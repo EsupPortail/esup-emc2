@@ -1,0 +1,99 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::testerEligibiliteAction()
+ * @var Agent $agent
+ * @var Campagne $campagne
+ *
+ * @var Agent[] $obligatoires
+ * @var Agent[] $facultatifs
+ * @var Agent[] $raisons
+ */
+
+
+
+$this->headTitle("Test de l'éligilité à la campagne ".$campagne->getAnnee(). " de ".$agent->getDenomination(true));
+?>
+
+<h1 class="page-header">
+    Test de l'éligilité à la campagne <?php echo $campagne->getAnnee(); ?>
+    de <?php echo $agent->getDenomination(true); ?>
+</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2> Agent </h2>
+
+        <dl>
+            <dt> Id </dt>
+            <dd> <?php echo $agent->getId(); ?></dd>
+            <dt> Dénomination </dt>
+            <dd> <?php echo $agent->getDenomination(true); ?></dd>
+            <dt> Supérieur·e </dt>
+            <dd>
+                <ul>
+                <?php foreach ($agent->getSuperieurs() as $agentSuperieur) : ?>
+                    <li> <?php echo $agentSuperieur->getSuperieur()->getDenomination(true); ?> </li>
+                <?php endforeach; ?>
+                </ul>
+            </dd>
+            <dt> Autorité </dt>
+            <dd>
+                <ul>
+                    <?php foreach ($agent->getAutorites() as $agentAutorite) : ?>
+                        <li> <?php echo $agentAutorite->getAutorite()->getDenomination(true); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <h2> Campagne </h2>
+
+        <dl>
+            <dt> Année </dt>
+            <dd> <?php echo $campagne->getAnnee(); ?> </dd>
+            <dt> Date de début </dt>
+            <dd> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?> </dd>
+            <dt> Date de fin </dt>
+            <dd> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?> </dd>
+            <dt> Date de prise de poste </dt>
+            <dd> <?php echo $campagne->getDateEnPoste()->format('d/m/Y'); ?> </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2> Résultat </h2>
+
+        <dl class="row">
+            <dt class="col-md-2"> Obligatoire : </dt>
+            <dd class="col-md-10">
+                <?php if (isset($obligatoires[$agent->getId()])) : ?>
+                    <span class="icon icon-checked text-success"></span>
+                <?php else : ?>
+                    <span class="icon icon-unchecked text-danger"></span>
+                <?php endif; ?>
+            </dd>
+            <dt class="col-md-2"> Facultatif : </dt>
+            <dd class="col-md-10">
+                <?php if (isset($facultatifs[$agent->getId()])) : ?>
+                    <span class="icon icon-checked text-success"></span>
+                <?php else : ?>
+                    <span class="icon icon-unchecked text-danger"></span>
+                <?php endif; ?>
+            </dd>
+            <dt class="col-md-2"> Raison : </dt>
+            <dd class="col-md-10">
+                <?php if (isset($raisons[$agent->getId()])) : ?>
+                    <?php echo $raisons[$agent->getId()]; ?>
+                <?php else : ?>
+                    Sans
+                <?php endif; ?>
+            </dd>
+    </div>
+</div>

@@ -4,7 +4,6 @@ namespace EntretienProfessionnel\Service\Campagne;
 
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -16,6 +15,7 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -27,6 +27,7 @@ class CampagneService
     use AgentForceSansObligationServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use StructureServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -163,20 +164,20 @@ class CampagneService
         return $entretiens;
     }
 
-    /**
-     * @param Campagne $campagne
-     * @return EntretienProfessionnel[]
-     */
-    public function getEntretiensProfessionnels(Campagne $campagne): array
-    {
-        $entretiens = [];
-        foreach ($campagne->getEntretiensProfessionnels() as $entretien) {
-            if ($entretien->estNonHistorise()) {
-                $entretiens[$entretien->getAgent()->getId()][] = $entretien;
-            }
-        }
-        return $entretiens;
-    }
+//    /**
+//     * @param Campagne $campagne
+//     * @return EntretienProfessionnel[]
+//     */
+//    public function getEntretiensProfessionnels(Campagne $campagne): array
+//    {
+//        $entretiens = [];
+//        foreach ($campagne->getEntretiensProfessionnels() as $entretien) {
+//            if ($entretien->estNonHistorise()) {
+//                $entretiens[$entretien->getAgent()->getId()][] = $entretien;
+//            }
+//        }
+//        return $entretiens;
+//    }
 
 
     /**
@@ -223,25 +224,27 @@ class CampagneService
         return $entretiens;
     }
 
-    /**
-     * @param Campagne $campagne
-     * @return EntretienProfessionnel[]
-     */
-    public function getEntretiensCompletes(Campagne $campagne): array
-    {
-        $etats = [
-            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
-        ];
-
-        $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
-        return $entretiens;
-    }
+//    /**
+//     * @param Campagne $campagne
+//     * @return EntretienProfessionnel[]
+//     */
+//    public function getEntretiensCompletes(Campagne $campagne): array
+//    {
+//        $etats = [
+//            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
+//        ];
+//
+//        $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
+//        return $entretiens;
+//    }
 
     public function getAgentsEligibles(Campagne $campagne): array
     {
+        $structureMere = $this->getStructureService()->getStructureMere();
+
         $agents = $this->getAgentService()->getAgentsWithDates($campagne->getDateDebut(), $campagne->getDateFin());
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION));
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT));
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT), $structureMere);
         $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE));
         $agents = $this->getAgentService()->filtrerWithGradeTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_GRADE));
         $agents = $this->getAgentService()->filtrerWithCorpsTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS));
@@ -282,11 +285,12 @@ class CampagneService
         $obligatoires = [];
         $facultatifs = [];
         $raison = [];
-        $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
 
         /** @var Agent $agent */
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
+
+            $structureMere = $this->getStructureService()->getStructureMere();
 
             $kept = true;
 
@@ -295,28 +299,35 @@ class CampagneService
                 $kept = false;
             }
 
-
             if (!$agent->isContratLong()) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans 'contrat long'</li>";
             }
-            if (!$agent->isValideEmploiType($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste)) {
-                $kept = false;
-                $raison[$agent->getId()] .= "<li>Emploi-type invalide dans le cadre des entretiens professionnels</li>";
-            }
-            if (!$agent->isValideStatut($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT), $dateMinEnPoste))
+            if (!$agent->isValideEmploiType(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE),
+                $campagne->getDateEnPoste()))
             {
                 $kept = false;
-                $raison[$agent->getId()] .= "<li>Statut invalide dans le cadre des entretiens professionnels</li>";
-
+                $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
             }
-            if (!$agent->isValideAffectation($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION), $dateMinEnPoste))
+            if (!$agent->isValideStatut(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT),
+                $campagne->getDateEnPoste(),
+                [$structureMere]))
             {
                 $kept = false;
-                $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$dateMinEnPoste->format('d/m/y').") </li>";
+                $raison[$agent->getId()] .= "<li>Statut invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
 
             }
-            if ($kept) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+            if (!$agent->isValideAffectation(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION),
+                $campagne->getDateEnPoste()))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
+
+            }
+            if ($kept) $obligatoires[$agent->getId()] = $agent; else $facultatifs[$agent->getId()] = $agent;
             $raison[$agent->getId()] .= "</ul>";
         }
         return [$obligatoires, $facultatifs, $raison];

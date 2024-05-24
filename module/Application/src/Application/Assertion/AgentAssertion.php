@@ -10,6 +10,7 @@ use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
+use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -23,6 +24,7 @@ class AgentAssertion extends AbstractAssertion
     use AgentSuperieurServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use UserServiceAwareTrait;
 
     public function computeAssertion(?Agent $entity, string $privilege) : bool
@@ -36,24 +38,20 @@ class AgentAssertion extends AbstractAssertion
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
-
-        $structures = [];
-        foreach ($entity->getAffectationsActifs() as $affectation) {
-            $structures[] = $affectation->getStructure();
-        }
-        foreach ($entity->getStructuresForcees() as $structureAgentForce) {
-            $structures[] = $structureAgentForce->getStructure();
-        }
+        $structures = $entity->getStructures();
 
         $isResponsable = false;
         $isSuperieur = false;
         $isAutorite = false;
+        $isObservateur = false;
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
+        if ($role->getRoleId() === StructureRoleProvider::OBSERVATEUR) $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
 
         switch ($privilege) {
             case AgentPrivileges::AGENT_AFFICHER :
+            case AgentPrivileges::AGENT_ACQUIS_AFFICHER:
                 switch ($role->getRoleId()) {
                     case AppRoleProvider::ADMIN_FONC:
                     case AppRoleProvider::ADMIN_TECH:
@@ -65,12 +63,12 @@ class AgentAssertion extends AbstractAssertion
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:
                         return $isAutorite;
+                    case StructureRoleProvider::OBSERVATEUR:
+                        return $isObservateur;
                     case AppRoleProvider::AGENT :
                         return $entity === $agent;
                 }
                 return false;
-            case AgentPrivileges::AGENT_ACQUIS_AFFICHER:
-            case true;
             case AgentPrivileges::AGENT_ACQUIS_MODIFIER:
             case AgentPrivileges::AGENT_ELEMENT_AJOUTER:
             case AgentPrivileges::AGENT_ELEMENT_MODIFIER:

@@ -7,12 +7,14 @@ use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Parametre\GlobalParametres;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
@@ -20,25 +22,21 @@ use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Role\RoleProvider;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class StructureService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use UserServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function update(Structure $structure) : Structure
+    public function update(Structure $structure): Structure
     {
-        try {
-            $this->getEntityManager()->flush($structure);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
-        }
+        $this->getObjectManager()->flush($structure);
         return $structure;
     }
 
@@ -47,17 +45,16 @@ class StructureService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->leftJoin('gestionnaire.agent', 'gAgent')->addSelect('gAgent')
             ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
             ->leftJoin('responsable.agent', 'rAgent')->addSelect('rAgent')
             ->addSelect('type')->leftjoin('structure.type', 'type')
             ->andWhere('structure.deleted_on IS NULL')
-            ->orderBy('structure.code')
-        ;
+            ->orderBy('structure.code');
         return $qb;
     }
 
@@ -65,14 +62,13 @@ class StructureService
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructures(bool $ouverte = true) : array
+    public function getStructures(bool $ouverte = true): array
     {
         $qb = $this->createQueryBuilder();
         if ($ouverte)
             $qb = $qb
                 ->andWhere("coalesce(structure.fermetureOW,structure.fermeture) IS NULL OR coalesce(structure.fermetureOW,structure.fermeture) >= :now")
-                ->setParameter('now', new DateTime())
-            ;
+                ->setParameter('now', new DateTime());
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -82,16 +78,16 @@ class StructureService
      * @param string|null $id
      * @return Structure|null
      */
-    public function getStructure(?string $id) : ?Structure
+    public function getStructure(?string $id): ?Structure
     {
-        if ($id === "" OR $id === null) return null;
+        if ($id === "" or $id === null) return null;
         $qb = $this->createQueryBuilder()
             ->andWhere('structure.id = :id')
             ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Structure partagent le même identifiant [".$id."]", $e);
+            throw new RuntimeException("Plusieurs Structure partagent le même identifiant [" . $id . "]", $e);
         }
         return $result;
     }
@@ -101,31 +97,47 @@ class StructureService
      * @param string $paramName
      * @return Structure|null
      */
-    public function getRequestedStructure(AbstractActionController $controller, string $paramName = 'structure') : ?Structure
+    public function getRequestedStructure(AbstractActionController $controller, string $paramName = 'structure'): ?Structure
     {
         $id = $controller->params()->fromRoute($paramName);
         $structure = $this->getStructure($id);
         return $structure;
     }
 
+    public function getStructureByCode(string $code): ?Structure
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('structure.code = :code')->setParameter('code', $code)
+            ->andWhere('structure.deleted_on IS NULL');
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [" . Structure::class . "] actives partagent le même code [" . $code . "]", 0, $e);
+        }
+        return $result;
+    }
+
+    public function getStructureMere(): ?Structure
+    {
+        $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
+        return $this->getStructureByCode($code);
+    }
+
     /**
-     * @param string $term
      * @param Structure[] $structures
      * @return Structure[]
      */
-    public function getStructuresByTerm(string $term, array $structures = null, bool $histo=false) : array
+    public function getStructuresByTerm(string $term, array $structures = null, bool $histo = false): array
     {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
-            ->setParameter('search', '%'.strtolower($term).'%')
-            ->andWhere('structure.fermeture IS NULL')
-        ;
+            ->setParameter('search', '%' . strtolower($term) . '%')
+            ->andWhere('structure.fermeture IS NULL');
         if (!$histo) $qb = $qb->andWhere('structure.deleted_on IS NULL');
 
         if ($structures !== null) {
             $qb = $qb->andWhere('structure IN (:structures)')
-                ->setParameter('structures', $structures)
-            ;
+                ->setParameter('structures', $structures);
         }
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -136,9 +148,9 @@ class StructureService
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getSousStructures(Structure $structure, bool $ouverte = true) : array
+    public function getSousStructures(Structure $structure, bool $ouverte = true): array
     {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('structure.parent = :structure')
             ->setParameter('structure', $structure)
             ->orderBy('structure.code')
@@ -154,7 +166,7 @@ class StructureService
      * @param bool $withRoot (ajoute $structrure au résultat)
      * @return Structure[]
      */
-    public function getStructuresFilles(Structure $structure, bool $withRoot = false) : array
+    public function getStructuresFilles(Structure $structure, bool $withRoot = false): array
     {
         $filles = [];
         $dejaTraitees = [];
@@ -162,11 +174,11 @@ class StructureService
         $aTraitees = [];
         $aTraitees[] = $structure;
 
-        while(! empty($aTraitees)) {
+        while (!empty($aTraitees)) {
             $current = array_shift($aTraitees);
             $result = $this->getSousStructures($current);
             foreach ($result as $item) {
-                if (!$item->isDeleted() AND !isset($dejaTraitees[$item->getId()])) {
+                if (!$item->isDeleted() and !isset($dejaTraitees[$item->getId()])) {
                     $filles[] = $item;
                     $dejaTraitees[$item->getId()] = true;
                     $aTraitees[] = $item;
@@ -183,17 +195,17 @@ class StructureService
      * @param Structure[] $structures
      * @return array
      */
-    public function formatStructureJSON(array $structures) : array
+    public function formatStructureJSON(array $structures): array
     {
         $result = [];
         foreach ($structures as $structure) {
             $result[] = array(
-                'id'    => $structure->getId(),
+                'id' => $structure->getId(),
                 'label' => $structure->getLibelleLong(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>".$structure->getLibelleCourt()."</span>",
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $structure->getLibelleCourt() . "</span>",
             );
         }
-        usort($result, function($a, $b) {
+        usort($result, function ($a, $b) {
             return strcmp($a['label'], $b['label']);
         });
         return $result;
@@ -203,7 +215,7 @@ class StructureService
      * @param Structure[] $structures
      * @return FichePoste[]
      */
-    public function getFichesPostesRecrutementsByStructures(array $structures) : array
+    public function getFichesPostesRecrutementsByStructures(array $structures): array
     {
         $fiches = [];
         foreach ($structures as $structure) {
@@ -214,10 +226,10 @@ class StructureService
         $result = [];
         foreach ($fiches as $fiche) {
             $result[] = ['id' => $fiche->getId(),
-                'agent_id' => ($fiche->getAgent())?$fiche->getAgent()->getId():null,
-                'prenom' => ($fiche->getAgent())?$fiche->getAgent()->getPrenom():null,
-                'nom_usage' => ($fiche->getAgent())?$fiche->getAgent()->getNomUsuel():null,
-                'fiche_principale' => ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():null,
+                'agent_id' => ($fiche->getAgent()) ? $fiche->getAgent()->getId() : null,
+                'prenom' => ($fiche->getAgent()) ? $fiche->getAgent()->getPrenom() : null,
+                'nom_usage' => ($fiche->getAgent()) ? $fiche->getAgent()->getNomUsuel() : null,
+                'fiche_principale' => ($fiche->getFicheTypeExternePrincipale()) ? $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle() : null,
             ];
         }
         return $result;
@@ -226,7 +238,7 @@ class StructureService
     /**
      * @return array
      */
-    public function getStructuresAsOptions() : array
+    public function getStructuresAsOptions(): array
     {
         $sql = <<<EOS
 select
@@ -241,7 +253,7 @@ order by st.libelle, s.libelle_long
 EOS;
 
         try {
-            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, []);
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, []);
             try {
                 $tmp = $res->fetchAllAssociative();
             } catch (DRV_Exception $e) {
@@ -253,7 +265,7 @@ EOS;
 
         $options = [];
         foreach ($tmp as $structure) {
-            $options[$structure['id']] = "[".$structure['type']."] ".$structure['libelle_long'] . " (".$structure['libelle_court'].")";
+            $options[$structure['id']] = "[" . $structure['type'] . "] " . $structure['libelle_long'] . " (" . $structure['libelle_court'] . ")";
         }
         return $options;
     }
@@ -261,12 +273,11 @@ EOS;
     /**
      * @return User[]
      */
-    public function getUsersInResponsables() : array
+    public function getUsersInResponsables(): array
     {
-        $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder("sr")
+        $qb = $this->getObjectManager()->getRepository(StructureResponsable::class)->createQueryBuilder("sr")
             ->join('sr.agent', 'agent')->addSelect('agent')
-            ->orderBy('agent.nomUsuel, agent.prenom' , 'ASC')
-        ;
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 
         /** @var StructureResponsable[] $result */
@@ -281,12 +292,11 @@ EOS;
     /**
      * @return User[]
      */
-    public function getUsersInGestionnaires() : array
+    public function getUsersInGestionnaires(): array
     {
-        $qb = $this->getEntityManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder("sg")
+        $qb = $this->getObjectManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder("sg")
             ->join('sg.agent', 'agent')->addSelect('agent')
-            ->orderBy('agent.nomUsuel, agent.prenom' , 'ASC')
-        ;
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 
         /** @var StructureGestionnaire[] $result */
@@ -303,16 +313,15 @@ EOS;
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByGestionnaire(User $user,  bool $ouverte = true) : array
+    public function getStructuresByGestionnaire(User $user, bool $ouverte = true): array
     {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.gestionnaires', 'gestionnaireSelection')
             ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
             ->addSelect('agent')->join('gestionnaire.agent', 'agent')
             ->andWhere('agent.utilisateur = :user')
             ->setParameter('user', $user)
-            ->orderBy('structure.libelleCourt')
-        ;
+            ->orderBy('structure.libelleCourt');
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
 
         $result = $qb->getQuery()->getResult();
@@ -324,16 +333,15 @@ EOS;
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByResponsable(User $user, bool $ouverte = true) : array
+    public function getStructuresByResponsable(User $user, bool $ouverte = true): array
     {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.responsables', 'responsableSelection')
             ->addSelect('responsable')->join('structure.responsables', 'responsable')
             ->addSelect('agent')->join('responsable.agent', 'agent')
             ->andWhere('agent.utilisateur = :user')
             ->setParameter('user', $user)
-            ->orderBy('structure.libelleCourt')
-        ;
+            ->orderBy('structure.libelleCourt');
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
 
         $result = $qb->getQuery()->getResult();
@@ -345,17 +353,17 @@ EOS;
      * @param Agent|null $agent
      * @return boolean
      */
-    public function isGestionnaire(Structure $structure, ?Agent $agent) : bool
+    public function isGestionnaire(Structure $structure, ?Agent $agent): bool
     {
         if ($agent === null) return false;
         $date = (new DateTime());
 
         $gestionnaires = $structure->getGestionnaires();
         foreach ($gestionnaires as $gestionnaire) {
-            if (    ($gestionnaire->getAgent() === $agent)
-                AND ($gestionnaire->getDateDebut() === NULL OR $gestionnaire->getDateDebut() <= $date)
-                AND ($gestionnaire->getDateFin() === NULL OR $gestionnaire->getDateFin() >= $date)
-                AND (!$gestionnaire->isDeleted())
+            if (($gestionnaire->getAgent() === $agent)
+                and ($gestionnaire->getDateDebut() === NULL or $gestionnaire->getDateDebut() <= $date)
+                and ($gestionnaire->getDateFin() === NULL or $gestionnaire->getDateFin() >= $date)
+                and (!$gestionnaire->isDeleted())
             ) return true;
         }
         if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
@@ -367,7 +375,7 @@ EOS;
      * @param Agent|null $agent
      * @return boolean
      */
-    public function isGestionnaireS(array $structures, ?Agent $agent)  : bool
+    public function isGestionnaireS(array $structures, ?Agent $agent): bool
     {
         foreach ($structures as $structure) {
             $result = $this->isGestionnaire($structure, $agent);
@@ -376,7 +384,7 @@ EOS;
         return false;
     }
 
-    public function isResponsable(?Structure $structure, ?Agent $agent)  : bool
+    public function isResponsable(?Structure $structure, ?Agent $agent): bool
     {
         if ($structure === null) return false;
         if ($agent === null) return false;
@@ -384,10 +392,10 @@ EOS;
 
         $responsables = $structure->getResponsables();
         foreach ($responsables as $responsable) {
-            if (    ($responsable->getAgent() === $agent)
-                AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
-                AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
-                AND (!$responsable->isDeleted())
+            if (($responsable->getAgent() === $agent)
+                and ($responsable->getDateDebut() === NULL or $responsable->getDateDebut() <= $date)
+                and ($responsable->getDateFin() === NULL or $responsable->getDateFin() >= $date)
+                and (!$responsable->isDeleted())
             ) return true;
         }
         if ($structure->getParent() && $structure !== $structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
@@ -399,7 +407,7 @@ EOS;
      * @param Agent|null $agent
      * @return boolean
      */
-    public function isResponsableS(array $structures, ?Agent $agent)  : bool
+    public function isResponsableS(array $structures, ?Agent $agent): bool
     {
         foreach ($structures as $structure) {
             $result = $this->isResponsable($structure, $agent);
@@ -408,7 +416,7 @@ EOS;
         return false;
     }
 
-    public function isAutorite(?Structure $structure, ?Agent $agent) : bool
+    public function isAutorite(?Structure $structure, ?Agent $agent): bool
     {
         if ($structure === null) return false;
         if ($agent === null) return false;
@@ -419,10 +427,10 @@ EOS;
 
         $responsables = $structure->getResponsables();
         foreach ($responsables as $responsable) {
-            if (    ($responsable->getAgent() === $agent)
-                AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
-                AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
-                AND (!$responsable->isDeleted())
+            if (($responsable->getAgent() === $agent)
+                and ($responsable->getDateDebut() === NULL or $responsable->getDateDebut() <= $date)
+                and ($responsable->getDateFin() === NULL or $responsable->getDateFin() >= $date)
+                and (!$responsable->isDeleted())
             ) return true;
         }
         return false;
@@ -433,7 +441,7 @@ EOS;
      * @param Agent|null $agent
      * @return boolean
      */
-    public function isAutoriteS(array $structures, ?Agent $agent)  : bool
+    public function isAutoriteS(array $structures, ?Agent $agent): bool
     {
         foreach ($structures as $structure) {
             $result = $this->isAutorite($structure, $agent);
@@ -445,7 +453,7 @@ EOS;
     /**
      * @return Structure[]
      */
-    public function getStructuresByCurrentRole(?User $user = null, ?RoleInterface $role = null) : array
+    public function getStructuresByCurrentRole(?User $user = null, ?RoleInterface $role = null): array
     {
         if ($user === null) $user = $this->getUserService()->getConnectedUser();
         if ($role === null) $role = $this->getUserService()->getConnectedRole();
@@ -453,7 +461,9 @@ EOS;
         $selecteur = [];
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = $this->getStructuresByResponsable($user);
-            usort($structures, function(Structure $a, Structure $b) {return strcmp($a->getLibelleCourt(),$b->getLibelleCourt());});
+            usort($structures, function (Structure $a, Structure $b) {
+                return strcmp($a->getLibelleCourt(), $b->getLibelleCourt());
+            });
             $selecteur = $structures;
         }
 
@@ -462,10 +472,10 @@ EOS;
 
     /** Fonctions pour l'organigramme *********************************************************************************/
 
-    public function getAgentsEnAffectationSecondaire(Structure $structure, ?DateTime $date = null) : array
+    public function getAgentsEnAffectationSecondaire(Structure $structure, ?DateTime $date = null): array
     {
         if ($date === null) $date = new DateTime();
-        $qb = $this->getEntityManager()->getRepository(AgentAffectation::class)->createQueryBuilder('affectation')
+        $qb = $this->getObjectManager()->getRepository(AgentAffectation::class)->createQueryBuilder('affectation')
 //            ->join('affectation.agent', 'agent')->addSelect('agent')
             // affectation en cours non principale dans la structure
             ->andWhere('affectation.structure = :structure')
@@ -475,8 +485,7 @@ EOS;
             ->andWhere('affectation.dateDebut <= :currentdate')
             ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :currentdate')
             ->andWhere('affectation.deleted_on IS NULL')
-            ->setParameter('currentdate', $date)
-//            ->orderBy('agent.nomUsuel, agent.prenom')
+            ->setParameter('currentdate', $date)//            ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
         /** @var AgentAffectation[] $result */
@@ -501,15 +510,14 @@ EOS;
      * @param DateTime|null $date
      * @return StructureResponsable[]
      */
-    public function getResponsables(?Structure $structure, ?DateTime $date = null) : array
+    public function getResponsables(?Structure $structure, ?DateTime $date = null): array
     {
-        $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('responsable')
+        $qb = $this->getObjectManager()->getRepository(StructureResponsable::class)->createQueryBuilder('responsable')
 //            ->join('responsable.source', 'source')->addSelect('source')
             ->join('responsable.agent', 'agent')->addSelect('agent')
             ->andWhere('responsable.structure = :structure')->setParameter('structure', $structure)
             ->andWhere('responsable.deleted_on IS NULL')
-            ->orderBy('agent.nomUsuel, agent.prenom')
-        ;
+            ->orderBy('agent.nomUsuel, agent.prenom');
         if ($date !== null) $qb = StructureResponsable::decorateWithActif($qb, 'responsable', $date);
 
         $result = $qb->getQuery()->getResult();
@@ -521,14 +529,13 @@ EOS;
      * @param DateTime|null $date
      * @return StructureGestionnaire[]
      */
-    public function getGestionnaires(?Structure $structure, ?DateTime $date = null) : array
+    public function getGestionnaires(?Structure $structure, ?DateTime $date = null): array
     {
-        $qb = $this->getEntityManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('gestionnaire')
+        $qb = $this->getObjectManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('gestionnaire')
             ->join('gestionnaire.agent', 'agent')->addSelect('agent')
             ->andWhere('gestionnaire.structure = :structure')
             ->setParameter('structure', $structure)
-            ->orderBy('agent.nomUsuel, agent.prenom')
-        ;
+            ->orderBy('agent.nomUsuel, agent.prenom');
         if ($date !== null) $qb = StructureGestionnaire::decorateWithActif($qb, 'gestionnaire', $date);
 
         $result = $qb->getQuery()->getResult();
@@ -542,11 +549,11 @@ EOS;
      * @param DateTime|null $date
      * @return StructureAgentForce[]
      */
-    public function getAgentsForces(Structure $structure, ?DateTime $date = null) : array
+    public function getAgentsForces(Structure $structure, ?DateTime $date = null): array
     {
         if ($date === null) $date = new DateTime();
 
-        $qb = $this->getEntityManager()->getRepository(StructureAgentForce::class)->createQueryBuilder('af')
+        $qb = $this->getObjectManager()->getRepository(StructureAgentForce::class)->createQueryBuilder('af')
             ->join('af.agent', 'af_agent')->addSelect('af_agent')
             ->join('af.structure', 'af_structure')->addSelect('af_structure')
             ->leftjoin('af_agent.affectations', 'af_affectation')->addSelect('af_affectation')
@@ -565,8 +572,7 @@ EOS;
 //            ->andWhere('structure_responsable.dateFin IS NULL or structure_responsable.dateFin >= :date')
 //            ->andWhere('niv2_responsable.dateDebut IS NULL or niv2_responsable.dateDebut <= :date')
 //            ->andWhere('niv2_responsable.dateFin IS NULL or niv2_responsable.dateFin >= :date')
-            ->setParameter('date', $date)
-        ;
+            ->setParameter('date', $date);
 
         $qb = AgentSuperieur::decorateWithAgentSuperieur($qb, 'af_agent');
         $qb = AgentAutorite::decorateWithAgentAutorite($qb, 'af_agent');

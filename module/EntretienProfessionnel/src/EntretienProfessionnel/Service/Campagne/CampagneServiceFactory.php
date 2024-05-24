@@ -8,6 +8,7 @@ use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObliga
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -28,12 +29,14 @@ class CampagneServiceFactory
          * @var AgentForceSansObligationService $agentForceService
          * @var EtatTypeService $etatTypeService
          * @var ParametreService $parametreService
+         * @var StructureService $structureService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
         $agentForceService = $container->get(AgentForceSansObligationService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $parametreService = $container->get(ParametreService::class);
+        $structureService = $container->get(StructureService::class);
 
         $service = new CampagneService();
         $service->setObjectManager($entityManager);
@@ -41,6 +44,7 @@ class CampagneServiceFactory
         $service->setAgentForceSansObligationService($agentForceService);
         $service->setEtatTypeService($etatTypeService);
         $service->setParametreService($parametreService);
+        $service->setStructureService($structureService);
         return $service;
     }
 }

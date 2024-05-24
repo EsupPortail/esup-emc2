@@ -53,7 +53,7 @@ class ObservationController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout d'une ".strtolower($observationType->getLibelle()),
+            'title' => "Ajout d'".strtolower($observationType->getLibelle()),
             'form' => $form,
             'js' => " $('.hidden').parent().hide()",
         ]);
@@ -90,7 +90,7 @@ class ObservationController extends AbstractActionController
 
         $vm = new ViewModel([
 //            'title' => "Ajout d'une observation sur l'entretien professionnel (en tant qu'autorité hiérarchique)",
-            'title' => "Ajout  d'une ".strtolower($observationType->getLibelle()),
+            'title' => "Ajout  d'".strtolower($observationType->getLibelle()),
             'form' => $form,
             'js' => " $('.hidden').parent().hide()",
         ]);

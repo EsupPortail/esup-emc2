@@ -116,17 +116,28 @@ class StructureController extends AbstractActionController {
 
     public function agentsAction() : ViewModel
     {
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
+        $debug = "";
 
+
+        $date_debut = new DateTime();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
+        $debug .= "Récupération des informations de l'utilisateur : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
+
+        $structureMere = $this->getStructureService()->getStructureMere();
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+        $debug .= "Récupération des informations des structures : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
 
-        $agents = $this->getAgentService()->getAgentsByStructures($structures,null, false);
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
+        $agents = $this->getAgentService()->getAgentsByStructures($structures,null, true);
+        $debug .= "Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
+//        die("Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>");
+
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
         $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE));
         $agents = $this->getAgentService()->filtrerWithGradeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE));
         $agents = $this->getAgentService()->filtrerWithCorpsTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS));
+        $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
 
         usort($agents, function (Agent $a, Agent $b) {
@@ -154,6 +165,7 @@ class StructureController extends AbstractActionController {
         } catch (Exception $e) {
             throw new RuntimeException("Une erreur est survenu lors de la récupération du paramètre [".GlobalParametres::TYPE."|".GlobalParametres::EMAIL_ASSISTANCE."]",0,$e);
         }
+        $debug .= "Fin du traitement côté controller : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
 
         return new ViewModel([
             'structure' => $structure,
@@ -165,6 +177,7 @@ class StructureController extends AbstractActionController {
 
             'campagnes' => $campagnes,
             'emailAssistance' => $emailAssistance,
+            'debug' => null,
         ]);
     }
 
@@ -196,9 +209,10 @@ class StructureController extends AbstractActionController {
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+        $structureMere = $this->getStructureService()->getStructureMere();
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $this->getStructureService()->getAgentsForces($structure));
 

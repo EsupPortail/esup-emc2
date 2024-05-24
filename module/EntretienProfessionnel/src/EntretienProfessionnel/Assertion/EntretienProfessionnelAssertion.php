@@ -159,13 +159,18 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     if ($role->getRoleId() === AppRoleProvider::ADMIN_TECH) return true;
                     if ($role->getRoleId() === AppRoleProvider::ADMIN_FONC) return true;
                 }
-                if (! $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
-                if (!$this->isScopeCompatible($entretien, $agent, $role, $predicats)) return false;
-                if ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien)) return false;
-                if ($role->getRoleId() === AppRoleProvider::AGENT) {
-                    if ($now > $entretien->getDateEntretien()) return false;
+                switch ($role->getRoleId()) {
+                    case Agent::ROLE_AGENT :
+                        $etatOk = $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
+                        $dateOk = $now > $entretien->getDateEntretien();
+                        $scope = $this->isScopeCompatible($entretien, $agent, $role, $predicats);
+                        $blocage = ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien));
+                        return $etatOk && $dateOk && $scope && !$blocage;
+                    default :
+                        $scope = $this->isScopeCompatible($entretien, $agent, $role, $predicats);
+                        $blocage = ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien));
+                        return $scope && !$blocage;
                 }
-                return true;
             case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
                 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
                     $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;

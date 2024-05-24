@@ -6,14 +6,17 @@
  * @var array $options
  * @var string $source
  * @var FormulaireInstance $cref
+ * @var RoleInterface $role
  */
 
+use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenAuthentification\Service\User;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
+use UnicaenUtilisateur\Entity\Db\RoleInterface;
 
 
 $canAfficher = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
@@ -58,7 +61,7 @@ $agent  = $entretien->getAgent();
     <?php if ($canAfficher) : ?>
         <?php echo $this->instanceAsText()->render($cref); ?>
 
-        <?php if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
+        <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND  $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
             <div class="alert alert-info">
                 <strong>
                     <span class="icon icon-information"></span>

@@ -182,7 +182,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null,  'connectedUser' => $user, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null,  'connectedUser' => $user, 'role' => $role, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
     </div>
 
 <!--            --><?php //if ($displayAcquis === true) : ?>

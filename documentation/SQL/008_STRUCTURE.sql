@@ -221,5 +221,16 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'structure';
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- MACROS ASSOCIEES ----------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+('STRUCTURE#bloc', null, 'structure', 'toStringStructureBloc'),
+('STRUCTURE#gestionnaires', '<p>Affiche sous la forme d''un listing les Gestionnaires de la structure</p>', 'structure', 'toStringGestionnaires'),
+('STRUCTURE#libelle', '<p>Retourne le libellé de la structure</p>', 'structure', 'toStringLibelle'),
+('STRUCTURE#libelle_long', '<p>Retourne le libellé de la structure + le libell&amp;eacute de la structure de niveau 2</p>', 'structure', 'toStringLibelleLong'),
+('STRUCTURE#responsables', '<p>Affiches sous la forme d''un listing les Responsables d''une structure</p>', 'structure', 'toStringResponsables'),
+('STRUCTURE#resume', null, 'structure', 'toStringResume');
 
 

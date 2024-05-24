@@ -18,6 +18,7 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     private ?string $annee = null;
     private ?Campagne $precede = null;
     private ?DateTime $dateCirculaire = null;
+    private ?DateTime $dateEnPoste = null;
     private Collection $entretiens;
 
     public function getId() : ?int
@@ -62,6 +63,16 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     public function setDateCirculaire(?DateTime $dateCirculaire): void
     {
         $this->dateCirculaire = $dateCirculaire;
+    }
+
+    public function getDateEnPoste(): ?DateTime
+    {
+        return $this->dateEnPoste;
+    }
+
+    public function setDateEnPoste(?DateTime $dateEnPoste): void
+    {
+        $this->dateEnPoste = $dateEnPoste;
     }
 
     /**

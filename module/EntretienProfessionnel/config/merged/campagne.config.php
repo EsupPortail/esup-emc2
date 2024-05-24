@@ -29,6 +29,7 @@ return [
                         'index',
                         'afficher',
                         'extraire',
+                        'tester-eligibilite',
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AFFICHER,
@@ -286,6 +287,18 @@ return [
                                         /** @see CampagneController::detruireAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'detruire',
+                                    ],
+                                ],
+                            ],
+                            'tester-eligibilite' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/tester-eligibilite/:campagne/:agent',
+                                    'defaults' => [
+                                        /** @see CampagneController::testerEligibiliteAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'tester-eligibilite',
                                     ],
                                 ],
                             ],

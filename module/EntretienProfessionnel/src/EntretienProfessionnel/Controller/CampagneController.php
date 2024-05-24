@@ -77,6 +77,7 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = new Campagne();
         $campagne->setAnnee(CampagneService::getAnneeScolaire());
+        $campagne->setDateEnPoste(DateTime::createFromFormat('Y-m-d', (new DateTime('now'))->format('Y')."-01-01"));
 
         $form = $this->getCampagneForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/ajouter', [], [], true));
@@ -365,20 +366,21 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structureMere = $this->getStructureService()->getStructureMere();
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         if ($structure === null) { throw new RuntimeException("Aucune structure de trouvée."); }
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(),false);
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(),true);
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut(), [$structureMere]);
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
         $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE), $campagne->getDateDebut());
         $agents = $this->getAgentService()->filtrerWithCorpsTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS), $campagne->getDateDebut());
         $agents = $this->getAgentService()->filtrerWithGradeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE), $campagne->getDateDebut());
 
-        $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
         [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
@@ -409,7 +411,6 @@ class CampagneController extends AbstractActionController {
             'encours' => $encours,
             'finalises' => $finalises,
 
-            'dateMinEnPoste' => $dateMinEnPoste,
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
             'raison' => $raison,
@@ -420,6 +421,7 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $superieur = $this->getAgentService()->getRequestedAgent($this);
+        $structureMere = $this->getStructureService()->getStructureMere();
 
         if ($superieur === null) {
             $user = $this->getUserService()->getConnectedUser();
@@ -430,7 +432,7 @@ class CampagneController extends AbstractActionController {
         }
         
         $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut(), [$structureMere]);
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
 
         //$entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, false, false);
@@ -455,6 +457,7 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $autorite = $this->getAgentService()->getRequestedAgent($this);
+        $structureMere = $this->getStructureService()->getStructureMere();
 
         if ($autorite === null) {
             $user = $this->getUserService()->getConnectedUser();
@@ -465,7 +468,7 @@ class CampagneController extends AbstractActionController {
         }
 
         $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut(), [$structureMere]);
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
@@ -479,4 +482,22 @@ class CampagneController extends AbstractActionController {
         $vm->setTemplate('entretien-professionnel/campagne/entretien');
         return $vm;
     }
+
+    public function testerEligibiliteAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+
+        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, [$agent]);
+
+        return new ViewModel([
+            'agent' => $agent,
+            'campagne' => $campagne,
+
+            'obligatoires' => $obligatoires,
+            'facultatifs' => $facultatifs,
+            'raisons' => $raison,
+        ]);
+    }
+
 }

@@ -10,6 +10,7 @@
         <field name="dateDebut"            column="date_debut"      type="datetime"              nullable="false"/>
         <field name="dateFin"              column="date_fin"        type="datetime"              nullable="false"/>
         <field name="dateCirculaire"       column="date_circulaire" type="datetime"              nullable="false"/>
+        <field name="dateEnPoste"          column="date_en_poste"   type="datetime"              nullable="true"/>
 
         <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne"  field="precede">
             <join-column name="precede_id" referenced-column-name="id"/>

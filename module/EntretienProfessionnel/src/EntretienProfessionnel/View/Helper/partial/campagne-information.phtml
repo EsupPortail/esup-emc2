@@ -43,4 +43,15 @@ use EntretienProfessionnel\Entity\Db\Campagne;
             <?php echo $campagne->getDateFin()->format('d/m/Y'); ?>
         <?php endif; ?>
     </dd>
+    <dt class="col-md-4"> Date de prise de poste </dt>
+    <dd  class="col-md-8">
+        <?php if ($campagne->getDateEnPoste() === null || $campagne->getDateEnPoste() === false) : ?>
+            <span class="text-danger">
+                <span class="icon icon-attention"></span>
+                Aucune date de prise de poste
+            </span>
+        <?php else : ?>
+            <?php echo $campagne->getDateEnPoste()->format('d/m/Y'); ?>
+        <?php endif; ?>
+    </dd>
 </dl>

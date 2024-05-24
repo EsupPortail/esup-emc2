@@ -9,6 +9,7 @@
  * @var string $source
  */
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
@@ -70,7 +71,7 @@ $data = $crep->buildResponseDictionnary();
     <?php if ($canAfficher) : ?>
         <?php echo $this->instanceAsText()->render($crep); ?>
 
-        <?php if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
+        <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
             <div class="alert alert-info">
                 <strong>
                     <span class="icon icon-information"></span>

@@ -9,7 +9,6 @@ use Structure\Entity\Db\Structure;
  * @see \EntretienProfessionnel\Controller\CampagneController::structureAction()
  * @var Campagne $campagne
  * @var Campagne[] $campagnes
- * @var DateTime $dateMinEnPoste
  *
  * @var Structure $structure
  * @var Structure[] $structures
@@ -94,7 +93,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
         <div class="row">
             <div class="col-md-1"><span class="icon icon-info"></span></div>
             <div class="col-md-10">
-                Les agents n'étant pas en poste à la date du <?php echo $dateMinEnPoste->format('d/m/Y'); ?> n'ont pas d'obligation d'entretien professionnel.
+                Les agents n'étant pas en poste à la date du <?php echo $campagne->getDateEnPoste()->format('d/m/Y'); ?> n'ont pas d'obligation d'entretien professionnel.
                 <br/>
                 Vous pouvez cependant planifier un entretien professionnel si vous le souhaitez.
             </div>

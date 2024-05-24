@@ -16,6 +16,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Campagne[] $campagnes
  * @var string $emailAssistance
  * @var Structure[] $selecteur
+ * @var ?string $debug
  */
 
 $this->headTitle($structure->getLibelleLong() . " - Liste des Agent·es");
@@ -24,6 +25,12 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
 ?>
 
 <?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'agents', 'selecteur' => $selecteur]); ?>
+
+<?php if ($debug) : ?>
+    <div class="alert alert-warning">
+        <?php echo $debug; ?>
+    </div>
+<?php endif; ?>
 
 <div class="alert alert-info">
     <span class="icon icon-information"></span>

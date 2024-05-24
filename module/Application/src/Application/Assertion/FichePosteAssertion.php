@@ -12,6 +12,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
@@ -24,6 +25,7 @@ class FichePosteAssertion extends AbstractAssertion {
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use FichePosteServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     use PrivilegeServiceAwareTrait;
@@ -67,6 +69,7 @@ class FichePosteAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
         if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
+
         $connectedAgent = $this->getAgentService()->getAgentByUser($user);
         $etatCode = ($entity->getEtatActif())?$entity->getEtatActif()->getType()->getCode():null;
 
@@ -76,6 +79,10 @@ class FichePosteAssertion extends AbstractAssertion {
                     case AppRoleProvider::AGENT:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
                         return $isAgent AND ($etatCode === FichePosteEtats::ETAT_CODE_OK OR $etatCode === FichePosteEtats::ETAT_CODE_SIGNEE);
+                    case StructureRoleProvider::OBSERVATEUR:
+                        $structures = ($entity->getAgent())?$entity->getAgent()->getStructures():[];
+                        $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
+                        return $isObservateur;
                     default:
                         return $this->isScopeCompatible($entity, $connectedAgent, $role);
                 }

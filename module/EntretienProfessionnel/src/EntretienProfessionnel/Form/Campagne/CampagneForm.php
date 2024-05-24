@@ -88,6 +88,22 @@ class CampagneForm extends Form
                 'id'                => 'date_circulaire',
             ]
         ]);
+        //DEBUT (DATE)
+        $this->add([
+            'name' => 'date_en_poste',
+            'type' => Date::class,
+            'options' => [
+                'label' => "Date pour prise de poste <span class='icon icon-information' title=\"L'agent·e doit être en poste à la date donnée\"></span> <span class='icon obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+//                'format' => 'd/m/Y'
+            ],
+            'attributes' => [
+                'id'                => 'date_en_poste',
+            ]
+        ]);
         //PRECEDE (SELECT)
         $this->add([
             'name' => 'precede',
@@ -126,6 +142,7 @@ class CampagneForm extends Form
             'annee' => [       'required' => true,   ],
             'date_debut' => [  'required' => true,   ],
             'date_fin' =>   [  'required' => true,   ],
+            'date_en_poste' =>   [  'required' => true,   ],
             'date_circulaire' =>   [  'required' => false,   ],
             'precede' =>    [  'required' => false,  ],
         ]));

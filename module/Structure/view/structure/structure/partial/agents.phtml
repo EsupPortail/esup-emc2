@@ -52,13 +52,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
         <tr class="<?php if ($agent->isAdministratif()) echo " administratif "; ?>">
             <td>
                 <?php if ($canVoirAgent) : ?>
-                    <a
-                        <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                        href="<?php //echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
-                        target="_blank"
-                        title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>" data-bs-toggle="tooltip" data-bs-html="true"
-                    >
-                        <?php echo $agent->getDenomination(); ?></a>
+                        <?php echo $agent->getDenomination(); ?>
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
