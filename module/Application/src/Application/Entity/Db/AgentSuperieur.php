@@ -45,8 +45,10 @@ class AgentSuperieur implements HistoriqueAwareInterface
     {
         $qb = $qb
             //Chaine hierarchique
-            ->leftJoin($entityname .'.superieurs', 'superieur')->addSelect('superieur')
-            ->leftJoin('superieur.superieur', 'asuperieur')->addSelect('asuperieur')
+            ->leftJoin($entityname .'.superieurs', 'superieur')
+//            ->addSelect('superieur')
+            ->leftJoin('superieur.superieur', 'asuperieur')
+//            ->addSelect('asuperieur')
         ;
         if ($histo === false) {
             $qb = $qb->andWhere('superieur.histoDestruction IS NULL');

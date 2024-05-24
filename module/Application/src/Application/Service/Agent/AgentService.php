@@ -142,6 +142,7 @@ class AgentService
     /**
      * @param string|null $id
      * @param bool $enlarge (si mis à TRUE alors pas d'obligation de donnée minimum)
+     * @param bool $enAffectation
      * @return Agent|null
      */
     public function getAgent(?string $id, bool $enlarge = false, bool $enAffectation=true): ?Agent
@@ -285,8 +286,10 @@ EOS;
         if ($date === null) $date = new DateTime();
 
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->select("DISTINCT agent")
             // AFFECTATION FILTER
-            ->addSelect('affectationfilter')->join('agent.affectations', 'affectationfilter')
+//            ->addSelect('affectationfilter')
+            ->join('agent.affectations', 'affectationfilter')
             ->andWhere('affectationfilter.deleted_on IS NULL')
             ->andWhere('affectationfilter.dateFin >= :today OR affectationfilter.dateFin IS NULL')
             ->andWhere('affectationfilter.dateDebut <= :today')
@@ -298,22 +301,32 @@ EOS;
         if ($withJoin) {
             $qb = $qb
             //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
-                ->addSelect('affectation')->join('agent.affectations', 'affectation')
-                ->addSelect('affectation_structure')->join('affectation.structure', 'affectation_structure')
+//                ->addSelect('affectation')
+                ->join('agent.affectations', 'affectation')
+//                ->addSelect('affectation_structure')
+                ->join('affectation.structure', 'affectation_structure')
                 ->andWhere('affectation.deleted_on IS NULL')
                 //STATUS
-            ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
+//            ->addSelect('statut')
+                ->leftjoin('agent.statuts', 'statut')
             ->andWhere('statut.deleted_on IS NULL')
                 //GRADE
-            ->addSelect('grade')->leftjoin('agent.grades', 'grade')
-            ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
-            ->addSelect('gstructure')->leftjoin('grade.structure', 'gstructure')
-            ->addSelect('ggrade')->leftjoin('grade.grade', 'ggrade')
-            ->addSelect('gcorrespondance')->leftjoin('grade.correspondance', 'gcorrespondance')
-            ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
+//            ->addSelect('grade')
+                ->leftjoin('agent.grades', 'grade')
+//            ->addSelect('emploitype')
+                ->leftjoin('grade.emploiType', 'emploitype')
+//            ->addSelect('gstructure')
+                ->leftjoin('grade.structure', 'gstructure')
+//            ->addSelect('ggrade')
+                ->leftjoin('grade.grade', 'ggrade')
+//            ->addSelect('gcorrespondance')
+                ->leftjoin('grade.correspondance', 'gcorrespondance')
+//            ->addSelect('gcorps')
+                ->leftjoin('grade.corps', 'gcorps')
             ->andWhere('grade.deleted_on IS NULL')
                 //FICHE DE POSTE
-            ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
+//            ->addSelect('ficheposte')
+                ->leftJoin('agent.fiches', 'ficheposte')
             ;
         }
 
@@ -324,6 +337,12 @@ EOS;
             $qb = $qb->andWhere('affectationfilter.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
+
+//        $structuresIds = array_map(function (Structure $structure) {return $structure->getId();}, $structures);
+//        var_dump(implode(',', $structuresIds));
+//        $sql = $qb->getQuery()->getSQL();
+//        var_dump($sql);
+//        die();
 
         $result = $qb->getQuery()->getResult();
         return $result;

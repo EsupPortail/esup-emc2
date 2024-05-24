@@ -45,8 +45,10 @@ class AgentAutorite implements HistoriqueAwareInterface
     {
         $qb = $qb
             //Chaine hierarchique
-            ->leftJoin($entityname . '.autorites', 'autorite')->addSelect('autorite')
-            ->leftJoin('autorite.autorite', 'aautorite')->addSelect('aautorite')
+            ->leftJoin($entityname . '.autorites', 'autorite')
+//            ->addSelect('autorite')
+            ->leftJoin('autorite.autorite', 'aautorite')
+//            ->addSelect('aautorite')
         ;
         if ($histo === false) {
             $qb = $qb->andWhere('autorite.histoDestruction IS NULL');

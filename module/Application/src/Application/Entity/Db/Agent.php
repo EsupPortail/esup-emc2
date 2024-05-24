@@ -269,7 +269,7 @@ class Agent implements
     {
         if ($date === null) $date = (new DateTime());
         $statuts = $this->getStatuts($date);
-        if ($structures != null) $statuts = array_filter($statuts, function (AgentStatut $a) use ($structures) { return in_array($a->getStructure(), $structures);});
+        if ($structures !== null) $statuts = array_filter($statuts, function (AgentStatut $a) use ($structures) { return in_array($a->getStructure(), $structures);});
         return $statuts;
     }
 
@@ -291,6 +291,7 @@ class Agent implements
 
         $count = [];
         $affectations = $this->getAffectationsActifs($date, $structures);
+        if (empty($affectations)) return false;
         foreach ($affectations as $affectation) {
             foreach (AgentAffectation::TEMOINS as $temoin) {
                 if ($affectation->getTemoin($temoin)) {
@@ -322,6 +323,8 @@ class Agent implements
 
         $count = [];
         $statuts = $this->getStatutsActifs($date, $structures);
+        if (empty($statuts)) return false;
+
         foreach ($statuts as $statut) {
             foreach (AgentStatut::TEMOINS as $temoin) {
                 if ($statut->getTemoin($temoin)) {
@@ -352,6 +355,7 @@ class Agent implements
 
         $count = [];
         $grades = $this->getEmploiTypesActifs($date, $structures);
+        if (empty($grades)) return false;
         foreach ($grades as $grade) {
             if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
         }
@@ -377,7 +381,8 @@ class Agent implements
         $temoins = $parametre->getTemoins();
 
         $count = [];
-        $grades = $this->getGradesActifs($date, $structures);
+        $grades = $this->getGradesActifs($date);
+        if (empty($grades)) return false;
         foreach ($grades as $grade) {
             if ($grade->getGrade()) $count[$grade->getGrade()->getLibelleCourt()] = true;
         }
@@ -403,7 +408,8 @@ class Agent implements
         $temoins = $parametre->getTemoins();
 
         $count = [];
-        $grades = $this->getGradesActifs($date, $structures);
+        $grades = $this->getGradesActifs($date);
+        if (empty($grades)) return false;
         foreach ($grades as $grade) {
             if ($grade->getCorps()) $count[$grade->getCorps()->getLibelleCourt()] = true;
         }
