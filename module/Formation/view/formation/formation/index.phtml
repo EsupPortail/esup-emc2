@@ -4,6 +4,8 @@
  * @see FormationController::indexAction()
  *
  * @var Formation[] $formations
+ * @var PlanDeFormation[] $plansDeFormation
+ * @var PlanDeFormation $planDeFormation
  * @var array $groupes
  * @var string $groupe
  * @var string $historise
@@ -11,6 +13,7 @@
  */
 
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Privilege\FormationPrivileges;
 
 $canAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
@@ -39,7 +42,7 @@ $this->headTitle("Actions de formation");
     </a>
 <?php endif; ?>
 
-<?php echo $this->partial('partial/filtre', ['groupes' => $groupes, 'groupe' => $groupe, 'historise' => $historise, 'source' => $source], [], true); ?>
+<?php echo $this->partial('partial/filtre', ['plansDeFormation' => $plansDeFormation, 'planDeFormation' => $planDeFormation, 'groupes' => $groupes, 'groupe' => $groupe, 'historise' => $historise, 'source' => $source], [], true); ?>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 

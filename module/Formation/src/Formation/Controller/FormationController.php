@@ -50,8 +50,11 @@ class FormationController extends AbstractActionController
         $groupe_ = ($groupe !== null and $groupe !== "") ? $this->getFormationGroupeService()->getFormationGroupe((int)$groupe) : null;
         $source = $this->params()->fromQuery('source');
         $historise = $this->params()->fromQuery('historise');
+        $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormation($this->params()->fromQuery('planDeFormation'));
 
         $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
+        $formations = array_filter($formations, function (Formation $formation) use ($planDeFormation) { return $formation->hasPlanDeFormation($planDeFormation); });
+
         if ($source !== null and $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) {
             return $a->getSource() === $source;
         });
@@ -63,6 +66,8 @@ class FormationController extends AbstractActionController
 
         return new ViewModel([
             'formations' => $formations,
+            'plansDeFormation' => $this->getPlanDeFormationService()->getPlansDeFormation('libelle'),
+            'planDeFormation' => $planDeFormation,
             'groupes' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
             'groupe' => $groupe,
             'source' => $source,
