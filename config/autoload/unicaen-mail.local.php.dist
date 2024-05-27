@@ -1,0 +1,53 @@
+<?php
+
+use UnicaenMail\Entity\Db\Mail;
+
+return [
+    'unicaen-mail' => [
+        /**
+         * Classe de entité
+         **/
+        'mail_entity_class' => Mail::class,
+
+        /**
+         * Options concernant l'envoi de mail par l'application
+         */
+        'transport_options' => [
+            'host' => 'smtp.XXXX.fr',
+            'port' => 25,
+        ],
+        /**
+         * Adresses des redirections si do_not_send est à true
+         */
+
+        'module' => [
+            'default' => [
+                'redirect_to' => [ 'PPP.NNN@XXX.fr', ],
+                'do_not_send' => false,
+                'redirect' => true,
+                'subject_prefix' => 'EMC2-test',
+                'from_name' => 'EMC2-test | Emploi, Mobilité, Carrière, Compétence',
+                'from_email' => 'assistance-emc2@XXX.fr',
+
+            ],
+            'EntretienProfessionnel' => [
+                'redirect_to' => [ 'PPP.NNN@XXX.fr', ],
+                'do_not_send' => false,
+                'redirect' => true,
+                'subject_prefix' => 'EMC2-test',
+                'from_name' => 'EMC2-test | Emploi, Mobilité, Carrière, Compétence',
+                'from_email' => 'drh.biatss@XXXX.fr',
+            ],
+            'Formation' => [
+                'redirect_to' => [ 'PPP.NNN@XXX.fr', ],
+                'do_not_send' => false,
+                'redirect' => true,
+                'subject_prefix' => 'Mes formations (test)',
+                'from_name' => 'mes-formations.unicaen.fr | Application de gestion des formations du personnel',
+                'from_email' => 'drh.formations@unicaen.fr',
+            ]
+        ]
+    ],
+
+    'server_url' => 'http://emc2.unicaen.fr',
+];
