@@ -365,6 +365,7 @@ $this->headTitle("Vérification de l'installation");
         <div class="card-body">
             <?php
         $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Privilege'), ['.', '..']);
+        $filenames = array_filter($filenames, function (string $a) { return !str_contains('AwareTrait.php', $a) && !str_contains('Interface.php', $a); });
         foreach ($filenames as $filename) {
             $res = explode('.', $filename);
             $path = $module ."\\Provider\\Privilege\\".$res[0];
@@ -413,6 +414,7 @@ $this->headTitle("Vérification de l'installation");
         <div class="card-body">
             <?php
             $filenames = array_diff(scandir($installation_path . '/vendor/unicaen/' . $bibliotheque . '/src/'.$namespace . '/Provider/Privilege'), ['.', '..']);
+            $filenames = array_filter($filenames, function (string $a) { return !str_contains($a,'AwareTrait.php') && !str_contains($a,'Interface.php'); });
             foreach ($filenames as $filename) {
                 $res = explode('.', $filename);
                 $path = $namespace ."\\Provider\\Privilege\\".$res[0];
