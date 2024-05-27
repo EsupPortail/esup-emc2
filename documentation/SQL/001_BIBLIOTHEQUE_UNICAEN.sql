@@ -1166,8 +1166,7 @@ WITH d(code, lib, ordre) AS (
     SELECT 'indicateur_mes_indicateurs', 'Menu - Mes indicateurs - ', 1   UNION
     SELECT 'afficher_indicateur', 'Afficher un indicateur', 1   UNION
     SELECT 'editer_indicateur', 'Éditer un indicateur', 2   UNION
-    SELECT 'detruire_indicateur', 'Effacer un indicateur', 3 UNION
-    SELECT 'indicateur_mes_indicateurs', 'Affichage du menu - Mes Indicateurs -', 100
+    SELECT 'detruire_indicateur', 'Effacer un indicateur', 3
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d

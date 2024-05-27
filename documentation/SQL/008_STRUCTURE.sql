@@ -118,6 +118,33 @@ create table structure_gestionnaire
     histo_destructeur_id  bigint
 );
 
+create table structure_observateur
+(
+    id                    serial
+        constraint structure_observateur_pk
+            primary key,
+    structure_id          integer                 not null
+        constraint structure_observateur_structure_id_fk
+            references structure
+            on delete cascade,
+    utilisateur_id        integer                 not null
+        constraint structure_observateur_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user
+            on delete cascade,
+    description           text,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint structure_observateur_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint structure_observateur_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint structure_observateur_unicaen_utilisateur_user_id_fk_4
+            references unicaen_utilisateur_user
+);
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TABLE - Forcage -----------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -182,9 +209,11 @@ create unique index structure_agent_force_id_uindex on structure_agent_force (id
 -- ROLE ----------------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, parent_id, ldap_filter, accessible_exterieur, description) VALUES
-    ('Responsable de structure', 'Responsable de structure', false, true, null, null, true, null),
-    ('Gestionnaire de structure', 'Gestionnaire de structure', false, true, null, null, true, null);
+INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, accessible_exterieur, description) VALUES
+    ('Responsable de structure', 'Responsable de structure', false, true, true, null),
+    ('Gestionnaire de structure', 'Gestionnaire de structure', false, true, true, null),
+    ('Observateur·trice de la structure', 'Observateur·trice (Structure)', false, true, true, 'Observateur·trice limité·e au périmètre d''une structrure')
+;
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
@@ -196,18 +225,26 @@ INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE) AS (
     SELECT 'AGENT_TEMOIN_STATUT', 'Filtre sur les témoins de statuts associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : cdi, cdd, titulaire, vacataire, enseignant, administratif, chercheur, doctorant, detacheIn, detacheOut, dispo <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 'administratif;!dispo;!doctorant', 100 UNION
     SELECT 'AGENT_TEMOIN_AFFECTATION', 'Filtre sur les témoins d''affectations associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : principale, hierarchique, fonctionnelle <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 'principale', 200 UNION
-    SELECT 'AGENT_TEMOIN_EMPLOITYPE', 'Filtres associés aux emploi-types', null, 'String', null, 300
+    SELECT 'AGENT_TEMOIN_EMPLOITYPE', 'Filtres associés aux emploi-types', null, 'String', null, 300 UNION
+    SELECT 'AGENT_TEMOIN_GRADE', 'Filtres associés aux grades', 'Filtrage basé sur les libellés courts (p.e. "IGE CN")', 'String', null, 400 UNION
+    SELECT 'AGENT_TEMOIN_CORPS', 'Filtres associés aux corps', 'Filtrage basé sur les libellés courts (p.e. "ASI RF")', 'String', null, 500 UNION
+    SELECT 'BLOC_OBSERVATEUR', 'Affichage du bloc - Observateur·trices -', null, 'Boolean', null, 10 UNION
+    SELECT 'BLOC_GESTIONNAIRE', 'Affichage du bloc - Gestionnaires -', null, 'Boolean', null, 11
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.VALEUR, d.ORDRE
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'STRUCTURE';
+
+-- VALEUR RECOMMANDEE
+update unicaen_parametre_parametre set valeur='false' where code='BLOC_OBSERVATEUR';
+update unicaen_parametre_parametre set valeur='false' where code='BLOC_GESTIONNAIRE';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGES ----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
-VALUES ('structure', 'Gestion des structures', 'Structure\Provider\Privilege', 200);
+VALUES ('structure', 'Gestion des structures', 'Structure\Provider\Privilege', 100);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'structure_index', 'Accéder à l''index des structures', 0 UNION
@@ -220,6 +257,23 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'structure';
+
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
+VALUES ('structureobservateur', 'Gestion des observateur·trice de structure', 'Structure\Provider\Privilege', 200);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'structureobservateur_index', 'Accéder à l''index', 10 UNION
+    SELECT 'structureobservateur_afficher', 'Afficher', 20 UNION
+    SELECT 'structureobservateur_ajouter', 'Ajouter', 30 UNION
+    SELECT 'structureobservateur_modifier', 'Modifier', 40 UNION
+    SELECT 'structureobservateur_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'structureobservateur_supprimer', 'Supprimer', 60 UNION
+    SELECT 'structureobservateur_indexobservateur', 'Index - Les structures dont vous êtes observateur·trice - ', 100
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'structureobservateur';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- MACROS ASSOCIEES ----------------------------------------------------------------------------------------------------

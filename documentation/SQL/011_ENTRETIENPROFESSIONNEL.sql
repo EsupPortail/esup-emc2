@@ -33,6 +33,7 @@ create table entretienprofessionnel_campagne
     date_debut            timestamp    not null,
     date_fin              timestamp    not null,
     date_circulaire       timestamp,
+    date_en_poste         date         not null,
     histo_creation        timestamp    not null,
     histo_createur_id     integer      not null
         constraint entretienprofessionnel_campagne_user_id_fk
@@ -96,6 +97,34 @@ create table if not exists entretienprofessionnel_observation
             on delete cascade,
     constraint epo_pk
         primary key (entretien_id, observation_id)
+);
+
+create table entretienprofessionnel_observateur
+(
+    id                    serial                  not null
+        constraint entretienprofessionnel_observateur_pk
+            primary key,
+    entretien_id          integer                 not null
+        constraint entretienprofessionnel_observateur_entretienprofessionnel_id_fk
+            references entretienprofessionnel
+            on delete cascade,
+    user_id               integer                 not null
+        constraint epo_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user
+            on delete cascade,
+    description           text,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint epo_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint epo_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint epo_unicaen_utilisateur_user_id_fk_4
+            references unicaen_utilisateur_user
 );
 
 create table entretienprofessionnel_validation
@@ -306,11 +335,16 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'TEMOIN_EMPLOITYPE', 'Filtrage sur les codes des emploi-types', null, 'String', 2000 UNION
     SELECT 'CAMPAGNE_BLOCAGE_STRICT_MODIFICATION', 'Blocage strict de la modification des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la modification des entretiens professionnels (comptes-rendus) doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 1 UNION
     SELECT 'CAMPAGNE_BLOCAGE_STRICT_VALIDATION', 'Blocage strict de la validation des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la validation des entretiens professionnels doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 2 UNION
-    SELECT 'OBSERVATION_AGENT_FINAL', 'Activation de l''observation finale par l''agent', '<p>Pour désactiver cette observation basculer la valeur à false</p>', 'Boolean', 3000
+    SELECT 'OBSERVATION_AGENT_FINAL', 'Activation de l''observation finale par l''agent', '<p>Pour désactiver cette observation basculer la valeur à false</p>', 'Boolean', 3000 UNION
+    SELECT 'TEMOIN_GRADE', 'Filtres associés aux grades', 'Filtrage basé sur les libellés courts (p.e. "IGE CN")', 'String', 500 UNION
+    SELECT 'TEMOIN_CORPS', 'Filtres associés aux corps', 'Filtrage basé sur les libellés courts (p.e. "ASI RF")', 'String', 400
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'ENTRETIEN_PROFESSIONNEL';
+
+-- VALEUR RECOMMANDEE
+update unicaen_parametre_parametre set valeur=8 where code='DELAI_CONVOCATION_AGENT';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- OBSERVATION ---------------------------------------------------------------------------------------------------------
@@ -1028,6 +1062,10 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <p> </p>
 <p>Cordialement,<br />EMC2</p>
 <p> </p>', null, 'EntretienProfessionnel\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
+VALUES ('STAGE_HORS_PLAN', '<p>Bloc de texte afficher en haut de la page de demande des stages hors du plan de formation</p>', 'texte', 'Stage hors plan', '<p><strong>La demande d''inscription ne vaut pas acceptation.</strong> Votre inscription est soumise à validation et en fonction des places disponibles.</p>', null, 'Formation\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
+VALUES ('PLANS_DE_FORMATION', '<p>Bandeau en haut de la page Plans de formation</p>', 'texte', 'Plans de formation', '<p>En vous abonnant aux notifications, vous recevrez un mail une fois la session ouverte et vous pourrez vous inscrire.</p>', null, 'Formation\Provider\Template');
 
 ------------------------------------------------------------------------------------------------------------------------
 -- FORMULAIRE DE L'ENTRETIEN PROFESSIONNEL -----------------------------------------------------------------------------
@@ -1285,13 +1323,31 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'recours';
 
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('observateur', 'Gestion des observateur·trices', 3000, 'EntretienProfessionnel\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'observateur_index',             'Accéder à l''index',                       10 UNION
+    SELECT 'observateur_index_observateur', 'Index des observateurs',                   11 UNION
+    SELECT 'observateur_afficher',      'Afficher',                                     20 UNION
+    SELECT 'observateur_ajouter',       'Ajouter',                                      30 UNION
+    SELECT 'observateur_modifier',      'Modifier',                                     40 UNION
+    SELECT 'observateur_historiser',    'Historiser/restaurer',                         50 UNION
+    SELECT 'observateur_supprimer',     'Supprimer',                                    60 UNION
+    SELECT 'observateur_rechercher',     'Rechercher',                                  100
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'observateur';
+
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- ROLE ----------------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur, description) VALUES
-    ('Gestionnaire des entretiens professionnels', 'Gestionnaire des entretiens professionnels', false, null, null, false, true, null)
+INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, is_auto, accessible_exterieur, description) VALUES
+    ('Gestionnaire des entretiens professionnels', 'Gestionnaire des entretiens professionnels', false, false, true, null),
+    ('Observateur·trice (Entretien Professionnel)', 'Observateur·trice (Entretien Professionnel)', false, true, true, 'Rôle permettant de visualiser des entretiens professionnels pour lesquels on a été nommé·e observateur·trice')
 ;
 
 -- DECALAGE SEQUENCES

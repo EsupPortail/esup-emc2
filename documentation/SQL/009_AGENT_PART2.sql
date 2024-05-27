@@ -402,7 +402,6 @@ create unique index agent_missionspecifique_id_uindex on agent_missionspecifique
 -- I::::::::IN::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
 -- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
 
-
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE ------------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -533,3 +532,32 @@ INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto) VAL
     ('Supérieur·e hiérarchique direct·e', 'Supérieur·e hiérarchique direct·e', false, true),
     ('Autorité hiérarchique', 'Autorité hiérarchique', false, true)
 ;
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PARAMETRE -----------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+
+INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
+VALUES ('AGENT', 'Paramètres liés à la partie Agent', 100, null);
+INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE)
+WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
+    SELECT 'ONGLET_INFORMATIONS', 'Affichage de la partie - Informations générales - ', null, 'Boolean', 10 UNION
+    SELECT 'ONGLET_FICHES', 'Affichage de la partie - Fiches de poste et missions spécifiques -', null, 'Boolean', 20 UNION
+    SELECT 'ONGLET_MOBILITES', 'Affichage de la partie - Déclaration de mobilités -', null, 'Boolean', 30 UNION
+    SELECT 'ONGLET_ACQUIS', 'Affichage de la partie - Acquis de l''agent -', null, 'Boolean', 40 UNION
+    SELECT 'ONGLET_PORTFOLIO', 'Affichage de la partie - Portfolio -', null, 'Boolean', 50 UNION
+    SELECT 'ONGLET_CCC', 'Affichage de la partie - Gestion CCC -', null, 'Boolean', 60
+)
+SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
+FROM d
+JOIN unicaen_parametre_categorie cp ON cp.CODE = 'AGENT';
+
+
+-- VALEUR RECOMMANDEE
+update unicaen_parametre_parametre set valeur='true' where code='ONGLET_INFORMATIONS';
+update unicaen_parametre_parametre set valeur='true' where code='ONGLET_FICHES';
+update unicaen_parametre_parametre set valeur='true' where code='ONGLET_MOBILITES';
+update unicaen_parametre_parametre set valeur='true' where code='ONGLET_ACQUIS';
+update unicaen_parametre_parametre set valeur='false' where code='ONGLET_PORTFOLIO';
+update unicaen_parametre_parametre set valeur='false' where code='ONGLET_CCC';

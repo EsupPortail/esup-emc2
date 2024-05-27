@@ -893,10 +893,11 @@ INSERT INTO formation_action_type (code, libelle, description) VALUES
 -- ROLE ----------------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur, description) VALUES
-    ('Formateur·trice', 'Formateur·trice', false, null, null, false, true, null),
-    ('Gestionnaire de formation', 'Gestionnaire de formation', false, null, null, false, true, null),
-    ('Stagiaire externe', 'Stagiaire externe', false, null, null, true, true, 'Stagiaire qui n''est pas un·e agent·e connu·e ')
+INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, is_auto, accessible_exterieur, description) VALUES
+    ('Formateur·trice', 'Formateur·trice', false, false, true, null),
+    ('Gestionnaire de formation', 'Gestionnaire de formation', false, false, true, null),
+    ('Responsable de formation', 'Responsable de formation', false, false, true, 'Rôle attribué aux personnes en charge du bureau des formations.'),
+    ('Stagiaire externe', 'Stagiaire externe', false, true, true, 'Stagiaire qui n''est pas un·e agent·e connu·e ')
 ;
 
 -- ---------------------------------------------------------------------------------------------------------------------
