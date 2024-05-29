@@ -285,13 +285,13 @@ class Agent implements
     /** Prédicats avec temoins ****************************************************************************************/
     // TODO factoriser le comptage ...
 
-    public function isValideAffectation(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    public function isValideAffectation(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
     {
         $temoins = $parametre->getTemoins();
 
         $count = [];
         $affectations = $this->getAffectationsActifs($date, $structures);
-        if (empty($affectations)) return false;
+        if (empty($affectations)) return $emptyResult;
         foreach ($affectations as $affectation) {
             foreach (AgentAffectation::TEMOINS as $temoin) {
                 if ($affectation->getTemoin($temoin)) {
@@ -316,14 +316,14 @@ class Agent implements
         return $keep;
     }
 
-    public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
     {
         if ($parametre === null) return true;
         $temoins = $parametre->getTemoins();
 
         $count = [];
         $statuts = $this->getStatutsActifs($date, $structures);
-        if (empty($statuts)) return false;
+        if (empty($statuts)) return $emptyResult;
 
         foreach ($statuts as $statut) {
             foreach (AgentStatut::TEMOINS as $temoin) {
@@ -349,13 +349,13 @@ class Agent implements
         return $keep;
     }
 
-    public function isValideEmploiType(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    public function isValideEmploiType(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
     {
         $temoins = $parametre->getTemoins();
 
         $count = [];
         $grades = $this->getEmploiTypesActifs($date, $structures);
-        if (empty($grades)) return false;
+        if (empty($grades)) return $emptyResult;
         foreach ($grades as $grade) {
             if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
         }
@@ -376,13 +376,13 @@ class Agent implements
         return $keep;
     }
 
-    public function isValideGrade(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    public function isValideGrade(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
     {
         $temoins = $parametre->getTemoins();
 
         $count = [];
         $grades = $this->getGradesActifs($date);
-        if (empty($grades)) return false;
+        if (empty($grades)) return $emptyResult;
         foreach ($grades as $grade) {
             if ($grade->getGrade()) $count[$grade->getGrade()->getLibelleCourt()] = true;
         }
@@ -403,13 +403,13 @@ class Agent implements
         return $keep;
     }
 
-    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
     {
         $temoins = $parametre->getTemoins();
 
         $count = [];
         $grades = $this->getGradesActifs($date);
-        if (empty($grades)) return false;
+        if (empty($grades)) return $emptyResult;
         foreach ($grades as $grade) {
             if ($grade->getCorps()) $count[$grade->getCorps()->getLibelleCourt()] = true;
         }

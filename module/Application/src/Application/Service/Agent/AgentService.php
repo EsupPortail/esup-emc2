@@ -653,13 +653,13 @@ EOS;
      * @param Structure[]|null $structures
      * @return Agent[]
      */
-    public function filtrerWithStatutTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): array
+    public function filtrerWithStatutTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
-            return $a->isValideStatut($parametre, $date, $structures);
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
+            return $a->isValideStatut($parametre, $date, $structures, $emptyResult);
         });
         return $agents;
     }
@@ -669,13 +669,13 @@ EOS;
      * @param Structure[]|null $structures
      * @return Agent[]
      */
-    public function filtrerWithAffectationTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): array
+    public function filtrerWithAffectationTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
-            return $a->isValideAffectation($parametre, $date, $structures);
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
+            return $a->isValideAffectation($parametre, $date, $structures, $emptyResult);
         });
         return $agents;
     }
@@ -685,13 +685,13 @@ EOS;
      * @param Structure[]|null $structures
      * @return Agent[]
      */
-    public function filtrerWithEmploiTypeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): array
+    public function filtrerWithEmploiTypeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
-            return $a->isValideEmploiType($parametre, $date, $structures);
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
+            return $a->isValideEmploiType($parametre, $date, $structures, $emptyResult);
         });
         return $agents;
     }
@@ -701,13 +701,13 @@ EOS;
      * @param Structure[]|null $structures
      * @return Agent[]
      */
-    public function filtrerWithGradeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): array
+    public function filtrerWithGradeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
-            return $a->isValideGrade($parametre, $date, $structures);
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
+            return $a->isValideGrade($parametre, $date, $structures, $emptyResult);
         });
         return $agents;
     }
@@ -717,13 +717,13 @@ EOS;
      * @param Structure[]|null $structures
      * @return Agent[]
      */
-    public function filtrerWithCorpsTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): array
+    public function filtrerWithCorpsTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
-            return $a->isValideCorps($parametre, $date, $structures);
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
+            return $a->isValideCorps($parametre, $date, $structures, $emptyResult);
         });
         return $agents;
     }
