@@ -162,7 +162,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 switch ($role->getRoleId()) {
                     case Agent::ROLE_AGENT :
                         $etatOk = $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
-                        $dateOk = $now > $entretien->getDateEntretien();
+                        $dateOk = $now < $entretien->getDateEntretien();
                         $scope = $this->isScopeCompatible($entretien, $agent, $role, $predicats);
                         $blocage = ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien));
                         return $etatOk && $dateOk && $scope && !$blocage;
