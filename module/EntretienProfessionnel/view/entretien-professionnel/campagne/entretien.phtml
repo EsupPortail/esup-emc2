@@ -74,7 +74,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
 
 <?php if (!empty($obligatoires)) : ?>
     <h2>
-        Agents sans entretien professionnel pour la campagne
+        Agents en attente d'entretien professionnel
         <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>
     <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien']); ?>

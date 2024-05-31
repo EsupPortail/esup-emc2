@@ -9,9 +9,17 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class AgentForceSansObligation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+    const FORCE_SANS_OBLIGATION = 'FORCE_SANS_OBLIGATION';
+    const FORCE_AVEC_OBLIGATION = 'FORCE_AVEC_OBLIGATION';
+    const FORCAGE_ARRAY = [
+        self::FORCE_SANS_OBLIGATION => "Forcé sans obligation d'entretien professionnel",
+        self::FORCE_AVEC_OBLIGATION => "Forcé l'obligation d'entretien professionnel",
+    ];
+
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?Campagne $campagne = null;
+    private ?string $type = null;
     private ?string $raison = null;
 
     public function getId(): ?int
@@ -37,6 +45,16 @@ class AgentForceSansObligation implements HistoriqueAwareInterface {
     public function setCampagne(?Campagne $campagne): void
     {
         $this->campagne = $campagne;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): void
+    {
+        $this->type = $type;
     }
 
     public function getRaison(): ?string

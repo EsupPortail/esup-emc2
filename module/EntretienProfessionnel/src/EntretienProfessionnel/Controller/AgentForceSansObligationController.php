@@ -32,6 +32,8 @@ class AgentForceSansObligationController extends AbstractActionController
             $agent = $this->getAgentService()->getAgent($agentArray);
         }
         if ($agent) $agentsForcesSansObligation = array_filter($agentsForcesSansObligation, function (AgentForceSansObligation $a) use ($agent) { return $a->getAgent() === $agent;});
+        $forcage = $this->params()->fromQuery('forcage');
+        if ($forcage) $agentsForcesSansObligation = array_filter($agentsForcesSansObligation, function (AgentForceSansObligation $a) use ($forcage) { return $a->getType() === $forcage;});
 
         return new ViewModel([
             'agentsForcesSansObligation' => $agentsForcesSansObligation,
@@ -39,6 +41,7 @@ class AgentForceSansObligationController extends AbstractActionController
 
             'agent' => $agent,
             'campagne' => $campagne,
+            'forcage' => $forcage,
         ]);
     }
 

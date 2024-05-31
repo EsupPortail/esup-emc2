@@ -327,6 +327,11 @@ class CampagneService
                 $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
 
             }
+            if ($agent->isForceAvecObligation($campagne)) {
+                $raison[$agent->getId()] .= "<li>Forcé·e avec obligation</li>";
+                $kept = true;
+            }
+
             if ($kept) $obligatoires[$agent->getId()] = $agent; else $facultatifs[$agent->getId()] = $agent;
             $raison[$agent->getId()] .= "</ul>";
         }

@@ -19,6 +19,7 @@ class AgentForceSansObligationHydrator implements HydratorInterface {
         $data = [
             'agentsearch'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
             'campagne'  => ($object->getCampagne())?$object->getCampagne()->getId():null,
+            'type'      => $object->getType(),
             'raison'    => $object->getRaison(),
         ];
         return $data;
@@ -28,11 +29,13 @@ class AgentForceSansObligationHydrator implements HydratorInterface {
     {
         $agent      = (isset($data['agentsearch']['id']))?$this->getAgentService()->getAgent($data['agentsearch']['id']):null;
         $campagne   = (isset($data['campagne']))?$this->getCampagneService()->getCampagne($data['campagne']):null;
+        $type       = (isset($data['type']) && trim($data['type']) !== '')?trim($data['type']):null;
         $raison     = (isset($data['raison']) && trim($data['raison']) !== '')?trim($data['raison']):null;
 
         /** @var AgentForceSansObligation $object */
         $object->setAgent($agent);
         $object->setCampagne($campagne);
+        $object->setType($type);
         $object->setRaison($raison);
         return $object;
     }

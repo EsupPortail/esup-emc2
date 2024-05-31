@@ -12,6 +12,7 @@ use EntretienProfessionnel\Provider\Privilege\AgentforcesansobligationPrivileges
  *
  * @var ?Campagne $campagne
  * @var ?Agent $agent
+ * @var ?string $forcage
  */
 
 $this->headTitle("Agent·es forcé·es sans obligation d'entretien professionnel");
@@ -28,7 +29,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
     Agent·es forcé·es sans obligation d'entretien professionnel
 </h1>
 
-<?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'campagne' => $campagne, 'agent' => $agent]); ?>
+<?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'campagne' => $campagne, 'agent' => $agent, 'forcage' => $forcage]); ?>
 
 <?php if ($canAjouter) : ?>
     <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::ajouterAction() */ ?>
@@ -47,6 +48,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
         <tr>
             <th> Agent·e </th>
             <th> Campagne </th>
+            <th> Type </th>
             <th> Est justifiée </th>
             <th class="action"> Action </th>
         </tr>
@@ -64,6 +66,9 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
             </td>
             <td data-order="<?php echo $campagne->getAnnee(); ?>">
                 <?php echo $campagne->getAnnee(); ?>
+            </td>
+            <td>
+                <?php echo AgentForceSansObligation::FORCAGE_ARRAY[$agentForceSansObligation->getType()]; ?>
             </td>
             <td>
                 <?php if ($agentForceSansObligation->getRaison()): ?>

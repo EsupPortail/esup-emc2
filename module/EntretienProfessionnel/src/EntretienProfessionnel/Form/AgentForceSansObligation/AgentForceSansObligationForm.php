@@ -2,8 +2,10 @@
 
 namespace EntretienProfessionnel\Form\AgentForceSansObligation;
 
+use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
@@ -47,6 +49,18 @@ class AgentForceSansObligationForm extends Form
             ],
             'attributes' => [
                 'id' => 'campagne',
+            ],
+        ]);
+        $this->add([
+            'type' => Radio::class,
+            'name' => 'type',
+            'options' => [
+                'label' => "Type de forçage  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => ['disable_html_escape' => true,],
+                'value_options' => AgentForceSansObligation::FORCAGE_ARRAY,
+            ],
+            'attributes' => [
+                'id' => 'type',
             ],
         ]);
         //raison

@@ -485,7 +485,16 @@ class Agent implements
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_SANS_OBLIGATION) return true;
+        }
+        return false;
+    }
+
+    public function isForceAvecObligation(Campagne $campagne): bool
+    {
+        /** @var AgentForceSansObligation $forcage */
+        foreach ($this->forcesSansObligation as $forcage) {
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_AVEC_OBLIGATION) return true;
         }
         return false;
     }

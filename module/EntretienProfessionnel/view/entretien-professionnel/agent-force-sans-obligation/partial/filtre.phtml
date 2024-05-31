@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use UnicaenApp\Form\Element\SearchAndSelect;
 
@@ -8,6 +9,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
  * @var Campagne[] $campagnes
  * @var ?Campagne $campagne
  * @var ?Agent $agent
+ * @var ?string $forcage
  */
 
 ?>
@@ -15,13 +17,13 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 <div class="card card-default">
     <div class="card-header">
         <span class="icon icon-filtrer"></span>
-        Filtre des forçages
+        Filtre de recherche des forçages
     </div>
     <div class="card-body">
 
         <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
             <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="campagne">Campagne d'entretien professionnel: </label><br>
                 <select id="campagne" name="campagne" class="selectpicker" data-live-search="true">
                     <option value=""> Toutes les campagnes </option>
@@ -39,7 +41,18 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-md-4">
+                <div class="col-md-3">
+                    <label for="forcage"> Type de forçage : </label>
+                    <select id="forcage" name="forcage" class="selectpicker">
+                        <option value=""> Peu importe </option>
+                        <?php foreach (AgentForceSansObligation::FORCAGE_ARRAY as $id => $libelle): ?>
+                            <option value="<?php echo $id; ?>"
+                                <?php if (isset($forcage) AND $forcage === $id) echo " selected "; ?>
+                            > <?php echo $libelle; ?> </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <div class="col-md-3">
                 <label for="activite"> Agent : </label>
                 <?php
                 /** @see  \Application\Controller\AgentController::rechercherAction() */
@@ -55,7 +68,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                 <?php echo $this->formControlGroup($agentF); ?>
             </div>
             <!-- BOUTON -->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="pull-right">
                     <button class="btn btn-primary action" id="clear">
                         <span class="icon icon-gommer"></span>
@@ -90,8 +103,10 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
         let campagneId = $('select#campagne option:selected').val();
         let agentId = $('input[name="agent[id]"]').val();
+        let forcageId = $('select#forcage option:selected').val();
 
         let query = "";
+        query += "&forcage=" + forcageId;
         query += "&campagne=" + campagneId;
         query += "&agent=" + agentId;
         window.location.href = '?'+ query;
