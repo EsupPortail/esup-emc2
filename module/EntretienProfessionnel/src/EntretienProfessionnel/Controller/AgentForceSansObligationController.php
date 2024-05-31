@@ -57,7 +57,7 @@ class AgentForceSansObligationController extends AbstractActionController
     {
         $agentForceSansObligation = new AgentForceSansObligation();
         $form = $this->getAgentForceSansObligationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/agent-force-sans-obligation/ajouter', [], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/agent-avec-forcage/ajouter', [], [], true));
         $form->bind($agentForceSansObligation);
 
         $request = $this->getRequest();
@@ -82,7 +82,7 @@ class AgentForceSansObligationController extends AbstractActionController
     {
         $agentForceSansObligation = $this->getAgentForceSansObligationService()->getRequestedAgentForceSansObligation($this);
         $form = $this->getAgentForceSansObligationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/agent-force-sans-obligation/modifier', ['agent-force-sans-obligation' => $agentForceSansObligation->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/agent-avec-forcage/modifier', ['agent-force-sans-obligation' => $agentForceSansObligation->getId()], [], true));
         $form->bind($agentForceSansObligation);
 
         $request = $this->getRequest();
@@ -110,7 +110,7 @@ class AgentForceSansObligationController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('entretien-professionnel/agent-force-sans-obligation', [], [], true);
+        return $this->redirect()->toRoute('entretien-professionnel/agent-avec-forcage', [], [], true);
     }
 
     public function restaurerAction(): Response
@@ -120,7 +120,7 @@ class AgentForceSansObligationController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('entretien-professionnel/agent-force-sans-obligation', [], [], true);
+        return $this->redirect()->toRoute('entretien-professionnel/agent-avec-forcage', [], [], true);
     }
 
     public function supprimerAction(): ViewModel
@@ -141,7 +141,7 @@ class AgentForceSansObligationController extends AbstractActionController
             $vm->setVariables([
                 'title' => "Suppression du forçage pour [" . $agentForceSansObligation->getAgent()->getDenomination() . "] et la campagne [" . $agentForceSansObligation->getCampagne()->getAnnee() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('entretien-professionnel/agent-force-sans-obligation/supprimer', ["agent-force-sans-obligation" => $agentForceSansObligation->getId()], [], true),
+                'action' => $this->url()->fromRoute('entretien-professionnel/agent-avec-forcage/supprimer', ["agent-force-sans-obligation" => $agentForceSansObligation->getId()], [], true),
             ]);
         }
         return $vm;
