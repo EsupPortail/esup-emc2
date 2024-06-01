@@ -443,13 +443,16 @@ class Agent implements
     }
 
 
-    public function getDenomination(bool $prenomFirst = false) : ?string
+    public function getDenomination(bool $prenomFirst = false, bool $nomCap = true, bool $nomBold = true) : ?string
     {
         $prenom = $this->getPrenom();
         $prenom = str_replace("É", "é", $prenom);
         $prenom = str_replace("È", "è", $prenom);
-        if ($prenomFirst) return  ucwords(strtolower($prenom), "- ") . ' ' . (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>') ;
-        return  (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>') . ' ' . ucwords(strtolower($prenom), "- ");
+        $nom = (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>');
+        if ($nomCap) $nom = strtoupper($nom);
+        if ($nomBold) $nom = "<strong>".$nom."</strong>";
+        if ($prenomFirst) return  ucwords(strtolower($prenom), "- ") . ' ' . $nom ;
+        return  $nom . ' ' . ucwords(strtolower($prenom), "- ");
 
     }
 

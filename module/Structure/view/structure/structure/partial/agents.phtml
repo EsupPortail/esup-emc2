@@ -7,6 +7,7 @@
  *
  * @var Agent[] $superieurs
  * @var Agent[] $autorites
+ * @var string[] $raison
  */
 
 use Application\Entity\Db\Agent;
@@ -55,6 +56,10 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                         <?php echo $agent->getDenomination(); ?>
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
+                <?php endif; ?>
+                <?php if (isset($raison[$agent->getId()]) AND $raison[$agent->getId()] !== "<ul></ul>") : ?>
+                    <span class="icon icon-information" title="<?php echo $raison[$agent->getId()]; ?>"
+                        data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php endif; ?>
             </td>
             <td>

@@ -142,8 +142,6 @@ class IndexController extends AbstractActionController
         $agents = array_map(function (AgentSuperieur $a) {
             return $a->getAgent();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
         usort($agents, function (Agent $a, Agent $b) {
             return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
         });
@@ -200,8 +198,6 @@ class IndexController extends AbstractActionController
         $agents = array_map(function (AgentAutorite $a) {
             return $a->getAgent();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
 
         usort($agents, function (Agent $a, Agent $b) {
             return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();

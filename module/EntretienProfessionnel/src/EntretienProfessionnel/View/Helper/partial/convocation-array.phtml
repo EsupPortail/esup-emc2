@@ -36,7 +36,7 @@ $raison = (isset($options['raison']))?$options['raison']:[];
     <tbody>
     <?php foreach ($agents as $agent) : ?>
         <tr>
-            <td data-order="<?php echo $agent->getDenomination(); ?>"> <?php echo $agent->getDenomination(true); ?>
+            <td data-order="<?php echo $agent->getDenomination(); ?>"> <?php echo $agent->getDenomination(); ?>
                 <?php if (isset($raison[$agent->getId()]) AND trim($raison[$agent->getId()]) !== '<ul></ul>') : ?>
                     <span class="icon icon-information" data-bs-toggle="tooltip" data-bs-html="true"
                           <?php if (isset($raison[$agent->getId()])) : ?>

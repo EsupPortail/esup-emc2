@@ -10,6 +10,8 @@ use Structure\Provider\Privilege\StructurePrivileges;
  *
  * @var Structure $structure
  * @var Agent[] $agents
+ * @var Agent[] $agentsRetires
+ * @var string[] $raison
  * @var Agent[] $agentsForces
  * @var Agent[] $superieurs
  * @var Agent[] $autorites
@@ -43,7 +45,14 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
     <span class="badge"><?php echo count($agents); ?></span>
 </h2>
 
-<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agent'], 'structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites]); ?>
+<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agent'], 'structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites, 'raison' => $raison]); ?>
+
+<h2>
+Agents masqués
+    <span class="badge"><?php echo count($agentsRetires); ?></span>
+</h2>
+
+<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agents-retires'], 'structure' => $structure, 'agents' => $agentsRetires, 'superieurs' => $superieurs, 'autorites' => $autorites, 'raison' => $raison]); ?>
 
 <h2>
     Agents manuellement ajoutés
