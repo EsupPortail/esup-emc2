@@ -325,7 +325,20 @@ class CampagneService
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
-
+            }
+            if (!$agent->isValideGrade(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_GRADE),
+                $campagne->getDateEnPoste()))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans grade valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
+            }
+            if (!$agent->isValideCorps(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS),
+                $campagne->getDateEnPoste()))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans corps valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
             }
             if ($agent->isForceAvecObligation($campagne)) {
                 $raison[$agent->getId()] .= "<li>Forcé·e avec obligation</li>";

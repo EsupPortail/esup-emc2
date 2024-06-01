@@ -28,8 +28,10 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -47,6 +49,7 @@ class CampagneController extends AbstractActionController {
     use RappelCampagneAvancementAutoriteServiceAwareTrait;
     use RappelCampagneAvancementSuperieurServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use StructureAgentForceServiceAwareTrait;
     use UserServiceAwareTrait;
     
     use CampagneFormAwareTrait;
@@ -375,11 +378,11 @@ class CampagneController extends AbstractActionController {
 
         // récupération des agents selon les critères de la structure
         $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(),true);
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut(), [$structureMere]);
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
-        $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE), $campagne->getDateDebut());
-        $agents = $this->getAgentService()->filtrerWithCorpsTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS), $campagne->getDateDebut());
-        $agents = $this->getAgentService()->filtrerWithGradeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE), $campagne->getDateDebut());
+        $agentsForces = array_map(function(StructureAgentForce $agentForce) { return $agentForce->getAgent(); }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
+        foreach ($agentsForces as $agentForce) {
+            if (!in_array($agentForce, $agents)) { $agents[] = $agentForce; }
+        }
+
 
         [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents);
 

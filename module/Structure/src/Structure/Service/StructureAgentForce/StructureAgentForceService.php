@@ -156,4 +156,19 @@ class StructureAgentForceService {
         }
         return $result;
     }
+
+    /**
+     * @param Structure[] $structures
+     * @return StructureAgentForce[]
+     */
+    public function getStructureAgentsForcesByStructures(array $structures): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('force.structure in (:structures)')->setParameter('structures', $structures)
+            ->andWhere('force.histoDestruction IS NULL')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }
