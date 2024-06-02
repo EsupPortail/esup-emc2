@@ -12,4 +12,5 @@ class StructurePrivileges extends Privileges
     const STRUCTURE_GESTIONNAIRE        = 'structure-structure_gestionnaire'; //sert pour les délégués
     const STRUCTURE_COMPLEMENT_AGENT    = 'structure-structure_complement_agent';
     const STRUCTURE_AGENT_FORCE         = 'structure-structure_agent_force';
+    const STRUCTURE_AGENT_MASQUE        = 'structure-structure_agent_masque';
 }

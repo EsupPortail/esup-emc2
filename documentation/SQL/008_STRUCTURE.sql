@@ -252,7 +252,8 @@ WITH d(code, lib, ordre) AS (
     SELECT 'structure_description', 'Édition de la description', 20 UNION
     SELECT 'structure_gestionnaire', 'Gérer les gestionnaire', 30 UNION
     SELECT 'structure_complement_agent', 'Ajouter des compléments à propos des agents', 40 UNION
-    SELECT 'structure_agent_force', 'Ajouter/Retirer des agents manuellements', 50
+    SELECT 'structure_agent_force', 'Ajouter/Retirer des agents manuellements', 50 UNION
+    SELECT 'structure_agent_masque', 'Afficher/Masquer les agents exclus de la structure', 60
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
