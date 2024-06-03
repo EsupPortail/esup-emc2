@@ -286,6 +286,13 @@ class CampagneService
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
 
+            if (!$agent->isValideCorps(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS),
+                $campagne->getDateEnPoste()))
+            {
+                continue;
+            }
+
             $structureMere = $this->getStructureService()->getStructureMere();
 
             $kept = true;
