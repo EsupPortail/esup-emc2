@@ -498,7 +498,7 @@ EOS;
             $extra = ($structure) ? $structure->getLibelleCourt() : "Affectation inconnue";
             $result[] = array(
                 'id' => $agent->getId(),
-                'label' => $agent->getDenomination(),
+                'label' => $agent->getDenomination(false, true, true),
                 'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
             );
         }
