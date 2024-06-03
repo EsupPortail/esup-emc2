@@ -443,7 +443,7 @@ class Agent implements
     }
 
 
-    public function getDenomination(bool $prenomFirst = false, bool $nomCap = true, bool $nomBold = true) : ?string
+    public function getDenomination(bool $prenomFirst = false, bool $nomCap = true, bool $nomBold = false) : ?string
     {
         $prenom = $this->getPrenom();
         $prenom = str_replace("É", "é", $prenom);
