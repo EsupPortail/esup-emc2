@@ -236,6 +236,26 @@ class FichePosteService {
         return $result;
     }
 
+    public function getFichePosteEnRedactionByAgent(Agent $agent, ?DateTime $date = null) : ?FichePoste
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fiche.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('fiche.histoCreation <= :date')
+            ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
+            ->setParameter('date', $date)
+        ;
+        $qb = FichePoste::decorateWithEtatsCodes($qb, 'fiche', [FichePosteEtats::ETAT_CODE_REDACTION]);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch(NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs fiches de poste en rédaction de remontées pour l'agent [".$agent->getDenomination()."] en date du [".$date->format('d/m/Y')."]. Veuillez retirer les fiches excédentaires.",0,$e);
+        }
+        return $result;
+    }
+
     public function getFichePosteActiveByAgent(Agent $agent) : ?FichePoste
     {
         return $this->getFichePosteByAgent($agent);
