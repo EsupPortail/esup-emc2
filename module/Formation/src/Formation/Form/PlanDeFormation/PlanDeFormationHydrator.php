@@ -24,8 +24,8 @@ class PlanDeFormationHydrator implements HydratorInterface {
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== "")?trim($data['libelle']):null;
         $description = (isset($data['description']) AND trim($data['description']) !== "")?trim($data['description']):null;
-        $dateDebut = (isset($data['date_debut']))?DateTime::createFromFormat('Y-m-d H:i', $data['date_debut']." 08:00"):null;
-        $dateFin = (isset($data['date_fin']))?DateTime::createFromFormat('Y-m-d H:i', $data['date_fin']." 20:00"):null;
+        $dateDebut = (isset($data['date_debut']) AND $data['date_debut'] !== '')?DateTime::createFromFormat('Y-m-d H:i', $data['date_debut']." 08:00"):null;
+        $dateFin = (isset($data['date_fin']) AND $data['date_fin'] !== '')?DateTime::createFromFormat('Y-m-d H:i', $data['date_fin']." 20:00"):null;
 
         /** @var PlanDeFormation $object */
         $object->setLibelle($libelle);
