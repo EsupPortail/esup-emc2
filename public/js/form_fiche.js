@@ -1,7 +1,7 @@
 $(function () {
     tinymce.init({
         selector: '.type1',
-        toolbar: 'newdocument undo redo | bold italic | bullist | bullist | highlight',
+        toolbar: 'newdocument undo redo | bold italic underline | bullist | bullist | highlight',
         language: 'fr_FR',
         resize: true,
         statusbar: true,
@@ -34,7 +34,7 @@ $(function () {
     tinymce.init({
         selector: '.type2',
         plugins: 'lists',
-        toolbar: 'newdocument undo redo | bold italic | bullist',
+        toolbar: 'newdocument undo redo | bold italic underline | bullist',
         browser_spellcheck : true,
         language: 'fr_FR',
         statusbar: false,

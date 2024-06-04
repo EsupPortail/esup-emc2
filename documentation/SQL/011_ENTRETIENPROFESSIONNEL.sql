@@ -62,7 +62,7 @@ create table entretienprofessionnel
         references agent,
     formulaire_instance   integer,
     date_entretien        timestamp,
-    campagne_id           integer     not null
+    campagne_id           integer
         constraint entretien_professionnel_campagne_id_fk
         references entretienprofessionnel_campagne
         on delete set null,

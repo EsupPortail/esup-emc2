@@ -105,7 +105,7 @@ class StructureService
         return $structure;
     }
 
-    public function getStructureByCode(string $code): ?Structure
+    public function getStructureByCode(?string $code): ?Structure
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('structure.code = :code')->setParameter('code', $code)
