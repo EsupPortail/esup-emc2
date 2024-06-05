@@ -6,8 +6,6 @@ use Structure\Assertion\StructureAssertion;
 use Structure\Assertion\StructureAssertionFactory;
 use Structure\Controller\StructureController;
 use Structure\Controller\StructureControllerFactory;
-use Structure\Event\InfoStructure\InfoStructureEvent;
-use Structure\Event\InfoStructure\InfoStructureEventFactory;
 use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Service\Notification\NotificationService;
 use Structure\Service\Notification\NotificationServiceFactory;
@@ -37,6 +35,7 @@ return [
                             StructurePrivileges::STRUCTURE_GESTIONNAIRE,
                             StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT,
                             StructurePrivileges::STRUCTURE_AGENT_FORCE,
+                            StructurePrivileges::STRUCTURE_AGENT_MASQUE,
                         ],
                         'resources' => ['Structure'],
                         'assertion' => StructureAssertion::class
@@ -393,7 +392,6 @@ return [
 
             StructureAssertion::class => StructureAssertionFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
-            InfoStructureEvent::class => InfoStructureEventFactory::class,
         ],
     ],
     'controllers'     => [
