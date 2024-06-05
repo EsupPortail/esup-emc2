@@ -1,6 +1,6 @@
 <?php
 
-namespace Formation\Form\FormationInstance;
+namespace Formation\Form\Session;
 
 use Formation\Entity\Db\FormationInstance;
 use Laminas\Form\Element\Button;
@@ -12,7 +12,7 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Regex;
 
-class FormationInstanceForm extends Form
+class SessionForm extends Form
 {
 
     public function init(): void

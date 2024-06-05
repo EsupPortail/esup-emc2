@@ -1,26 +1,24 @@
 <?php
 
-namespace Formation\Form\FormationInstance;
+namespace Formation\Form\Session;
 
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class FormationInstanceFormFactory
+class SessionFormFactory
 {
 
     /**
-     * @param ContainerInterface $container
-     * @return FormationInstanceForm
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): FormationInstanceForm
+    public function __invoke(ContainerInterface $container): SessionForm
     {
-        /** @var FormationInstanceHydrator $hydrator */
-        $hydrator = $container->get('HydratorManager')->get(FormationInstanceHydrator::class);
+        /** @var SessionHydrator $hydrator */
+        $hydrator = $container->get('HydratorManager')->get(SessionHydrator::class);
 
-        $form = new FormationInstanceForm();
+        $form = new SessionForm();
         $form->setHydrator($hydrator);
         return $form;
     }

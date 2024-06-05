@@ -1,20 +1,19 @@
 <?php
 
-namespace Formation\Form\FormationInstance;
+namespace Formation\Form\Session;
 
-trait FormationInstanceFormAwareTrait
-{
+trait SessionFormAwareTrait {
 
-    private FormationInstanceForm $formationInstanceForm;
+    private SessionForm $sessionForm;
 
-    public function getFormationInstanceForm(): FormationInstanceForm
+    public function getSessionForm(): SessionForm
     {
-        return $this->formationInstanceForm;
+        return $this->sessionForm;
     }
 
-    public function setFormationInstanceForm(FormationInstanceForm $formationInstanceForm): void
+    public function setSessionForm(SessionForm $sessionForm): void
     {
-        $this->formationInstanceForm = $formationInstanceForm;
+        $this->sessionForm = $sessionForm;
     }
 
 }

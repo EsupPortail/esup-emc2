@@ -7,19 +7,19 @@ use Formation\Assertion\SessionAssertionFactory;
 use Formation\Controller\FormationInstanceController;
 use Formation\Controller\FormationInstanceControllerFactory;
 use Formation\Controller\InscriptionController;
-use Formation\Form\FormationInstance\FormationInstanceForm;
-use Formation\Form\FormationInstance\FormationInstanceFormFactory;
-use Formation\Form\FormationInstance\FormationInstanceHydrator;
-use Formation\Form\FormationInstance\FormationInstanceHydratorFactory;
+use Formation\Form\Session\SessionForm;
+use Formation\Form\Session\SessionFormFactory;
+use Formation\Form\Session\SessionHydrator;
+use Formation\Form\Session\SessionHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
 use Formation\View\Helper\FormationInstanceArrayViewHelper;
 use Formation\View\Helper\FormationInstanceInformationsViewHelper;
-use UnicaenPrivilege\Guard\PrivilegeController;
-use Unicaen\Console\Router\Simple;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use Unicaen\Console\Router\Simple;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
@@ -169,24 +169,24 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'formation' => [
             'home' => [
                 'pages' => [
                     'gestion-formation' => [
                         'pages' => [
                             'session_' => [
-                                'label'    => 'Sessions',
-                                'route'    => 'formation-instance',
-                                'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
-                                'order'    => 230,
+                                'label' => 'Sessions',
+                                'route' => 'formation-instance',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index'),
+                                'order' => 230,
                                 'icon' => 'fas fa-angle-right',
                             ],
                             'isncription_' => [
-                                'label'    => 'Inscriptions',
-                                'route'    => 'formation/inscription',
-                                'resource' => PrivilegeController::getResourceId(InscriptionController::class, 'index') ,
-                                'order'    => 240,
+                                'label' => 'Inscriptions',
+                                'route' => 'formation/inscription',
+                                'resource' => PrivilegeController::getResourceId(InscriptionController::class, 'index'),
+                                'order' => 240,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -213,24 +213,24 @@ return [
                         'may_terminate' => false,
                         'child_routes' => [
                             'ajouter-formateur' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/ajouter-formateur/:session',
+                                    'route' => '/ajouter-formateur/:session',
                                     'defaults' => [
                                         /** @see FormationInstanceController::ajouterFormateurAction() */
                                         'controller' => FormationInstanceController::class,
-                                        'action'     => 'ajouter-formateur',
+                                        'action' => 'ajouter-formateur',
                                     ],
                                 ],
                             ],
                             'retirer-formateur' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/retirer-formateur/:session/:formateur',
+                                    'route' => '/retirer-formateur/:session/:formateur',
                                     'defaults' => [
                                         /** @see FormationInstanceController::retirerFormateurAction() */
                                         'controller' => FormationInstanceController::class,
-                                        'action'     => 'retirer-formateur',
+                                        'action' => 'retirer-formateur',
                                     ],
                                 ],
                             ],
@@ -239,9 +239,9 @@ return [
                 ],
             ],
             'formation-instance' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/formation-instance',
+                    'route' => '/formation-instance',
                     'defaults' => [
                         'controller' => FormationInstanceController::class,
                         'action' => 'index',
@@ -250,183 +250,183 @@ return [
                 'may_terminate' => true,
                 'child_routes' => [
                     'rechercher' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/rechercher',
+                            'route' => '/rechercher',
                             'defaults' => [
                                 /** @see FormationInstanceController::rechercherAction() */
-                                'action'     => 'rechercher',
+                                'action' => 'rechercher',
                             ],
                         ],
                     ],
                     'ajouter-avec-formulaire' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/ajouter-avec-formulaire',
+                            'route' => '/ajouter-avec-formulaire',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'ajouter-avec-formulaire',
+                                'action' => 'ajouter-avec-formulaire',
                             ],
                         ],
                     ],
                     'ajouter' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter/:formation',
+                            'route' => '/ajouter/:formation',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'ajouter',
+                                'action' => 'ajouter',
                             ],
                         ],
                     ],
                     'afficher' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/afficher/:formation-instance',
+                            'route' => '/afficher/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'afficher',
+                                'action' => 'afficher',
                             ],
                         ],
                     ],
                     'historiser' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/historiser/:formation-instance',
+                            'route' => '/historiser/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'historiser',
+                                'action' => 'historiser',
                             ],
                         ],
                     ],
                     'restaurer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer/:formation-instance',
+                            'route' => '/restaurer/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'restaurer',
+                                'action' => 'restaurer',
                             ],
                         ],
                     ],
                     'supprimer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer/:formation-instance',
+                            'route' => '/supprimer/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'supprimer',
+                                'action' => 'supprimer',
                             ],
                         ],
                     ],
                     'annuler' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/annuler/:formation-instance',
+                            'route' => '/annuler/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'annuler',
+                                'action' => 'annuler',
                             ],
                         ],
                     ],
                     'reouvrir' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/reouvrir/:formation-instance',
+                            'route' => '/reouvrir/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'reouvrir',
+                                'action' => 'reouvrir',
                             ],
                         ],
                     ],
                     'modifier-informations' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-informations/:formation-instance',
+                            'route' => '/modifier-informations/:formation-instance',
                             'defaults' => [
                                 /** @see FormationInstanceController::modifierInformationsAction() */
-                                'action'     => 'modifier-informations',
+                                'action' => 'modifier-informations',
                             ],
                         ],
                     ],
                     'selectionner-gestionnaires' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/selectionner-gestionnaires/:session',
+                            'route' => '/selectionner-gestionnaires/:session',
                             'defaults' => [
                                 /** @see FormationInstanceController::selectionnerGestionnairesAction() */
-                                'action'     => 'selectionner-gestionnaires',
+                                'action' => 'selectionner-gestionnaires',
                             ],
                         ],
                     ],
                     'ouvrir-inscription' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ouvrir-inscription/:formation-instance',
+                            'route' => '/ouvrir-inscription/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'ouvrir-inscription',
+                                'action' => 'ouvrir-inscription',
                             ],
                         ],
                     ],
                     'fermer-inscription' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/fermer-inscription/:formation-instance',
+                            'route' => '/fermer-inscription/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'fermer-inscription',
+                                'action' => 'fermer-inscription',
                             ],
                         ],
                     ],
                     'envoyer-convocation' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/envoyer-convocation/:formation-instance',
+                            'route' => '/envoyer-convocation/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'envoyer-convocation',
+                                'action' => 'envoyer-convocation',
                             ],
                         ],
                     ],
                     'demander-retour' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/demander-retour/:formation-instance',
+                            'route' => '/demander-retour/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'demander-retour',
+                                'action' => 'demander-retour',
                             ],
                         ],
                     ],
                     'cloturer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/cloturer/:formation-instance',
+                            'route' => '/cloturer/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'cloturer',
+                                'action' => 'cloturer',
                             ],
                         ],
                     ],
                     'exporter-inscription' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/exporter-inscription/:session',
+                            'route' => '/exporter-inscription/:session',
                             'defaults' => [
                                 /** @see FormationInstanceController::exporterInscriptionAction() */
-                                'action'     => 'exporter-inscription',
+                                'action' => 'exporter-inscription',
                             ],
                         ],
                     ],
                     /** @see FormationInstanceController::changerEtatAction() */
                     'changer-etat' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/changer-etat/:formation-instance',
+                            'route' => '/changer-etat/:formation-instance',
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
-                                'action'     => 'changer-etat',
+                                'action' => 'changer-etat',
                             ],
                         ],
                     ],
@@ -458,19 +458,19 @@ return [
             SessionAssertion::class => SessionAssertionFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             FormationInstanceController::class => FormationInstanceControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            FormationInstanceForm::class => FormationInstanceFormFactory::class,
+            SessionForm::class => SessionFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            FormationInstanceHydrator::class => FormationInstanceHydratorFactory::class,
+            SessionHydrator::class => SessionHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
