@@ -62,7 +62,7 @@ create table entretienprofessionnel
         references agent,
     formulaire_instance   integer,
     date_entretien        timestamp,
-    campagne_id           integer     not null
+    campagne_id           integer
         constraint entretien_professionnel_campagne_id_fk
         references entretienprofessionnel_campagne
         on delete set null,
@@ -215,34 +215,37 @@ create table entretienprofessionnel_etat
         primary key (entretien_id, etat_id)
 );
 
-create table entretienprofessionnel_agent_force_sansobligation
+create table entretienprofessionnel_agent_force
 (
     id                    serial
-        constraint entretienprofessionnel_agent_force_sansobligation_pk
+        constraint entretienprofessionnel_agent_force_pk
         primary key,
     agent_id              varchar(40) not null
-        constraint ep_agent_force_sansobligation_agent_c_individu_fk
+        constraint ep_agent_force_agent_c_individu_fk
         references agent
         on delete cascade,
     campagne_id           integer     not null
-        constraint ep_agent_force_sansobligation_campagne_id_fk
+        constraint ep_agent_force_campagne_id_fk
         references entretienprofessionnel_campagne
         on delete cascade,
+    type                  varchar(64),
     raison                text,
     histo_creation        timestamp   not null,
     histo_createur_id     integer     not null
-        constraint ep_agent_force_sansobligation_unicaen_utilisateur_user_id_fk
+        constraint ep_agent_force_unicaen_utilisateur_user_id_fk
         references unicaen_utilisateur_user,
     histo_modification    timestamp,
     histo_modificateur_id integer
-        constraint ep_agent_force_sansobligation_unicaen_utilisateur_user_id_fk2
+        constraint ep_agent_force_unicaen_utilisateur_user_id_fk2
         references unicaen_utilisateur_user,
     histo_destruction     timestamp,
     histo_destructeur_id  integer
-        constraint ep_agent_force_sansobligation_unicaen_utilisateur_user_id_fk3
+        constraint ep_agent_force_unicaen_utilisateur_user_id_fk3
         references unicaen_utilisateur_user
 );
-comment on table entretienprofessionnel_agent_force_sansobligation is 'Table listant les agents pour lesquels on a forcé le fait qu''ils n''avait pas d''obligation d''entretien professionnel';
+comment on table entretienprofessionnel_agent_force is 'Table listant les agents pour lesquels un forçage a été mise en place pour une campagne ';
+create index entretienprofessionnel_agent_force_agent_id_index on entretienprofessionnel_agent_force (agent_id);
+create index entretienprofessionnel_agent_force_campagne_id_index on entretienprofessionnel_agent_force (campagne_id);
 
 create table entretienprofessionnel_recours
 (
@@ -337,7 +340,8 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'CAMPAGNE_BLOCAGE_STRICT_VALIDATION', 'Blocage strict de la validation des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la validation des entretiens professionnels doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 2 UNION
     SELECT 'OBSERVATION_AGENT_FINAL', 'Activation de l''observation finale par l''agent', '<p>Pour désactiver cette observation basculer la valeur à false</p>', 'Boolean', 3000 UNION
     SELECT 'TEMOIN_GRADE', 'Filtres associés aux grades', 'Filtrage basé sur les libellés courts (p.e. "IGE CN")', 'String', 500 UNION
-    SELECT 'TEMOIN_CORPS', 'Filtres associés aux corps', 'Filtrage basé sur les libellés courts (p.e. "ASI RF")', 'String', 400
+    SELECT 'TEMOIN_CORPS', 'Filtres associés aux corps', 'Filtrage basé sur les libellés courts (p.e. "ASI RF")', 'String', 400 UNION
+    SELECT 'TEMOIN_CORPS_EXCLUS','Corps non considérer pour l''entretien professionnel','<p>Les corps list&eacute;s ne seront pas consid&eacute;rer ni class&eacute;.</p>','String',1000
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
@@ -345,6 +349,7 @@ JOIN unicaen_parametre_categorie cp ON cp.CODE = 'ENTRETIEN_PROFESSIONNEL';
 
 -- VALEUR RECOMMANDEE
 update unicaen_parametre_parametre set valeur=8 where code='DELAI_CONVOCATION_AGENT';
+update unicaen_parametre_parametre set valeur='!MCF;!PROF UNIV' where code='TEMOIN_CORPS_EXCLUS';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- OBSERVATION ---------------------------------------------------------------------------------------------------------

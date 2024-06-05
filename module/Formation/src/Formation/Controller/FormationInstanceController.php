@@ -4,9 +4,9 @@ namespace Formation\Controller;
 
 use DateTime;
 use Formation\Entity\Db\Inscription;
-use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Form\SelectionFormateur\SelectionFormateurFormAwareTrait;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormAwareTrait;
+use Formation\Form\Session\SessionFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
@@ -45,9 +45,9 @@ class FormationInstanceController extends AbstractActionController
     use PresenceServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    use FormationInstanceFormAwareTrait;
     use SelectionFormateurFormAwareTrait;
     use SelectionGestionnaireFormAwareTrait;
+    use SessionFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -208,7 +208,7 @@ class FormationInstanceController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
-        $form = $this->getFormationInstanceForm();
+        $form = $this->getSessionForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation-instance/modifier-informations', ['formation-instance' => $instance->getId()], [], true));
         $form->bind($instance);
 

@@ -82,11 +82,11 @@ return [
         'routes' => [
             'entretien-professionnel' => [
                 'child_routes' => [
-                    'agent-force-sans-obligation' => [
+                    'agent-avec-forcage' => [
                         'type' => Literal::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route' => '/agent-force-sans-obligation',
+                            'route' => '/agent-avec-forcage',
                             'defaults' => [
                                 /** @see AgentForceSansObligationController::indexAction() */
                                 'controller' => AgentForceSansObligationController::class,
@@ -168,8 +168,8 @@ return [
                     'gestion' => [
                         'pages' => [
                             'agent-force' => [
-                                'label' => "Agent·es forcé·es sans obligation d'entretien professionnel",
-                                'route' => 'entretien-professionnel/agent-force-sans-obligation',
+                                'label' => "Agent·es avec forçage d'entretien professionnel",
+                                'route' => 'entretien-professionnel/agent-avec-forcage',
                                 'resource' => PrivilegeController::getResourceId(AgentForceSansObligationController::class, 'index'),
                                 'order' => 3100,
                                 'icon' => 'fas fa-angle-right',

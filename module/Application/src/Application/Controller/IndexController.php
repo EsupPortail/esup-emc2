@@ -137,13 +137,16 @@ class IndexController extends AbstractActionController
     {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
+
+        if ($user === null) {
+
+        }
         $structureMere = $this->getStructureService()->getStructureMere();
+
 
         $agents = array_map(function (AgentSuperieur $a) {
             return $a->getAgent();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
         usort($agents, function (Agent $a, Agent $b) {
             return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
         });
@@ -160,12 +163,6 @@ class IndexController extends AbstractActionController
         $entretiens = []; $agentsByCampagne = [];
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($agent, $campagne->getDateDebut(), $campagne->getDateFin());
-            $agentsS = $this->getAgentService()->filtrerWithAffectationTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
-            $agentsS = $this->getAgentService()->filtrerWithStatutTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), $campagne->getDateDebut(), [$structureMere]);
-            $agentsS = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE), $campagne->getDateDebut());
-            $agentsS = $this->getAgentService()->filtrerWithGradeTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE), $campagne->getDateDebut());
-            $agentsS = $this->getAgentService()->filtrerWithCorpsTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS), $campagne->getDateDebut());
-
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsS, false, false);
             [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsS);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
@@ -206,8 +203,6 @@ class IndexController extends AbstractActionController
         $agents = array_map(function (AgentAutorite $a) {
             return $a->getAgent();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
 
         usort($agents, function (Agent $a, Agent $b) {
             return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
@@ -225,13 +220,7 @@ class IndexController extends AbstractActionController
         $entretiens = []; $agentsByCampagne = [];
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
-            $agentsS = $this->getAgentService()->filtrerWithAffectationTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut(),[$structureMere]);
-            $agentsS = $this->getAgentService()->filtrerWithStatutTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), $campagne->getDateDebut());
-            $agentsS = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE), $campagne->getDateDebut());
-            $agentsS = $this->getAgentService()->filtrerWithCorpsTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS), $campagne->getDateDebut());
-            $agentsS = $this->getAgentService()->filtrerWithGradeTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE), $campagne->getDateDebut());
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsS, false, false);
-
             [$obligatoires, $facultatifs, $raison]  = $this->getCampagneService()->trierAgents($campagne, $agentsS);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison] ;
         }

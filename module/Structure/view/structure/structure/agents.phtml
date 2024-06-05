@@ -10,6 +10,8 @@ use Structure\Provider\Privilege\StructurePrivileges;
  *
  * @var Structure $structure
  * @var Agent[] $agents
+ * @var Agent[] $agentsRetires
+ * @var string[] $raison
  * @var Agent[] $agentsForces
  * @var Agent[] $superieurs
  * @var Agent[] $autorites
@@ -22,6 +24,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
 $this->headTitle($structure->getLibelleLong() . " - Liste des Agent·es");
 
 $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AGENT_FORCE);
+$canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AGENT_MASQUE))
 ?>
 
 <?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'agents', 'selecteur' => $selecteur]); ?>
@@ -43,7 +46,23 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
     <span class="badge"><?php echo count($agents); ?></span>
 </h2>
 
-<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agent'], 'structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites]); ?>
+<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agent'], 'structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites, 'raison' => $raison]); ?>
+
+<?php if ($canAfficherAgentsExclus) : ?>
+    <span id="button_exclus" class="btn btn-secondary">
+        <span id="icone_exclus" class="icon icon-voir"></span>
+        <span id="texte_exclus">Afficher les agents exclus</span>
+    </span>
+<?php endif; ?>
+
+<div id="agents_exclus" style="display: none">
+    <h2>
+        Agents exclus
+        <span class="badge"><?php echo count($agentsRetires); ?></span>
+    </h2>
+
+    <?php echo $this->partial('partial/agents', ['options' => ['id' => 'agents-retires'], 'structure' => $structure, 'agents' => $agentsRetires, 'superieurs' => $superieurs, 'autorites' => $autorites, 'raison' => $raison]); ?>
+</div>
 
 <h2>
     Agents manuellement ajoutés
@@ -64,4 +83,21 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
 
 <script>
     $('button#agents-tab').addClass('active');
+</script>
+
+
+<script>
+    $('span#button_exclus').on('click', function() {
+        $('div#agents_exclus').toggle();
+        if ($('div#agents_exclus').is(":visible")) {
+            // alert('visible');
+            $('span#icone_exclus').removeClass('icon-voir').addClass('icon-masquer');
+            $('span#texte_exclus').text("Masquer les agents explus");
+        } else {
+            // alert('masquer');
+            $('span#icone_exclus').removeClass('icon-masquer').addClass('icon-voir');
+            $('span#texte_exclus').text("Afficher les agents exclus");
+        }
+
+    });
 </script>

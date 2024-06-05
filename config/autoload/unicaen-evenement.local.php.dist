@@ -1,0 +1,7 @@
+<?php
+
+return [
+    'unicaen-evenement' => [
+        'max_time_execution' => 300,
+    ],
+];

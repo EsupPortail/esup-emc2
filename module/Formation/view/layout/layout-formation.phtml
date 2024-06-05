@@ -1,5 +1,7 @@
 <?php
 
+use Application\Provider\Parametre\GlobalParametres;
+
 $navigationHelper = $this->navigation('Laminas\Navigation\Formation');
 echo $this->doctype();
 
@@ -17,7 +19,7 @@ echo $this->doctype();
     <?php echo $this->headLink(array(
         'rel'   => 'shortcut icon',
         'type'  => 'image/vnd.microsoft.icon',
-        'href'  => '//www.unicaen.fr/favicon.ico')) ?>
+        'href'  => $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::FAVICON))) ?>
     <!-- Scripts -->
     <script>
         function generateAdresse(name, domaine) {
@@ -119,10 +121,12 @@ echo $this->doctype();
 <script>
     <!-- On récupère la liste des images associées aux personnas -->
     <?php
-        $directory = "/var/www/html/public/img/Personna";
-        $files =  array_diff(scandir($directory), ['.', '..']);
-        $files =  array_map(function(string $name) { return explode('.', $name)[0]; }, $files);
-        $s = "['".implode("', '",$files)."']";
+    $base = $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH);
+    $directory =  $base.'/public/img/Personna';
+
+    $files =  array_diff(scandir($directory), ['.', '..']);
+    $files =  array_map(function(string $name) { return explode('.', $name)[0]; }, $files);
+    $s = "['".implode("', '",$files)."']";
     ?>
     const personaClasses = <?php echo $s; ?>;
 
@@ -130,7 +134,7 @@ echo $this->doctype();
     $(function() {
         const userStatusName = $('#user-status-name').text();
         if (personaClasses.includes(userStatusName)) {
-            $('div#contenu-principal').css("background-image", 'url("img/Personna/' + userStatusName + '.jpg")');
+            $('div#contenu-principal').css("background-image", 'url("<?php echo $this->url('home',[],['force_canonical' => true], true); ?>img/Personna/' + userStatusName + '.jpg")');
         }
     });
 </script>

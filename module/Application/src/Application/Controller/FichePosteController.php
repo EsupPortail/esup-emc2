@@ -105,10 +105,10 @@ class FichePosteController extends AbstractActionController
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         if ($agent) {
-            $fiche = $this->getFichePosteService()->getFichePosteByAgent($agent);
+            $fiche = $this->getFichePosteService()->getFichePosteEnRedactionByAgent($agent);
             if ($fiche !== null) {
                 $this->flashMessenger()->addErrorMessage("La fiche de poste existe déjà l'ajout n'a pu être effectué.");
-                return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
+                return $this->redirect()->toRoute('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true);
             }
         }
 

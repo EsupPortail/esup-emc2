@@ -236,6 +236,7 @@ class FormateurService
         $qb = $this->createQueryBuilder()
             ->andWhere('formateur.email = :email')
             ->setParameter('email', $email)
+            ->andWhere('formateur.histoDestruction IS NULL')
         ;
         $result = $qb->getQuery()->getResult();
         return $result;

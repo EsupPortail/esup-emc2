@@ -20,6 +20,7 @@ use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
+use Structure\Provider\Parametre\StructureParametres;
 use Structure\Provider\Role\RoleProvider;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -104,7 +105,7 @@ class StructureService
         return $structure;
     }
 
-    public function getStructureByCode(string $code): ?Structure
+    public function getStructureByCode(?string $code): ?Structure
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('structure.code = :code')->setParameter('code', $code)
@@ -579,5 +580,64 @@ EOS;
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
+
+    public function trierAgents(array $agents): array
+    {
+        $conserver = [];
+        $retirer = [];
+        $raison = [];
+
+        $now = new DateTime();
+
+        /** @var Agent $agent */
+        foreach ($agents as $agent) {
+            $raison[$agent->getId()] = "<ul>";
+
+            $kept = true;
+
+            if (!$agent->isValideEmploiType(
+                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE),
+                $now))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Emploi-type invalide</li>";
+            }
+            if (!$agent->isValideStatut(
+                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),
+                $now))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Statut invalide</li>";
+
+            }
+            if (!$agent->isValideAffectation(
+                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION),
+                $now))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Affectation invalide</li>";
+            }
+            if (!$agent->isValideGrade(
+                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE),
+                $now))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Grade invalide</li>";
+            }
+            if (!$agent->isValideCorps(
+                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS),
+                $now))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Corps invalide</li>";
+            }
+
+            if ($kept) $conserver[$agent->getId()] = $agent; else $retirer[$agent->getId()] = $agent;
+            $raison[$agent->getId()] .= "</ul>";
+        }
+        return [$conserver, $retirer, $raison];
     }
 }

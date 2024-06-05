@@ -22,4 +22,5 @@ class EntretienProfessionnelParametres {
     const TEMOIN_CORPS = 'TEMOIN_CORPS';
 
     const OBSERVATION_AGENT_FINAL = 'OBSERVATION_AGENT_FINAL';
+    const TEMOIN_CORPS_EXCLUS = 'TEMOIN_CORPS_EXCLUS';
 }

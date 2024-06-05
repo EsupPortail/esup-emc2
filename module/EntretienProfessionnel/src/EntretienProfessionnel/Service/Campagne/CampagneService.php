@@ -243,15 +243,11 @@ class CampagneService
         $structureMere = $this->getStructureService()->getStructureMere();
 
         $agents = $this->getAgentService()->getAgentsWithDates($campagne->getDateDebut(), $campagne->getDateFin());
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION));
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT), $structureMere);
-        $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE));
-        $agents = $this->getAgentService()->filtrerWithGradeTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_GRADE));
-        $agents = $this->getAgentService()->filtrerWithCorpsTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS));
+        [$obligatoires, $facultatifs, $raison] = $this->trierAgents($campagne, $agents);
 
         $sansObligations = array_map(function (AgentForceSansObligation $a) { return $a->getAgent(); }, $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagne($campagne));
         $agentsFinales = [];
-        foreach ($agents as $agent) {
+        foreach ($obligatoires as $agent) {
             $keep = true;
             foreach ($sansObligations as $sansObligation) {
                 if ($agent === $sansObligation) {
@@ -290,6 +286,13 @@ class CampagneService
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
 
+            if (!$agent->isValideCorps(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS),
+                $campagne->getDateEnPoste()))
+            {
+                continue;
+            }
+
             $structureMere = $this->getStructureService()->getStructureMere();
 
             $kept = true;
@@ -325,8 +328,26 @@ class CampagneService
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
-
             }
+            if (!$agent->isValideGrade(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_GRADE),
+                $campagne->getDateEnPoste()))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans grade valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
+            }
+            if (!$agent->isValideCorps(
+                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS),
+                $campagne->getDateEnPoste()))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans corps valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
+            }
+            if ($agent->isForceAvecObligation($campagne)) {
+                $raison[$agent->getId()] .= "<li>Forcé·e avec obligation</li>";
+                $kept = true;
+            }
+
             if ($kept) $obligatoires[$agent->getId()] = $agent; else $facultatifs[$agent->getId()] = $agent;
             $raison[$agent->getId()] .= "</ul>";
         }

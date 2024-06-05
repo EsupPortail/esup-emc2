@@ -2,9 +2,9 @@
 
 namespace Formation\Controller;
 
-use Formation\Form\FormationInstance\FormationInstanceForm;
 use Formation\Form\SelectionFormateur\SelectionFormateurForm;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireForm;
+use Formation\Form\Session\SessionForm;
 use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
@@ -60,11 +60,11 @@ class FormationInstanceControllerFactory
         $userService = $container->get(UserService::class);
 
         /**
-         * @var FormationInstanceForm $formationInstanceForm
          * @var SelectionFormateurForm $selectionFormateurForm
          * @var SelectionGestionnaireForm $selectionGestionnaireForm
+         * @var SessionForm $sessionForm
          */
-        $formationInstanceForm = $container->get('FormElementManager')->get(FormationInstanceForm::class);
+        $sessionForm = $container->get('FormElementManager')->get(SessionForm::class);
         $selectionFormateurForm = $container->get('FormElementManager')->get(SelectionFormateurForm::class);
         $selectionGestionnaireForm = $container->get('FormElementManager')->get(SelectionGestionnaireForm::class);
 
@@ -81,7 +81,7 @@ class FormationInstanceControllerFactory
         $controller->setParametreService($parametreService);
         $controller->setPresenceService($presenceService);
         $controller->setUserService($userService);
-        $controller->setFormationInstanceForm($formationInstanceForm);
+        $controller->setSessionForm($sessionForm);
         $controller->setSelectionFormateurForm($selectionFormateurForm);
         $controller->setSelectionGestionnaireForm($selectionGestionnaireForm);
 

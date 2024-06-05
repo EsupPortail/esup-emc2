@@ -83,6 +83,7 @@ class FormateurController extends AbstractActionController
         $form = $this->getFormateurForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/formateur/modifier', ['formateur' => $formateur->getId()], [], true));
         $form->bind($formateur);
+        $form->setOperation("modification");
 
         $request = $this->getRequest();
         if ($request->isPost()) {

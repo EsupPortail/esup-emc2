@@ -130,13 +130,7 @@ class StructureController extends AbstractActionController {
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures,null, true);
         $debug .= "Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
-//        die("Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>");
-
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
-        $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE));
-        $agents = $this->getAgentService()->filtrerWithGradeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE));
-        $agents = $this->getAgentService()->filtrerWithCorpsTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS));
+        [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents);
         $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
 
@@ -170,7 +164,9 @@ class StructureController extends AbstractActionController {
         return new ViewModel([
             'structure' => $structure,
             'selecteur' => $selecteur,
-            'agents' => $agents,
+            'agents' => $conserver,
+            'agentsRetires' => $retirer,
+            'raison' => $raison,
             'agentsForces' => $agentsForces,
             'superieurs' => $superieurs,
             'autorites' => $autorites,
@@ -209,14 +205,12 @@ class StructureController extends AbstractActionController {
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-        $structureMere = $this->getStructureService()->getStructureMere();
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT), null, [$structureMere]);
-        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
+        [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents);
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $this->getStructureService()->getAgentsForces($structure));
 
-        $allAgents = array_merge($agents, $agentsForces);
+        $allAgents = array_merge($conserver, $agentsForces);
 
         usort($allAgents, function (Agent $a, Agent $b) {
             $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();

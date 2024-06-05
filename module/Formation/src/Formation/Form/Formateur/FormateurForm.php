@@ -10,11 +10,22 @@ use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
-use RuntimeException;
 
 class FormateurForm extends Form
 {
     use FormateurServiceAwareTrait;
+
+    private string $operation = "creation";
+
+    public function getOperation(): string
+    {
+        return $this->operation;
+    }
+
+    public function setOperation(string $operation): void
+    {
+        $this->operation = $operation;
+    }
 
     public function init(): void
     {
@@ -154,6 +165,9 @@ class FormateurForm extends Form
                             ],
                             'callback' => function ($value, $context = []) {
                                 $formateurs = $this->getFormateurService()->getFormateursByEmail($value);
+                                if (empty($formateurs)) return true;
+                                if ($this->getOperation() === 'modification' and count($formateurs) === 1 and current($formateurs)->getEmail() === $value) return true;
+                                return false;
                             },
                             //'break_chain_on_failure' => true,
                         ],

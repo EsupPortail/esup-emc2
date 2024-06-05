@@ -498,7 +498,7 @@ EOS;
             $extra = ($structure) ? $structure->getLibelleCourt() : "Affectation inconnue";
             $result[] = array(
                 'id' => $agent->getId(),
-                'label' => $agent->getDenomination(),
+                'label' => $agent->getDenomination(false, true, false),
                 'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
             );
         }
@@ -644,88 +644,6 @@ EOS;
             throw new RuntimeException("Plusieurs Agent partagent le même login [" . $login . "]", 0, $e);
         }
         return $result;
-    }
-
-    /** FILTRE : Prédicats et méthodes de filtre **********************************************************************/
-
-    /**
-     * @param Agent[] $agents
-     * @param Structure[]|null $structures
-     * @return Agent[]
-     */
-    public function filtrerWithStatutTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
-    {
-        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
-        if ($date === null) $date = new DateTime();
-
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
-            return $a->isValideStatut($parametre, $date, $structures, $emptyResult);
-        });
-        return $agents;
-    }
-
-    /**
-     * @param Agent[] $agents
-     * @param Structure[]|null $structures
-     * @return Agent[]
-     */
-    public function filtrerWithAffectationTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
-    {
-        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
-        if ($date === null) $date = new DateTime();
-
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
-            return $a->isValideAffectation($parametre, $date, $structures, $emptyResult);
-        });
-        return $agents;
-    }
-
-    /**
-     * @param Agent[] $agents
-     * @param Structure[]|null $structures
-     * @return Agent[]
-     */
-    public function filtrerWithEmploiTypeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
-    {
-        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
-        if ($date === null) $date = new DateTime();
-
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
-            return $a->isValideEmploiType($parametre, $date, $structures, $emptyResult);
-        });
-        return $agents;
-    }
-
-    /**
-     * @param Agent[] $agents
-     * @param Structure[]|null $structures
-     * @return Agent[]
-     */
-    public function filtrerWithGradeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
-    {
-        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
-        if ($date === null) $date = new DateTime();
-
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
-            return $a->isValideGrade($parametre, $date, $structures, $emptyResult);
-        });
-        return $agents;
-    }
-
-    /**
-     * @param Agent[] $agents
-     * @param Structure[]|null $structures
-     * @return Agent[]
-     */
-    public function filtrerWithCorpsTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
-    {
-        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
-        if ($date === null) $date = new DateTime();
-
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures, $emptyResult) {
-            return $a->isValideCorps($parametre, $date, $structures, $emptyResult);
-        });
-        return $agents;
     }
 
     /**
