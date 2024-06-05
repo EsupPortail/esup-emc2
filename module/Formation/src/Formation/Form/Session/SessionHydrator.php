@@ -1,11 +1,11 @@
 <?php
 
-namespace Formation\Form\FormationInstance;
+namespace Formation\Form\Session;
 
 use Formation\Entity\Db\FormationInstance;
 use Laminas\Hydrator\HydratorInterface;
 
-class FormationInstanceHydrator implements HydratorInterface
+class SessionHydrator implements HydratorInterface
 {
 
     public function extract($object) : array
@@ -20,7 +20,7 @@ class FormationInstanceHydrator implements HydratorInterface
             'inscription' => ($object) ? $object->isAutoInscription() : null,
             'cout_ht' => ($object) ? $object->getCoutHt() : null,
             'cout_ttc' => ($object) ? $object->getCoutTtc() : null,
-            'cout_vacation' => ($object) ? $object->getCoutTtc() : null,
+            'cout_vacation' => ($object) ? $object->getCoutVacation() : null,
         ];
         return $data;
     }
