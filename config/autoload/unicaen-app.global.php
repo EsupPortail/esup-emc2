@@ -34,8 +34,8 @@ return [
         'app_infos' => [
             'nom'     => "EMC2",
             'desc'    => "Emploi Mobilité Carrière Compétences",
-            'version' => "4.4.10-aplha",
-            'date'    => "07/06/2024",
+            'version' => "4.4.10",
+            'date'    => "05/06/2024",
 
 //            'liens' => [
 //                'COMUE' => [
