@@ -37,7 +37,7 @@ trait HasPeriodeTrait {
     public function estCommence(?DateTime $date = null) : bool
     {
         if ($date === null) $date = new DateTime();
-        return ($this->dateDebut->format('Ymd') <= $date->format('Ymd'));
+        return ($this->dateDebut !== null AND $this->dateDebut->format('Ymd') <= $date->format('Ymd'));
     }
 
     /**
