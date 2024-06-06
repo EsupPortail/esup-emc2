@@ -13,6 +13,8 @@ use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservatio
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenEvenement\Entity\HasEvenementsInterface;
+use UnicaenEvenement\Entity\HasEvenementsTrait;
 use UnicaenObservation\Entity\Interface\HasObservationsInterface;
 use UnicaenObservation\Entity\Trait\HasObservationsTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -25,11 +27,14 @@ use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
 class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface,
-    HasEtatsInterface, HasValidationsInterface, HasObservationsInterface {
+    HasEtatsInterface, HasValidationsInterface, HasObservationsInterface,
+    HasEvenementsInterface
+{
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
     use HasValidationsTrait;
     use HasObservationsTrait;
+    use HasEvenementsTrait;
 
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
@@ -72,6 +77,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->validations = new ArrayCollection();
         $this->recours = new ArrayCollection();
         $this->observateurs = new ArrayCollection();
+        $this->initEvenements();
     }
 
     public function getId() : ?int

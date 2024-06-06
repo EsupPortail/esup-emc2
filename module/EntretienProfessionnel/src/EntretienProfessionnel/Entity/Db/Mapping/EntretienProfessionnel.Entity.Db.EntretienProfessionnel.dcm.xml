@@ -66,6 +66,17 @@
         <one-to-many field="recours" target-entity="EntretienProfessionnel\Entity\Db\Recours" mapped-by="entretien"/>
         <one-to-many field="observateurs" target-entity="EntretienProfessionnel\Entity\Db\Observateur" mapped-by="entretien"/>
 
+        <many-to-many field="evenements" target-entity="UnicaenEvenement\Entity\Db\Evenement">
+            <join-table name="entretienprofessionnel_evenement">
+                <join-columns>
+                    <join-column name="entretien_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="evenement_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

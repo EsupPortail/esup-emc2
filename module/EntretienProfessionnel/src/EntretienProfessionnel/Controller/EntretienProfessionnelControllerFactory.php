@@ -20,6 +20,7 @@ use Structure\Service\Structure\StructureService;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenEvenement\Service\Evenement\EvenementService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
@@ -46,6 +47,7 @@ class EntretienProfessionnelControllerFactory {
          * @var EntretienProfessionnelService $entretienProfesionnelService
          * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
+         * @var EvenementService $evenementService
          * @var FichePosteService $fichePosteService
          * @var MailService $mailService
          * @var NotificationService $notificationService
@@ -64,6 +66,7 @@ class EntretienProfessionnelControllerFactory {
         $userService = $container->get(UserService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
+        $evenementService = $container->get(EvenementService::class);
         $fichePosteService = $container->get(FichePosteService::class);
 
         $entretienProfesionnelService = $container->get(EntretienProfessionnelService::class);
@@ -95,6 +98,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
+        $controller->setEvenementService($evenementService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setCampagneService($campagneService);
         $controller->setValidationInstanceService($validationInstanceService);

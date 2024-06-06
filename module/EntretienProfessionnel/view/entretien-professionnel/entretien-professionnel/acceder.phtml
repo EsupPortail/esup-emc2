@@ -34,6 +34,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
+use UnicaenEvenement\Provider\Privilege\EvenementinstancePrivileges;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
@@ -45,6 +46,7 @@ $this->headTitle('Modification de l\'entretien professionnel');
 
 $canExporterEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
 $canModifierEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
+$canEvenement = $this->isAllowed(EvenementinstancePrivileges::getResourceId(EvenementinstancePrivileges::INSTANCE_CONSULTATION));
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
@@ -149,6 +151,13 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             type="button" role="tab" aria-controls="mails" aria-selected="true">
         Courriers <br/> &nbsp;électroniques <span class="badge" style="margin-left:1rem;"><?php echo count($mails); ?></span>
     </button>
+    <?php if ($canEvenement) : ?>
+        <button class="nav-link" id="evenements-tab"
+                data-bs-toggle="tab" data-bs-target="#evenements"
+                type="button" role="tab" aria-controls="evenements" aria-selected="true">
+            Événements <br/> &nbsp; <span class="badge" style="margin-left:1rem;"><?php echo count($entretien->getEvenements()->toArray()); ?></span>
+        </button>
+    <?php endif; ?>
 </div>
 
 
@@ -214,6 +223,16 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             <?php echo $this->mails($mails); ?>
         </div>
     </div>
+
+    <?php if ($canEvenement) : ?>
+        <div id="evenements" class="tab-pane">
+
+            <br/>
+            <div>
+                <?php echo $this->evenements($entretien->getEvenements()->toArray()); ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
 
 
