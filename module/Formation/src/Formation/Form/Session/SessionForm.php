@@ -131,6 +131,17 @@ class SessionForm extends Form
                 'id' => 'cout_vacation',
             ],
         ]);
+        //recette ttc
+        $this->add([
+            'type' => Text::class,
+            'name' => 'recette_ttc',
+            'options' => [
+                'label' => "Recette TTC :",
+            ],
+            'attributes' => [
+                'id' => 'recette_ttc',
+            ],
+        ]);
 
         //button
         $this->add([
@@ -186,6 +197,21 @@ class SessionForm extends Form
                 ],
             ],
             'cout_ttc' => [
+                'required' => false,
+                'validators' => [
+                    [
+                        'name' => Regex::class,
+                        'options' => [
+                            'pattern' => '/^\d+(\.\d+)?$/',
+                            'messages' => [
+                                Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
+                            ],
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
+            ],
+            'recette_ttc' => [
                 'required' => false,
                 'validators' => [
                     [

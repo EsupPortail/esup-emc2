@@ -15,7 +15,6 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
-use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
@@ -51,6 +50,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private ?float $coutHt = null;
     private ?float $coutTtc = null;
     private ?float $coutVacation = null;
+    private ?float $recetteTtc = null;
 
 
     private Collection $journees;
@@ -486,6 +486,16 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function setCoutVacation(?float $coutVacation): void
     {
         $this->coutVacation = $coutVacation;
+    }
+
+    public function getRecetteTtc(): ?float
+    {
+        return $this->recetteTtc;
+    }
+
+    public function setRecetteTtc(?float $recetteTtc): void
+    {
+        $this->recetteTtc = $recetteTtc;
     }
 
     /** @return UserInterface[] */
