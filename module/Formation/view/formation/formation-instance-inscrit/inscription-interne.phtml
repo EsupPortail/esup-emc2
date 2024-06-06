@@ -5,6 +5,7 @@
  * @var FormationInstance[] $instances
  * @var Inscription[] $inscriptions
  * @var Agent $agent
+ * @var Rendu $rendu
  */
 
 $canInscrire = true; //todo !!!!
@@ -12,6 +13,7 @@ $canInscrire = true; //todo !!!!
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
+use UnicaenRenderer\Entity\Db\Rendu;
 
 $this->headTitle("M'inscrire à une formation du plan de formation");
 
@@ -22,12 +24,15 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
 
 <h1 class="page-header"> M'inscrire à une formation du plan de formation </h1>
 
-<div class="alert alert-info">
-    <span class="icon icon-attention"></span>
-    <strong>La demande d'inscription ne vaut pas acceptation.</strong>
-    Votre inscription est soumise à validation et en fonction des places disponibles.
+<div class="row">
+    <div class="col-md-9">
+        <?php if ($rendu) : ?>
+            <div class="alert alert-info">
+                <?php echo $rendu->getCorps(); ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
-
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 

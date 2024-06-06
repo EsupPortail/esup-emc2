@@ -53,10 +53,14 @@ class FormationInstanceInscritController extends AbstractActionController
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
         $inscriptions = $this->getInscriptionService()->getInscriptionByUser($utilisateur);
 
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::INSCRIPTION_FORMATION_DU_PLAN, [], false);
+
+
         return new ViewModel([
             'instances' => $instances,
             'inscriptions' => $inscriptions,
             'agent' => $agent,
+            'rendu' => $rendu,
 //            'stagiaire' => $stagiaire,
         ]);
     }
