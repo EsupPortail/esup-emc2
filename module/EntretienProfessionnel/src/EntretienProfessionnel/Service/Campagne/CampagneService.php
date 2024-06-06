@@ -254,7 +254,7 @@ class CampagneService
                     $keep = false; break;
                 }
             }
-            if ($keep) $agentsFinales[] = $agent;
+            if ($keep) $agentsFinales[$agent->getId()] = $agent;
         }
 
         return $agentsFinales;
