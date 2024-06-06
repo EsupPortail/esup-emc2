@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @see \Formation\View\Helper\FormationInstanceInformationsViewHelper
- * @var FormationInstance $instance
+ * @see \Formation\View\Helper\SessionInformationsViewHelper
+ * @var FormationInstance $session
  * @var string $mode
  * @var array $options
  */
@@ -12,7 +12,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 
-$gestionnaires = $instance->getGestionnaires();
+$gestionnaires = $session->getGestionnaires();
 
 $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
 
@@ -21,24 +21,24 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
 <?php if ($mode === 'liste') : ?>
     <dl class="row">
         <dt class="col-md-3"> État</dt>
-        <dd class="col-md-9">  <?php echo ($instance->getEtatActif())?$this->etattype($instance->getEtatActif()->getType())." ".$instance->getEtatActif()->getType()->getLibelle():"N.C."; ?> </dd>
-        <?php if ($instance->getComplement() !== null) : ?>
+        <dd class="col-md-9">  <?php echo ($session->getEtatActif())?$this->etattype($session->getEtatActif()->getType())." ".$session->getEtatActif()->getType()->getLibelle():"N.C."; ?> </dd>
+        <?php if ($session->getComplement() !== null) : ?>
             <dt class="col-md-3"> Compléments </dt>
-            <dd class="col-md-9"> <?php echo $instance->getComplement(); ?></dd>
+            <dd class="col-md-9"> <?php echo $session->getComplement(); ?></dd>
         <?php endif; ?>
         <dt class="col-md-3"> Taille liste principale</dt>
-        <dd class="col-md-9"> <?php echo $instance->getNbPlacePrincipale(); ?> </dd>
+        <dd class="col-md-9"> <?php echo $session->getNbPlacePrincipale(); ?> </dd>
         <dt class="col-md-3"> Taille liste complémentaire</dt>
-        <dd class="col-md-9"> <?php echo $instance->getNbPlaceComplementaire(); ?> </dd>
+        <dd class="col-md-9"> <?php echo $session->getNbPlaceComplementaire(); ?> </dd>
         <dt class="col-md-3"> Lieu</dt>
-        <dd class="col-md-9"> <?php echo ($instance->getLieu())?:"Non communiqué"; ?> </dd>
-        <?php if ($instance->getType() !== null) : ?>
+        <dd class="col-md-9"> <?php echo ($session->getLieu())?:"Non communiqué"; ?> </dd>
+        <?php if ($session->getType() !== null) : ?>
             <dt class="col-md-3"> Type</dt>
-            <dd class="col-md-9"> <?php echo $instance->getType(); ?> </dd>
+            <dd class="col-md-9"> <?php echo $session->getType(); ?> </dd>
         <?php endif; ?>
         <dt class="col-md-3"> Auto-inscription</dt>
         <dd class="col-md-9">
-            <?php if ($instance->isAutoInscription()) : ?>
+            <?php if ($session->isAutoInscription()) : ?>
                 Oui (les agents peuvent s'inscrire eux-même)
             <?php else : ?>
                 Non (les agents doivent notifier les gestionnaires de formation)
@@ -58,48 +58,48 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
                 </ul>
             <?php endif; ?>
         </dd>
-        <?php if ($instance->getCoutHt() !== null) : ?>
+        <?php if ($session->getCoutHt() !== null) : ?>
             <dt class="col-md-3"> Coût HT </dt>
-            <dd class="col-md-9"> <?php echo $instance->getCoutHt(); ?>€</dd>
+            <dd class="col-md-9"> <?php echo $session->getCoutHt(); ?>€</dd>
         <?php endif; ?>
-        <?php if ($instance->getCoutTtc() !== null) : ?>
+        <?php if ($session->getCoutTtc() !== null) : ?>
             <dt class="col-md-3"> Coût TTC </dt>
-            <dd class="col-md-9"> <?php echo $instance->getCoutTtc(); ?>€</dd>
+            <dd class="col-md-9"> <?php echo $session->getCoutTtc(); ?>€</dd>
         <?php endif; ?>
-        <?php if ($instance->getCoutVacation() !== null) : ?>
+        <?php if ($session->getCoutVacation() !== null) : ?>
             <dt class="col-md-3"> Coût Vacation </dt>
-            <dd class="col-md-9"> <?php echo $instance->getCoutVacation(); ?>€</dd>
+            <dd class="col-md-9"> <?php echo $session->getCoutVacation(); ?>€</dd>
         <?php endif; ?>
-        <?php if ($instance->getRecetteTtc() !== null) : ?>
+        <?php if ($session->getRecetteTtc() !== null) : ?>
             <dt class="col-md-3"> Recette TTC </dt>
-            <dd class="col-md-9"> <?php echo $instance->getRecetteTtc(); ?>€</dd>
+            <dd class="col-md-9"> <?php echo $session->getRecetteTtc(); ?>€</dd>
         <?php endif; ?>
     </dl>
 <?php endif; ?>
 
 <?php if ($mode === 'bloc') : ?>
-    <?php echo $this->etatinstance($instance->getEtatActif()); ?>
-    <strong><?php echo $instance->getFormation()->getLibelle(); ?></strong>
+    <?php echo $this->etatinstance($session->getEtatActif()); ?>
+    <strong><?php echo $session->getFormation()->getLibelle(); ?></strong>
     <br/>
-    Session <?php echo $instance->getId(); ?> du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?>
+    Session <?php echo $session->getId(); ?> du <?php echo $session->getDebut(); ?> au <?php echo $session->getFin(); ?>
     <br/>
-    <?php if ($instance->getSource() !== HasSourceInterface::SOURCE_LAGAF) : ?>
-        <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?> -
+    <?php if ($session->getSource() !== HasSourceInterface::SOURCE_LAGAF) : ?>
+        <?php echo $session->getType(); ?> - <?php echo $session->getDuree(); ?> -
     <?php endif; ?>
     Liste principale
-    <?php if ($instance->getSource() !== HasSourceInterface::SOURCE_LAGAF) : ?>
-        <?php echo count($instance->getListePrincipale());  ?>/<?php echo $instance->getNbPlacePrincipale(); ?>
+    <?php if ($session->getSource() !== HasSourceInterface::SOURCE_LAGAF) : ?>
+        <?php echo count($session->getListePrincipale());  ?>/<?php echo $session->getNbPlacePrincipale(); ?>
     <?php endif; ?>
 <!--    --->
-<!--    Liste complémentaire --><?php //echo count($instance->getListeComplementaire());  ?><!--/--><?php //echo $instance->getNbPlaceComplementaire(); ?>
+<!--    Liste complémentaire --><?php //echo count($session->getListeComplementaire());  ?><!--/--><?php //echo $session->getNbPlaceComplementaire(); ?>
 <?php endif; ?>
 
 
-<?php if (!empty($instance->getDemandesExternes())) : ?>
+<?php if (!empty($session->getDemandesExternes())) : ?>
     <dt> Demandes de formations externes associées</dt>
     <dd>
         <ul>
-            <?php foreach ($instance->getDemandesExternes() as $demandesExterne) : ?>
+            <?php foreach ($session->getDemandesExternes() as $demandesExterne) : ?>
                 <li>
                     Demande #<?php echo $demandesExterne->getId(); ?> (<?php echo $demandesExterne->getAgent()->getDenomination(true); ?>)
                     <?php if ($canAfficherDemande) : ?>
