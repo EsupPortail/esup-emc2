@@ -75,7 +75,7 @@ class FormationInstanceInscritController extends AbstractActionController
             return $d->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS);
         });
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::STAGE_HORS_PLAN, [], false);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::INSCRIPTION_STAGE_HORS_PLAN, [], false);
 
         return new ViewModel([
             'agent' => $agent,
