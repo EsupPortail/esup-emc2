@@ -31,6 +31,7 @@ class JustificationForm extends Form {
                 ],
             ],
             'attributes' => [
+                'id' => 'missions',
                 'class' => 'type2 form-control',
             ]
         ]);
@@ -46,6 +47,7 @@ class JustificationForm extends Form {
                 ],
             ],
             'attributes' => [
+                'id' => 'justification',
                 'class' => 'type2 form-control',
             ]
         ]);

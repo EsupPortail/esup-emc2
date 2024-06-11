@@ -236,17 +236,11 @@ class InscriptionController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $justification = (isset($data['justification']) && trim($data['justification']) !== '') ? trim($data['justification']) : null;
-                if ($justification === null) {
-                    $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec du refus  </strong></span> <br/> Veuillez justifier votre refus !");
-                } else {
-                    $inscription->setJustificationRefus($justification);
-                    $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_RESPONSABLE);
-                    $this->getInscriptionService()->historise($inscription);
-                    $this->flashMessenger()->addSuccessMessage("Refus effectué.");
-                    $this->getNotificationService()->triggerResponsableRefus($inscription);
-                    //todo trigger reclassement
-                }
+                $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_RESPONSABLE);
+                $this->getInscriptionService()->historise($inscription);
+                $this->flashMessenger()->addSuccessMessage("Refus effectué.");
+                $this->getNotificationService()->triggerResponsableRefus($inscription);
+                exit();
             }
         }
 
