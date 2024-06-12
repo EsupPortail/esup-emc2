@@ -11,6 +11,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionService;
+use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -70,6 +71,12 @@ class InscriptionAssertionFactory
         $assertion->setPrivilegeService($privilegeService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
+
+        /* @var $application Application */
+        $application = $container->get('Application');
+        $mvcEvent = $application->getMvcEvent();
+        $assertion->setMvcEvent($mvcEvent);
+
         return $assertion;
     }
 }
