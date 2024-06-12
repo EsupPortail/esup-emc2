@@ -105,7 +105,7 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                                 $structure = $affectation->getStructure();
                                 $structures[$structure->getId()] = $structure;
                             }
-                            usort($structures, function (Structure $a, Structure $b) { return ($a->getLibelleCourt() .' '. $a->getLibelleLong()) < ($b->getLibelleCourt() .' '. $b->getLibelleLong());});
+                            usort($structures, function (Structure $a, Structure $b) { return ($a->getLibelleCourt() .' '. $a->getLibelleLong()) <=> ($b->getLibelleCourt() .' '. $b->getLibelleLong());});
                         ?>
                         <?php foreach ($structures as $structure) : ?>
 
