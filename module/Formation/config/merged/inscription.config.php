@@ -2,6 +2,8 @@
 
 namespace Formation;
 
+use Formation\Assertion\InscriptionAssertion;
+use Formation\Assertion\InscriptionAssertionFactory;
 use Formation\Controller\FormationController;
 use Formation\Controller\InscriptionController;
 use Formation\Controller\InscriptionControllerFactory;
@@ -19,6 +21,7 @@ use Formation\Form\Justification\JustificationHydrator;
 use Formation\Form\Justification\JustificationHydratorFactory;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
+use Formation\Provider\Privilege\InscriptionPrivileges;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Inscription\InscriptionServiceFactory;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
@@ -26,9 +29,28 @@ use Formation\Service\InscriptionFrais\InscriptionFraisServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'Inscription' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            InscriptionPrivileges::INSCRIPTION_AFFICHER,
+                        ],
+                        'resources' => ['Inscription'],
+                        'assertion' => InscriptionAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -46,8 +68,9 @@ return [
                         'afficher'
                     ],
                     'privileges' => [
-                        FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
+                        InscriptionPrivileges::INSCRIPTION_AFFICHER,
                     ],
+                    'assertion' => InscriptionAssertion::class,
                 ],
                 [
                     'controller' => InscriptionController::class,
@@ -372,6 +395,7 @@ return [
         'factories' => [
             InscriptionService::class => InscriptionServiceFactory::class,
             InscriptionFraisService::class => InscriptionFraisServiceFactory::class,
+            InscriptionAssertion::class => InscriptionAssertionFactory::class,
         ],
     ],
     'controllers' => [

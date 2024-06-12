@@ -132,6 +132,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
         return new ViewModel([
+            'title' => "Visualisation de l'inscription",
             'inscription' => $inscription,
         ]);
     }

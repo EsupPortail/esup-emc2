@@ -7,6 +7,7 @@ use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
+use Formation\Provider\Privilege\InscriptionPrivileges;
 
 /**
  * @var Inscription[] $inscriptions
@@ -70,7 +71,7 @@ usort($dictionnaryDemandes,
 
 <div class="row">
     <div class="col-md-6">
-        <h3> Formations du plan de formation </h3>
+        <h3> Formations du plan de formation</h3>
 
         <?php /** @var Inscription[] $ds */ ?>
         <ul>
@@ -81,10 +82,20 @@ usort($dictionnaryDemandes,
 
                     <?php foreach ($ds as $d) : ?>
                         <br/>
+                        <?php $canVoirInscription = $this->isAllowed($d, InscriptionPrivileges::INSCRIPTION_AFFICHER); ?>
+
                         <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getSession()->getFormation()->getLibelle(); ?>
                         (<?php echo $d->getSession()->getPeriode(); ?>)
                         <br/>
+                        <?php if ($canVoirInscription) : ?>
+                        <?php /** @see \Formation\Controller\InscriptionController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('formation/inscription/afficher', ['inscription' => $d->getId()], [], true); ?>"
+                           class="ajax-modal">
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                        </a>
+                        <?php endif; ?>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <?php if ($canValiderResponsable && $d->isEtatActif(InscriptionEtats::ETAT_DEMANDE)) : ?>
                             <?php /** @see \Formation\Controller\InscriptionController::validerResponsableAction() */ ?>

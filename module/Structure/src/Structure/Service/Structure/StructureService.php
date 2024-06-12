@@ -640,4 +640,8 @@ EOS;
         }
         return [$conserver, $retirer, $raison];
     }
+
+    public function isObservateurS(array $getStructures, Agent $inscrit)
+    {
+    }
 }
