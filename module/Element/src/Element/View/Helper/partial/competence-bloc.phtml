@@ -165,6 +165,9 @@ ksort($groupes);
                         <?php if ($displayRaison) : ?>
                             <?php echo $this->raisons($element['raison']); ?>
                         <?php endif; ?>
+                        <?php if ($competence->getReferentiel() !== null): ?>
+                            <span class="badge" style="background: <?php echo $competence->getReferentiel()->getCouleur(); ?>;"><?php echo $competence->getReferentiel()->getLibelleCourt(); ?> - <?php echo $competence->getIdSource(); ?></span>
+                        <?php endif; ?>
                         <?php if ($old && $old->getCommentaire()) : ?>
                             <br>
                             <u>Précision :</u> <?php echo $old->getCommentaire(); ?>
