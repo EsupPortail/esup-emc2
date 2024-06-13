@@ -9,6 +9,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use DateTime;
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
@@ -488,7 +489,27 @@ class NotificationService {
         return null;
     }
 
-    // NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE /////////////////////////////////////////////////////////////
+    public function triggerAjoutAbonnementPostCloture(Inscription $inscription): ?Mail
+    {
+        $vars = [
+            'agent' => $inscription->getAgent(),
+            'session' => $inscription->getSession(),
+            'formation' => $inscription->getSession()->getFormation(),
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+
+        $adresse = $inscription->getIndividu()->getEmail();
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_ABONNEMENT_POST_CLOTURE, $vars);
+        $mail = $this->getMailService()->sendMail($adresse, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $mail->setMotsClefs([$rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+
+    }
+
+    /** NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE ***********************************************************/
 
     public function triggerValidationAgent(DemandeExterne $demande) : ?Mail
     {
@@ -593,4 +614,6 @@ class NotificationService {
         $this->getMailService()->update($mail);
         return $mail;
     }
+
+
 }

@@ -71,9 +71,9 @@ class UrlService {
         return UrlService::trueLink($url);
     }
 
-    static public function trueLink(string $url) : string
+    static public function trueLink(string $url, string $texte = null) : string
     {
-        return "<a href='".$url."' target='_blank'>".$url."</a>";
+        return "<a href='".$url."' target='_blank'>".$texte??$url."</a>";
     }
 
 }
