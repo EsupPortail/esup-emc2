@@ -9,7 +9,6 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use DateTime;
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
@@ -58,6 +57,16 @@ class NotificationService {
         return $email;
     }
 
+    public function generateAndSend(string $templateCode, $adresses, array $motsClefs = [], array $vars = []) : ?Mail
+    {
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode($templateCode, $vars);
+        $mail = $this->getMailService()->sendMail($adresses, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $motsClefs[] =  $rendu->getTemplate()->generateTag();
+        $mail->setMotsClefs($motsClefs);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
+
     /** GESTION DES INSCRIPTIONS **************************************************************************************/
 
     public function triggerInscriptionAgent(Agent $agent, FormationInstance $instance) : ?Mail
@@ -69,13 +78,7 @@ class NotificationService {
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $vars);
-
-        $mail = $this->getMailService()->sendMail($this->getMailsSuperieursByAgent($agent), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        if ($mail) {
-            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
-        }
+        $mail = $this->generateAndSend(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $this->getMailsSuperieursByAgent($agent), [$instance->generateTag()], $vars);
         return $mail;
     }
 
@@ -127,11 +130,9 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_REFUS, $vars);
-
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
-
         return $mail;
     }
 
@@ -500,11 +501,9 @@ class NotificationService {
         ];
 
         $adresse = $inscription->getIndividu()->getEmail();
-
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_ABONNEMENT_POST_CLOTURE, $vars);
-        $mail = $this->getMailService()->sendMail($adresse, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        $mail->setMotsClefs([$rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        $mail = $this->generateAndSend(
+            MailTemplates::FORMATION_ABONNEMENT_POST_CLOTURE, $adresse,
+            [$inscription->generateTag(), $inscription->getSession()->generateTag()], $vars);
         return $mail;
 
     }

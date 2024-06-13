@@ -320,4 +320,9 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
     }
+
+    public function generateTag(): string
+    {
+        return 'Inscription_'. $this->getId();
+    }
 }

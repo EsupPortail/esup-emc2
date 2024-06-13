@@ -73,7 +73,7 @@ class UrlService {
 
     static public function trueLink(string $url, string $texte = null) : string
     {
-        return "<a href='".$url."' target='_blank'>".$texte??$url."</a>";
+        return "<a href='".$url."' target='_blank'>".($texte??$url)."</a>";
     }
 
 }

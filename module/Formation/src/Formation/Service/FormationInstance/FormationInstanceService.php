@@ -433,10 +433,12 @@ class FormationInstanceService
         $formation = $instance->getFormation();
         foreach ($instance->getListeComplementaire() as $inscription) {
             $agent = $inscription->getAgent();
-            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
-            if ($abonnement === null) {
-                $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
-                $this->getNotificationService()->triggerAjoutAbonnementPostCloture($inscription);
+            if ($agent !== null) { // exclusion des stagiaires externes
+                $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+                if ($abonnement === null) {
+                    $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+                    $this->getNotificationService()->triggerAjoutAbonnementPostCloture($inscription);
+                }
             }
         }
         return $instance;
