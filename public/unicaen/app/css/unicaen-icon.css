@@ -339,3 +339,10 @@
 .icon.icon-gerer:before {
     content:"\f013";
 }
+
+.icon.icon-vider::before,
+.icon.icon-nettoyer::before,
+.icon.icon-clear::before
+{
+    content:"\f51a";
+}

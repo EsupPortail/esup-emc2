@@ -190,6 +190,17 @@ class CompetenceService {
         return $result;
     }
 
+    /** @return Competence[] */
+    public function getCompetencesByRefentiel(?CompetenceReferentiel $referentiel): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('competence.referentiel = :referentiel')
+            ->setParameter('referentiel', $referentiel)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     public function getCompetenceByRefentiel(CompetenceReferentiel $referentiel, string $id)
     {
         $qb = $this->createQueryBuilder()
@@ -244,4 +255,6 @@ class CompetenceService {
         if ($wasModified) $this->update($competence);
         return $competence;
     }
+
+
 }

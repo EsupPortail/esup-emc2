@@ -75,6 +75,15 @@ return [
                         CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_EFFACER,
                     ],
                 ],
+                [
+                    'controller' => CompetenceReferentielController::class,
+                    'action' => [
+                        'vider',
+                    ],
+                    'privileges' => [
+                        CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_GERER_COMPETENCE,
+                    ],
+                ],
             ],
         ],
     ],
@@ -163,6 +172,17 @@ return [
                                         /** @see CompetenceReferentielController::supprimerAction() */
                                         'controller' => CompetenceReferentielController::class,
                                         'action' => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            'vider' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/vider/:competence-referentiel',
+                                    'defaults' => [
+                                        /** @see CompetenceReferentielController::viderAction() */
+                                        'controller' => CompetenceReferentielController::class,
+                                        'action' => 'vider',
                                     ],
                                 ],
                             ],
