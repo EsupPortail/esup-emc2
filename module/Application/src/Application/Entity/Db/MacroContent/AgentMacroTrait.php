@@ -153,15 +153,29 @@ trait AgentMacroTrait
     /**
      * @return string
      */
-    public function toStringQuotiteTravaillee() : string
+    public function toStringModaliteDeService() : string
     {
-        /** @var Agent $agent */
         $agent = $this;
         $quotites = $agent->getQuotitesActives();
-        if ($quotites === null or empty($quotites)) return 'Aucune quotité de remontée du SIRH';
+        if (empty($quotites)) {
+            $quotite = new AgentQuotite();
+            $quotite->setAgent($agent);
+            $quotite->setQuotite(100);
+            $quotites[] = $quotite;
+        }
 
+        $array = [];
+        foreach ($quotites as $quotite) {
+            $modalite = $quotite->getModaliteDeService();
+            $pourcentage = $quotite->getQuotite()??100;
+            if ($modalite === null) {
+                $array[] = $pourcentage."% ";
+            } else {
+                $array[] = "$modalite (". $pourcentage. "%)";
+            }
+        }
         $texte = "";
-        $texte = implode("<br>",array_map(function (AgentQuotite $a) { return ($a->getQuotite())?$a->getQuotite()."%":"100%"; }, $quotites));
+        $texte = implode("<br>",$array);
         return $texte;
     }
 
@@ -214,8 +228,8 @@ trait AgentMacroTrait
         $texte .= "<td>".$this->toStringGradesActifs()."</td>";
         $texte .= "</tr>";
         $texte .= "<tr>";
-        $texte .= "<th> Quotité travaillée </th>";
-        $texte .= "<td>".$this->toStringQuotiteTravaillee()."</td>";
+        $texte .= "<th> Modalité de service </th>";
+        $texte .= "<td>".$this->toStringModaliteDeService()."</td>";
         $texte .= "</tr>";
         $texte .= "</table>";
         return $texte;
@@ -373,7 +387,7 @@ trait AgentMacroTrait
 
     public function toStringQuotite() : string
     {
-        return $this->toStringQuotiteTravaillee();
+        return $this->toStringModaliteDeService();
     }
 
     public function toStringEchelon() : string
