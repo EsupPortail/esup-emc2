@@ -6,11 +6,15 @@
  * @var string[] $label
  * @var array $values
  * @var Agent $agent
+ * @var Niveau[] $niveaux
  */
 
 use Application\Entity\Db\Agent;
+use Element\Entity\Db\Niveau;
 
 ?>
+
+<!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
 
 <?php if ($agent) : ?>
     <?php echo $agent->getDenomination(); ?>
@@ -41,9 +45,13 @@ use Application\Entity\Db\Agent;
                 ticks: {
                     min: 0,
                     max: 5,
-                    stepSize: 1
-                }
+                    stepSize: 1,
+                    callback: function(val) {
+                        let niveaux = [<?php echo implode(",",array_map(function ($a) { return "'".$a."'";}, $niveaux)); ?>];
+                        return niveaux[val];
+                    },
+                },
             },
-        }
+        },
     });
 </script>

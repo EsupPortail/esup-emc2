@@ -93,10 +93,11 @@ class NiveauService {
         return $result;
     }
 
-    public function getMaitrisesNiveauxAsOptions(string $type="", string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false) : array
+    public function getMaitrisesNiveauxAsOptions(string $type="", string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false, bool $withZero = false) : array
     {
         $maitrises = $this->getMaitrisesNiveaux($type, $champ, $ordre, $nonHistorise);
         $options = [];
+        if ($withZero) $options[0] = "";
         foreach ($maitrises as $maitrise) {
             $options[$maitrise->getId()] = $maitrise->getLibelle();
         }

@@ -5,13 +5,16 @@ namespace FicheMetier\Controller;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
+use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class GraphiqueController extends AbstractActionController {
+class GraphiqueController extends AbstractActionController
+{
     use AgentServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use NiveauServiceAwareTrait;
 
     public function graphiqueCompetencesAction(): ViewModel
     {
@@ -62,6 +65,7 @@ class GraphiqueController extends AbstractActionController {
             'agent' => $agent,
             'label' => $labels,
             'values' => $values,
+            'niveaux' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions('Competence','niveau','ASC',false, true),
         ]);
         $vm->setTemplate('fiche-metier/graphique/graphique-radar');
         return $vm;
@@ -116,6 +120,7 @@ class GraphiqueController extends AbstractActionController {
             'agent' => $agent,
             'label' => $labels,
             'values' => $values,
+            'niveaux' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions('Application','niveau','ASC',false, true),
         ]);
         $vm->setTemplate('fiche-metier/graphique/graphique-radar');
         return $vm;
