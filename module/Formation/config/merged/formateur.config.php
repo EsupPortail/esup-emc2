@@ -148,9 +148,9 @@ return [
                                 ],
                             ],
                             'ajouter' => [
-                                'type' => Literal::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/ajouter',
+                                    'route' => '/ajouter[/:session]',
                                     'defaults' => [
                                         /** @see FormateurController::ajouterAction() */
                                         'action' => 'ajouter',
