@@ -163,11 +163,20 @@ class CompetenceService {
 
     private function competenceOptionify(Competence $competence, int $max_length=60) : array
     {
+        /** @var CompetenceReferentiel $referentiel */
+        $referentiel = $competence->getReferentiel();
+        $type = $competence->getType();
         $texte = (strlen($competence->getLibelle())>$max_length)?substr($competence->getLibelle(),0,$max_length)." ...":$competence->getLibelle();
         $this_option = [
             'value' =>  $competence->getId(),
             'attributes' => [
-                'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $texte . " " . (($competence->getSource())?"<span class='label' style='background: darkslategrey;'>" . $competence->getSource() . " - " . $competence->getIdSource(). "</span>":""):"",
+                'data-content' => $texte
+                    . "&nbsp;" . "<span class='badge'>"
+                    . (($type !== null)?$type->getLibelle():"Sans type")
+                    . "</span>"
+                    . "&nbsp;" . "<span class='badge' style='background: ".(($referentiel !== null)?$referentiel->getCouleur():"gray")."'>"
+                    . (($referentiel !== null)?$referentiel->getLibelleCourt():"Sans référentiel") . " - " . $competence->getIdSource()
+                    . "</span>",
             ],
             'label' => $texte,
         ];
