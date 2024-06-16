@@ -44,10 +44,18 @@ use Element\Entity\Db\Niveau;
             scale: {
                 ticks: {
                     min: 0,
-                    max: 5,
+                    max: <?php $maxKey = array_key_last($niveaux); echo $maxKey; ?>,
                     stepSize: 1,
                     callback: function(val) {
-                        let niveaux = [<?php echo implode(",",array_map(function ($a) { return "'".$a."'";}, $niveaux)); ?>];
+                        <?php
+                            $maxKey = array_key_last($niveaux);
+                            $labels = [];
+                            for ($key = 0; $key <= $maxKey; $key++) {
+                                if (isset($niveaux[$key])) { $labels[] = $niveaux[$key]; } else { $labels[] = ''; }
+                            }
+                        ?>
+                        let niveaux = [<?php echo implode(",",array_map(function ($a) { return "'".$a."'";}, $labels)); ?>];
+                        console.log(niveaux);
                         return niveaux[val];
                     },
                 },
