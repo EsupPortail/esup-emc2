@@ -20,6 +20,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class FicheMetierControllerFactory {
 
@@ -38,6 +39,7 @@ class FicheMetierControllerFactory {
          * @var FichePosteService $fichePosteService
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var ParametreService $parametreService
          * @var ThematiqueElementService $thematiqueElementService
          * @var ThematiqueTypeService $thematiqueTypeService
          */
@@ -47,6 +49,7 @@ class FicheMetierControllerFactory {
         $fichePosteService = $container->get(FichePosteService::class);
         $metierService = $container->get(metierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $parametreService = $container->get(ParametreService::class);
         $thematiqueElementService = $container->get(ThematiqueElementService::class);
         $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
@@ -74,6 +77,7 @@ class FicheMetierControllerFactory {
         $controller->setFichePosteService($fichePosteService);
         $controller->setMetierService($metierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
+        $controller->setParametreService($parametreService);
         $controller->setThematiqueElementService($thematiqueElementService);
         $controller->setThematiqueTypeService($thematiqueTypeService);
         $controller->setFicheMetierImportationForm($importationForm);
