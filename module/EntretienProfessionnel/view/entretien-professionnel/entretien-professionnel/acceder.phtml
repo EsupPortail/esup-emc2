@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::acceder Action()
+ * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction()
  * @var UserInterface $user
  * @var RoleInterface $role
  *
@@ -9,6 +9,7 @@
  * @var EntretienProfessionnel $entretien
  * @var Agent $agent
  * @var FichePoste[] $ficheposte
+ * @var ?Fichier $ficheposteFichier
  * @var FicheMetier[] $fichesmetiers
  * @var Mail[] $mails
  * @var string[] $documents
@@ -33,6 +34,7 @@ use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use Fichier\Entity\Db\Fichier;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEvenement\Provider\Privilege\EvenementinstancePrivileges;
 use UnicaenMail\Entity\Db\Mail;
@@ -111,7 +113,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 
 
 <?php
-    echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents, 'observateurs' => $observateurs], [], true);
+    echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'ficheposteFichier' => $ficheposteFichier, 'fichesmetiers' => $fichesmetiers, "documents" => $documents, 'observateurs' => $observateurs], [], true);
 ?>
 
 

@@ -773,10 +773,10 @@ class Agent implements
         return $best;
     }
 
+    /** @return Fichier[] */
     public function getFichiersByCode(string $code) : array
     {
         $result = [];
-        /** @var Fichier $fichier */
         foreach ($this->getFichiers() as $fichier) {
             if ($fichier->getNature()->getCode() === $code) $result[] = $fichier;
         }

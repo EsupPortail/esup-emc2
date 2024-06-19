@@ -274,6 +274,15 @@ class EntretienProfessionnelController extends AbstractActionController
             $fichesmetiers[] = $fiche->getFicheType();
         }
 
+        //recupération de la fiche de poste (version fichier si elle existe)
+        $fichiers = $agent->getFichiersByCode('FICHE_POSTE');
+        $ficheposteFichier = null;
+        if (!empty($fichiers)) {
+            foreach ($fichiers as $fichier) {
+                if ($ficheposteFichier === null OR $fichier->getHistoCreation() > $ficheposteFichier->getHistoCreation()) $ficheposteFichier = $fichier;
+            }
+        }
+
         $superieures = array_map(function (AgentSuperieur $a) {
             return $a->getSuperieur();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
@@ -295,6 +304,8 @@ class EntretienProfessionnelController extends AbstractActionController
             'autorites' => $autorites,
 
             'ficheposte' => $ficheposte,
+            'ficheposteFichier' => $ficheposteFichier,
+
             'fichesmetiers' => $fichesmetiers,
             'mails' => $mails,
             'documents' => $this->getEntretienProfessionnelService()->getDocumentsUtiles(),
