@@ -78,8 +78,12 @@ class RappelCampagneAvancementAutoriteService extends EvenementService {
                     }
                 }
                 if (!$completed) {
-                    $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
-                    $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
+                    try {
+                        $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
+                        $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
+                    } catch (\Laminas\Mail\Protocol\Exception\RuntimeException $e ) {
+                        $message .= "<span class='text-danger'>Notification impossible vers ".$autorite->getSuperieur()->getDenomination()."</span><br/>\n";
+                    };
                 }
             }
         } catch(Exception $e) {
