@@ -273,6 +273,20 @@ create table entretienprofessionnel_recours
             references unicaen_utilisateur_user
 );
 
+-- TABLE
+create table entretienprofessionnel_evenement
+(
+    entretien_id integer not null
+        constraint epe_entretienprofessionnel_id_fk references entretienprofessionnel on delete cascade,
+    evenement_id integer not null
+        constraint epe_unicaen_evenement_instance_id_fk references unicaen_evenement_instance on delete cascade,
+    constraint entretienprofessionnel_evenement_pk primary key (entretien_id, evenement_id)
+);
+create index entretienprofessionnel_evenement_entretien_id_index on entretienprofessionnel_evenement (entretien_id);
+create index entretienprofessionnel_evenement_evenement_id_index on entretienprofessionnel_evenement (evenement_id);
+comment on table entretienprofessionnel_agent_force is 'Table de jointure reliant les entretiens professionnels aux événements qui leurs sont associés';
+
+
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
 -- I::::::::IN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R T:::::::::::::::::::::T
@@ -1067,10 +1081,6 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <p> </p>
 <p>Cordialement,<br />EMC2</p>
 <p> </p>', null, 'EntretienProfessionnel\Provider\Template');
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
-VALUES ('STAGE_HORS_PLAN', '<p>Bloc de texte afficher en haut de la page de demande des stages hors du plan de formation</p>', 'texte', 'Stage hors plan', '<p><strong>La demande d''inscription ne vaut pas acceptation.</strong> Votre inscription est soumise à validation et en fonction des places disponibles.</p>', null, 'Formation\Provider\Template');
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
-VALUES ('PLANS_DE_FORMATION', '<p>Bandeau en haut de la page Plans de formation</p>', 'texte', 'Plans de formation', '<p>En vous abonnant aux notifications, vous recevrez un mail une fois la session ouverte et vous pourrez vous inscrire.</p>', null, 'Formation\Provider\Template');
 
 ------------------------------------------------------------------------------------------------------------------------
 -- FORMULAIRE DE L'ENTRETIEN PROFESSIONNEL -----------------------------------------------------------------------------
