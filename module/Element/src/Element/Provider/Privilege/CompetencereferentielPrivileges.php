@@ -12,4 +12,5 @@ class CompetencereferentielPrivileges extends Privileges
     const COMPETENCEREFERENTIEL_MODIFIER = 'competencereferentiel-competencereferentiel_modifier';
     const COMPETENCEREFERENTIEL_HISTORISER = 'competencereferentiel-competencereferentiel_historiser';
     const COMPETENCEREFERENTIEL_EFFACER = 'competencereferentiel-competencereferentiel_effacer';
+    const COMPETENCEREFERENTIEL_GERER_COMPETENCE = 'competencereferentiel-competencereferentiel_gerer_competence';
 }

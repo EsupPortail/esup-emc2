@@ -1,0 +1,69 @@
+<?php
+
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use UnicaenParametre\Entity\Db\Parametre;
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::afficherAction()
+ * @var FicheMetier $fiche
+ * @var array $competences
+ * @var array $applications
+ * @var array $missions
+ * @var array $thematiquestypes
+ * @var array $thematiqueselements
+ * @var Parametre[] $parametres
+ *
+ * @var string $mode ('affichage', 'edition-fiche-metier')
+ */
+
+$libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
+$titre = " de la fiche métier #" . $fiche->getId(). " : " . $libelle;
+if ($mode === 'affichage') $titre = "Affichage".$titre;
+if ($mode === 'edition-fiche-metier') $titre = "Modification".$titre;
+
+
+
+$this->headTitle($titre);
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_TITRE]) || $parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() !== "false") : ?>
+            <?php echo $this->partial('partial/titre',   ['fichemetier' => $fiche, 'titre' => $titre, 'mode' => $mode ],  [], true); ?>
+        <?php endif; ?>
+    </div>
+    <div class="col-md-4">
+        <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RESUME]) || $parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() !== "false") : ?>
+            <?php echo $this->partial('partial/resume',   ['fichemetier' => $fiche, 'mode' => $mode ],  [], true); ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/raison',   ['fichemetier' => $fiche, 'mode' => $mode ],  [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_MISSION]) || $parametres[FicheMetierParametres::DISPLAY_MISSION]->getValeur() !== "false") : ?>
+   <?php echo $this->partial('partial/missions-principales',   ['fichemetier' => $fiche, 'missionsprincipales' => $missions, 'mode' => $mode ],  [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/competences',            ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode ],       [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICAITON]) || $parametres[FicheMetierParametres::DISPLAY_APPLICAITON]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/applications',           ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode ],     [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_CONTEXTE]) || $parametres[FicheMetierParametres::DISPLAY_CONTEXTE]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/thematiques', ['fichemetier' => $fiche, 'thematiquesTypes' => $thematiquestypes, 'thematiquesElements' => $thematiqueselements, 'mode' => $mode], [], true); ?>
+<?php endif; ?>
+
+<script>
+$(function () {
+    $('.datatable').DataTable({
+            paging: false,
+        });
+    });
+</script>

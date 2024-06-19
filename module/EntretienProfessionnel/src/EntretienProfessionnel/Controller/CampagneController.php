@@ -319,11 +319,13 @@ class CampagneController extends AbstractActionController {
         /** @var Agent[] $agents */
         $agents = $this->getCampagneService()->getAgentsEligibles($campagne);
         $entretiens = $campagne->getEntretiensProfessionnels();
+        foreach ($entretiens as $entretien) $agents[$entretien->getAgent()->getId()] = $entretien->getAgent();
 
-        $headers = ['Prénom', 'Nom', 'Affectations', 'Supérieur·es', 'Autorités', 'Responsable d\'entretien', 'Validation du responsable', 'Validation de l\'autorité', 'Validation de l\'agent'];
+        $headers = ['Identifiant', 'Prénom', 'Nom', 'Affectations', 'Supérieur·es', 'Autorités', 'Responsable d\'entretien', 'Validation du responsable', 'Validation de l\'autorité', 'Validation de l\'agent'];
         $resume = [];
         foreach ($agents as $agent) {
             $resume[$agent->getId()] = [
+                'Identifiant' => '',
                 'Prénom' => $agent->getPrenom(),
                 'Nom' => $agent->getNomUsuel()??$agent->getNomFamille(),
                 'Affectations' => implode("\n",array_map(function (AgentAffectation $a) { return $a->getStructure()->getLibelleLong(); },$agent->getAffectationsActifs($campagne->getDateDebut()))),
@@ -338,6 +340,7 @@ class CampagneController extends AbstractActionController {
 
         foreach ($entretiens as $entretien) {
             if ($entretien->estNonHistorise()) {
+                $resume[$entretien->getAgent()->getId()]['Identifiant'] = $entretien->getId();
                 $resume[$entretien->getAgent()->getId()]['Responsable d\'entretien'] = $entretien->getResponsable()->getDenomination();
                 $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
                 if ($validationResponsable) $resume[$entretien->getAgent()->getId()]['Validation du responsable'] = $validationResponsable->getHistoCreation()->format('d/m/Y à H:i');

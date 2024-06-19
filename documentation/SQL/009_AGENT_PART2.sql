@@ -233,7 +233,8 @@ create table agent_carriere_quotite
         constraint agent_carriere_quotite_agent_c_individu_fk
             references agent
             on delete cascade,
-    quotite               integer,
+    quotite                 integer,
+    modalite_de_service     varchar(1024),
     d_debut               timestamp,
     d_fin                 timestamp,
     source_id             varchar(128),

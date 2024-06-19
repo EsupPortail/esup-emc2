@@ -422,7 +422,8 @@ WITH d(code, lib, ordre) AS (
     SELECT 'competencereferentiel_ajouter', 'Ajouter', 30 UNION
     SELECT 'competencereferentiel_modifier', 'Modifier', 40 UNION
     SELECT 'competencereferentiel_historiser', 'Historiser/Restaurer', 50 UNION
-    SELECT 'competencereferentiel_effacer', 'Supprimer', 60
+    SELECT 'competencereferentiel_effacer', 'Supprimer', 60 UNIOn
+    SELECT 'competencereferentiel_gerer_competence', 'Gérer les compétences associées', 100
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d

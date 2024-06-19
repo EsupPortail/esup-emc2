@@ -53,7 +53,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
     <?php foreach ($realisees as $inscription) : ?>
         <div class="row formation-inscription">
             <div class="col-md-7 description">
-                <?php echo $this->formationInstanceInformations($inscription->getSession(), 'bloc'); ?>
+                <?php echo $this->sessionInformations($inscription->getSession(), 'bloc'); ?>
                 <br/>
                 <br/>
             </div>

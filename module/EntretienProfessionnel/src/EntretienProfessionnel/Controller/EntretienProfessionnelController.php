@@ -39,6 +39,7 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenEvenement\Service\Evenement\EvenementServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
@@ -54,6 +55,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use RenduServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use EvenementServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
@@ -272,6 +274,15 @@ class EntretienProfessionnelController extends AbstractActionController
             $fichesmetiers[] = $fiche->getFicheType();
         }
 
+        //recupération de la fiche de poste (version fichier si elle existe)
+        $fichiers = $agent->getFichiersByCode('FICHE_POSTE');
+        $ficheposteFichier = null;
+        if (!empty($fichiers)) {
+            foreach ($fichiers as $fichier) {
+                if ($ficheposteFichier === null OR $fichier->getHistoCreation() > $ficheposteFichier->getHistoCreation()) $ficheposteFichier = $fichier;
+            }
+        }
+
         $superieures = array_map(function (AgentSuperieur $a) {
             return $a->getSuperieur();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
@@ -293,6 +304,8 @@ class EntretienProfessionnelController extends AbstractActionController
             'autorites' => $autorites,
 
             'ficheposte' => $ficheposte,
+            'ficheposteFichier' => $ficheposteFichier,
+
             'fichesmetiers' => $fichesmetiers,
             'mails' => $mails,
             'documents' => $this->getEntretienProfessionnelService()->getDocumentsUtiles(),
@@ -349,7 +362,12 @@ class EntretienProfessionnelController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelService()->delete($entretien);
+            if ($data["reponse"] === "oui") {
+                foreach ($entretien->getEvenements() as $evenement) {
+                    $this->getEvenementService()->supprimer($evenement);
+                }
+                $this->getEntretienProfessionnelService()->delete($entretien);
+            }
             exit();
         }
 
@@ -394,6 +412,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
                     $dateNotification = (new DateTime())->add(new DateInterval('P1W'));
                     $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
+                    $this->getEntretienProfessionnelService()->update($entretien);
                     break;
 
                 case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:

@@ -21,6 +21,7 @@ class SessionHydrator implements HydratorInterface
             'cout_ht' => ($object) ? $object->getCoutHt() : null,
             'cout_ttc' => ($object) ? $object->getCoutTtc() : null,
             'cout_vacation' => ($object) ? $object->getCoutVacation() : null,
+            'recette_ttc' => ($object) ? $object->getRecetteTtc() : null,
         ];
         return $data;
     }
@@ -36,6 +37,7 @@ class SessionHydrator implements HydratorInterface
         $coutHt = (isset($data['cout_ht']) and trim($data['cout_ht']) !== "") ? trim($data['cout_ht']) : null;
         $coutTtc = (isset($data['cout_ttc']) and trim($data['cout_ttc']) !== "") ? trim($data['cout_ttc']) : null;
         $coutVacation = (isset($data['cout_vacation']) and trim($data['cout_vacation']) !== "") ? trim($data['cout_vacation']) : null;
+        $recetteTtc = (isset($data['recette_ttc']) and trim($data['recette_ttc']) !== "") ? trim($data['recette_ttc']) : null;
 
         /** @var FormationInstance $object */
         $object->setComplement($description);
@@ -47,6 +49,7 @@ class SessionHydrator implements HydratorInterface
         $object->setCoutHt($coutHt);
         $object->setCoutTtc($coutTtc);
         $object->setCoutVacation($coutVacation);
+        $object->setRecetteTtc($recetteTtc);
 
         return $object;
     }

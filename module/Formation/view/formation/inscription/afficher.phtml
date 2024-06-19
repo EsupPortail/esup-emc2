@@ -11,11 +11,44 @@ $this->headTitle("Inscription #".$inscription->getId());
 
 ?>
 
-<h1 class='page-header'>
-    Inscription <?php echo $inscription->getId();?>
-</h1>
+<dl class="row">
+    <dt class="col-md-4"> Personne inscrite </dt>
+    <dd class="col-md-8"> <?php echo $inscription->getIndividu()->getDenomination(true); ?> </dd>
+    <dt class="col-md-4"> Formation </dt>
+    <dd class="col-md-8"> <?php echo $inscription->getSession()->getFormation()->getLibelle(); ?> </dd>
+    <dt class="col-md-4"> Domaine·s </dt>
+    <dd class="col-md-8">
+        <?php $domaines =  $inscription->getSession()->getFormation()->getDomaines(); ?>
+        <?php if (empty($domaines)) : ?>
+            <em> Aucun domaine de précisé </em>
+        <?php else : ?>
+            <ul>
+                <?php foreach ($domaines as $domaine) : ?>
+                    <li> <?php echo $domaine->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Session </dt>
+    <dd class="col-md-8"> #<?php echo $inscription->getSession()->getId(); ?> (Période: <?php echo $inscription->getSession()->getPeriode(); ?>)</dd>
+    <dt class="col-md-4"> État de l'inscription</dt>
+    <dd class="col-md-8"> <?php echo $this->etatinstance($inscription->getEtatActif()); ?></dd>
 
-<span class="todo">
-    Reste à faire
-</span>
+    <?php if ($inscription->getJustificationAgent()) : ?>
+        <dt class="col-md-4"> Justification de l'inscrit·e </dt>
+        <dd class="col-md-8"><?php echo $inscription->getJustificationAgent(); ?></dd>
+    <?php endif; ?>
+    <?php if ($inscription->getJustificationResponsable()) : ?>
+        <dt class="col-md-4"> Justification du responsable </dt>
+        <dd class="col-md-8"><?php echo $inscription->getJustificationResponsable(); ?></dd>
+    <?php endif; ?>
+    <?php if ($inscription->getJustificationDrh()) : ?>
+        <dt class="col-md-4"> Justification de la DRH </dt>
+        <dd class="col-md-8"><?php echo $inscription->getJustificationDrh(); ?></dd>
+    <?php endif; ?>
+    <?php if ($inscription->getJustificationRefus()) : ?>
+        <dt class="col-md-4"> Justification du refus</dt>
+        <dd class="col-md-8"><?php echo $inscription->getJustificationRefus(); ?></dd>
+    <?php endif; ?>
 
+</dl>

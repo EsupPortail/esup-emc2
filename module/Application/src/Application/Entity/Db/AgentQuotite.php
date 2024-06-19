@@ -14,6 +14,7 @@ class AgentQuotite implements HasPeriodeInterface
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?int $quotite = null;
+    private ?string $modaliteDeService = null;
 
     public function getId(): int
     {
@@ -34,6 +35,21 @@ class AgentQuotite implements HasPeriodeInterface
     public function getQuotite(): ?int
     {
         return $this->quotite;
+    }
+
+    public function setQuotite(?int $quotite): void
+    {
+        $this->quotite = $quotite;
+    }
+
+    public function getModaliteDeService(): ?string
+    {
+        return $this->modaliteDeService;
+    }
+
+    public function setModaliteDeService(?string $modaliteDeService): void
+    {
+        $this->modaliteDeService = $modaliteDeService;
     }
 
 }

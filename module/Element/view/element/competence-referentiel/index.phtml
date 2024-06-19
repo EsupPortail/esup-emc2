@@ -22,6 +22,7 @@ $canAjouter = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(Co
 $canModifier = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_MODIFIER));
 $canHistoriser = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_HISTORISER));
 $canDetruire = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_EFFACER));
+$canVider = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_EFFACER));
 
 $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
 
@@ -122,6 +123,17 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
                                 Restaurer
                             </a>
                         <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canVider) : ?>
+                        <br>
+                        <?php /** @see \Element\Controller\CompetenceReferentielController::viderAction() */ ?>
+                        <a href="<?php echo $this->url('element/competence-referentiel/vider', ['competence-referentiel' => $referentiel->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                        <span class="text-warning">
+                            <span class="icon icon-vider"></span>
+                            Vider
+                        </span>
+                        </a>
                     <?php endif; ?>
                     <?php if ($canDetruire) : ?>
                         <br>

@@ -4,12 +4,14 @@
  * @var EntretienProfessionnel $entretien
  * @var Agent $agent
  * @var FichePoste $ficheposte
+ * @var ?Fichier $ficheposteFichier
  * @var FicheMetier[] $fichesmetiers
  * @var string[] $documents
  * @var Observateur[] $observateurs
  */
 
 use Application\Entity\Db\Agent;
+    use Application\Provider\Privilege\AgentPrivileges;
     use EntretienProfessionnel\Entity\Db\Observateur;
     use EntretienProfessionnel\Provider\Privilege\ObservateurPrivileges;
     use FicheMetier\Entity\Db\FicheMetier;
@@ -17,6 +19,7 @@ use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
     use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
+    use Fichier\Entity\Db\Fichier;
     use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 
@@ -70,9 +73,21 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                                     Fiche de poste #<?php echo $ficheposte->getId();?>
                                 </a>
                             <?php else : ?>
-                                <span style="color: darkred;"><span class="icon icon-attention"></span> Aucune fiche de poste</span>
+                                <?php if ($ficheposteFichier !== null) : ?>
+                                    <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                                        <?php /** @see \Fichier\Controller\FichierController::downloadAction() */ ?>
+                                        <a href="<?php echo $this->url('download-fichier', ['fichier' => $ficheposteFichier->getId()] ,[], true); ?>">
+                                            Fiche de poste (fichier)
+                                        </a>
+                                    <?php else: ?>
+                                        Fiche de poste (fichier)
+                                    <?php endif; ?>
+                                <?php else : ?>
+                                    <span style="color: darkred;"><span class="icon icon-attention"></span> Aucune fiche de poste</span>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </dd>
+                        <?php if ($ficheposte) : ?>
                         <dt class="col-md-4"> Fiche(s) métier(s)</dt>
                         <dd class="col-md-8">
                             <?php if (!empty($fichesmetiers)) : ?>
@@ -94,7 +109,7 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                                 <span style="color: darkred;"><span class="icon icon-attention"></span> Aucune fiche métier </span>
                             <?php endif; ?>
                         </dd>
-
+                        <?php endif; ?>
                     <?php endif; ?>
 
                     <dt class="col-md-4"> Structure(s) </dt>
@@ -105,7 +120,7 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                                 $structure = $affectation->getStructure();
                                 $structures[$structure->getId()] = $structure;
                             }
-                            usort($structures, function (Structure $a, Structure $b) { return ($a->getLibelleCourt() .' '. $a->getLibelleLong()) < ($b->getLibelleCourt() .' '. $b->getLibelleLong());});
+                            usort($structures, function (Structure $a, Structure $b) { return ($a->getLibelleCourt() .' '. $a->getLibelleLong()) <=> ($b->getLibelleCourt() .' '. $b->getLibelleLong());});
                         ?>
                         <?php foreach ($structures as $structure) : ?>
 

@@ -57,6 +57,16 @@ class NotificationService {
         return $email;
     }
 
+    public function generateAndSend(string $templateCode, $adresses, array $motsClefs = [], array $vars = []) : ?Mail
+    {
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode($templateCode, $vars);
+        $mail = $this->getMailService()->sendMail($adresses, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $motsClefs[] =  $rendu->getTemplate()->generateTag();
+        $mail->setMotsClefs($motsClefs);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
+
     /** GESTION DES INSCRIPTIONS **************************************************************************************/
 
     public function triggerInscriptionAgent(Agent $agent, FormationInstance $instance) : ?Mail
@@ -68,13 +78,7 @@ class NotificationService {
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $vars);
-
-        $mail = $this->getMailService()->sendMail($this->getMailsSuperieursByAgent($agent), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        if ($mail) {
-            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
-        }
+        $mail = $this->generateAndSend(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $this->getMailsSuperieursByAgent($agent), [$instance->generateTag()], $vars);
         return $mail;
     }
 
@@ -126,11 +130,9 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_REFUS, $vars);
-
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
-
         return $mail;
     }
 
@@ -488,7 +490,25 @@ class NotificationService {
         return null;
     }
 
-    // NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE /////////////////////////////////////////////////////////////
+    public function triggerAjoutAbonnementPostCloture(Inscription $inscription): ?Mail
+    {
+        $vars = [
+            'agent' => $inscription->getAgent(),
+            'session' => $inscription->getSession(),
+            'formation' => $inscription->getSession()->getFormation(),
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+
+        $adresse = $inscription->getIndividu()->getEmail();
+        $mail = $this->generateAndSend(
+            MailTemplates::FORMATION_ABONNEMENT_POST_CLOTURE, $adresse,
+            [$inscription->generateTag(), $inscription->getSession()->generateTag()], $vars);
+        return $mail;
+
+    }
+
+    /** NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE ***********************************************************/
 
     public function triggerValidationAgent(DemandeExterne $demande) : ?Mail
     {
@@ -593,4 +613,6 @@ class NotificationService {
         $this->getMailService()->update($mail);
         return $mail;
     }
+
+
 }

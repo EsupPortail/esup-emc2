@@ -41,6 +41,7 @@ class RappelPasObservationService extends EvenementService {
         $description = "Rappel ''Pas d'Observation'' de l'entretien professionnel #" . $entretien->getId() . " de " . $entretien->getAgent()->getDenomination();
         $evenement = $this->createEvent($description, $description, $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE), $type, $parametres, $dateTraitement);
         $this->ajouter($evenement);
+        $entretien->addEvenement($evenement);
         return $evenement;
     }
 
@@ -56,6 +57,10 @@ class RappelPasObservationService extends EvenementService {
             $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($parametres['entretien']);
             if (!isset($entretien)) {
                 $evenement->setLog("Plus d'entretien professionnel");
+                return Etat::ECHEC;
+            }
+            if ($entretien->estHistorise()) {
+                $evenement->setLog("L'entretien professionnel a été historisé");
                 return Etat::ECHEC;
             }
             if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)) {

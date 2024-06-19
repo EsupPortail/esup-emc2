@@ -53,10 +53,14 @@ class FormationInstanceInscritController extends AbstractActionController
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
         $inscriptions = $this->getInscriptionService()->getInscriptionByUser($utilisateur);
 
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::INSCRIPTION_FORMATION_DU_PLAN, [], false);
+
+
         return new ViewModel([
             'instances' => $instances,
             'inscriptions' => $inscriptions,
             'agent' => $agent,
+            'rendu' => $rendu,
 //            'stagiaire' => $stagiaire,
         ]);
     }
@@ -75,7 +79,7 @@ class FormationInstanceInscritController extends AbstractActionController
             return $d->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS);
         });
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::STAGE_HORS_PLAN, [], false);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::INSCRIPTION_STAGE_HORS_PLAN, [], false);
 
         return new ViewModel([
             'agent' => $agent,

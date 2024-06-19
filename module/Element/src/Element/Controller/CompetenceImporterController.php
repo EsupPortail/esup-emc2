@@ -40,6 +40,8 @@ class CompetenceImporterController extends AbstractActionController
             $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentiel($data['referentiel']);
             if ($referentiel === null) { throw new RuntimeException("Aucun référentiel [".$data['referentiel']."] de trouvé .");}
 
+            $all = file_get_contents($fichier_path);
+            $encoding = mb_detect_encoding($all, 'UTF-8, ISO-8859-1');
 
             //reading
             $array = [];
@@ -49,7 +51,16 @@ class CompetenceImporterController extends AbstractActionController
                 $handle = fopen($fichier_path, "r");
 
                 while ($content = fgetcsv($handle, 0, ";")) {
-                    $array[] = $content;
+                    $array[] = array_map(function (string $a) use ($encoding) {
+//                        for ($i = 0 ; $i < strlen($a) ; $i++) {
+//                            var_dump($a[$i]);
+//                            var_dump(ord($a[$i]));
+//                        }
+                        //Note les backquote ne passe pas dans la fonction de convertion ...
+                        $a = str_replace(chr(63),'\'', $a);
+                        $a = mb_convert_encoding($a, 'UTF-8', $encoding);
+                        return $a;
+                    }, $content);
                 }
             }
             $warning = [];

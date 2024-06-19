@@ -1,0 +1,24 @@
+<?php
+
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Entity\Db\FicheMetier;
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var string $titre
+ * @var string $mode
+ */
+
+$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+
+$metier = $fichemetier->getMetier();
+$libelle = $metier?$metier->getLibelle():"Aucun métier";
+
+?>
+
+
+<h1 class="page-header">
+    <?php echo ($mode === 'affichage')?'Affichage':'Modication'; ?> de la fiche métier
+    <br>
+    <span style="font-weight:bold; color: var(--unistrap-color-main);"> <?php echo $libelle; ?> </span>
+</h1>

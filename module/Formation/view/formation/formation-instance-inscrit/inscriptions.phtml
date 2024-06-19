@@ -54,7 +54,7 @@ foreach ($inscriptions as $inscription) {
     ?>
     <div class="row formation-inscription">
         <div class="col-md-8 description">
-            <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
+            <?php echo $this->sessionInformations($instance, 'bloc'); ?>
             <br/>
             <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
         </div>
@@ -98,7 +98,7 @@ foreach ($inscriptions as $inscription) {
     ?>
     <div class="row formation-inscription">
         <div class="col-md-7 description">
-            <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
+            <?php echo $this->sessionInformations($instance, 'bloc'); ?>
             <br/>
         </div>
         <div class="col-md-5">

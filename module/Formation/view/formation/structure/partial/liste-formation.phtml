@@ -3,6 +3,7 @@
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
+use Formation\Provider\Privilege\InscriptionPrivileges;
 
 /**
  * @var Inscription[] $inscriptions
@@ -54,6 +55,16 @@ usort($dictionnaryDemandes,
                         <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getSession()->getFormation()->getLibelle(); ?>
                         (<?php echo $d->getSession()->getPeriode(); ?>)
+                        <br/>
+                        <?php $canVoirInscription = $this->isAllowed($d, InscriptionPrivileges::INSCRIPTION_AFFICHER); ?>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<?php if ($canVoirInscription) : ?>
+                            <?php /** @see \Formation\Controller\InscriptionController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('formation/inscription/afficher', ['inscription' => $d->getId()], [], true); ?>"
+                               class="ajax-modal">
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </li>
             <?php endforeach; ?>

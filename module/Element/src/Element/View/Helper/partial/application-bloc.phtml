@@ -124,7 +124,7 @@ ksort($groupes);
 
 <div class="listing">
 
-    <table>
+    <table id="application" class="datatable">
         <thead>
         <tr>
             <th style="width:40%;"> Libellé </th>
@@ -164,7 +164,13 @@ ksort($groupes);
                         <u>Précision :</u> <?php echo $old->getCommentaire(); ?>
                     <?php endif; ?>
                 </td>
-                <td> <?php echo $application->getGroupe()->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($application->getGroupe()) : ?>
+                        <?php echo $application->getGroupe()->getLibelle(); ?>
+                    <?php else : ?>
+                        Application sans groupe
+                    <?php endif; ?>
+                </td>
                 <td class="niveau">
                     <?php if ($entite instanceof ApplicationElement) : ?>
                         <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Non précisé"; ?>

@@ -31,16 +31,9 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     <dd class="col-md-9"> <?php echo $agent->getPrenom(); ?> </dd>
     <dt class="col-md-3"> Nom </dt>
     <dd class="col-md-9"> <?php echo $agent->getNomUsuel(); ?> </dd>
-    <dt class="col-md-3"> Quotité travaillée </dt>
+    <dt class="col-md-3"> Modalité de service </dt>
     <dd class="col-md-9">
-        <?php $quotites = $agent->getQuotitesActives(); ?>
-        <?php if(empty($quotites)) : ?>
-            100%
-        <?php else: ?>
-            <?php foreach ($quotites as $quotite) : ?>
-                <?php echo $quotite->getQuotite(); ?>%<br>
-            <?php endforeach; ?>
-        <?php endif; ?>
+        <?php echo $agent->toStringModaliteDeService(); ?>
     </dd>
 </dl>
 

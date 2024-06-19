@@ -27,11 +27,11 @@ usort($formateurs, function (Formateur $a, Formateur $b) {
     <div class="col-md-6">
         <?php if ($canFormateurAjouter) : ?>
             <?php /** @see \Formation\Controller\FormateurController::ajouterAction() */ ?>
-            <a href="<?php echo $this->url('formation/formateur/ajouter', [], [], true); ?>"
+            <a href="<?php echo $this->url('formation/formateur/ajouter', ['session' => $session->getId()], [], true); ?>"
                class="action btn btn-primary ajax-modal" data-event="modification"
             >
                 <span class="icon icon-ajouter"></span>
-                Créer un·e formateur·trice
+                Créer et ajouter un·e formateur·trice
             </a>
         <?php endif; ?>
         <?php if ($canFormateurModifier) : ?>

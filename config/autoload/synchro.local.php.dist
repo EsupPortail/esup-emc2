@@ -252,6 +252,7 @@ return [
                 'quotite' => 'quotite',
                 'date_debut' => 'd_debut',
                 'date_fin' => 'd_fin',
+                'modalite' => 'modalite_de_service',
             ],
             'id' => 'id',
         ],

@@ -11,6 +11,7 @@
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Privilege\AgentPrivileges;
@@ -47,8 +48,9 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
     <?php foreach ($agents as $agent) :?>
         <?php
             if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
-            $structureAgent =  ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
-            $niveau2   =  ($structureAgent AND $structureAgent->getNiv2())?$structureAgent->getNiv2():null;
+//            /** @var AgentAffectation[] $affectations */
+//            $affectations = $agent->getAffectationsActifs();
+//            $affectations = array_filter($affectations, function (AgentAffectation $a) { return $a->isPrincipale(); });
         ?>
         <tr class="<?php if ($agent->isAdministratif()) echo " administratif "; ?>">
             <td>
@@ -64,12 +66,17 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
             </td>
             <td>
                 <!-- STRUCTURE --------------------------------------------------------------------------------------->
-                <?php if ($structureAgent) : ?>
-                    <span class="icon application" title="Déterminé par EMC2"></span>
-                    <?php echo $structureAgent->getLibelleCourt(); ?><br/>
-                <?php else : ?>
-                    Pas de structure fines<br/>
-                <?php endif ?>
+                <?php foreach ($agent->getStructures() as $structure) : ?>
+                    <?php
+                    $niveau2   =  ($structure AND $structure->getNiv2())?$structure->getNiv2():null;
+                    ?>
+                    <?php if ($structure) : ?>
+                        <span class="icon application" title="Déterminé par EMC2"></span>
+                        <?php echo $structure->getLibelleCourt(); ?><br/>
+                    <?php else : ?>
+                        Pas de structure fines<br/>
+                    <?php endif ?>
+                <?php endforeach; ?>
             </td>
             <td> <!-- RESPONSABLE HIERARCHIQUE ------------------------------------------------------------------------>
                 <?php $superieurs = $agent->getSuperieurs(); ?>

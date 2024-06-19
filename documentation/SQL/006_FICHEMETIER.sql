@@ -262,3 +262,24 @@ e'<h1>VAR[FICHE_METIER#INTITULE]</h1>
 <h2>Parcours de formation</h2>
 <p>VAR[PARCOURS#FORMATIONS]</p>', 'body {font-size: 9pt;}h1 {font-size: 14pt; color:#123456;}h2 {font-size: 12pt; color:#123456; border-bottom: 1px solid #123456;}h3 {font-size: 10pt; color:#123456;}li.formation-groupe {font-weight:bold;} .mission-principale { padding-bottom:0; margin-bottom:0;}', 'FicheMetier\Provider\Template');
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- Paramètres ----------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+-- NOUVELLE CATÉGORIE DE PARAMETRE
+INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
+VALUES ('FICHE_METIER', 'Paramètres liés aux fiches métiers', 200, null);
+-- NOUVEAU PARAMÈTRES
+INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE)
+WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
+    SELECT 'DISPLAY_TITRE', 'Affichage du bloc "Intitulé de la fiche métier"', null, 'Boolean',  10 UNION
+    SELECT 'DISPLAY_RESUME', 'Affichage du bloc "Résumé"', null, 'Boolean',  20 UNION
+    SELECT 'DISPLAY_RAISON', 'Affichage du bloc "Raison d''être du métier dans l''établissement"', null, 'Boolean',  30 UNION
+    SELECT 'DISPLAY_MISSION', 'Affichage du bloc "Missions principales "', null, 'Boolean',  40 UNION
+    SELECT 'DISPLAY_COMPETENCE', 'Affichage du bloc "Compétences"', null, 'Boolean', 50 UNION
+    SELECT 'DISPLAY_APPLICATION', 'Affichage du bloc "Applications"', null, 'Boolean', 60 UNION
+    SELECT 'DISPLAY_CONTEXTE', 'Affichage du bloc "Contexte et environnement de travail"', null, 'Boolean', 70
+)
+SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
+FROM d
+JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FICHE_METIER';

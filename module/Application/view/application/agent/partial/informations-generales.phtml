@@ -43,13 +43,9 @@ $canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AG
             <dd>
                 <?php echo $agent->getNomUsuel(); ?>
             </dd>
-            <dt> Quotité travaillée </dt>
+            <dt> Modalité de service </dt>
             <dd>
-                <?php if($quotite) : ?>
-                    <?php echo $quotite->getQuotite(); ?>%
-                <?php else: ?>
-                    100%
-                <?php endif; ?>
+                <?php echo $agent->toStringModaliteDeService(); ?>
             </dd>
         </dl>
 

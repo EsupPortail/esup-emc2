@@ -484,7 +484,7 @@ create table formation_instance
     cout_ht                 double precision,
     cout_ttc                double precision,
     cout_vacation           double precision,
-
+    recette_ttc             double precision,
     parametre_id            integer
         constraint formation_instance_formation_session_parametre_null_fk
         references formation_session_parametre
@@ -1011,6 +1011,14 @@ VALUES ('MES_FORMATIONS_PROJETPERSO', '<p>Texte associé à la page du projet pe
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENQUETE_EXPLICATION', '<p>Texte précisant le caractère anonyme et <em>facultatif</em> de l''enquête</p>', 'texte', 'À propos des formulaires de retour d''expérience', e'<p>Ces formulaires sont anonymes et si vous ne souhaitez pas fournir de réponse à une des questions de l\'enquête vous pouvez sélectionner la réponse "<em>Sans avis</em>".</p>
 <p>Vous ne pourrez récupérer l\'attestation pour une formation qu\'une fois l\'enquête associée saisie et validée.</p>', null, 'Formation\Provider\Privilege');
 
+-- Bandeau en haut des pages des agents
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
+VALUES ('PLANS_DE_FORMATION', '<p>Bandeau en haut de la page Plans de formation</p>', 'texte', 'Plans de formation', '<p>En vous abonnant aux notifications, vous recevrez un mail une fois la session ouverte et vous pourrez vous inscrire.</p>', null, 'Formation\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
+VALUES ('INSCRIPTION_STAGE_HORS_PLAN', '<p>Bloc de texte afficher en haut de la page de demande des stages hors du plan de formation</p>', 'texte', 'Stage hors plan', '<p><strong>La demande d''inscription ne vaut pas acceptation.</strong> Votre inscription est soumise à validation et en fonction des places disponibles.</p>', null, 'Formation\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
+VALUES ('INSCRIPTION_FORMATION_DU_PLAN', '<p>Bloc en haut de la page d''inscription à une formation du plan de formation sur la page des agents</p>', 'texte', '.', '<p><strong>La demande d''inscription ne vaut pas acceptation.</strong> Votre inscription est soumise à validation et en fonction des places disponibles.</p>', null, 'Formation\Provider\Template');
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE - PDF ------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -1391,9 +1399,21 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_SESSION_LISTE_PRINCIPALE', '<p>Mail envoyé (individuellement) aux agents de la liste principale.</p>', 'mail', 'Formation\Provider\Template', 'Vous êtes inscrit sur la liste principale de la session de formation VAR[SESSION#libelle]', e'<p>Université de Caen Normandie<br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN 5                                                                                                                                                                                     <br /><br />A Caen, le VAR[EMC2#Date]<br /><br /><br /><br />Bonjour VAR[AGENT#Prenom] VAR[AGENT#NomUsage],<br /><br />Votre inscription à la session de formation formation VAR[SESSION#libelle] (formation VAR[SESSION#identification]) du VAR[SESSION#periode] est confirmée.<br />Vous allez prochainement recevoir par courrier électronique votre convocation et vous pourrez la télécharger via l\'application Mes Formations (VAR[EMC2#AppLink]).<br /><br />Cette convocation vaut ordre de mission.<br /><br />Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br />VAR[EMC2#AppLink]<br /><br /><br /></p>
 <p> </p>', null);
 
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_ABONNEMENT_POST_CLOTURE', '<p>Courrier électronique envoyé aux inscrit·es de la liste complémentaire les prévenants qu''ils ou elles ont été abonné·es à la formation</p>', 'mail', 'Abonnement à la formation VAR[SESSION#libelle] suite à la clôture de la session dont vous étiez inscrit·e', e'<p>Bonjour,</p>
+<p>Vous étiez sur la liste complémentaire de la session de formation VAR[SESSION#libelle] se déroulant sur la période du VAR[SESSION#periode]).<br />Malheureusement aucune place n\'a pu se libéré et vous n\'avez pu participer à cette session de formation.</p>
+<p>Afin de vous permettre de participer à la prochaine session de formation VAR[SESSION#libelle], vous avez été automatiquement abonné·e aux notifications associées à cette formation.<br />Vous serez ainsi prévenu des prochaines ouvertures de session de formation.</p>
+<p>Vous pouvez vous désinscrire de ces notifications en allant sur l\'application VAR[MesFormations#AppLink] et en consultant la page "Plan de formation" accessible en suivant le lien VAR[URL#PlanDeFormation].</p>
+<p>En vous souhaitant une bonne journée,<br />VAR[MesFormations#AppLink]</p>
+<p> </p>', null, 'Formation\Provider\Template');
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- MACROS --------------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('URL#PlanDeFormation', '<p>Fourni un lieu vers la page des plans de formation courants</p>', 'UrlService', 'getUrlPlanDeFormation'),
+    ('MesFormations#AppLink', '<p>Affiche le nom de l''application de formation et fourni un lien vers celle-ci</p>', 'UrlService', 'getMesFormationsUrl')
+;
+
 
 -- Macro portant sur les inscriptions
 INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
@@ -1740,6 +1760,16 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formateur';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('inscription','Gestion des inscriptions',400,'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'inscription_afficher', 'Afficher', 20
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'inscription';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- EVENEMENT -----------------------------------------------------------------------------------------------------------

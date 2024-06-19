@@ -4,6 +4,8 @@ namespace Element\Controller;
 
 use Element\Entity\Db\CompetenceReferentiel;
 use Element\Form\CompetenceReferentiel\CompetenceReferentielFormAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -12,7 +14,9 @@ use Laminas\View\Model\ViewModel;
 
 class CompetenceReferentielController extends AbstractActionController
 {
+    use CompetenceServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
     use CompetenceReferentielFormAwareTrait;
 
     public function indexAction(): ViewModel
@@ -125,6 +129,50 @@ class CompetenceReferentielController extends AbstractActionController
                 'title' => "Suppression du référentiel de compétences  " . $referentiel->getLibelleCourt(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/competence-referentiel/supprimer', ["competence-referentiel" => $referentiel->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    public function viderAction(): ViewModel
+    {
+        $referentiel = $this->getCompetenceReferentielService()->getRequestedCompetenceReferentiel($this);
+
+        $comptences = $this->getCompetenceService()->getCompetencesByRefentiel($referentiel);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                foreach ($comptences as $competence) $this->getCompetenceService()->delete($competence);
+            }
+            exit();
+        }
+
+
+        $used = [];
+        foreach ($comptences as $competence) {
+            $elements = $this->getCompetenceElementService()->getElementsByCompetence($competence);
+            if (!empty($elements)) $used[$competence->getId()] = $elements;
+        }
+        $warning = null;
+        if (!empty($used)) {
+            $warning  = "Parmi les ".count($comptences)." compétences du référentiel ".$referentiel->getLibelleCourt()
+                ." ".count($used)." compétences sont utilisées.<br> Vider le référentiel cassera ces usages. <br><br> Liste des compétences utilisées : <ul>";
+            foreach ($used as $competence) {
+                $warning .= "<li>".current($competence)->getCompetence()->getLibelle()."</li>";
+            }
+            $warning .= "</ul>";
+        }
+        $vm = new ViewModel();
+        if ($referentiel !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Vidage du référentiel de compétences  " . $referentiel->getLibelleCourt(),
+                'text' => "Le vidage est défénitif et supprimera définitivement les compétences de celui-ci.",
+                'warning' => $warning,
+                'action' => $this->url()->fromRoute('element/competence-referentiel/vider', ["competence-referentiel" => $referentiel->getId()], [], true),
             ]);
         }
         return $vm;

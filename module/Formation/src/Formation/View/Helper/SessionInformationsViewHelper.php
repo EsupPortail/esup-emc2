@@ -9,7 +9,7 @@ use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
 
-class FormationInstanceInformationsViewHelper extends AbstractHelper
+class SessionInformationsViewHelper extends AbstractHelper
 {
     /**
      * @param FormationInstance $instance
@@ -23,6 +23,6 @@ class FormationInstanceInformationsViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('formation-instance-informations', ['instance' => $instance, 'mode' => $mode, 'options' => $options]);
+        return $view->partial('session-informations', ['session' => $instance, 'mode' => $mode, 'options' => $options]);
     }
 }

@@ -15,7 +15,7 @@ use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
 use Formation\View\Helper\FormationInstanceArrayViewHelper;
-use Formation\View\Helper\FormationInstanceInformationsViewHelper;
+use Formation\View\Helper\SessionInformationsViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Unicaen\Console\Router\Simple;
@@ -475,8 +475,8 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'formationInstanceInformations' => FormationInstanceInformationsViewHelper::class,
             'formationInstanceArray' => FormationInstanceArrayViewHelper::class,
+            'sessionInformations' => SessionInformationsViewHelper::class,
         ],
     ],
 

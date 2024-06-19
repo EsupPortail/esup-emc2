@@ -11,6 +11,7 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementServiceAwareTrait;
@@ -24,6 +25,7 @@ use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -34,6 +36,7 @@ class FicheMetierController extends AbstractActionController {
     use FichePosteServiceAwareTrait;
     use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use ThematiqueElementServiceAwareTrait;
     use ThematiqueTypeServiceAwareTrait;
 
@@ -78,14 +81,20 @@ class FicheMetierController extends AbstractActionController {
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
 
-        return new ViewModel([
+
+        $vm = new ViewModel([
             'fiche' => $fichemetier,
             'missions' => $missions,
             'competences' => $competences,
             'applications' => $applications,
             'thematiquestypes' => $thematiquestypes,
             'thematiqueselements' => $thematiqueselements,
+
+            'parametres' => $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE),
+            'mode' => 'affichage',
         ]);
+        $vm->setTemplate('fiche-metier/fiche-metier/fiche-metier');
+        return $vm;
     }
 
     public function ajouterAction(): ViewModel
@@ -131,14 +140,21 @@ class FicheMetierController extends AbstractActionController {
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
 
-        return new ViewModel([
+        $vm = new ViewModel([
             'fiche' => $fichemetier,
             'missions' => $missions,
             'competences' => $competences,
             'applications' => $applications,
             'thematiquestypes' => $thematiquestypes,
             'thematiqueselements' => $thematiqueselements,
+
+
+            'parametres' => $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE),
+            'mode' => 'edition-fiche-metier',
+
         ]);
+        $vm->setTemplate('fiche-metier/fiche-metier/fiche-metier');
+        return $vm;
     }
 
     public function historiserAction() : Response

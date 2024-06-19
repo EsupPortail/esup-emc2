@@ -425,8 +425,22 @@ class FormationInstanceService
      */
     public function cloturer(FormationInstance $instance): FormationInstance
     {
+        //changement de l'état de la session
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CLOTURE_INSTANCE);
         $this->update($instance);
+
+        //ajout d'un abonnement à la formation aux inscrits de la liste complémentaire
+        $formation = $instance->getFormation();
+        foreach ($instance->getListeComplementaire() as $inscription) {
+            $agent = $inscription->getAgent();
+            if ($agent !== null) { // exclusion des stagiaires externes
+                $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+                if ($abonnement === null) {
+                    $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+                    $this->getNotificationService()->triggerAjoutAbonnementPostCloture($inscription);
+                }
+            }
+        }
         return $instance;
     }
 

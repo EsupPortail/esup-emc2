@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use Fichier\Entity\Db\Fichier;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
@@ -17,10 +18,15 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasValidationsInterface {
+class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasValidationsInterface, ResourceInterface {
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
     use HasValidationsTrait;
+
+    public function getResourceId(): string
+    {
+        return 'Inscription';
+    }
 
     const PRINCIPALE = 'principale';
     const COMPLEMENTAIRE = 'complementaire';
@@ -313,5 +319,10 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $minutes = ($result->i);
         $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
+    }
+
+    public function generateTag(): string
+    {
+        return 'Inscription_'. $this->getId();
     }
 }

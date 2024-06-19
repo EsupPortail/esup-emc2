@@ -23,7 +23,7 @@ use UnicaenObservation\Provider\Privilege\ObservationinstancePrivileges;
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
-$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+$canValiderAutorite     = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
 
 // TODO serait plus sûr d'ajouter une assertion (mais surement de l'overkill car la page check ce qu'il faut en amont)
 $canVoirObservationsAgent = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_VOIR_OBSERVATION_AGENT));
@@ -69,7 +69,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
 
 <h2 class="page-header-tab"> Validations </h2>
 
-<?php if ($canValiderDrh === null) : ?>
+<?php if ($canValiderAutorite === null) : ?>
     <div class="alert alert-warning">
         <span class="icon icon-attention"> </span>
         La validation de l'entretien professionnel provoquent un blocage des saisies de celui-ci.
@@ -86,7 +86,6 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             Cette validation :
             <ul>
                 <li> fige les compte-rendus d'entretien professionnel et de formation ;</li>
-                <li> rend visible les compte-rendus d'entretien professionnel et de formation à l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>);</li>
                 <li> notifie l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) que la phase d'observation est ouverte.</li>
             </ul>
         </div>
@@ -265,8 +264,8 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         $optionsObservationsAutorite['can-historiser'] = false;
         $optionsObservationsAutorite['can-supprimer'] = false;
     } else {
-        $optionsObservationsAutorite['can-modifier'] = $canValiderDrh;
-        $optionsObservationsAutorite['can-historiser'] = $canValiderDrh;
+        $optionsObservationsAutorite['can-modifier'] = $canValiderAutorite;
+        $optionsObservationsAutorite['can-historiser'] = $canValiderAutorite;
     }
     ?>
 
@@ -290,7 +289,8 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
 
 
 
-        <?php if ($observationAutorite === null AND $canValiderDrh) : ?>
+        <?php if ($observationAutorite === null AND $canValiderAutorite) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAutoriteAction() */ ?>
             <a href="<?php echo $this->url('entretien-professionnel/observation/autorite/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
                class="btn btn-primary ajax-modal" data-event="modification">
                 Ajouter une observation
@@ -315,7 +315,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
 
     <?php if ($validationHierarchie !== null) : ?>
         <?php echo $this->validationAfficher($validationHierarchie); ?>
-        <?php if ($canValiderDrh AND $validationAgent === null) : ?>
+        <?php if ($canValiderAutorite AND $validationAgent === null) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationHierarchie->getId()], [], true); ?>"
@@ -326,7 +326,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             </a>
         <?php endif; ?>
    <?php else : ?>
-        <?php if ($canValiderDrh AND $validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
+        <?php if ($canValiderAutorite AND $validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_DRH], [], true); ?>"

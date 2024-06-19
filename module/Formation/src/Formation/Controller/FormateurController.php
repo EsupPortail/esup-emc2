@@ -49,11 +49,11 @@ class FormateurController extends AbstractActionController
 
     public function ajouterAction(): ViewModel
     {
-
+        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
         $formateur = new Formateur();
 
         $form = $this->getFormateurForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/formateur/ajouter', [], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/formateur/ajouter', ['session' => $session?->getId()], [], true));
         $form->bind($formateur);
 
         $request = $this->getRequest();
@@ -62,6 +62,10 @@ class FormateurController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFormateurService()->create($formateur);
+                if ($session) {
+                    $session->addFormateur($formateur);
+                    $this->getFormationInstanceService()->update($session);
+                }
                 exit();
             }
         }

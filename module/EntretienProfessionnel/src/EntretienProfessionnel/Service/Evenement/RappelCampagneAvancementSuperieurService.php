@@ -79,12 +79,16 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
                     }
                 }
                 if (!$completed) {
-                    $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur->getSuperieur());
-                    $message .= "Notification faites vers " . $superieur->getSuperieur()->getDenomination() . "<br/>\n";
+                    try {
+                        $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur->getSuperieur());
+                        $message .= "Notification faites vers " . $superieur->getSuperieur()->getDenomination() . "<br/>\n";
+                    } catch (\Laminas\Mail\Protocol\Exception\RuntimeException $e ) {
+                        $message .= "<span class='text-danger'>Notification impossible vers ".$superieur->getSuperieur()->getDenomination()."</span><br/>\n";
+                    };
                 }
             }
         } catch(Exception $e) {
-            $evenement->setLog($message . $e->getMessage());
+            $evenement->setLog($message . "(".$e->getCode()."|".get_class($e).")".$e->getMessage());
             return Etat::ECHEC;
         }
 

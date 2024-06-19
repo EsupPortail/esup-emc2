@@ -35,6 +35,7 @@ class RappelEntretienProfessionnelService extends EvenementService {
         $description = "Rappel de l'entretien professionnel #" . $entretien->getId() . " de " . $entretien->getAgent()->getDenomination();
         $evenement = $this->createEvent($description, $description, $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE), $type, $parametres, $dateTraitement);
         $this->ajouter($evenement);
+        $entretien->addEvenement($evenement);
         return $evenement;
     }
 
@@ -48,6 +49,14 @@ class RappelEntretienProfessionnelService extends EvenementService {
 
         try {
             $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($parametres['entretien']);
+            if (!isset($entretien)) {
+                $evenement->setLog("Plus d'entretien professionnel");
+                return Etat::ECHEC;
+            }
+            if ($entretien->estHistorise()) {
+                $evenement->setLog("L'entretien professionnel a été historisé");
+                return Etat::ECHEC;
+            }
             $this->getNotificationService()->triggerRappelEntretien($entretien);
         } catch(Exception $e) {
             $evenement->setLog($e->getMessage());
