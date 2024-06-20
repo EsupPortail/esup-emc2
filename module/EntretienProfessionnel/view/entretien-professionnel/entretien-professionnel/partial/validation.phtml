@@ -13,6 +13,7 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
@@ -326,7 +327,9 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             </a>
         <?php endif; ?>
    <?php else : ?>
-        <?php if ($canValiderAutorite AND $validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
+        <?php if ($canValiderAutorite
+            AND $validationResponsable
+            AND ($validationObservation !== null OR $entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) OR $depasse)) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_DRH], [], true); ?>"
