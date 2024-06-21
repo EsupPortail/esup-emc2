@@ -141,7 +141,6 @@ class IndexController extends AbstractActionController
         if ($user === null) {
 
         }
-        $structureMere = $this->getStructureService()->getStructureMere();
 
 
         $agents = array_map(function (AgentSuperieur $a) {
@@ -164,8 +163,8 @@ class IndexController extends AbstractActionController
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
-            foreach ($agents as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
-            foreach ($agentsS as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
+            foreach ($agents as $agent_) $agentsSCampagnes[$agent_->getId()] = $agent_;
+            foreach ($agentsS as $agent_) $agentsSCampagnes[$agent_->getId()] = $agent_;
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
             [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
@@ -224,8 +223,8 @@ class IndexController extends AbstractActionController
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
-            foreach ($agents as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
-            foreach ($agentsS as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
+            foreach ($agents as $agent_) $agentsSCampagnes[$agent_->getId()] = $agent_;
+            foreach ($agentsS as $agent_) $agentsSCampagnes[$agent_->getId()] = $agent_;
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
             [$obligatoires, $facultatifs, $raison]  = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison] ;
