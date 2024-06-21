@@ -136,7 +136,7 @@ class AgentAutoriteService
     }
 
     /** @return AgentAutorite[] */
-    public function getAgentsAutoritesByAutorite(Agent $autorite, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
+    public function getAgentsAutoritesByAutorite(?Agent $autorite, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
@@ -149,7 +149,7 @@ class AgentAutoriteService
     }
 
     /** @return Agent[] */
-    public function getAgentsWithAutorite(Agent $autorite, DateTime $dateDebut = null, DateTime $dateFin = null): array
+    public function getAgentsWithAutorite(?Agent $autorite, ?DateTime $dateDebut = null, ?DateTime $dateFin = null): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
