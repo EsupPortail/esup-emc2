@@ -44,7 +44,5 @@ return [
         'icone' => [
             EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL => 'icon rappel',
         ],
-
-        'max_time_execution' => 300,
     ],
 ];

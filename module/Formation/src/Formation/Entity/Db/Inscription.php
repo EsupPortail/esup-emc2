@@ -192,6 +192,17 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         return $this->frais;
     }
 
+    public function estPresence(string $code, Seance $seance): bool
+    {
+        /** @var Presence $presence */
+        foreach ($this->presences as $presence) {
+            if ($presence->estNonHistorise() && $presence->getStatut() === $code) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Enquete *******************************************************************************************************/
 
     /** @return EnqueteReponse[] */
@@ -308,7 +319,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
                 try {
                     $temp = new DateInterval('PT' . $volume . 'H');
                 } catch (Exception $e) {
-                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]",0,$e);
+                    throw new RuntimeException("Un problème est survenu lors de la création de l'intervale avec [PT".$volume."H]",0,$e);
                 }
                 $sum->add($temp);
             }
