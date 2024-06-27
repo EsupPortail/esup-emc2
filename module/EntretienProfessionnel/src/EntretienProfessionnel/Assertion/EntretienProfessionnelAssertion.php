@@ -141,6 +141,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $now = new DateTime();
 
         $grades = $entretien->getAgent()->getGradesActifs($entretien->getDateEntretien());
+
+        //todo faire une vraiment méthode
         $inhibition = false;
         foreach ($grades as $grade) {
             if ($grade->getCorps()->isSuperieurAsAutorite()) {
@@ -148,6 +150,14 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 break;
             }
         }
+        if (empty($agent->getAutorites())) {
+            $inhibition = true;
+        }
+        if (count($entretien->getAgent()->getAutorites()) === 1 && count($entretien->getAgent()->getSuperieurs()) === 1 && current($entretien->getAgent()->getAutorites())->getAutorite() === current($entretien->getAgent()->getSuperieurs())->getSuperieur())
+        {
+            $inhibition = true;
+        }
+
 
         $predicats = $this->computePredicats($entretien, $agent, $role);
         switch($privilege) {
@@ -217,11 +227,12 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 return $this->isScopeCompatible($entretien, $agent, $role, $predicats);
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH :
                 if ($this->BLOCAGE_VALIDATION AND !$this->isPeriodeCompatible($entretien)) return false;
-                return match ($role->getRoleId()) {
+                $value =  match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH => true,
                     RoleProvider::RESPONSABLE, Agent::ROLE_AUTORITE => ($predicats['isAutoriteHierarchique'] && ($inhibition || !$predicats['isResponsableEntretien'])),
                     default => false,
                 };
+                return $value;
         }
         return true;
     }
