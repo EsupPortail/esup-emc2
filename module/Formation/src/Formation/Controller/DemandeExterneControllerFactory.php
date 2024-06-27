@@ -10,6 +10,7 @@ use Fichier\Service\Nature\NatureService;
 use Formation\Form\Demande2Formation\Demande2FormationForm;
 use Formation\Form\DemandeExterne\DemandeExterneForm;
 use Formation\Form\Justification\JustificationForm;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\Notification\NotificationService;
@@ -60,12 +61,14 @@ class DemandeExterneControllerFactory
          * @var Demande2FormationForm $demande2formationForm
          * @var JustificationForm $justificationForm
          * @var SelectionAgentForm $selectionAgentForm
+         * @var SelectionGestionnaireForm $selectionGestionnaireForm
          * @var UploadForm $uploadForm
          */
         $demandeExterneForm = $container->get('FormElementManager')->get(DemandeExterneForm::class);
         $demande2formationForm = $container->get('FormElementManager')->get(Demande2FormationForm::class);
         $justificationForm = $container->get('FormElementManager')->get(JustificationForm::class);
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
+        $selectionGestionnaireForm = $container->get('FormElementManager')->get(SelectionGestionnaireForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
 
@@ -85,6 +88,7 @@ class DemandeExterneControllerFactory
         $controller->setDemande2formationForm($demande2formationForm);
         $controller->setJustificationForm($justificationForm);
         $controller->setSelectionAgentForm($selectionAgentForm);
+        $controller->setSelectionGestionnaireForm($selectionGestionnaireForm);
         $controller->setUploadForm($uploadForm);
 
         return $controller;

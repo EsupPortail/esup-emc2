@@ -12,6 +12,7 @@ use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
@@ -50,12 +51,14 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $justificationRefus = null;
     private ?Collection $devis;
 
+    private Collection $gestionnaires;
     private Collection $sessions;
 
     public function __construct()
     {
         $this->etats = new ArrayCollection();
         $this->devis = new ArrayCollection();
+        $this->gestionnaires = new ArrayCollection();
         $this->sessions = new ArrayCollection();
 
     }
@@ -318,7 +321,28 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         $this->sessions->removeElement($session);
     }
 
+    /** GESTION DES GESTIONNAIRES *************************************************************************************/
 
+    /** @return UserInterface[] */
+    public function getGestionnaires(): array
+    {
+        return $this->gestionnaires->toArray();
+    }
+
+    public function hasGestionnaire(UserInterface $gestionnaire): bool
+    {
+        return $this->gestionnaires->contains($gestionnaire);
+    }
+
+    public function addGestionnaire(UserInterface $gestionnaire): void
+    {
+        if (!$this->hasGestionnaire($gestionnaire)) $this->gestionnaires->add($gestionnaire);
+    }
+
+    public function removeGestionnaire(UserInterface $gestionnaire): void
+    {
+        if ($this->hasGestionnaire($gestionnaire)) $this->gestionnaires->removeElement($gestionnaire);
+    }
 
     /** MACRO ET PRETTYPRINT ******************************************************************************************/
 
