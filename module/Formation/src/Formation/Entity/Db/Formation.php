@@ -54,6 +54,7 @@ class Formation implements HistoriqueAwareInterface,
     private ?string $programme = null;
     private ?string $prerequis = null;
     private ?string $public = null;
+    private ?string $complement = null;
     private ?ActionType $actionType = null;
 
     private Collection $missions;
@@ -281,6 +282,16 @@ class Formation implements HistoriqueAwareInterface,
         $this->public = $public;
     }
 
+    public function getComplement(): ?string
+    {
+        return $this->complement;
+    }
+
+    public function setComplement(?string $complement): void
+    {
+        $this->complement = $complement;
+    }
+
     public function getActionType(): ?ActionType
     {
         return $this->actionType;
@@ -312,6 +323,7 @@ class Formation implements HistoriqueAwareInterface,
     }
 
     /** GESTION DES ABONNEMENTS ***************************************************************************************/
+
     /** @return FormationAbonnement[] */
     public function getAbonnements(): array
     {
@@ -377,5 +389,19 @@ class Formation implements HistoriqueAwareInterface,
     {
         return $this->plans->contains($plan);
     }
+
+    /** MACROS ********************************************************************************************************/
+
+    /** @noinspection PhpUnused  Macro: Formation#Complement */
+    public function toStringComplement(): string
+    {
+        if ($this->getComplement() === null) return "";
+
+        $text  = "<strong>Compléments à propos de l'action de formation :</strong>";
+        $text .= $this->getComplement();
+        return $text;
+    }
+
+
 
 }

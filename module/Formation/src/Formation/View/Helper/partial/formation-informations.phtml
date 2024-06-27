@@ -97,6 +97,12 @@ $canModifierPlans = !$noAction && $this->isAllowed(FormationPrivileges::getResou
                 <?php endif; ?>
             </dd>
         <?php endif; ?>
+        <?php if ($formation->getComplement() !== null) : ?>
+            <dt class="col-md-3"> Complément à propos de l'action </dt>
+            <dd class="col-md-9">
+                <?php echo $formation->getComplement(); ?>
+            </dd>
+        <?php endif; ?>
 
         <dt class="col-md-3"> Affichage "plan" </dt>
         <dd class="col-md-9"> <?php echo ($formation->getAffichage())?"Oui":"Non"; ?> </dd>

@@ -137,6 +137,18 @@ class FormationForm extends Form
                 'class' => 'type2 form-control',
             ],
         ]);
+        $this->add([
+            'type' => Textarea::class,
+            'name' => "complement",
+            'options' => [
+                'label' => "Complément <span class='icon icon-information text-info' title='Figurera sur les convocations des sessions associées' data-bs-toggle='tooltip' data-bs-html='true'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'complement',
+                'class' => 'type2 form-control',
+            ],
+        ]);
 
         //lien
         $this->add([
@@ -210,6 +222,7 @@ class FormationForm extends Form
             'programme' => ['required' => false,],
             'prerequis' => ['required' => false,],
             'public' => ['required' => false,],
+            'complement' => ['required' => false,],
         ]));
     }
 }

@@ -28,6 +28,7 @@ class FormationHydrator implements HydratorInterface
             'programme' => $object->getProgramme(),
             'prerequis' => $object->getPrerequis(),
             'public' => $object->getPublic(),
+            'complement' => $object->getComplement(),
         ];
 
         return $data;
@@ -45,6 +46,7 @@ class FormationHydrator implements HydratorInterface
         $programme = $data['programme'] ?? null;
         $prerequis = $data['prerequis'] ?? null;
         $public = $data['public'] ?? null;
+        $complement = $data['complement'] ?? null;
 
         /** @var Formation $object */
         $object->setLibelle($data['libelle']);
@@ -59,6 +61,7 @@ class FormationHydrator implements HydratorInterface
         $object->setProgramme($programme);
         $object->setPrerequis($prerequis);
         $object->setPublic($public);
+        $object->setComplement($complement);
         return $object;
     }
 
