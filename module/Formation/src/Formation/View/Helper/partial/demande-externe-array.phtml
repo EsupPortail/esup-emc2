@@ -21,12 +21,20 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 $canTelechargerDevis = $canGerer;
 $canTeleverserDevis = $canGerer;
 
+
+$displayGestionnaire = true;
+if (isset($options['affichage']) AND isset($options['affichage']['gestionnaires'])) {
+    $displayGestionnaire = $options['affichage']['gestionnaires'];
+}
+
+
 ?>
 
 <table class="table table-condensed table-hover">
     <thead>
     <tr>
-        <th> Agent             </th>
+        <th> Agent </th>
+        <?php if ($displayGestionnaire) : ?> <th> Gestionnaires </th> <?php endif; ?>
         <th> Formation </th>
         <th> Organisme </th>
         <th> Devis </th>
@@ -38,6 +46,19 @@ $canTeleverserDevis = $canGerer;
     <?php foreach ($demandes as $demande) : ?>
         <tr class=" <?php if ($demande->estHistorise()) echo " historise "; ?> ">
             <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
+            <?php if ($displayGestionnaire) : ?>
+                <td class="gestionnaire">
+                    <?php if (empty($demande->getGestionnaires())) : ?>
+                        Aucun·e gestionnaire
+                    <?php else : ?>
+                        <ul>
+                            <?php foreach ($demande->getGestionnaires() as $gestionnaire) : ?>
+                                <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </td>
+            <?php endif; ?>
             <td> <?php echo $demande->getLibelle(); ?> </td>
             <td> <?php echo $demande->getOrganisme(); ?> </td>
 

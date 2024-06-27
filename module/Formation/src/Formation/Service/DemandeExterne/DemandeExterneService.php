@@ -20,6 +20,7 @@ use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
@@ -32,6 +33,7 @@ use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
@@ -94,7 +96,7 @@ class DemandeExterneService
         $qb = $this->getObjectManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
             ->join('demande.agent', 'agent')->addSelect('agent')
             ->join('demande.etats', 'etat')->addSelect('etat')
-            ->join('etat.type', 'type')->addSelect('type')
+            ->join('etat.type', 'etype')->addSelect('etype')
             ->andWhere('etat.histoDestruction IS NULL');
         return $qb;
     }
@@ -336,6 +338,15 @@ class DemandeExterneService
         return $result;
     }
 
+    static public function decorateWithGestionnairesId(QueryBuilder $qb, array $gestionnaires, bool $addJointure = true): QueryBuilder
+    {
+        if ($addJointure) {
+            $qb = $qb->leftJoin('demande.gestionnaires', 'decorateurGestionnaire')->addSelect('decorateurGestionnaire');
+        }
+        $qb = $qb->andWhere('decorateurGestionnaire.id = (:gestionnaires)')->setParameter('gestionnaires', $gestionnaires);
+        return $qb;
+    }
+
     /** FACADE ********************************************************************************************************/
 
     public function transformer(?DemandeExterne $demande, string $libelle, ?FormationGroupe $groupe, float $volume, float $suivi): FormationInstance
@@ -442,6 +453,38 @@ class DemandeExterneService
         }
 
         return $session;
+    }
+
+    /** @return DemandeExterne[] */
+    public function getDemandesExternesByGestionnaires(?UserInterface $gestionnaire): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = DemandeExterneService::decorateWithGestionnairesId($qb, [$gestionnaire->getId()]);
+        $qb = $qb->andWhere('demande.histoDestruction IS NULL');
+        /** @var DemandeExterne[] $demandes */
+        $demandes = $qb->getQuery()->getResult();
+
+        $dictionnaire = [];
+        foreach (DemandeExterneEtats::ETATS_OUVERTS as $etatCode) $dictionnaire[$etatCode] = [];
+        foreach ($demandes as $demande) $dictionnaire[$demande->getEtatActif()->getType()->getCode()][] = $demande;
+
+        return $dictionnaire;
+    }
+
+    /** @return DemandeExterne[] */
+    public function getDemandesExternesSansGestionnaires(): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = $qb->leftJoin('demande.gestionnaires', 'gestionnaire')
+            ->andWhere('gestionnaire.id IS NULL')
+            ->andWhere('demande.histoDestruction IS NULL')
+        ;
+        // retrait des états finaux
+        $qb = $qb->andWhere('etype.code not in (:etatsfinaux)')->setParameter('etatsfinaux', DemandeExterneEtats::ETATS_FINAUX);
+        /** @var DemandeExterne[] $demandes */
+        $demandes = $qb->getQuery()->getResult();
+
+        return $demandes;
     }
 
 

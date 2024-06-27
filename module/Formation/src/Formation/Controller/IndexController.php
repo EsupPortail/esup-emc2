@@ -78,18 +78,23 @@ class IndexController extends AbstractActionController
 
         $etatsTypesSession = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE);
         $etatsTypesDemande = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
-        $dictionnaire = $this->getFormationInstanceService()->getSessionsByGestionnaires($user);
-        $sansGestionnaire = $this->getFormationInstanceService()->getSessionsSansGestionnaires();
-        $demandes = $this->getDemandeExterneService()->getDemandesExternesByEtats(DemandeExterneEtats::ETATS_ATTENTE_GESTION);
+        $dictionnaireSession = $this->getFormationInstanceService()->getSessionsByGestionnaires($user);
+        $sessionsSansGestionnaire = $this->getFormationInstanceService()->getSessionsSansGestionnaires();
+
+        $dictionnaireDemande = $this->getDemandeExterneService()->getDemandesExternesByGestionnaires($user);
+        $demandesSansGestionnaire = $this->getDemandeExterneService()->getDemandesExternesSansGestionnaires();
 
         return new ViewModel([
             'user' => $user,
             'role' => $role,
             'etatsTypesSession' => $etatsTypesSession,
             'etatsTypesDemande' => $etatsTypesDemande,
-            'dictionnaire' => $dictionnaire,
-            'sansGestionnaire' => $sansGestionnaire,
-            'demandes' => $demandes,
+
+            'dictionnaireSession' => $dictionnaireSession,
+            'sessionsSansGestionnaire' => $sessionsSansGestionnaire,
+
+            'dictionnaireDemande' => $dictionnaireDemande,
+            'demandesSansGestionnaire' => $demandesSansGestionnaire,
         ]);
     }
 
