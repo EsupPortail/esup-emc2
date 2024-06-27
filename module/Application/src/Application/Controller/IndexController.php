@@ -184,7 +184,7 @@ class IndexController extends AbstractActionController
 
         return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $agent,
+            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
 
             'missionsSpecifiques' => $missionsSpecifiques,
 
@@ -244,7 +244,7 @@ class IndexController extends AbstractActionController
 
         return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $agent,
+            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
             'agentsByCampagne' => $agentsByCampagne,

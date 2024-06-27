@@ -270,7 +270,13 @@ class NotificationService
         $agents = array_map(function (AgentSuperieur $a) {
             return $a->getAgent();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur));
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+        $agents = $obligatoires;
+        foreach ($entretiens as $entretien) {
+            $agent = $entretien->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
 
         $vh = new CampagneAvancementViewHelper();
         $vh->renderer = $this->renderer;
@@ -295,7 +301,14 @@ class NotificationService
         $agents = array_map(function (AgentAutorite $a) {
             return $a->getAgent();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite));
+
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+        $agents = $obligatoires;
+        foreach ($entretiens as $entretien) {
+            $agent = $entretien->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
 
         $vh = new CampagneAvancementViewHelper();
         $vh->renderer = $this->renderer;

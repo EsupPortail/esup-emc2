@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
@@ -59,8 +60,10 @@ class CampagneControllerFactory extends AbstractActionController
 
         /**
          * @var CampagneForm $campagneForm
+         * @var SelectionAgentForm $selectionAgentForm
          */
         $campagneForm = $container->get('FormElementManager')->get(CampagneForm::class);
+        $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
 
         $controller = new CampagneController();
         $controller->setAgentService($agentService);
@@ -76,6 +79,7 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setStructureAgentForceService($structureAgentForceService);
         $controller->setUserService($userService);
         $controller->setCampagneForm($campagneForm);
+        $controller->setSelectionAgentForm($selectionAgentForm);
         return $controller;
     }
 }

@@ -97,7 +97,7 @@ class AgentSuperieurService
     }
 
     /** @return AgentSuperieur[] */
-    public function getAgentsSuperieursByAgent(Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
+    public function getAgentsSuperieursByAgent(?Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent', $agent)
@@ -110,7 +110,7 @@ class AgentSuperieurService
     }
 
     /** @return AgentSuperieur[] */
-    public function getAgentsSuperieursBySuperieur(Agent $superieur, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
+    public function getAgentsSuperieursBySuperieur(?Agent $superieur, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
@@ -122,7 +122,7 @@ class AgentSuperieurService
     }
 
     /** @return Agent[] */
-    public function getAgentsWithSuperieur(Agent $superieur, DateTime $dateDebut = null, DateTime $dateFin = null): array
+    public function getAgentsWithSuperieur(?Agent $superieur, DateTime $dateDebut = null, DateTime $dateFin = null): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agent.deleted_on  IS NULL')
