@@ -321,14 +321,15 @@ create table formation
     programme             text,
     prerequis             text,
     public                text,
+    complement            text,
     action_type_id        integer
         constraint formation_type_fk
             references formation_action_type on delete set null,
     type                  varchar(64),
     id_source             varchar(256)
 );
-create unique index formation_id_uindex
-    on formation (id);
+create unique index formation_id_uindex on formation (id);
+comment on column formation.complement is 'Information à faire figurer sur les convocations';
 
 create table formation_element
 (
@@ -502,6 +503,22 @@ create table formation_session_gestionnaire
         constraint formation_session_gestionnaire_unicaen_utilisateur_user_id_fk
             references unicaen_utilisateur_user on delete cascade,
     constraint formation_session_gestionnaire_pk primary key (session_id, gestionnaire_id)
+);
+
+
+
+create table formation_demande_externe_gestionnaire
+(
+    demande_externe_id integer not null
+        constraint fdeg_formation_demande_externe_id_fk
+            references formation_demande_externe
+            on delete cascade,
+    gestionnaire_id    integer not null
+        constraint fdeg_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user
+            on delete cascade,
+    constraint formation_demande_externe_gestionnaire_pk
+        primary key (demande_externe_id, gestionnaire_id)
 );
 
 
