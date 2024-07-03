@@ -609,4 +609,19 @@ class InscriptionController extends AbstractActionController
         $vm->setTemplate('default/reponse');
         return $vm;
     }
+
+    public function envoyerAttestationAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $session = $inscription->getSession();
+
+        $mail = $this->getFormationInstanceService()->envoyerAttestation($session, $inscription);
+
+        $vm = new ViewModel([
+            'title' => "Envoi de l'attestation",
+            'reponse' => "L'attestion pour la session ".$session->getFormation()->getLibelle(). " du ".$session->getPeriode()." vient d'être envoyée à ".$inscription->getStagiaireDenomination().".",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
 }

@@ -305,7 +305,7 @@ class DemandeExterneService
 
         $qb = $this->createQueryBuilder()
             ->andWhere('demande.histoDestruction IS NULL')
-            ->andWhere('type.code in (:etats)')->setParameter('etats', $etats)
+            ->andWhere('etype.code in (:etats)')->setParameter('etats', $etats)
             ->andWhere('demande.debut > :debut')->setParameter('debut', $debut)
             ->andWhere('demande.debut < :fin')->setParameter('fin', $fin)
             ->andWhere('agent in (:agents)')->setParameter('agents', $agents);

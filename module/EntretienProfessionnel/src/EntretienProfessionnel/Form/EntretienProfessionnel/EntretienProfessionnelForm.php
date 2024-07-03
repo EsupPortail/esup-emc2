@@ -46,7 +46,7 @@ class EntretienProfessionnelForm extends Form {
             'type' => Select::class,
             'name' => 'responsable',
             'options' => [
-                'label' => "Responsable de l'entretien <span class='icon icon-obligatoire' title='Champ obligatoire' ></span> :",
+                'label' => "Responsable de l'entretien <span class='icon icon-obligatoire' title='Champ obligatoire' ></span> <span class='icon icon-information' title='La liste ci-dessous correspond aux supérieur·es hiérarchique·s direct·es déclaré·es' ></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner un·e responsable pour l'entretien",
                 'value_options' => $this->superieursAsOptions(),

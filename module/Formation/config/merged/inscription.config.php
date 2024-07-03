@@ -84,6 +84,7 @@ return [
                         'renseigner-frais',
 
                         'envoyer-convocation',
+                        'envoyer-attestation',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -239,6 +240,16 @@ return [
                                     'defaults' => [
                                         /** @see InscriptionController::envoyerConvocationAction() */
                                         'action' => 'envoyer-convocation',
+                                    ],
+                                ],
+                            ],
+                            'envoyer-attestation' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/envoyer-attestation/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::envoyerAttestationAction() */
+                                        'action' => 'envoyer-attestation',
                                     ],
                                 ],
                             ],

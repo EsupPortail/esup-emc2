@@ -123,7 +123,7 @@ class FormationInstanceDocumentController extends AbstractActionController
 
         $vars = [
             'type' => '',
-            'agent' => $inscription->getAgent(),
+            'agent' => $inscription->getIndividu(),
             'inscription' => $inscription,
             'formation' => $inscription->getSession()->getFormation(),
             'session' => $inscription->getSession(),

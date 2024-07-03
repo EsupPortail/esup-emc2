@@ -64,6 +64,9 @@ $complementaireComplete = $session->isListeComplementaireComplete();
             <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
                 <td data-order="<?php echo $inscription->getStagiaireDenomination(false); ?>">
                     <?php echo $inscription->getStagiaireDenomination(); ?>
+                    <?php if ($inscription->getIndividu()->getNomFamille() && $inscription->getIndividu()->getNomFamille() !== $inscription->getIndividu()->getNomUsuel()) : ?>
+                        (né·e <?php echo $inscription->getIndividu()->getNomFamille(); ?>)
+                    <?php endif; ?>
                     <?php if ($inscription->isRqth()) : ?>
                         <br>
                         <span class="text-info" data-bs-toggle="tooltip" data-bs-html="true"
@@ -127,7 +130,7 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                 </td>
                 <?php endif; ?>
                 <td class="action">
-
+                    <!-- AFFICHER ------------------------------------------------------------------------------------->
                     <?php if ($canAfficherIndividu) : ?>
                         <?php if ($inscription->isInterne()) : ?>
                             <a href="<?php echo $this->url('formation/agent', ['agent' => $inscription->getAgent()->getId()], [], true); ?>"
@@ -142,27 +145,42 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                                 <span class="icon icon-user"></span> Afficher </a>
                         <?php endif; ?>
                     <?php endif; ?>
+
+                    <!-- CONVOCATION & ATTESTATION  ------------------------------------------------------------------->
                     <?php if ($inscription->getListe() === Inscription::PRINCIPALE) : ?>
-                        <br>
-                        <?php /** @see FormationInstanceDocumentController::genererConvocationAction() */?>
-                        <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
-                            data-toogle="tooltip" data-bs-html="true" title="Générer la convocation">
-                            <span class="icon icon-pdf"></span>
-                            Générer la convocation
-                        </a>
-                        <br>
-                        <?php /** @see \Formation\Controller\InscriptionController::envoyerConvocationAction() */?>
-                        <a  href="<?php echo $this->url('formation/inscription/envoyer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
-                            data-toogle="tooltip" data-bs-html="true" title="Envoyer la convocation"
-                            class="ajax-modal">
-                            <span class="icon icon-notifier"></span> Envoyer la convocation
-                        </a>
-                        <?php if ($inscription->getSession()->estRealisee()): ?>
+                        <?php if (!$inscription->getSession()->estRealisee()): ?>
+                            <br>
+                            <?php /** @see FormationInstanceDocumentController::genererConvocationAction() */?>
+                            <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
+                                data-toogle="tooltip" data-bs-html="true" title="Générer la convocation">
+                                <span class="icon icon-pdf"></span>
+                                Générer la convocation
+                            </a>
+                            <br>
+                            <?php /** @see \Formation\Controller\InscriptionController::envoyerConvocationAction() */?>
+                            <a  href="<?php echo $this->url('formation/inscription/envoyer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
+                                data-toogle="tooltip" data-bs-html="true" title="Envoyer la convocation"
+                                class="ajax-modal">
+                                <span class="icon icon-notifier"></span> Envoyer la convocation
+                            </a>
+                        <?php else : ?>
                             <br>
                             <?php /** @see FormationInstanceDocumentController::genererAttestationAction() */?>
                             <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
                                 data-toogle="tooltip" data-bs-html="true" title="Générer l'attestation" class="ajax-modal">
                                 <span class="icon icon-pdf"></span>Générer l'attestation</a>
+                            <br>
+                            <?php /** @see \Formation\Controller\InscriptionController::envoyerAttestationAction() */?>
+                            <a  href="<?php echo $this->url('formation/inscription/envoyer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
+                                data-toogle="tooltip" data-bs-html="true" title="Envoyer l'attestation"
+                                class="ajax-modal">
+                                <span class="icon icon-notifier"></span> Envoyer l'attestation
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php if ($inscription->getListe() === Inscription::PRINCIPALE) : ?>
+                        <?php if ($inscription->getSession()->estRealisee()): ?>
                             <?php if ($canFraisAfficher) : ?>
                                 <?php if ($canFraisModifier) : ?>
                                     <br>
@@ -181,7 +199,7 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <?php if (!$session->estRealisee()): ?>
+                    <?php if ($inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH) && !$session->estRealisee()): ?>
                         <?php if (($inscription->getListe() === Inscription::PRINCIPALE || $inscription->getListe() === null) && !$complementaireComplete) : ?>
                             <br>
                             <?php /** @see \Formation\Controller\InscriptionController::envoyerListeComplementaireAction() */?>

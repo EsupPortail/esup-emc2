@@ -3,9 +3,12 @@
 namespace Formation\Service\Url;
 
 use Formation\Controller\FormationInstanceController;
+use Formation\Controller\FormationInstanceDocumentController;
 use Formation\Controller\IndexController;
+use Formation\Controller\InscriptionController;
 use Formation\Controller\PlanDeFormationController;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Inscription;
 
 class UrlService extends \Application\Service\Url\UrlService
 {
@@ -33,6 +36,18 @@ class UrlService extends \Application\Service\Url\UrlService
     {
         /** @see PlanDeFormationController::courantAction() */
         $url = $this->renderer->url('plan-de-formation/courant', [], ['force_canonical' => true], true);
+        return  UrlService::trueLink($url);
+    }
+
+    /** @noinspection PhpUnused :: macro URL#Attestation  */
+    public function getUrlAttestation() : string
+    {
+        /** @var Inscription $inscription */
+        $inscription = $this->getVariable('inscription');
+        if ($inscription === null) return "<span style='color:darkred'>Variable [inscription] non founie à UrlService</span>";
+
+        /** @see FormationInstanceDocumentController::genererAttestationAction() */
+        $url = $this->renderer->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
         return  UrlService::trueLink($url);
     }
 }

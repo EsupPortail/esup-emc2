@@ -98,7 +98,10 @@ $inscriptions = $instance->getInscriptions()
     <tbody>
     <?php foreach ($principales as $inscription) : ?>
         <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
-            <td data-order="<?php echo $inscription->getStagiaireDenomination(false);?>"> <?php echo $inscription->getStagiaireDenomination(); ?> </td>
+            <td data-order="<?php echo $inscription->getStagiaireDenomination(false);?>">
+                <?php echo $inscription->getStagiaireDenomination(); ?>
+
+            </td>
             <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
             <td>
                 <?php if ($inscription->isInterne()) : ?>

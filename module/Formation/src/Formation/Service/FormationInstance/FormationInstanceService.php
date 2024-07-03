@@ -380,13 +380,25 @@ class FormationInstanceService
 
     public function envoyerConvocation(FormationInstance $session, ?Inscription $inscription = null): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_FORMATION_CONVOCATION);
-        $this->update($session);
+        if ($inscription === null) {
+            $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_FORMATION_CONVOCATION);
+            $this->update($session);
+        }
 
         $liste = [];
         if ($inscription !== null) $liste[] = $inscription; else $liste = $session->getListePrincipale();
         foreach ($liste as $inscrit) {
             if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
+        }
+        return $session;
+    }
+
+    public function envoyerAttestation(FormationInstance $session, ?Inscription $inscription = null): FormationInstance
+    {
+        $liste = [];
+        if ($inscription !== null) $liste[] = $inscription; else $liste = $session->getListePrincipale();
+        foreach ($liste as $inscrit) {
+            if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerAttestation($inscrit);
         }
         return $session;
     }

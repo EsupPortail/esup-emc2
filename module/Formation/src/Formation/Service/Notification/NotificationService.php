@@ -305,6 +305,40 @@ class NotificationService {
         return $mail;
     }
 
+    public function triggerAttestation(Inscription $inscrit) : ?Mail
+    {
+        $instance = $inscrit->getSession();
+        if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
+        if (!$instance->isMailActive()) return null;
+
+        $agent = $inscrit->getIndividu();
+        if ($agent === null) throw new RuntimeException("Aucune personne d'identifié·e pour cette inscription");
+
+        $vars = [
+            'session' => $instance,
+            'agent' => $agent,
+            'inscription' => $inscrit,
+            'MacroService' => $this->getMacroService(),
+        ];
+        $urlService = $this->getUrlService();
+        $urlService->setVariables($vars);
+        $vars['UrlService'] = $this->getUrlService();
+
+        $copie = [];
+        $avecCopieSuperieur = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::CONVOCATION_SUPERIEUR_COPIE);
+        if ($avecCopieSuperieur && $inscrit->getAgent() !== null) {
+            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
+            foreach ($superieurs as $superieur) $copie[] = $superieur->getSuperieur()->getEmail();
+        }
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_ATTESTATION, $vars);
+        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation', null, $copie);
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
     public function triggerDemandeRetour(Inscription $inscrit) : ?Mail
     {
         $instance = $inscrit->getSession();
