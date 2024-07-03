@@ -87,6 +87,15 @@ class FormationController extends AbstractActionController
         ]);
     }
 
+    public function ficheAction(): ViewModel
+    {
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+
+        return new ViewModel([
+            'title' => "Action de formation [".$formation->getLibelle()."]",
+            'formation' => $formation,
+        ]);
+    }
     public function ajouterAction(): ViewModel
     {
         $formation = new Formation();

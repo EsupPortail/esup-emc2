@@ -70,99 +70,7 @@ $complementaireComplete = $instance->isListeComplementaireComplete();
 $inscriptions = $instance->getInscriptions()
 ?>
 
-<table id="inscriptions" class="datatable table table-condensed">
-    <thead>
-    <tr>
-        <th data-type="string"> Dénomination </th>
-        <th> Affection principale </th>
-        <th style="width:6rem;"> Statut </th>
-        <th style="width:13rem;"> Date de demande </th>
-        <th style="width:6rem;"> Liste </th>
-        <th style="width:13rem;"> État </th>
-        <th class="action"> Action </th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($inscriptions as $inscription) : ?>
-        <?php if ($inscription->estNonHistorise()) : ?>
-        <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
-            <td data-order="<?php echo $inscription->getStagiaireDenomination(false); ?>">
-                <?php echo $inscription->getStagiaireDenomination(); ?>
-            </td>
-            <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
-            <td>
-                <?php if ($inscription->isInterne()) : ?>
-                    <?php echo $inscription->getAgent()->getStatutToString(); ?>
-                <?php endif; ?>
-                <?php if ($inscription->isExterne()) : ?>
-                    Stagiaire Externe
-                <?php endif; ?>
-            </td>
-            <td> <?php echo $inscription->getHistoCreation()->format('d/m/Y'); ?> </td>
-            <td> <?php echo $inscription->getListe()??"Aucune"; ?> </td>
-            <td> <?php echo $this->etatinstance($inscription->getEtatActif()); ?> </td>
-            <td class="action">
-
-                <?php if ($canAfficherIndividu) : ?>
-                    <?php if ($inscription->isInterne()) : ?>
-                        <a href="<?php echo $this->url('formation/agent', ['agent' => $inscription->getAgent()->getId()], [], true); ?>"
-                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
-                        >
-                            <span class="icon icon-user"></span> Afficher </a>
-                    <?php endif; ?>
-                    <?php if ($inscription->isExterne()) : ?>
-                        <a href="<?php echo $this->url('stagiaire-externe/afficher', ['stagiaire-externe' => $inscription->getStagiaire()->getId()], [], true); ?>"
-                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
-                        >
-                            <span class="icon icon-user"></span> Afficher </a>
-                    <?php endif; ?>
-                <?php endif; ?>
-
-                <?php if ($canInscritModifier && $inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
-                    <br>
-                    <?php  /** @see \Formation\Controller\InscriptionController::validerDrhAction() */ ?>
-                    <a href="<?php echo $this->url('formation/inscription/valider-drh', ['inscription' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success"> Valider</span>  </a>
-                    <?php  /** @see \Formation\Controller\InscriptionController::refuserDrhAction() */ ?>
-                    <a href="<?php echo $this->url('formation/inscription/refuser-drh', ['inscription' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger"> Refuser</span>  </a>
-                <?php endif; ?>
-
-                <?php if ($inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH) && $inscription->getListe() === null) :?>
-                    <br>
-                    <?php  /** @see \Formation\Controller\InscriptionController::classerAction() */ ?>
-                    <a href="<?php echo $this->url('formation/inscription/classer', ['inscription' => $inscription->getId()], [], true); ?>">
-                        <span class="icon icon-sort" title="Classer l'inscription"></span> Classer</a>
-                <?php endif; ?>
-
-                <?php if ($canHistoriserInscription) : ?>
-                    <br>
-                    <?php /** @see \Formation\Controller\InscriptionController::historiserAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()], ['query' => ['retour' => $urlRetour] ], true); ?>"
-                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation"
-                    >
-                        <span class="icon icon-historiser"></span>
-                        Historiser
-                    </a>
-                <?php endif; ?>
-
-                <?php if ($canSupprimerInscription) : ?>
-                    <br>
-                    <?php /** @see \Formation\Controller\InscriptionController::supprimerAction() */?>
-                    <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
-                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation."
-                    >
-                        <span class="text-danger">
-                            <span class="icon icon-unchecked"></span>
-                            Supprimer
-                        </span>
-                    </a>
-                <?php endif; ?>
-            </td>
-        </tr>
-        <?php endif; ?>
-    <?php endforeach; ?>
-    </tbody>
-</table><br/>
+<?php echo $this->inscriptions($instance, $inscriptions, ['id' => 'all-inscriptions', 'display-document' => false]); ?>
 
 <h4>
     Liste principale
@@ -172,9 +80,11 @@ $inscriptions = $instance->getInscriptions()
     <?php endif; ?>
 </h4>
 
+
 <?php if (empty($principales)): ?>
     <div class="alert alert-info"> Aucune inscription dans la liste principale. </div>
 <?php else: ?>
+    <?php echo $this->inscriptions($instance, $principales, ['id' => 'liste-principale']); ?>
     <table id="principale" class="datatable table table-condensed">
     <thead>
     <tr>
@@ -473,9 +383,6 @@ $inscriptions = $instance->getInscriptions()
 
 <script>
     $(function() {
-        $('.datatable#inscriptions').DataTable( {
-            'paging' : false,
-        });
        $('.datatable#principale').DataTable( {
            'paging' : false,
        });

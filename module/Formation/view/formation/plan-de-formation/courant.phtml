@@ -125,7 +125,15 @@ usort($domaines, function (Domaine $a, Domaine $b) {
     <ul>
         <?php foreach ($actions_ as $action) : ?>
             <li>
-                <?php echo $action->getLibelle(); ?>
+                <?php if ($canAfficherAction) : ?>
+                    <?php /** @see \Formation\Controller\FormationController::ficheAction() */ ?>
+                    <a href = "<?php echo $this->url('formation/fiche', ['formation' => $action->getId()], [], true); ?>"
+                       class="ajax-modal"
+                    >
+                        <?php echo $action->getLibelle(); ?></a>
+                <?php else : ?>
+                    <?php echo $action->getLibelle(); ?>
+                <?php endif; ?>
                 (<?php echo count($actions[$action->getId()]->getSessionsOuvertes()); ?> session·s ouverte·s)
 
                 <?php $abonnement = $action->getAbonnementByAgent($agent); ?>

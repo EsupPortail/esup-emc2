@@ -1,0 +1,18 @@
+<?php
+
+use Formation\Entity\Db\ActionCoutPrevisionnel;
+use Formation\Entity\Db\Formation;
+
+/**
+ * @see \Formation\Controller\FormationController::ficheAction()
+ * @var Formation $formation
+ * @var ActionCoutPrevisionnel[] $coutsPrevisionnels
+ */
+
+
+?>
+
+<h2> Description de la formation </h2>
+
+<?php echo $this->formationInformations($formation, 'liste', ['no-action' => true]); ?>
+

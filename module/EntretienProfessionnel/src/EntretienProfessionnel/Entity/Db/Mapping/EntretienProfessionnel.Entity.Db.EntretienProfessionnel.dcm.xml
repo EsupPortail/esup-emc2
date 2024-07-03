@@ -72,7 +72,7 @@
                     <join-column name="entretien_id" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="evenement_id" referenced-column-name="id" />
+                    <join-column name="evenement_id" referenced-column-name="ID" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>

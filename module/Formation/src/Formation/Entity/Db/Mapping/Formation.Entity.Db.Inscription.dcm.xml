@@ -24,6 +24,9 @@
         <field name="justificationDrh"          column="justification_drh"                  type="text"         nullable="true"/>
         <field name="justificationRefus"        column="justification_refus"                type="text"         nullable="true"/>
 
+        <field name="rqth"                      column="rqth"                               type="boolean"      nullable="false"/>
+        <field name="precisionRqth"             column="precision_rqth"                     type="text"         nullable="true"/>
+
         <one-to-one     field="frais"           target-entity="Formation\Entity\Db\InscriptionFrais"      mapped-by="inscription" />
         <one-to-many    field="presences"       target-entity="Formation\Entity\Db\Presence"              mapped-by="inscription" />
 

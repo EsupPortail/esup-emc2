@@ -26,6 +26,7 @@ use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Inscription\InscriptionServiceFactory;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceFactory;
+use Formation\View\Helper\InscriptionsViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -416,6 +417,11 @@ return [
             JustificationHydrator::class => JustificationHydratorFactory::class,
             InscriptionFraisHydrator::class => InscriptionFraisHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'inscriptions' => InscriptionsViewHelper::class,
+        ],
+    ],
 
 ];

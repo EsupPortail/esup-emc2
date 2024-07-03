@@ -43,6 +43,9 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     private ?string $justificationDrh = null;
     private ?string $justificationRefus = null;
 
+    private bool $rqth = false;
+    private ?string $precisionRqth = null;
+
     private ?DateTime $validationEnquete = null;
     private Collection $reponsesEnquete;
 
@@ -155,6 +158,26 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     public function setJustificationRefus(?string $justificationRefus): void
     {
         $this->justificationRefus = $justificationRefus;
+    }
+
+    public function isRqth(): bool
+    {
+        return $this->rqth;
+    }
+
+    public function setRqth(bool $rqth): void
+    {
+        $this->rqth = $rqth;
+    }
+
+    public function getPrecisionRqth(): ?string
+    {
+        return $this->precisionRqth;
+    }
+
+    public function setPrecisionRqth(?string $precisionRqth): void
+    {
+        $this->precisionRqth = $precisionRqth;
     }
 
     public function getValidationEnquete(): ?DateTime

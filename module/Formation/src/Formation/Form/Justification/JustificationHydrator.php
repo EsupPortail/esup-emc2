@@ -39,6 +39,8 @@ class JustificationHydrator implements HydratorInterface
         $data = [
             'missions' => $object->getMissions()??null,
             'justification' => $description,
+            'rqth' => $object->isRqth(),
+            'precision_rqth' => $object->getPrecisionRqth(),
         ];
         return $data;
     }
@@ -48,6 +50,8 @@ class JustificationHydrator implements HydratorInterface
         $etape = $data['etape'];
         $missions = (isset($data['missions']) AND trim($data['missions']) !== '')?trim($data['missions']):null;
         $justification = (isset($data['justification']) AND trim($data['justification']) !== '')?trim($data['justification']):null;
+        $rqth = $data['rqth'];
+        $precisionRqth = (isset($data['precision_rqth']) AND trim($data['precision_rqth']) !== '')?trim($data['precision_rqth']):null;
 
         switch ($etape) {
             case 'AGENT' : $object->setJustificationAgent($justification); break;
@@ -78,6 +82,8 @@ class JustificationHydrator implements HydratorInterface
 //                break;
 //        }
         $object->setMissions($missions);
+        $object->setRqth($rqth);
+        $object->setPrecisionRqth($precisionRqth);
 
         return $object;
     }

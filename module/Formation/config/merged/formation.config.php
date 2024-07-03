@@ -79,6 +79,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'afficher',
+                        'fiche',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_AFFICHER,
@@ -209,6 +210,16 @@ return [
                             'defaults' => [
                                 /** @see FormationController::afficherAction() */
                                 'action' => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'fiche' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/fiche/:formation',
+                            'defaults' => [
+                                /** @see FormationController::ficheAction() */
+                                'action' => 'fiche',
                             ],
                         ],
                     ],

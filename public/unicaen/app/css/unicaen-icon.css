@@ -346,3 +346,11 @@
 {
     content:"\f51a";
 }
+
+.icon.icon-accessibilite::before,
+.icon.icon-accessibility::before,
+.icon.icon-rqth::before
+{
+    content:"\f193";
+}
+
