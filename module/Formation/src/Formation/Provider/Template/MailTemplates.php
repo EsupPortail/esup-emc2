@@ -16,6 +16,7 @@ class MailTemplates {
     //session
     const SESSION_ATTESTATION                           = "FORMATION_SESSION_ATTESTATION";
     const SESSION_CONVOCATION                           = "FORMATION_SESSION_CONVOCATION";
+    const SESSION_ABSENCE                               = "FORMATION_SESSION_ABSENCE";
     const SESSION_EMARGEMENT                            = "FORMATION_SESSION_EMARGEMENT";
     const SESSION_LISTE_PRINCIPALE                      = "FORMATION_SESSION_LISTE_PRINCIPALE";
     const SESSION_LISTE_COMPLEMENTAIRE                  = "FORMATION_SESSION_LISTE_COMPLEMENTAIRE";

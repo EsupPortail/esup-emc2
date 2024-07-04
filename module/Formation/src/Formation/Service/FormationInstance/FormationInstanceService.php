@@ -403,6 +403,17 @@ class FormationInstanceService
         return $session;
     }
 
+
+    public function envoyerAbsence(FormationInstance $session, ?Inscription $inscription = null): FormationInstance
+    {
+        $liste = [];
+        if ($inscription !== null) $liste[] = $inscription; else $liste = $session->getListePrincipale();
+        foreach ($liste as $inscrit) {
+            if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConstatAbsence($inscrit);
+        }
+        return $session;
+    }
+
     /**
      * @param FormationInstance $instance
      * @return FormationInstance

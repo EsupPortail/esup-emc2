@@ -85,6 +85,7 @@ return [
 
                         'envoyer-convocation',
                         'envoyer-attestation',
+                        'envoyer-absence',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -250,6 +251,16 @@ return [
                                     'defaults' => [
                                         /** @see InscriptionController::envoyerAttestationAction() */
                                         'action' => 'envoyer-attestation',
+                                    ],
+                                ],
+                            ],
+                            'envoyer-absence' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/envoyer-absence/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::envoyerAbsenceAction() */
+                                        'action' => 'envoyer-absence',
                                     ],
                                 ],
                             ],

@@ -624,4 +624,19 @@ class InscriptionController extends AbstractActionController
         $vm->setTemplate('default/reponse');
         return $vm;
     }
+
+    public function envoyerAbsenceAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $session = $inscription->getSession();
+
+        $mail = $this->getFormationInstanceService()->envoyerAbsence($session, $inscription);
+
+        $vm = new ViewModel([
+            'title' => "Envoi du constat d'absence",
+            'reponse' => "Le constat d'absence pour la session ".$session->getFormation()->getLibelle(). " du ".$session->getPeriode()." vient d'être envoyée à ".$inscription->getStagiaireDenomination().".",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
 }

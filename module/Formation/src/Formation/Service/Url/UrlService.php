@@ -39,6 +39,18 @@ class UrlService extends \Application\Service\Url\UrlService
         return  UrlService::trueLink($url);
     }
 
+    /** @noinspection PhpUnused :: macro URL#Convocation  */
+    public function getUrlConvocation() : string
+    {
+        /** @var Inscription $inscription */
+        $inscription = $this->getVariable('inscription');
+        if ($inscription === null) return "<span style='color:darkred'>Variable [inscription] non founie à UrlService</span>";
+
+        /** @see FormationInstanceDocumentController::genererConvocationAction() */
+        $url = $this->renderer->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
+        return  UrlService::trueLink($url);
+    }
+
     /** @noinspection PhpUnused :: macro URL#Attestation  */
     public function getUrlAttestation() : string
     {
@@ -48,6 +60,18 @@ class UrlService extends \Application\Service\Url\UrlService
 
         /** @see FormationInstanceDocumentController::genererAttestationAction() */
         $url = $this->renderer->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
+        return  UrlService::trueLink($url);
+    }
+
+    /** @noinspection PhpUnused :: macro URL#Absence  */
+    public function getUrlAbsence() : string
+    {
+        /** @var Inscription $inscription */
+        $inscription = $this->getVariable('inscription');
+        if ($inscription === null) return "<span style='color:darkred'>Variable [inscription] non founie à UrlService</span>";
+
+        /** @see FormationInstanceDocumentController::genererAbsenceAction() */
+        $url = $this->renderer->url('formation-instance/generer-absence', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
         return  UrlService::trueLink($url);
     }
 }

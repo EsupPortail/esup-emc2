@@ -53,6 +53,7 @@ class JustificationHydrator implements HydratorInterface
         $rqth = $data['rqth'];
         $precisionRqth = (isset($data['precision_rqth']) AND trim($data['precision_rqth']) !== '')?trim($data['precision_rqth']):null;
 
+        /** @var Inscription|DemandeExterne $object */
         switch ($etape) {
             case 'AGENT' : $object->setJustificationAgent($justification); break;
             case 'RESPONSABLE' : $object->setJustificationResponsable($justification); break;

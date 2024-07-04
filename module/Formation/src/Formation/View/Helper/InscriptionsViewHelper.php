@@ -13,8 +13,13 @@ class InscriptionsViewHelper extends AbstractHelper
 {
     /**
      * @param Inscription[] $inscriptions
-     * @param array $options
-     * @return string|Partial
+     *
+     * Options :
+     * 'url-retour' permet de forcer l'url de retour des actions du VH
+     *
+     * 'display-document' controle l'affichage de la colonne document/attestation (default: true)
+     * 'display-liste' controle l'affichage de la colonne affichant les listes (default: true)
+     * 'display-historise' controle l'affichage des lignes historisées (default: true)
      */
     public function __invoke(FormationInstance $session, array $inscriptions, array $options = []): string|Partial
     {

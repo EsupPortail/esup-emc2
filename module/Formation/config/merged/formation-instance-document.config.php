@@ -33,6 +33,15 @@ return [
                 [
                     'controller' => FormationInstanceDocumentController::class,
                     'action' => [
+                        'generer-absence',
+                    ],
+                    'privileges' => [
+                        FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_ABSENCE
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceDocumentController::class,
+                    'action' => [
                         'generer-historique',
                     ],
                     'privileges' => [
@@ -75,6 +84,17 @@ return [
                                 /** @see FormationInstanceDocumentController::genererAttestationAction() */
                                 'controller' => FormationInstanceDocumentController::class,
                                 'action'     => 'generer-attestation',
+                            ],
+                        ],
+                    ],
+                    'generer-absence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-absence/:inscription',
+                            'defaults' => [
+                                /** @see FormationInstanceDocumentController::genererAbsenceAction() */
+                                'controller' => FormationInstanceDocumentController::class,
+                                'action'     => 'generer-absence',
                             ],
                         ],
                     ],

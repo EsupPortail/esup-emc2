@@ -417,7 +417,7 @@ class FormationInstanceController extends AbstractActionController
         $inscriptions = array_filter($inscriptions, function (Inscription $inscription) { return $inscription->estNonHistorise();});
         $inscriptions = array_filter($inscriptions, function (Inscription $inscription) { return in_array($inscription->getListe(), [Inscription::PRINCIPALE, Inscription::COMPLEMENTAIRE]) ;});
 
-        $headers = [ 'Liste', 'Prenom', 'Nom', 'Adresse électronique', 'Date de naissance', 'Grade', 'Affectation'];
+        $headers = [ 'Liste', 'Prenom', 'Nom usuel', 'Nom patronymique', 'Adresse électronique', 'Date de naissance', 'Grade', 'Affectation'];
 
         $records = [];
         /** @var Inscription $inscription */
@@ -427,7 +427,8 @@ class FormationInstanceController extends AbstractActionController
             if ($inscription->isInterne()) {
                 $individu = $inscription->getIndividu();
                 $item[] = $individu->getPrenom();
-                $item[] = $individu->getNomUsuel()??$individu->getNomFamille();
+                $item[] = $individu->getNomUsuel();
+                $item[] = $individu->getNomFamille();
                 $item[] = $individu->getEmail();
                 $item[] = $individu->getDateNaissance();
                 $gradeTexte = [];
@@ -449,6 +450,7 @@ class FormationInstanceController extends AbstractActionController
             if ($inscription->isExterne()) {
                 $item[] = $inscription->getStagiaire()->getPrenom();
                 $item[] = $inscription->getStagiaire()->getNom();
+                $item[] = $inscription->getStagiaire()->getNomFamille();
                 $item[] = $inscription->getStagiaire()->getEmail();
                 $item[] = $inscription->getStagiaire()->getDateNaissance();
                 $item[] = "";

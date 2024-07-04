@@ -142,6 +142,33 @@ class FormationInstanceDocumentController extends AbstractActionController
         return $exporter->export($rendu->getSujet());
     }
 
+    /**
+     * @throws MpdfException
+     */
+    public function genererAbsenceAction(): ?string
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+
+        $vars = [
+            'type' => '',
+            'agent' => $inscription->getIndividu(),
+            'inscription' => $inscription,
+            'formation' => $inscription->getSession()->getFormation(),
+            'session' => $inscription->getSession(),
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ABSENCE, $vars);
+        $exporter = new PdfExporter();
+        $exporter->setRenderer($this->renderer);
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->getMpdf()->SetMargins(0,0,50);
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
+        $exporter->setFooterScript('/application/document/pdf/pied-vide');
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet());
+    }
 
     /**
      * @throws MpdfException

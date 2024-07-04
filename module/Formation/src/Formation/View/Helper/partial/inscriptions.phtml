@@ -33,6 +33,8 @@ $canTeleverserAttestation     = $canInscritModifier;
 $canSupprimerAttestation      = $canInscritModifier;
 
 $displayDocument = !isset($options['display-document']) || $options['display-document'] !== false;
+$displayListe = !isset($options['display-liste']) || $options['display-liste'] !== false;
+$displayHistorise = !isset($options['display-historise']) || $options['display-historise'] !== false;
 
 $principaleComplete = $session->isListePrincipaleComplete();
 $complementaireComplete = $session->isListeComplementaireComplete();
@@ -50,7 +52,9 @@ $complementaireComplete = $session->isListeComplementaireComplete();
         <th> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
         <th style="width:13rem;"> Date de demande </th>
-        <th style="width:6rem;"> Liste </th>
+        <?php if ($displayListe) : ?>
+            <th style="width:6rem;"> Liste </th>
+        <?php endif; ?>
         <th style="width:4rem;"> État </th>
         <?php if ($displayDocument) : ?>
             <th> Documents </th>
@@ -60,7 +64,7 @@ $complementaireComplete = $session->isListeComplementaireComplete();
     </thead>
     <tbody>
     <?php foreach ($inscriptions as $inscription) : ?>
-        <?php if ($inscription->estNonHistorise()) : ?>
+        <?php if ($inscription->estNonHistorise() || $displayHistorise) : ?>
             <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
                 <td data-order="<?php echo $inscription->getStagiaireDenomination(false); ?>">
                     <?php echo $inscription->getStagiaireDenomination(); ?>
@@ -86,7 +90,9 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                     <?php endif; ?>
                 </td>
                 <td> <?php echo $inscription->getHistoCreation()->format('d/m/Y'); ?> </td>
-                <td> <?php echo $inscription->getListe()??"Aucune"; ?> </td>
+                <?php if ($displayListe) : ?>
+                    <td> <?php echo $inscription->getListe()??"Aucune"; ?> </td>
+                <?php endif; ?>
                 <td> <?php echo $this->etatinstance($inscription->getEtatActif()); ?> </td>
                 <?php if ($displayDocument) : ?>
                 <td class="action">
@@ -146,8 +152,8 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <!-- CONVOCATION & ATTESTATION  ------------------------------------------------------------------->
-                    <?php if ($inscription->getListe() === Inscription::PRINCIPALE) : ?>
+                    <!-- CONVOCATION & ATTESTATION & ABSENCE ---------------------------------------------------------->
+                    <?php if ($inscription->getListe() === Inscription::PRINCIPALE && $inscription->estNonHistorise()) : ?>
                         <?php if (!$inscription->getSession()->estRealisee()): ?>
                             <br>
                             <?php /** @see FormationInstanceDocumentController::genererConvocationAction() */?>
@@ -176,10 +182,24 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                                 class="ajax-modal">
                                 <span class="icon icon-notifier"></span> Envoyer l'attestation
                             </a>
+                            <?php if ($inscription->hasAbsence()) : ?>
+                                <br>
+                                <?php /** @see FormationInstanceDocumentController::genererAbsenceAction() */?>
+                                <a  href="<?php echo $this->url('formation-instance/generer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
+                                    data-toogle="tooltip" data-bs-html="true" title="Générer le constat d'absence" class="ajax-modal">
+                                    <span class="icon icon-pdf"></span>Générer le constat d'absence</a>
+                                <br>
+                                <?php /** @see \Formation\Controller\InscriptionController::envoyerAbsenceAction() */?>
+                                <a  href="<?php echo $this->url('formation/inscription/envoyer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
+                                    data-toogle="tooltip" data-bs-html="true" title="Envoyer le constat d'absence"
+                                    class="ajax-modal">
+                                    <span class="icon icon-notifier"></span> Envoyer  le constat d'absence
+                                </a>
+                            <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>
-
-                    <?php if ($inscription->getListe() === Inscription::PRINCIPALE) : ?>
+                    <!-- Frais ----------------------------------------------------------------------------------------->
+                    <?php if ($inscription->getListe() === Inscription::PRINCIPALE && $inscription->estNonHistorise()) : ?>
                         <?php if ($inscription->getSession()->estRealisee()): ?>
                             <?php if ($canFraisAfficher) : ?>
                                 <?php if ($canFraisModifier) : ?>
@@ -198,8 +218,8 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>
-
-                    <?php if ($inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH) && !$session->estRealisee()): ?>
+                    <!-- Changement liste ----------------------------------------------------------------------------->
+                    <?php if ($inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH) && !$session->estRealisee() && $inscription->estNonHistorise()): ?>
                         <?php if (($inscription->getListe() === Inscription::PRINCIPALE || $inscription->getListe() === null) && !$complementaireComplete) : ?>
                             <br>
                             <?php /** @see \Formation\Controller\InscriptionController::envoyerListeComplementaireAction() */?>
@@ -235,13 +255,23 @@ $complementaireComplete = $session->isListeComplementaireComplete();
 
                     <?php if ($canHistoriserInscription) : ?>
                         <br>
-                        <?php /** @see \Formation\Controller\InscriptionController::historiserAgentAction() */?>
-                        <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()], ['query' => ['retour' => $urlRetour] ], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation"
-                        >
-                            <span class="icon icon-historiser"></span>
-                            Historiser
-                        </a>
+                        <?php if ($inscription->estNonHistorise()) : ?>
+                            <?php /** @see \Formation\Controller\InscriptionController::historiserAction() */?>
+                            <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()], ['query' => ['retour' => $urlRetour] ], true); ?>"
+                                data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation"
+                            >
+                                <span class="icon icon-historiser"></span>
+                                Historiser
+                            </a>
+                        <?php else : ?>
+                            <?php /** @see \Formation\Controller\InscriptionController::restaurerAction() */?>
+                            <a  href="<?php echo $this->url('formation/inscription/restaurer', ['inscription' => $inscription->getId()], ['query' => ['retour' => $urlRetour] ], true); ?>"
+                                data-bs-toggle="tooltip" data-bs-html="true" title="Ré-établir <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation"
+                            >
+                                <span class="icon icon-restaurer"></span>
+                                Restaurer
+                            </a>
+                        <?php endif; ?>
                     <?php endif; ?>
 
                     <?php if ($canSupprimerInscription) : ?>

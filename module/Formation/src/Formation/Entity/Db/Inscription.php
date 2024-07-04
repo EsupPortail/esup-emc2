@@ -219,9 +219,18 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     {
         /** @var Presence $presence */
         foreach ($this->presences as $presence) {
-            if ($presence->estNonHistorise() && $presence->getStatut() === $code) {
+            if ($presence->estNonHistorise() && $presence->getStatut() === $code && $presence->getJournee() === $seance) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    public function hasAbsence(): bool
+    {
+        $codes = [Presence::PRESENCE_ABSENCE_NON_JUSTIFIEE, Presence::PRESENCE_ABSENCE_JUSTIFIEE];
+        foreach ($this->presences as $presence) {
+            if ($presence->estNonHistorise() && in_array($presence->getStatut(), $codes)) return true;
         }
         return false;
     }
