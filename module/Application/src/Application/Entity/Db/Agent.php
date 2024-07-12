@@ -28,14 +28,18 @@ use Structure\Entity\Db\StructureAgentForce;
 use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenValidation\Entity\HasValidationsInterface;
+use UnicaenValidation\Entity\HasValidationsTrait;
 
 class Agent implements
     ResourceInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface,
+    HasValidationsInterface
 {
     use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
+    use HasValidationsTrait;
     use AgentMacroTrait;
 
     const ROLE_AGENT         = 'Agent';
@@ -90,6 +94,7 @@ class Agent implements
         $this->affectations = new ArrayCollection();
         $this->autorites = new ArrayCollection();
         $this->superieurs = new ArrayCollection();
+        $this->validations = new ArrayCollection();
     }
 
     /**

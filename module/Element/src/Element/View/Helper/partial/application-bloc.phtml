@@ -55,7 +55,7 @@ if ($objet instanceof FicheMetier) {
 $canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher')  AND $canAcquisAfficher);
 $canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter')   AND $canAcquisModifier);
 $canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier')  AND $canAcquisModifier);
-$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer') AND $canAcquisModifier);
+$canSupprimer       = $canModifier;
 $canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'valider')   AND $canAcquisModifier);
 
 $displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
@@ -124,12 +124,14 @@ ksort($groupes);
 
 <div class="listing">
 
+    <?php if (!empty($groupes)) : ?>
     <table id="application" class="datatable">
         <thead>
         <tr>
             <th style="width:40%;"> Libellé </th>
             <th style="width:30%;"> Groupe </th>
             <th style="width:20%;"> Niveau </th>
+            <th></th>
             <th></th>
             <th style="width:10%;"> Action </th>
         </tr>
@@ -204,16 +206,17 @@ ksort($groupes);
                                         href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                         class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
                                         title="Modifier le niveau de l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
-                                    <span class="icon icon-editer"></span></a>
+                                    <span class="icon icon-editer"></span> Modifier </a>
                             <?php else : ?>
                                 <a  <?php /** @see \Application\Controller\ElementController::modifierApplicationElementAction() */ ?>
                                         href="<?php echo $this->url("element_/modifier-application-element", ['application-element' => $entite->getId()], [], true); ?>"
                                         class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
                                         title="Modifier l'acquis <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
-                                    <span class="icon icon-editer"></span></a>
+                                    <span class="icon icon-editer"></span> Modifier </a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if ($canSupprimer) : ?>
+                            <br>
                             <a
                                 <?php /** @see \Application\Controller\ElementController::supprimerAction() */?>
                                     href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId()], [], true); ?>"
@@ -222,6 +225,7 @@ ksort($groupes);
                             >
                                 <span class="text-danger">
                                     <span class="icon icon-unchecked" title="Supprimer définitivement une application liées à l'agent"></span>
+                                    Supprimer
                                 </span></a>
                         <?php endif; ?>
                         <?php if ($canValider) : ?>
@@ -250,7 +254,7 @@ ksort($groupes);
         <?php endforeach; ?>
             </tbody>
     </table>
-
+    <?php endif; ?>
 </div>
 
 <style>

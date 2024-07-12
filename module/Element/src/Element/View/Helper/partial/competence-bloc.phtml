@@ -57,7 +57,7 @@ if ($objet instanceof FicheMetier) {
 $canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher')  AND $canAcquisAfficher);
 $canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter')   AND $canAcquisModifier);
 $canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier')  AND $canAcquisModifier);
-$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer') AND $canAcquisModifier);
+$canSupprimer       = $canModifier;
 
 $displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
 $displayValidation  = CompetenceBlocViewHelper::isDisplayed($options,'validation');
@@ -143,6 +143,7 @@ ksort($groupes);
                 <th style="width:30%;"> Thème </th>
                 <th style="width:20%;"> Niveau </th>
                 <th> &nbsp; </th>
+                <th> &nbsp; </th>
                 <?php if ($nbAction > 0) : ?>
                     <th style="width:10%;"> Actions </th>
                 <?php endif; ?>
@@ -215,16 +216,17 @@ ksort($groupes);
                                             href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                             class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
                                             title="Modifier le niveau de la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
-                                        <span class="icon icon-editer"></span></a>
+                                        <span class="icon icon-editer"></span> Modifier</a>
                                 <?php else : ?>
                                     <a  <?php /** @see \Element\Controller\ElementController::modifierCompetenceElementAction() */ ?>
                                             href="<?php echo $this->url("element_/modifier-competence-element", ['competence-element' => $entite->getId()], [], true); ?>"
                                             class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
                                             title="Modifier l'acquis <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
-                                        <span class="icon icon-editer"></span></a>
+                                        <span class="icon icon-editer"></span> Modifier</a>
                                 <?php endif; ?>
                             <?php endif; ?>
                             <?php if ($canSupprimer) : ?>
+                            <br>
                                 <a
                                     <?php /** @see \Element\Controller\ElementController::supprimerAction() */?>
                                         href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?>"
@@ -233,6 +235,7 @@ ksort($groupes);
                                 >
                                     <span class="text-danger">
                                         <span class="icon icon-unchecked" title="Supprimer définitivement une compétence liées à l'agent"></span>
+                                        Supprimer
                                     </span></a>
                             <?php endif; ?>
                         <?php endif; ?>

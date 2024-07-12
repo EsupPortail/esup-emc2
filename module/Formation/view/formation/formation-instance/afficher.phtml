@@ -368,7 +368,22 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                                 <td> <?php echo ($journee->getVolumeDebut()) ? $journee->getVolumeDebut()->format('d/m/Y') : "N.C."; ?> </td>
                                 <td> <?php echo ($journee->getVolumeFin()) ? $journee->getVolumeFin()->format('d/m/Y') : "N.C."; ?> </td>
                             <?php endif; ?>
-                            <td> <?php echo $journee->getLieu(); ?></td>
+                            <td>
+                                <?php if ($journee->getLieu() === null): ?>
+                                    <?php if ($journee->getOldLieu() !== null) : ?>
+                                        <?php echo $journee->getOldLieu(); ?>
+                                    <?php else : ?>
+                                        <span class="text-warning"><span class="icon icon-attention"></span>Aucun lieu de précisé</span>
+                                    <?php endif ; ?>
+                                <?php else : ?>
+                                    <?php echo $journee->getLieu()->getBatiment(); ?>
+                                    <?php echo $journee->getLieu()->getLibelle(); ?>
+                                    /
+                                    <?php echo $journee->getLieu()->getCampus(); ?>
+                                    <?php echo $journee->getLieu()->getVille(); ?>
+                                <?php endif; ?>
+
+                            </td>
                             <td>
                                <?php if ($canEmargement) : ?>
                                     <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */ ?>

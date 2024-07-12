@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @see \Formation\Controller\AgentController::afficherCharteAction()
+ * @var string $title
+ * @var string $charte
+ */
+
+$this->headTitle($title);
+
+?>
+
+<div class="card">
+    <div class="card-header bg-default">
+        <?php echo $title; ?>
+    </div>
+    <div class="card-body">
+        <?php echo $charte; ?>
+
+        <div>
+            <?php /** @see \Formation\Controller\AgentController::validerCharteAction() */ ?>
+            <a href="<?php echo $this->url('formation/charte/valider', [] , [], true) ; ?>"
+               class="btn btn-success">
+                <span class="icon icon-checked"></span>
+                Je signe la charte
+            </a>
+
+            <a href="<?php echo $this->url('zfcuser/logout', [] , [], true) ; ?>"
+               class="btn btn-danger">
+                <span class="icon icon-unchecked"></span>
+                Je ne signe pas la charte
+            </a>
+        </div>
+    </div>
+</div>

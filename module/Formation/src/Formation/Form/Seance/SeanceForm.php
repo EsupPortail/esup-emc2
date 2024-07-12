@@ -6,15 +6,27 @@ use Formation\Entity\Db\Seance;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
-use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Time;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
 use UnicaenApp\Form\Element\Date;
+use UnicaenApp\Form\Element\SearchAndSelect;
 
 class SeanceForm extends Form
 {
+
+    private ?string $url;
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): void
+    {
+        $this->url = $url;
+    }
 
     public function init(): void
     {
@@ -115,16 +127,29 @@ class SeanceForm extends Form
             ],
         ]);
 
-        //salle
+        $lieu = new SearchAndSelect('lieu-sas', ['label' => "Lieu * :"]);
+        $lieu
+            ->setAutocompleteSource($this->url)
+            ->setSelectionRequired()
+            ->setAttributes([
+                'id' => 'lieu-sas',
+                'placeholder' => "Renseigner le nom du lieu ...",
+            ]);
+        $this->add($lieu);
+        //button
         $this->add([
-            'type' => Text::class,
-            'name' => "lieu",
-            'label_options' => [ 'disable_html_escape' => true, ],
+            'type' => Button::class,
+            'name' => 'enregistrer',
             'options' => [
-                'label' => "Lieu de la formation ou lien de visoconférence * :",
+                'label' => '<i class="fas fa-save"></i> Enregistrer',
+                'label_options' => [
+                    'disable_html_escape' => true,
+                ],
             ],
             'attributes' => [
-                'id' => 'lieu',
+                'id' => 'enregistrer',
+                'type' => 'submit',
+                'class' => 'btn btn-primary',
             ],
         ]);
         //submit
@@ -168,7 +193,7 @@ class SeanceForm extends Form
             'volume' => ['required' => false,],
             'volume_debut' => ['required' => false,],
             'volume_fin' => ['required' => false,],
-            'lieu' => ['required' => true,],
+            'lieu-sas' => ['required' => true,],
         ]));
     }
 }

@@ -1,0 +1,84 @@
+<?php
+
+use Formation\Entity\Db\Lieu;
+use Formation\Entity\Db\Seance;
+
+/** @see \Formation\Controller\LieuController::afficherAction()
+ * @var Lieu $lieu
+ * */
+
+$this->headTitle('Affichage du lieu');
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl>
+            <dt> Libellé </dt>
+            <dd>
+                <?php if ($lieu->getLibelle()) : ?>
+                    <?php echo $lieu->getLibelle(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun libellé
+                    </span>
+                <?php endif; ?>
+            </dd>
+            <dt> Bâtiment </dt>
+            <dd>
+                <?php if ($lieu->getBatiment()) : ?>
+                    <?php echo $lieu->getBatiment(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun batiment
+                    </span>
+                <?php endif; ?>
+            </dd>
+            <dt> Campus </dt>
+            <dd>
+                <?php if ($lieu->getCampus()) : ?>
+                    <?php echo $lieu->getCampus(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun campus
+                    </span>
+                <?php endif; ?>
+            </dd>
+            <dt> Ville </dt>
+            <dd>
+                <?php if ($lieu->getVille()) : ?>
+                    <?php echo $lieu->getVille(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun ville
+                    </span>
+                <?php endif; ?>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt> Seances associées</dt>
+            <dd>
+                <ul>
+                <?php foreach ($lieu->getSeances() as $seance) : ?>
+                    <li>
+                        <?php
+                            /** @var Seance $seance */
+                            $session = $seance->getInstance();
+                            $formation = $session->getFormation();
+                        ?>
+                        <?php echo $formation->getLibelle(); ?> <br/>
+                        <?php echo $session->getId(); ?>  - <?php echo $session->getPeriode(); ?><br/>
+                        <?php echo $seance->getJour()->format('d/m/Y'); ?> de <?php echo $seance->getDebut(); ?> à <?php echo $seance->getFin(); ?>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</div>

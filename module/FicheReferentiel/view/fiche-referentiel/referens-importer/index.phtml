@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @see \FicheReferentiel\Controller\ReferensImporterController::indexAction()
+ * @var string $warning
+ * @var string $error
+ * @var string $result;
+ */
+
+?>
+
+<?php if ($error !== '') : ?>
+    <div class="alert alert-danger">
+        <?php echo $error; ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($warning !== '') : ?>
+    <div class="alert alert-warning">
+        <?php echo $warning; ?>
+    </div>
+<?php endif; ?>
+
+
+<?php
+    var_dump($libelleMission);
+    var_dump($activites);

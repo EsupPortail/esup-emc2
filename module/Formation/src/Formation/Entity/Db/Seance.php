@@ -29,7 +29,8 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     private ?DateTime $jour = null;
     private ?string $debut = null;
     private ?string $fin = null;
-    private ?string $lieu = null;
+    private ?string $oldLieu = null;
+    private ?Lieu $lieu = null;
 
     //volume
     private ?float $volume = null;
@@ -95,12 +96,22 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
         $this->fin = $fin;
     }
 
-    public function getLieu() : ?string
+    public function getOldLieu(): ?string
+    {
+        return $this->oldLieu;
+    }
+
+    public function setOldLieu(?string $oldLieu): void
+    {
+        $this->oldLieu = $oldLieu;
+    }
+
+    public function getLieu(): ?Lieu
     {
         return $this->lieu;
     }
 
-    public function setLieu(?string $lieu) : void
+    public function setLieu(?Lieu $lieu): void
     {
         $this->lieu = $lieu;
     }

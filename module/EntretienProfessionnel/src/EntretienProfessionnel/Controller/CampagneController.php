@@ -512,7 +512,7 @@ class CampagneController extends AbstractActionController {
 
                 $vm = new ViewModel([
                     'title' => "Notification de " . $autorite->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
-                    'reponse' => "<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>",
+                    'reponse' => ($mail)?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
 
                 ]);
                 $vm->setTemplate('default/reponse');
@@ -559,7 +559,7 @@ class CampagneController extends AbstractActionController {
 
                 $vm = new ViewModel([
                     'title' => "Notification de " . $superieur->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
-                    'reponse' => "<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>",
+                    'reponse' => $mail?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
 
                 ]);
                 $vm->setTemplate('default/reponse');

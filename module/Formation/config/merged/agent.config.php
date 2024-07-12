@@ -17,6 +17,8 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'index',
+                        'afficher-charte',
+                        'valider-charte',
                     ],
                     'privilege' => [
                         FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_INDEX),
@@ -77,6 +79,31 @@ return [
         'routes' => [
             'formation' => [
                 'child_routes' => [
+                    'charte' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            /** @see AgentController::afficherCharteAction() */
+                            'route'    => '/charte',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'afficher-charte',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'valider' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    /** @see AgentController::validerCharteAction() */
+                                    'route'    => '/valider',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action'     => 'valider-charte',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                     'agent-index' => [
                         'type'  => Literal::class,
                         'options' => [

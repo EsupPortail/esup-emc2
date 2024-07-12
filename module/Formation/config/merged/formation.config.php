@@ -175,6 +175,7 @@ return [
                 'options' => [
                     'route'    => '/index-mes-formations',
                     'defaults' => [
+                        /** @see IndexController::indexAction() */
                         'controller' => IndexController::class,
                         'action'     => 'index',
                     ],

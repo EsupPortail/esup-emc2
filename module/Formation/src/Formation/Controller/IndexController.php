@@ -2,11 +2,13 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\TextTemplates;
+use Formation\Provider\Validation\MesFormationsValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
@@ -61,6 +63,11 @@ class IndexController extends AbstractActionController
                 $this->redirect()->toRoute('home');
             }
         }
+
+        if ($agent !== null && $agent->getValidationActiveByTypeCode(MesFormationsValidations::CHARTE_SIGNEE) === null) {
+            return $this->redirect()->toRoute('formation/charte', [], [], true);
+        }
+
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::MES_FORMATIONS_ACCUEIL, [], false);
 
         return new ViewModel([

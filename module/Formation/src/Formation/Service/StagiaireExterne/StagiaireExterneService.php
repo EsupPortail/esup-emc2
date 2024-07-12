@@ -161,6 +161,9 @@ class StagiaireExterneService {
         return $result;
     }
 
+
+    /** Facade ********************************************************************************************************/
+
     public function formatStagiaireExterneJSON(array $stagiaires): array
     {
         $result = [];
@@ -178,7 +181,5 @@ class StagiaireExterneService {
         });
         return $result;
     }
-
-    /** Facade ********************************************************************************************************/
 
 }
