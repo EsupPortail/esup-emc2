@@ -339,7 +339,7 @@ class ImportationLagafController extends AbstractActionController
 
                         $seance->setInstance($dictionnaireS[$action_id . "-" . $session_id]);
                         $seance->setType("SEANCE");
-                        $seance->setLieu("Import LAGAF");
+                        $seance->setOldLieu("Import LAGAF");
                         $this->getSeanceService()->create($seance);
                     }
                 }
