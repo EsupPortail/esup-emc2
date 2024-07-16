@@ -103,6 +103,13 @@ return [
                         RoleProvider::ADMIN_TECH,
                     ],
                 ],
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'check-connection',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -263,6 +270,17 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
+            ],
+            'check-connection' => [
+                'type' => Literal::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route' => '/check-connection',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action' => 'check-connection',
+                    ],
+                ],
             ],
         ],
     ],
