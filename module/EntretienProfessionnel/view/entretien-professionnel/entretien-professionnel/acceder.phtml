@@ -63,7 +63,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 
 ?>
 
-<div style="position: fixed; top: 70px; left:20px; z-index:1060;" id="alert"></div>
+
 
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
 <div class="row">
@@ -293,43 +293,11 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
         }
     });
 
-    document.querySelector('form').addEventListener('submit', function() {
+    $('form').on("submit", function() {
         // Sauvegarder la position de défilement actuelle
         localStorage.setItem('scrollPosition', window.scrollY);
     });
-
-    function checkit() {
-        $.ajax({
-            type: "POST",
-            url: "<?php echo $this->url('check-connection',[], ['force_canonical' => true], true); ?>",
-            beforeSend:
-                function () {
-                    console.log("checking ...")
-                },
-            success:
-                function (retour) {
-                    let test  = retour["connection"];
-                    console.log(test);
-                    if (test === true) {
-                        $('div#alert').html("");
-                        $('div#alert').removeClass('alert alert-danger');
-                        $("input[type='submit']").show();
-                    } else {
-                        <?php
-                            $appConnection = $this->appConnection();
-                            $link = $appConnection->getView()->plugin('userConnection')->computeConnectionLink();
-                        ?>
-                        let text = "<strong><span class='icon icon-attention'></span>Attention, vous avez été déconnecté·e. <span class='icon icon-attention'></span></strong><br>";
-                        text += "Veuillez vous reconnecter en utilsant sur le lien suivant et retourner sur cet onglet avant d'enregistrer : <a href='" + <?php echo '"' . $link . '"'; ?> + "' target='_blank'> Lien pour la reconnexion </a>";
-                        $('div#alert').html(text);
-                        $('div#alert').addClass('alert alert-danger');
-                        $("input[type='submit']").hide();
-                    }
-
-                }
-        });
-    }
-    setInterval(checkit, 30000);
 </script>
+
 
 

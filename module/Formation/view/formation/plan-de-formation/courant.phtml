@@ -124,6 +124,7 @@ usort($domaines, function (Domaine $a, Domaine $b) {
     ?>
     <ul>
         <?php foreach ($actions_ as $action) : ?>
+            <?php $nbSessions = count($actions[$action->getId()]->getSessionsOuvertes()); ?>
             <li>
                 <?php if ($canAfficherAction) : ?>
                     <?php /** @see \Formation\Controller\FormationController::ficheAction() */ ?>
@@ -134,7 +135,10 @@ usort($domaines, function (Domaine $a, Domaine $b) {
                 <?php else : ?>
                     <?php echo $action->getLibelle(); ?>
                 <?php endif; ?>
-                (<?php echo count($actions[$action->getId()]->getSessionsOuvertes()); ?> session·s ouverte·s)
+
+                <?php if ($nbSessions > 0) : ?>
+                    - <strong><?php echo $nbSessions; ?> session<?php if ($nbSessions > 1) echo "s"; ?> ouverte<?php if ($nbSessions > 1) echo "s"; ?></strong>
+                <?php endif; ?>
 
                 <?php $abonnement = $action->getAbonnementByAgent($agent); ?>
                 <?php if ($abonnement !== null) : ?>
