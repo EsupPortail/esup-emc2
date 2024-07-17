@@ -4,6 +4,7 @@ use Application\Entity\Db\Agent;
 use Formation\Entity\Db\Domaine;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\PlanDeFormation;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormationabonnementPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenRenderer\Entity\Db\Rendu;
@@ -124,7 +125,7 @@ usort($domaines, function (Domaine $a, Domaine $b) {
     ?>
     <ul>
         <?php foreach ($actions_ as $action) : ?>
-            <?php $nbSessions = count($actions[$action->getId()]->getSessionsOuvertes()); ?>
+            <?php $nbSessions = count($actions[$action->getId()]->getSessionsWithEtats([SessionEtats::ETAT_INSCRIPTION_OUVERTE])); ?>
             <li>
                 <?php if ($canAfficherAction) : ?>
                     <?php /** @see \Formation\Controller\FormationController::ficheAction() */ ?>

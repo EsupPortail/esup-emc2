@@ -6,6 +6,7 @@ use Formation\Entity\Db\Seance;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Time;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
@@ -56,7 +57,8 @@ class SeanceForm extends Form
             'type' => Date::class,
             'name' => 'jour',
             'options' => [
-                'label' => "Jour de la formation * :",
+                'label' => "Jour de la formation <span class='icon icon-asterisque' title='Champ obligatoire' ></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'd/m/Y',
             ],
             'attributes' => [
@@ -68,7 +70,8 @@ class SeanceForm extends Form
             'type' => Time::class,
             'name' => 'debut',
             'options' => [
-                'label' => "Début de la journée * :",
+                'label' => "Début de la journée <span class='icon icon-asterisque' title='Champ obligatoire' ></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'H:i',
             ],
             'attributes' => [
@@ -80,7 +83,8 @@ class SeanceForm extends Form
             'type' => Time::class,
             'name' => 'fin',
             'options' => [
-                'label' => "Fin de la journée * :",
+                'label' => "Fin de la journée <span class='icon icon-asterisque' title='Champ obligatoire' ></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'H:i'
             ],
             'attributes' => [
@@ -107,7 +111,8 @@ class SeanceForm extends Form
             'type' => Date::class,
             'name' => 'volume_debut',
             'options' => [
-                'label' => "Date d'ouverture du volume * :",
+                'label' => "Date d'ouverture du volume <span class='icon icon-asterisque' title='Champ obligatoire' ></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'd/m/Y',
             ],
             'attributes' => [
@@ -119,15 +124,16 @@ class SeanceForm extends Form
             'type' => Date::class,
             'name' => 'volume_fin',
             'options' => [
-                'label' => "Date de fermeture du volume * :",
+                'label' => "Date de fermeture du volume <span class='icon icon-asterisque' title='Champ obligatoire' ></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'volume_fin',
             ],
         ]);
-
-        $lieu = new SearchAndSelect('lieu-sas', ['label' => "Lieu * :"]);
+        //lieu
+        $lieu = new SearchAndSelect('lieu-sas', ['label' => "Lieu :"]);
         $lieu
             ->setAutocompleteSource($this->url)
             ->setSelectionRequired()
@@ -136,38 +142,32 @@ class SeanceForm extends Form
                 'placeholder' => "Renseigner le nom du lieu ...",
             ]);
         $this->add($lieu);
-        //button
+        //lien
         $this->add([
-            'type' => Button::class,
-            'name' => 'enregistrer',
+            'type' => Text::class,
+            'name' => "lien",
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label' => "Lien pour la sénace :",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
-                'id' => 'enregistrer',
-                'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'id' => 'lien',
             ],
         ]);
-        //submit
+        //button
         $this->add([
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
+                'id' => 'creer',
                 'type' => 'submit',
                 'class' => 'btn btn-primary',
             ],
         ]);
-
         //inputFilter
         $this->setInputFilter((new Factory())->createInputFilter([
             'type' => ['required' => true,
@@ -193,7 +193,8 @@ class SeanceForm extends Form
             'volume' => ['required' => false,],
             'volume_debut' => ['required' => false,],
             'volume_fin' => ['required' => false,],
-            'lieu-sas' => ['required' => true,],
+            'lieu-sas' => ['required' => false,],
+            'lien' => ['required' => false,],
         ]));
     }
 }

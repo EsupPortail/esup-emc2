@@ -28,6 +28,7 @@ class SeanceHydrator implements HydratorInterface
                 'label' => $object->getLieu()?$object->getLieu()->getBatiment()." ".$object->getLieu()->getLibelle():null,
                 'extra' => $object->getLieu()?$object->getLieu()->getCampus()." ".$object->getLieu()->getVille():null,
             ],
+            'lien' => $object->getLien(),
             'volume' => $object->getVolume(),
             'volume_debut' => $object->getVolumeDebut(),
             'volume_fin' => $object->getVolumeFin(),
@@ -47,7 +48,8 @@ class SeanceHydrator implements HydratorInterface
         $jour = ($jour === false) ? null : $jour;
         $debut = (isset($data['debut'])) ? $data['debut'] : null;
         $fin = (isset($data['fin'])) ? $data['fin'] : null;
-        $lieu = (isset($data['lieu-sas']['id']))?$this->getLieuService()->getLieu($data['lieu-sas']['id']):null;
+        $lieu = (isset($data['lieu-sas']['id']) AND $data['lieu-sas']['id'] !== '')?$this->getLieuService()->getLieu($data['lieu-sas']['id']):null;
+        $lien = (isset($data['lien']) and trim($data['lien']) !== null) ? trim($data['lien']) : null;
         $volume = (isset($data['volume'])) ? ((float)$data['volume']) : null;
         $volumeDebut = (isset($data['volume_debut']) and trim($data['volume_debut']) !== '') ? DateTime::createFromFormat('d/m/Y', $data['volume_debut']) : null;
         $volumeFin = (isset($data['volume_fin']) and trim($data['volume_debut']) !== '') ? DateTime::createFromFormat('d/m/Y', $data['volume_fin']) : null;
@@ -57,6 +59,7 @@ class SeanceHydrator implements HydratorInterface
         $object->setDebut($debut);
         $object->setFin($fin);
         $object->setLieu($lieu);
+        $object->setLien($lien);
         $object->setVolume($volume);
         $object->setVolumeDebut($volumeDebut);
         $object->setVolumeFin($volumeFin);

@@ -312,13 +312,21 @@ class Formation implements HistoriqueAwareInterface,
         return $this->instances->toArray();
     }
 
+
+    /** @return FormationInstance[] */
+    public function getSessionsWithEtats(array $etatCodes): array
+    {
+        $sessions = $this->getInstances();
+        $sessions = array_filter($sessions, function (FormationInstance $a) use ($etatCodes) {
+            return in_array($a->getEtatActif()->getType()->getCode(), $etatCodes);
+        });
+        return $sessions;
+    }
+
     /** @return FormationInstance[] */
     public function getSessionsOuvertes(): array
     {
-        $sessions = $this->getInstances();
-        $sessions = array_filter($sessions, function (FormationInstance $a) {
-            return in_array($a->getEtatActif()->getType()->getCode(), SessionEtats::ETATS_OUVERTS);
-        });
+        $sessions = $this->getSessionsWithEtats(SessionEtats::ETATS_OUVERTS);
         return $sessions;
     }
 

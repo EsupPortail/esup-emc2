@@ -152,6 +152,23 @@ class LieuService {
         }
         return $lieux;
     }
+
+    public function getLieuWithInfos(?string $libelle, ?string $batiment, ?string $campus, ?string $ville): ?Lieu
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('lieu.histoDestruction IS NULL')
+            ->andWhere('lieu.libelle = :libelle')->setParameter('libelle', $libelle)
+            ->andWhere('lieu.batiment = :batiment')->setParameter('batiment', $batiment)
+            ->andWhere('lieu.campus = :campus')->setParameter('campus', $campus)
+            ->andWhere('lieu.ville = :ville')->setParameter('ville', $ville)
+        ;
+        try {
+            $results = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Lieu::class."] partagent les même info [Libelle:".$libelle."|Batiment:".$batiment."|Campus:".$campus."|Ville:".$ville."]",0,$e);
+        }
+        return $results;
+    }
     /** FACADES *******************************************************************************************************/
 
     public function createWithData(array $data): Lieu

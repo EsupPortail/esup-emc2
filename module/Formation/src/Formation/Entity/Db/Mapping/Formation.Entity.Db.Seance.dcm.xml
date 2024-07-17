@@ -17,6 +17,7 @@
         <field name="fin"               column="fin"            type="string"  length="64"     nullable="true"/>
 
         <field name="oldLieu"           column="lieu_old"       type="string"  length="1024"   nullable="true"/>
+        <field name="lien"              column="lien"           type="string"  length="1024"   nullable="true"/>
 
         <many-to-one target-entity="Formation\Entity\Db\Lieu"  field="lieu">
             <join-column name="lieu_id" referenced-column-name="id"/>

@@ -7,6 +7,7 @@ use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 
 class LieuForm extends Form {
     use LieuServiceAwareTrait;
@@ -80,23 +81,23 @@ class LieuForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => [
                 'required' => true,
-//                'validators' => [
-//                    [
-//                        'name' => Callback::class,
-//                        'options' => [
-//                            'messages' => [
-//                                Callback::INVALID_VALUE => "Un·e formateur·trice utilise déjà cette adresse électronique",
-//                            ],
-//                            'callback' => function ($value, $context = []) {
-//                                $lieux = $this->getLieuService()->getLieuWithArray($context);
-//                                if (empty($lieux)) return true;
-//                                if ($this->getOperation() === 'modification' and count($lieux) === 1 and current($lieux)->getEmail() === $value) return true;
-//                                return false;
-//                            },
-//                            //'break_chain_on_failure' => true,
-//                        ],
-//                    ],
-//                ],
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "Un lieu existe déjà avec les mêmes informations",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                $lieu = $this->getLieuService()->getLieuWithInfos($context['libelle'], $context['batiment'], $context['campus'], $context['ville']);
+                                if ($lieu === null) return true;
+                                if ($lieu->getId() === $this->getObject()->getId()) return true;
+                                return false;
+                            },
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
             ],
             'batiment' => ['required' => true],
             'campus' => ['required' => true],

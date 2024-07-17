@@ -1,6 +1,5 @@
 <?php
 
-use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
@@ -71,32 +70,39 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php echo $this->formationInformations($formation); ?>
 
             <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
-            <br/>
-            <?php if (!empty($presencesManquantes) OR !empty($fraisManquants)) : ?>
-            <div class="alert alert-danger">
-                <p>
-                    <strong> <span class="icon icon-attention"></span> La session ne peut pas être clôturée. </strong>
-                </p>
-                Raison·s :
-                <ul>
-                    <?php if (!empty($presencesManquantes)) : ?>
-                        <li> des présences sont non renseignées (<?php echo implode(", ", array_unique(array_map(function ($a) { return $a['personne'];}, $presencesManquantes))); ?>)</li>
-                    <?php endif; ?>
-                    <?php if (!empty($fraisManquants)) : ?>
-                        <li>
-                            des frais sont non renseignés (<?php echo implode(", ", array_map(function ($a) { return $a['personne'];}, $fraisManquants)); ?>)
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-            <?php endif; ?>
+                <br/>
+                <?php if (!empty($presencesManquantes) or !empty($fraisManquants)) : ?>
+                    <div class="alert alert-danger">
+                        <p>
+                            <strong> <span class="icon icon-attention"></span> La session ne peut pas être clôturée.
+                            </strong>
+                        </p>
+                        Raison·s :
+                        <ul>
+                            <?php if (!empty($presencesManquantes)) : ?>
+                                <li> des présences sont non renseignées
+                                    (<?php echo implode(", ", array_unique(array_map(function ($a) {
+                                        return $a['personne'];
+                                    }, $presencesManquantes))); ?>)
+                                </li>
+                            <?php endif; ?>
+                            <?php if (!empty($fraisManquants)) : ?>
+                                <li>
+                                    des frais sont non renseignés (<?php echo implode(", ", array_map(function ($a) {
+                                        return $a['personne'];
+                                    }, $fraisManquants)); ?>)
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
         <div class="col-md-3">
             <?php if ($canMesSessions) : ?>
                 <?php /** @see \Formation\Controller\FormateurController::mesSessionsAction() */ ?>
                 <a href="<?php echo $this->url('formation/formateur/mes-sessions', [], [], true); ?>"
-                        class="btn btn-secondary action">
+                   class="btn btn-secondary action">
                     <span class="icon icon-retour"></span>
                     Retour à - Mes sessions -
                 </a>
@@ -105,7 +111,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php if ($canFormationModifier) : ?>
                 <?php /** @see FormationController::editerAction() */ ?>
                 <a href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
-                        class="btn btn-secondary action">
+                   class="btn btn-secondary action">
                     <span class="icon icon-retour"></span>
                     Retour à l'action formation
                 </a>
@@ -114,7 +120,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php if ($canFormationIndex) : ?>
                 <?php /** @see FormationController::indexAction() */ ?>
                 <a href="<?php echo $this->url('formation', [], [], true); ?>"
-                        class="btn btn-secondary action">
+                   class="btn btn-secondary action">
                     <span class="icon icon-retour"></span>
                     Retour à l'index des formations
                 </a>
@@ -154,11 +160,11 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                     <br/>
-                        <a <?php /** @see FormationInstanceController::cloturerAction() */ ?>
-                                href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                class="btn btn-primary action  <?php if (!empty($presencesManquantes) OR !empty($fraisManquants)) echo " disabled "; ?>">
-                            Clotûrer la session
-                        </a>
+                    <a <?php /** @see FormationInstanceController::cloturerAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-primary action  <?php if (!empty($presencesManquantes) or !empty($fraisManquants)) echo " disabled "; ?>">
+                        Clotûrer la session
+                    </a>
                 <?php endif; ?>
             <?php endif; ?>
             <!-- todo privilege assicié -->
@@ -349,7 +355,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                         <th> Jour</th>
                         <th> Début</th>
                         <th> Fin</th>
-                        <th> Salle</th>
+                        <th> Lieu et/ou Lien</th>
                         <th style="width:13rem;"> Action</th>
                     </tr>
                     </thead>
@@ -369,23 +375,31 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                                 <td> <?php echo ($journee->getVolumeFin()) ? $journee->getVolumeFin()->format('d/m/Y') : "N.C."; ?> </td>
                             <?php endif; ?>
                             <td>
-                                <?php if ($journee->getLieu() === null): ?>
-                                    <?php if ($journee->getOldLieu() !== null) : ?>
-                                        <?php echo $journee->getOldLieu(); ?>
+                                <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                                    <?php if ($journee->getLieu() === null): ?>
+                                        <?php if ($journee->getOldLieu() !== null) : ?>
+                                            <?php echo $journee->getOldLieu(); ?>
+                                        <?php else : ?>
+                                            <span class="text-warning"><span class="icon icon-attention"></span>Aucun lieu de précisé</span>
+                                        <?php endif; ?>
                                     <?php else : ?>
-                                        <span class="text-warning"><span class="icon icon-attention"></span>Aucun lieu de précisé</span>
-                                    <?php endif ; ?>
-                                <?php else : ?>
-                                    <?php echo $journee->getLieu()->getBatiment(); ?>
-                                    <?php echo $journee->getLieu()->getLibelle(); ?>
-                                    /
-                                    <?php echo $journee->getLieu()->getCampus(); ?>
-                                    <?php echo $journee->getLieu()->getVille(); ?>
+                                        <?php echo $journee->getLieu()->getBatiment(); ?> -
+                                        <?php echo $journee->getLieu()->getLibelle(); ?>
+                                        /
+                                        <?php echo $journee->getLieu()->getCampus(); ?> -
+                                        <?php echo $journee->getLieu()->getVille(); ?>
+                                    <?php endif; ?>
                                 <?php endif; ?>
-
+                                <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
+                                    <?php if ($journee->getLien()) : ?>
+                                        <?php echo $journee->getLien(); ?>
+                                    <?php else : ?>
+                                        <span class="text-warning"><span class="icon icon-attention"></span>Aucun lien de précisé</span>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                             <td>
-                               <?php if ($canEmargement) : ?>
+                                <?php if ($canEmargement) : ?>
                                     <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */ ?>
                                     <a href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
                                        title="Exporter l'émargement de la séance de formation" target="_blank">

@@ -649,7 +649,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             $text .= "<th>Date</th>";
             $text .= "<th>de</th>";
             $text .= "<th>à</th>";
-            $text .= "<th>Lieu</th>";
+            $text .= "<th>Lieu ou lien</th>";
             $text .= "</tr>";
             $text .= "</thead>";
             $text .= "<tbody>";
@@ -658,7 +658,15 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
                 $text .= "<td>" . $seance->getJour()->format('d/m/Y') . "</td>";
                 $text .= "<td>" . $seance->getDebut() . "</td>";
                 $text .= "<td>" . $seance->getFin() . "</td>";
-                $text .= "<td>" . $seance->getLieu() . "</td>";
+                $text .= "<td>";
+                if ($seance->getType() === Seance::TYPE_SEANCE) {
+                    $text .= $seance->getLieu()->getLibelle() . " - " . $seance->getLieu()->getBatiment() . " / ";
+                    $text .= $seance->getLieu()->getCampus() . " - " . $seance->getLieu()->getVille();
+                }
+                if ($seance->getType() === Seance::TYPE_VOLUME) {
+                    $text .= $seance->getLien();
+                }
+                $text .= "</td>";
                 $text .= "</tr>";
             }
             $text .= "</tbody>";
