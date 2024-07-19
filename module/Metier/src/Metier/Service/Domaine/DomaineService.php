@@ -111,7 +111,7 @@ class DomaineService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Domaine partagent le même identifiant [".$id."]");
+            throw new RuntimeException("Plusieurs [".Domaine::class."] partagent le même identifiant [".$id."]");
         }
         return $result;
     }
@@ -121,6 +121,28 @@ class DomaineService {
         $id = $controller->params()->fromRoute($paramName);
         $domaine = $this->getDomaine($id);
 
+        return $domaine;
+    }
+
+    public function getDomaineByLibelle(string $libelle): ?Domaine
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('domaine.libelle = :libelle')->setParameter('libelle', $libelle)
+            ->andWhere('domaine.histoDestruction IS NULL')
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Domaine::class."] partagent le même libellé [".$libelle."]");
+        }
+        return $result;
+    }
+
+    public function createWith(string $domaineLibelle): ?Domaine
+    {
+        $domaine = new Domaine();
+        $domaine->setLibelle($domaineLibelle);
+        $this->create($domaine);
         return $domaine;
     }
 

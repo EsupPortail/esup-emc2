@@ -8,6 +8,7 @@ use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\Repertoire\RepertoireService;
+use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -23,6 +24,7 @@ class RepertoireControllerFactory {
         /**
          * @var CompetenceService $competenceService
          * @var FicheMetierService $ficheMetierService
+         * @var MetierService $metierService
          * @var RepertoireService $repertoireService
          * @var CompetenceReferentielService $competenceReferentielService
          * @var CompetenceTypeService $competenceTypeService
@@ -33,6 +35,7 @@ class RepertoireControllerFactory {
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $metierService = $container->get(MetierService::class);
         $repertoireService = $container->get(RepertoireService::class);
         $ficheMetierImportationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
 
@@ -41,6 +44,7 @@ class RepertoireControllerFactory {
         $controller->setCompetenceReferentielService($competenceReferentielService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setMetierService($metierService);
         $controller->setRepertoireService($repertoireService);
         $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
         return $controller;

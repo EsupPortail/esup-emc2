@@ -10,11 +10,14 @@ use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\Repertoire\RepertoireServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Metier\Service\Metier\MetierServiceAwareTrait;
+use RuntimeException;
 
 class RepertoireController extends AbstractActionController
 {
     use FicheMetierImportationFormAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use MetierServiceAwareTrait;
     use RepertoireServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
@@ -33,9 +36,13 @@ class RepertoireController extends AbstractActionController
 
             $fichier_path = $file['fichier']['tmp_name'];
             $mode = $data['mode'];
-
             $json = $this->getRepertoireService()->readCSV($fichier_path);
-            $dgafp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('DGAFP');
+
+            /** Gestion des compétences *******************************************************************************/
+
+            $referentielCompetenceDgafp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('DGAFP');
+            if ($referentielCompetenceDgafp === null) throw new RuntimeException("Aucun référentiel de compétence pour le direction générale de l'aldministation et de la fonction public [code:DGFAP]");
+
             $types = $this->getCompetenceTypeService()->getCompetencesTypes();
 
             $competences = [];
@@ -50,11 +57,11 @@ class RepertoireController extends AbstractActionController
                             if (!isset($competences[$type_competence][$competence])) {
                                 $competences[$type_competence][$competence] = [
                                     'libelle' => $competence,
-                                    'exists' => $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($dgafp, $competence),
+                                    'exists' => $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($referentielCompetenceDgafp, $competence),
                                 ];
                                 if ($mode === 'import') {
                                     if ($competences[$type_competence][$competence]['exists'] === null) {
-                                        $competences[$type_competence][$competence]['exists'] = $this->getCompetenceService()->createWith($competences[$type_competence][$competence]['libelle'], null, $type, null, $dgafp, -1);
+                                        $competences[$type_competence][$competence]['exists'] = $this->getCompetenceService()->createWith($competences[$type_competence][$competence]['libelle'], null, $type, null, $referentielCompetenceDgafp, -1);
                                     }
 
                                 }
@@ -64,6 +71,26 @@ class RepertoireController extends AbstractActionController
                 }
             }
 
+            /** Gestion des métiers ***********************************************************************************/
+
+            foreach ($json as $fiche) {
+                $code = $fiche['Code'];
+                $metier = $this->getMetierService()->getMetierByReference('DGFAP', $code);
+                if ($metier === null) {
+
+                    $domaine = $fiche['DF'];
+                    $famille = $fiche['Famille'];
+                    var_dump($code . " - " . $domaine . " " . $famille);
+                    $libelle = $fiche['Intitulé'];
+                    //todo ceci est suffisant il faudra un vrai truc car LF/LM Reste du libellé
+                    $libelles = explode(" / ", $libelle);
+                    var_dump($libelle . " - " . ($libelles[0]??"none") . " " . ($libelles[1]??"none"));
+
+                    $this->getMetierService()->createWith($libelle, "DGAFP", $code, $domaine, $famille);
+
+                }
+            }
+            die();
             return new ViewModel(
                 [
                     'form' => $form,
