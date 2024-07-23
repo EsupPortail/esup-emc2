@@ -2,7 +2,7 @@
 
 namespace Formation\Form\Session;
 
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
@@ -62,9 +62,9 @@ class SessionForm extends Form
                 'label' => "Type de formation :",
                 'empty_option' => "Sélectionner un type ...",
                 'value_options' => [
-                    FormationInstance::TYPE_INTERNE => 'Formation interne',
-                    FormationInstance::TYPE_EXTERNE => 'Formation externe',
-                    FormationInstance::TYPE_REGIONALE => 'Formation régionale',
+                    Session::TYPE_INTERNE => 'Formation interne',
+                    Session::TYPE_EXTERNE => 'Formation externe',
+                    Session::TYPE_REGIONALE => 'Formation régionale',
                 ],
             ],
             'attributes' => [

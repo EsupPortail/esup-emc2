@@ -10,8 +10,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class UrlServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return UrlService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

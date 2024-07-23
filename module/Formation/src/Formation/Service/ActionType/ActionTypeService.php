@@ -66,7 +66,7 @@ class ActionTypeService {
         try {
             $actionType = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".ActionType::class."] partagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs [".ActionType::class."] partagent le même id [".$id."]", 0, $e);
         }
         return $actionType;
     }

@@ -23,7 +23,7 @@
         <field name="public"          column="public"           type="text" />
         <field name="complement"      column="complement"       type="text" />
 
-        <one-to-many field="instances" target-entity="Formation\Entity\Db\FormationInstance" mapped-by="formation"/>
+        <one-to-many field="instances" target-entity="Formation\Entity\Db\Session" mapped-by="formation"/>
         <one-to-many field="abonnements" target-entity="Formation\Entity\Db\FormationAbonnement" mapped-by="formation"/>
 
         <many-to-many field="applications" target-entity="Element\Entity\Db\ApplicationElement" inversed-by="application" fetch="LAZY">

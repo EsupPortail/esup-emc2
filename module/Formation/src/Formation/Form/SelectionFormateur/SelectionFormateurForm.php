@@ -4,7 +4,6 @@ namespace Formation\Form\SelectionFormateur;
 
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Form\Element\Button;
-use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use UnicaenApp\Form\Element\SearchAndSelect;

@@ -2,15 +2,15 @@
 
 /**
  * @see \Formation\Controller\PresenceController::renseignerPresencesAction()
- * @var FormationInstance $instance
+ * @var Session $instance
  * @var Presence[][] $presences
  * @var bool $titre
  */
 
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
 /** @var Seance[] $journees */
@@ -40,7 +40,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                 <h2> Instance de la formation </h2>
             </div>
             <div class="pull-right">
-                <a <?php /** @see FormationInstanceController::afficherAction() */ ?>
+                <a <?php /** @see SessionController::afficherAction() */ ?>
                         href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-info action">
                     <span class="icon icon-retour"></span>

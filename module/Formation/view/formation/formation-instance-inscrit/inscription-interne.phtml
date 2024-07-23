@@ -2,7 +2,7 @@
 
 /**
  * @see \Formation\Controller\FormationInstanceInscritController::inscriptionInterneAction()
- * @var FormationInstance[] $instances
+ * @var Session[] $sessions
  * @var Inscription[] $inscriptions
  * @var Agent $agent
  * @var Rendu $rendu
@@ -11,8 +11,8 @@
 $canInscrire = true; //todo !!!!
 
 use Application\Entity\Db\Agent;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\Session;
 use UnicaenRenderer\Entity\Db\Rendu;
 
 $this->headTitle("M'inscrire à une formation du plan de formation");
@@ -37,7 +37,7 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 
-<?php foreach ($instances as $instance) : ?>
+<?php foreach ($sessions as $instance) : ?>
     <?php
     $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
     $dejaInscrit = !empty(array_filter($inscriptions, function (Inscription $a) use ($instance) {

@@ -2,7 +2,6 @@
 
 namespace Formation\Form\Justification;
 
-use Application\Form\HasDescription\HasDescriptionFieldset;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Hidden;
 use Laminas\Form\Element\Radio;

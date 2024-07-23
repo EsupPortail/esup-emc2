@@ -2,7 +2,7 @@
 
 namespace Formation\Form\SelectionGestionnaire;
 
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Laminas\Hydrator\HydratorInterface;
 use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -13,7 +13,7 @@ class SelectionGestionnaireHydrator implements HydratorInterface
 
     public function extract(object $object): array
     {
-        /** @var FormationInstance $object */
+        /** @var Session $object */
         $gestionnaires = $object->getGestionnaires();
         $gestionnaireIds = array_map(function (AbstractUser $f) {
             return $f->getId();
@@ -26,7 +26,7 @@ class SelectionGestionnaireHydrator implements HydratorInterface
 
     public function hydrate(array $data, $object): object
     {
-        /** @var FormationInstance $object */
+        /** @var Session $object */
         $gestionnaires = [];
         if (isset($data['gestionnaires'])) {
             foreach ($data['gestionnaires'] as $gestionnaireId) {

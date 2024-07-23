@@ -12,26 +12,26 @@ use Formation\Entity\Db\Domaine;
 ?>
 
 <dl>
-    <dt> Libellé </dt>
+    <dt> Libellé</dt>
     <dd> <?php echo $domaine->getLibelle(); ?> </dd>
-    <dt> Dernière modification </dt>
+    <dt> Dernière modification</dt>
     <dd>
         <?php echo $domaine->getHistoModificateur()->getDisplayName(); ?>
         <br/>
         <?php echo $domaine->getHistoModification()->format('d/m/Y à H:i:s'); ?>
     </dd>
-<!--    <dt> Source </dt>-->
-<!--    <dd>-->
-<!--        --><?php //echo $groupe->getSource(); ?><!-- --->
-<!--        --><?php //echo $groupe->getIdSource(); ?>
-<!--    </dd>-->
+    <!--    <dt> Source </dt>-->
+    <!--    <dd>-->
+    <!--        --><?php //echo $groupe->getSource(); ?><!-- --->
+    <!--        --><?php //echo $groupe->getIdSource(); ?>
+    <!--    </dd>-->
     <dt>
         Liste des formations
         <span class="badge"> <?php echo count($domaine->getFormations()); ?></span>
     </dt>
 
     <?php /** @see \Formation\Controller\DomaineController::gererFormationsAction() */ ?>
-    <a href="<?php echo $this->url('formation-domaine/gerer-formations', ['domaine' => $domaine->getId()],[], true); ?>"
+    <a href="<?php echo $this->url('formation-domaine/gerer-formations', ['domaine' => $domaine->getId()], [], true); ?>"
        class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-listing"></span>
@@ -39,7 +39,7 @@ use Formation\Entity\Db\Domaine;
     </a>
     <dd>
         <ul>
-            <?php foreach($domaine->getFormations() as $formation) : ?>
+            <?php foreach ($domaine->getFormations() as $formation) : ?>
                 <li> <?php echo $formation->getLibelle(); ?> </li>
             <?php endforeach; ?>
         </ul>

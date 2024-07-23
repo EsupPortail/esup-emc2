@@ -308,18 +308,18 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         $this->devis->add($fichier);
     }
 
-    /** @return FormationInstance[] */
+    /** @return Session[] */
     public function getSessions(): array
     {
         return $this->sessions->toArray();
     }
 
-    public function addSession(FormationInstance $session): void
+    public function addSession(Session $session): void
     {
         $this->sessions->add($session);
     }
 
-    public function removeSession(FormationInstance $session): void
+    public function removeSession(Session $session): void
     {
         $this->sessions->removeElement($session);
     }

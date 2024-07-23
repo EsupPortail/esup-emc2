@@ -3,7 +3,6 @@
 namespace Formation\Form\SelectionFormateur;
 
 use Formation\Controller\FormateurController;
-use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;

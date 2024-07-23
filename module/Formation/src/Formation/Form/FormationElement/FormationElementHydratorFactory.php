@@ -23,7 +23,6 @@ class FormationElementHydratorFactory
          */
         $formationService = $container->get(FormationService::class);
 
-        /** @var FormationElementHydrator $hydrator */
         $hydrator = new FormationElementHydrator();
         $hydrator->setFormationService($formationService);
         return $hydrator;

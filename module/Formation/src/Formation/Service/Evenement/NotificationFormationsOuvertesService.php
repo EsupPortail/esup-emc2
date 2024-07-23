@@ -4,7 +4,7 @@ namespace Formation\Service\Evenement;
 
 use DateTime;
 use Exception;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Event\EvenementProvider;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Formation\Service\Session\SessionServiceAwareTrait;
@@ -44,7 +44,7 @@ class NotificationFormationsOuvertesService extends EvenementService
 //        $parametres = json_decode($evenement->getParametres(), true);
 
         try {
-            /** @var FormationInstance[] $sessions */
+            /** @var Session[] $sessions */
             $sessions = $this->getSessionService()->getNouvellesSessions();
             $this->getNotificationService()->triggerNotificationFormationsOuvertes($sessions);
         } catch(Exception $e) {

@@ -30,7 +30,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
-class FormationInstanceController extends AbstractActionController
+class SessionController extends AbstractActionController
 {
     use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
@@ -114,12 +114,12 @@ class FormationInstanceController extends AbstractActionController
 
     public function afficherAction(): ViewModel
     {
-        $instance = $this->getSessionService()->getRequestedSession($this);
-        $mails = $this->getMailService()->getMailsByMotClef($instance->generateTag());
+        $session = $this->getSessionService()->getRequestedSession($this);
+        $mails = $this->getMailService()->getMailsByMotClef($session->generateTag());
 
-        $presences = $this->getPresenceService()->getPresenceByInstance($instance);
-        $presencesManquantes = $this->getPresenceService()->getPresencesManquantes($instance);
-        $fraisManquants = $this->getInscriptionFraisService()->getFraisManquants($instance);
+        $presences = $this->getPresenceService()->getPresenceBySession($session);
+        $presencesManquantes = $this->getPresenceService()->getPresencesManquantes($session);
+        $fraisManquants = $this->getInscriptionFraisService()->getFraisManquants($session);
 
         $dictionnaire = [];
         foreach ($presences as $presence) {
@@ -127,7 +127,7 @@ class FormationInstanceController extends AbstractActionController
         }
 
         return new ViewModel([
-            'instance' => $instance,
+            'instance' => $session,
             'mode' => "affichage",
             'presences' => $dictionnaire,
             'fraisManquants' => $fraisManquants,

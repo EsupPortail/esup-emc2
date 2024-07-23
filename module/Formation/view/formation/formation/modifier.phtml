@@ -2,7 +2,7 @@
 
 use Formation\Entity\Db\ActionCoutPrevisionnel;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\CoutprevisionnelPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -10,7 +10,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
 /**
  * @see FormationController::editerAction()
  * @var Formation $formation
- * @var FormationInstance[] $instances
+ * @var Session[] $sessions
  * @var string $mode
  * @var ActionCoutPrevisionnel[] $coutsPrevisionnels
  */
@@ -84,10 +84,10 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
     <div class="col-md-4">
         <h2>
             Sessions de formation
-            <span class="badge"><?php echo count($instances); ?></span>
+            <span class="badge"><?php echo count($sessions); ?></span>
         </h2>
         <?php if ($canAjouterInstance) : ?>
-            <?php /** @see FormationInstanceController::ajouterAction() */ ?>
+            <?php /** @see SessionController::ajouterAction() */ ?>
             <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
                     class="btn btn-primary action"
             >
@@ -120,7 +120,7 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
     </div>
 </div>
 
-<?php echo $this->formationInstanceArray($instances); ?>
+<?php echo $this->formationInstanceArray($sessions); ?>
 
 
 <?php if ($canAfficherCout) : ?>

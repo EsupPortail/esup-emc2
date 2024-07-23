@@ -600,7 +600,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $mail = $this->getSessionService()->envoyerConvocation($session, $inscription);
+        $this->getSessionService()->envoyerConvocation($session, $inscription);
 
         $vm = new ViewModel([
             'title' => "Envoi de la convocation",
@@ -615,7 +615,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $mail = $this->getSessionService()->envoyerAttestation($session, $inscription);
+        $this->getSessionService()->envoyerAttestation($session, $inscription);
 
         $vm = new ViewModel([
             'title' => "Envoi de l'attestation",
@@ -630,7 +630,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $mail = $this->getSessionService()->envoyerAbsence($session, $inscription);
+        $this->getSessionService()->envoyerAbsence($session, $inscription);
 
         $vm = new ViewModel([
             'title' => "Envoi du constat d'absence",

@@ -5,7 +5,7 @@ namespace Formation\Service\InscriptionFrais;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\InscriptionFrais;
 use RuntimeException;
 
@@ -69,7 +69,7 @@ class InscriptionFraisService
         return $frais;
     }
 
-    public function getFraisManquants(?FormationInstance $session): array
+    public function getFraisManquants(?Session $session): array
     {
         $sql = <<<EOS
 select frais.id, coalesce(concat(agent.prenom, ' ', coalesce(agent.nom_usage, agent.nom_famille)), concat(stagiaire.prenom, ' ', stagiaire.nom)) AS personne , frais_hebergement, frais_repas, frais_transport

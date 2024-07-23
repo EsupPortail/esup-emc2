@@ -11,7 +11,8 @@ use Formation\Entity\Db\Inscription;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 
-class EnqueteReponseService {
+class EnqueteReponseService
+{
     use ProvidesObjectManager;
 
 
@@ -21,7 +22,7 @@ class EnqueteReponseService {
      * @param EnqueteReponse $reponse
      * @return EnqueteReponse
      */
-    public function create(EnqueteReponse $reponse) : EnqueteReponse
+    public function create(EnqueteReponse $reponse): EnqueteReponse
     {
         $this->getObjectManager()->persist($reponse);
         $this->getObjectManager()->flush($reponse);
@@ -32,7 +33,7 @@ class EnqueteReponseService {
      * @param EnqueteReponse $reponse
      * @return EnqueteReponse
      */
-    public function update(EnqueteReponse $reponse) : EnqueteReponse
+    public function update(EnqueteReponse $reponse): EnqueteReponse
     {
         $this->getObjectManager()->flush($reponse);
         return $reponse;
@@ -42,7 +43,7 @@ class EnqueteReponseService {
      * @param EnqueteReponse $reponse
      * @return EnqueteReponse
      */
-    public function historise(EnqueteReponse $reponse) : EnqueteReponse
+    public function historise(EnqueteReponse $reponse): EnqueteReponse
     {
         $reponse->historiser();
         $this->getObjectManager()->flush($reponse);
@@ -53,7 +54,7 @@ class EnqueteReponseService {
      * @param EnqueteReponse $reponse
      * @return EnqueteReponse
      */
-    public function restore(EnqueteReponse $reponse) : EnqueteReponse
+    public function restore(EnqueteReponse $reponse): EnqueteReponse
     {
         $reponse->dehistoriser();
         $this->getObjectManager()->flush($reponse);
@@ -64,7 +65,7 @@ class EnqueteReponseService {
      * @param EnqueteReponse $reponse
      * @return EnqueteReponse
      */
-    public function delete(EnqueteReponse $reponse) : EnqueteReponse
+    public function delete(EnqueteReponse $reponse): EnqueteReponse
     {
         $this->getObjectManager()->remove($reponse);
         $this->getObjectManager()->flush($reponse);
@@ -73,7 +74,7 @@ class EnqueteReponseService {
 
     /** REQUETAGE  ****************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(EnqueteReponse::class)->createQueryBuilder('reponse');
         return $qb;
@@ -83,13 +84,13 @@ class EnqueteReponseService {
      * @param int|null $id
      * @return EnqueteReponse|null
      */
-    public function getEnqueteReponse(?int $id) : ?EnqueteReponse
+    public function getEnqueteReponse(?int $id): ?EnqueteReponse
     {
         $qb = $this->createQueryBuilder()->andWhere('reponse.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs EnqueteReponse partagent le même id [".$id."]", 0 , $e);
+            throw new RuntimeException("Plusieurs EnqueteReponse partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -99,7 +100,7 @@ class EnqueteReponseService {
      * @param string $param
      * @return EnqueteReponse|null
      */
-    public function getRequestedEnqueteReponse(AbstractActionController $controller, string $param = 'reponse') : ?EnqueteReponse
+    public function getRequestedEnqueteReponse(AbstractActionController $controller, string $param = 'reponse'): ?EnqueteReponse
     {
         $id = $controller->params()->fromRoute($param);
         $categorie = $this->getEnqueteReponse($id);
@@ -107,7 +108,7 @@ class EnqueteReponseService {
     }
 
     /** @return EnqueteReponse[] */
-    public function findEnqueteReponseByInscription(Inscription $inscription) : array
+    public function findEnqueteReponseByInscription(Inscription $inscription): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('reponse.inscription = :inscription')->setParameter('inscription', $inscription);
@@ -118,11 +119,10 @@ class EnqueteReponseService {
     /**
      * @return EnqueteReponse[]
      */
-    public function getEnqueteReponses() : array
+    public function getEnqueteReponses(): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('reponse.histoDestruction IS NULL')
-        ;
+            ->andWhere('reponse.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -139,23 +139,21 @@ class EnqueteReponseService {
             ->join('inscription.session', 'session')->addSelect('session')
             ->join('session.formateurs', 'formateur')->addSelect('formateur')
             ->join('session.formation', 'formation')->addSelect('formation')
-            ->join('session.journees', 'journee')->addSelect('journee')
-        ;
+            ->join('session.journees', 'journee')->addSelect('journee');
 
         if (isset($params['formation'])) {
             $qb = $qb->andWhere('formation.id = :id')->setParameter('id', $params['formation']->getId());
         }
-        if (isset($params['formateur']) AND trim($params['formateur']) !== "") {
+        if (isset($params['formateur']) and trim($params['formateur']) !== "") {
             $qb = $qb->andWhere('formateur.email = :email')->setParameter('email', $params['formateur']);
         }
-        if (isset($params['annee'])  AND trim($params['annee']) !== "") {
-            $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$params['annee']);
-            $fin = DateTime::createFromFormat('d/m/Y', '31/08/'.(((int) $params['annee']) + 1));
+        if (isset($params['annee']) and trim($params['annee']) !== "") {
+            $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $params['annee']);
+            $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . (((int)$params['annee']) + 1));
 
             $qb = $qb
                 ->andWhere('journee.jour <= :fin')->setParameter('fin', $fin)
-                ->andWhere('journee.jour >= :debut')->setParameter('debut', $debut)
-            ;
+                ->andWhere('journee.jour >= :debut')->setParameter('debut', $debut);
         }
 
         $result = $qb->getQuery()->getResult();

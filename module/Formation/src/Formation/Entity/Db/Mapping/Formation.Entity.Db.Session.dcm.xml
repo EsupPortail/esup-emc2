@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping>
-    <entity name="Formation\Entity\Db\FormationInstance" table="formation_instance">
+    <entity name="Formation\Entity\Db\Session" table="formation_instance">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>

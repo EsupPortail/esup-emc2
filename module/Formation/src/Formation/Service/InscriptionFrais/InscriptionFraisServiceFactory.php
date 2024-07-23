@@ -23,7 +23,6 @@ class InscriptionFraisServiceFactory
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var InscriptionFraisService $service */
         $service = new InscriptionFraisService();
         $service->setObjectManager($entityManager);
         return $service;

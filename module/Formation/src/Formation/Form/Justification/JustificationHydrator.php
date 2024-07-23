@@ -17,7 +17,6 @@ class JustificationHydrator implements HydratorInterface
         $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
         switch ($etattype) {
             case null :
-                $description = null;
                 break;
             case InscriptionEtats::ETAT_DEMANDE :
                 $description = $object->getJustificationResponsable();

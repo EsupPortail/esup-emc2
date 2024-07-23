@@ -2,7 +2,6 @@
 
 namespace Formation\Service\StagiaireExterne;
 
-use Application\Entity\Db\Agent;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;

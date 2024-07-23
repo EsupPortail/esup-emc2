@@ -38,7 +38,6 @@ class EnqueteReponseController extends AbstractActionController {
             }
         }
         $array = [];
-        /** @var EnqueteReponse $reponse */
         foreach ($reponses as $reponse) {
             if ($reponse->getQuestion()->estNonHistorise()) {
                 $question = $reponse->getQuestion()->getId();

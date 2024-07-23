@@ -2,7 +2,7 @@
 
 namespace Formation\Form\Session;
 
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Laminas\Hydrator\HydratorInterface;
 
 class SessionHydrator implements HydratorInterface
@@ -10,7 +10,7 @@ class SessionHydrator implements HydratorInterface
 
     public function extract($object) : array
     {
-        /** @var FormationInstance $object */
+        /** @var Session $object */
         $data = [
             'description' => ($object AND $object->getComplement()) ?: null,
             'principale' => ($object AND $object->getNbPlacePrincipale()) ?$object->getNbPlacePrincipale(): 0,
@@ -39,7 +39,7 @@ class SessionHydrator implements HydratorInterface
         $coutVacation = (isset($data['cout_vacation']) and trim($data['cout_vacation']) !== "") ? trim($data['cout_vacation']) : null;
         $recetteTtc = (isset($data['recette_ttc']) and trim($data['recette_ttc']) !== "") ? trim($data['recette_ttc']) : null;
 
-        /** @var FormationInstance $object */
+        /** @var Session $object */
         $object->setComplement($description);
         $object->setNbPlacePrincipale($principale);
         $object->setNbPlaceComplementaire($complementaire);

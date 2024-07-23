@@ -10,7 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
@@ -38,10 +38,10 @@ class SessionService
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function create(FormationInstance $instance): FormationInstance
+    public function create(Session $instance): Session
     {
         $this->getObjectManager()->persist($instance);
         $this->getObjectManager()->flush($instance);
@@ -49,20 +49,20 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function update(FormationInstance $instance): FormationInstance
+    public function update(Session $instance): Session
     {
         $this->getObjectManager()->flush($instance);
         return $instance;
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function historise(FormationInstance $instance): FormationInstance
+    public function historise(Session $instance): Session
     {
         $instance->historiser();
         $this->getObjectManager()->flush($instance);
@@ -70,10 +70,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function restore(FormationInstance $instance): FormationInstance
+    public function restore(Session $instance): Session
     {
         $instance->dehistoriser();
         $this->getObjectManager()->flush($instance);
@@ -81,10 +81,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function delete(FormationInstance $instance): FormationInstance
+    public function delete(Session $instance): Session
     {
         $this->getObjectManager()->remove($instance);
         $this->getObjectManager()->flush($instance);
@@ -98,7 +98,7 @@ class SessionService
      */
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getObjectManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+        $qb = $this->getObjectManager()->getRepository(Session::class)->createQueryBuilder('Finstance')
             ->addSelect('formation')->join('Finstance.formation', 'formation')
             ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
             ->addSelect('inscription')->leftJoin('Finstance.inscriptions', 'inscription')
@@ -135,7 +135,7 @@ class SessionService
 
     /** Requetage *****************************************************************************************************/
 
-    /**@return FormationInstance[] */
+    /**@return Session[] */
     public function getSessions(string $champ = 'id', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
@@ -145,7 +145,7 @@ class SessionService
         return $result;
     }
 
-    /** @return FormationInstance[] */
+    /** @return Session[] */
     public function getSessionsByFormation(Formation $formation): array
     {
         $qb = $this->createQueryBuilder()
@@ -155,7 +155,7 @@ class SessionService
         return $result;
     }
 
-    /** @return FormationInstance[] */
+    /** @return Session[] */
     public function getSessionsOuvertesByFormation(Formation $formation): array
     {
         $qb = $this->createQueryBuilder()
@@ -168,7 +168,7 @@ class SessionService
 
     /**
      * @param string $etatCode
-     * @return FormationInstance[]
+     * @return Session[]
      */
     public function getSessionsByEtat(string $etatCode): array
     {
@@ -181,9 +181,9 @@ class SessionService
 
     /**
      * @param int|null $id
-     * @return FormationInstance|null
+     * @return Session|null
      */
-    public function getSession(?int $id): ?FormationInstance
+    public function getSession(?int $id): ?Session
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.id = :id')
@@ -192,7 +192,7 @@ class SessionService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".FormationInstance::class."] partagent le même id [" . $id . "]", 0, $e);
+            throw new RuntimeException("Plusieurs [".Session::class."] partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -200,9 +200,9 @@ class SessionService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationInstance|null
+     * @return Session|null
      */
-    public function getRequestedSession(AbstractActionController $controller, string $param = 'formation-instance'): ?FormationInstance
+    public function getRequestedSession(AbstractActionController $controller, string $param = 'formation-instance'): ?Session
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getSession($id);
@@ -210,13 +210,13 @@ class SessionService
         return $result;
     }
 
-    /** @return FormationInstance[][] */
+    /** @return Session[][] */
     public function getSessionsByGestionnaires(UserInterface $gestionnaire): array
     {
         $qb = $this->createQueryBuilder();
         $qb = SessionService::decorateWithGestionnairesId($qb, [$gestionnaire->getId()]);
         $qb = $qb->andWhere('Finstance.histoDestruction IS NULL');
-        /** @var FormationInstance[] $sessions */
+        /** @var Session[] $sessions */
         $sessions = $qb->getQuery()->getResult();
 
         $dictionnaire = [];
@@ -226,7 +226,7 @@ class SessionService
         return $dictionnaire;
     }
 
-    /** @return FormationInstance[] */
+    /** @return Session[] */
     public function getSessionsSansGestionnaires(): array
     {
         $qb = $this->createQueryBuilder();
@@ -235,16 +235,16 @@ class SessionService
             ->andWhere('Finstance.histoDestruction IS NULL');
         // retrait des états finaux
         $qb = $qb->andWhere('etype.code not in (:etatsfinaux)')->setParameter('etatsfinaux', SessionEtats::ETATS_FINAUX);
-        /** @var FormationInstance[] $sessions */
+        /** @var Session[] $sessions */
         $sessions = $qb->getQuery()->getResult();
 
-        $sessions = array_filter($sessions, function (FormationInstance $session) {
+        $sessions = array_filter($sessions, function (Session $session) {
             return $session->getEtatActif()->getType() !== SessionEtats::ETAT_CLOTURE_INSTANCE;
         });
         return $sessions;
     }
 
-    /** @return FormationInstance[] */
+    /** @return Session[] */
     public function getSessionsWithParams(array $params): array
     {
         $qb = $this->createQueryBuilder();
@@ -257,7 +257,7 @@ class SessionService
         if (isset($params['etats']) and $params['etats'] != '') {
             /** TODO :: REMOVE THIS */
             if (is_string($params['etats'])) $etats = [$params['etats']]; else $etats = $params['etats'];
-            $qb = FormationInstance::decorateWithEtatsCodes($qb, 'Finstance', $etats);
+            $qb = Session::decorateWithEtatsCodes($qb, 'Finstance', $etats);
         }
         if (isset($params['themes']) and $params['themes'] != '') {
             /** TODO :: REMOVE THIS */
@@ -271,10 +271,10 @@ class SessionService
 
     /** FACADE  *******************************************************************************************************/
 
-    public function createSession(Formation $formation): FormationInstance
+    public function createSession(Formation $formation): Session
     {
-        $instance = new FormationInstance();
-        $instance->setType(FormationInstance::TYPE_INTERNE);
+        $instance = new Session();
+        $instance->setType(Session::TYPE_INTERNE);
         $instance->setAutoInscription(true);
         $instance->setNbPlacePrincipale($this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::NB_PLACE_PRINCIPALE)->getValeur());
         $instance->setNbPlaceComplementaire($this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::NB_PLACE_COMPLEMENTAIRE)->getValeur());
@@ -291,7 +291,7 @@ class SessionService
     /** Fonctions associées aux états de l'instance *******************************************************************/
 
 
-    public function recreation(FormationInstance $instance): FormationInstance
+    public function recreation(Session $instance): Session
     {
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CREATION_EN_COURS);
         $this->update($instance);
@@ -301,10 +301,10 @@ class SessionService
 
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function ouvrirInscription(FormationInstance $instance): FormationInstance
+    public function ouvrirInscription(Session $instance): Session
     {
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_INSCRIPTION_OUVERTE);
         $this->update($instance);
@@ -320,10 +320,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function fermerInscription(FormationInstance $instance): FormationInstance
+    public function fermerInscription(Session $instance): Session
     {
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_INSCRIPTION_FERMEE);
         $this->update($instance);
@@ -359,7 +359,7 @@ class SessionService
         return $instance;
     }
 
-    public function envoyerConvocation(FormationInstance $session, ?Inscription $inscription = null): FormationInstance
+    public function envoyerConvocation(Session $session, ?Inscription $inscription = null): Session
     {
         if ($inscription === null) {
             $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_FORMATION_CONVOCATION);
@@ -374,7 +374,7 @@ class SessionService
         return $session;
     }
 
-    public function envoyerAttestation(FormationInstance $session, ?Inscription $inscription = null): FormationInstance
+    public function envoyerAttestation(Session $session, ?Inscription $inscription = null): Session
     {
         $liste = [];
         if ($inscription !== null) $liste[] = $inscription; else $liste = $session->getListePrincipale();
@@ -385,7 +385,7 @@ class SessionService
     }
 
 
-    public function envoyerAbsence(FormationInstance $session, ?Inscription $inscription = null): FormationInstance
+    public function envoyerAbsence(Session $session, ?Inscription $inscription = null): Session
     {
         $liste = [];
         if ($inscription !== null) $liste[] = $inscription; else $liste = $session->getListePrincipale();
@@ -396,10 +396,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function envoyerEmargement(FormationInstance $instance): FormationInstance
+    public function envoyerEmargement(Session $instance): Session
     {
         if ($instance->isEmargementActive()) {
             $this->update($instance);
@@ -409,10 +409,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function demanderRetour(FormationInstance $instance): FormationInstance
+    public function demanderRetour(Session $instance): Session
     {
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_ATTENTE_RETOURS);
         $this->update($instance);
@@ -424,10 +424,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function cloturer(FormationInstance $instance): FormationInstance
+    public function cloturer(Session $instance): Session
     {
         //changement de l'état de la session
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CLOTURE_INSTANCE);
@@ -449,10 +449,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function annuler(FormationInstance $instance): FormationInstance
+    public function annuler(Session $instance): Session
     {
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_SESSION_ANNULEE);
         $this->update($instance);
@@ -467,10 +467,10 @@ class SessionService
     }
 
     /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
+     * @param Session $instance
+     * @return Session
      */
-    public function reouvrir(FormationInstance $instance): FormationInstance
+    public function reouvrir(Session $instance): Session
     {
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CREATION_EN_COURS);
         $this->update($instance);
@@ -498,7 +498,7 @@ class SessionService
     }
 
     /**
-     * @return FormationInstance[]
+     * @return Session[]
      * @attention se base sur l'etat !
      */
     public function getSessionsEnCours(): array
@@ -527,7 +527,7 @@ class SessionService
     }
 
     /**
-     * @return FormationInstance[]
+     * @return Session[]
      */
     public function getSessionsByTerm(mixed $term): array
     {
@@ -542,7 +542,7 @@ class SessionService
     public function formatSessionJSON(array $sessions): array
     {
         $result = [];
-        /** @var FormationInstance[] $sessions */
+        /** @var Session[] $sessions */
         foreach ($sessions as $session) {
             $formation = $session->getFormation();
             $groupe = $formation->getGroupe();
@@ -560,13 +560,13 @@ class SessionService
 
     /** Gestion des fomateurs *****************************************************************************************/
 
-    public function ajouterFormateur(FormationInstance $session, Formateur $formateur): void
+    public function ajouterFormateur(Session $session, Formateur $formateur): void
     {
         $session->addFormateur($formateur);
         $this->update($session);
     }
 
-    public function retirerFormateur(FormationInstance $session, Formateur $formateur): void
+    public function retirerFormateur(Session $session, Formateur $formateur): void
     {
         $session->removeFormateur($formateur);
         $this->update($session);

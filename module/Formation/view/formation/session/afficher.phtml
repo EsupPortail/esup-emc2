@@ -1,7 +1,7 @@
 <?php
 
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
@@ -15,8 +15,8 @@ use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Provider\Privilege\MailPrivileges;
 
 /**
- * @see FormationInstanceController::afficherAction()
- * @var FormationInstance $instance
+ * @see SessionController::afficherAction()
+ * @var Session $instance
  * @var array $presences
  * @var array $presencesManquantes
  * @var array $fraisManquants
@@ -128,7 +128,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php if ($canGererInscription) : ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_CREATION_EN_COURS) && $instance->hasJournee())  : ?>
                     <br/>
-                    <a <?php /** @see FormationInstanceController::ouvrirInscriptionAction() */ ?>
+                    <a <?php /** @see SessionController::ouvrirInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/ouvrir-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Ouvrir les inscriptions
@@ -136,7 +136,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_INSCRIPTION_OUVERTE)) : ?>
                     <br/>
-                    <a <?php /** @see FormationInstanceController::fermerInscriptionAction() */ ?>
+                    <a <?php /** @see SessionController::fermerInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/fermer-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Fermer les inscriptions
@@ -144,7 +144,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_INSCRIPTION_FERMEE)) : ?>
                     <br/>
-                    <a <?php /** @see FormationInstanceController::envoyerConvocationAction() */ ?>
+                    <a <?php /** @see SessionController::envoyerConvocationAction() */ ?>
                             href="<?php echo $this->url('formation-instance/envoyer-convocation', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Convoquer les inscrits
@@ -152,7 +152,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION)) : ?>
                     <br/>
-                    <a <?php /** @see FormationInstanceController::demanderRetourAction() */ ?>
+                    <a <?php /** @see SessionController::demanderRetourAction() */ ?>
                             href="<?php echo $this->url('formation-instance/demander-retour', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Demander les retours
@@ -160,7 +160,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                     <br/>
-                    <a <?php /** @see FormationInstanceController::cloturerAction() */ ?>
+                    <a <?php /** @see SessionController::cloturerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action  <?php if (!empty($presencesManquantes) or !empty($fraisManquants)) echo " disabled "; ?>">
                         Clotûrer la session
@@ -169,7 +169,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php endif; ?>
             <!-- todo privilege assicié -->
             <?php if ($canGererInscription) : ?>
-                <a <?php /** @see FormationInstanceController::changerEtatAction() */ ?>
+                <a <?php /** @see SessionController::changerEtatAction() */ ?>
                         href="<?php echo $this->url('formation-instance/changer-etat', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification">
                     Changer l'état
@@ -178,13 +178,13 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php if ($canAnnuler) : ?>
                 <br/>
                 <?php if (!$instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE)) : ?>
-                    <a <?php /** @see FormationInstanceController::annulerAction() */ ?>
+                    <a <?php /** @see SessionController::annulerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-danger action">
                         Annuler la session
                     </a>
                 <?php else : ?>
-                    <a <?php /** @see FormationInstanceController::reouvrirAction() */ ?>
+                    <a <?php /** @see SessionController::reouvrirAction() */ ?>
                             href="<?php echo $this->url('formation-instance/reouvrir', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Remettre la session en édition
@@ -229,13 +229,13 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 </div>
                 <div class="col-md-3">
                     <?php if ($canInformation) : ?>
-                        <?php /** @see FormationInstanceController::modifierInformationsAction() */ ?>
+                        <?php /** @see SessionController::modifierInformationsAction() */ ?>
                         <a href="<?php echo $this->url('formation-instance/modifier-informations', ['formation-instance' => $instance->getId()], [], true); ?>"
                            class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon icon-editer"></span>
                             Modifier les informations<!-- de la session -->
                         </a>
-                        <?php /** @see FormationInstanceController::selectionnerGestionnairesAction() */ ?>
+                        <?php /** @see SessionController::selectionnerGestionnairesAction() */ ?>
                         <a href="<?php echo $this->url('formation-instance/selectionner-gestionnaires', ['session' => $instance->getId()], [], true); ?>"
                            class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon icon-editer"></span>

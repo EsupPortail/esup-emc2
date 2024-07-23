@@ -10,7 +10,8 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class DomaineController extends AbstractActionController {
+class DomaineController extends AbstractActionController
+{
     use DomaineServiceAwareTrait;
     use DomaineFormAwareTrait;
     use SelectionFormationFormAwareTrait;
@@ -29,7 +30,7 @@ class DomaineController extends AbstractActionController {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
 
         return new ViewModel([
-            'title' => "Affichage de du domaine [".$domaine->getLibelle()."]",
+            'title' => "Affichage de du domaine [" . $domaine->getLibelle() . "]",
             'domaine' => $domaine,
         ]);
     }
@@ -79,14 +80,14 @@ class DomaineController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Modification du domaine [".$domaine->getLibelle()."]",
+            'title' => "Modification du domaine [" . $domaine->getLibelle() . "]",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function historiserAction() : ViewModel
+    public function historiserAction(): ViewModel
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
 
@@ -109,7 +110,7 @@ class DomaineController extends AbstractActionController {
         return $vm;
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
         $this->getDomaineService()->restore($domaine);
@@ -119,7 +120,7 @@ class DomaineController extends AbstractActionController {
         return $this->redirect()->toRoute('formation-domaine', [], [], true);
     }
 
-    public function supprimerAction() : ViewModel
+    public function supprimerAction(): ViewModel
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
 
@@ -162,7 +163,7 @@ class DomaineController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Gérer les formations associé aux domaines [".$domaine->getLibelle()."]",
+            'title' => "Gérer les formations associé aux domaines [" . $domaine->getLibelle() . "]",
             'form' => $form,
         ]);
         $vm->setTemplate('formation/formation/selection-formation-form');

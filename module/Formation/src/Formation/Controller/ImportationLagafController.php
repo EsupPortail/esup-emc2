@@ -7,7 +7,7 @@ use DateTime;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\FormationGroupe;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\InscriptionFrais;
 use Formation\Entity\Db\LAGAFStagiaire;
@@ -205,7 +205,7 @@ class ImportationLagafController extends AbstractActionController
         foreach ($actions as $action) $dictionnaireA[$action->getIdSource()] = $action;
 
         $sessions = $this->getSessionService()->getSessions();
-        $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) {
+        $sessions = array_filter($sessions, function (Session $a) use ($lagaf) {
             return $a->getSource() === $lagaf;
         });
         $dictionnaireS = [];
@@ -228,20 +228,20 @@ class ImportationLagafController extends AbstractActionController
             $idOrig = $st_action_id . "-" . $st_session_id;
             if ($dictionnaireA[$st_action_id] !== null) {
                 if (!isset($dictionnaireS[$idOrig])) {
-                    $instance = new FormationInstance();
-                    $instance->setFormation($dictionnaireA[$st_action_id]);
-                    $instance->setComplement($st_responsable);
-                    $instance->setLieu($st_lieu);
-                    $instance->setSource($this->sourceLagaf);
-                    $instance->setIdSource($idOrig);
-                    $instance->setNbPlacePrincipale(0);
-                    $instance->setNbPlaceComplementaire(0);
-                    $instance->setAutoInscription();
-                    $this->getSessionService()->create($instance);
-                    $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CLOTURE_INSTANCE);
-                    $this->getSessionService()->update($instance);
+                    $session = new Session();
+                    $session->setFormation($dictionnaireA[$st_action_id]);
+                    $session->setComplement($st_responsable);
+                    $session->setLieu($st_lieu);
+                    $session->setSource($this->sourceLagaf);
+                    $session->setIdSource($idOrig);
+                    $session->setNbPlacePrincipale(0);
+                    $session->setNbPlaceComplementaire(0);
+                    $session->setAutoInscription();
+                    $this->getSessionService()->create($session);
+                    $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_CLOTURE_INSTANCE);
+                    $this->getSessionService()->update($session);
 
-                    $instances[] = $instance;
+                    $instances[] = $session;
                 }
             } else {
                 $problemes[] = ['raison' => "Pas de formation de trouver pour l'instance", 'data' => $data];
@@ -293,7 +293,7 @@ class ImportationLagafController extends AbstractActionController
         $lagaf = $this->sourceLagaf;
 
         $sessions = $this->getSessionService()->getSessions();
-        $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) {
+        $sessions = array_filter($sessions, function (Session $a) use ($lagaf) {
             return $a->getSource() === $lagaf;
         });
         $dictionnaireS = [];

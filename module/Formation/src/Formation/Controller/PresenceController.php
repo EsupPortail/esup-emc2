@@ -20,8 +20,8 @@ class PresenceController extends AbstractActionController
 
     public function renseignerPresencesAction(): ViewModel
     {
-        $instance = $this->getSessionService()->getRequestedSession($this);
-        $presences = $this->getPresenceService()->getPresenceByInstance($instance);
+        $session = $this->getSessionService()->getRequestedSession($this);
+        $presences = $this->getPresenceService()->getPresenceBySession($session);
 
         $dictionnaire = [];
         foreach ($presences as $presence) {
@@ -29,7 +29,7 @@ class PresenceController extends AbstractActionController
         }
 
         return new ViewModel([
-            'instance' => $instance,
+            'instance' => $session,
             'presences' => $dictionnaire,
         ]);
     }

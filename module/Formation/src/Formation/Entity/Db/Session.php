@@ -19,7 +19,7 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
-class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface, ResourceInterface
+class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface, ResourceInterface
 {
     use HasEtatsTrait;
     use HasSourceTrait;
@@ -105,9 +105,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /**
      * @param Formation|null $formation
-     * @return FormationInstance
+     * @return Session
      */
-    public function setFormation(?Formation $formation): FormationInstance
+    public function setFormation(?Formation $formation): Session
     {
         $this->formation = $formation;
         return $this;
@@ -123,9 +123,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /**
      * @param string|null $complement
-     * @return FormationInstance
+     * @return Session
      */
-    public function setComplement(?string $complement): FormationInstance
+    public function setComplement(?string $complement): Session
     {
         $this->complement = $complement;
         return $this;
@@ -143,9 +143,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /**
      * @param int $nbPlacePrincipale
-     * @return FormationInstance
+     * @return Session
      */
-    public function setNbPlacePrincipale(int $nbPlacePrincipale): FormationInstance
+    public function setNbPlacePrincipale(int $nbPlacePrincipale): Session
     {
         $this->nbPlacePrincipale = $nbPlacePrincipale;
         return $this;
@@ -161,9 +161,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /**
      * @param int $nbPlaceComplementaire
-     * @return FormationInstance
+     * @return Session
      */
-    public function setNbPlaceComplementaire(int $nbPlaceComplementaire): FormationInstance
+    public function setNbPlaceComplementaire(int $nbPlaceComplementaire): Session
     {
         $this->nbPlaceComplementaire = $nbPlaceComplementaire;
         return $this;
@@ -179,9 +179,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /**
      * @param string|null $lieu
-     * @return FormationInstance
+     * @return Session
      */
-    public function setLieu(?string $lieu): FormationInstance
+    public function setLieu(?string $lieu): Session
     {
         $this->lieu = $lieu;
         return $this;
@@ -197,9 +197,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /**
      * @param string|null $type
-     * @return FormationInstance
+     * @return Session
      */
-    public function setType(?string $type): FormationInstance
+    public function setType(?string $type): Session
     {
         $this->type = $type;
         return $this;
@@ -215,9 +215,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /**
      * @param bool $autoInscription
-     * @return FormationInstance
+     * @return Session
      */
-    public function setAutoInscription(bool $autoInscription = false): FormationInstance
+    public function setAutoInscription(bool $autoInscription = false): Session
     {
         $this->autoInscription = $autoInscription;
         return $this;

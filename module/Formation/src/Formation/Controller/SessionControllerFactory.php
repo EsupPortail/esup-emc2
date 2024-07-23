@@ -21,16 +21,14 @@ use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationInstanceControllerFactory
+class SessionControllerFactory
 {
 
     /**
-     * @param ContainerInterface $container
-     * @return FormationInstanceController
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): FormationInstanceController
+    public function __invoke(ContainerInterface $container): SessionController
     {
         /**
          * @var EtatCategorieService $etatCategorieService
@@ -67,7 +65,7 @@ class FormationInstanceControllerFactory
         $selectionFormateurForm = $container->get('FormElementManager')->get(SelectionFormateurForm::class);
         $selectionGestionnaireForm = $container->get('FormElementManager')->get(SelectionGestionnaireForm::class);
 
-        $controller = new FormationInstanceController();
+        $controller = new SessionController();
         $controller->setEtatCategorieService($etatCategorieService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormateurService($formateurService);

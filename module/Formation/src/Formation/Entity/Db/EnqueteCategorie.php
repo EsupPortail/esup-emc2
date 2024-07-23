@@ -6,7 +6,8 @@ use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class EnqueteCategorie implements HistoriqueAwareInterface {
+class EnqueteCategorie implements HistoriqueAwareInterface
+{
     use HistoriqueAwareTrait;
 
     private ?int $id = -1;

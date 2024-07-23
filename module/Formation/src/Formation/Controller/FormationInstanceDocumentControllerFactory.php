@@ -48,7 +48,6 @@ class FormationInstanceDocumentControllerFactory
         /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
 
-        /** @var FormationInstanceDocumentController $controller */
         $controller = new FormationInstanceDocumentController();
         $controller->setAgentService($agentService);
         $controller->setSessionService($sessionService);

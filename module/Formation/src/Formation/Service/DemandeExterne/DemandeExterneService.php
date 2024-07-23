@@ -11,10 +11,10 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
@@ -347,7 +347,7 @@ class DemandeExterneService
 
     /** FACADE ********************************************************************************************************/
 
-    public function transformer(?DemandeExterne $demande, string $libelle, ?FormationGroupe $groupe, float $volume, float $suivi): FormationInstance
+    public function transformer(?DemandeExterne $demande, string $libelle, ?FormationGroupe $groupe, float $volume, float $suivi): Session
     {
         //theme
         if ($groupe === null) {
@@ -378,7 +378,7 @@ class DemandeExterneService
         $this->getFormationService()->update($formation);
 
         //session
-        $session = new FormationInstance();
+        $session = new Session();
         $session->setFormation($formation);
         $session->setAutoInscription();
         $session->setNbPlacePrincipale(1);

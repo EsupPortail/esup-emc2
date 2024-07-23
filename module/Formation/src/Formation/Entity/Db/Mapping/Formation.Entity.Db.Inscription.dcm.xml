@@ -6,7 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Formation\Entity\Db\FormationInstance"  field="session">
+        <many-to-one target-entity="Formation\Entity\Db\Session"  field="session">
             <join-column name="session_id" referenced-column-name="id"/>
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">

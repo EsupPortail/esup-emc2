@@ -155,7 +155,7 @@ class StagiaireExterneController extends AbstractActionController
         $inscriptions = $this->getInscriptionService()->getInscriptionsValideesByStagiaires([$stagiaire],null);
 
         return new ViewModel([
-            'title' => "Historique des formations de ".$stagiaire->getDenomination(true),
+            'title' => "Historique des formations de ".$stagiaire->getDenomination(),
             'stagiaire' => $stagiaire,
             'inscriptions' => $inscriptions,
         ]);

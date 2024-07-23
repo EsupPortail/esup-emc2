@@ -3,7 +3,7 @@
 namespace Formation\Assertion;
 
 
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Service\Session\SessionServiceAwareTrait;
@@ -19,7 +19,7 @@ class SessionAssertion extends AbstractAssertion {
     use PrivilegeServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    public function isScopeCompatible(?FormationInstance $session, UserInterface $user, ?RoleInterface $role): bool
+    public function isScopeCompatible(?Session $session, UserInterface $user, ?RoleInterface $role): bool
     {
         if ($role->getRoleId() === FormationRoles::FORMATEUR) {
             foreach ($session->getFormateurs() as $formateur) {
@@ -30,7 +30,7 @@ class SessionAssertion extends AbstractAssertion {
         return true;
     }
 
-    private function computeAssertion(?FormationInstance $entity, string $privilege): bool
+    private function computeAssertion(?Session $entity, string $privilege): bool
     {
 
         $user = $this->getUserService()->getConnectedUser();
@@ -48,8 +48,8 @@ class SessionAssertion extends AbstractAssertion {
 
     protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
-        /** @var FormationInstance|null $entity */
-        if (!$entity instanceof FormationInstance) {
+        /** @var Session|null $entity */
+        if (!$entity instanceof Session) {
             return false;
         }
 
@@ -58,7 +58,7 @@ class SessionAssertion extends AbstractAssertion {
 
     protected function assertController($controller, $action = null, $privilege = null): bool
     {
-        /** @var FormationInstance|null $entity */
+        /** @var Session|null $entity */
         $sessionId = (($this->getMvcEvent()->getRouteMatch()->getParam('formation-instance')));
         $entity = $this->getSessionService()->getSession($sessionId);
 

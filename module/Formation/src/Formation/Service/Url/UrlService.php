@@ -2,12 +2,10 @@
 
 namespace Formation\Service\Url;
 
-use Formation\Controller\FormationInstanceController;
 use Formation\Controller\FormationInstanceDocumentController;
 use Formation\Controller\IndexController;
-use Formation\Controller\InscriptionController;
 use Formation\Controller\PlanDeFormationController;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\Inscription;
 
 class UrlService extends \Application\Service\Url\UrlService
@@ -23,11 +21,11 @@ class UrlService extends \Application\Service\Url\UrlService
     /** @noinspection PhpUnused :: macro */
     public function getUrlSessionAfficher() : string
     {
-        /** @var FormationInstance $instance */
-        $instance = $this->getVariable('instance');
-        if ($instance === null) return "<span style='color:darkred'>Variable [instance] non founie à UrlService</span>";
-        /** @see FormationInstanceController::afficherAction() */
-        $url = $this->renderer->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
+        /** @var Session $session */
+        $session = $this->getVariable('instance');
+        if ($session === null) return "<span style='color:darkred'>Variable [instance] non founie à UrlService</span>";
+        /** @see SessionController::afficherAction() */
+        $url = $this->renderer->url('formation-instance/afficher', ['formation-instance' => $session->getId()], ['force_canonical' => true], true);
         return  UrlService::trueLink($url);
     }
 

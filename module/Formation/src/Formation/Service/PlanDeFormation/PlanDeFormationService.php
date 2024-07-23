@@ -6,26 +6,26 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
-class PlanDeFormationService {
+class PlanDeFormationService
+{
     use ProvidesObjectManager;
     use FormationServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(PlanDeFormation $plan) : PlanDeFormation
+    public function create(PlanDeFormation $plan): PlanDeFormation
     {
         $this->getObjectManager()->persist($plan);
         $this->getObjectManager()->flush($plan);
         return $plan;
     }
 
-    public function update(PlanDeFormation $plan) : PlanDeFormation
+    public function update(PlanDeFormation $plan): PlanDeFormation
     {
         $this->getObjectManager()->flush($plan);
         return $plan;
@@ -53,7 +53,7 @@ class PlanDeFormationService {
 //        return $plan;
 //    }
 
-    public function delete(PlanDeFormation $plan) : PlanDeFormation
+    public function delete(PlanDeFormation $plan): PlanDeFormation
     {
         $this->getObjectManager()->remove($plan);
         $this->getObjectManager()->flush($plan);
@@ -62,7 +62,7 @@ class PlanDeFormationService {
 
     /** REQUETAGE ********************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(PlanDeFormation::class)->createQueryBuilder('plan')
             ->leftjoin('plan.formations', 'formation')->addSelect('formation')
@@ -72,28 +72,28 @@ class PlanDeFormationService {
     }
 
     /** @return PlanDeFormation[] */
-    public function getPlansDeFormation(string $champ='dateDebut', string $ordre='ASC') : array
+    public function getPlansDeFormation(string $champ = 'dateDebut', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('plan.'.$champ, $ordre);
+            ->orderBy('plan.' . $champ, $ordre);
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getPlanDeFormation(?int $id) : ?PlanDeFormation
+    public function getPlanDeFormation(?int $id): ?PlanDeFormation
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('plan.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs PlanDeFormation partagent le même id [".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs PlanDeFormation partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    public function getRequestedPlanDeFormation(AbstractActionController $controller, string $param='plan-de-formation') : ?PlanDeFormation
+    public function getRequestedPlanDeFormation(AbstractActionController $controller, string $param = 'plan-de-formation'): ?PlanDeFormation
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getPlanDeFormation($id);
@@ -109,24 +109,23 @@ class PlanDeFormationService {
             ->andWhere('plan.dateDebut IS NULL or plan.dateDebut <= :date')
             ->andWhere('plan.dateFin IS NULL or plan.dateFin >= :date')
             ->setParameter('date', $date)
-            ->andWhere('plan.histoDestruction IS NULL')
-        ;
+            ->andWhere('plan.histoDestruction IS NULL');
         return $qb->getQuery()->getResult();
     }
 
-    public function getPlansDeFormationAsOption(string $champ='dateDebut', string $ordre='ASC') : array
+    public function getPlansDeFormationAsOption(string $champ = 'dateDebut', string $ordre = 'ASC'): array
     {
         $plans = $this->getPlansDeFormation($champ, $ordre);
         $options = [];
         foreach ($plans as $plan) {
-            $options[$plan->getId()] = $plan->getLibelle() ." (".")";
+            $options[$plan->getId()] = $plan->getLibelle() . " (" . ")";
         }
         return $options;
     }
 
     /** FACADE ********************************************************************************************************/
 
-    public function transferer(PlanDeFormation $toRecopy, PlanDeFormation $planDeFormation) : void
+    public function transferer(PlanDeFormation $toRecopy, PlanDeFormation $planDeFormation): void
     {
         foreach ($toRecopy->getFormations() as $formation) {
             if (!$formation->hasPlanDeFormation($planDeFormation)) {

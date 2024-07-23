@@ -4,8 +4,8 @@ namespace Formation;
 
 use Formation\Assertion\SessionAssertion;
 use Formation\Assertion\SessionAssertionFactory;
-use Formation\Controller\FormationInstanceController;
-use Formation\Controller\FormationInstanceControllerFactory;
+use Formation\Controller\SessionController;
+use Formation\Controller\SessionControllerFactory;
 use Formation\Controller\InscriptionController;
 use Formation\Form\Session\SessionForm;
 use Formation\Form\Session\SessionFormFactory;
@@ -46,7 +46,7 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'index',
                     ],
@@ -55,7 +55,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'afficher',
                     ],
@@ -65,7 +65,7 @@ return [
                     'assertion' => SessionAssertion::class,
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'rechercher',
                     ],
@@ -74,7 +74,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'ajouter',
                         'ajouter-avec-formulaire',
@@ -84,7 +84,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'modifier-informations',
                         'selectionner-gestionnaires',
@@ -96,7 +96,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'ouvrir-inscription',
                         'fermer-inscription',
@@ -110,7 +110,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'exporter-inscription'
                     ],
@@ -119,7 +119,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'annuler',
                         'reouvrir',
@@ -129,7 +129,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'restaurer',
                         'historiser',
@@ -139,7 +139,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'supprimer',
                     ],
@@ -148,7 +148,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstanceController::class,
+                    'controller' => SessionController::class,
                     'action' => [
                         'ajouter-formateur',
                         'retirer-formateur',
@@ -159,7 +159,7 @@ return [
                 ],
                 //console
 //                [
-//                    'controller' => FormationInstanceController::class,
+//                    'controller' => SessionController::class,
 //                    'action' => [
 //                        'formation-console',
 //                    ],
@@ -178,7 +178,7 @@ return [
                             'session_' => [
                                 'label' => 'Sessions',
                                 'route' => 'formation-instance',
-                                'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index'),
+                                'resource' => PrivilegeController::getResourceId(SessionController::class, 'index'),
                                 'order' => 230,
                                 'icon' => 'fas fa-angle-right',
                             ],
@@ -217,8 +217,8 @@ return [
                                 'options' => [
                                     'route' => '/ajouter-formateur/:session',
                                     'defaults' => [
-                                        /** @see FormationInstanceController::ajouterFormateurAction() */
-                                        'controller' => FormationInstanceController::class,
+                                        /** @see SessionController::ajouterFormateurAction() */
+                                        'controller' => SessionController::class,
                                         'action' => 'ajouter-formateur',
                                     ],
                                 ],
@@ -228,8 +228,8 @@ return [
                                 'options' => [
                                     'route' => '/retirer-formateur/:session/:formateur',
                                     'defaults' => [
-                                        /** @see FormationInstanceController::retirerFormateurAction() */
-                                        'controller' => FormationInstanceController::class,
+                                        /** @see SessionController::retirerFormateurAction() */
+                                        'controller' => SessionController::class,
                                         'action' => 'retirer-formateur',
                                     ],
                                 ],
@@ -243,7 +243,7 @@ return [
                 'options' => [
                     'route' => '/formation-instance',
                     'defaults' => [
-                        'controller' => FormationInstanceController::class,
+                        'controller' => SessionController::class,
                         'action' => 'index',
                     ],
                 ],
@@ -254,7 +254,7 @@ return [
                         'options' => [
                             'route' => '/rechercher',
                             'defaults' => [
-                                /** @see FormationInstanceController::rechercherAction() */
+                                /** @see SessionController::rechercherAction() */
                                 'action' => 'rechercher',
                             ],
                         ],
@@ -264,7 +264,7 @@ return [
                         'options' => [
                             'route' => '/ajouter-avec-formulaire',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'ajouter-avec-formulaire',
                             ],
                         ],
@@ -274,7 +274,7 @@ return [
                         'options' => [
                             'route' => '/ajouter/:formation',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'ajouter',
                             ],
                         ],
@@ -284,7 +284,7 @@ return [
                         'options' => [
                             'route' => '/afficher/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'afficher',
                             ],
                         ],
@@ -294,7 +294,7 @@ return [
                         'options' => [
                             'route' => '/historiser/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'historiser',
                             ],
                         ],
@@ -304,7 +304,7 @@ return [
                         'options' => [
                             'route' => '/restaurer/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'restaurer',
                             ],
                         ],
@@ -314,7 +314,7 @@ return [
                         'options' => [
                             'route' => '/supprimer/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'supprimer',
                             ],
                         ],
@@ -324,7 +324,7 @@ return [
                         'options' => [
                             'route' => '/annuler/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'annuler',
                             ],
                         ],
@@ -334,7 +334,7 @@ return [
                         'options' => [
                             'route' => '/reouvrir/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'reouvrir',
                             ],
                         ],
@@ -344,7 +344,7 @@ return [
                         'options' => [
                             'route' => '/modifier-informations/:formation-instance',
                             'defaults' => [
-                                /** @see FormationInstanceController::modifierInformationsAction() */
+                                /** @see SessionController::modifierInformationsAction() */
                                 'action' => 'modifier-informations',
                             ],
                         ],
@@ -354,7 +354,7 @@ return [
                         'options' => [
                             'route' => '/selectionner-gestionnaires/:session',
                             'defaults' => [
-                                /** @see FormationInstanceController::selectionnerGestionnairesAction() */
+                                /** @see SessionController::selectionnerGestionnairesAction() */
                                 'action' => 'selectionner-gestionnaires',
                             ],
                         ],
@@ -364,7 +364,7 @@ return [
                         'options' => [
                             'route' => '/ouvrir-inscription/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'ouvrir-inscription',
                             ],
                         ],
@@ -374,7 +374,7 @@ return [
                         'options' => [
                             'route' => '/fermer-inscription/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'fermer-inscription',
                             ],
                         ],
@@ -384,7 +384,7 @@ return [
                         'options' => [
                             'route' => '/envoyer-convocation/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'envoyer-convocation',
                             ],
                         ],
@@ -394,7 +394,7 @@ return [
                         'options' => [
                             'route' => '/demander-retour/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'demander-retour',
                             ],
                         ],
@@ -404,7 +404,7 @@ return [
                         'options' => [
                             'route' => '/cloturer/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'cloturer',
                             ],
                         ],
@@ -414,18 +414,18 @@ return [
                         'options' => [
                             'route' => '/exporter-inscription/:session',
                             'defaults' => [
-                                /** @see FormationInstanceController::exporterInscriptionAction() */
+                                /** @see SessionController::exporterInscriptionAction() */
                                 'action' => 'exporter-inscription',
                             ],
                         ],
                     ],
-                    /** @see FormationInstanceController::changerEtatAction() */
+                    /** @see SessionController::changerEtatAction() */
                     'changer-etat' => [
                         'type' => Segment::class,
                         'options' => [
                             'route' => '/changer-etat/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                'controller' => SessionController::class,
                                 'action' => 'changer-etat',
                             ],
                         ],
@@ -443,7 +443,7 @@ return [
                     'options' => [
                         'route' => 'formation-console',
                         'defaults' => [
-                            'controller' => FormationInstanceController::class,
+                            'controller' => SessionController::class,
                             'action' => 'formation-console'
                         ],
                     ],
@@ -460,7 +460,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            FormationInstanceController::class => FormationInstanceControllerFactory::class,
+            SessionController::class => SessionControllerFactory::class,
         ],
     ],
     'form_elements' => [

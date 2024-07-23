@@ -34,7 +34,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?StagiaireExterne $stagiaire = null;
-    private ?FormationInstance $session = null;
+    private ?Session $session = null;
     private ?string $liste = null;
 
     private ?string $missions = null;
@@ -90,12 +90,12 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $this->stagiaire = $stagiaire;
     }
 
-    public function getSession(): ?FormationInstance
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function setSession(?FormationInstance $session): void
+    public function setSession(?Session $session): void
     {
         $this->session = $session;
     }

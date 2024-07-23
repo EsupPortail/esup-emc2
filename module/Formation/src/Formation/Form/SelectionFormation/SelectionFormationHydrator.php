@@ -3,7 +3,6 @@
 namespace Formation\Form\SelectionFormation;
 
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;

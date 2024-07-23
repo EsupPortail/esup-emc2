@@ -172,7 +172,7 @@ class InscriptionService
     }
 
     /**
-     * @param Agent[] $agents
+     * @param StagiaireExterne[] $stagiaires
      * @param int|null $annee
      * @return Inscription[]
      */
@@ -225,7 +225,7 @@ class InscriptionService
     }
 
     /**
-     * @param Agent[] $agents
+     * @param StagiaireExterne[] $stagiaires
      * @param EtatType[] $etats
      * @param int|null $annee
      * @return Inscription[]
