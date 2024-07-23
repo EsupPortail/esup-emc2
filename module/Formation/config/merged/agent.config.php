@@ -28,6 +28,7 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'afficher',
+                        'historique',
                     ],
                     'privilege' => [
                         FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_AFFICHER),
@@ -124,6 +125,18 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'historique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            /** @see AgentController::historiqueAction() */
+                            'route'    => '/historique/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'historique',
                             ],
                         ],
                         'may_terminate' => true,

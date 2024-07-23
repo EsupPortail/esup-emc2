@@ -27,6 +27,7 @@ use Formation\Service\Inscription\InscriptionServiceFactory;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceFactory;
 use Formation\View\Helper\InscriptionsViewHelper;
+use Formation\View\Helper\InscriptionViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -442,6 +443,7 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
+            'inscription' => InscriptionViewHelper::class,
             'inscriptions' => InscriptionsViewHelper::class,
         ],
     ],

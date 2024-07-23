@@ -143,12 +143,24 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                                data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
                             >
                                 <span class="icon icon-user"></span> Afficher </a>
+                            <br>
+                            <a href="<?php echo $this->url('formation/historique', ['agent' => $inscription->getAgent()->getId()], [], true); ?>"
+                               class="ajax-modal"
+                               data-bs-toggle="tooltip" data-bs-html="true" title="Afficher l'historique de formation de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                            >
+                                <span class="icon icon-lister"></span> Historique </a>
                         <?php endif; ?>
                         <?php if ($inscription->isExterne()) : ?>
                             <a href="<?php echo $this->url('stagiaire-externe/afficher', ['stagiaire-externe' => $inscription->getStagiaire()->getId()], [], true); ?>"
                                data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
                             >
                                 <span class="icon icon-user"></span> Afficher </a>
+                            <br>
+                            <a href="<?php echo $this->url('stagiaire-externe/historique', ['stagiaire-externe' => $inscription->getStagiaire()->getId()], [], true); ?>"
+                               class="ajax-modal"
+                               data-bs-toggle="tooltip" data-bs-html="true" title="Afficher l'historique de formation de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                            >
+                                <span class="icon icon-lister"></span> Historique </a>
                         <?php endif; ?>
                     <?php endif; ?>
 

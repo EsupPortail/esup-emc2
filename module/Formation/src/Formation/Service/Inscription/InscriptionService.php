@@ -176,6 +176,18 @@ class InscriptionService
      * @param int|null $annee
      * @return Inscription[]
      */
+    public function getInscriptionsValideesByStagiaires(array $stagiaires, ?int $annee): array
+    {
+        $etats = [InscriptionEtats::ETAT_VALIDER_DRH, InscriptionEtats::ETAT_REFUSER];
+        $result = $this->getInscriptionsByStagiairesAndEtats($stagiaires, $etats, $annee);
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param int|null $annee
+     * @return Inscription[]
+     */
     public function getInscriptionsNonValideesByAgents(array $agents, ?int $annee): array
     {
         $etats = [InscriptionEtats::ETAT_DEMANDE, InscriptionEtats::ETAT_VALIDER_RESPONSABLE];
@@ -199,6 +211,35 @@ class InscriptionService
             ->andWhere('inscription.histoDestruction IS NULL')
             ->andWhere('session.histoDestruction IS NULL')
             ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
+        ;
+
+        $qb = Inscription::decorateWithEtatsCodes($qb, 'inscription', $etats);
+
+        $result = $qb->getQuery()->getResult();
+        $result = array_filter($result, function (Inscription $a) use ($debut, $fin) {
+            $sessionDebut = DateTime::createFromFormat('d/m/Y', $a->getSession()->getDebut());
+            $sessionFin = DateTime::createFromFormat('d/m/Y', $a->getSession()->getFin());
+            return ($sessionDebut >= $debut && $sessionFin <= $fin);
+        });
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param EtatType[] $etats
+     * @param int|null $annee
+     * @return Inscription[]
+     */
+    public function getInscriptionsByStagiairesAndEtats(array $stagiaires, array $etats, ?int $annee): array
+    {
+        if ($annee === null) $annee = Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
+        $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscription.histoDestruction IS NULL')
+            ->andWhere('session.histoDestruction IS NULL')
+            ->andWhere('stagiaire in (:stagiaires)')->setParameter('stagiaires', $stagiaires)
         ;
 
         $qb = Inscription::decorateWithEtatsCodes($qb, 'inscription', $etats);

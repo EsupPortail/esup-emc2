@@ -179,4 +179,16 @@ class AgentController extends AbstractActionController
         return $this->redirect()->toRoute('index-mes-formations', [], [], true);
     }
 
+    public function historiqueAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $inscriptions = $this->getInscriptionService()->getInscriptionsValideesByAgents([$agent],null);
+
+        return new ViewModel([
+            'title' => "Historique des formations de ".$agent->getDenomination(true),
+            'agent' => $agent,
+            'inscriptions' => $inscriptions,
+        ]);
+    }
+
 }

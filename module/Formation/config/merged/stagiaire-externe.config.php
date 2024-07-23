@@ -32,6 +32,7 @@ return [
                     'controller' => StagiaireExterneController::class,
                     'action' => [
                         'afficher',
+                        'historique',
                     ],
                     'privileges' => [
                         StagiaireexternePrivileges::STAGIAIREEXTERNE_AFFICHER,
@@ -128,6 +129,16 @@ return [
                             'defaults' => [
                                 /** @see StagiaireExterneController::afficherAction() */
                                 'action' => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'historique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historique/:stagiaire-externe',
+                            'defaults' => [
+                                /** @see StagiaireExterneController::historiqueAction() */
+                                'action' => 'historique',
                             ],
                         ],
                     ],
