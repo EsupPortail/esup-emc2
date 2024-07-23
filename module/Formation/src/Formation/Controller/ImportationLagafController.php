@@ -17,12 +17,12 @@ use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -35,8 +35,8 @@ class ImportationLagafController extends AbstractActionController
     use EtatInstanceServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
     use SeanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use InscriptionFraisServiceAwareTrait;
     use PresenceServiceAwareTrait;
@@ -204,7 +204,7 @@ class ImportationLagafController extends AbstractActionController
         $dictionnaireA = [];
         foreach ($actions as $action) $dictionnaireA[$action->getIdSource()] = $action;
 
-        $sessions = $this->getFormationInstanceService()->getFormationsInstances();
+        $sessions = $this->getSessionService()->getSessions();
         $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) {
             return $a->getSource() === $lagaf;
         });
@@ -237,9 +237,9 @@ class ImportationLagafController extends AbstractActionController
                     $instance->setNbPlacePrincipale(0);
                     $instance->setNbPlaceComplementaire(0);
                     $instance->setAutoInscription();
-                    $this->getFormationInstanceService()->create($instance);
+                    $this->getSessionService()->create($instance);
                     $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CLOTURE_INSTANCE);
-                    $this->getFormationInstanceService()->update($instance);
+                    $this->getSessionService()->update($instance);
 
                     $instances[] = $instance;
                 }
@@ -292,7 +292,7 @@ class ImportationLagafController extends AbstractActionController
 
         $lagaf = $this->sourceLagaf;
 
-        $sessions = $this->getFormationInstanceService()->getFormationsInstances();
+        $sessions = $this->getSessionService()->getSessions();
         $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) {
             return $a->getSource() === $lagaf;
         });
@@ -399,7 +399,7 @@ class ImportationLagafController extends AbstractActionController
             /** @var Agent $agent */
             $agent = null;
             $agent = $this->getStagiaireService()->getAgentService()->getAgentByIdentification($st_prenom, $st_nom);
-            if ($agent) $stagiaire->setOctopusId((string) $agent->getId());
+            if ($agent) $stagiaire->setOctopusId((string)$agent->getId());
             $this->getStagiaireService()->create($stagiaire);
             $stagiaires[] = $stagiaire;
 
@@ -448,7 +448,7 @@ class ImportationLagafController extends AbstractActionController
         $position_FHebergement = array_search('FHebergement', $array[0]);
         $position_FTransport = array_search('FTransport', $array[0]);
 
-        $instances_tmp = $this->getFormationInstanceService()->getFormationsInstances();
+        $instances_tmp = $this->getSessionService()->getSessions();
         $instances = [];
         foreach ($instances_tmp as $instance) {
             if ($instance->getSource() === $this->sourceLagaf) {

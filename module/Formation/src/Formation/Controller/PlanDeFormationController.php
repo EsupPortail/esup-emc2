@@ -3,9 +3,6 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Formation\Entity\Db\Axe;
-use Formation\Entity\Db\Domaine;
-use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Form\PlanDeFormation\PlanDeFormationFormAwareTrait;
 use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationFormAwareTrait;
@@ -18,7 +15,6 @@ use Formation\Service\Axe\AxeServiceAwareTrait;
 use Formation\Service\Domaine\DomaineServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -34,7 +30,6 @@ class PlanDeFormationController extends AbstractActionController
     use FormationGroupeServiceAwareTrait;
     use FormationServiceAwareTrait;
     use PlanDeFormationServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
     use RenduServiceAwareTrait;
 
     use PlanDeFormationFormAwareTrait;
@@ -175,7 +170,7 @@ class PlanDeFormationController extends AbstractActionController
 
     /** Gestion des formations d'un plan de formation **************************************************************/
 
-    public function gererFormationsAction() : ViewModel
+    public function gererFormationsAction(): ViewModel
     {
         $planDeFormation = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
 
@@ -206,7 +201,7 @@ class PlanDeFormationController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Ajouter une formation au plan de formation [".$planDeFormation->getLibelle()."]",
+            'title' => "Ajouter une formation au plan de formation [" . $planDeFormation->getLibelle() . "]",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -214,7 +209,7 @@ class PlanDeFormationController extends AbstractActionController
     }
 
     /** Reprend les formations d'un plan de formation et les ajoute à plan courant */
-    public function reprendreAction() : ViewModel
+    public function reprendreAction(): ViewModel
     {
         $planDeFormation = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
 
@@ -232,14 +227,14 @@ class PlanDeFormationController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Reprendre un plan de formation pour le plan de formation [".$planDeFormation->getLibelle()."]",
+            'title' => "Reprendre un plan de formation pour le plan de formation [" . $planDeFormation->getLibelle() . "]",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function viderAction() : ViewModel
+    public function viderAction(): ViewModel
     {
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
 
@@ -264,7 +259,8 @@ class PlanDeFormationController extends AbstractActionController
 
     public function importerDepuisCsvAction(): ViewModel
     {
-        $warning = []; $title = "Importation depuis un CSV";
+        $warning = [];
+        $title = "Importation depuis un CSV";
 
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
         if ($plan === null) $plan = new PlanDeFormation();
@@ -300,8 +296,8 @@ class PlanDeFormationController extends AbstractActionController
 
                 while ($content = fgetcsv($handle, 0, ";")) {
                     $array[] = array_map(function ($a) {
-                        return  ($a !== null)?str_replace('','\'',iconv('ISO-8859-1', 'UTF-8', $a)):null;
-                        }, $content);
+                        return ($a !== null) ? str_replace('', '\'', iconv('ISO-8859-1', 'UTF-8', $a)) : null;
+                    }, $content);
                 }
 
                 $header = $array[0];
@@ -336,7 +332,7 @@ class PlanDeFormationController extends AbstractActionController
 
                 //Lecture
                 foreach ($array as $line) {
-                    $axeLibelle = isset($line[$axeColumn])?trim($line[$axeColumn]):null;
+                    $axeLibelle = isset($line[$axeColumn]) ? trim($line[$axeColumn]) : null;
                     $axe = ($axeLibelle !== '') ? $this->getAxeService()->getAxeByLibelle($axeLibelle) : null;
                     if ($axe === null && $axeLibelle !== '') {
                         $nouveauxAxes[$axeLibelle] = $axeLibelle;
@@ -344,7 +340,7 @@ class PlanDeFormationController extends AbstractActionController
                         $axes[$axeLibelle] = $axe;
                     }
 
-                    $themeLibelle = isset($line[$themeColumn])?trim($line[$themeColumn]):null;
+                    $themeLibelle = isset($line[$themeColumn]) ? trim($line[$themeColumn]) : null;
                     $theme = ($themeLibelle !== '') ? $this->getFormationGroupeService()->getFormationGroupeByLibelle($themeLibelle, $axe) : null;
                     if ($theme === null && $themeLibelle !== '') {
                         $nouveauxThemes[$themeLibelle] = $themeLibelle;
@@ -373,7 +369,7 @@ class PlanDeFormationController extends AbstractActionController
                     }
 
                     if (!in_array($line[$modaliteColumn], ['Présentiel', 'Distanciel', 'Mixte', ''])) {
-                        $error[] = "Modalité [".$line[$modaliteColumn]."] non reconnue !";
+                        $error[] = "Modalité [" . $line[$modaliteColumn] . "] non reconnue !";
                     }
                 }
 

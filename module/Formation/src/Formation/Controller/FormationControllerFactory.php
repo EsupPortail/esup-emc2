@@ -13,8 +13,8 @@ use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
-use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\PlanDeFormation\PlanDeFormationService;
+use Formation\Service\Session\SessionService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -36,7 +36,7 @@ class FormationControllerFactory
          * @var FormationService $formationService
          * @var FormationElementService $formationElementService
          * @var FormationGroupeService $formationGroupeService
-         * @var FormationInstanceService $formationInstanceService
+         * @var SessionService $sessionService
          * @var PlanDeFormationService $planDeFormationService
          */
         $actionCoutPrevisionnelService = $container->get(ActionCoutPrevisionnelService::class);
@@ -44,7 +44,7 @@ class FormationControllerFactory
         $formationService = $container->get(FormationService::class);
         $formationElementService = $container->get(FormationElementService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
-        $formationInstanceService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
         $planDeFormationService = $container->get(PlanDeFormationService::class);
 
         /**
@@ -71,7 +71,7 @@ class FormationControllerFactory
         $controller->setFormationService($formationService);
         $controller->setFormationElementService($formationElementService);
         $controller->setFormationGroupeService($formationGroupeService);
-        $controller->setFormationInstanceService($formationInstanceService);
+        $controller->setSessionService($sessionService);
         $controller->setFormationForm($formationForm);
         $controller->setPlanDeFormationService($planDeFormationService);
         $controller->setSelectionFormationForm($selectionFormationForm);

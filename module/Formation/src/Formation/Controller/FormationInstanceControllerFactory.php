@@ -8,10 +8,10 @@ use Formation\Form\Session\SessionForm;
 use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
-use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Presence\PresenceService;
+use Formation\Service\Session\SessionService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -38,7 +38,6 @@ class FormationInstanceControllerFactory
          * @var FormateurService $formateurService
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
-         * @var FormationInstanceService $formationInstanceService
          * @var InscriptionFraisService $inscriptionFraisService
          * @var MailService $mailService
          * @var NotificationService $notificationService
@@ -51,7 +50,7 @@ class FormationInstanceControllerFactory
         $formateurService = $container->get(FormateurService::class);
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
-        $formationInstanceService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
         $inscriptionFraisService = $container->get(InscriptionFraisService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -74,7 +73,7 @@ class FormationInstanceControllerFactory
         $controller->setFormateurService($formateurService);
         $controller->setFormationService($formationService);
         $controller->setFormationGroupeService($formationGroupeService);
-        $controller->setFormationInstanceService($formationInstanceService);
+        $controller->setSessionService($sessionService);
         $controller->setInscriptionFraisService($inscriptionFraisService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);

@@ -2,7 +2,6 @@
 
 namespace Formation\Controller;
 
-use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
@@ -10,7 +9,7 @@ use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\TextTemplates;
 use Formation\Provider\Validation\MesFormationsValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -26,7 +25,7 @@ class IndexController extends AbstractActionController
     use AgentServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use RenduServiceAwareTrait;
     use StagiaireExterneServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -38,7 +37,7 @@ class IndexController extends AbstractActionController
         $connectedUser = $this->getUserService()->getConnectedUser();
         $connectedRole = $this->getUserService()->getConnectedRole();
 
-        if ($connectedRole AND $connectedRole->getRoleId() === FormationRoles::GESTIONNAIRE_FORMATION) {
+        if ($connectedRole and $connectedRole->getRoleId() === FormationRoles::GESTIONNAIRE_FORMATION) {
             /** @see IndexController::indexGestionnaireAction() */
             return $this->redirect()->toRoute('index-gestionnaire', [], [], true);
         }
@@ -85,8 +84,8 @@ class IndexController extends AbstractActionController
 
         $etatsTypesSession = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE);
         $etatsTypesDemande = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
-        $dictionnaireSession = $this->getFormationInstanceService()->getSessionsByGestionnaires($user);
-        $sessionsSansGestionnaire = $this->getFormationInstanceService()->getSessionsSansGestionnaires();
+        $dictionnaireSession = $this->getSessionService()->getSessionsByGestionnaires($user);
+        $sessionsSansGestionnaire = $this->getSessionService()->getSessionsSansGestionnaires();
 
         $dictionnaireDemande = $this->getDemandeExterneService()->getDemandesExternesByGestionnaires($user);
         $demandesSansGestionnaire = $this->getDemandeExterneService()->getDemandesExternesSansGestionnaires();

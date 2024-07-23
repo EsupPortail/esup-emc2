@@ -17,8 +17,8 @@ use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelServiceAwareT
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -31,7 +31,7 @@ class FormationController extends AbstractActionController
 {
     use ActionCoutPrevisionnelServiceAwareTrait;
     use AgentServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use FormationElementServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
@@ -53,10 +53,12 @@ class FormationController extends AbstractActionController
         $source = $this->params()->fromQuery('source');
         $historise = $this->params()->fromQuery('historise');
         $planId = $this->params()->fromQuery('planDeFormation');
-        $planDeFormation = ($planId !== null && $planId !== '')?$this->getPlanDeFormationService()->getPlanDeFormation($this->params()->fromQuery('planDeFormation')):null;
+        $planDeFormation = ($planId !== null && $planId !== '') ? $this->getPlanDeFormationService()->getPlanDeFormation($this->params()->fromQuery('planDeFormation')) : null;
 
         $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
-        if ($planDeFormation !== null) $formations = array_filter($formations, function (Formation $formation) use ($planDeFormation) { return $formation->hasPlanDeFormation($planDeFormation); });
+        if ($planDeFormation !== null) $formations = array_filter($formations, function (Formation $formation) use ($planDeFormation) {
+            return $formation->hasPlanDeFormation($planDeFormation);
+        });
 
         if ($source !== null and $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) {
             return $a->getSource() === $source;
@@ -83,7 +85,7 @@ class FormationController extends AbstractActionController
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
         return new ViewModel([
-            'title' => "Action de formation [".$formation->getLibelle()."]",
+            'title' => "Action de formation [" . $formation->getLibelle() . "]",
             'formation' => $formation,
             'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByAction($formation),
         ]);
@@ -92,16 +94,17 @@ class FormationController extends AbstractActionController
     public function ficheAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
-        $sessions = $this->getFormationInstanceService()->getFormationsInstancesOuvertesByFormation($formation);
+        $sessions = $this->getSessionService()->getSessionsOuvertesByFormation($formation);
         $agent = $this->getAgentService()->getAgentByConnectedUser();
 
         return new ViewModel([
-            'title' => "Action de formation [".$formation->getLibelle()."]",
+            'title' => "Action de formation [" . $formation->getLibelle() . "]",
             'formation' => $formation,
             'sessions' => $sessions,
             'agent' => $agent,
         ]);
     }
+
     public function ajouterAction(): ViewModel
     {
         $formation = new Formation();
@@ -154,7 +157,7 @@ class FormationController extends AbstractActionController
             }
         }
 
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
+        $instances = $this->getSessionService()->getSessionsByFormation($formation);
 
         $vm = new ViewModel();
         $vm->setTemplate('formation/formation/modifier');
@@ -348,10 +351,10 @@ class FormationController extends AbstractActionController
                     $this->getFormationElementService()->update($element);
                 }
                 //décalage des instances
-                $instances = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
+                $instances = $this->getSessionService()->getSessionsByFormation($formation);
                 foreach ($instances as $instance) {
                     $instance->setFormation($formationSub);
-                    $this->getFormationInstanceService()->update($instance);
+                    $this->getSessionService()->update($instance);
                 }
 
                 //decalage des applications acquises

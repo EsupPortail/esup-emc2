@@ -5,12 +5,12 @@ namespace Formation\Controller;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
-use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;
+use Formation\Service\Session\SessionService;
 use Formation\Service\Stagiaire\StagiaireService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -33,7 +33,7 @@ class ImportationLagafControllerFactory
          * @var EtatInstanceService $etatInstanceService
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
-         * @var FormationInstanceService $formationInstanceService
+         * @var SessionService $sessionService
          * @var SeanceService $seanceService
          * @var PresenceService $presenceService
          * @var HasFormationCollectionService $hasFormationCollectionService
@@ -43,7 +43,7 @@ class ImportationLagafControllerFactory
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
-        $formationInstanceService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
         $seanceService = $container->get(SeanceService::class);
         $formationInstanceInscritService = $container->get(InscriptionService::class);
         $formationInstanceFraisService = $container->get(InscriptionFraisService::class);
@@ -56,7 +56,7 @@ class ImportationLagafControllerFactory
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFormationService($formationService);
         $controller->setFormationGroupeService($formationGroupeService);
-        $controller->setFormationInstanceService($formationInstanceService);
+        $controller->setSessionService($sessionService);
         $controller->setSeanceService($seanceService);
         $controller->setInscriptionService($formationInstanceInscritService);
         $controller->setInscriptionFraisService($formationInstanceFraisService);

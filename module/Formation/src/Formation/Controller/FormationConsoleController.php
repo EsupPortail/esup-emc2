@@ -6,7 +6,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 use Formation\Provider\Etat\SessionEtats;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
@@ -16,7 +16,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
  */
 class FormationConsoleController extends AbstractActionController
 {
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use ParametreServiceAwareTrait;
 
     /**
@@ -43,14 +43,14 @@ class FormationConsoleController extends AbstractActionController
 
         $now = new DateTime();
         $now->add(new DateInterval('P' . $delai->getValeur() . 'D'));
-        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_FERMEE);
+        $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_INSCRIPTION_FERMEE);
         foreach ($sessions as $session) {
             $debut = DateTime::createFromFormat('d/m/Y', $session->getDebut());
             if ($debut <= $now) {
-                $this->getFormationInstanceService()->envoyerConvocation($session);
+                $this->getSessionService()->envoyerConvocation($session);
                 echo (new DateTime())->format('d/m/y à H:i:s') . "\n";
                 echo "Envoi des convocations effectué pour la session de formation " . $session->getFormation()->getLibelle() . " - " . $session->getId() . "\n";
-                $this->getFormationInstanceService()->envoyerEmargement($session);
+                $this->getSessionService()->envoyerEmargement($session);
                 echo (new DateTime())->format('d/m/y à H:i:s') . "\n";
                 echo "Envoi des émargements effectué pour la session de formation " . $session->getFormation()->getLibelle() . " - " . $session->getId() . "\n";
             }
@@ -72,11 +72,11 @@ class FormationConsoleController extends AbstractActionController
 
         $now = new DateTime();
         $now->add(new DateInterval('P' . $delai->getValeur() . 'D'));
-        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_FORMATION_CONVOCATION);
+        $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_FORMATION_CONVOCATION);
         foreach ($sessions as $session) {
             $fin = DateTime::createFromFormat('d/m/Y', $session->getFin());
             if ($fin <= $now) {
-                $this->getFormationInstanceService()->demanderRetour($session);
+                $this->getSessionService()->demanderRetour($session);
                 echo (new DateTime())->format('d/m/y à H:i:s') . "\n";
                 echo "Envoi des demandes de retour effectué pour la session de formation " . $session->getFormation()->getLibelle() . " - " . $session->getId() . "\n";
             }
@@ -97,11 +97,11 @@ class FormationConsoleController extends AbstractActionController
 
         $now = new DateTime();
         $now->add(new DateInterval('P' . $delai->getValeur() . 'D'));
-        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_ATTENTE_RETOURS);
+        $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_ATTENTE_RETOURS);
         foreach ($sessions as $session) {
             $fin = DateTime::createFromFormat('d/m/Y', $session->getFin());
             if ($fin <= $now) {
-                $this->getFormationInstanceService()->cloturer($session);
+                $this->getSessionService()->cloturer($session);
                 echo (new DateTime())->format('d/m/y à H:i:s') . "\n";
                 echo "Clotûre de la la session de formation " . $session->getFormation()->getLibelle() . " - " . $session->getId() . "\n";
             }

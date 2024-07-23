@@ -12,8 +12,8 @@ use Formation\Form\Session\SessionFormFactory;
 use Formation\Form\Session\SessionHydrator;
 use Formation\Form\Session\SessionHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
-use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
+use Formation\Service\Session\SessionService;
+use Formation\Service\Session\SessionServiceFactory;
 use Formation\View\Helper\FormationInstanceArrayViewHelper;
 use Formation\View\Helper\SessionInformationsViewHelper;
 use Laminas\Router\Http\Literal;
@@ -454,7 +454,7 @@ return [
 
     'service_manager' => [
         'factories' => [
-            FormationInstanceService::class => FormationInstanceServiceFactory::class,
+            SessionService::class => SessionServiceFactory::class,
             SessionAssertion::class => SessionAssertionFactory::class,
         ],
     ],

@@ -1,6 +1,6 @@
 <?php
 
-namespace Formation\Service\FormationInstance;
+namespace Formation\Service\Session;
 
 use Doctrine\ORM\EntityManager;
 use Formation\Service\Abonnement\AbonnementService;
@@ -13,16 +13,16 @@ use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
-class FormationInstanceServiceFactory
+class SessionServiceFactory
 {
 
     /**
      * @param ContainerInterface $container
-     * @return FormationInstanceService
+     * @return SessionService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): FormationInstanceService
+    public function __invoke(ContainerInterface $container): SessionService
     {
         /**
          * @var EntityManager $entityManager
@@ -41,10 +41,7 @@ class FormationInstanceServiceFactory
         $parametreService = $container->get(ParametreService::class);
         $rappelAgentAvantForamtionService = $container->get(RappelAgentAvantFormationService::class);
 
-        /**
-         * @var FormationInstanceService $service
-         */
-        $service = new FormationInstanceService();
+        $service = new SessionService();
         $service->setObjectManager($entityManager);
         $service->setAbonnementService($abonnementService);
         $service->setEtatInstanceService($etatInstanceService);

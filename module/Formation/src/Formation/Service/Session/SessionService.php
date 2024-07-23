@@ -1,6 +1,6 @@
 <?php
 
-namespace Formation\Service\FormationInstance;
+namespace Formation\Service\Session;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use DateInterval;
@@ -12,7 +12,6 @@ use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
-use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
@@ -25,7 +24,7 @@ use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
-class FormationInstanceService
+class SessionService
 {
     use ProvidesObjectManager;
     use EtatTypeServiceAwareTrait;
@@ -137,7 +136,7 @@ class FormationInstanceService
     /** Requetage *****************************************************************************************************/
 
     /**@return FormationInstance[] */
-    public function getFormationsInstances(string $champ = 'id', string $ordre = 'ASC'): array
+    public function getSessions(string $champ = 'id', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('Finstance.' . $champ, $ordre);
@@ -147,7 +146,7 @@ class FormationInstanceService
     }
 
     /** @return FormationInstance[] */
-    public function getFormationsInstancesByFormation(Formation $formation): array
+    public function getSessionsByFormation(Formation $formation): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formation.id = :id')->setParameter('id', $formation->getId());
@@ -156,7 +155,8 @@ class FormationInstanceService
         return $result;
     }
 
-    public function getFormationsInstancesOuvertesByFormation(Formation $formation)
+    /** @return FormationInstance[] */
+    public function getSessionsOuvertesByFormation(Formation $formation): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
@@ -166,31 +166,11 @@ class FormationInstanceService
         return $result;
     }
 
-    public function getFormationsInstancesByFormationAndPlan(Formation $formation, PlanDeFormation $plan): array
-    {
-        $annees = explode("/", $plan->getLibelle());
-        $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annees[0]);
-        $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . $annees[1]);
-
-        $qb = $this->createQueryBuilder()
-            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId());
-
-        $result = $qb->getQuery()->getResult();
-        $trueR = [];
-
-        /** @var FormationInstance $instance */
-        foreach ($result as $instance) {
-            if ($instance->getDebut(true) > $debut and $instance->getFin(true) < $fin) $trueR[] = $instance;
-
-        }
-        return $trueR;
-    }
-
     /**
      * @param string $etatCode
      * @return FormationInstance[]
      */
-    public function getFormationsInstancesByEtat(string $etatCode): array
+    public function getSessionsByEtat(string $etatCode): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etype.code = :code')
@@ -203,7 +183,7 @@ class FormationInstanceService
      * @param int|null $id
      * @return FormationInstance|null
      */
-    public function getFormationInstance(?int $id): ?FormationInstance
+    public function getSession(?int $id): ?FormationInstance
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.id = :id')
@@ -212,7 +192,7 @@ class FormationInstanceService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstance partagent le même id [" . $id . "]", 0, $e);
+            throw new RuntimeException("Plusieurs [".FormationInstance::class."] partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -222,10 +202,10 @@ class FormationInstanceService
      * @param string $param
      * @return FormationInstance|null
      */
-    public function getRequestedFormationInstance(AbstractActionController $controller, string $param = 'formation-instance'): ?FormationInstance
+    public function getRequestedSession(AbstractActionController $controller, string $param = 'formation-instance'): ?FormationInstance
     {
         $id = $controller->params()->fromRoute($param);
-        $result = $this->getFormationInstance($id);
+        $result = $this->getSession($id);
 
         return $result;
     }
@@ -234,7 +214,7 @@ class FormationInstanceService
     public function getSessionsByGestionnaires(UserInterface $gestionnaire): array
     {
         $qb = $this->createQueryBuilder();
-        $qb = FormationInstanceService::decorateWithGestionnairesId($qb, [$gestionnaire->getId()]);
+        $qb = SessionService::decorateWithGestionnairesId($qb, [$gestionnaire->getId()]);
         $qb = $qb->andWhere('Finstance.histoDestruction IS NULL');
         /** @var FormationInstance[] $sessions */
         $sessions = $qb->getQuery()->getResult();
@@ -252,14 +232,15 @@ class FormationInstanceService
         $qb = $this->createQueryBuilder();
         $qb = $qb->leftJoin('Finstance.gestionnaires', 'gestionnaire')
             ->andWhere('gestionnaire.id IS NULL')
-            ->andWhere('Finstance.histoDestruction IS NULL')
-        ;
+            ->andWhere('Finstance.histoDestruction IS NULL');
         // retrait des états finaux
         $qb = $qb->andWhere('etype.code not in (:etatsfinaux)')->setParameter('etatsfinaux', SessionEtats::ETATS_FINAUX);
         /** @var FormationInstance[] $sessions */
         $sessions = $qb->getQuery()->getResult();
 
-        $sessions = array_filter($sessions, function (FormationInstance $session) { return $session->getEtatActif()->getType() !== SessionEtats::ETAT_CLOTURE_INSTANCE;});
+        $sessions = array_filter($sessions, function (FormationInstance $session) {
+            return $session->getEtatActif()->getType() !== SessionEtats::ETAT_CLOTURE_INSTANCE;
+        });
         return $sessions;
     }
 
@@ -271,7 +252,7 @@ class FormationInstanceService
         if (isset($params['gestionnaires']) and $params['gestionnaires'] != '') {
             /** TODO :: REMOVE THIS */
             $gestionnaires = [$params['gestionnaires']];
-            $qb = FormationInstanceService::decorateWithGestionnairesId($qb, $gestionnaires);
+            $qb = SessionService::decorateWithGestionnairesId($qb, $gestionnaires);
         }
         if (isset($params['etats']) and $params['etats'] != '') {
             /** TODO :: REMOVE THIS */
@@ -281,7 +262,7 @@ class FormationInstanceService
         if (isset($params['themes']) and $params['themes'] != '') {
             /** TODO :: REMOVE THIS */
             $themes = [$params['themes']];
-            $qb = FormationInstanceService::decorateWithGroupeId($qb, $themes);
+            $qb = SessionService::decorateWithGroupeId($qb, $themes);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -290,7 +271,7 @@ class FormationInstanceService
 
     /** FACADE  *******************************************************************************************************/
 
-    public function createNouvelleInstance(Formation $formation): FormationInstance
+    public function createSession(Formation $formation): FormationInstance
     {
         $instance = new FormationInstance();
         $instance->setType(FormationInstance::TYPE_INTERNE);
@@ -520,7 +501,7 @@ class FormationInstanceService
      * @return FormationInstance[]
      * @attention se base sur l'etat !
      */
-    public function getFormationInstanceEnCours(): array
+    public function getSessionsEnCours(): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etat IS NOT NULL')
@@ -533,7 +514,7 @@ class FormationInstanceService
     }
 
     /** !! TODO !! NAZE FAIRE MIEUX */
-    public function getNouvelleInstance()
+    public function getNouvellesSessions()
     {
         $date = (new DateTime())->sub(new DateInterval('P1W'));
 
@@ -548,7 +529,7 @@ class FormationInstanceService
     /**
      * @return FormationInstance[]
      */
-    public function getSessionByTerm(mixed $term): array
+    public function getSessionsByTerm(mixed $term): array
     {
         $qb = $this->createQueryBuilder();
         $qb = $qb->andWhere("LOWER(formation.libelle) like :search")

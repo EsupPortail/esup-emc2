@@ -11,9 +11,9 @@ use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use JetBrains\PhpStorm\NoReturn;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -27,7 +27,7 @@ use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 class FormationInstanceDocumentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use MacroServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -76,7 +76,7 @@ class FormationInstanceDocumentController extends AbstractActionController
 
     #[NoReturn] public function exportTousEmargementsAction(): void
     {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $instance = $this->getSessionService()->getRequestedSession($this);
         $journees = $instance->getSeances();
         $journees = array_filter($journees, function (Seance $a) {
             return $a->estNonHistorise();

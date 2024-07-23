@@ -4,8 +4,8 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\Seance;
 use Formation\Form\Seance\SeanceFormAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -13,19 +13,19 @@ use Laminas\View\Model\ViewModel;
 
 class SeanceController extends AbstractActionController
 {
-    use FormationInstanceServiceAwareTrait;
     use SeanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use SeanceFormAwareTrait;
 
     public function ajouterJourneeAction(): ViewModel
     {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $session = $this->getSessionService()->getRequestedSession($this);
 
         $journee = new Seance();
-        $journee->setInstance($instance);
+        $journee->setInstance($session);
 
         $form = $this->getSeanceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['formation-instance' => $session->getId()], [], true));
         $form->bind($journee);
 
         $request = $this->getRequest();

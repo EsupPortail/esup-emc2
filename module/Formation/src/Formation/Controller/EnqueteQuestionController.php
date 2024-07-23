@@ -14,7 +14,6 @@ use Formation\Form\EnqueteReponse\EnqueteReponseFormAwareTrait;
 use Formation\Service\EnqueteCategorie\EnqueteCategorieServiceAwareTrait;
 use Formation\Service\EnqueteQuestion\EnqueteQuestionServiceAwareTrait;
 use Formation\Service\EnqueteReponse\EnqueteReponseServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -26,7 +25,6 @@ class EnqueteQuestionController extends AbstractActionController
     use EnqueteCategorieServiceAwareTrait;
     use EnqueteQuestionServiceAwareTrait;
     use EnqueteReponseServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
     use EnqueteCategorieFormAwareTrait;
     use EnqueteQuestionFormAwareTrait;
     use EnqueteReponseFormAwareTrait;
@@ -319,7 +317,7 @@ class EnqueteQuestionController extends AbstractActionController
         foreach ($reponses as $reponse) $dictionnaireReponse[$reponse->getQuestion()->getId()] = $reponse;
         $enquete = new ArrayCollection();
         foreach ($dictionnaireQuestion as $id => $question) {
-            if (! isset($dictionnaireReponse[$id])) {
+            if (!isset($dictionnaireReponse[$id])) {
                 $reponse = new EnqueteReponse();
                 $reponse->setInscription($inscription);
                 $reponse->setQuestion($question);

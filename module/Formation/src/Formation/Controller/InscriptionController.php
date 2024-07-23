@@ -18,10 +18,10 @@ use Formation\Form\Justification\JustificationFormAwareTrait;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Source\Sources;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Form\Element\Select;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -39,7 +39,7 @@ class InscriptionController extends AbstractActionController
     use InscriptionFormAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use FichierServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -63,7 +63,7 @@ class InscriptionController extends AbstractActionController
 
     public function ajouterAction(): ViewModel
     {
-        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+        $session = $this->getSessionService()->getRequestedSession($this, 'session');
 
         $inscription = new Inscription();
         if ($session) $inscription->setSession($session);
@@ -84,7 +84,7 @@ class InscriptionController extends AbstractActionController
                     $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
                     $this->getInscriptionService()->update($inscription);
 
-                    $this->getFormationInstanceService()->classerInscription($inscription);
+                    $this->getSessionService()->classerInscription($inscription);
                 }
             }
             exit();
@@ -272,7 +272,7 @@ class InscriptionController extends AbstractActionController
             if ($form->isValid()) {
                 $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
                 $this->getInscriptionService()->update($inscription);
-                $this->getFormationInstanceService()->classerInscription($inscription);
+                $this->getSessionService()->classerInscription($inscription);
                 $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
                 $this->getNotificationService()->triggerDrhValidation($inscription);
                 if ($inscription->getListe() === Inscription::PRINCIPALE
@@ -378,7 +378,7 @@ class InscriptionController extends AbstractActionController
     {
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
-        $this->getFormationInstanceService()->classerInscription($inscription);
+        $this->getSessionService()->classerInscription($inscription);
 
         switch ($inscription->getListe()) {
             case Inscription::PRINCIPALE :
@@ -516,7 +516,7 @@ class InscriptionController extends AbstractActionController
 
     public function inscriptionAction(): ViewModel
     {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $instance = $this->getSessionService()->getRequestedSession($this);
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $inscription = new Inscription();
@@ -600,7 +600,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $mail = $this->getFormationInstanceService()->envoyerConvocation($session, $inscription);
+        $mail = $this->getSessionService()->envoyerConvocation($session, $inscription);
 
         $vm = new ViewModel([
             'title' => "Envoi de la convocation",
@@ -615,7 +615,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $mail = $this->getFormationInstanceService()->envoyerAttestation($session, $inscription);
+        $mail = $this->getSessionService()->envoyerAttestation($session, $inscription);
 
         $vm = new ViewModel([
             'title' => "Envoi de l'attestation",
@@ -630,7 +630,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $mail = $this->getFormationInstanceService()->envoyerAbsence($session, $inscription);
+        $mail = $this->getSessionService()->envoyerAbsence($session, $inscription);
 
         $vm = new ViewModel([
             'title' => "Envoi du constat d'absence",

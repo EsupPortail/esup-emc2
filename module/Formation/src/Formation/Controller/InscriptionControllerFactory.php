@@ -9,17 +9,18 @@ use Fichier\Service\Nature\NatureService;
 use Formation\Form\Inscription\InscriptionForm;
 use Formation\Form\InscriptionFrais\InscriptionFraisForm;
 use Formation\Form\Justification\JustificationForm;
-use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\Notification\NotificationService;
+use Formation\Service\Session\SessionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class InscriptionControllerFactory {
+class InscriptionControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -33,7 +34,7 @@ class InscriptionControllerFactory {
          * @var AgentService $agentService
          * @var EtatInstanceService $etatInstanceService
          * @var FichierService $fichierService
-         * @var FormationInstanceService $formationInstanceService
+         * @var SessionService $sessionService
          * @var InscriptionService $inscriptionService
          * @var NatureService $natureService
          * @var NotificationService $notificationService
@@ -42,7 +43,7 @@ class InscriptionControllerFactory {
         $agentService = $container->get(AgentService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $fichierService = $container->get(FichierService::class);
-        $formationInstanceService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
         $inscriptionService = $container->get(InscriptionService::class);
         $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -65,7 +66,7 @@ class InscriptionControllerFactory {
         $controller->setAgentService($agentService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFichierService($fichierService);
-        $controller->setFormationInstanceService($formationInstanceService);
+        $controller->setSessionService($sessionService);
         $controller->setInscriptionService($inscriptionService);
         $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);

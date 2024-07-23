@@ -3,16 +3,16 @@
 namespace Formation\Controller;
 
 use Formation\Entity\Db\Presence;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
 class PresenceController extends AbstractActionController
 {
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use PresenceServiceAwareTrait;
     use SeanceServiceAwareTrait;
@@ -20,7 +20,7 @@ class PresenceController extends AbstractActionController
 
     public function renseignerPresencesAction(): ViewModel
     {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $instance = $this->getSessionService()->getRequestedSession($this);
         $presences = $this->getPresenceService()->getPresenceByInstance($instance);
 
         $dictionnaire = [];
@@ -97,7 +97,7 @@ class PresenceController extends AbstractActionController
     public function toggleToutesPresencesAction(): ViewModel
     {
         $mode = $this->params()->fromRoute('mode');
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $instance = $this->getSessionService()->getRequestedSession($this);
 
         foreach ($instance->getInscriptions() as $inscription) {
             $journees = $instance->getSeances();

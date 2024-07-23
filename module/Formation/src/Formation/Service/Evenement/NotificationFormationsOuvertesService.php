@@ -6,15 +6,15 @@ use DateTime;
 use Exception;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Event\EvenementProvider;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class NotificationFormationsOuvertesService extends EvenementService
 {
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use NotificationServiceAwareTrait;
 
     /**
@@ -44,9 +44,9 @@ class NotificationFormationsOuvertesService extends EvenementService
 //        $parametres = json_decode($evenement->getParametres(), true);
 
         try {
-            /** @var FormationInstance[] $instances */
-            $instances = $this->getFormationInstanceService()->getNouvelleInstance();
-            $this->getNotificationService()->triggerNotificationFormationsOuvertes($instances);
+            /** @var FormationInstance[] $sessions */
+            $sessions = $this->getSessionService()->getNouvellesSessions();
+            $this->getNotificationService()->triggerNotificationFormationsOuvertes($sessions);
         } catch(Exception $e) {
             $evenement->setLog($e->getMessage());
             return Etat::ECHEC;
