@@ -347,7 +347,13 @@ class Formation implements HistoriqueAwareInterface,
         return null;
     }
 
-
+    public function isPlanActif(): bool
+    {
+        foreach ($this->getPlans() as $plan) {
+            if ($plan->isActif()) return true;
+        }
+        return false;
+    }
     /** GESTION DES DOMAINES *************************************************************************/
 
     /**
@@ -409,7 +415,5 @@ class Formation implements HistoriqueAwareInterface,
         $text .= $this->getComplement();
         return $text;
     }
-
-
 
 }

@@ -81,13 +81,11 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
 <!-- SESSIONS LIEES FORMATION ----------------------------------------------------------------------------------------->
 
 <div class="row">
-    <div class="col-sm-6 col-md-8">
+    <div class="col-md-4">
         <h2>
             Sessions de formation
             <span class="badge"><?php echo count($instances); ?></span>
         </h2>
-    </div>
-    <div class="pull-right">
         <?php if ($canAjouterInstance) : ?>
             <?php /** @see FormationInstanceController::ajouterAction() */ ?>
             <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
@@ -97,8 +95,28 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
                 Ajouter une session
             </a>
         <?php endif; ?>
-        <br/>
-        <br/>
+    </div>
+    <div class="col-md-8">
+        <?php if ($formation->isPlanActif()) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-information"></span>
+                    Cette action de formation est présente dans un plan de formation actif.
+                </strong>
+                <br>
+                Cette action est affichée aux plans de formations courants.
+            </div>
+        <?php else : ?>
+            <div class="alert alert-warning">
+                <strong>
+                    <span class="icon icon-attention"></span>
+                    Cette action de formation n'est pas présente dans un plan de formation actif.
+                </strong>
+                <br>
+                Par conséquent, elle n'est pas listée sur le plan de formation présenté aux agent·es.
+            </div>
+
+        <?php endif; ?>
     </div>
 </div>
 

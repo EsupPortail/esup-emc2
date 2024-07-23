@@ -7,20 +7,22 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
+use UnicaenObservation\Entity\Interface\HasObservationsInterface;
+use UnicaenObservation\Entity\Trait\HasObservationsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, HasEtatsInterface, HasValidationsInterface
+class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, HasEtatsInterface, HasValidationsInterface, HasObservationsInterface
 {
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
     use HasValidationsTrait;
+    use HasObservationsTrait;
 
     public function getResourceId(): string
     {
@@ -60,6 +62,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         $this->devis = new ArrayCollection();
         $this->gestionnaires = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+        $this->observations = new ArrayCollection();
 
     }
 
@@ -350,16 +353,16 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     {
         $text = "<dl class='row'>";
         if ($this->getOrganisme()) {
-            $text.= "<dt class='col-md-4'>Organisme</dt><dd>".$this->getOrganisme()."</dd>";
+            $text .= "<dt class='col-md-4'>Organisme</dt><dd>" . $this->getOrganisme() . "</dd>";
         }
         if ($this->getContact()) {
-            $text.= "<dt class='col-md-4'>Contact</dt><dd>".$this->getContact()."</dd>";
+            $text .= "<dt class='col-md-4'>Contact</dt><dd>" . $this->getContact() . "</dd>";
         }
         if ($this->getLieu()) {
-            $text.= "<dt class='col-md-4'>Lieu</dt><dd>".$this->getLieu()."</dd>";
+            $text .= "<dt class='col-md-4'>Lieu</dt><dd>" . $this->getLieu() . "</dd>";
         }
         if ($this->getMontant()) {
-            $text.= "<dt class='col-md-4'>Montant</dt><dd>".$this->getMontant()."</dd>";
+            $text .= "<dt class='col-md-4'>Montant</dt><dd>" . $this->getMontant() . "</dd>";
         }
         $text .= "</dl>";
         return $text;

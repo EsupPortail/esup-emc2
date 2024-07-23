@@ -74,6 +74,12 @@ class PlanDeFormation implements HistoriqueAwareInterface {
         $this->dateFin = $dateFin;
     }
 
+    public function isActif(?DateTime $date = null): bool
+    {
+        if ($date === null) $date = new DateTime();
+        return $date > $this->getDateDebut() && $date < $this->getDateFin();
+    }
+
     /** @return Formation[] */
     public function getFormations(): array
     {

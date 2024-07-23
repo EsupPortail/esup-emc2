@@ -10,12 +10,21 @@ use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Metier\Entity\Db\Reference;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Metier\Service\Reference\ReferenceServiceAwareTrait;
+use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
 class MetierService {
     use EntityManagerAwareTrait;
+    use DomaineServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
+    use ReferenceServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
 
     /** GESTIONS DES ENTITES ******************************************************************************************/
 
@@ -317,6 +326,35 @@ EOS;
                 throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
             }
             return $tmp;
+    }
+
+    public function createWith(string $libelle, string $referentielCode, string $metierCode, string $domaineLibelle, string $familleLibelle): ?Metier
+    {
+        $domaine = $this->getDomaineService()->getDomaineByLibelle($domaineLibelle);
+        if ($domaine === null) { $domaine = $this->getDomaineService()->createWith($domaineLibelle); }
+        $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($familleLibelle);
+        if ($famille === null) { $famille = $this->getFamilleProfessionnelleService()->createWith($familleLibelle); }
+        $referentiel = $this->getReferentielService()->getReferentielByCode($referentielCode);
+
+        // metier
+        $metier = new Metier();
+        $metier->setLibelle($libelle);
+        $this->create($metier);
+
+        //reference
+        $reference = new Reference();
+        $reference->setCode($metierCode);
+        $reference->setReferentiel($referentiel);
+        $reference->setMetier($metier);
+        $this->getReferenceService()->create($reference);
+
+        // domaine et autre
+        $metier->addDomaine($domaine);
+        $domaine->addFamille($famille);
+        $this->getDomaineService()->update($domaine);
+        $this->update($metier);
+
+        return $metier;
     }
 
 

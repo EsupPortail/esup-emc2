@@ -8,8 +8,6 @@ use Formation\Form\Lieu\LieuForm;
 use Formation\Form\Lieu\LieuFormFactory;
 use Formation\Form\Lieu\LieuHydrator;
 use Formation\Form\Lieu\LieuHydratorFactory;
-use Formation\Form\SelectionLieu\SelectionLieuForm;
-use Formation\Form\SelectionLieu\SelectionLieuFormFactory;
 use Formation\Provider\Privilege\FormationlieuPrivileges;
 use Formation\Service\Lieu\LieuService;
 use Formation\Service\Lieu\LieuServiceFactory;
