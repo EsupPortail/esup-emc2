@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
@@ -29,6 +30,7 @@ use Laminas\View\Model\ViewModel;
 class FormationController extends AbstractActionController
 {
     use ActionCoutPrevisionnelServiceAwareTrait;
+    use AgentServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationElementServiceAwareTrait;
     use FormationServiceAwareTrait;
@@ -90,10 +92,14 @@ class FormationController extends AbstractActionController
     public function ficheAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
+        $sessions = $this->getFormationInstanceService()->getFormationsInstancesOuvertesByFormation($formation);
+        $agent = $this->getAgentService()->getAgentByConnectedUser();
 
         return new ViewModel([
             'title' => "Action de formation [".$formation->getLibelle()."]",
             'formation' => $formation,
+            'sessions' => $sessions,
+            'agent' => $agent,
         ]);
     }
     public function ajouterAction(): ViewModel

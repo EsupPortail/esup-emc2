@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Application\Service\Agent\AgentService;
 use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Form\CompetenceElement\CompetenceElementForm;
 use Element\Service\ApplicationElement\ApplicationElementService;
@@ -31,6 +32,7 @@ class FormationControllerFactory
     {
         /**
          * @var ActionCoutPrevisionnelService $actionCoutPrevisionnelService
+         * @var AgentService $agentService
          * @var FormationService $formationService
          * @var FormationElementService $formationElementService
          * @var FormationGroupeService $formationGroupeService
@@ -38,6 +40,7 @@ class FormationControllerFactory
          * @var PlanDeFormationService $planDeFormationService
          */
         $actionCoutPrevisionnelService = $container->get(ActionCoutPrevisionnelService::class);
+        $agentService = $container->get(AgentService::class);
         $formationService = $container->get(FormationService::class);
         $formationElementService = $container->get(FormationElementService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
@@ -64,6 +67,7 @@ class FormationControllerFactory
 
         $controller = new FormationController();
         $controller->setActionCoutPrevisionnelService($actionCoutPrevisionnelService);
+        $controller->setAgentService($agentService);
         $controller->setFormationService($formationService);
         $controller->setFormationElementService($formationElementService);
         $controller->setFormationGroupeService($formationGroupeService);

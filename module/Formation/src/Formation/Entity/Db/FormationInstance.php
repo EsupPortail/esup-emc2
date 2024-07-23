@@ -277,7 +277,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** SÉANCES *******************************************************************************************************/
 
     /**
-     * @return array|null
+     * @return Seance[]|null
      */
     public function getSeances(): ?array
     {
