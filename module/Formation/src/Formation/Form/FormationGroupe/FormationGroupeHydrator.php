@@ -16,7 +16,7 @@ class FormationGroupeHydrator implements HydratorInterface
         $data = [
             'libelle' => ($object->getLibelle()) ?: null,
             'axe' => ($object->getAxe()) ?$object->getAxe()->getId(): null,
-            'HasDescription' => ['description' => $object->getDescription()],
+            'description' => $object->getDescription(),
             'ordre' => ($object->getOrdre() !== null) ? $object->getOrdre(): null,
         ];
         return $data;
@@ -25,7 +25,7 @@ class FormationGroupeHydrator implements HydratorInterface
     public function hydrate(array $data, $object) : object
     {
         $libelle = (isset($data['libelle']) and trim($data['libelle']) !== '') ? trim($data['libelle']) : null;
-        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
+        $description = (isset($data['description']) && trim($data['description']) != '')?trim($data['description']):null;
         $ordre = (isset($data['ordre'])) ? $data['ordre'] : null;
         $axe = (isset($data['axe']) and trim($data['axe']) !== '') ? $this->getAxeService()->getAxe($data['axe']) : null;
 

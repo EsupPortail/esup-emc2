@@ -75,7 +75,7 @@ class FormationGroupeController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Ajouter un thème de formation',
             'form' => $form,
@@ -101,7 +101,7 @@ class FormationGroupeController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Modifier un thème de formation',
             'form' => $form,

@@ -44,7 +44,6 @@ $this->headTitle("Thèmes de formation");
         <th> Axe </th>
         <th> Ordre </th>
         <th style="width: 10rem;"> #Formation </th>
-        <th style="width: 14rem;"> Source </th>
         <th style="width: 9rem;">  Action </th>
     </tr>
     </thead>
@@ -83,12 +82,6 @@ $this->headTitle("Thèmes de formation");
             </td>
             <td> <!-- NB FORMATION -->
                 <?php echo count($groupe->getFormations()); ?>
-            </td>
-            <td> <!-- SOURCE -->
-                <span class="badge source <?php echo $groupe->getSource(); ?>" id="<?php echo $groupe->getSource(); ?>">
-                    <?php echo $groupe->getSource(); ?>
-                    <?php echo $groupe->getIdSource(); ?>
-                </span>
             </td>
             <td class="action"> <!-- ACTION -->
                 <?php if ($canAfficher) : ?>
@@ -138,8 +131,10 @@ $this->headTitle("Thèmes de formation");
                         href="<?php  echo $this->url('formation-groupe/detruire', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-unchecked text-danger" title="Supprimer définitivement le thème"></span>
-                        Supprimer
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked " title="Supprimer définitivement le thème"></span>
+                            Supprimer
+                        </span>
                     </a>
                 <?php endif; ?>
             </td>

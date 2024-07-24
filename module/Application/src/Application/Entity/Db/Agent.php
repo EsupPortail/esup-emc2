@@ -2,7 +2,6 @@
 
 namespace Application\Entity\Db;
 
-use Carriere\Entity\Db\EmploiType;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\Collection;
