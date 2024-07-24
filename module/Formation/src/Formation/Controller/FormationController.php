@@ -13,10 +13,12 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Http\Request;
@@ -25,17 +27,24 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use UnicaenEnquete\Service\Enquete\EnqueteServiceAwareTrait;
+use UnicaenEnquete\Service\Resultat\ResultatServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 class FormationController extends AbstractActionController
 {
     use ActionCoutPrevisionnelServiceAwareTrait;
     use AgentServiceAwareTrait;
-    use SessionServiceAwareTrait;
+    use EnqueteServiceAwareTrait;
     use FormationElementServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use PlanDeFormationServiceAwareTrait;
+    use ResultatServiceAwareTrait;
+    use SessionServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
     use ApplicationElementServiceAwareTrait;
@@ -429,4 +438,23 @@ class FormationController extends AbstractActionController
         return $this->redirect()->toRoute('formation/editer', ['formation' => $formation->getId()], [], true);
     }
 
+    public function resultatEnqueteAction(): ViewModel
+    {
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+
+        $code_enquete = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::CODE_ENQUETE);
+        $enquete = $this->getEnqueteService()->getEnqueteByCode($code_enquete);
+
+        $inscriptions = $this->getInscriptionService()->getInscriptionsByFormation($formation);
+        [$counts, $results] = $this->getResultatService()->generateResultatArray($enquete, $inscriptions);
+
+        $vm = new ViewModel([
+            'enquete' => $enquete,
+            'results' => $results,
+            'counts' => $counts,
+            'elements' => $inscriptions,
+        ]);
+        $vm->setTemplate('unicaen-enquete/resultat/resultats');
+        return $vm;
+    }
 }

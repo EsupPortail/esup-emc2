@@ -28,7 +28,7 @@ $estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats:
 $canInformation = (!$estAnnulee and $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
 $canAfficherMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
 $canReEnvoyerMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
-$canAfficherEnquete = $this->isAllowed(FormationenquetePrivileges::getResourceId(FormationenquetePrivileges::ENQUETE_RESULTAT));
+$canAfficherEnquete = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER_INSCRIPTION));
 
 $canAnnuler = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
 $canEmargement = (
@@ -252,7 +252,8 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($canAfficherEnquete) : ?>
-                        <a href="<?php echo $this->url('formation/enquete/resultat', ['session' => $instance->getId()], [], true); ?>"
+                        <?php /** @see \Formation\Controller\SessionController::resultatEnqueteAction() */ ?>
+                        <a href="<?php echo $this->url('formation/session/resultat-enquete', ['session' => $instance->getId()], [], true); ?>"
                            class="btn btn-secondary">
                             <span class="icon icon-diagramme"></span>
                             Afficher le résultat de l'enquête

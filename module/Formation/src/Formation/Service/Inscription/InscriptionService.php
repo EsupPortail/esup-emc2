@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\StagiaireExterne;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
@@ -62,7 +63,8 @@ class InscriptionService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Inscription::class)->createQueryBuilder('inscription')
-            ->leftJoin('inscription.session', 'session')->addSelect('session')
+            ->join('inscription.session', 'session')->addSelect('session')
+            ->join('session.formation', 'formation')->addSelect('formation')
             ->leftJoin('inscription.agent', 'agent')->addSelect('agent')
             ->leftJoin('inscription.stagiaire', 'stagiaire')->addSelect('stagiaire');
         return $qb;
@@ -287,6 +289,28 @@ class InscriptionService
         if (!$withHisto) $qb = $qb->andWhere('inscription.histoDestruction IS NULL');
 
 
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return Inscription[] */
+    public function getInscriptionsByFormation(?Formation $formation): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('session.formation = :formation')->setParameter('formation', $formation)
+            ->andWhere('inscription.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return Inscription[] */
+    public function getInscriptionsBySession(?Session $session): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscription.session = :session')->setParameter('session', $session)
+            ->andWhere('inscription.histoDestruction IS NULL')
+        ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }

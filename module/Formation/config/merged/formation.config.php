@@ -130,6 +130,15 @@ return [
                         FormationRoles::GESTIONNAIRE_FORMATION,
                     ],
                 ],
+                [
+                    'controller' => FormationController::class,
+                    'action' => [
+                        'resultat-enquete',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_MODIFIER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -353,6 +362,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action' => 'rechercher-formateur',
+                            ],
+                        ],
+                    ],
+                    'resultat-enquete' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/resultat-enquete/:formation',
+                            'defaults' => [
+                                /** @see FormationController::resultatEnqueteAction() */
+                                'action' => 'resultat-enquete',
                             ],
                         ],
                     ],

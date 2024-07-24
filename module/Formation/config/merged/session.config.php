@@ -112,7 +112,8 @@ return [
                 [
                     'controller' => SessionController::class,
                     'action' => [
-                        'exporter-inscription'
+                        'exporter-inscription',
+                        'resultat-enquete',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER_INSCRIPTION,
@@ -212,6 +213,17 @@ return [
                         ],
                         'may_terminate' => false,
                         'child_routes' => [
+                            'resultat-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/resultat-enquete/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::resultatEnqueteAction() */
+                                        'controller' => SessionController::class,
+                                        'action' => 'resultat-enquete',
+                                    ],
+                                ],
+                            ],
                             'ajouter-formateur' => [
                                 'type' => Segment::class,
                                 'options' => [

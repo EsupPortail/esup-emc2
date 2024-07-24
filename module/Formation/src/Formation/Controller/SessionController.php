@@ -8,10 +8,12 @@ use Formation\Form\SelectionFormateur\SelectionFormateurFormAwareTrait;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormAwareTrait;
 use Formation\Form\Session\SessionFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
@@ -23,6 +25,8 @@ use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenEnquete\Service\Enquete\EnqueteServiceAwareTrait;
+use UnicaenEnquete\Service\Resultat\ResultatServiceAwareTrait;
 use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -32,17 +36,20 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 /** @method FlashMessenger flashMessenger() */
 class SessionController extends AbstractActionController
 {
+    use EnqueteServiceAwareTrait;
     use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FormateurServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use SessionServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
     use InscriptionFraisServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use PresenceServiceAwareTrait;
+    use ResultatServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use SelectionFormateurFormAwareTrait;
@@ -397,6 +404,26 @@ class SessionController extends AbstractActionController
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
             'instance' => $instance,
         ]);
+    }
+
+    public function resultatEnqueteAction(): ViewModel
+    {
+        $session = $this->getSessionService()->getRequestedSession($this, 'session');
+
+        $code_enquete = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::CODE_ENQUETE);
+        $enquete = $this->getEnqueteService()->getEnqueteByCode($code_enquete);
+
+        $inscriptions = $this->getInscriptionService()->getInscriptionsBySession($session);
+        [$counts, $results] = $this->getResultatService()->generateResultatArray($enquete, $inscriptions);
+
+        $vm = new ViewModel([
+            'enquete' => $enquete,
+            'results' => $results,
+            'counts' => $counts,
+            'elements' => $inscriptions,
+        ]);
+        $vm->setTemplate('unicaen-enquete/resultat/resultats');
+        return $vm;
     }
 
     public function rechercherAction(): JsonModel

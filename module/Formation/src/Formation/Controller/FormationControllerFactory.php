@@ -13,11 +13,15 @@ use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
+use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\PlanDeFormation\PlanDeFormationService;
 use Formation\Service\Session\SessionService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEnquete\Service\Enquete\EnqueteService;
+use UnicaenEnquete\Service\Resultat\ResultatService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class FormationControllerFactory
 {
@@ -33,19 +37,27 @@ class FormationControllerFactory
         /**
          * @var ActionCoutPrevisionnelService $actionCoutPrevisionnelService
          * @var AgentService $agentService
+         * @var EnqueteService $enqueteService
          * @var FormationService $formationService
          * @var FormationElementService $formationElementService
          * @var FormationGroupeService $formationGroupeService
-         * @var SessionService $sessionService
+         * @var InscriptionService $inscriptionService
+         * @var ParametreService $parametreService
          * @var PlanDeFormationService $planDeFormationService
+         * @var ResultatService $resultatService
+         * @var SessionService $sessionService
          */
         $actionCoutPrevisionnelService = $container->get(ActionCoutPrevisionnelService::class);
         $agentService = $container->get(AgentService::class);
+        $enqueteService = $container->get(EnqueteService::class);
         $formationService = $container->get(FormationService::class);
         $formationElementService = $container->get(FormationElementService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
-        $sessionService = $container->get(SessionService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
+        $parametreService = $container->get(ParametreService::class);
         $planDeFormationService = $container->get(PlanDeFormationService::class);
+        $resultatService = $container->get(ResultatService::class);
+        $sessionService = $container->get(SessionService::class);
 
         /**
          * @var FormationForm $formationForm
@@ -68,13 +80,17 @@ class FormationControllerFactory
         $controller = new FormationController();
         $controller->setActionCoutPrevisionnelService($actionCoutPrevisionnelService);
         $controller->setAgentService($agentService);
+        $controller->setEnqueteService($enqueteService);
         $controller->setFormationService($formationService);
         $controller->setFormationElementService($formationElementService);
         $controller->setFormationGroupeService($formationGroupeService);
-        $controller->setSessionService($sessionService);
         $controller->setFormationForm($formationForm);
+        $controller->setInscriptionService($inscriptionService);
+        $controller->setParametreService($parametreService);
         $controller->setPlanDeFormationService($planDeFormationService);
+        $controller->setResultatService($resultatService);
         $controller->setSelectionFormationForm($selectionFormationForm);
+        $controller->setSessionService($sessionService);
 
         $controller->setApplicationElementService($applicationElementService);
         $controller->setApplicationElementForm($applicationElementForm);

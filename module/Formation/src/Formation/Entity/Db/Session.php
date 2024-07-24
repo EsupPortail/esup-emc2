@@ -660,8 +660,12 @@ class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsI
                 $text .= "<td>" . $seance->getFin() . "</td>";
                 $text .= "<td>";
                 if ($seance->getType() === Seance::TYPE_SEANCE) {
-                    $text .= $seance->getLieu()->getLibelle() . " - " . $seance->getLieu()->getBatiment() . " / ";
-                    $text .= $seance->getLieu()->getCampus() . " - " . $seance->getLieu()->getVille();
+                    if ($seance->getLieu() !== null) {
+                        $text .= $seance->getLieu()->getLibelle() . " - " . $seance->getLieu()->getBatiment() . " / ";
+                        $text .= $seance->getLieu()->getCampus() . " - " . $seance->getLieu()->getVille();
+                    } else {
+                        $text .= "Lieu non renseigné";
+                    }
                 }
                 if ($seance->getType() === Seance::TYPE_VOLUME) {
                     $text .= $seance->getLien();
