@@ -421,6 +421,11 @@ class SessionController extends AbstractActionController
             'results' => $results,
             'counts' => $counts,
             'elements' => $inscriptions,
+
+            'retourLibelle' => "Accéder à la session de formation",
+            'retourIcone' => "icon icon-retour",
+            /** @see SessionController::afficherAction() */
+            'retourUrl' => $this->url()->fromRoute('formation-instance/afficher', ['formation-instance' => $session->getId()] ,[], true),
         ]);
         $vm->setTemplate('unicaen-enquete/resultat/resultats');
         return $vm;

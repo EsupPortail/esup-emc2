@@ -453,6 +453,10 @@ class FormationController extends AbstractActionController
             'results' => $results,
             'counts' => $counts,
             'elements' => $inscriptions,
+            'retourIcone' => "icon icon-retour",
+            'retourLibelle' => "Accéder à l'action de formation",
+            /** @see FormationController::editerAction() */
+            'retourUrl' => $this->url()->fromRoute('formation/editer', ['formation' => $formation->getId()] ,[], true),
         ]);
         $vm->setTemplate('unicaen-enquete/resultat/resultats');
         return $vm;
