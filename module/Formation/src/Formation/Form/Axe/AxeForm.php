@@ -2,17 +2,16 @@
 
 namespace Formation\Form\Axe;
 
-use Application\Form\HasDescription\HasDescriptionFieldset;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Color;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
 class AxeForm extends Form
 {
-
     public function init(): void
     {
         //libelle
@@ -20,7 +19,8 @@ class AxeForm extends Form
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle* :",
+                'label' => "Libelle <span class='icon icon-obligatoire' title='champ Obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -28,10 +28,15 @@ class AxeForm extends Form
         ]);
         //description
         $this->add([
-            'name' => 'HasDescription',
-            'type' => HasDescriptionFieldset::class,
+            'name' => 'description',
+            'type' => Textarea::class,
+            'options' => [
+                'label' => "Description :",
+                'label_options' => [ 'disable_html_escape' => true,],
+            ],
             'attributes' => [
                 'id' => 'description',
+                'class' => 'tinymce',
             ],
         ]);
         //ordre
@@ -40,6 +45,7 @@ class AxeForm extends Form
             'name' => 'ordre',
             'options' => [
                 'label' => "Ordre :",
+                'label_options' => [ 'disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'ordre',
@@ -51,6 +57,7 @@ class AxeForm extends Form
             'name' => 'couleur',
             'options' => [
                 'label' => "Couleur :",
+                'label_options' => [ 'disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'couleur',
@@ -62,9 +69,7 @@ class AxeForm extends Form
             'name' => 'bouton',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true,],
             ],
             'attributes' => [
                 'type' => 'submit',

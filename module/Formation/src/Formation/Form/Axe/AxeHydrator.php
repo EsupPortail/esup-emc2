@@ -13,7 +13,7 @@ class AxeHydrator implements HydratorInterface
         /** @var Axe $object */
         $data = [
             'libelle' => ($object->getLibelle()) ?: null,
-            'HasDescription' => ['description' => $object->getDescription()],
+            'description' => $object->getDescription(),
             'ordre' => ($object->getOrdre() !== null) ? $object->getOrdre(): null,
             'couleur' => ($object->getCouleur() !== null) ? $object->getCouleur(): null,
         ];
@@ -23,7 +23,7 @@ class AxeHydrator implements HydratorInterface
     public function hydrate(array $data, $object) : object
     {
         $libelle = (isset($data['libelle']) and trim($data['libelle']) !== '') ? trim($data['libelle']) : null;
-        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
+        $description = (isset($data['description']) AND trim($data['description']) != '')?trim($data['description']):null;
         $ordre = (isset($data['ordre'])) ? $data['ordre'] : null;
         $couleur = (isset($data['couleur'])) ? $data['couleur'] : null;
 
