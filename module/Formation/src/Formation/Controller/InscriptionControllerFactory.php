@@ -16,7 +16,10 @@ use Formation\Service\Session\SessionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEnquete\Service\Enquete\EnqueteService;
+use UnicaenEnquete\Service\Instance\InstanceService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class InscriptionControllerFactory
@@ -33,21 +36,26 @@ class InscriptionControllerFactory
         /**
          * @var AgentService $agentService
          * @var EtatInstanceService $etatInstanceService
+         * @var EnqueteService $enqueteService
          * @var FichierService $fichierService
-         * @var SessionService $sessionService
          * @var InscriptionService $inscriptionService
+         * @var InstanceService $enqueteService
          * @var NatureService $natureService
          * @var NotificationService $notificationService
+         * @var ParametreService $parametreService
+         * @var SessionService $sessionService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $enqueteService = $container->get(EnqueteService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $fichierService = $container->get(FichierService::class);
         $sessionService = $container->get(SessionService::class);
         $inscriptionService = $container->get(InscriptionService::class);
+        $instanceService = $container->get(InstanceService::class);
         $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
-
+        $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
         /**
          * @var InscriptionForm $inscriptionForm
@@ -64,12 +72,15 @@ class InscriptionControllerFactory
 
         $controller = new InscriptionController();
         $controller->setAgentService($agentService);
+        $controller->setEnqueteService($enqueteService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFichierService($fichierService);
-        $controller->setSessionService($sessionService);
         $controller->setInscriptionService($inscriptionService);
+        $controller->setInstanceService($instanceService);
         $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);
+        $controller->setParametreService($parametreService);
+        $controller->setSessionService($sessionService);
         $controller->setUserService($userService);
 
         $controller->setInscriptionForm($inscriptionForm);

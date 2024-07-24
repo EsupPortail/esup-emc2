@@ -1,0 +1,58 @@
+<?php
+
+use Formation\Entity\Db\Inscription;
+use UnicaenEnquete\Entity\Db\Instance;
+use UnicaenUtilisateur\Entity\Db\RoleInterface;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
+
+/**
+ * @see \Formation\Controller\InscriptionController::repondreEnqueteAction()
+ * @var Inscription $inscription
+ * @var Instance $instance
+ * @var ?string $retour
+ * @var RoleInterface $connectedRole
+ * @var UserInterface $connectedUser
+ */
+
+$this->headTitle("Réponse à l'enquête de retour de l'atelier");
+
+$session = $inscription->getSession();
+$formation = $session->getFormation();
+
+?>
+    <h1 class="page-header">
+        Réponse à l'enquête de retour de l'atelier
+    </h1>
+
+
+    <div class="alert alert-info row">
+        <div class="col-md-6">
+            <h2> Session </h2>
+            <dl class="row">
+                <dt class="col-md-4"> Atelier</dt>
+                <dd class="col-md-8"> <?php echo $formation->getLibelle(); ?> </dd>
+                <dt class="col-md-4"> Période</dt>
+                <dd class="col-md-8"> <?php echo $session->getPeriode(); ?> </dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <h2> Inscription </h2>
+            <dl class="row">
+                <dt class="col-md-4"> Inscription validée</dt>
+                <dd class="col-md-8"> <?php echo ($inscription->getEtatActif())?$inscription->getEtatActif()->getHistoCreation()->format('h/m/Y'):"Date de validation non connue"; ?> </dd>
+                <dt class="col-md-4"> Volume suivi</dt>
+                <dd class="col-md-8">
+                    <?php if ($inscription->hasAllPresence()) : ?>
+                        <?php echo $inscription->getDureePresence(); ?>  sur <?php echo $session->getDuree(); ?>
+                    <?php else : ?>
+                        Les présences à cet atelier n'ont pas été reportées.
+                    <?php endif; ?>
+                </dd>
+            </dl>
+
+        </div>
+    </div>
+
+    <h2> Enquête </h2>
+
+    <?php echo $this->instanceReponse($instance, ['retour' => $retour]); ?>

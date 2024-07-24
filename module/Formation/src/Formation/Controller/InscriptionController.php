@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use Fichier\Controller\FichierController;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
@@ -17,6 +18,7 @@ use Formation\Form\InscriptionFrais\InscriptionFraisFormAwareTrait;
 use Formation\Form\Justification\JustificationFormAwareTrait;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Source\Sources;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
@@ -27,23 +29,28 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use UnicaenEnquete\Service\Enquete\EnqueteServiceAwareTrait;
+use UnicaenEnquete\Service\Instance\InstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 class InscriptionController extends AbstractActionController
 {
-
     use AgentServiceAwareTrait;
     use InscriptionServiceAwareTrait;
-    use InscriptionFormAwareTrait;
+    use EnqueteServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use FichierServiceAwareTrait;
-    use SessionServiceAwareTrait;
+    use InstanceServiceAwareTrait;
     use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use ParametreServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use UserServiceAwareTrait;
 
+    use InscriptionFormAwareTrait;
     use InscriptionFraisServiceAwareTrait;
     use InscriptionFraisFormAwareTrait;
     use JustificationFormAwareTrait;
@@ -639,4 +646,45 @@ class InscriptionController extends AbstractActionController
         $vm->setTemplate('default/reponse');
         return $vm;
     }
+
+    /** GESTION DE L'ENQUETE ******************************************************************************************/
+
+    public function repondreEnqueteAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        if ($inscription->getEnquete() === null) {
+            $enquete = $this->getEnqueteService()->getEnqueteByCode($this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::CODE_ENQUETE));
+            $instance = $this->getInstanceService()->createInstance($enquete);
+            $inscription->setEnquete($instance);
+            $this->getInscriptionService()->update($inscription);
+        } else {
+            $instance = $inscription->getEnquete();
+        }
+
+        $retour = $this->params()->fromQuery('retour');
+        return new ViewModel([
+            'inscription' => $inscription,
+            'instance' => $instance,
+            'retour' => $retour,
+            'connectedRole' => $this->getUserService()->getConnectedRole(),
+            'connectedUser' => $this->getUserService()->getConnectedUser(),
+        ]);
+
+    }
+
+    public function validerEnqueteAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $inscription->setValidationEnquete(new DateTime());
+        $this->getInscriptionService()->update($inscription);
+
+        $vm = new ViewModel([
+            'title' => "Validation de l'enquête de retour de l'atelier",
+            'succes' => "<span class='icon icon-checked'></span> Vous venez de valider l'enquête de retour d'atelier. Vous pouvez maintenant télécharger votre attestation.",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
+
 }

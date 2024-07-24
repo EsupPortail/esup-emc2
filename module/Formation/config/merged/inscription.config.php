@@ -146,6 +146,18 @@ return [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
                     ],
                 ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'repondre-enquete',
+                        'valider-enquete'
+                    ],
+                    'privileges' => [
+                        InscriptionPrivileges::INSCRIPTION_ENQUETE,
+                    ],
+                    //todo creer assertion ...
+                    //'assertion' => InscriptionAssertion::class,
+                ],
             ],
         ],
     ],
@@ -405,6 +417,27 @@ return [
                                     'route' => '/annuler-inscription/:inscription',
                                     'defaults' => [
                                         'action' => 'desinscription',
+                                    ],
+                                ],
+                            ],
+                            /** ENQUETE ********************************************************************************/
+                            'repondre-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/repondre-enquete/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::repondreEnqueteAction() */
+                                        'action' => 'repondre-enquete',
+                                    ],
+                                ],
+                            ],
+                            'valider-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/valider-enquete/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::validerEnqueteAction() */
+                                        'action' => 'valider-enquete',
                                     ],
                                 ],
                             ],
