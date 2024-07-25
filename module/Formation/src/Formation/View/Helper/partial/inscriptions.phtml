@@ -17,7 +17,7 @@ use Formation\Provider\Privilege\FormationinstancePrivileges;
 
 
 $id = $options['id'] ?? null;
-$urlRetour = (isset($options['url-retour'])) ? $options['url-retour'] : $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], ['fragment' => 'inscriptions'], true);
+$urlRetour = (isset($options['url-retour'])) ? $options['url-retour'] : $this->url('formation/session/afficher', ['session' => $session->getId()], ['fragment' => 'inscriptions'], true);
 $estAnnulee = ($session->getEtatActif() && $session->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE));
 
 $canAfficherIndividu = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));

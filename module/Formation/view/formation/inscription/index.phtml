@@ -125,7 +125,7 @@ $canSupprimerAttestation = $canModifier;
                         <?php if ($canVoirSession) : ?>
                             <br>
                             <?php /** @see \Formation\Controller\SessionController::afficherAction */ ?>
-                            <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $inscription->getSession()->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('formation/session/afficher', ['session' => $inscription->getSession()->getId()], [], true); ?>">
                                 <span class="icon icon-voir"></span> Acceder
                             </a>
                         <?php endif; ?>

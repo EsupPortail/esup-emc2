@@ -115,7 +115,7 @@ $sessions = array_reverse($sessions);
                 <td class="action">
                     <?php if ($canAfficherInstance) : ?>
                         <?php /** @see SessionController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('formation/session/afficher', ['session' => $instance->getId()], [], true); ?>"
                            data-toogle="tooltip" data-bs-html="true" title="Afficher/Modifier la session de formation">
                             <span class="icon icon-voir"></span>
                             Accéder
@@ -125,7 +125,7 @@ $sessions = array_reverse($sessions);
                         <br>
                         <?php if ($instance->estNonHistorise()) : ?>
                             <?php /** @see SessionController::historiserAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/historiser', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('formation/session/historiser', ['session' => $instance->getId()], [], true); ?>"
                                data-toogle="tooltip" data-bs-html="true" title="Supprimer la session de formation"
                                class="ajax-modal" data-event="modification">
                                 <span class="icon icon-historiser"></span>
@@ -133,7 +133,7 @@ $sessions = array_reverse($sessions);
                             </a>
                         <?php else : ?>
                             <?php /** @see SessionController::restaurerAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/restaurer', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('formation/session/restaurer', ['session' => $instance->getId()], [], true); ?>"
                                data-toogle="tooltip" data-bs-html="true" title="Restaurer la session de formation">
                                 <span class="icon icon-restaurer"></span>
                                 Restaurer
@@ -143,7 +143,7 @@ $sessions = array_reverse($sessions);
                     <?php if ($canSupprimerInstance) : ?>
                         <br>
                         <?php /** @see SessionController::supprimerAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/supprimer', ['formation-instance' => $instance->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('formation/session/supprimer', ['session' => $instance->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                            data-toogle="tooltip" data-bs-html="true"
                            title="Supprimer définitivement la session de formation">

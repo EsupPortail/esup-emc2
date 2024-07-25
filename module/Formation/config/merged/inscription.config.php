@@ -405,7 +405,8 @@ return [
                             'creer-inscription' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/creer-inscription/:formation-instance/:agent',
+                                    /** @see InscriptionController::inscriptionAction() */
+                                    'route' => '/creer-inscription/:session/:agent',
                                     'defaults' => [
                                         'action' => 'inscription',
                                     ],
@@ -414,6 +415,7 @@ return [
                             'annuler-inscription' => [
                                 'type' => Segment::class,
                                 'options' => [
+                                    /** @see InscriptionController::desinscriptionAction() */
                                     'route' => '/annuler-inscription/:inscription',
                                     'defaults' => [
                                         'action' => 'desinscription',

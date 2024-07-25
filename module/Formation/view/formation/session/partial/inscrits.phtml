@@ -31,7 +31,7 @@ $canInscritExporter           = $this->isAllowed(FormationinstancePrivileges::ge
 $canHistoriserInscription = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
 $canSupprimerInscription = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
 
-$urlRetour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['fragment' => 'inscriptions'], true);
+$urlRetour = $this->url('formation/session/afficher', ['session' => $instance->getId()], ['fragment' => 'inscriptions'], true);
 
 ?>
 
@@ -51,7 +51,7 @@ $urlRetour = $this->url('formation-instance/afficher', ['formation-instance' => 
         <?php endif; ?>
         <?php if ($canInscritModifier) : ?>
             <a <?php /**  @see \Formation\Controller\SessionController::exporterInscriptionAction() */ ?>
-                    href="<?php echo $this->url('formation-instance/exporter-inscription', ['session' => $instance->getId()], [], true); ?>"
+                    href="<?php echo $this->url('formation/session/exporter-inscription', ['session' => $instance->getId()], [], true); ?>"
                     class="btn btn-primary">
                 <span class="icon icon-csv"></span>
                 Exporter les inscriptions

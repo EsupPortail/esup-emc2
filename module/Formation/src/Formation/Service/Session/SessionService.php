@@ -202,7 +202,7 @@ class SessionService
      * @param string $param
      * @return Session|null
      */
-    public function getRequestedSession(AbstractActionController $controller, string $param = 'formation-instance'): ?Session
+    public function getRequestedSession(AbstractActionController $controller, string $param = 'session'): ?Session
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getSession($id);

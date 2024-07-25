@@ -59,7 +59,7 @@ class SessionAssertion extends AbstractAssertion {
     protected function assertController($controller, $action = null, $privilege = null): bool
     {
         /** @var Session|null $entity */
-        $sessionId = (($this->getMvcEvent()->getRouteMatch()->getParam('formation-instance')));
+        $sessionId = (($this->getMvcEvent()->getRouteMatch()->getParam('session')));
         $entity = $this->getSessionService()->getSession($sessionId);
 
         switch ($action) {

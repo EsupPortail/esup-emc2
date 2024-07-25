@@ -193,4 +193,18 @@ EOS;
 
         return $tmp;
     }
+
+    /** Facade ********************************************************************************************************/
+
+    /** QUID :: j'ai oublie mode a vérifier ce que c'est */
+    public function createWith(Inscription $inscription, Seance $seance, string $mode, string $presenceType = "???"): Presence
+    {
+        $presence = new Presence();
+        $presence->setJournee($seance);
+        $presence->setInscription($inscription);
+        $presence->setStatut($mode);
+        $presence->setPresenceType($presenceType);
+        $this->create($presence);
+        return $presence;
+    }
 }

@@ -17,7 +17,7 @@ class SessionParametreController extends AbstractActionController
 
     public function modifierAction(): ViewModel
     {
-        $session = $this->getSessionService()->getRequestedSession($this, 'session');
+        $session = $this->getSessionService()->getRequestedSession($this);
 
         $parametre = $session->getParametre();
         if ($parametre === null) {

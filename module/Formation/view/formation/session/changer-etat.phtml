@@ -19,7 +19,7 @@ use UnicaenEtat\Entity\Db\EtatType;
 </div>
 
 <form method="POST"
-      action="<?php echo $this->url('formation-instance/changer-etat', ['formation-instance' => $instance->getId()], [], true); ?>">
+      action="<?php echo $this->url('formation/session/changer-etat', ['session' => $instance->getId()], [], true); ?>">
     <label for="etat">État : </label>
     <select id="etat" name="etat" data-live-search="true">
         <?php foreach ($etats as $etat) : ?>

@@ -97,7 +97,7 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
         </h2>
         <?php if ($canAjouterInstance) : ?>
             <?php /** @see SessionController::ajouterAction() */ ?>
-            <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
+            <a      href="<?php echo $this->url('formation/session/ajouter', ['formation' => $formation->getId()], [], true); ?>"
                     class="btn btn-primary action"
             >
                 <span class="icon icon-ajouter"></span>

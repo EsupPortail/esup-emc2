@@ -159,13 +159,13 @@ return [
                     ],
                 ],
                 //console
-//                [
-//                    'controller' => SessionController::class,
-//                    'action' => [
-//                        'formation-console',
-//                    ],
-//                    'roles' => [],
-//                ],
+                [
+                    'controller' => SessionController::class,
+                    'action' => [
+                        'formation-console',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -178,7 +178,7 @@ return [
                         'pages' => [
                             'session_' => [
                                 'label' => 'Sessions',
-                                'route' => 'formation-instance',
+                                'route' => 'formation/session',
                                 'resource' => PrivilegeController::getResourceId(SessionController::class, 'index'),
                                 'order' => 230,
                                 'icon' => 'fas fa-angle-right',
@@ -210,27 +210,173 @@ return [
                         'type' => Literal::class,
                         'options' => [
                             'route' => '/session',
+                            'defaults' => [
+                                /** @see SessionController::indexAction() */
+                                'controller' => SessionController::class,
+                                'action' => 'index',
+                            ],
                         ],
-                        'may_terminate' => false,
+                        'may_terminate' => true,
                         'child_routes' => [
-                            'resultat-enquete' => [
+                            /** crud ******************************************************************/
+                            'afficher' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/resultat-enquete/:session',
+                                    'route' => '/afficher/:session',
                                     'defaults' => [
-                                        /** @see SessionController::resultatEnqueteAction() */
-                                        'controller' => SessionController::class,
-                                        'action' => 'resultat-enquete',
+                                        /** @see SessionController::afficherAction() */
+                                        'action' => 'afficher',
                                     ],
                                 ],
                             ],
+                            'ajouter' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/ajouter/:formation',
+                                    'defaults' => [
+                                        /** @see SessionController::ajouterAction() */
+                                        'action' => 'ajouter',
+                                    ],
+                                ],
+                            ],
+                            'ajouter-avec-formulaire' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/ajouter-avec-formulaire',
+                                    'defaults' => [
+                                        /** @see SessionController::ajouterAvecFormulaireAction() */
+                                        'action' => 'ajouter-avec-formulaire',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/historiser/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::historiserAction() */
+                                        'action' => 'historiser',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/restaurer/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::restaurerAction() */
+                                        'action' => 'restaurer',
+                                    ],
+                                ],
+                            ],
+                            'supprimer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/supprimer/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::supprimerAction() */
+                                        'action' => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            'modifier-informations' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/modifier-informations/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::modifierInformationsAction() */
+                                        'action' => 'modifier-informations',
+                                    ],
+                                ],
+                            ],
+                            /** changement d'etat *****************************************************/
+                            'changer-etat' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/changer-etat/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::changerEtatAction() */
+                                        'action' => 'changer-etat',
+                                    ],
+                                ],
+                            ],
+                            'annuler' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/annuler/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::annulerAction() */
+                                        'action' => 'annuler',
+                                    ],
+                                ],
+                            ],
+                            'reouvrir' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/reouvrir/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::reouvrirAction() */
+                                        'action' => 'reouvrir',
+                                    ],
+                                ],
+                            ],
+                            'ouvrir-inscription' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/ouvrir-inscription/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::ouvrirInscriptionAction() */
+                                        'action' => 'ouvrir-inscription',
+                                    ],
+                                ],
+                            ],
+                            'fermer-inscription' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/fermer-inscription/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::fermerInscriptionAction() */
+                                        'action' => 'fermer-inscription',
+                                    ],
+                                ],
+                            ],
+                            'envoyer-convocation' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/envoyer-convocation/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::envoyerConvocationAction() */
+                                        'action' => 'envoyer-convocation',
+                                    ],
+                                ],
+                            ],
+                            'demander-retour' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/demander-retour/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::demanderRetourAction() */
+                                        'action' => 'demander-retour',
+                                    ],
+                                ],
+                            ],
+                            'cloturer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/cloturer/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::cloturerAction() */
+                                        'action' => 'cloturer',
+                                    ],
+                                ],
+                            ],
+                            /** gestion des formateurs ************************************************/
                             'ajouter-formateur' => [
                                 'type' => Segment::class,
                                 'options' => [
                                     'route' => '/ajouter-formateur/:session',
                                     'defaults' => [
                                         /** @see SessionController::ajouterFormateurAction() */
-                                        'controller' => SessionController::class,
                                         'action' => 'ajouter-formateur',
                                     ],
                                 ],
@@ -241,204 +387,51 @@ return [
                                     'route' => '/retirer-formateur/:session/:formateur',
                                     'defaults' => [
                                         /** @see SessionController::retirerFormateurAction() */
-                                        'controller' => SessionController::class,
                                         'action' => 'retirer-formateur',
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
-                ],
-            ],
-            'formation-instance' => [
-                'type' => Literal::class,
-                'options' => [
-                    'route' => '/formation-instance',
-                    'defaults' => [
-                        'controller' => SessionController::class,
-                        'action' => 'index',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'rechercher' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/rechercher',
-                            'defaults' => [
-                                /** @see SessionController::rechercherAction() */
-                                'action' => 'rechercher',
+                            'selectionner-gestionnaires' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/selectionner-gestionnaires/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::selectionnerGestionnairesAction() */
+                                        'action' => 'selectionner-gestionnaires',
+                                    ],
+                                ],
                             ],
-                        ],
-                    ],
-                    'ajouter-avec-formulaire' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/ajouter-avec-formulaire',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'ajouter-avec-formulaire',
+                            /** Enquete ***************************************************************/
+                            'resultat-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/resultat-enquete/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::resultatEnqueteAction() */
+                                        'action' => 'resultat-enquete',
+                                    ],
+                                ],
                             ],
-                        ],
-                    ],
-                    'ajouter' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/ajouter/:formation',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'ajouter',
+                            /** Fonctions utilitaires *************************************************/
+                            'exporter-inscription' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/exporter-inscription/:session',
+                                    'defaults' => [
+                                        /** @see SessionController::exporterInscriptionAction() */
+                                        'action' => 'exporter-inscription',
+                                    ],
+                                ],
                             ],
-                        ],
-                    ],
-                    'afficher' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/afficher/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'afficher',
-                            ],
-                        ],
-                    ],
-                    'historiser' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/historiser/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'historiser',
-                            ],
-                        ],
-                    ],
-                    'restaurer' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/restaurer/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'restaurer',
-                            ],
-                        ],
-                    ],
-                    'supprimer' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/supprimer/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'supprimer',
-                            ],
-                        ],
-                    ],
-                    'annuler' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/annuler/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'annuler',
-                            ],
-                        ],
-                    ],
-                    'reouvrir' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/reouvrir/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'reouvrir',
-                            ],
-                        ],
-                    ],
-                    'modifier-informations' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/modifier-informations/:formation-instance',
-                            'defaults' => [
-                                /** @see SessionController::modifierInformationsAction() */
-                                'action' => 'modifier-informations',
-                            ],
-                        ],
-                    ],
-                    'selectionner-gestionnaires' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/selectionner-gestionnaires/:session',
-                            'defaults' => [
-                                /** @see SessionController::selectionnerGestionnairesAction() */
-                                'action' => 'selectionner-gestionnaires',
-                            ],
-                        ],
-                    ],
-                    'ouvrir-inscription' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/ouvrir-inscription/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'ouvrir-inscription',
-                            ],
-                        ],
-                    ],
-                    'fermer-inscription' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/fermer-inscription/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'fermer-inscription',
-                            ],
-                        ],
-                    ],
-                    'envoyer-convocation' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/envoyer-convocation/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'envoyer-convocation',
-                            ],
-                        ],
-                    ],
-                    'demander-retour' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/demander-retour/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'demander-retour',
-                            ],
-                        ],
-                    ],
-                    'cloturer' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/cloturer/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'cloturer',
-                            ],
-                        ],
-                    ],
-                    'exporter-inscription' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/exporter-inscription/:session',
-                            'defaults' => [
-                                /** @see SessionController::exporterInscriptionAction() */
-                                'action' => 'exporter-inscription',
-                            ],
-                        ],
-                    ],
-                    /** @see SessionController::changerEtatAction() */
-                    'changer-etat' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/changer-etat/:formation-instance',
-                            'defaults' => [
-                                'controller' => SessionController::class,
-                                'action' => 'changer-etat',
+                            'rechercher' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/rechercher',
+                                    'defaults' => [
+                                        /** @see SessionController::rechercherAction() */
+                                        'action' => 'rechercher',
+                                    ],
+                                ],
                             ],
                         ],
                     ],

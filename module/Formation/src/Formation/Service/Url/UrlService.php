@@ -25,7 +25,7 @@ class UrlService extends \Application\Service\Url\UrlService
         $session = $this->getVariable('instance');
         if ($session === null) return "<span style='color:darkred'>Variable [instance] non founie à UrlService</span>";
         /** @see SessionController::afficherAction() */
-        $url = $this->renderer->url('formation-instance/afficher', ['formation-instance' => $session->getId()], ['force_canonical' => true], true);
+        $url = $this->renderer->url('formation/session/afficher', ['session' => $session->getId()], ['force_canonical' => true], true);
         return  UrlService::trueLink($url);
     }
 

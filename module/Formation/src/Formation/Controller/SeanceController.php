@@ -25,7 +25,7 @@ class SeanceController extends AbstractActionController
         $journee->setInstance($session);
 
         $form = $this->getSeanceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['formation-instance' => $session->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['session' => $session->getId()], [], true));
         $form->bind($journee);
 
         $request = $this->getRequest();
@@ -77,14 +77,14 @@ class SeanceController extends AbstractActionController
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
         $this->getSeanceService()->historise($journee);
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $journee->getInstance()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $journee->getInstance()->getId()], [], true);
     }
 
     public function restaurerJourneeAction(): Response
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
         $this->getSeanceService()->restore($journee);
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $journee->getInstance()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $journee->getInstance()->getId()], [], true);
     }
 
     public function supprimerJourneeAction()

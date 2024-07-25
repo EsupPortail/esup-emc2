@@ -11,6 +11,7 @@ use Formation\Form\Seance\SeanceHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\Seance\SeanceService;
 use Formation\Service\Seance\SeanceServiceFactory;
+use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -37,12 +38,24 @@ return [
 
     'router'          => [
         'routes' => [
-            'formation-instance' => [
+            'formation' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/formation',
+                ],
+                'may_terminate' => true,
                 'child_routes' => [
+                    'session' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/session',
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
                     'ajouter-journee' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-journee/:formation-instance',
+                            'route'    => '/ajouter-journee/:session',
                             'defaults' => [
                                 'controller' => SeanceController::class,
                                 'action'     => 'ajouter-journee',
@@ -88,6 +101,8 @@ return [
                                 'action'     => 'supprimer-journee',
                             ],
                         ],
+                    ],
+                ],
                     ],
                 ],
             ],

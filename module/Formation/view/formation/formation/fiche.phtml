@@ -65,7 +65,7 @@ use Formation\Entity\Db\Seance;
                 <?php else: ?>
                     <?php /**  @see \Formation\Controller\InscriptionController::inscriptionAction() */ ?>
                     <a href="<?php echo $this->url('formation/inscription/creer-inscription', [
-                        'formation-instance' => $session->getId(),
+                        'session' => $session->getId(),
                         'agent' => $agent->getId()], [], true); ?>"
                        class="btn btn-primary" data-event="modification">
                         <span class="icon inscription-ouverture"> Je m'inscris</span>

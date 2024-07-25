@@ -29,7 +29,7 @@ class SessionForm extends Form
             ],
             'attributes' => [
                 'id' => 'description',
-                'class' => 'form-control description type2',
+                'class' => 'tinymce',
             ],
         ]);
         /** Taille liste principale */

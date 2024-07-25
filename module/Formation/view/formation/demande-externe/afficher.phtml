@@ -204,7 +204,7 @@ $canGererGestionnaires = $canModifierSession;
                                     <?php if ($canAfficherSession) : ?>
                                         <span class="action">
                                             <?php /** @see \Formation\Controller\SessionController::afficherAction(); */ ?>
-                                            <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>"
+                                            <a href="<?php echo $this->url('formation/session/afficher', ['session' => $session->getId()], [], true); ?>"
                                                target="_blank">
                                                 <span class="icon icon-voir"></span> Acceder
                                             </a>

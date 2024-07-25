@@ -2,7 +2,7 @@
 
 /**
  * @see \Formation\Controller\PresenceController::renseignerPresencesAction()
- * @var Session $instance
+ * @var Session $session
  * @var Presence[][] $presences
  * @var bool $titre
  */
@@ -13,22 +13,20 @@ use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
-/** @var Seance[] $journees */
-$journees = $instance->getSeances();
-/** @var Inscription[] $inscriptions */
-$inscriptions = $instance->getListePrincipale();
+$seances = $session->getSeances();
+$inscriptions = $session->getListePrincipale();
 usort($inscriptions, function (Inscription $a, Inscription $b) { return $a->getStagiaireDenomination(false)<=>$b->getStagiaireDenomination(false); });
 
 $canPresenceModifier = /** $instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS) &&**/
     $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
 
-$this->headTitle("Présences pour la formation : " . $instance->getInstanceCode() . " " . $instance->getFormation()->getLibelle());
+$this->headTitle("Présences pour la formation : " . $session->getInstanceCode() . " " . $session->getFormation()->getLibelle());
 ?>
 
 <?php if ($titre !== false) : ?>
     <h1 class="page-header">
         Présences pour la formation :
-        <em> <?php echo $instance->getInstanceCode(); ?><?php echo $instance->getFormation()->getLibelle(); ?> </em>
+        <em> <?php echo $session->getInstanceCode(); ?><?php echo $session->getFormation()->getLibelle(); ?> </em>
     </h1>
 <?php endif; ?>
 
@@ -41,14 +39,14 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             </div>
             <div class="pull-right">
                 <a <?php /** @see SessionController::afficherAction() */ ?>
-                        href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
+                        href="<?php echo $this->url('formation/session/afficher', ['session' => $session->getId()], [], true); ?>"
                         class="btn btn-info action">
                     <span class="icon icon-retour"></span>
                     Retour à l'instance de la formation
                 </a>
                 <br/>
                 <a <?php /** @see FormationController::editerAction() */ ?>
-                        href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
+                        href="<?php echo $this->url('formation/editer', ['formation' => $session->getFormation()->getId()], [], true); ?>"
                         class="btn btn-info action">
                     <span class="icon icon-retour"></span>
                     Retour à la formation associée
@@ -58,14 +56,14 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
 
         <dl class="dl-horizontal">
             <dt> Intitulé de la formation</dt>
-            <dd> <?php echo $instance->getFormation()->getLibelle(); ?></dd>
+            <dd> <?php echo $session->getFormation()->getLibelle(); ?></dd>
             <dt> Code de l'action</dt>
-            <dd> <?php echo $instance->getInstanceCode(); ?></dd>
+            <dd> <?php echo $session->getInstanceCode(); ?></dd>
             <dt> Période</dt>
-            <dd> <?php echo $instance->getDebut(); ?> &rightarrow; <?php echo $instance->getFin(); ?></dd>
+            <dd> <?php echo $session->getDebut(); ?> &rightarrow; <?php echo $session->getFin(); ?></dd>
             <dt> Liste principale</dt>
-            <dd> <?php echo count($instance->getListePrincipale()); ?>
-                /<?php echo $instance->getNbPlacePrincipale(); ?> </dd>
+            <dd> <?php echo count($session->getListePrincipale()); ?>
+                /<?php echo $session->getNbPlacePrincipale(); ?> </dd>
         </dl>
     <?php endif; ?>
 
@@ -75,29 +73,29 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                 <td class="separateur">
                     <?php if ($canPresenceModifier) : ?>
                         <span class="all_all_toggle icon icon-question"
-                              id="NON_RENSEIGNEE|<?php echo $instance->getId(); ?>"
+                              id="NON_RENSEIGNEE|<?php echo $session->getId(); ?>"
                               data-bs-toggle="tooltip" data-bs-html="true" style="color:cadetblue;"
                               title="Passer à non renseigné toutes les présences">
                     </span>
-                        <span class="all_all_toggle icon icon-checked" id="PRESENCE|<?php echo $instance->getId(); ?>"
+                        <span class="all_all_toggle icon icon-checked" id="PRESENCE|<?php echo $session->getId(); ?>"
                               data-bs-toggle="tooltip" data-bs-html="true" style="color:darkgreen;"
                               title="Passer à présent toutes les présences">
                     </span>
                         <span class="all_all_toggle icon icon-unchecked"
-                              id="ABSENCE_JUSTIFIEE|<?php echo $instance->getId(); ?>"
+                              id="ABSENCE_JUSTIFIEE|<?php echo $session->getId(); ?>"
                               data-bs-toggle="tooltip" data-bs-html="true" style="color:#ff7979;"
                               title="Passer à absence justifiée toutes les présences">
                                 <span class="small-lettrine-xxx">J</span>
                     </span>
                         <span class="all_all_toggle icon icon-unchecked"
-                              id="ABSENCE_NON_JUSTIFIEE|<?php echo $instance->getId(); ?>"
+                              id="ABSENCE_NON_JUSTIFIEE|<?php echo $session->getId(); ?>"
                               data-bs-toggle="tooltip" data-bs-html="true" style="color:darkred;"
                               title="Passer à absence non justifiée toutes les présences">
                                 <span class="small-lettrine-xxx">NJ</span>
                     </span>
                     <?php endif; ?>
                 </td>
-                <?php foreach ($journees as $journee) : ?>
+                <?php foreach ($seances as $journee) : ?>
                     <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
                         <td class="journee"> <?php echo $journee->getJour()->format('d/m/Y') ?>
                             <br/> <?php echo $journee->getDebut() ?> &rightarrow; <?php echo $journee->getFin() ?> </td>
@@ -138,7 +136,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                             <?php endif; ?>
                         </div>
                     </td>
-                    <?php foreach ($journees as $journee) : ?>
+                    <?php foreach ($seances as $journee) : ?>
                         <td class="reponse <?php if ($canPresenceModifier) echo "toggle"; ?>"
                             id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
                             <?php if (isset($presences[$journee->getId()][$inscrit->getId()])) : ?>
@@ -217,7 +215,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
         <?php
         $array = array_map(function (Seance $a) {
             return $a->getId();
-        }, $journees);
+        }, $seances);
         echo implode(",", $array);
         ?>
     ];

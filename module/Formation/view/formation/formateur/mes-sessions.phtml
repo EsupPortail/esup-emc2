@@ -50,7 +50,7 @@ $this->headTitle('Mes sessions');
                 <td class="action">
                     <?php if ($canSessionAfficher) : ?>
                         <?php /** @see \Formation\Controller\SessionController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('formation/session/afficher', ['session' => $session->getId()], [], true); ?>">
                             <span class="icon icon-voir"></span>
                             Accéder
                         </a>
@@ -93,7 +93,7 @@ $this->headTitle('Mes sessions');
                 <td class="action">
                     <?php if ($canSessionAfficher) : ?>
                         <?php /** @see \Formation\Controller\SessionController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('formation/session/afficher', ['session' => $session->getId()], [], true); ?>">
                             <span class="icon icon-voir"></span>
                             Accéder
                         </a>

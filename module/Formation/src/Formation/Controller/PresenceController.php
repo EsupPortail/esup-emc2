@@ -29,7 +29,7 @@ class PresenceController extends AbstractActionController
         }
 
         return new ViewModel([
-            'instance' => $session,
+            'session' => $session,
             'presences' => $dictionnaire,
         ]);
     }
@@ -55,7 +55,7 @@ class PresenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/reponse');
+        $vm->setTemplate('default/reponse');
         $vm->setVariables([
             'reponse' => $presence->getStatut(),
         ]);
@@ -70,16 +70,10 @@ class PresenceController extends AbstractActionController
         $session = $inscription->getSession();
         $journees = $session->getSeances();
 
-        /** @var  Presence $presence */
         foreach ($journees as $journee) {
             $presence = $this->getPresenceService()->getPresenceByJourneeAndInscription($journee, $inscription);
             if ($presence === null) {
-                $presence = new Presence();
-                $presence->setJournee($journee);
-                $presence->setInscription($inscription);
-                $presence->setStatut($mode);
-                $presence->setPresenceType("???");
-                $this->getPresenceService()->create($presence);
+                $this->getPresenceService()->createWith($inscription, $journee, $mode);
             } else {
                 $presence->setStatut($mode);
                 $this->getPresenceService()->update($presence);
@@ -87,7 +81,7 @@ class PresenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/reponse');
+        $vm->setTemplate('default/reponse');
         $vm->setVariables([
             'reponse' => $mode,
         ]);
@@ -97,20 +91,14 @@ class PresenceController extends AbstractActionController
     public function toggleToutesPresencesAction(): ViewModel
     {
         $mode = $this->params()->fromRoute('mode');
-        $instance = $this->getSessionService()->getRequestedSession($this);
+        $session = $this->getSessionService()->getRequestedSession($this);
 
-        foreach ($instance->getInscriptions() as $inscription) {
-            $journees = $instance->getSeances();
-            /** @var  Presence $presence */
+        foreach ($session->getInscriptions() as $inscription) {
+            $journees = $session->getSeances();
             foreach ($journees as $journee) {
                 $presence = $this->getPresenceService()->getPresenceByJourneeAndInscription($journee, $inscription);
                 if ($presence === null) {
-                    $presence = new Presence();
-                    $presence->setJournee($journee);
-                    $presence->setInscription($inscription);
-                    $presence->setStatut($mode);
-                    $presence->setPresenceType("???");
-                    $this->getPresenceService()->create($presence);
+                    $this->getPresenceService()->createWith($inscription, $journee, $mode);
                 } else {
                     $presence->setStatut($mode);
                     $this->getPresenceService()->update($presence);
@@ -119,7 +107,7 @@ class PresenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/reponse');
+        $vm->setTemplate('default/reponse');
         $vm->setVariables([
             'reponse' => $mode,
         ]);

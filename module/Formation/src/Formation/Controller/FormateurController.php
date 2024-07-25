@@ -49,7 +49,7 @@ class FormateurController extends AbstractActionController
 
     public function ajouterAction(): ViewModel
     {
-        $session = $this->getSessionService()->getRequestedSession($this, 'session');
+        $session = $this->getSessionService()->getRequestedSession($this);
         $formateur = new Formateur();
 
         $form = $this->getFormateurForm();

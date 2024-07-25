@@ -28,7 +28,7 @@ $canVoir = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileg
 
 <?php echo $this->partial('partial/filtre', ['params' => $params, 'etats' => $etats, 'gestionnaires' => $gestionnaires, 'themes' => $themes], [], true); ?>
 
-<a href="<?php echo $this->url('formation-instance/ajouter-avec-formulaire', [], [], true); ?>"
+<a href="<?php echo $this->url('formation/session/ajouter-avec-formulaire', [], [], true); ?>"
    class="btn btn-primary action ajax-modal" data-event="modification"
    >
     <span class="icon icon-ajouter">
