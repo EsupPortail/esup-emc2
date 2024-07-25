@@ -770,6 +770,152 @@ create table unicaen_observation_observation_validation
         primary key (observation_instance_id, validation_id)
 );
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN - ENQUETE ---------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_enquete_enquete
+(
+    id                    serial
+        constraint unicaen_enquete_enquete_pk
+            primary key,
+    titre                 varchar(1024)           not null,
+    description           text,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint unicaen_enquete_enquete_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint unicaen_enquete_enquete_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint unicaen_enquete_enquete_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user,
+    code                  varchar(1024)           not null
+);
+
+create table unicaen_enquete_groupe
+(
+    id                    serial
+        constraint formation_enquete_categorie_pkey
+            primary key,
+    libelle               varchar(1024)           not null,
+    description           text,
+    ordre                 integer                 not null,
+    histo_createur_id     integer   default 0     not null
+        constraint formation_enquete_categorie_utilisateur_id_fk_1
+            references unicaen_utilisateur_user,
+    histo_creation        timestamp default now() not null,
+    histo_modificateur_id integer
+        constraint formation_enquete_categorie_utilisateur_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_destructeur_id  integer
+        constraint formation_enquete_categorie_utilisateur_id_fk_3
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    enquete_id            integer   default 1     not null
+        constraint unicaen_enquete_groupe_unicaen_enquete_enquete_id_fk
+            references unicaen_enquete_enquete
+            on delete cascade,
+    code                  varchar(256)            not null
+);
+create unique index formation_enquete_categorie_id_uindex on unicaen_enquete_groupe (id);
+create unique index unicaen_enquete_groupe_code_uindex on unicaen_enquete_groupe (code);
+create index unicaen_enquete_groupe_enquete_id_index on unicaen_enquete_groupe (enquete_id);
+
+create table unicaen_enquete_question
+(
+    id                    serial
+        constraint formation_enquete_question_pkey
+            primary key,
+    libelle               varchar(1024)           not null,
+    description           text,
+    ordre                 integer                 not null,
+    histo_createur_id     integer   default 0     not null
+        constraint formation_enquete_question_utilisateur_id_fk_1
+            references unicaen_utilisateur_user,
+    histo_creation        timestamp default now() not null,
+    histo_modificateur_id integer
+        constraint formation_enquete_question_utilisateur_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_destructeur_id  integer
+        constraint formation_enquete_question_utilisateur_id_fk_3
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    groupe_id             integer
+        constraint formation_enquete_question_formation_enquete_categorie_id_fk
+            references unicaen_enquete_groupe,
+    enquete_id            integer   default 1     not null
+        constraint unicaen_enquete_question_unicaen_enquete_enquete_id_fk
+            references unicaen_enquete_enquete
+            on delete cascade,
+    has_note              boolean   default true  not null,
+    has_commentaire       boolean   default true  not null
+);
+create unique index formation_enquete_question_id_uindex on unicaen_enquete_question (id);
+create index unicaen_enquete_question_enquete_id_index on unicaen_enquete_question (enquete_id);
+create index unicaen_enquete_question_groupe_id_index on unicaen_enquete_question (groupe_id);
+create index unicaen_enquete_enquete_code_index on unicaen_enquete_enquete (code);
+
+create table unicaen_enquete_instance
+(
+    id                    serial
+        constraint unicaen_enquete_instance_pk
+            primary key,
+    enquete_id            integer                 not null
+        constraint unicaen_enquete_instance_unicaen_enquete_enquete_id_fk
+            references unicaen_enquete_enquete
+            on delete cascade,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint unicaen_enquete_instance_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint unicaen_enquete_instance_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint unicaen_enquete_instance_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+create index unicaen_enquete_instance_enquete_id_index on unicaen_enquete_instance (enquete_id);
+
+create table unicaen_enquete_reponse
+(
+    id                    serial
+        constraint unicaen_enquete_reponse_pk
+            primary key,
+    instance_id           integer                 not null
+        constraint unicaen_enquete_reponse_unicaen_enquete_instance_id_fk
+            references unicaen_enquete_instance
+            on delete cascade,
+    question_id           integer                 not null
+        constraint unicaen_enquete_reponse_unicaen_enquete_question_id_fk
+            references unicaen_enquete_question
+            on delete cascade,
+    reponse               varchar(1024),
+    commentaire           text,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint unicaen_enquete_reponse_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint unicaen_enquete_reponse_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint unicaen_enquete_reponse_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+create index unicaen_enquete_reponse_instance_id_index on unicaen_enquete_reponse (instance_id);
+create index unicaen_enquete_reponse_question_id_index on unicaen_enquete_reponse (question_id);
+
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
 -- I::::::::IN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R T:::::::::::::::::::::T
@@ -1231,6 +1377,70 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'observationinstance';
 
+-- ENQUETE -
+
+-- privileges (ajout des nouveaux privileges)
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre) VALUES
+    ('enquete', 'Enquête - Gestion des enquêtes', 'UnicaenEnquete\Provider\Privilege', 100);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'enquete_index', 'Accéder à l''index', 10 UNION
+    SELECT 'enquete_afficher', 'Afficher', 20 UNION
+    SELECT 'enquete_ajouter', 'Ajouter', 30 UNION
+    SELECT 'enquete_modifier', 'Modifier', 40 UNION
+    SELECT 'enquete_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'enquete_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'enquete';
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre) VALUES
+    ('egroupe', 'Enquête - Gestions des groupes de questions', 'UnicaenEnquete\Provider\Privilege', 200);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'groupe_index', 'Accéder à l''index', 10 UNION
+    SELECT 'groupe_afficher', 'Afficher', 20 UNION
+    SELECT 'groupe_ajouter', 'Ajouter', 30 UNION
+    SELECT 'groupe_modifier', 'Modifier', 40 UNION
+    SELECT 'groupe_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'groupe_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'egroupe';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre) VALUES
+    ('question', 'Enquête - Gestions des questions', 'UnicaenEnquete\Provider\Privilege', 300);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'question_index', 'Accéder à l''index', 10 UNION
+    SELECT 'question_afficher', 'Afficher', 20 UNION
+    SELECT 'question_ajouter', 'Ajouter', 30 UNION
+    SELECT 'question_modifier', 'Modifier', 40 UNION
+    SELECT 'question_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'question_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'question';
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre) VALUES
+    ('einstance', 'Enquête - Gestion des instances', 'UnicaenEnquete\Provider\Privilege', 1100);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'instance_index', 'Accéder à l''index', 10 UNION
+    SELECT 'instance_afficher', 'Afficher', 20 UNION
+    SELECT 'instance_ajouter', 'Ajouter', 30 UNION
+    SELECT 'instance_modifier', 'Modifier', 40 UNION
+    SELECT 'instance_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'instance_supprimer', 'Supprimer', 60
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'einstance';
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -1246,7 +1456,7 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
 FROM d
-         JOIN unicaen_parametre_categorie cp ON cp.CODE = 'GLOBAL';
+JOIN unicaen_parametre_categorie cp ON cp.CODE = 'GLOBAL';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE GENERAUX ---------------------------------------------------------------------------------------------------
