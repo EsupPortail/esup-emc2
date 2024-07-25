@@ -1003,6 +1003,8 @@ VALUES ('INSCRIPTION_STAGE_HORS_PLAN', '<p>Bloc de texte afficher en haut de la 
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
 VALUES ('INSCRIPTION_FORMATION_DU_PLAN', '<p>Bloc en haut de la page d''inscription à une formation du plan de formation sur la page des agents</p>', 'texte', '.', '<p><strong>La demande d''inscription ne vaut pas acceptation.</strong> Votre inscription est soumise à validation et en fonction des places disponibles.</p>', null, 'Formation\Provider\Template');
 
+-- Chartre
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_CHARTE', null, 'texte', 'Charte d''engagement', '<p>Je, VAR[AGENT#Denomination], m''engage à suivre les formations que je demande et à me montrer respectueux des personnes associés à ses formations.</p>', null, 'Formation\Provider\Template');
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE - PDF ------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
