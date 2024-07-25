@@ -173,7 +173,7 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                         <?php if (!$inscription->getSession()->estRealisee()): ?>
                             <br>
                             <?php /** @see FormationInstanceDocumentController::genererConvocationAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('formation/session/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
                                data-toogle="tooltip" data-bs-html="true" title="Générer la convocation">
                                 <span class="icon icon-pdf"></span>
                                 Générer la convocation
@@ -188,7 +188,7 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                         <?php else : ?>
                             <br>
                             <?php /** @see FormationInstanceDocumentController::genererAttestationAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('formation/session/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
                                data-toogle="tooltip" data-bs-html="true" title="Générer l'attestation"
                                class="ajax-modal">
                                 <span class="icon icon-pdf"></span>Générer l'attestation</a>
@@ -202,7 +202,7 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                             <?php if ($inscription->hasAbsence()) : ?>
                                 <br>
                                 <?php /** @see FormationInstanceDocumentController::genererAbsenceAction() */ ?>
-                                <a href="<?php echo $this->url('formation-instance/generer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
+                                <a href="<?php echo $this->url('formation/session/generer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
                                    data-toogle="tooltip" data-bs-html="true" title="Générer le constat d'absence"
                                    class="ajax-modal">
                                     <span class="icon icon-pdf"></span>Générer le constat d'absence</a>

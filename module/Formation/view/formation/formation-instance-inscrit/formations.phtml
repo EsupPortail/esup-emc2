@@ -43,7 +43,7 @@ $canEnquete = $this->isAllowed(InscriptionPrivileges::getResourceId(InscriptionP
 
 <?php if ($canGenererHistorique AND $agent !== null) : ?>
 <?php /**  @see \Formation\Controller\FormationInstanceDocumentController::genererHistoriqueAction() */ ?>
-<a href="<?php echo $this->url('formation-instance/generer-historique', ['agent' => $agent->getId()], [], true); ?>"
+<a href="<?php echo $this->url('formation/session/generer-historique', ['agent' => $agent->getId()], [], true); ?>"
    class="btn btn-primary" target="_blank"
 >
     <span class="icon icon-pdf"></span>
@@ -110,7 +110,7 @@ $canEnquete = $this->isAllowed(InscriptionPrivileges::getResourceId(InscriptionP
                                 <br/>
                                 <a
                                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
-                                        href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
+                                        href="<?php echo $this->url('formation/session/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
                                         class="btn btn-primary action <?php //if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
                                 >
                                     <span class="icon icon-pdf"> Je télécharge mon attestation</span>
@@ -121,7 +121,7 @@ $canEnquete = $this->isAllowed(InscriptionPrivileges::getResourceId(InscriptionP
                             <br>
                             <a
                                 <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAbsenceAction()Action() */?>
-                                    href="<?php echo $this->url('formation-instance/generer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
+                                    href="<?php echo $this->url('formation/session/generer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
                                     class="btn btn-primary action <?php //if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
                             >
                                 <span class="icon icon-pdf"> Je télécharge mon constat d'absence</span>

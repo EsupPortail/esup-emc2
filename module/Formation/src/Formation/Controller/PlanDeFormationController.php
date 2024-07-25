@@ -115,7 +115,7 @@ class PlanDeFormationController extends AbstractActionController
             'title' => "Ajouter un plan de formation",
             'form' => $form,
         ]);
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -141,7 +141,7 @@ class PlanDeFormationController extends AbstractActionController
             'title' => "Modifier le plan de formation",
             'form' => $form,
         ]);
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 

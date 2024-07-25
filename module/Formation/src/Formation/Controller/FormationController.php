@@ -140,7 +140,7 @@ class FormationController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Ajouter une formation',
             'form' => $form,
@@ -239,7 +239,7 @@ class FormationController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Modifier les informations de la formation',
             'formation' => $formation,
@@ -276,7 +276,7 @@ class FormationController extends AbstractActionController
                 'title' => "Ajout d'une application",
                 'form' => $form,
             ]);
-            $vm->setTemplate('application/default/default-form');
+            $vm->setTemplate('default/default-form');
             return $vm;
         }
         exit();
@@ -310,7 +310,7 @@ class FormationController extends AbstractActionController
                 'title' => "Ajout d'une competence",
                 'form' => $form,
             ]);
-            $vm->setTemplate('application/default/default-form');
+            $vm->setTemplate('default/default-form');
             return $vm;
         }
         exit();
@@ -394,7 +394,7 @@ class FormationController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Sélection de la formation qui remplacera [" . $formation->getLibelle() . "]",
             'form' => $form,

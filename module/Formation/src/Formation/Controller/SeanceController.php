@@ -25,7 +25,7 @@ class SeanceController extends AbstractActionController
         $journee->setInstance($session);
 
         $form = $this->getSeanceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['session' => $session->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/session/ajouter-journee', ['session' => $session->getId()], [], true));
         $form->bind($journee);
 
         $request = $this->getRequest();
@@ -52,7 +52,7 @@ class SeanceController extends AbstractActionController
         $journee = $this->getSeanceService()->getRequestedSeance($this);
 
         $form = $this->getSeanceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/session/modifier-journee', ['journee' => $journee->getId()], [], true));
         $form->bind($journee);
 
         $request = $this->getRequest();
@@ -105,7 +105,7 @@ class SeanceController extends AbstractActionController
             $vm->setVariables([
                 'title' => "Suppression de la journée de formation du [" . $journee->getDateDebut()->format('d/m/Y') . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('formation-instance/supprimer-journee', ["journee" => $journee->getId()], [], true),
+                'action' => $this->url()->fromRoute('formation/session/supprimer-journee', ["journee" => $journee->getId()], [], true),
             ]);
         }
         return $vm;

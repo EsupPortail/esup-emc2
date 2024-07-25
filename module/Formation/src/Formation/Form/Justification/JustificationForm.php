@@ -32,7 +32,7 @@ class JustificationForm extends Form {
             ],
             'attributes' => [
                 'id' => 'missions',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
             ]
         ]);
         //description
@@ -48,7 +48,7 @@ class JustificationForm extends Form {
             ],
             'attributes' => [
                 'id' => 'justification',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
             ]
         ]);
         //rqth
@@ -81,7 +81,7 @@ class JustificationForm extends Form {
             ],
             'attributes' => [
                 'id' => 'precision_rqth',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
             ]
         ]);
         //bouton

@@ -237,7 +237,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                         <br/>
                         <?php if ($session->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                             <?php /** @see \Formation\Controller\PresenceController::renseignerPresencesAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['session' => $session->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('formation/session/renseigner-presences', ['session' => $session->getId()], [], true); ?>"
                                class="btn btn-primary action">
                                 <span class="icon icon-checked"></span>
                                 <?php echo ($canPresenceModifier) ? "Renseigner" : "Voir"; ?> les présences
@@ -313,7 +313,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 <div class="col-md-3">
                     <?php if ($canJourneeModifier): ?>
                         <?php /** @see \Formation\Controller\SeanceController::ajouterJourneeAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/ajouter-journee', ['session' => $session->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('formation/session/ajouter-journee', ['session' => $session->getId()], [], true); ?>"
                            class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon icon-ajouter"></span>
                             Ajouter une séance
@@ -322,7 +322,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                     <?php endif; ?>
                     <?php if ($canEmargement): ?>
                         <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/export-tous-emargements', ['session' => $session->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('formation/session/export-tous-emargements', ['session' => $session->getId()], [], true); ?>"
                            class="btn btn-primary action" target="_blank">
                             <span class="icon icon-pdf"></span>
                             Exporter les émargements
@@ -395,29 +395,29 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                             <td>
                                 <?php if ($canEmargement) : ?>
                                     <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */ ?>
-                                    <a href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
+                                    <a href="<?php echo $this->url('formation/session/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
                                        title="Exporter l'émargement de la séance de formation" target="_blank">
                                         <span class="icon icon-pdf"></span><span class="lettrine">E</span></a>
                                 <?php endif; ?>
                                 <?php if ($canJourneeModifier) : ?>
                                     <?php /** @see \Formation\Controller\SeanceController::modifierJourneeAction() */ ?>
-                                    <a href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                    <a href="<?php echo $this->url('formation/session/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
                                        class="ajax-modal" data-event="modification"
                                        title="Modifier l'émargement de la séance de formation">
                                         <span class="icon icon-editer"></span></a>
                                     <?php if ($journee->estNonHistorise()) : ?>
                                         <?php /** @see \Formation\Controller\SeanceController::historiserJourneeAction() */ ?>
-                                        <a href="<?php echo $this->url('formation-instance/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                        <a href="<?php echo $this->url('formation/session/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
                                            title="Supprimer l'émargement de la séance de formation">
                                             <span class="icon icon-historiser"></span></a>
                                     <?php else : ?>
                                         <?php /** @see \Formation\Controller\SeanceController::restaurerJourneeAction() */ ?>
-                                        <a href="<?php echo $this->url('formation-instance/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                        <a href="<?php echo $this->url('formation/session/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
                                            title="Restaurer l'émargement de la séance de formation">
                                             <span class="icon icon-restaurer"></span></a>
                                     <?php endif; ?>
                                     <?php /** @see \Formation\Controller\SeanceController::supprimerJourneeAction() */ ?>
-                                    <a href="<?php echo $this->url('formation-instance/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                    <a href="<?php echo $this->url('formation/session/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
                                        class="ajax-modal" data-event="modification"
                                        title="Supprimer définitivement l'émargement de la séance de formation">
                                         <span class="icon icon-unchecked text-danger"></span></a>

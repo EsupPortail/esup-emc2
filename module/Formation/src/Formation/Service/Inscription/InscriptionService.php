@@ -107,7 +107,6 @@ class InscriptionService
             ->andWhere('agent.login = :login OR stagiaire.login = :login')
             ->setParameter('login', $user->getUsername())
             ->andWhere('inscription.histoDestruction IS NULL')
-            ->leftJoin('session.formation', 'formation')->addSelect('formation')
             ->orderBy('formation.libelle', 'ASC');
 
         $qb = $qb

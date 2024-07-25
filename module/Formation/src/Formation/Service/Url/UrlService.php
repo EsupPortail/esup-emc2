@@ -45,7 +45,7 @@ class UrlService extends \Application\Service\Url\UrlService
         if ($inscription === null) return "<span style='color:darkred'>Variable [inscription] non founie à UrlService</span>";
 
         /** @see FormationInstanceDocumentController::genererConvocationAction() */
-        $url = $this->renderer->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
+        $url = $this->renderer->url('formation/session/generer-convocation', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
         return  UrlService::trueLink($url);
     }
 
@@ -57,7 +57,7 @@ class UrlService extends \Application\Service\Url\UrlService
         if ($inscription === null) return "<span style='color:darkred'>Variable [inscription] non founie à UrlService</span>";
 
         /** @see FormationInstanceDocumentController::genererAttestationAction() */
-        $url = $this->renderer->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
+        $url = $this->renderer->url('formation/session/generer-attestation', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
         return  UrlService::trueLink($url);
     }
 
@@ -69,7 +69,7 @@ class UrlService extends \Application\Service\Url\UrlService
         if ($inscription === null) return "<span style='color:darkred'>Variable [inscription] non founie à UrlService</span>";
 
         /** @see FormationInstanceDocumentController::genererAbsenceAction() */
-        $url = $this->renderer->url('formation-instance/generer-absence', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
+        $url = $this->renderer->url('formation/session/generer-absence', ['inscription' => $inscription->getId()], ['force_canonical' => true], true);
         return  UrlService::trueLink($url);
     }
 }

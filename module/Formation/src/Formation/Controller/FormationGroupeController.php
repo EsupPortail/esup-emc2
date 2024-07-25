@@ -182,7 +182,7 @@ class FormationGroupeController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Sélection de le groupe qui remplacera [" . $groupe->getLibelle() . "]",
             'form' => $form,

@@ -47,7 +47,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
     public function inscriptionInterneAction(): ViewModel
     {
-        $instances = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
+        $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
         $utilisateur = $this->getUserService()->getConnectedUser();
 
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
@@ -57,7 +57,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
 
         return new ViewModel([
-            'instances' => $instances,
+            'sessions' => $sessions,
             'inscriptions' => $inscriptions,
             'agent' => $agent,
             'rendu' => $rendu,

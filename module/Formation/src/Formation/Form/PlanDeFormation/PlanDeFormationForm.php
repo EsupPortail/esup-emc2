@@ -35,7 +35,7 @@ class PlanDeFormationForm extends Form
             ],
             'attributes' => [
                 'id' => 'description',
-                'class' => "type2",
+                'class' => "tinymce",
             ],
         ]);
         //dates

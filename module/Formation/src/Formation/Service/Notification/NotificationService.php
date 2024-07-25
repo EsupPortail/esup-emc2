@@ -430,7 +430,12 @@ class NotificationService {
         }
 
         $urlService = $this->getUrlService()->setVariables(['instance' => $session]);
-        $vars = ['session' => $session, 'instance' => $session, 'UrlService' => $urlService];
+        $vars = [
+            'session' => $session,
+            'instance' => $session,
+            'UrlService' => $urlService,
+            'MacroService' => $this->getMacroService()
+        ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_EMARGEMENT, $vars);
         $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$session->generateTag(), $rendu->getTemplate()->generateTag()]);

@@ -238,6 +238,8 @@ class InscriptionController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/refuser-responsable', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
         $form->get('etape')->setValue('REFUS');
+        $form->get('missions')->setValue($inscription->getMissions());
+        $form->get('rqth')->setValue($inscription->isRqth()?"1":"0");
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -411,12 +413,13 @@ class InscriptionController extends AbstractActionController
     public function renseignerFraisAction(): ViewModel
     {
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
-        if ($inscription->getFrais() === null) {
+        $frais = $inscription->getFrais();
+        if ($frais === null) {
             $frais = new InscriptionFrais();
             $frais->setInscrit($inscription);
             $this->getInscriptionFraisService()->create($frais);
         }
-        $frais = $inscription->getFrais();
+
 
         $form = $this->getInscriptionFraisForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/renseigner-frais', ['inscription' => $inscription->getId()], [], true));
