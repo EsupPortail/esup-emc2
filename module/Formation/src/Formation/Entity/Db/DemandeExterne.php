@@ -278,6 +278,19 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         return 'DemandeExterne_' . $this->getId();
     }
 
+    public function isRqth(): bool
+    {
+        return false;
+    }
+
+    public function setRqth(bool $isRqth): void
+    {}
+
+    public function getPrecisionRqth(): void
+    {}
+    public function setPrecisionRqth(?string $precision = null): void
+    {}
+
     public function getJustificationResponsable(): ?string
     {
         return $this->justificationResponsable;

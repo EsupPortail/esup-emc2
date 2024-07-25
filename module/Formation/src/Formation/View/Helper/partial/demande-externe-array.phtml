@@ -104,20 +104,18 @@ if (isset($options['affichage']) and isset($options['affichage']['gestionnaires'
                 <?php endif; ?>
             </td>
             <td class="action observation">
-                <?php /** @see \Formation\Controller\ObservationController::ajouterDemandeExterneAction() */ ?>
-                <a href="<?php echo $this->url('formation/demande-externe/ajouter-observation', ['demande-externe' => $demande->getId()], [], true); ?>"
+                <?php /** @see \Formation\Controller\ObservationController::ajouterObservationDemandeExterneAction() */ ?>
+                <a href="<?php echo $this->url('formation/demande-externe/ajouter-observation-demande-externe', ['demande-externe' => $demande->getId()], [], true); ?>"
                    class="ajax-modal" data-event="modification"
                 >
                     <span class="icon icon-ajouter"></span>
                     Ajouter une observation
                 </a>
                 <br>
-                <?php $array = [];
-                    $observation =$demande->getObservationWithTypeCode(FormationObservations::OBSERVATION_DEMANDEEXTERNE_BUREAU);
-                    if ($observation) $array[] = $observation; ?>
-                <?php foreach ($array as $observation) : ?>
+                <?php $observations =$demande->getObservationsWithTypeCode(FormationObservations::OBSERVATION_DEMANDEEXTERNE_BUREAU); ?>
+                <?php foreach ($observations as $observation) : ?>
                     <span class="observation">
-                        <span class="icon icon-attention" data-bs-toggle="tooltip" data-bs-html="true"
+                        <span class="icon icon-commentaire" data-bs-toggle="tooltip" data-bs-html="true"
                               title="<?php echo $observation->getHistoCreateur()->getDisplayName(); ?> <br> <?php echo $observation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br><hr> <?php echo $observation->getObservation(); ?>"></span>
                         <?php if ($canModifier) : ?>
                             <?php /** @see \UnicaenObservation\Controller\ObservationInstanceController::historiserAction() */ ?>

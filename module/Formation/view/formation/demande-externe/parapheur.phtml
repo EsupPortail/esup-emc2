@@ -2,6 +2,7 @@
 
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Inscription;
+use Formation\Provider\Observation\FormationObservations;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 /**
@@ -104,6 +105,7 @@ $canValider = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
         <th class="agent"> Agent</th>
         <th class="formation"> Formation</th>
         <th> Organisme</th>
+        <th> Observations</th>
         <th class="etat"> État</th>
         <th class="action"> Action</th>
     </tr>
@@ -114,6 +116,15 @@ $canValider = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
             <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
             <td> <?php echo $demande->getLibelle(); ?> </td>
             <td> <?php echo $demande->getOrganisme(); ?> </td>
+            <td>
+                <?php $observations =$demande->getObservationsWithTypeCode(FormationObservations::OBSERVATION_DEMANDEEXTERNE_BUREAU); ?>
+                <?php foreach ($observations as $observation) : ?>
+                    <span class="observation">
+                        <span class="icon icon-commentaire" data-bs-toggle="tooltip" data-bs-html="true"
+                              title="<?php echo $observation->getHistoCreateur()->getDisplayName(); ?> <br> <?php echo $observation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br><hr> <?php echo $observation->getObservation(); ?>"></span>
+                    </span>
+                <?php endforeach; ?>
+            </td>
             <td>
                 <?php
                 echo $this->etatinstance($demande->getEtatActif());
@@ -194,4 +205,11 @@ $canValider = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
         min-width: 30rem;
         width: 30rem;
     }
+
+     span.observation {
+         display: inline-block;
+         background: lightgrey;
+         border-radius: 0.25rem;
+         padding: 0.1rem 0.5rem;
+     }
 </style>

@@ -16,9 +16,9 @@ return [
                 [
                     'controller' => ObservationController::class,
                     'action' => [
-                        'ajouter-demande-externe',
+                        'ajouter-observation-demande-externe',
                     ],
-                    'privileges' => [
+                    'roles' => [
 //                        DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_GESTIONNAIRE,
 //                        DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_RESPONSABLE,
 //                        DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH,
@@ -44,14 +44,14 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'ajouter-observation' => [
+                            'ajouter-observation-demande-externe' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/ajouter-observation/:demande-externe',
+                                    'route' => '/ajouter-observation-demande-externe/:demande-externe',
                                     'defaults' => [
-                                        /** @see ObservationController::ajouterDemandeExterneAction() */
+                                        /** @see ObservationController::ajouterObservationDemandeExterneAction() */
                                         'controller' => ObservationController::class,
-                                        'action' => 'ajouter-demande-externe',
+                                        'action' => 'ajouter-observation-demande-externe',
                                     ],
                                 ],
                             ],

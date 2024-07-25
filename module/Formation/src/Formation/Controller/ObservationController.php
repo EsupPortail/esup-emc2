@@ -19,7 +19,7 @@ class ObservationController extends AbstractActionController
     use ObservationInstanceFormAwareTrait;
 
 
-    public function ajouterDemandeExterneAction(): ViewModel
+    public function ajouterObservationDemandeExterneAction(): ViewModel
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
         $observationType = $this->getObservationTypeService()->getObservationTypeByCode(FormationObservations::OBSERVATION_DEMANDEEXTERNE_BUREAU);
@@ -27,7 +27,7 @@ class ObservationController extends AbstractActionController
         $observation = new ObservationInstance();
         $observation->setType($observationType);
         $form = $this->getObservationInstanceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-observation', ['demande-externe' => $demande->getId(), 'type' => FormationObservations::OBSERVATION_DEMANDEEXTERNE_BUREAU], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-observation-demande-externe', ['demande-externe' => $demande->getId(), 'type' => FormationObservations::OBSERVATION_DEMANDEEXTERNE_BUREAU], [], true));
         $form->bind($observation);
         $form->cacherType();
 
