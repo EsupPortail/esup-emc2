@@ -276,8 +276,8 @@ class SessionService
         $instance = new Session();
         $instance->setType(Session::TYPE_INTERNE);
         $instance->setAutoInscription(true);
-        $instance->setNbPlacePrincipale($this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::NB_PLACE_PRINCIPALE)->getValeur());
-        $instance->setNbPlaceComplementaire($this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::NB_PLACE_COMPLEMENTAIRE)->getValeur());
+        $instance->setNbPlacePrincipale($this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::NB_PLACE_PRINCIPALE));
+        $instance->setNbPlaceComplementaire($this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::NB_PLACE_COMPLEMENTAIRE));
         $instance->setFormation($formation);
         $this->create($instance);
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CREATION_EN_COURS);
