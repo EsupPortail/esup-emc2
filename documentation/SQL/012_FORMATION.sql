@@ -1762,7 +1762,8 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('inscription','Gestion des inscriptions',400,'Formation\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'inscription_afficher', 'Afficher', 20
+    SELECT 'inscription_afficher', 'Afficher', 20 UNION
+    SELECT 'inscription_enquete' ,'Répondre et Valider l''enquete',110
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
