@@ -237,8 +237,7 @@ $this->headTitle("Présences pour la formation : " . $session->getInstanceCode()
                     },
                 success:
                     function (retour) {
-                        // console.log(id);
-                        // console.log(retour);
+                        retour = retour.trim();
                         let texte = "";
                         if (retour === 'NON_RENSEIGNEE') texte = "<span class='icon icon-question' style='color:cadetblue;' title='Non renseignée'></span>";
                         if (retour === 'PRESENCE') texte = "<span class='icon icon-checked' style='color:darkgreen;' title='Présent·e'></span>";
@@ -254,8 +253,6 @@ $this->headTitle("Présences pour la formation : " . $session->getInstanceCode()
             let split = id.split("|");
             let inscrit = split[1];
             let mode = split[0];
-            // console.log('mode: ' + mode);
-            // console.log('inscrit: ' + inscrit);
 
             <?php /** @see PresenceController::togglePresencesAction() */ ?>
             let url = "../toggle-presences/" + mode + "/" + inscrit;
@@ -265,14 +262,12 @@ $this->headTitle("Présences pour la formation : " . $session->getInstanceCode()
                 beforeSend:
                     function () {
                         $.each(journees, function (index, journee) {
-                            // console.log(inscrit);
-                            // console.log(journee);
                             document.getElementById(journee + "_" + inscrit).innerHTML = "<i class='fas fa-hourglass' style='color:#1b6d85;'></i>";
                         });
                     },
                 success:
                     function (retour) {
-                        // console.log(retour);
+                        retour = retour.trim();
                         let texte = "";
                         $.each(journees, function (index, journee) {
                             console.log("Inscrit:" + inscrit);
@@ -312,8 +307,7 @@ $this->headTitle("Présences pour la formation : " . $session->getInstanceCode()
                     },
                 success:
                     function (retour) {
-                        console.log("RETOUR:" + retour);
-                        // window.location.reload();
+                        retour = retour.trim();
                         let texte = "";
                         if (retour === 'NON_RENSEIGNEE') texte = "<span class='icon icon-question' style='color:cadetblue;' title='Non renseignée'></span>";
                         if (retour === 'PRESENCE') texte = "<span class='icon icon-checked' style='color:darkgreen;' title='Présent·e'></span>";
