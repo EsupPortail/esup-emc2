@@ -870,6 +870,7 @@ create table unicaen_enquete_instance
         constraint unicaen_enquete_instance_unicaen_enquete_enquete_id_fk
             references unicaen_enquete_enquete
             on delete cascade,
+    validation            timestamp,
     histo_creation        timestamp default now() not null,
     histo_createur_id     integer   default 0     not null
         constraint unicaen_enquete_instance_unicaen_utilisateur_user_id_fk

@@ -125,7 +125,6 @@ class InscriptionService
         $qb = $this->createQueryBuilder()
             ->andWhere('inscription.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('inscription.histoDestruction IS NULL')
-            ->leftJoin('session.formation', 'formation')->addSelect('formation')
             ->orderBy('formation.libelle', 'ASC');
 
 //        $qb = $qb

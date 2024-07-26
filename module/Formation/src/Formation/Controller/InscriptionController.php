@@ -664,7 +664,7 @@ class InscriptionController extends AbstractActionController
             $instance = $inscription->getEnquete();
         }
 
-        $retour = $this->params()->fromQuery('retour');
+        $retour = $this->url()->fromRoute('formations', ['agent' => $inscription->getAgent()->getId()], [], true);
         return new ViewModel([
             'inscription' => $inscription,
             'instance' => $instance,
@@ -678,12 +678,15 @@ class InscriptionController extends AbstractActionController
     public function validerEnqueteAction(): ViewModel
     {
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
-        $inscription->setValidationEnquete(new DateTime());
-        $this->getInscriptionService()->update($inscription);
+        $enquete = $inscription->getEnquete();
+        if ($enquete !== null) {
+            $enquete->setValidation(new DateTime());
+            $this->getInstanceService()->update($enquete);
+        }
 
         $vm = new ViewModel([
             'title' => "Validation de l'enquête de retour de l'atelier",
-            'succes' => "<span class='icon icon-checked'></span> Vous venez de valider l'enquête de retour d'atelier. Vous pouvez maintenant télécharger votre attestation.",
+            'reponse' => "<span class='icon icon-checked'></span> Vous venez de valider l'enquête de retour d'atelier. Vous pouvez maintenant télécharger votre attestation.",
         ]);
         $vm->setTemplate('default/reponse');
         return $vm;

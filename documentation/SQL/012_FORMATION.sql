@@ -572,7 +572,6 @@ create table formation_inscription
         constraint formation_inscription_unicaen_enquete_instance_id_fk
             references unicaen_enquete_instance
             on delete set null,
-    validation_enquete        timestamp,
     rqth                      boolean default false not null,
     precision_rqth            text,
     source_id                 varchar(128),
