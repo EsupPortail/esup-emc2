@@ -7,15 +7,15 @@ use DateTime;
 use Exception;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class ConvocationEvent extends EvenementService
 {
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use NotificationServiceAwareTrait;
 
     private ?string $deadline = null;
@@ -53,13 +53,13 @@ class ConvocationEvent extends EvenementService
 
         try {
             $convocations = [];
-            $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_FERMEE);
+            $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_INSCRIPTION_FERMEE);
             $deadline = (new DateTime())->sub(new DateInterval($this->deadline));
             foreach ($sessions as $session) {
                 if ($session->isEvenementActive()) {
                     $dateDebut = ($session->getDebut() !== null) ? DateTime::createFromFormat('d/m/Y', $session->getDebut()) : null;
                     if ($dateDebut >= $deadline) {
-                        $this->getFormationInstanceService()->envoyerConvocation($session);
+                        $this->getSessionService()->envoyerConvocation($session);
                         $log .= "Convocation des inscrits de la session : " . $session->getInstanceLibelle() . "(" . $session->getInstanceCode() . ")";
                         $convocations[] = $session;
                     }

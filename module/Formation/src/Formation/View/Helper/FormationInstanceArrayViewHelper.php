@@ -2,7 +2,7 @@
 
 namespace Formation\View\Helper;
 
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
 use Laminas\View\Renderer\PhpRenderer;
@@ -16,18 +16,18 @@ use Laminas\View\Resolver\TemplatePathStack;
 class FormationInstanceArrayViewHelper extends AbstractHelper
 {
     /**
-     * @param FormationInstance[] $instances
+     * @param Session[] $sessions
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $instances, array $options = []): string|Partial
+    public function __invoke(array $sessions, array $options = []): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        usort($instances, function (FormationInstance $a, FormationInstance $b) { return $a->getDebut(true) <=> $b->getDebut(true); });
+        usort($sessions, function (Session $a, Session $b) { return $a->getDebut(true) <=> $b->getDebut(true); });
 
-        return $view->partial('sessions-array', ['instances' => $instances, 'options' => $options]);
+        return $view->partial('sessions-array', ['sessions' => $sessions, 'options' => $options]);
     }
 }

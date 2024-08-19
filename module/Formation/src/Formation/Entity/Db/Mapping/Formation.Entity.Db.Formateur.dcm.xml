@@ -15,7 +15,7 @@
         <field name="telephone"           column="telephone"        type="string"  length="64"     nullable="true"/>
 
 
-        <many-to-many field="sessions" target-entity="Formation\Entity\Db\FormationInstance">
+        <many-to-many field="sessions" target-entity="Formation\Entity\Db\Session">
             <join-table name="formation_formateur_session">
                 <join-columns>
                     <join-column name="formateur_id" referenced-column-name="id" />

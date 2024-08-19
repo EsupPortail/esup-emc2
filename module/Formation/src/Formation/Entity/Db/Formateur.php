@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 class Formateur implements HistoriqueAwareInterface
 {
@@ -41,7 +42,7 @@ class Formateur implements HistoriqueAwareInterface
         return $this->id;
     }
 
-    /** @return FormationInstance[] */
+    /** @return Session[] */
     public function getSessions(): array
     {
         return $this->sessions->toArray();
@@ -133,7 +134,7 @@ class Formateur implements HistoriqueAwareInterface
         return $this->utilisateur;
     }
 
-    public function setUtilisateur(?User $utilisateur): void
+    public function setUtilisateur(?UserInterface $utilisateur): void
     {
         $this->utilisateur = $utilisateur;
     }

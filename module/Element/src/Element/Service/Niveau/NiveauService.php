@@ -99,7 +99,7 @@ class NiveauService {
         $options = [];
         if ($withZero) $options[0] = "";
         foreach ($maitrises as $maitrise) {
-            $options[$maitrise->getNiveau()] = $maitrise->getLibelle();
+            $options[$maitrise->getId()] = $maitrise->getLibelle();
         }
         return $options;
     }

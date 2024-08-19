@@ -54,6 +54,7 @@ class Formation implements HistoriqueAwareInterface,
     private ?string $programme = null;
     private ?string $prerequis = null;
     private ?string $public = null;
+    private ?string $complement = null;
     private ?ActionType $actionType = null;
 
     private Collection $missions;
@@ -281,6 +282,16 @@ class Formation implements HistoriqueAwareInterface,
         $this->public = $public;
     }
 
+    public function getComplement(): ?string
+    {
+        return $this->complement;
+    }
+
+    public function setComplement(?string $complement): void
+    {
+        $this->complement = $complement;
+    }
+
     public function getActionType(): ?ActionType
     {
         return $this->actionType;
@@ -294,24 +305,33 @@ class Formation implements HistoriqueAwareInterface,
     /** Formation Instances *******************************************************************************************/
 
     /**
-     * @return FormationInstance[]
+     * @return Session[]
      */
     public function getInstances(): array
     {
         return $this->instances->toArray();
     }
 
-    /** @return FormationInstance[] */
-    public function getSessionsOuvertes(): array
+
+    /** @return Session[] */
+    public function getSessionsWithEtats(array $etatCodes): array
     {
         $sessions = $this->getInstances();
-        $sessions = array_filter($sessions, function (FormationInstance $a) {
-            return in_array($a->getEtatActif()->getType()->getCode(), SessionEtats::ETATS_OUVERTS);
+        $sessions = array_filter($sessions, function (Session $a) use ($etatCodes) {
+            return in_array($a->getEtatActif()->getType()->getCode(), $etatCodes);
         });
         return $sessions;
     }
 
+    /** @return Session[] */
+    public function getSessionsOuvertes(): array
+    {
+        $sessions = $this->getSessionsWithEtats(SessionEtats::ETATS_OUVERTS);
+        return $sessions;
+    }
+
     /** GESTION DES ABONNEMENTS ***************************************************************************************/
+
     /** @return FormationAbonnement[] */
     public function getAbonnements(): array
     {
@@ -327,7 +347,13 @@ class Formation implements HistoriqueAwareInterface,
         return null;
     }
 
-
+    public function isPlanActif(): bool
+    {
+        foreach ($this->getPlans() as $plan) {
+            if ($plan->isActif()) return true;
+        }
+        return false;
+    }
     /** GESTION DES DOMAINES *************************************************************************/
 
     /**
@@ -376,6 +402,18 @@ class Formation implements HistoriqueAwareInterface,
     public function hasPlanDeFormation(PlanDeFormation $plan): bool
     {
         return $this->plans->contains($plan);
+    }
+
+    /** MACROS ********************************************************************************************************/
+
+    /** @noinspection PhpUnused  Macro: Formation#Complement */
+    public function toStringComplement(): string
+    {
+        if ($this->getComplement() === null) return "";
+
+        $text  = "<strong>Compléments à propos de l'action de formation :</strong>";
+        $text .= $this->getComplement();
+        return $text;
     }
 
 }

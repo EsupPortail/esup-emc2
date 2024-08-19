@@ -1,14 +1,14 @@
 <?php
 
 use Formation\Entity\Db\Formateur;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 
 /**
  * @see \Formation\Controller\FormateurController::mesSessionsAction()
  * @var Formateur $formateur
- * @var FormationInstance[] $sessionsActives
- * @var FormationInstance[] $sessionsInactives
+ * @var Session[] $sessionsActives
+ * @var Session[] $sessionsInactives
  */
 
 $this->headTitle('Mes sessions');
@@ -27,10 +27,10 @@ $this->headTitle('Mes sessions');
     <table class="table table-condensed" id="actives">
         <thead>
         <tr>
-            <th class="libelle"> Libellé </th>
-            <th class="periode"> Période </th>
-            <th class="etat"> État </th>
-            <th class="action"> Action </th>
+            <th class="libelle"> Libellé</th>
+            <th class="periode"> Période</th>
+            <th class="etat"> État</th>
+            <th class="action"> Action</th>
         </tr>
         </thead>
         <tbody>
@@ -49,8 +49,8 @@ $this->headTitle('Mes sessions');
                 </td>
                 <td class="action">
                     <?php if ($canSessionAfficher) : ?>
-                        <?php /** @see \Formation\Controller\FormationInstanceController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>">
+                        <?php /** @see \Formation\Controller\SessionController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('formation/session/afficher', ['session' => $session->getId()], [], true); ?>">
                             <span class="icon icon-voir"></span>
                             Accéder
                         </a>
@@ -70,10 +70,10 @@ $this->headTitle('Mes sessions');
     <table class="table table-condensed" id="actives">
         <thead>
         <tr>
-            <th class="libelle"> Libellé </th>
-            <th class="periode"> Période </th>
-            <th class="etat"> État </th>
-            <th class="action"> Action </th>
+            <th class="libelle"> Libellé</th>
+            <th class="periode"> Période</th>
+            <th class="etat"> État</th>
+            <th class="action"> Action</th>
         </tr>
         </thead>
         <tbody>
@@ -92,8 +92,8 @@ $this->headTitle('Mes sessions');
                 </td>
                 <td class="action">
                     <?php if ($canSessionAfficher) : ?>
-                        <?php /** @see \Formation\Controller\FormationInstanceController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>">
+                        <?php /** @see \Formation\Controller\SessionController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('formation/session/afficher', ['session' => $session->getId()], [], true); ?>">
                             <span class="icon icon-voir"></span>
                             Accéder
                         </a>
@@ -107,12 +107,13 @@ $this->headTitle('Mes sessions');
 
 <style>
     th.libelle {
-        width:50%;
+        width: 50%;
     }
-    th.periode
-    {
+
+    th.periode {
         /*width:50%;*/
     }
+
     th.etat {
         width: 10rem;
     }

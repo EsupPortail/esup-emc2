@@ -17,6 +17,8 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'index',
+                        'afficher-charte',
+                        'valider-charte',
                     ],
                     'privilege' => [
                         FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_INDEX),
@@ -26,6 +28,7 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'afficher',
+                        'historique',
                     ],
                     'privilege' => [
                         FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_AFFICHER),
@@ -77,6 +80,31 @@ return [
         'routes' => [
             'formation' => [
                 'child_routes' => [
+                    'charte' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            /** @see AgentController::afficherCharteAction() */
+                            'route'    => '/charte',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'afficher-charte',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'valider' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    /** @see AgentController::validerCharteAction() */
+                                    'route'    => '/valider',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action'     => 'valider-charte',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                     'agent-index' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -97,6 +125,18 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'historique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            /** @see AgentController::historiqueAction() */
+                            'route'    => '/historique/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'historique',
                             ],
                         ],
                         'may_terminate' => true,

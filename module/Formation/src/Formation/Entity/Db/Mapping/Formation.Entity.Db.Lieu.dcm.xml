@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping>
+    <entity name="Formation\Entity\Db\Lieu" table="formation_lieu">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="libelle"               column="libelle"         type="string"  length="1024"    nullable="false"/>
+        <field name="batiment"              column="batiment"        type="string"  length="1024"    nullable="false"/>
+        <field name="campus"                column="campus"          type="string"  length="1024"    nullable="false"/>
+        <field name="ville"                 column="ville"           type="string"  length="1024"    nullable="false"/>
+
+        <one-to-many target-entity="Formation\Entity\Db\Seance" mapped-by="lieu" field="seances" />
+
+        <!-- HISTO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

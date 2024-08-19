@@ -7,19 +7,22 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
+use UnicaenObservation\Entity\Interface\HasObservationsInterface;
+use UnicaenObservation\Entity\Trait\HasObservationsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, HasEtatsInterface, HasValidationsInterface
+class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, HasEtatsInterface, HasValidationsInterface, HasObservationsInterface
 {
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
     use HasValidationsTrait;
+    use HasObservationsTrait;
 
     public function getResourceId(): string
     {
@@ -50,13 +53,16 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $justificationRefus = null;
     private ?Collection $devis;
 
+    private Collection $gestionnaires;
     private Collection $sessions;
 
     public function __construct()
     {
         $this->etats = new ArrayCollection();
         $this->devis = new ArrayCollection();
+        $this->gestionnaires = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+        $this->observations = new ArrayCollection();
 
     }
 
@@ -272,6 +278,19 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         return 'DemandeExterne_' . $this->getId();
     }
 
+    public function isRqth(): bool
+    {
+        return false;
+    }
+
+    public function setRqth(bool $isRqth): void
+    {}
+
+    public function getPrecisionRqth(): void
+    {}
+    public function setPrecisionRqth(?string $precision = null): void
+    {}
+
     public function getJustificationResponsable(): ?string
     {
         return $this->justificationResponsable;
@@ -302,23 +321,44 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         $this->devis->add($fichier);
     }
 
-    /** @return FormationInstance[] */
+    /** @return Session[] */
     public function getSessions(): array
     {
         return $this->sessions->toArray();
     }
 
-    public function addSession(FormationInstance $session): void
+    public function addSession(Session $session): void
     {
         $this->sessions->add($session);
     }
 
-    public function removeSession(FormationInstance $session): void
+    public function removeSession(Session $session): void
     {
         $this->sessions->removeElement($session);
     }
 
+    /** GESTION DES GESTIONNAIRES *************************************************************************************/
 
+    /** @return UserInterface[] */
+    public function getGestionnaires(): array
+    {
+        return $this->gestionnaires->toArray();
+    }
+
+    public function hasGestionnaire(UserInterface $gestionnaire): bool
+    {
+        return $this->gestionnaires->contains($gestionnaire);
+    }
+
+    public function addGestionnaire(UserInterface $gestionnaire): void
+    {
+        if (!$this->hasGestionnaire($gestionnaire)) $this->gestionnaires->add($gestionnaire);
+    }
+
+    public function removeGestionnaire(UserInterface $gestionnaire): void
+    {
+        if ($this->hasGestionnaire($gestionnaire)) $this->gestionnaires->removeElement($gestionnaire);
+    }
 
     /** MACRO ET PRETTYPRINT ******************************************************************************************/
 
@@ -326,16 +366,16 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     {
         $text = "<dl class='row'>";
         if ($this->getOrganisme()) {
-            $text.= "<dt class='col-md-4'>Organisme</dt><dd>".$this->getOrganisme()."</dd>";
+            $text .= "<dt class='col-md-4'>Organisme</dt><dd>" . $this->getOrganisme() . "</dd>";
         }
         if ($this->getContact()) {
-            $text.= "<dt class='col-md-4'>Contact</dt><dd>".$this->getContact()."</dd>";
+            $text .= "<dt class='col-md-4'>Contact</dt><dd>" . $this->getContact() . "</dd>";
         }
         if ($this->getLieu()) {
-            $text.= "<dt class='col-md-4'>Lieu</dt><dd>".$this->getLieu()."</dd>";
+            $text .= "<dt class='col-md-4'>Lieu</dt><dd>" . $this->getLieu() . "</dd>";
         }
         if ($this->getMontant()) {
-            $text.= "<dt class='col-md-4'>Montant</dt><dd>".$this->getMontant()."</dd>";
+            $text .= "<dt class='col-md-4'>Montant</dt><dd>" . $this->getMontant() . "</dd>";
         }
         $text .= "</dl>";
         return $text;

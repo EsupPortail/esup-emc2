@@ -6,7 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Formation\Entity\Db\FormationInstance"  field="session">
+        <many-to-one target-entity="Formation\Entity\Db\Session"  field="session">
             <join-column name="session_id" referenced-column-name="id"/>
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
@@ -23,6 +23,9 @@
         <field name="justificationResponsable"  column="justification_responsable"          type="text"         nullable="true"/>
         <field name="justificationDrh"          column="justification_drh"                  type="text"         nullable="true"/>
         <field name="justificationRefus"        column="justification_refus"                type="text"         nullable="true"/>
+
+        <field name="rqth"                      column="rqth"                               type="boolean"      nullable="false"/>
+        <field name="precisionRqth"             column="precision_rqth"                     type="text"         nullable="true"/>
 
         <one-to-one     field="frais"           target-entity="Formation\Entity\Db\InscriptionFrais"      mapped-by="inscription" />
         <one-to-many    field="presences"       target-entity="Formation\Entity\Db\Presence"              mapped-by="inscription" />
@@ -49,9 +52,9 @@
             </join-table>
         </many-to-many>
 
-
-        <field name="validationEnquete"  type="datetime"                 column="validation_enquete"  nullable="true"/>
-        <one-to-many field="reponsesEnquete" target-entity="Formation\Entity\Db\EnqueteReponse" mapped-by="inscription"/>
+        <one-to-one field="enquete" target-entity="UnicaenEnquete\Entity\Db\Instance" >
+            <join-column name="enquete_instance_id" referenced-column-name="id" />
+        </one-to-one>
 
         <field name="source"            column="source_id"          type="string"   length="128" nullable="true"/>
         <field name="idSource"          column="id_source"          type="string"   length="256" nullable="true"/>

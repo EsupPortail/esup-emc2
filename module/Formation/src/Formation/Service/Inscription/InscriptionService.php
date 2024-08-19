@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\StagiaireExterne;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
@@ -62,7 +63,8 @@ class InscriptionService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Inscription::class)->createQueryBuilder('inscription')
-            ->leftJoin('inscription.session', 'session')->addSelect('session')
+            ->join('inscription.session', 'session')->addSelect('session')
+            ->join('session.formation', 'formation')->addSelect('formation')
             ->leftJoin('inscription.agent', 'agent')->addSelect('agent')
             ->leftJoin('inscription.stagiaire', 'stagiaire')->addSelect('stagiaire');
         return $qb;
@@ -105,7 +107,6 @@ class InscriptionService
             ->andWhere('agent.login = :login OR stagiaire.login = :login')
             ->setParameter('login', $user->getUsername())
             ->andWhere('inscription.histoDestruction IS NULL')
-            ->leftJoin('session.formation', 'formation')->addSelect('formation')
             ->orderBy('formation.libelle', 'ASC');
 
         $qb = $qb
@@ -124,7 +125,6 @@ class InscriptionService
         $qb = $this->createQueryBuilder()
             ->andWhere('inscription.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('inscription.histoDestruction IS NULL')
-            ->leftJoin('session.formation', 'formation')->addSelect('formation')
             ->orderBy('formation.libelle', 'ASC');
 
 //        $qb = $qb
@@ -172,6 +172,18 @@ class InscriptionService
     }
 
     /**
+     * @param StagiaireExterne[] $stagiaires
+     * @param int|null $annee
+     * @return Inscription[]
+     */
+    public function getInscriptionsValideesByStagiaires(array $stagiaires, ?int $annee): array
+    {
+        $etats = [InscriptionEtats::ETAT_VALIDER_DRH, InscriptionEtats::ETAT_REFUSER];
+        $result = $this->getInscriptionsByStagiairesAndEtats($stagiaires, $etats, $annee);
+        return $result;
+    }
+
+    /**
      * @param Agent[] $agents
      * @param int|null $annee
      * @return Inscription[]
@@ -199,6 +211,35 @@ class InscriptionService
             ->andWhere('inscription.histoDestruction IS NULL')
             ->andWhere('session.histoDestruction IS NULL')
             ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
+        ;
+
+        $qb = Inscription::decorateWithEtatsCodes($qb, 'inscription', $etats);
+
+        $result = $qb->getQuery()->getResult();
+        $result = array_filter($result, function (Inscription $a) use ($debut, $fin) {
+            $sessionDebut = DateTime::createFromFormat('d/m/Y', $a->getSession()->getDebut());
+            $sessionFin = DateTime::createFromFormat('d/m/Y', $a->getSession()->getFin());
+            return ($sessionDebut >= $debut && $sessionFin <= $fin);
+        });
+        return $result;
+    }
+
+    /**
+     * @param StagiaireExterne[] $stagiaires
+     * @param EtatType[] $etats
+     * @param int|null $annee
+     * @return Inscription[]
+     */
+    public function getInscriptionsByStagiairesAndEtats(array $stagiaires, array $etats, ?int $annee): array
+    {
+        if ($annee === null) $annee = Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
+        $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscription.histoDestruction IS NULL')
+            ->andWhere('session.histoDestruction IS NULL')
+            ->andWhere('stagiaire in (:stagiaires)')->setParameter('stagiaires', $stagiaires)
         ;
 
         $qb = Inscription::decorateWithEtatsCodes($qb, 'inscription', $etats);
@@ -246,6 +287,28 @@ class InscriptionService
         if (!$withHisto) $qb = $qb->andWhere('inscription.histoDestruction IS NULL');
 
 
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return Inscription[] */
+    public function getInscriptionsByFormation(?Formation $formation): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('session.formation = :formation')->setParameter('formation', $formation)
+            ->andWhere('inscription.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return Inscription[] */
+    public function getInscriptionsBySession(?Session $session): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscription.session = :session')->setParameter('session', $session)
+            ->andWhere('inscription.histoDestruction IS NULL')
+        ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }

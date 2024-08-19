@@ -19,4 +19,17 @@ class DemandeExterneEtats {
         DemandeExterneEtats::ETAT_VALIDATION_RESP,
         DemandeExterneEtats::ETAT_VALIDATION_GESTIONNAIRE,
         DemandeExterneEtats::ETAT_FORCEE_PARAPHEUR];
+
+    const ETATS_OUVERTS = [
+        DemandeExterneEtats::ETAT_CREATION_EN_COURS,
+        DemandeExterneEtats::ETAT_VALIDATION_AGENT,
+        DemandeExterneEtats::ETAT_VALIDATION_RESP,
+        DemandeExterneEtats::ETAT_VALIDATION_GESTIONNAIRE,
+        DemandeExterneEtats::ETAT_VALIDATION_DRH,
+        DemandeExterneEtats::ETAT_FORCEE_PARAPHEUR,
+    ];
+    const ETATS_FINAUX = [
+        DemandeExterneEtats::ETAT_TERMINEE,
+        DemandeExterneEtats::ETAT_REJETEE,
+    ];
 }

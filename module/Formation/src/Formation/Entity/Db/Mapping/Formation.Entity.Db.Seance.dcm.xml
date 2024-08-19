@@ -6,7 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Formation\Entity\Db\FormationInstance"  field="instance">
+        <many-to-one target-entity="Formation\Entity\Db\Session"  field="instance">
             <join-column name="instance_id" referenced-column-name="id"/>
         </many-to-one>
 
@@ -15,7 +15,13 @@
         <field name="jour"              column="jour"           type="datetime"                nullable="true"/>
         <field name="debut"             column="debut"          type="string"  length="64"     nullable="true"/>
         <field name="fin"               column="fin"            type="string"  length="64"     nullable="true"/>
-        <field name="lieu"              column="lieu"           type="string"  length="1024"   nullable="true"/>
+
+        <field name="oldLieu"           column="lieu_old"       type="string"  length="1024"   nullable="true"/>
+        <field name="lien"              column="lien"           type="string"  length="1024"   nullable="true"/>
+
+        <many-to-one target-entity="Formation\Entity\Db\Lieu"  field="lieu">
+            <join-column name="lieu_id" referenced-column-name="id"/>
+        </many-to-one>
 
         <field name="volume"            column="volume"         type="float"                   nullable="true"/>
         <field name="volumeDebut"       column="volume_debut"   type="datetime"                nullable="true"/>
@@ -26,6 +32,7 @@
         <field name="source"            column="source_id"          type="string"   length="128" nullable="true"/>
         <field name="idSource"          column="id_source"          type="string"   length="256" nullable="true"/>
 
+        <!-- HISTORIQUE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>

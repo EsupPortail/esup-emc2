@@ -25,7 +25,6 @@ class FormationGroupeFormFactory
         $axeService = $container->get(AxeService::class);
         $hydrator = $container->get('HydratorManager')->get(FormationGroupeHydrator::class);
 
-        /** @var FormationGroupeForm $form */
         $form = new FormationGroupeForm();
         $form->setAxeService($axeService);
         $form->setHydrator($hydrator);

@@ -2,8 +2,6 @@
 
 namespace Formation\Form\Demande2Formation;
 
-use Formation\Entity\Db\DemandeExterne;
-use Laminas\Hydrator\HydratorInterface;
 use Psr\Container\ContainerInterface;
 
 class Demande2FormationHydratorFactory {

@@ -2,7 +2,6 @@
 
 namespace Formation\Service\StagiaireExterne;
 
-use Application\Entity\Db\Agent;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -161,6 +160,9 @@ class StagiaireExterneService {
         return $result;
     }
 
+
+    /** Facade ********************************************************************************************************/
+
     public function formatStagiaireExterneJSON(array $stagiaires): array
     {
         $result = [];
@@ -178,7 +180,5 @@ class StagiaireExterneService {
         });
         return $result;
     }
-
-    /** Facade ********************************************************************************************************/
 
 }

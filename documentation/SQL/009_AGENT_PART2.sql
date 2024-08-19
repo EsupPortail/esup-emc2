@@ -340,7 +340,7 @@ create table agent_carriere_mobilite
 
 create table agent_poste
 (
-    id         serial
+    id         bigserial
         constraint agent_poste_pk
             primary key,
     agent_id   varchar(40)             not null

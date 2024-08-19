@@ -4,14 +4,14 @@ namespace Formation\Form\Inscription;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\Inscription;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class InscriptionHydrator implements HydratorInterface
 {
     use AgentServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use StagiaireExterneServiceAwareTrait;
 
     public function extract(object $object): array
@@ -30,7 +30,7 @@ class InscriptionHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         /** @var Inscription $object */
-        $session = (isset($data['session']) && $data['session']['id'] !== '') ? $this->getFormationInstanceService()->getFormationInstance((int)$data['session']['id']) : null;
+        $session = (isset($data['session']) && $data['session']['id'] !== '') ? $this->getSessionService()->getSession((int)$data['session']['id']) : null;
         $type = $data['type'] ?? null;
         $agent = (isset($data['agent']) && $data['agent']['id'] !== '') ? $this->getAgentService()->getAgent($data['agent']['id'], true, false) : null;
         $stagiaire = (isset($data['stagiaire']) && $data['stagiaire']['id'] !== '') ? $this->getStagiaireExterneService()->getStagiaireExterne($data['stagiaire']['id']) : null;

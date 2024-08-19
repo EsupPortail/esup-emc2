@@ -32,7 +32,7 @@ use Laminas\Form\Form;
     $(document).ready(function() {
         tinymce.remove();
         tinymce.init({
-            selector: '.type2',
+            selector: '.tinymce',
             toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
             resize: true,
             language: 'fr_FR',
@@ -41,6 +41,8 @@ use Laminas\Form\Form;
             browser_spellcheck : true,
             branding: false,
             menu: {},
+            menubar: false,
+            height: 200,
             body_id: 'description',
             setup: function (editor) {
                 editor.on("focusout", function () {

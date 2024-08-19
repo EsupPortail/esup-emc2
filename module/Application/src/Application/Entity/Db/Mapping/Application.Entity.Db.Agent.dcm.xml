@@ -76,6 +76,17 @@
         <one-to-many field="autorites" target-entity="Application\Entity\Db\AgentAutorite" mapped-by="agent"/>
         <one-to-many field="superieurs" target-entity="Application\Entity\Db\AgentSuperieur" mapped-by="agent"/>
 
+        <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
+            <join-table name="agent_validation">
+                <join-columns>
+                    <join-column name="agent_id" referenced-column-name="c_individu" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="validation_instance_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>
         <field name="updated_on"               column="updated_on"       type="datetime"/>

@@ -26,6 +26,8 @@ use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Inscription\InscriptionServiceFactory;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceFactory;
+use Formation\View\Helper\InscriptionsViewHelper;
+use Formation\View\Helper\InscriptionViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -83,6 +85,8 @@ return [
                         'renseigner-frais',
 
                         'envoyer-convocation',
+                        'envoyer-attestation',
+                        'envoyer-absence',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -141,6 +145,18 @@ return [
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
                     ],
+                ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'repondre-enquete',
+                        'valider-enquete'
+                    ],
+                    'privileges' => [
+                        InscriptionPrivileges::INSCRIPTION_ENQUETE,
+                    ],
+                    //todo creer assertion ...
+                    //'assertion' => InscriptionAssertion::class,
                 ],
             ],
         ],
@@ -238,6 +254,26 @@ return [
                                     'defaults' => [
                                         /** @see InscriptionController::envoyerConvocationAction() */
                                         'action' => 'envoyer-convocation',
+                                    ],
+                                ],
+                            ],
+                            'envoyer-attestation' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/envoyer-attestation/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::envoyerAttestationAction() */
+                                        'action' => 'envoyer-attestation',
+                                    ],
+                                ],
+                            ],
+                            'envoyer-absence' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/envoyer-absence/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::envoyerAbsenceAction() */
+                                        'action' => 'envoyer-absence',
                                     ],
                                 ],
                             ],
@@ -369,7 +405,8 @@ return [
                             'creer-inscription' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/creer-inscription/:formation-instance/:agent',
+                                    /** @see InscriptionController::inscriptionAction() */
+                                    'route' => '/creer-inscription/:session/:agent',
                                     'defaults' => [
                                         'action' => 'inscription',
                                     ],
@@ -378,9 +415,31 @@ return [
                             'annuler-inscription' => [
                                 'type' => Segment::class,
                                 'options' => [
+                                    /** @see InscriptionController::desinscriptionAction() */
                                     'route' => '/annuler-inscription/:inscription',
                                     'defaults' => [
                                         'action' => 'desinscription',
+                                    ],
+                                ],
+                            ],
+                            /** ENQUETE ********************************************************************************/
+                            'repondre-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/repondre-enquete/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::repondreEnqueteAction() */
+                                        'action' => 'repondre-enquete',
+                                    ],
+                                ],
+                            ],
+                            'valider-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/valider-enquete/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::validerEnqueteAction() */
+                                        'action' => 'valider-enquete',
                                     ],
                                 ],
                             ],
@@ -416,6 +475,12 @@ return [
             JustificationHydrator::class => JustificationHydratorFactory::class,
             InscriptionFraisHydrator::class => InscriptionFraisHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'inscription' => InscriptionViewHelper::class,
+            'inscriptions' => InscriptionsViewHelper::class,
+        ],
+    ],
 
 ];

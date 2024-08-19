@@ -16,7 +16,6 @@ use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Event\SessionCloture\SessionClotureEventFactory;
 use Formation\Provider\IdentityProvider;
 use Formation\Provider\IdentityProviderFactory;
-use Formation\Provider\Role\FormationRoles;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\NotificationFormationsOuvertesServiceFactory;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;

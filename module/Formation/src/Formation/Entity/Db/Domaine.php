@@ -5,7 +5,6 @@ namespace Formation\Entity\Db;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -23,6 +22,7 @@ class Domaine implements HistoriqueAwareInterface, HasDescriptionInterface, HasF
     private ?string $libelle = null;
     private ?int $ordre = null;
     private ?string $couleur = null;
+
 //    private Collection $formations;
 
     public function __construct()
@@ -57,7 +57,7 @@ class Domaine implements HistoriqueAwareInterface, HasDescriptionInterface, HasF
 
     public function getCouleur(): ?string
     {
-        return ($this->couleur)??"gray";
+        return ($this->couleur) ?? "gray";
     }
 
     public function setCouleur(?string $couleur): void

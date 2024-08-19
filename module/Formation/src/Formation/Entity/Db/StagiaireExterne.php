@@ -55,6 +55,8 @@ class StagiaireExterne implements HistoriqueAwareInterface {
         $this->nom = $nom;
     }
 
+    public function getNomFamille(): null { return null; }
+
     public function getDateNaissance(): ?DateTime
     {
         return $this->dateNaissance;

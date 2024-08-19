@@ -2,7 +2,6 @@
 
 namespace Formation\Form\SelectionPlanDeFormation;
 
-use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;

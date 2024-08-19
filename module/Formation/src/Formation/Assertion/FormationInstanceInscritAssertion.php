@@ -24,11 +24,8 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
         }
 
         /** @var Agent $entity */
-
-        $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
-        $isResponsable = false;
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {

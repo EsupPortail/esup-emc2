@@ -13,7 +13,9 @@ use Formation\Service\Inscription\InscriptionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
 class AgentControllerFactory
 {
@@ -33,7 +35,9 @@ class AgentControllerFactory
          * @var AgentSuperieurService $agentSuperieurService
          * @var DemandeExterneService $demandeExterneService
          * @var InscriptionService $inscriptionService
+         * @var RenduService $renduService
          * @var UserService $userService
+         * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
         $affectationService = $container->get(AgentAffectationService::class);
@@ -43,7 +47,9 @@ class AgentControllerFactory
         $statutService = $container->get(AgentStatutService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
         $inscriptionService = $container->get(InscriptionService::class);
+        $renduService = $container->get(RenduService::class);
         $userService = $container->get(UserService::class);
+        $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         $controller = new AgentController();
         $controller->setAgentService($agentService);
@@ -54,7 +60,9 @@ class AgentControllerFactory
         $controller->setAgentStatutService($statutService);
         $controller->setDemandeExterneService($demandeExterneService);
         $controller->setInscriptionService($inscriptionService);
+        $controller->setRenduService($renduService);
         $controller->setUserService($userService);
+        $controller->setValidationInstanceService($validationInstanceService);
 
         return $controller;
     }

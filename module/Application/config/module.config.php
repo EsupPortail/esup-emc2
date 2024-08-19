@@ -26,7 +26,7 @@ use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Carriere\Provider\Privilege\CorpsPrivileges;
-Use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -103,6 +103,13 @@ return [
                         RoleProvider::ADMIN_TECH,
                     ],
                 ],
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'check-connection',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -134,8 +141,8 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'etab'                     => [
-                        'footer'   => false, // propriété maison pour inclure cette page dans le menu de pied de page
+                    'etab' => [
+                        'footer' => false, // propriété maison pour inclure cette page dans le menu de pied de page
                     ],
                     'gestion' => [
                         'order' => 400,
@@ -149,120 +156,131 @@ return [
                         'label' => 'Ressources',
                         'title' => "Ressources",
                         'route' => 'ressource-rh',
-                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-ressources') ,
+                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-ressources'),
                     ],
                     'administration' => [
                         'order' => 10000,
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',
-                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-administration') ,
+                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-administration'),
                     ],
                 ],
             ],
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
-            'home'        => [
-                'type'          => Literal::class,
+            'home' => [
+                'type' => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/',
+                    'route' => '/',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
             'index-personnel' => [
-                'type'          => Literal::class,
+                'type' => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/index-personnel',
+                    'route' => '/index-personnel',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index-personnel',
+                        'action' => 'index-personnel',
                     ],
                 ],
             ],
             'index-validateur' => [
-                'type'          => Literal::class,
+                'type' => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/index-validateur',
+                    'route' => '/index-validateur',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index-validateur',
+                        'action' => 'index-validateur',
                     ],
                 ],
             ],
             'index-superieur' => [
-                'type'          => Literal::class,
+                'type' => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/index-superieur',
+                    'route' => '/index-superieur',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index-superieur',
+                        'action' => 'index-superieur',
                     ],
                 ],
             ],
             'index-autorite' => [
-                'type'          => Literal::class,
+                'type' => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/index-autorite',
+                    'route' => '/index-autorite',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index-autorite',
+                        'action' => 'index-autorite',
                     ],
                 ],
             ],
             'infos' => [
-                'type'          => Literal::class,
+                'type' => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/infos',
+                    'route' => '/infos',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'infos',
+                        'action' => 'infos',
                     ],
                 ],
             ],
-            'gestion'        => [
-                'type'    => Literal::class,
+            'gestion' => [
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/gestion',
+                    'route' => '/gestion',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index-gestion',
-                    ],
-                ],
-                'may_terminate' => true,
-            ],
-            'ressource-rh'        => [
-                'type'    => Literal::class,
-                'options' => [
-                    'route'    => '/ressource-rh',
-                    'defaults' => [
-                        'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index-ressources',
+                        'action' => 'index-gestion',
                     ],
                 ],
                 'may_terminate' => true,
             ],
-            'administration'        => [
-                'type'    => Literal::class,
+            'ressource-rh' => [
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/administration',
+                    'route' => '/ressource-rh',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'index-administration',
+                        'action' => 'index-ressources',
                     ],
                 ],
                 'may_terminate' => true,
+            ],
+            'administration' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/administration',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action' => 'index-administration',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
+            'check-connection' => [
+                'type' => Literal::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route' => '/check-connection',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action' => 'check-connection',
+                    ],
+                ],
             ],
         ],
     ],
@@ -279,7 +297,7 @@ return [
             SynchroOctopusService::class => SynchroOctopusServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'invokables' => [
         ],
         'factories' => [
@@ -305,59 +323,58 @@ return [
         ],
     ],
 
-    'view_manager'    => [
-        'template_map'             => [
+    'view_manager' => [
+        'template_map' => [
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
-            'error/403'     => realpath('./module/Application/view/error/403.phtml'),
-            'error/404'     => realpath('./module/Application/view/error/404.phtml'),
+            'error/403' => realpath('./module/Application/view/error/403.phtml'),
+            'error/404' => realpath('./module/Application/view/error/404.phtml'),
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
     ],
 
-    'translator'      => [
-        'locale'                    => 'fr_FR', // en_US
+    'translator' => [
+        'locale' => 'fr_FR', // en_US
         'translation_file_patterns' => [
             [
-                'type'     => 'gettext',
+                'type' => 'gettext',
                 'base_dir' => __DIR__ . '/../language',
-                'pattern'  => '%s.mo',
+                'pattern' => '%s.mo',
             ],
         ],
     ],
 
-      'public_files' => [
-        'head_scripts'          => [
+    'public_files' => [
+        'head_scripts' => [
             '015_jquery' => 'unistrap-1.0.0/js/jquery-3.6.1.min.js',
             '040_bootstrap' => '',
+            '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
         ],
         'inline_scripts' => [
-            '020_app'         => '',
-            '030_util'        => '/unicaen/app/js/util.js',
-            '040_unicaen'     => '/unicaen/app/js/unicaen.js',
+            '020_app' => '',
+            '030_util' => '/unicaen/app/js/util.js',
+            '040_unicaen' => '/unicaen/app/js/unicaen.js',
             '050_jquery_form' => '',
             '070_bootstrap' => 'unistrap-1.0.0/lib/bootstrap-5.2.2/dist/js/bootstrap.bundle.min.js',
             '080_unistrap' => 'unistrap-1.0.0/js/unistrap.js',
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
             '120_bootstrap-select' => '/vendor/bootstrap-select-1.14.0-beta3/js/bootstrap-select.min.js',
             '120_bootstrap-select-fr' => '/vendor/bootstrap-select-1.14.0-beta3/js/i18n/defaults-fr_FR.js',
-            '150_' => 'js/tinymce/js/tinymce/tinymce.js',
-            '151_' => 'js/form_fiche.js',
-            '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
+            '150_' => 'vendor/tinymce-6.8.2/js/tinymce/tinymce.min.js',
         ],
         'stylesheets' => [
             '000_unistra' => 'css/font-local.css',
             '040_bootstrap' => 'unistrap-1.0.0/lib/bootstrap-5.2.2/dist/css/bootstrap.min.css',
             '041_ubuntu' => 'unistrap-1.0.0/css/font-ubuntu.css',
             '042_unistrap' => 'unistrap-1.0.0/css/unistrap.css',
-            '060_unicaen'             => '',
+            '060_unicaen' => '',
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.css',
             '112_' => 'vendor/font-awesome-5.15.2/css/all.min.css',
             '120_' => '/vendor/bootstrap-select-1.14.0-beta3/css/bootstrap-select.min.css',
-            '065_unicaen-icon'        => '/unicaen/app/css/unicaen-icon.css',
+            '065_unicaen-icon' => '/unicaen/app/css/unicaen-icon.css',
 
-            '976_environnement'         => 'css/environnement.css',
+            '976_environnement' => 'css/environnement.css',
             '977_app' => 'css/app.css',
             '998_default' => 'css/default.css',
             '999_local' => 'css/local.css',

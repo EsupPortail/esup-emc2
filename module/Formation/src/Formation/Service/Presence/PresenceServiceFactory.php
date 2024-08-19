@@ -22,7 +22,6 @@ class PresenceServiceFactory
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var PresenceService $service */
         $service = new PresenceService();
         $service->setObjectManager($entityManager);
         return $service;

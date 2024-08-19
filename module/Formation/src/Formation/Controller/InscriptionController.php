@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use Fichier\Controller\FichierController;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
@@ -17,33 +18,39 @@ use Formation\Form\InscriptionFrais\InscriptionFraisFormAwareTrait;
 use Formation\Form\Justification\JustificationFormAwareTrait;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Source\Sources;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Form\Element\Select;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use UnicaenEnquete\Service\Enquete\EnqueteServiceAwareTrait;
+use UnicaenEnquete\Service\Instance\InstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 class InscriptionController extends AbstractActionController
 {
-
     use AgentServiceAwareTrait;
     use InscriptionServiceAwareTrait;
-    use InscriptionFormAwareTrait;
+    use EnqueteServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use FichierServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use InstanceServiceAwareTrait;
     use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use ParametreServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use UserServiceAwareTrait;
 
+    use InscriptionFormAwareTrait;
     use InscriptionFraisServiceAwareTrait;
     use InscriptionFraisFormAwareTrait;
     use JustificationFormAwareTrait;
@@ -63,7 +70,7 @@ class InscriptionController extends AbstractActionController
 
     public function ajouterAction(): ViewModel
     {
-        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+        $session = $this->getSessionService()->getRequestedSession($this);
 
         $inscription = new Inscription();
         if ($session) $inscription->setSession($session);
@@ -84,7 +91,7 @@ class InscriptionController extends AbstractActionController
                     $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
                     $this->getInscriptionService()->update($inscription);
 
-                    $this->getFormationInstanceService()->classerInscription($inscription);
+                    $this->getSessionService()->classerInscription($inscription);
                 }
             }
             exit();
@@ -145,7 +152,7 @@ class InscriptionController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getSession()->getId()], ['fragment' => 'inscriptions'], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $inscrit->getSession()->getId()], ['fragment' => 'inscriptions'], true);
     }
 
     public function restaurerAction(): Response
@@ -156,7 +163,7 @@ class InscriptionController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getSession()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $inscrit->getSession()->getId()], [], true);
 
     }
 
@@ -231,6 +238,8 @@ class InscriptionController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/refuser-responsable', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
         $form->get('etape')->setValue('REFUS');
+        $form->get('missions')->setValue($inscription->getMissions());
+        $form->get('rqth')->setValue($inscription->isRqth()?"1":"0");
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -272,7 +281,7 @@ class InscriptionController extends AbstractActionController
             if ($form->isValid()) {
                 $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
                 $this->getInscriptionService()->update($inscription);
-                $this->getFormationInstanceService()->classerInscription($inscription);
+                $this->getSessionService()->classerInscription($inscription);
                 $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
                 $this->getNotificationService()->triggerDrhValidation($inscription);
                 if ($inscription->getListe() === Inscription::PRINCIPALE
@@ -341,7 +350,7 @@ class InscriptionController extends AbstractActionController
 
         $this->flashMessenger()->addSuccessMessage("<strong>" . $inscription->getStagiaireDenomination() . "</strong> vient d'être ajouté&middot;e en liste principale.");
 
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscription->getSession()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $inscription->getSession()->getId()], [], true);
     }
 
     public function envoyerListeComplementaireAction(): Response
@@ -356,7 +365,7 @@ class InscriptionController extends AbstractActionController
 
         $this->flashMessenger()->addSuccessMessage("<strong>" . $inscription->getStagiaireDenomination() . "</strong> vient d'être ajouté&middot;e en liste complémentaire.");
 
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscription->getSession()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $inscription->getSession()->getId()], [], true);
     }
 
     public function retirerListeAction(): Response
@@ -371,14 +380,14 @@ class InscriptionController extends AbstractActionController
 
         $this->flashMessenger()->addSuccessMessage("<strong>" . $inscription->getStagiaireDenomination() . "</strong> vient d'être retiré·e des listes.");
 
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscription->getSession()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $inscription->getSession()->getId()], [], true);
     }
 
     public function classerAction(): Response
     {
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
-        $this->getFormationInstanceService()->classerInscription($inscription);
+        $this->getSessionService()->classerInscription($inscription);
 
         switch ($inscription->getListe()) {
             case Inscription::PRINCIPALE :
@@ -396,7 +405,7 @@ class InscriptionController extends AbstractActionController
         if ($retour) return $this->redirect()->toUrl($retour);
 
         $session = $inscription->getSession();
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $session->getId()], ['fragment' => 'inscriptions'], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $session->getId()], ['fragment' => 'inscriptions'], true);
     }
 
     /** FRAIS  ********************************************************************************************************/
@@ -404,12 +413,13 @@ class InscriptionController extends AbstractActionController
     public function renseignerFraisAction(): ViewModel
     {
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
-        if ($inscription->getFrais() === null) {
+        $frais = $inscription->getFrais();
+        if ($frais === null) {
             $frais = new InscriptionFrais();
             $frais->setInscrit($inscription);
             $this->getInscriptionFraisService()->create($frais);
         }
-        $frais = $inscription->getFrais();
+
 
         $form = $this->getInscriptionFraisForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/renseigner-frais', ['inscription' => $inscription->getId()], [], true));
@@ -516,15 +526,15 @@ class InscriptionController extends AbstractActionController
 
     public function inscriptionAction(): ViewModel
     {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $session = $this->getSessionService()->getRequestedSession($this);
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $inscription = new Inscription();
-        $inscription->setSession($instance);
+        $inscription->setSession($session);
         $inscription->setAgent($agent);
 
         $form = $this->getJustificationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/creer-inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/creer-inscription', ['session' => $session->getId(), 'agent' => $agent->getId()], [], true));
         $form->bind($inscription);
         $form->get('etape')->setValue('AGENT');
 
@@ -543,13 +553,13 @@ class InscriptionController extends AbstractActionController
                     $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_DEMANDE);
                     $this->getInscriptionService()->update($inscription);
                     $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
-                    $this->getNotificationService()->triggerInscriptionAgent($agent, $instance);
+                    $this->getNotificationService()->triggerInscriptionAgent($agent, $session);
                 }
             }
         }
 
         return new ViewModel([
-            'title' => "Inscription à la formation " . $instance->getInstanceLibelle() . " du " . $instance->getPeriode(),
+            'title' => "Inscription à la formation " . $session->getInstanceLibelle() . " du " . $session->getPeriode(),
             'inscription' => $inscription,
             'form' => $form,
         ]);
@@ -600,7 +610,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $mail = $this->getFormationInstanceService()->envoyerConvocation($session, $inscription);
+        $this->getSessionService()->envoyerConvocation($session, $inscription);
 
         $vm = new ViewModel([
             'title' => "Envoi de la convocation",
@@ -609,4 +619,78 @@ class InscriptionController extends AbstractActionController
         $vm->setTemplate('default/reponse');
         return $vm;
     }
+
+    public function envoyerAttestationAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $session = $inscription->getSession();
+
+        $this->getSessionService()->envoyerAttestation($session, $inscription);
+
+        $vm = new ViewModel([
+            'title' => "Envoi de l'attestation",
+            'reponse' => "L'attestion pour la session ".$session->getFormation()->getLibelle(). " du ".$session->getPeriode()." vient d'être envoyée à ".$inscription->getStagiaireDenomination().".",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
+    public function envoyerAbsenceAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $session = $inscription->getSession();
+
+        $this->getSessionService()->envoyerAbsence($session, $inscription);
+
+        $vm = new ViewModel([
+            'title' => "Envoi du constat d'absence",
+            'reponse' => "Le constat d'absence pour la session ".$session->getFormation()->getLibelle(). " du ".$session->getPeriode()." vient d'être envoyée à ".$inscription->getStagiaireDenomination().".",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
+    /** GESTION DE L'ENQUETE ******************************************************************************************/
+
+    public function repondreEnqueteAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        if ($inscription->getEnquete() === null) {
+            $enquete = $this->getEnqueteService()->getEnqueteByCode($this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::CODE_ENQUETE));
+            $instance = $this->getInstanceService()->createInstance($enquete);
+            $inscription->setEnquete($instance);
+            $this->getInscriptionService()->update($inscription);
+        } else {
+            $instance = $inscription->getEnquete();
+        }
+
+        $retour = $this->url()->fromRoute('formations', ['agent' => $inscription->getAgent()->getId()], [], true);
+        return new ViewModel([
+            'inscription' => $inscription,
+            'instance' => $instance,
+            'retour' => $retour,
+            'connectedRole' => $this->getUserService()->getConnectedRole(),
+            'connectedUser' => $this->getUserService()->getConnectedUser(),
+        ]);
+
+    }
+
+    public function validerEnqueteAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $enquete = $inscription->getEnquete();
+        if ($enquete !== null) {
+            $enquete->setValidation(new DateTime());
+            $this->getInstanceService()->update($enquete);
+        }
+
+        $vm = new ViewModel([
+            'title' => "Validation de l'enquête de retour de l'atelier",
+            'reponse' => "<span class='icon icon-checked'></span> Vous venez de valider l'enquête de retour d'atelier. Vous pouvez maintenant télécharger votre attestation.",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
+
 }

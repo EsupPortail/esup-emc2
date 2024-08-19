@@ -20,7 +20,6 @@ class DomaineFormFactory
         /** @var DomaineHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(DomaineHydrator::class);
 
-        /** @var DomaineForm $form */
         $form = new DomaineForm();
         $form->setHydrator($hydrator);
         return $form;

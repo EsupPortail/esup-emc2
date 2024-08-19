@@ -2,7 +2,6 @@
 
 namespace Formation\Form\SelectionFormationGroupe;
 
-use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -24,7 +23,6 @@ class SelectionFormationGroupeFormFactory
          */
         $formationGroupeService = $container->get(FormationGroupeService::class);
 
-        /** @var SelectionFormationGroupeForm $form */
         $form = new SelectionFormationGroupeForm();
         $form->setFormationGroupeService($formationGroupeService);
         return $form;

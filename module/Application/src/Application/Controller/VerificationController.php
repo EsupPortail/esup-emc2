@@ -29,7 +29,7 @@ class VerificationController extends AbstractActionController {
     public function indexAction() : ViewModel
     {
         $modules = ['Application', 'Carriere', 'Element', 'EntretienProfessionnel', 'FichePoste', 'Formation', 'Metier', 'MissionSpecifique', 'Structure'];
-        $bibliotheques = ['indicateur', 'etat', 'validation', 'renderer','autoform', 'evenement', 'mail', 'parametre', 'authentification', 'utilisateur', 'privilege'];
+        $bibliotheques = ['indicateur', 'etat', 'validation', 'renderer','autoform', 'enquete', 'evenement', 'mail', 'parametre', 'authentification', 'utilisateur', 'privilege'];
 
         return new ViewModel([
             'modules' => $modules,

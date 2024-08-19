@@ -86,10 +86,12 @@ class FormationService
         $qb = $this->getObjectManager()->getRepository(Formation::class)->createQueryBuilder('formation')
             ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
             ->addSelect('axe')->leftJoin('groupe.axe', 'axe')
-            ->addSelect('competence')->leftJoin('formation.competences', 'competence')
-            ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
-            ->addSelect('application')->leftJoin('formation.applications', 'application')
-            ->addSelect('niveau_a')->leftJoin('application.niveau', 'niveau_a');
+            /** ceci semble provoquer un déborderment mémoire en demo **/
+//            ->addSelect('competence')->leftJoin('formation.competences', 'competence')
+//            ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
+//            ->addSelect('application')->leftJoin('formation.applications', 'application')
+//            ->addSelect('niveau_a')->leftJoin('application.niveau', 'niveau_a')
+        ;
         return $qb;
     }
 

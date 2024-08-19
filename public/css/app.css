@@ -204,6 +204,15 @@ small a {
 
 @media only screen and (min-width: 1600px) {
     div#contenu-principal{
+        min-width:1450px;
+    }
+    header nav div#menu {
+        min-width: 1450px;
+    }
+}
+
+@media only screen and (min-width: 1700px) {
+    div#contenu-principal{
         min-width:1550px;
     }
     header nav div#menu {
@@ -211,7 +220,7 @@ small a {
     }
 }
 
-@media only screen and (min-width: 1700px) {
+@media only screen and (min-width: 1800px) {
     div#contenu-principal{
         min-width:1650px;
     }
@@ -220,21 +229,12 @@ small a {
     }
 }
 
-@media only screen and (min-width: 1800px) {
-    div#contenu-principal{
-        min-width:1700px;
-    }
-    header nav div#menu {
-        min-width: 1700px;
-    }
-}
-
 @media only screen and (min-width: 1900px) {
     div#contenu-principal{
-        min-width:1800px;
+        min-width:1750px;
     }
     header nav div#menu {
-        min-width: 1800px;
+        min-width: 1750px;
     }
 }
 

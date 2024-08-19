@@ -2,19 +2,27 @@
 
 namespace Formation\Form\Seance;
 
+use Formation\Service\Lieu\LieuService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SeanceHydratorFactory
 {
 
     /**
-     * @param ContainerInterface $container
-     * @return SeanceHydrator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : SeanceHydrator
     {
-        /** @var SeanceHydrator $hydrator */
+        /**
+         * @var LieuService $lieuService
+         */
+        $lieuService = $container->get(LieuService::class);
+
         $hydrator = new SeanceHydrator();
+        $hydrator->setLieuService($lieuService);
         return $hydrator;
     }
 }

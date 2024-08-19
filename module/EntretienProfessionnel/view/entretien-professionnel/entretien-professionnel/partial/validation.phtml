@@ -47,7 +47,7 @@ $depasse = ($date === null or $date < $now);
 $agent = $entretien->getAgent();
 $responsable = $entretien->getResponsable();
 
-// Filtrage du responsable de l'entretien pro parmi les autorités SAUF si inhiber par le corps (par exemple BIB).
+// Filtrage du responsable de l'entretien pro parmi les autorités SAUF si inhiber par le corps (par exemple BIB, AENES).
 $grades = $agent->getGradesActifs($entretien->getDateEntretien());
 $inhibition = false;
 foreach ($grades as $grade) {
@@ -56,6 +56,9 @@ foreach ($grades as $grade) {
         break;
     }
 }
+if (empty($agent->getAutorites())) $inhibition = true;
+if (count($agent->getAutorites()) === 1 && count($agent->getSuperieurs()) === 1 && current($agent->getAutorites())->getAutorite() === current($agent->getSuperieurs())->getSuperieur()) $inhibition = true;
+
 if (!$inhibition) $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use ($responsable) { return $a->getAutorite() !== $responsable; });
 else $autorites = $agent->getAutorites();
 

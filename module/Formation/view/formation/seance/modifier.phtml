@@ -17,13 +17,14 @@ use Formation\Form\Seance\SeanceForm;
     <?php echo $this->formControlGroup($form->get('jour')); ?>
     <?php echo $this->formControlGroup($form->get('debut')); ?>
     <?php echo $this->formControlGroup($form->get('fin')); ?>
+    <?php echo $this->formControlGroup($form->get('lieu-sas')); ?>
 </div>
 <div id="volume">
     <?php echo $this->formControlGroup($form->get('volume')); ?>
     <?php echo $this->formControlGroup($form->get('volume_debut')); ?>
     <?php echo $this->formControlGroup($form->get('volume_fin')); ?>
+    <?php echo $this->formControlGroup($form->get('lien')); ?>
 </div>
-<?php echo $this->formControlGroup($form->get('lieu')); ?>
 <?php echo $this->formControlGroup($form->get('creer')); ?>
 <?php echo $this->form()->closeTag(); ?>
 

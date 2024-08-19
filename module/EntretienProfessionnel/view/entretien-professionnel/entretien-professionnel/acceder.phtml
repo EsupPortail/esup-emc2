@@ -63,6 +63,8 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 
 ?>
 
+
+
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
 <div class="row">
     <div class="col-md-8">
@@ -242,6 +244,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     h3.categorie {
         border-bottom: 1px solid #31708f;
     }
+
 </style>
 
 <script>
@@ -281,7 +284,20 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
                 url: '/localisation/fr_FR.json'
             }
         } );
+
+        const scrollPosition = localStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            // alert('scrollPosition=[' + scrollPosition + ']');
+            window.scrollTo(0, parseInt(scrollPosition, 10));
+            localStorage.removeItem('scrollPosition');
+        }
+    });
+
+    $('form').on("submit", function() {
+        // Sauvegarder la position de défilement actuelle
+        localStorage.setItem('scrollPosition', window.scrollY);
     });
 </script>
+
 
 

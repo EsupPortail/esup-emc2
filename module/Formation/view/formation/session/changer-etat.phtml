@@ -1,0 +1,46 @@
+<?php
+
+use Formation\Entity\Db\Session;
+use UnicaenEtat\Entity\Db\EtatType;
+
+/**
+ * @see \Formation\Controller\SessionController::changerEtatAction()
+ * @var Session $instance
+ * @var EtatType[] $etats
+ */
+
+?>
+
+<div class="alert alert-info">
+    La session de formation <strong><?php echo $instance->getFormation()->getLibelle(); ?></strong>
+    (<?php echo $instance->getPeriode(); ?>) est actuellement à l'état
+    <strong><?php echo $instance->getEtatActif()->getType()->getLibelle(); ?></strong>
+    <?php echo $this->etatinstance($instance->getEtatActif()); ?>.
+</div>
+
+<form method="POST"
+      action="<?php echo $this->url('formation/session/changer-etat', ['session' => $instance->getId()], [], true); ?>">
+    <label for="etat">État : </label>
+    <select id="etat" name="etat" data-live-search="true">
+        <?php foreach ($etats as $etat) : ?>
+            <option
+                    value="<?php echo $etat->getId(); ?>"
+                    data-content='<?php echo $this->etattype($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
+            >
+                <?php echo $etat->getLibelle(); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+    <br/>
+
+    <button class="btn btn-primary">
+        Valider
+    </button>
+</form>
+
+
+<script>
+    $('select').selectpicker();
+</script>
+

@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -53,6 +54,7 @@ class CampagneController extends AbstractActionController {
     use UserServiceAwareTrait;
     
     use CampagneFormAwareTrait;
+    use SelectionAgentFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -484,6 +486,103 @@ class CampagneController extends AbstractActionController {
             'entretiens' => $entretiens,
         ]);
         $vm->setTemplate('entretien-professionnel/campagne/entretien');
+        return $vm;
+    }
+
+    /** TESTS ET DEBUGS ***********************************************************************************************/
+
+
+    public function notifierAvancementAutoriteAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $autorite = $this->getAgentService()->getRequestedAgent($this);
+
+        $request = $this->getRequest();
+        if ($autorite !== null || $request->isPost()) {
+
+            if ($request->isPost()) {
+                $data = $request->getPost();
+                $autoriteId = $data['agent-sas']['id'];
+                $autorite = $this->getAgentService()->getAgent($autoriteId);
+            }
+            $listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
+
+            if (!empty($listing)) {
+                $mail = $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite);
+
+                $vm = new ViewModel([
+                    'title' => "Notification de " . $autorite->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
+                    'reponse' => ($mail)?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
+
+                ]);
+                $vm->setTemplate('default/reponse');
+                return $vm;
+            } else {
+                $vm = new ViewModel([
+                    'title' => "Notification de " . $autorite->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
+                    'error' => "L'agent n'est l'autorité d'aucune personne pour la campagne",
+
+                ]);
+                $vm->setTemplate('default/reponse');
+                return $vm;
+            }
+        }
+
+        $form = $this->getSelectionAgentForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/notifier-avancement-autorite', ['campagne' => $campagne->getId()], [], true));
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner l'agent à notifier (en tant qu'autorité)",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function notifierAvancementSuperieurAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $superieur = $this->getAgentService()->getRequestedAgent($this);
+
+        $request = $this->getRequest();
+        if ($superieur !== null || $request->isPost()) {
+
+            if ($request->isPost()) {
+                $data = $request->getPost();
+                $superieurId = $data['agent-sas']['id'];
+                $superieur = $this->getAgentService()->getAgent($superieurId);
+            }
+            $listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
+
+            if (!empty($listing)) {
+                $mail = $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur);
+
+                $vm = new ViewModel([
+                    'title' => "Notification de " . $superieur->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
+                    'reponse' => $mail?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
+
+                ]);
+                $vm->setTemplate('default/reponse');
+                return $vm;
+            } else {
+                $vm = new ViewModel([
+                    'title' => "Notification de " . $superieur->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
+                    'error' => "L'agent n'est le ou la supérieur·e d'aucune personne pour la campagne",
+
+                ]);
+                $vm->setTemplate('default/reponse');
+                return $vm;
+            }
+        }
+
+        $form = $this->getSelectionAgentForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/notifier-avancement-superieur', ['campagne' => $campagne->getId()], [], true));
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner l'agent à notifier (en tant que supérieur·e)",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 

@@ -14,6 +14,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\Controller\ObservateurController;
+use Laminas\View\Model\JsonModel;
 use Structure\Controller\ObservateurController as StructureObservateurController;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienProfessionnelRoleProvider;
@@ -184,7 +185,7 @@ class IndexController extends AbstractActionController
 
         return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $agent,
+            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
 
             'missionsSpecifiques' => $missionsSpecifiques,
 
@@ -244,7 +245,7 @@ class IndexController extends AbstractActionController
 
         return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $agent,
+            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
             'agentsByCampagne' => $agentsByCampagne,
@@ -259,5 +260,11 @@ class IndexController extends AbstractActionController
     public function infosAction(): ViewModel
     {
         return new ViewModel();
+    }
+
+    public function checkConnectionAction(): JsonModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        return new JsonModel(["connection" => $user !== null]);
     }
 }

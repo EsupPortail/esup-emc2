@@ -2,7 +2,6 @@
 
 namespace Formation\Form\Formation;
 
-use Application\Form\HasDescription\HasDescriptionFieldset;
 use Formation\Entity\Db\Formation;
 use Formation\Service\ActionType\ActionTypeServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
@@ -53,10 +52,15 @@ class FormationForm extends Form
         ]);
         //description
         $this->add([
-            'name' => 'HasDescription',
-            'type' => HasDescriptionFieldset::class,
+            'name' => 'description',
+            'type' => Textarea::class,
+            'options' => [
+                'label' => "Description :",
+                'label_options' => [ 'disable_html_escape' => true,],
+            ],
             'attributes' => [
                 'id' => 'description',
+                'class' => 'tinymce',
             ],
         ]);
         //type
@@ -100,7 +104,7 @@ class FormationForm extends Form
             ],
             'attributes' => [
                 'id' => 'objectifs',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
             ],
         ]);
         //programme
@@ -112,7 +116,7 @@ class FormationForm extends Form
             ],
             'attributes' => [
                 'id' => 'programme',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
             ],
         ]);
         $this->add([
@@ -123,7 +127,7 @@ class FormationForm extends Form
             ],
             'attributes' => [
                 'id' => 'prerequis',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
             ],
         ]);
         $this->add([
@@ -134,7 +138,19 @@ class FormationForm extends Form
             ],
             'attributes' => [
                 'id' => 'public',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
+            ],
+        ]);
+        $this->add([
+            'type' => Textarea::class,
+            'name' => "complement",
+            'options' => [
+                'label' => "Complément <span class='icon icon-information text-info' title='Figurera sur les convocations des sessions associées' data-bs-toggle='tooltip' data-bs-html='true'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'complement',
+                'class' => 'tinymce',
             ],
         ]);
 
@@ -210,6 +226,7 @@ class FormationForm extends Form
             'programme' => ['required' => false,],
             'prerequis' => ['required' => false,],
             'public' => ['required' => false,],
+            'complement' => ['required' => false,],
         ]));
     }
 }

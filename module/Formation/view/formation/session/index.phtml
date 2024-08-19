@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @see \Formation\Controller\SessionController::indexAction()
+ * // ELEMENT POUR LE FILTRE
+ * @var array $params
+ * @var EtatType[] $etats
+ * @var string[] $gestionnaires
+ * @var string[] $themes
+ *
+ * @var Session[] $instances
+ */
+
+use Formation\Entity\Db\Session;
+use Formation\Provider\Privilege\FormationPrivileges;
+use UnicaenEtat\Entity\Db\EtatType;
+
+$this->headTitle("Index des sessions");
+
+usort($instances, function (Session $a, Session $b) { return $a->getDebut() <=> $b->getDebut();});
+
+$canVoir = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+?>
+
+<h1 class="page-header">
+    Sessions de formation
+</h1>
+
+<?php echo $this->partial('partial/filtre', ['params' => $params, 'etats' => $etats, 'gestionnaires' => $gestionnaires, 'themes' => $themes], [], true); ?>
+
+<a href="<?php echo $this->url('formation/session/ajouter-avec-formulaire', [], [], true); ?>"
+   class="btn btn-primary action ajax-modal" data-event="modification"
+   >
+    <span class="icon icon-ajouter">
+        Ouvrir une nouvelle session
+    </span>
+</a>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<?php echo $this->formationInstanceArray($instances); ?>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

@@ -50,6 +50,8 @@ foreach ($entretiens as $etat => $liste) {
     </div>
 </div>
 
+
+
 <!-- INFORMATIONS ----------------------------------------------------------------------------------------------------->
 <div class="card">
     <div class="card-header card-info">
@@ -204,4 +206,23 @@ foreach ($entretiens as $etat => $liste) {
             </div>
 <!--        </div>-->
 <!--    </div>-->
+</div>
+
+<h2>
+    Notifier de l'avancement les supérieur·es et autorité·es
+</h2>
+
+<div>
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneController::notifierAvancementSuperieurAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/campagne/notifier-avancement-superieur', ['campagne' => $campagne->getId()], [], true); ?>"
+       class="btn btn-primary ajax-modal"
+    >
+        Notifier l'avancement pour un·e supérieur·e
+    </a>
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneController::notifierAvancementAutoriteAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/campagne/notifier-avancement-autorite', ['campagne' => $campagne->getId()], [], true); ?>"
+       class="btn btn-primary ajax-modal"
+    >
+        Notifier l'avancement pour un·e autorité
+    </a>
 </div>

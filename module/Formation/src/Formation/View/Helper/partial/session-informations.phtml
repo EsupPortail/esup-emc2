@@ -2,13 +2,13 @@
 
 /**
  * @see \Formation\View\Helper\SessionInformationsViewHelper
- * @var FormationInstance $session
+ * @var Session $session
  * @var string $mode
  * @var array $options
  */
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 
@@ -21,9 +21,9 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
 <?php if ($mode === 'liste') : ?>
     <dl class="row">
         <dt class="col-md-3"> État</dt>
-        <dd class="col-md-9">  <?php echo ($session->getEtatActif())?$this->etattype($session->getEtatActif()->getType())." ".$session->getEtatActif()->getType()->getLibelle():"N.C."; ?> </dd>
+        <dd class="col-md-9">  <?php echo ($session->getEtatActif()) ? $this->etattype($session->getEtatActif()->getType()) . " " . $session->getEtatActif()->getType()->getLibelle() : "N.C."; ?> </dd>
         <?php if ($session->getComplement() !== null) : ?>
-            <dt class="col-md-3"> Compléments </dt>
+            <dt class="col-md-3"> Compléments</dt>
             <dd class="col-md-9"> <?php echo $session->getComplement(); ?></dd>
         <?php endif; ?>
         <dt class="col-md-3"> Taille liste principale</dt>
@@ -31,7 +31,7 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
         <dt class="col-md-3"> Taille liste complémentaire</dt>
         <dd class="col-md-9"> <?php echo $session->getNbPlaceComplementaire(); ?> </dd>
         <dt class="col-md-3"> Lieu</dt>
-        <dd class="col-md-9"> <?php echo ($session->getLieu())?:"Non communiqué"; ?> </dd>
+        <dd class="col-md-9"> <?php echo ($session->getLieu()) ?: "Non communiqué"; ?> </dd>
         <?php if ($session->getType() !== null) : ?>
             <dt class="col-md-3"> Type</dt>
             <dd class="col-md-9"> <?php echo $session->getType(); ?> </dd>
@@ -59,19 +59,19 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
             <?php endif; ?>
         </dd>
         <?php if ($session->getCoutHt() !== null) : ?>
-            <dt class="col-md-3"> Coût HT </dt>
+            <dt class="col-md-3"> Coût HT</dt>
             <dd class="col-md-9"> <?php echo $session->getCoutHt(); ?>€</dd>
         <?php endif; ?>
         <?php if ($session->getCoutTtc() !== null) : ?>
-            <dt class="col-md-3"> Coût TTC </dt>
+            <dt class="col-md-3"> Coût TTC</dt>
             <dd class="col-md-9"> <?php echo $session->getCoutTtc(); ?>€</dd>
         <?php endif; ?>
         <?php if ($session->getCoutVacation() !== null) : ?>
-            <dt class="col-md-3"> Coût Vacation </dt>
+            <dt class="col-md-3"> Coût Vacation</dt>
             <dd class="col-md-9"> <?php echo $session->getCoutVacation(); ?>€</dd>
         <?php endif; ?>
         <?php if ($session->getRecetteTtc() !== null) : ?>
-            <dt class="col-md-3"> Recette TTC </dt>
+            <dt class="col-md-3"> Recette TTC</dt>
             <dd class="col-md-9"> <?php echo $session->getRecetteTtc(); ?>€</dd>
         <?php endif; ?>
     </dl>
@@ -88,10 +88,10 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
     <?php endif; ?>
     Liste principale
     <?php if ($session->getSource() !== HasSourceInterface::SOURCE_LAGAF) : ?>
-        <?php echo count($session->getListePrincipale());  ?>/<?php echo $session->getNbPlacePrincipale(); ?>
+        <?php echo count($session->getListePrincipale()); ?>/<?php echo $session->getNbPlacePrincipale(); ?>
     <?php endif; ?>
-<!--    --->
-<!--    Liste complémentaire --><?php //echo count($session->getListeComplementaire());  ?><!--/--><?php //echo $session->getNbPlaceComplementaire(); ?>
+    <!--    --->
+    <!--    Liste complémentaire --><?php //echo count($session->getListeComplementaire());  ?><!--/--><?php //echo $session->getNbPlaceComplementaire(); ?>
 <?php endif; ?>
 
 
@@ -101,11 +101,12 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
         <ul>
             <?php foreach ($session->getDemandesExternes() as $demandesExterne) : ?>
                 <li>
-                    Demande #<?php echo $demandesExterne->getId(); ?> (<?php echo $demandesExterne->getAgent()->getDenomination(true); ?>)
+                    Demande #<?php echo $demandesExterne->getId(); ?>
+                    (<?php echo $demandesExterne->getAgent()->getDenomination(true); ?>)
                     <?php if ($canAfficherDemande) : ?>
                         <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
-                        <a  href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demandesExterne->getId()], [], true); ?>"
-                            class="ajax-modal"
+                        <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demandesExterne->getId()], [], true); ?>"
+                           class="ajax-modal"
                         >
                         <span class="action">
                             <span class="icon icon-voir"></span>

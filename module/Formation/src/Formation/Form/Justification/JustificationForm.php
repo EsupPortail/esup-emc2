@@ -2,9 +2,9 @@
 
 namespace Formation\Form\Justification;
 
-use Application\Form\HasDescription\HasDescriptionFieldset;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Hidden;
+use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
@@ -32,7 +32,7 @@ class JustificationForm extends Form {
             ],
             'attributes' => [
                 'id' => 'missions',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
             ]
         ]);
         //description
@@ -48,7 +48,40 @@ class JustificationForm extends Form {
             ],
             'attributes' => [
                 'id' => 'justification',
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
+            ]
+        ]);
+        //rqth
+        $this->add( [
+            'name' => 'rqth',
+            'type' => Radio::class,
+            'options' => [
+                'label' => "Êtes vous un agent en situation de handicap? <span class='icon icon-obligatoire' title='champ obligatoire'></span>",
+                'label_options' => ['disable_html_escape' => true,],
+                'value_options' => [
+                    true => "Oui",
+                    false => "Non",
+                ],
+            ],
+            'attributes' => [
+                'id' => 'rqth',
+                'class' => '',
+            ]
+        ]);
+        //precision_rqth
+        $this->add([
+            'name' => 'precision_rqth',
+            'type' => Textarea::class,
+            'options' => [
+                'label' => "Si oui, de quel accompagnement avez-vous besoin ?",
+                'label_options' => ['disable_html_escape' => true,],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+            ],
+            'attributes' => [
+                'id' => 'precision_rqth',
+                'class' => 'tinymce',
             ]
         ]);
         //bouton
@@ -70,6 +103,8 @@ class JustificationForm extends Form {
             'missions' => [ 'missions' => true,  ],
             'justification' => [ 'required' => true,  ],
             'etape' => [ 'required' => true,  ],
+            'rqth' => [ 'required' => true,  ],
+            'precision_rqth' => [ 'required' => false,  ],
         ]));
     }
 

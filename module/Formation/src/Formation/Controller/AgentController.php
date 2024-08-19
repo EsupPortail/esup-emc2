@@ -14,11 +14,16 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Template\TextTemplates;
+use Formation\Provider\Validation\MesFormationsValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 class AgentController extends AbstractActionController
 {
@@ -30,7 +35,9 @@ class AgentController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
     use InscriptionServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use UserServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
 
 
     public function indexAction(): ViewModel
@@ -60,7 +67,7 @@ class AgentController extends AbstractActionController
             return $a->getAutorite();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
-        $formations =  $this->getInscriptionService()->getInscriptionsByAgent($agent);
+        $formations = $this->getInscriptionService()->getInscriptionsByAgent($agent);
         $inscriptions = $this->getInscriptionService()->getInscriptionsByAgent($agent);
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
@@ -128,11 +135,15 @@ class AgentController extends AbstractActionController
         $agents = [];
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE)
             $agents = array_map(
-                function (AgentSuperieur $a) {return $a->getAgent();},
+                function (AgentSuperieur $a) {
+                    return $a->getAgent();
+                },
                 $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
         if ($role->getRoleId() === Agent::ROLE_AUTORITE)
-            $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); },
-            $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+            $agents = array_map(function (AgentAutorite $a) {
+                return $a->getAgent();
+            },
+                $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
 
         usort($agents, function (Agent $a, Agent $b) {
             $aaa = $a->getNomUsuel() . " " . $a->getPrenom() . " " . $a->getId();
@@ -146,4 +157,41 @@ class AgentController extends AbstractActionController
             'agents' => $agents,
         ]);
     }
+
+    public function afficherCharteAction(): ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByConnectedUser($user);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FORMATION_CHARTE, ['agent' => $agent], false);
+
+        return new ViewModel([
+            'title' => $rendu->getSujet(),
+            'charte' => $rendu->getCorps(),
+        ]);
+    }
+
+    public function validerCharteAction(): Response
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByConnectedUser($user);
+
+        $instance = $this->getValidationInstanceService()->createWithCode(MesFormationsValidations::CHARTE_SIGNEE);
+        $agent->addValidation($instance);
+        $this->getAgentService()->update($agent);
+
+        return $this->redirect()->toRoute('index-mes-formations', [], [], true);
+    }
+
+    public function historiqueAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $inscriptions = $this->getInscriptionService()->getInscriptionsValideesByAgents([$agent], null);
+
+        return new ViewModel([
+            'title' => "Historique des formations de " . $agent->getDenomination(true),
+            'agent' => $agent,
+            'inscriptions' => $inscriptions,
+        ]);
+    }
+
 }

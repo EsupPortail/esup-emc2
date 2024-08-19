@@ -16,7 +16,46 @@ use Formation\Provider\Validation\DemandeExterneValidations;
 //$canValiderDrh = $this->isAllowed($demande,DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH);
 
 $canAfficherSession = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER));
+$canModifierSession = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_MODIFIER));
+$canGererGestionnaires = $canModifierSession;
 ?>
+
+<?php if ($canModifierSession) : ?>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl>
+                        <dt>Gestionnaire·s associé·es : </dt>
+                        <dd>
+                            <?php if (empty($demande->getGestionnaires())) : ?>
+                                <em> Aucun·e gestionnaire</em>
+                            <?php else : ?>
+                                <ul>
+                                    <?php foreach ($demande->getGestionnaires() as $gestionnaire) : ?>
+                                        <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+                        </dd>
+
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <?php if ($canGererGestionnaires) : ?>
+                        <?php /** @see \Formation\Controller\DemandeExterneController::selectionnerGestionnairesAction() */ ?>
+                        <a href="<?php echo $this->url('formation/demande-externe/selectionner-gestionnaires', ['demande-externe' => $demande->getId()], [], true); ?>"
+                           class="btn btn-primary ajax-modal" data-event="modification">
+                            <span class="icon icon-editer"></span>
+                            Renseigner les gestionnaires
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<?php endif; ?>
 
 
 <div class="card card-info">
@@ -164,8 +203,8 @@ $canAfficherSession = $this->isAllowed(FormationinstancePrivileges::getResourceI
                                     (<?php echo $session->getPeriode(); ?>)
                                     <?php if ($canAfficherSession) : ?>
                                         <span class="action">
-                                            <?php /** @see \Formation\Controller\FormationInstanceController::afficherAction(); */ ?>
-                                            <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>"
+                                            <?php /** @see \Formation\Controller\SessionController::afficherAction(); */ ?>
+                                            <a href="<?php echo $this->url('formation/session/afficher', ['session' => $session->getId()], [], true); ?>"
                                                target="_blank">
                                                 <span class="icon icon-voir"></span> Acceder
                                             </a>
@@ -203,12 +242,14 @@ $canAfficherSession = $this->isAllowed(FormationinstancePrivileges::getResourceI
 <!--    </a>-->
 <?php //endif; ?>
 <!---->
-<!--<script>-->
-<!--    $(function() {-->
-<!--        $("body").on("modification", function (event) {-->
-<!--            event.div.modal('hide');-->
-<!--            window.location.reload();-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
-<!---->
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+

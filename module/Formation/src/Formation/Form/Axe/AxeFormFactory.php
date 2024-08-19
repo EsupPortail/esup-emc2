@@ -20,7 +20,6 @@ class AxeFormFactory
         /** @var AxeHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(AxeHydrator::class);
 
-        /** @var AxeForm $form */
         $form = new AxeForm();
         $form->setHydrator($hydrator);
         return $form;

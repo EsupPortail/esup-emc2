@@ -161,6 +161,20 @@ create table agent_element_competence
 --         primary key (agent_id, formation_element_id)
 -- );
 
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- TABLE - VALIDATIONS ASSOCIEES AUX AGENTS ----------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table agent_validation
+(
+    agent_id               varchar(40) not null
+        constraint agent_validation_agent_c_individu_fk references agent on delete cascade,
+    validation_instance_id integer     not null
+        constraint agent_validation_unicaen_validation_instance_id_fk references unicaen_validation_instance on delete cascade,
+    constraint fagent_validation_pk primary key (agent_id, validation_instance_id)
+);
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TABLE - Autre -------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------

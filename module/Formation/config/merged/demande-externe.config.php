@@ -93,6 +93,7 @@ return [
                         'modifier',
                         'ajouter-devis',
                         'retirer-devis',
+                        'selectionner-gestionnaires',
                     ],
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER,
@@ -248,7 +249,6 @@ return [
                                 'options' => [
                                     'route'    => '/parapheur',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
                                         'action' => 'parapheur'
                                     ],
                                 ],
@@ -258,7 +258,6 @@ return [
                                 'options' => [
                                     'route'    => '/creer-pour-agent',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
                                         'action' => 'creer-pour-agent'
                                     ],
                                 ],
@@ -268,7 +267,6 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter/:agent',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
                                         'action' => 'ajouter'
                                     ],
                                 ],
@@ -278,7 +276,7 @@ return [
                                 'options' => [
                                     'route'    => '/afficher/:demande-externe',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
+                                        /** @see DemandeExterneController::afficherAction() */
                                         'action' => 'afficher'
                                     ],
                                 ],
@@ -340,6 +338,16 @@ return [
                                     'defaults' => [
                                         'controller' => DemandeExterneController::class,
                                         'action' => 'supprimer'
+                                    ],
+                                ],
+                            ],
+                            'selectionner-gestionnaires' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/selectionner-gestionnaires/:demande-externe',
+                                    'defaults' => [
+                                        /** @see DemandeExterneController::selectionnerGestionnairesAction() */
+                                        'action' => 'selectionner-gestionnaires'
                                     ],
                                 ],
                             ],

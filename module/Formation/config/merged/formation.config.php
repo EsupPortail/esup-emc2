@@ -79,6 +79,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'afficher',
+                        'fiche',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_AFFICHER,
@@ -129,6 +130,15 @@ return [
                         FormationRoles::GESTIONNAIRE_FORMATION,
                     ],
                 ],
+                [
+                    'controller' => FormationController::class,
+                    'action' => [
+                        'resultat-enquete',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_MODIFIER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -174,6 +184,7 @@ return [
                 'options' => [
                     'route'    => '/index-mes-formations',
                     'defaults' => [
+                        /** @see IndexController::indexAction() */
                         'controller' => IndexController::class,
                         'action'     => 'index',
                     ],
@@ -209,6 +220,16 @@ return [
                             'defaults' => [
                                 /** @see FormationController::afficherAction() */
                                 'action' => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'fiche' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/fiche/:formation',
+                            'defaults' => [
+                                /** @see FormationController::ficheAction() */
+                                'action' => 'fiche',
                             ],
                         ],
                     ],
@@ -341,6 +362,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action' => 'rechercher-formateur',
+                            ],
+                        ],
+                    ],
+                    'resultat-enquete' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/resultat-enquete/:formation',
+                            'defaults' => [
+                                /** @see FormationController::resultatEnqueteAction() */
+                                'action' => 'resultat-enquete',
                             ],
                         ],
                     ],

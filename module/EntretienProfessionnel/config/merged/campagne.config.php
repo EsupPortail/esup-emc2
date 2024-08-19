@@ -30,6 +30,8 @@ return [
                         'afficher',
                         'extraire',
                         'tester-eligibilite',
+                        'notifier-avancement-autorite',
+                        'notifier-avancement-superieur',
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AFFICHER,
@@ -299,6 +301,30 @@ return [
                                         /** @see CampagneController::testerEligibiliteAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'tester-eligibilite',
+                                    ],
+                                ],
+                            ],
+                            'notifier-avancement-autorite' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/notifier-avancement-autorite/:campagne[/:agent]',
+                                    'defaults' => [
+                                        /** @see CampagneController::notifierAvancementAutoriteAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'notifier-avancement-autorite',
+                                    ],
+                                ],
+                            ],
+                            'notifier-avancement-superieur' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/notifier-avancement-superieur/:campagne[/:agent]',
+                                    'defaults' => [
+                                        /** @see CampagneController::notifierAvancementSuperieurAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'notifier-avancement-superieur',
                                     ],
                                 ],
                             ],

@@ -4,7 +4,7 @@ namespace Formation\Event\DemandeRetour;
 
 use Doctrine\ORM\EntityManager;
 use Formation\Provider\Parametre\FormationParametres;
-use Formation\Service\FormationInstance\FormationInstanceService;
+use Formation\Service\Session\SessionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -25,14 +25,14 @@ class DemandeRetourEventFactory
     {
         /**
          * @var EntityManager $entityManager
-         * @var FormationInstanceService $sessionService
+         * @var SessionService $sessionService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $sessionService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
 
         $event = new DemandeRetourEvent();
         $event->setEntityManager($entityManager);
-        $event->setFormationInstanceService($sessionService);
+        $event->setSessionService($sessionService);
 
         /** @var Parametre $deadline */
         $deadline = $container->get(ParametreService::class)->getParametreByCode(FormationParametres::TYPE, FormationParametres::AUTO_RETOUR);

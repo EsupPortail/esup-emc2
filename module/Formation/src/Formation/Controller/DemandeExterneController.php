@@ -13,6 +13,7 @@ use Formation\Entity\Db\Formation;
 use Formation\Form\Demande2Formation\Demande2FormationFormAwareTrait;
 use Formation\Form\DemandeExterne\DemandeExterneFormAwareTrait;
 use Formation\Form\Justification\JustificationFormAwareTrait;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
@@ -51,6 +52,7 @@ class DemandeExterneController extends AbstractActionController {
     use Demande2FormationFormAwareTrait;
     use JustificationFormAwareTrait;
     use SelectionAgentFormAwareTrait;
+    use SelectionGestionnaireFormAwareTrait;
     use UploadFormAwareTrait;
 
     public function indexAction() : ViewModel
@@ -217,6 +219,34 @@ class DemandeExterneController extends AbstractActionController {
                 'action' => $this->url()->fromRoute('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    /** GESTIONNAIRES ************************************************************************************/
+
+    public function selectionnerGestionnairesAction(): ViewModel
+    {
+        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+
+        $form = $this->getSelectionGestionnaireForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/selectionner-gestionnaires', ['demande-externe' => $demande->getId()], [], true));
+        $form->bind($demande);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if (!isset($data['gestionnaires'])) $data['gestionnaires'] = [];
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getDemandeExterneService()->update($demande);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner les gestionnaires pour cette demande externe",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 

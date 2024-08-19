@@ -4,7 +4,7 @@ namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
 use Formation\Service\DemandeExterne\DemandeExterneService;
-use Formation\Service\FormationInstance\FormationInstanceService;
+use Formation\Service\Session\SessionService;
 use Formation\Service\StagiaireExterne\StagiaireExterneService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -28,7 +28,7 @@ class IndexControllerFactory
          * @var AgentService $agentService
          * @var DemandeExterneService $demandeExterneService
          * @var EtatTypeService $etatTypeService
-         * @var FormationInstanceService $formationInstanceService
+         * @var SessionService $sessionService
          * @var RenduService $renduService
          * @var StagiaireExterneService $stagiaireExterneService
          * @var UserService $userService
@@ -36,7 +36,7 @@ class IndexControllerFactory
         $agentService = $container->get(AgentService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
-        $formationInstanceService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
         $renduService = $container->get(RenduService::class);
         $stagiaireExterneService = $container->get(StagiaireExterneService::class);
         $userService = $container->get(UserService::class);
@@ -45,7 +45,7 @@ class IndexControllerFactory
         $controller->setAgentService($agentService);
         $controller->setDemandeExterneService($demandeExterneService);
         $controller->setEtatTypeService($etatTypeService);
-        $controller->setFormationInstanceService($formationInstanceService);
+        $controller->setSessionService($sessionService);
         $controller->setRenduService($renduService);
         $controller->setStagiaireExterneService($stagiaireExterneService);
         $controller->setUserService($userService);

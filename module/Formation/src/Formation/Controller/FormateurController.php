@@ -6,7 +6,7 @@ use Formation\Entity\Db\Formateur;
 use Formation\Form\Formateur\FormateurFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -20,7 +20,7 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class FormateurController extends AbstractActionController
 {
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use FormateurServiceAwareTrait;
     use UserServiceAwareTrait;
     use FormateurFormAwareTrait;
@@ -49,7 +49,7 @@ class FormateurController extends AbstractActionController
 
     public function ajouterAction(): ViewModel
     {
-        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+        $session = $this->getSessionService()->getRequestedSession($this);
         $formateur = new Formateur();
 
         $form = $this->getFormateurForm();
@@ -64,7 +64,7 @@ class FormateurController extends AbstractActionController
                 $this->getFormateurService()->create($formateur);
                 if ($session) {
                     $session->addFormateur($formateur);
-                    $this->getFormationInstanceService()->update($session);
+                    $this->getSessionService()->update($session);
                 }
                 exit();
             }
@@ -115,7 +115,7 @@ class FormateurController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('formation/formateur',[],[],true);
+        return $this->redirect()->toRoute('formation/formateur', [], [], true);
     }
 
     public function restaurerAction(): Response
@@ -125,7 +125,7 @@ class FormateurController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('formation/formateur',[],[],true);
+        return $this->redirect()->toRoute('formation/formateur', [], [], true);
     }
 
     public function supprimerAction(): ViewModel
@@ -213,7 +213,7 @@ class FormateurController extends AbstractActionController
             }
         }
 
-        $js =<<<EOS
+        $js = <<<EOS
 $(function () {
 $('#utilisateur')
             .autocompleteUnicaen({
@@ -297,10 +297,10 @@ EOS;
         $formateurs = $this->getFormateurService()->getFormateursByUser($user);
 
         if (empty($formateurs)) {
-            throw new RuntimeException("[".$user->getDisplayName()." #".$user->getId()."] est associé·e à aucun formateur actif.");
+            throw new RuntimeException("[" . $user->getDisplayName() . " #" . $user->getId() . "] est associé·e à aucun formateur actif.");
         }
         if (count($formateurs) > 1) {
-            throw new RuntimeException("[".$user->getDisplayName()." #".$user->getId()."] est associé·e à plusieurs formateurs actifs.");
+            throw new RuntimeException("[" . $user->getDisplayName() . " #" . $user->getId() . "] est associé·e à plusieurs formateurs actifs.");
         }
         /** @var Formateur $formateur */
         $formateur = current($formateurs);

@@ -11,6 +11,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Template\MailTemplates;
@@ -265,12 +266,27 @@ class NotificationService
         return $mail;
     }
 
-    public function triggerRappelCampagneSuperieur(Campagne $campagne, Agent $superieur): Mail
+    public function triggerRappelCampagneSuperieur(Campagne $campagne, Agent $superieur): ?Mail
     {
         $agents = array_map(function (AgentSuperieur $a) {
             return $a->getAgent();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur));
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+        $agents = $obligatoires;
+        foreach ($entretiens as $entretien) {
+            $agent = $entretien->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+
+        $notificationNeeded = false;
+        foreach ($obligatoires as $obligatoire) {
+            if (!isset($entretiens[$obligatoire->getId()]) && !$entretiens[$obligatoire->getId()]->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $notificationNeeded = true;
+                break;
+            }
+        }
+        if (!$notificationNeeded) return null;
 
         $vh = new CampagneAvancementViewHelper();
         $vh->renderer = $this->renderer;
@@ -290,12 +306,29 @@ class NotificationService
         return $mail;
     }
 
-    public function triggerRappelCampagneAutorite(Campagne $campagne, Agent $autorite): Mail
+    public function triggerRappelCampagneAutorite(Campagne $campagne, Agent $autorite): ?Mail
     {
         $agents = array_map(function (AgentAutorite $a) {
             return $a->getAgent();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite));
+
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+        $agents = $obligatoires;
+        foreach ($entretiens as $entretien) {
+            $agent = $entretien->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+
+        $notificationNeeded = false;
+        foreach ($obligatoires as $obligatoire) {
+            if (!isset($entretiens[$obligatoire->getId()])  && !$entretiens[$obligatoire->getId()]->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $notificationNeeded = true;
+                break;
+            }
+        }
+
+        if ($notificationNeeded === false) return null;
 
         $vh = new CampagneAvancementViewHelper();
         $vh->renderer = $this->renderer;

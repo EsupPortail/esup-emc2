@@ -346,3 +346,22 @@
 {
     content:"\f51a";
 }
+
+.icon.icon-accessibilite::before,
+.icon.icon-accessibility::before,
+.icon.icon-rqth::before
+{
+    content:"\f193";
+}
+
+.icon.icon-commentaire::before,
+.icon.icon-comment::before
+{
+    content:"\f075";
+}
+
+.icon.icon-commentaires::before,
+.icon.icon-comments::before
+{
+    content:"\f086";
+}

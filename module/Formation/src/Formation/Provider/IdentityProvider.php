@@ -2,7 +2,6 @@
 
 namespace Formation\Provider;
 
-use Application\Entity\Db\Agent;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;

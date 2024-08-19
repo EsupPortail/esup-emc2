@@ -4,8 +4,8 @@ namespace Formation\Event\InscriptionCloture;
 
 use Doctrine\ORM\EntityManager;
 use Formation\Provider\Parametre\FormationParametres;
-use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\Notification\NotificationService;
+use Formation\Service\Session\SessionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -26,17 +26,17 @@ class InscriptionClotureEventFactory
     {
         /**
          * @var EntityManager $entityManager
-         * @var FormationInstanceService $sessionService
+         * @var SessionService $sessionService
          * @var NotificationService $notificationService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $notificationService = $container->get(NotificationService::class);
-        $sessionService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
 
         $event = new InscriptionClotureEvent();
         $event->setEntityManager($entityManager);
         $event->setNotificationService($notificationService);
-        $event->setFormationInstanceService($sessionService);
+        $event->setSessionService($sessionService);
 
         /** @var Parametre $deadline */
         $deadline = $container->get(ParametreService::class)->getParametreByCode(FormationParametres::TYPE, FormationParametres::AUTO_FERMETURE);

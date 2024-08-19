@@ -53,7 +53,7 @@ foreach ($inscriptions as $inscription) {
                         <br/>
                         <a
                             <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
-                                href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+                                href="<?php echo $this->url('formation/session/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
                         >
                             <span class="icon icon-pdf"> Je télécharge ma convocation</span>
                         </a>
@@ -94,7 +94,7 @@ foreach ($inscriptions as $inscription) {
                             <a
                                 <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
                                     href="
-        <?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+        <?php echo $this->url('formation/session/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
                             >
                                 <span class="icon icon-pdf"> Je télécharge ma convocation</span>
                             </a>

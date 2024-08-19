@@ -55,7 +55,7 @@ $this->headTitle("Domaines de formation");
                 <span class="badge" style="background: <?php echo $domaine->getCouleur(); ?>">&nbsp;</span>
                 <?php echo $domaine->getLibelle(); ?>
                 <?php if ($domaine->getDescription() !== null) : ?>
-                    <span class="icon icon-info" title="<?php echo $domaine->getDescription(); ?>"
+                    <span class="icon icon-info" title="<?php echo htmlentities($domaine->getDescription()); ?>"
                           data-bs-toggle="tooltip" data-bs-html="true">
                     </span>
                 <?php endif; ?>

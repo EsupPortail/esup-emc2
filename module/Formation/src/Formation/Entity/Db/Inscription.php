@@ -11,6 +11,8 @@ use Exception;
 use Fichier\Entity\Db\Fichier;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
+use UnicaenEnquete\Entity\HasEnqueteInterface;
+use UnicaenEnquete\Entity\HasEnqueteTrait;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -18,10 +20,11 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasValidationsInterface, ResourceInterface {
+class Inscription implements
+    HistoriqueAwareInterface, ResourceInterface,
+    HasEtatsInterface, HasValidationsInterface, HasEnqueteInterface {
     use HistoriqueAwareTrait;
-    use HasEtatsTrait;
-    use HasValidationsTrait;
+    use HasEtatsTrait, HasValidationsTrait, HasEnqueteTrait;
 
     public function getResourceId(): string
     {
@@ -34,7 +37,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?StagiaireExterne $stagiaire = null;
-    private ?FormationInstance $session = null;
+    private ?Session $session = null;
     private ?string $liste = null;
 
     private ?string $missions = null;
@@ -43,8 +46,8 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     private ?string $justificationDrh = null;
     private ?string $justificationRefus = null;
 
-    private ?DateTime $validationEnquete = null;
-    private Collection $reponsesEnquete;
+    private bool $rqth = false;
+    private ?string $precisionRqth = null;
 
     private Collection $presences;
     private ?InscriptionFrais $frais = null;
@@ -58,7 +61,6 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $this->etats = new ArrayCollection();
         $this->presences = new ArrayCollection();
         $this->validations = new ArrayCollection();
-        $this->reponsesEnquete = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
     }
 
@@ -87,12 +89,12 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $this->stagiaire = $stagiaire;
     }
 
-    public function getSession(): ?FormationInstance
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function setSession(?FormationInstance $session): void
+    public function setSession(?Session $session): void
     {
         $this->session = $session;
     }
@@ -157,6 +159,26 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $this->justificationRefus = $justificationRefus;
     }
 
+    public function isRqth(): bool
+    {
+        return $this->rqth;
+    }
+
+    public function setRqth(bool $rqth): void
+    {
+        $this->rqth = $rqth;
+    }
+
+    public function getPrecisionRqth(): ?string
+    {
+        return $this->precisionRqth;
+    }
+
+    public function setPrecisionRqth(?string $precisionRqth): void
+    {
+        $this->precisionRqth = $precisionRqth;
+    }
+
     public function getValidationEnquete(): ?DateTime
     {
         return $this->validationEnquete;
@@ -192,15 +214,35 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         return $this->frais;
     }
 
-    /** Enquete *******************************************************************************************************/
-
-    /** @return EnqueteReponse[] */
-    public function getReponsesEnquete(): array
+    public function estPresence(string $code, Seance $seance): bool
     {
-        $responses = $this->reponsesEnquete->toArray();
-        $responses = array_filter($responses, function (EnqueteReponse $a) { return $a->estNonHistorise(); });
-        return $responses;
+        /** @var Presence $presence */
+        foreach ($this->presences as $presence) {
+            if ($presence->estNonHistorise() && $presence->getStatut() === $code && $presence->getJournee() === $seance) {
+                return true;
+            }
+        }
+        return false;
     }
+
+    public function hasAbsence(): bool
+    {
+        $codes = [Presence::PRESENCE_ABSENCE_NON_JUSTIFIEE, Presence::PRESENCE_ABSENCE_JUSTIFIEE];
+        foreach ($this->presences as $presence) {
+            if ($presence->estNonHistorise() && in_array($presence->getStatut(), $codes)) return true;
+        }
+        return false;
+    }
+
+    public function hasAllPresence(): bool
+    {
+        /** @var Presence $presence */
+        foreach ($this->presences as $presence) {
+            if ($presence->getStatut() === null || $presence->getStatut() === Presence::PRESENCE_NON_RENSEIGNEE) return false;
+        }
+        return true;
+    }
+
 
     /** Gestion des fichiers  *****************************************************************************************/
     // TODO trait et interface ?
@@ -308,7 +350,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
                 try {
                     $temp = new DateInterval('PT' . $volume . 'H');
                 } catch (Exception $e) {
-                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]",0,$e);
+                    throw new RuntimeException("Un problème est survenu lors de la création de l'intervale avec [PT".$volume."H]",0,$e);
                 }
                 $sum->add($temp);
             }

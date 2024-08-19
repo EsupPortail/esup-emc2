@@ -4,7 +4,7 @@ namespace Formation\Controller;
 
 use Formation\Form\Formateur\FormateurForm;
 use Formation\Service\Formateur\FormateurService;
-use Formation\Service\FormationInstance\FormationInstanceService;
+use Formation\Service\Session\SessionService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -24,11 +24,11 @@ class FormateurControllerFactory
     public function __invoke(ContainerInterface $container): FormateurController
     {
         /**
-         * @var FormationInstanceService $formationInstanceService
+         * @var SessionService $sessionService
          * @var FormateurService $formateurService
          * @var UserService $userService
          */
-        $formationInstanceService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
         $formateurService = $container->get(FormateurService::class);
         $userService = $container->get(UserService::class);
 
@@ -42,7 +42,7 @@ class FormateurControllerFactory
         $userRechercheForm = $container->get('FormElementManager')->get(UserRechercheForm::class);
 
         $controller = new FormateurController();
-        $controller->setFormationInstanceService($formationInstanceService);
+        $controller->setSessionService($sessionService);
         $controller->setFormateurService($formateurService);
         $controller->setUserService($userService);
         $controller->setFormateurForm($formateurForm);
