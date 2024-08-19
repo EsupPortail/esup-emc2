@@ -166,14 +166,14 @@ class FormationController extends AbstractActionController
             }
         }
 
-        $instances = $this->getSessionService()->getSessionsByFormation($formation);
+        $sessions = $this->getSessionService()->getSessionsByFormation($formation);
 
         $vm = new ViewModel();
         $vm->setTemplate('formation/formation/modifier');
         $vm->setVariables([
             'title' => 'Edition d\'une formation',
             'formation' => $formation,
-            'instances' => $instances,
+            'sessions' => $sessions,
             'form' => $form,
             'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByAction($formation),
         ]);
