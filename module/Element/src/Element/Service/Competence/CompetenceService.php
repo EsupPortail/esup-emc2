@@ -226,6 +226,21 @@ class CompetenceService {
         return $result;
     }
 
+    /** @return Competence[] */
+    public function getCompetencesByTerm(string $term): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('LOWER(competence.libelle) like :search')
+            ->setParameter('search', '%' . strtolower($term) . '%');
+        $result = $qb->getQuery()->getResult();
+
+        $competences = [];
+        /** @var Competence $item */
+        foreach ($result as $item) {
+            $competences[$item->getId()] = $item;
+        }
+        return $competences;
+    }
     /** FACADE ****************************************************************************************************/
 
     public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id) : Competence
@@ -265,5 +280,24 @@ class CompetenceService {
         return $competence;
     }
 
-
+    /**
+     * @param Competence[] $competences
+     * @return array
+     */
+    public function formatCompetencesJSON(array $competences): array
+    {
+        $result = [];
+        foreach ($competences as $competence) {
+            $referentiel = $competence->getReferentiel();
+            $result[] = array(
+                'id' => $competence->getId(),
+                'label' => $competence->getLibelle(),
+                'extra' => ($referentiel === null)?"<span class='badge' style='background-color: slategray;'>Aucun référentiel</span>":"<span class='badge' style='background-color: ".$referentiel->getCouleur().";'>".$referentiel->getLibelleCourt()." #".$competence->getIdSource()."</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 }

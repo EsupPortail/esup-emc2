@@ -1,0 +1,209 @@
+<?php
+
+/**
+ * @see \Element\Controller\CompetenceController::rechercherAgentsAction()
+ * @var Niveau[] $niveaux
+ */
+
+use Element\Entity\Db\Niveau;
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+$this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
+
+?>
+
+<h1 class="page-header">
+    Rechercher des agent·es avec un ensemble de compétences
+</h1>
+
+<div class="card">
+    <div class="card-header bg-default">
+        Critères de recherche
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url(); ?>">
+        <div id="competence-criteres">
+        <span class="header">Compétences</span>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <span class="icon icon-minus text-danger"></span>
+                        </div>
+                        <div class="col-md-5">
+<!--                            --><?php
+//                            $competenceSas = new SearchAndSelect('competence-filtre', ['label' => ""]);
+//                            $competenceSas
+//                                ->setAutocompleteSource($this->url('element/competence/rechercher'))
+//                                ->setSelectionRequired(true)
+//                                ->setAttributes([
+//                                    'id' => 'competence-filtre',
+//                                    'placeholder' => "Aucune compétence",
+//                                ]);
+//                            ?>
+<!--                            --><?php //echo $this->formControlGroup($competenceSas); ?>
+                            <div class="mb-2">
+                                <input type="text" id="competence-filtre"              name="competence-filtre[id]"     placeholder="Aucune compétence" class="sas" value="" style="display:none;">
+                                <input type="text" id="competence-filtre-autocomplete" name="competence-filtre[label]"  placeholder="Aucune compétence" class="sas-autocomplete form-control form-control-sm" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="operateur" name="operateur" class="selectpicker">
+                                <option value="">Aucun opérateur</option>
+                                <option value="superieur"> &gt; </option>
+                                <option value="superieur_ou_egal"> &ge; </option>
+                                <option value="egale"> &equals; </option>
+                                <option value="inferieur_ou_egal"> &le; </option>
+                                <option value="inferieur"> &lt; </option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="niveau" name="niveau" class="selectpicker">
+                                <option value="">Aucun niveau</option>
+                                <?php foreach ($niveaux as $niveau): ?>
+                                    <option value="<?php echo $niveau->getId(); ?>"><?php echo $niveau->getLibelle(); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary" id="ajout-competence">
+                        <span class="icon icon-plus"></span>
+                        Ajouter un critère sur les compétences
+                    </button>
+                    <button class="btn btn-primary" id="raz-competence">
+                        <span class="icon icon-gommer"></span>
+                        Vider les critères sur les compétences
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div>
+        <span class="header">Critères sur les agent·es</span>
+            TODO
+        </div>
+        <div>
+            <button class="btn btn-primary" id="rechercher">
+                <span class="icon icon-search"></span>
+                Rechercher des agents
+            </button>
+            <button class="btn btn-primary" id="raz">
+                <span class="icon icon-gommer"></span>
+                Remise à zéro
+            </button>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    .card .card-body span.header {
+        font-variant: small-caps;
+        text-decoration: underline;
+    }
+</style>
+
+
+<script>
+    function generateSas2(idSas) {
+        let text = ''
+            + '<div class="mb-2">'
+            + '     <input type="text" id="competence-filtre_'+idSas+'"              name="competence-filtre_'+idSas+'[id]"     placeholder="Aucune compétence" class="sas" value="" style="display:none;">'
+            + '     <input type="text" id="competence-filtre_'+idSas+'-autocomplete" name="competence-filtre_'+idSas+'[label]"  placeholder="Aucune compétence" class="sas-autocomplete form-control form-control-sm" value="">'
+            + '</div>'
+            + ''
+            ;
+        return text;
+    }
+
+    function generateOperateurSelect(id) {
+        let text =
+            '<div class="col-md-3">'
+            + '    <select id="operateur_'+id+'" name="operateur_'+id+'" class="selectpicker">'
+            + '        <option value="">Aucun opérateur</option>'
+            + '        <option value="superieur"> &gt; </option>'
+            + '        <option value="superieur_ou_egal"> &ge; </option>'
+            + '        <option value="egale"> &equals; </option>'
+            + '        <option value="inferieur_ou_egal"> &le; </option>'
+            + '        <option value="inferieur"> &lt; </option>'
+            + '    </select>'
+            + '</div>';
+        return text;
+    }
+
+    function generateNiveauSelect(id) {
+        let niveauId = 'undefined';
+        let niveauLibelle = 'undefined';
+        let text =
+            '<div class="col-md-3">'
+            + '    <select id="niveau_'+id+'" name="niveau_'+id+'" class="selectpicker">'
+            + '        <option value="">Aucun niveau</option>'
+            ;
+            <?php foreach ($niveaux as $niveau): ?>
+                 niveauId = "<?php echo $niveau->getId(); ?>";
+                 niveauLibelle = "<?php echo $niveau->getLibelle(); ?>";
+                text += '<option value="' + niveauId + '" >'+ niveauLibelle +'</option>';
+            <?php endforeach; ?>
+        text += '    </select>';
+        text += '</div>';
+        return text;
+    }
+
+    $(function () {
+        $('button#ajout-competence').on("click", function(e) {
+
+            e.preventDefault();
+            let id = Math.random() * 1000000;
+            $('div#competence-criteres').append(
+                '<div class="row">' +
+                '   <div class="col-md-1"> <span class="icon icon-minus text-danger"></span></div>' +
+                '   <div class="col-md-5">' + generateSas2(id) + '</div>' +
+                generateOperateurSelect(id) +
+                generateNiveauSelect(id) +
+                '</div>');
+            $('select').selectpicker();
+            // alert("done");
+
+            var autocomp = $('#competence-filtre_'+id+'-autocomplete');
+            console.log(autocomp);
+            // console.log(autocomp.attr('id').slice(0,-13));
+            // autocomp.autocompleteUnicaen({ // autocompleteUnicaen() définie dans "public/unicaen/app/js/unicaen.js"
+            //     elementDomId: "competence-filtre_"+id,
+            //     source: '/element/competence/rechercher',
+            //     minLength: 2,
+            //     delay: 750
+            // });
+        });
+    });
+
+
+</script>
+
+
+<?php if ($query) : ?>
+    <?php var_dump($query); ?>
+<?php endif; ?>
+
+<style>
+    ul.ui-autocomplete {
+        z-index: 5000
+    }
+    .ui-autocomplete-loading {
+        background: white url("//gest.unicaen.fr/images/ajax-loader-r.gif") right center no-repeat;
+    }
+</style>
+<!--<script>-->
+<!--    $(function() {-->
+<!--        // jQuery UI autocomplete-->
+<!--        var autocomp = $(".sas-autocomplete");-->
+<!--        autocomp.autocompleteUnicaen({ // autocompleteUnicaen() définie dans "public/unicaen/app/js/unicaen.js"-->
+<!--            console.log(autocomp.attr('id').slice(0,-13));-->
+<!--            elementDomId: autocomp.attr('id').slice(0,-13),-->
+<!--            source: '/element/competence/rechercher',-->
+<!--            minLength: 2,-->
+<!--            delay: 750-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
