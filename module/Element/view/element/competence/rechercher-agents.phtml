@@ -26,22 +26,12 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
         <span class="header">Compétences</span>
             <div class="row">
                 <div class="col-md-9">
-                    <div class="row">
+                    <div id="competence-bloc">
+                    <div class="row" >
                         <div class="col-md-1">
                             <span class="icon icon-minus text-danger"></span>
                         </div>
                         <div class="col-md-5">
-<!--                            --><?php
-//                            $competenceSas = new SearchAndSelect('competence-filtre', ['label' => ""]);
-//                            $competenceSas
-//                                ->setAutocompleteSource($this->url('element/competence/rechercher'))
-//                                ->setSelectionRequired(true)
-//                                ->setAttributes([
-//                                    'id' => 'competence-filtre',
-//                                    'placeholder' => "Aucune compétence",
-//                                ]);
-//                            ?>
-<!--                            --><?php //echo $this->formControlGroup($competenceSas); ?>
                             <div class="mb-2">
                                 <input type="text" id="competence-filtre"              name="competence-filtre[id]"     placeholder="Aucune compétence" class="sas" value="" style="display:none;">
                                 <input type="text" id="competence-filtre-autocomplete" name="competence-filtre[label]"  placeholder="Aucune compétence" class="sas-autocomplete form-control form-control-sm" value="">
@@ -65,6 +55,7 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                    </div>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -155,8 +146,9 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
         $('button#ajout-competence').on("click", function(e) {
 
             e.preventDefault();
-            let id = Math.random() * 1000000;
-            $('div#competence-criteres').append(
+            let id = Math.floor(Math.random() * 1000000);
+            // let id = 15;
+            $('div#competence-bloc').append(
                 '<div class="row">' +
                 '   <div class="col-md-1"> <span class="icon icon-minus text-danger"></span></div>' +
                 '   <div class="col-md-5">' + generateSas2(id) + '</div>' +
@@ -164,17 +156,16 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                 generateNiveauSelect(id) +
                 '</div>');
             $('select').selectpicker();
-            // alert("done");
 
-            var autocomp = $('#competence-filtre_'+id+'-autocomplete');
+            var autocomp = $('.sas-autocomplete:last');
             console.log(autocomp);
-            // console.log(autocomp.attr('id').slice(0,-13));
-            // autocomp.autocompleteUnicaen({ // autocompleteUnicaen() définie dans "public/unicaen/app/js/unicaen.js"
-            //     elementDomId: "competence-filtre_"+id,
-            //     source: '/element/competence/rechercher',
-            //     minLength: 2,
-            //     delay: 750
-            // });
+            console.log("competence-filtre_"+id);
+            autocomp.autocompleteUnicaen({
+                elementDomId: "competence-filtre_"+id,
+                source: '/element/competence/rechercher',
+                minLength: 2,
+                delay: 750
+            });
         });
     });
 
@@ -182,7 +173,7 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
 </script>
 
 
-<?php if ($query) : ?>
+<?php if (isset($query)) : ?>
     <?php var_dump($query); ?>
 <?php endif; ?>
 
@@ -194,16 +185,14 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
         background: white url("//gest.unicaen.fr/images/ajax-loader-r.gif") right center no-repeat;
     }
 </style>
-<!--<script>-->
-<!--    $(function() {-->
-<!--        // jQuery UI autocomplete-->
-<!--        var autocomp = $(".sas-autocomplete");-->
-<!--        autocomp.autocompleteUnicaen({ // autocompleteUnicaen() définie dans "public/unicaen/app/js/unicaen.js"-->
-<!--            console.log(autocomp.attr('id').slice(0,-13));-->
-<!--            elementDomId: autocomp.attr('id').slice(0,-13),-->
-<!--            source: '/element/competence/rechercher',-->
-<!--            minLength: 2,-->
-<!--            delay: 750-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
+<script>
+    $(function() {
+        var autocomp = $("#competence-filtre-autocomplete");
+        autocomp.autocompleteUnicaen({ // autocompleteUnicaen() définie dans "public/unicaen/app/js/unicaen.js"
+            elementDomId: 'competence-filtre',
+            source: '/element/competence/rechercher',
+            minLength: 2,
+            delay: 750
+        });
+    });
+</script>
