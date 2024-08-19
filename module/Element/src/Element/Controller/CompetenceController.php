@@ -203,16 +203,40 @@ class CompetenceController extends AbstractActionController
     }
 
     /** Fonction associée à la recherche d'éléments ayant un sous-ensemble de comptences
-     *  TODO/QUID décaller dans un CompetenceElementController ??? */
+     *  TODO/QUID décaller dans un CompetenceElementController ???
+     **/
 
     public function rechercherAgentsAction(): ViewModel
     {
         $query = $this->params()->fromQuery();
+        $agents = [];
+
+        if (!empty($query)) {
+            $criteres = [];
+            foreach ($query as $key => $value) {
+                if (str_contains($key, 'competence-filtre_')) {
+                    $group = substr($key, strlen('competence-filtre_'));
+                    $competenceId = $value['id'];
+                    $operateur = $query['operateur_' . $group];
+                    $niveau = $query['niveau_' . $group];
+
+                    $criteres[] = [
+                        'competence' => $competenceId,
+                        'operateur' => $operateur,
+                        'niveau' => $niveau,
+                    ];
+
+                    $agents = $this->getCompetenceElementService()->getAgentsHavingCompetencesWithCriteres($criteres);
+                }
+            }
+        }
+
 
         $niveaux = $this->getNiveauService()->getMaitrisesNiveaux("Competence");
         return new ViewModel([
             'niveaux' => $niveaux,
             'query' => $query,
+            'agents' => $agents,
         ]);
     }
 
