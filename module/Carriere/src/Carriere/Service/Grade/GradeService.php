@@ -7,6 +7,7 @@ use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
@@ -68,7 +69,7 @@ class GradeService
         return $array;
     }
 
-    public function getGrade(int $id, bool $avecAgent = true): ?Grade
+    public function getGrade(?int $id, bool $avecAgent = true): ?Grade
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('grade.id = :id')
@@ -90,4 +91,36 @@ class GradeService
         return $grade;
     }
 
+    /** @return Grade[] */
+    public function getGradesByTerm(mixed $term): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('lower(grade.libelleCourt) LIKE :search or lower(grade.libelleLong) LIKE :search or lower(grade.code) LIKE :search')
+            ->setParameter('search', '%' . strtolower($term) . '%')
+//            ->andWhere('grade.histo IS NULL')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Grade[] $grades
+     * @return array
+     */
+    public function formatGradesJSON(array $grades): array
+    {
+        $result = [];
+        foreach ($grades as $grade) {
+            $result[] = array(
+                'id' => $grade->getId(),
+                'label' => $grade->getLibelleLong(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $grade->getLibelleCourt() . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 }

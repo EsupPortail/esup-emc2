@@ -6,13 +6,18 @@
  * @var Agent[]|null $agents
  * @var Competence[] $competences
  * @var array $criteria
+ * @var Structure|null $structureFiltre
+ * @var Grade|null $gradeFiltre
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentGrade;use Application\Entity\Db\AgentStatut;
 use Application\Provider\Privilege\AgentPrivileges;
+use Carriere\Entity\Db\Grade;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\Niveau;
+use Structure\Entity\Db\Structure;
+use UnicaenApp\Form\Element\SearchAndSelect;
 
 $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
 
@@ -49,7 +54,53 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
         </div>
         <div>
         <span class="header">Critères sur les agent·es</span>
-            <span class="todo">TODO</span>
+            <div class="row">
+                <div class="col-md-9">
+                    <div id="agent-bloc">
+                        <div class="row">
+                            <div class="col-md-2 ">Affectation</div>
+                            <div class="col-md-10">
+                                <?php
+                                    /** @see  \Structure\Controller\StructureController::rechercherAction() */
+                                    $structureF = new SearchAndSelect('structure');
+                                    $structureF
+                                        ->setAutocompleteSource($this->url('structure/rechercher'))
+                                        ->setSelectionRequired()
+                                        ->setAttributes([
+                                            'id' => 'structure',
+                                            'placeholder' => "Structure de l'affectation",
+                                        ]);
+                                    ?>
+                                    <?php echo $this->formControlGroup($structureF); ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 ">Grade</div>
+                            <div class="col-md-10">
+                                <?php
+                                /** @see  \Carriere\Controller\GradeController::rechercherAction() */
+                                $gradeF = new SearchAndSelect('grade');
+                                $gradeF
+                                    ->setAutocompleteSource($this->url('grade/rechercher'))
+                                    ->setSelectionRequired()
+                                    ->setAttributes([
+                                        'id' => 'grade',
+                                        'placeholder' => "Grade de l'agent·e",
+                                    ]);
+                                ?>
+                                <?php echo $this->formControlGroup($gradeF); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary" id="raz-agent">
+                        <span class="icon icon-gommer"></span>
+                        Vider les critères sur les agent·es
+                    </button>
+                </div>
+            </div>
+
         </div>
         <div>
             <button class="btn btn-primary" id="rechercher">
@@ -263,10 +314,17 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
 
     function retirerCompetence(id) { $('div#competence_'+id).remove(); }
     function retirerCompetences(e) { e.preventDefault(); $('div#competence-bloc').html(""); ajouterCompetence(e);}
+    function retirerAgents(e) { e.preventDefault();
+        $('input[name="structure[id]"]').val(null);
+        $('input[name="structure[label]"]').val(null);
+        $('input[name="grade[id]"]').val(null);
+        $('input[name="grade[label]"]').val(null);
+    }
 
     $(function () {
         $('button#ajout-competence').on("click", function(e) { ajouterCompetence(e); });
         $('button#raz-competence').on("click", function(e) { retirerCompetences(e); });
+        $('button#raz-agent').on("click", function(e) { retirerAgents(e); });
         $('button#raz').on("click", function(e) { e.preventDefault(); window.location.href = "?"; });
     });
 
@@ -314,15 +372,23 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
             ajouterCompetence(undefined, groupid);
             $('input[name="competence-filtre_' + groupid + '[id]"]').val(competenceId);
             $('input[name="competence-filtre_' + groupid + '[label]"]').val(competenceLabel);
-            if (operateur !== undefined && operateur !== '') {
+            if (operateur !== '') {
                 $('select#operateur_' + groupid).val(operateur).change();
             }
-            if (niveau !== undefined && niveau !== '') {
+            if (niveau !== '') {
                 $('select#niveau_' + groupid + ' option[value=' + niveau + ']').prop('selected', true);
             }
             withit = true;
         }
         <?php endforeach; ?>
+        <?php if ($structureFiltre !== null) : ?>
+            $('input[name="structure[id]"]').val(<?php echo $structureFiltre->getId(); ?>);
+            $('input[name="structure[label]"]').val("<?php echo $structureFiltre->getLibelleLong(); ?>");
+        <?php endif; ?>
+        <?php if ($gradeFiltre !== null) : ?>
+            $('input[name="grade[id]"]').val(<?php echo $gradeFiltre->getId(); ?>);
+            $('input[name="grade[label]"]').val("<?php echo $gradeFiltre->getLibelleLong(); ?>");
+        <?php endif; ?>
 
         if (withit === false) ajouterCompetence();
         $('select').selectpicker();

@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Carriere\Entity\Db\Grade;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\Collection;
@@ -815,6 +816,25 @@ class Agent implements
     {
         $statuts =  $this->getStatutsActifs($date);
         foreach ($statuts as $statut) if ($statut->isAdministratif()) return true;
+        return false;
+    }
+
+    public function hasAffectationPrincipale(?Structure $structure): bool
+    {
+        $affectationPrincipale = $this->getAffectationPrincipale();
+        //todo checkbien l'inclusion
+        if ($affectationPrincipale AND $affectationPrincipale->getStructure() === $structure) return true;
+        return false;
+    }
+
+    public function hasGrade(?Grade $grade): bool
+    {
+        $gradesActifs = $this->getGradesActifs();
+        if ($gradesActifs AND !empty($gradesActifs)) {
+            foreach ($gradesActifs as $gradeActif) {
+                if ($gradeActif->getGrade() === $grade) return true;
+            }
+        }
         return false;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Element\Controller;
 
+use Carriere\Service\Grade\GradeServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Form\Competence\CompetenceFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
@@ -17,6 +18,7 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 
 class CompetenceController extends AbstractActionController
 {
@@ -25,8 +27,10 @@ class CompetenceController extends AbstractActionController
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use GradeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use StructureServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -212,6 +216,8 @@ class CompetenceController extends AbstractActionController
         $agents = [];
         $competences = [];
         $criteres = [];
+        $structure = null;
+        $grade = null;
 
         if (!empty($query)) {
             $criteres = [];
@@ -222,20 +228,33 @@ class CompetenceController extends AbstractActionController
                     $operateur = $query['operateur_' . $group];
                     $niveau = $query['niveau_' . $group];
 
-                    $competence = $this->getCompetenceService()->getCompetence($competenceId);
-                    $criteres[] = [
-                        'id' => $group,
-                        'competence' => $competence,
-                        'operateur' => $operateur,
-                        'niveau' => $niveau,
-                    ];
-                    $competences[] = $competence;
+                    $competence = $this->getCompetenceService()->getCompetence($competenceId !== ''?$competenceId:null);
+                    if ($competence) {
+                        $criteres[] = [
+                            'id' => $group,
+                            'competence' => $competence,
+                            'operateur' => $operateur,
+                            'niveau' => $niveau,
+                        ];
+                        $competences[] = $competence;
+                    }
 
                 }
-                $agents = $this->getCompetenceElementService()->getAgentsHavingCompetencesWithCriteres($criteres);
+                $agents = [];
+                if (!empty($criteres)) {
+                    $agents = $this->getCompetenceElementService()->getAgentsHavingCompetencesWithCriteres($criteres);
+                }
+
+                if ($query['structure']['id']) {
+                    $structure = $this->getStructureService()->getStructure($query['structure']['id']);
+                    $agents = array_filter($agents, function ($agent) use ($structure) { return $agent->hasAffectationPrincipale($structure); });
+                }
+                if ($query['grade']['id']) {
+                    $grade = $this->getGradeService()->getGrade($query['grade']['id']);
+                    $agents = array_filter($agents, function ($agent) use ($grade) { return $agent->hasGrade($grade); });
+                }
             }
         }
-
 
         $niveaux = $this->getNiveauService()->getMaitrisesNiveaux("Competence");
         return new ViewModel([
@@ -244,6 +263,8 @@ class CompetenceController extends AbstractActionController
             'agents' => $agents,
             'competences' => $competences,
             'criteria' => $criteres,
+            'structureFiltre' => $structure,
+            'gradeFiltre' => $grade,
         ]);
     }
 
