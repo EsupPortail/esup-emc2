@@ -3,17 +3,15 @@
 namespace Carriere\Service\Grade;
 
 use Carriere\Entity\Db\Grade;
-use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class GradeService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENITIES *******************************************************************************************/
     // les grades sont importés et ne sont pas gérés dans l'application
@@ -22,12 +20,8 @@ class GradeService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
-                ->andWhere('grade.deleted_on IS NULL');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de  [" . Grade::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(Grade::class)->createQueryBuilder('grade')
+            ->andWhere('grade.deleted_on IS NULL');
         return $qb;
     }
 
