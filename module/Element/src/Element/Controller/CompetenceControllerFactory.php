@@ -2,6 +2,7 @@
 
 namespace Element\Controller;
 
+use Carriere\Service\Grade\GradeService;
 use Element\Form\Competence\CompetenceForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\Competence\CompetenceService;
@@ -14,6 +15,7 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Structure\Service\Structure\StructureService;
 
 class CompetenceControllerFactory
 {
@@ -31,8 +33,10 @@ class CompetenceControllerFactory
          * @var CompetenceTypeService $competenceTypeService
          * @var CompetenceElementService $competenceElementService
          * @var FicheMetierService $ficherMetierService
+         * @var GradeService $gradeService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauService $maitriseNiveauService
+         * @var StructureService $structureService
          */
         $competenceService = $container->get(CompetenceService::class);
         $maitriseNiveauService = $container->get(NiveauService::class);
@@ -40,7 +44,9 @@ class CompetenceControllerFactory
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $ficherMetierService = $container->get(FicheMetierService::class);
+        $gradeService = $container->get(GradeService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $structureService = $container->get(StructureService::class);
 
         /**
          * @var CompetenceForm $competenceForm
@@ -51,12 +57,14 @@ class CompetenceControllerFactory
 
         $controller = new CompetenceController();
         $controller->setCompetenceService($competenceService);
-        $controller->setNiveauService($maitriseNiveauService);
         $controller->setCompetenceThemeService($competenceThemeService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setFicheMetierService($ficherMetierService);
+        $controller->setGradeService($gradeService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
+        $controller->setNiveauService($maitriseNiveauService);
+        $controller->setStructureService($structureService);
         $controller->setCompetenceForm($competenceForm);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
         return $controller;

@@ -6,6 +6,7 @@ use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
@@ -43,5 +44,15 @@ class GradeController extends AbstractActionController {
             'agentGrades' => $agentGrades,
             'agents' => $agents,
         ]);
+    }
+
+    public function rechercherAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $grades = $this->getGradeService()->getGradesByTerm($term);
+            $result = $this->getGradeService()->formatGradesJSON($grades);
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

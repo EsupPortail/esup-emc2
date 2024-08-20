@@ -27,6 +27,7 @@ $canSubstituer  = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
 $canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
 $canCompetenceTypeIndex = $this->isAllowed(CompetencetypePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_INDEX));
 $canCompetenceReferentielIndex = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_INDEX));
+$canRechercherAgents = $canVoir;
 
 $canAction = ($canVoir OR $canModifier OR $canSubstituer OR $canHistoriser OR $canDetruire);
 
@@ -78,6 +79,13 @@ $this->headTitle("Liste des compétences");
                class="btn btn-secondary">
                 <span class="icon icon-lister"></span>
                 Accéder aux référentiels</a>
+        <?php endif; ?>
+        <?php if ($canRechercherAgents) : ?>
+            <?php /** @see \Element\Controller\CompetenceController::rechercherAgentsAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/rechercher-agents', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-search"></span>
+                Rechercher des agents avec des compétences</a>
         <?php endif; ?>
     </div>
 </div>
@@ -180,12 +188,3 @@ $this->headTitle("Liste des compétences");
     });
 </script>
 
-<style>
-    span.badge.EMC2 {
-        background: var(--unistrap-color-main);
-    }
-
-    span.badge.REFERENS3 {
-        background: indianred;
-    }
-</style>
