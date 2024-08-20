@@ -1,8 +1,6 @@
 <?php
 
-use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use UnicaenEtat\Entity\Db\EtatType;
 
@@ -30,7 +28,7 @@ $canAjouter = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
 <?php if ($canAjouter) : ?>
     <?php /** @see \Formation\Controller\DemandeExterneController::creerPourAgentAction() */ ?>
     <a href="<?php echo $this->url('formation/demande-externe/creer-pour-agent', [], [], true); ?>"
-        class="btn btn-primary ajax-modal">
+       class="btn btn-primary ajax-modal">
         <span class="icon icon-ajouter"></span>
         Ajouter pour un agent
     </a>
@@ -40,10 +38,10 @@ $canAjouter = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
 
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            tinyMCE.editors=[];
+            tinyMCE.editors = [];
             window.location.reload();
         });
     });

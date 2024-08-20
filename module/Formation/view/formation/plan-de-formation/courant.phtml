@@ -127,6 +127,7 @@ usort($domaines, function (Domaine $a, Domaine $b) {
         <?php foreach ($actions_ as $action) : ?>
             <?php $nbSessions = count($actions[$action->getId()]->getSessionsWithEtats([SessionEtats::ETAT_INSCRIPTION_OUVERTE])); ?>
             <li>
+                <a id="formation_<?php echo $action->getId(); ?>">
                 <?php if ($canAfficherAction) : ?>
                     <?php /** @see \Formation\Controller\FormationController::ficheAction() */ ?>
                     <a href = "<?php echo $this->url('formation/fiche', ['formation' => $action->getId()], [], true); ?>"
@@ -170,6 +171,7 @@ usort($domaines, function (Domaine $a, Domaine $b) {
                     >
                         <span class="icon icon-listing" title="lister les abonnements pour cette formation"></span></a>
                 <?php endif; ?>
+                </a>
             </li>
         <?php endforeach; ?>
     </ul>

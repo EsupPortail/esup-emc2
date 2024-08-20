@@ -3,11 +3,11 @@
 /**
  * @see \Formation\Controller\ImportationLagafController::sessionAction()
  * @var string $report
- * @var FormationInstance[] $instances
+ * @var Session[] $sessions
  * @var array $problemes
  */
 
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 
 ?>
 
@@ -19,7 +19,7 @@ use Formation\Entity\Db\FormationInstance;
     <h2> Nouveaux éléments</h2>
     <dl>
         <dt> #séances </dt>
-        <dd> <?php echo count($instances); ?> </dd>
+        <dd> <?php echo count($sessions); ?> </dd>
         <dt> #Problèmes </dt>
         <dd> <?php echo count($problemes); ?> </dd>
     </dl>

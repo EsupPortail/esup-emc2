@@ -55,7 +55,7 @@ $this->headTitle("Axes de formation");
                 <span class="badge" style="background: <?php echo $axe->getCouleur(); ?>">&nbsp;</span>
                 <?php echo $axe->getLibelle(); ?>
                 <?php if ($axe->getDescription() !== null) : ?>
-                    <span class="icon icon-info" title="<?php echo $axe->getDescription(); ?>"
+                    <span class="icon icon-info" title="<?php echo htmlentities($axe->getDescription()); ?>"
                           data-bs-toggle="tooltip" data-bs-html="true">
                     </span>
                 <?php endif; ?>

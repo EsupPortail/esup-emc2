@@ -8,11 +8,14 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 
 class CompetenceElementService
 {
+    use NiveauServiceAwareTrait;
     use ProvidesObjectManager;
 
     /** Gestion des entites ***************************************************************************************/
@@ -98,6 +101,31 @@ class CompetenceElementService
             ->andWhere('competenceelement.competence = :competence')->setParameter('competence', $competence)
             ->andWhere('competenceelement.histoDestruction IS NULL');
         return $qb->getQuery()->getResult();
+    }
+
+    /** @return Agent[] */
+    public function getAgentsHavingCompetencesWithCriteres(array $criteria): array
+    {
+        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder("agent")
+            ->join('agent.competences', 'competenceelement')->addSelect('fcompetenceelement')
+            ->join('agent.competences', 'fcompetenceelement')->addSelect('fcompetenceelement')
+            ->join('fcompetenceelement.competence', 'competence')->addSelect('competence')
+            ->join('fcompetenceelement.niveau', 'niveau')->addSelect('niveau');
+    ;
+
+        foreach ($criteria as $criterion) {
+            $competence = $criterion['competence'];
+            $operateur = $criterion['operateur'];
+            $niveau = $this->getNiveauService()->getMaitriseNiveau(($criterion['niveau'] !== '')?$criterion['niveau']:null);
+
+            $qb = $qb->andWhere('fcompetenceelement.competence = :competence')->setParameter('competence', $competence);
+            if ($operateur !== null && $niveau !== null) {
+                $qb = $qb->andWhere('niveau.niveau ' . $operateur . ' :niveau')->setParameter('niveau', $niveau->getNiveau());
+            }
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }

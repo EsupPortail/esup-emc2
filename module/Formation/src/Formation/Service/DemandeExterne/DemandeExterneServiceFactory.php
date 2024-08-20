@@ -5,10 +5,10 @@ namespace Formation\Service\DemandeExterne;
 use Doctrine\ORM\EntityManager;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
-use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;
+use Formation\Service\Session\SessionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -35,7 +35,7 @@ class DemandeExterneServiceFactory
          * @var EtatTypeService $etatTypeService
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
-         * @var FormationInstanceService $formationInstanceService
+         * @var SessionService $sessionService
          * @var InscriptionService $inscriptionService
          * @var SeanceService $seanceService
          * @var PresenceService $presenceService
@@ -48,7 +48,7 @@ class DemandeExterneServiceFactory
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
-        $formationInstanceService = $container->get(FormationInstanceService::class);
+        $sessionService = $container->get(SessionService::class);
         $inscriptionService = $container->get(InscriptionService::class);
         $presenceService = $container->get(PresenceService::class);
         $seanceService = $container->get(SeanceService::class);
@@ -61,7 +61,7 @@ class DemandeExterneServiceFactory
         $service->setEtatInstanceService($etatInstanceService);
         $service->setEtatTypeService($etatTypeService);
         $service->setFormationService($formationService);
-        $service->setFormationInstanceService($formationInstanceService);
+        $service->setSessionService($sessionService);
         $service->setFormationGroupeService($formationGroupeService);
         $service->setInscriptionService($inscriptionService);
         $service->setPresenceService($presenceService);

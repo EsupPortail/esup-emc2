@@ -138,6 +138,7 @@ class FormationGroupeService
     }
 
     /**
+     * @param Axe $axe
      * @param string $champ
      * @param string $ordre
      * @return array

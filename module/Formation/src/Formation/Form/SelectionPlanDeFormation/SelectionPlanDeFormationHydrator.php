@@ -2,9 +2,6 @@
 
 namespace Formation\Form\SelectionPlanDeFormation;
 
-use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationElement;
-use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Laminas\Hydrator\HydratorInterface;
 
 class SelectionPlanDeFormationHydrator implements HydratorInterface

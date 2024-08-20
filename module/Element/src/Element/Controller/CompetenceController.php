@@ -2,6 +2,7 @@
 
 namespace Element\Controller;
 
+use Carriere\Service\Grade\GradeServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Form\Competence\CompetenceFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
@@ -15,7 +16,9 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 
 class CompetenceController extends AbstractActionController
 {
@@ -24,15 +27,17 @@ class CompetenceController extends AbstractActionController
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use GradeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use StructureServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
 
     /** INDEX *********************************************************************************************************/
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
@@ -49,7 +54,7 @@ class CompetenceController extends AbstractActionController
 
     /** COMPETENCE ****************************************************************************************************/
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
         $agents = $this->getCompetenceElementService()->getAgentsHavinCompetenceFromAgent($competence);
@@ -64,7 +69,7 @@ class CompetenceController extends AbstractActionController
         ]);
     }
 
-    public function ajouterAction() : ViewModel
+    public function ajouterAction(): ViewModel
     {
         $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
         $competence = new Competence();
@@ -81,7 +86,7 @@ class CompetenceController extends AbstractActionController
             if ($form->isValid()) {
                 $this->getCompetenceService()->create($competence);
                 $competence->setSource("EMC2");
-                $competence->setIdSource($competence->getIdSource()??$competence->getId());
+                $competence->setIdSource($competence->getIdSource() ?? $competence->getId());
                 $this->getCompetenceService()->update($competence);
             }
         }
@@ -95,7 +100,7 @@ class CompetenceController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
         $form = $this->getCompetenceForm();
@@ -121,21 +126,21 @@ class CompetenceController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
         $this->getCompetenceService()->historise($competence);
         return $this->redirect()->toRoute('element/competence', [], [], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
         $this->getCompetenceService()->restore($competence);
         return $this->redirect()->toRoute('element/competence', [], [], true);
     }
 
-    public function detruireAction() : ViewModel
+    public function detruireAction(): ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
 
@@ -159,7 +164,7 @@ class CompetenceController extends AbstractActionController
         return $vm;
     }
 
-    public function substituerAction() : ViewModel
+    public function substituerAction(): ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
 
@@ -171,7 +176,7 @@ class CompetenceController extends AbstractActionController
             $data = $request->getPost();
             $competenceSub = $this->getCompetenceService()->getCompetence($data['competences'][0]);
 
-            if ($competenceSub AND $competenceSub !== $competence) {
+            if ($competenceSub and $competenceSub !== $competence) {
                 $elements = $this->getCompetenceElementService()->getElementsByCompetence($competence);
                 foreach ($elements as $element) {
                     $element->setCompetence($competenceSub);
@@ -185,10 +190,82 @@ class CompetenceController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
-           'title' => "Sélection de la compétence qui remplacera [".$competence->getLibelle()."]",
-           'form' => $form,
+            'title' => "Sélection de la compétence qui remplacera [" . $competence->getLibelle() . "]",
+            'form' => $form,
         ]);
         return $vm;
+    }
+
+    public function rechercherAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $competences = $this->getCompetenceService()->getCompetencesByTerm($term);
+            $result = $this->getCompetenceService()->formatCompetencesJSON($competences);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    /** Fonction associée à la recherche d'éléments ayant un sous-ensemble de comptences
+     *  TODO/QUID décaller dans un CompetenceElementController ???
+     **/
+
+    public function rechercherAgentsAction(): ViewModel
+    {
+        $query = $this->params()->fromQuery();
+        $agents = [];
+        $competences = [];
+        $criteres = [];
+        $structure = null;
+        $grade = null;
+
+        if (!empty($query)) {
+            $criteres = [];
+            foreach ($query as $key => $value) {
+                if (str_contains($key, 'competence-filtre_')) {
+                    $group = substr($key, strlen('competence-filtre_'));
+                    $competenceId = $value['id'];
+                    $operateur = $query['operateur_' . $group];
+                    $niveau = $query['niveau_' . $group];
+
+                    $competence = $this->getCompetenceService()->getCompetence($competenceId !== ''?$competenceId:null);
+                    if ($competence) {
+                        $criteres[] = [
+                            'id' => $group,
+                            'competence' => $competence,
+                            'operateur' => $operateur,
+                            'niveau' => $niveau,
+                        ];
+                        $competences[] = $competence;
+                    }
+
+                }
+                $agents = [];
+                if (!empty($criteres)) {
+                    $agents = $this->getCompetenceElementService()->getAgentsHavingCompetencesWithCriteres($criteres);
+                }
+
+                if ($query['structure']['id']) {
+                    $structure = $this->getStructureService()->getStructure($query['structure']['id']);
+                    $agents = array_filter($agents, function ($agent) use ($structure) { return $agent->hasAffectationPrincipale($structure); });
+                }
+                if ($query['grade']['id']) {
+                    $grade = $this->getGradeService()->getGrade($query['grade']['id']);
+                    $agents = array_filter($agents, function ($agent) use ($grade) { return $agent->hasGrade($grade); });
+                }
+            }
+        }
+
+        $niveaux = $this->getNiveauService()->getMaitrisesNiveaux("Competence");
+        return new ViewModel([
+            'niveaux' => $niveaux,
+            'query' => $query,
+            'agents' => $agents,
+            'competences' => $competences,
+            'criteria' => $criteres,
+            'structureFiltre' => $structure,
+            'gradeFiltre' => $grade,
+        ]);
     }
 
 }

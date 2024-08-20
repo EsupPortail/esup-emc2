@@ -22,7 +22,7 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     ];
 
     private ?int $id = null;
-    private ?FormationInstance $instance = null;
+    private ?Session $instance = null;
     private string $type = self::TYPE_SEANCE;
 
     //seance
@@ -41,17 +41,17 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     private ?string $remarque = null;
     private ?string $source = null;
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getInstance() : ?FormationInstance
+    public function getInstance(): ?Session
     {
         return $this->instance;
     }
 
-    public function setInstance(FormationInstance $instance) : void
+    public function setInstance(Session $instance): void
     {
         $this->instance = $instance;
     }
@@ -67,32 +67,32 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     }
 
     /** DONNEES RELATIVES AUX SEANCES **************************** */
-    public function getJour() : ?DateTime
+    public function getJour(): ?DateTime
     {
         return $this->jour;
     }
 
-    public function setJour(?DateTime $jour) : void
+    public function setJour(?DateTime $jour): void
     {
         $this->jour = $jour;
     }
 
-    public function getDebut() : ?string
+    public function getDebut(): ?string
     {
         return $this->debut;
     }
 
-    public function setDebut(?string $debut) : void
+    public function setDebut(?string $debut): void
     {
         $this->debut = $debut;
     }
 
-    public function getFin() : ?string
+    public function getFin(): ?string
     {
         return $this->fin;
     }
 
-    public function setFin(?string $fin) : void
+    public function setFin(?string $fin): void
     {
         $this->fin = $fin;
     }
@@ -130,12 +130,12 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     public function getDateDebut(): null|DateTime
     {
         if ($this->getDebut() === null) return null;
-        switch($this->type) {
+        switch ($this->type) {
             case Seance::TYPE_SEANCE :
-                $asString = $this->getJour()->format('d/m/y')." ".$this->getDebut();
+                $asString = $this->getJour()->format('d/m/y') . " " . $this->getDebut();
                 return DateTime::createFromFormat('d/m/Y H:i', $asString);
             case Seance::TYPE_VOLUME :
-                $asString = $this->getVolumeDebut()->format('d/m/y')." 08:00";
+                $asString = $this->getVolumeDebut()->format('d/m/y') . " 08:00";
                 return DateTime::createFromFormat('d/m/Y H:i', $asString);
         }
         throw new RuntimeException("Le type de seance est inconnu");
@@ -175,12 +175,12 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
 
     /** AUTRE ****************************************************** */
 
-    public function getRemarque() : ?string
+    public function getRemarque(): ?string
     {
         return $this->remarque;
     }
 
-    public function setRemarque(?string $remarque) : void
+    public function setRemarque(?string $remarque): void
     {
         $this->remarque = $remarque;
     }

@@ -42,6 +42,7 @@ use Laminas\Form\Form;
 <?php echo $this->formControlGroup($form->get('etape')); ?>
 <div style="<?php if ($inscription->getEtatActif() !== null) echo " display: none; "; ?>">
     <?php echo $this->formControlGroup($form->get('missions')); ?>
+    <?php echo $this->formControlGroup($form->get('rqth')); ?>
 </div>
 <?php echo $this->formControlGroup($form->get('justification')); ?>
 <?php echo $this->formControlGroup($form->get('bouton')); ?>
@@ -49,9 +50,11 @@ use Laminas\Form\Form;
 
 <script>
     $(document).ready(function() {
+        $('select').selectpicker();
+
         tinymce.remove();
         tinymce.init({
-            selector: '.type2',
+            selector: '.tinymce',
             toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
             resize: true,
             language: 'fr_FR',
@@ -60,6 +63,8 @@ use Laminas\Form\Form;
             browser_spellcheck : true,
             branding: false,
             menu: {},
+            menubar: false,
+            height:200,
             body_id: 'description',
             setup: function (editor) {
                 editor.on("focusout", function () {
@@ -70,7 +75,7 @@ use Laminas\Form\Form;
         });
     });
 
-    $('select').selectpicker();
+
 </script>
 
 <style>

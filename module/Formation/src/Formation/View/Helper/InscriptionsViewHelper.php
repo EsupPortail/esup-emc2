@@ -2,8 +2,8 @@
 
 namespace Formation\View\Helper;
 
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\Session;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
 use Laminas\View\Renderer\PhpRenderer;
@@ -21,7 +21,7 @@ class InscriptionsViewHelper extends AbstractHelper
      * 'display-liste' controle l'affichage de la colonne affichant les listes (default: true)
      * 'display-historise' controle l'affichage des lignes historisées (default: true)
      */
-    public function __invoke(FormationInstance $session, array $inscriptions, array $options = []): string|Partial
+    public function __invoke(Session $session, array $inscriptions, array $options = []): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

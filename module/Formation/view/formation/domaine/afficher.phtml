@@ -8,44 +8,95 @@
  */
 
 use Formation\Entity\Db\Domaine;
+use Formation\Provider\Privilege\FormationdomainePrivileges;
 
+$canIndexDomaine = $this->isAllowed(FormationdomainePrivileges::getResourceId(FormationdomainePrivileges::FORMATIONDOMAINE_INDEX));
+$canModifierDomaine = $this->isAllowed(FormationdomainePrivileges::getResourceId(FormationdomainePrivileges::FORMATIONDOMAINE_MODIFIER));
+
+$this->headTitle("Domaine : ".$domaine->getLibelle());
 ?>
 
-<dl>
-    <dt> Libellé </dt>
-    <dd> <?php echo $domaine->getLibelle(); ?> </dd>
-    <dt> Dernière modification </dt>
-    <dd>
-        <?php echo $domaine->getHistoModificateur()->getDisplayName(); ?>
-        <br/>
-        <?php echo $domaine->getHistoModification()->format('d/m/Y à H:i:s'); ?>
-    </dd>
-<!--    <dt> Source </dt>-->
-<!--    <dd>-->
-<!--        --><?php //echo $groupe->getSource(); ?><!-- --->
-<!--        --><?php //echo $groupe->getIdSource(); ?>
-<!--    </dd>-->
-    <dt>
-        Liste des formations
-        <span class="badge"> <?php echo count($domaine->getFormations()); ?></span>
-    </dt>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Domaine <br>
+            <span class="higligth"><?php echo $domaine->getLibelle(); ?></span>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <div class="float-end">
+            <?php if ($canIndexDomaine) : ?>
+                <?php /** @see \Metier\Controller\DomaineController::indexAction() */ ?>
+                <a href="<?php echo $this->url('domaine',[],[], true); ?>"
+                   class="btn btn-secondary">
+                    <span class="icon icon-listing"></span>
+                    Retour à la liste des domaine
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
 
-    <?php /** @see \Formation\Controller\DomaineController::gererFormationsAction() */ ?>
-    <a href="<?php echo $this->url('formation-domaine/gerer-formations', ['domaine' => $domaine->getId()],[], true); ?>"
-       class="btn btn-primary ajax-modal" data-event="modification"
-    >
-        <span class="icon icon-listing"></span>
-        Gérer les formations associées au domaine
-    </a>
-    <dd>
-        <ul>
-            <?php foreach($domaine->getFormations() as $formation) : ?>
-                <li> <?php echo $formation->getLibelle(); ?> </li>
-            <?php endforeach; ?>
-        </ul>
-    </dd>
-</dl>
+<div class="row">
+    <div class="col-md-8">
+        <dl>
+        <dt> Libellé</dt>
+        <dd> <?php echo $domaine->getLibelle(); ?> </dd>
+        <dt> Dernière modification</dt>
+        <dd>
+            <?php echo $domaine->getHistoModificateur()->getDisplayName(); ?>
+            <br/>
+            <?php echo $domaine->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+        </dd>
+        <!--    <dt> Source </dt>-->
+        <!--    <dd>-->
+        <!--        --><?php //echo $groupe->getSource(); ?><!-- --->
+        <!--        --><?php //echo $groupe->getIdSource(); ?>
+        <!--    </dd>-->
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <?php if($canModifierDomaine) : ?>
+            <?php /**@see \Formation\Controller\DomaineController::modifierAction() */ ?>
+            <a href="<?php echo  $this->url('formation-domaine/modifier',['domaine' => $domaine->getId()],[], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-modifier">
+                    Modifier le domaine
+                </span>
+            </a>
+        <?php endif;?>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-8">
+        <dl>
+        <dt>
+            Liste des formations
+            <span class="badge"> <?php echo count($domaine->getFormations()); ?></span>
+        </dt>
+        <dd>
+            <ul>
+                <?php foreach ($domaine->getFormations() as $formation) : ?>
+                    <li> <?php echo $formation->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </dd>
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <?php if($canModifierDomaine) : ?>
+            <?php /** @see \Formation\Controller\DomaineController::gererFormationsAction() */ ?>
+            <a href="<?php echo $this->url('formation-domaine/gerer-formations', ['domaine' => $domaine->getId()], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-listing"></span>
+                Gérer les formations associées au domaine
+            </a>
+        <?php endif;?>
+    </div>
+</div>
 
 <script>
     $("body").on("modification", function (event) {

@@ -2,7 +2,7 @@
 
 /**
  * @see \Formation\Controller\FormationInstanceInscritController::inscriptionsAction()
- * @var FormationInstance[] $instances
+ * @var Session[] $sessions
  * @var Inscription[] $inscriptions
  * @var DemandeExterne[] $demandes
  * @var Agent $agent
@@ -10,8 +10,8 @@
 
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
 
@@ -19,7 +19,7 @@ $canInscrire = true;
 
 $formationValidees = [];
 foreach ($inscriptions as $inscription) {
-    if ($inscription->getSession()->estPrete() AND $inscription->getListe() === Inscription::PRINCIPALE) $formationValidees[] = $inscription;
+    if ($inscription->getSession()->estPrete() and $inscription->getListe() === Inscription::PRINCIPALE) $formationValidees[] = $inscription;
 }
 $demandesValidees = [];
 $demandesAttentes = [];
@@ -33,7 +33,7 @@ foreach ($demandes as $demande) {
 
 $formationsAttentes = [];
 foreach ($inscriptions as $inscription) {
-    if ($inscription->getSession()->estPrete() AND $inscription->getListe() !== Inscription::PRINCIPALE) $formationsAttentes[] = $inscription;
+    if ($inscription->getSession()->estPrete() and $inscription->getListe() !== Inscription::PRINCIPALE) $formationsAttentes[] = $inscription;
     if ($inscription->getSession()->estPreparation()) $formationsAttentes[] = $inscription;
 }
 
@@ -44,41 +44,42 @@ foreach ($inscriptions as $inscription) {
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<?php if (empty($formationValidees) AND empty($demandesValidees)) : ?>
+<?php if (empty($formationValidees) and empty($demandesValidees)) : ?>
     <em> Aucune formation validée </em>
 <?php else : ?>
     <?php foreach ($formationValidees as $inscription) : ?>
-    <?php
+        <?php
         $instance = $inscription->getSession();
         $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
-    ?>
-    <div class="row formation-inscription">
-        <div class="col-md-8 description">
-            <?php echo $this->sessionInformations($instance, 'bloc'); ?>
-            <br/>
-            <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
-        </div>
-        <div class="col-md-4">
-            <a
-                <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
-                    href="<?php //echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
-                    class="btn btn-danger action ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-unchecked"> J'annule mon inscription </span>
-            </a>
-            <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === Inscription::PRINCIPALE) : ?>
-            <br/>
+        ?>
+        <div class="row formation-inscription">
+            <div class="col-md-8 description">
+                <?php echo $this->sessionInformations($instance, 'bloc'); ?>
+                <br/>
+                <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
+            </div>
+            <div class="col-md-4">
                 <a
-                    <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
-                        href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+                    <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */ ?>
+                        href="<?php //echo $this->url('formation/session/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
+                        class="btn btn-danger action ajax-modal" data-event="modification"
                 >
-                    <span class="icon icon-pdf"> Je télécharge ma convocation</span>
+                    <span class="icon icon-unchecked"> J'annule mon inscription </span>
                 </a>
-            <?php endif; ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === Inscription::PRINCIPALE) : ?>
+                    <br/>
+                    <a
+                        <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */ ?>
+                            href="<?php echo $this->url('formation/session/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
+                            class="btn btn-primary action"
+                    >
+                        <span class="icon icon-pdf"> Je télécharge ma convocation</span>
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
-    </div>
-    <br/>
-<?php endforeach; ?>
+        <br/>
+    <?php endforeach; ?>
     <?php foreach ($demandesValidees as $demande) : ?>
         <?php echo $this->demandeExterne($demande); ?>
     <?php endforeach; ?>
@@ -88,40 +89,41 @@ foreach ($inscriptions as $inscription) {
     Mes inscriptions en attente de validation
 </h1>
 
-<?php if (empty($formationsAttentes) AND empty($demandesAttentes)) : ?>
+<?php if (empty($formationsAttentes) and empty($demandesAttentes)) : ?>
     <em> Aucune formation en attente de validation </em>
 <?php else : ?>
     <?php foreach ($formationsAttentes as $inscription) : ?>
-    <?php
-    $instance = $inscription->getSession();
-    $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
-    ?>
-    <div class="row formation-inscription">
-        <div class="col-md-7 description">
-            <?php echo $this->sessionInformations($instance, 'bloc'); ?>
-            <br/>
-        </div>
-        <div class="col-md-5">
-            <a
-                <?php /** @see \Formation\Controller\InscriptionController::desinscriptionAction() */?>
-                    href="<?php echo $this->url('formation/inscription/annuler-inscription', ['inscription' => $inscription->getId()], [], true); ?>"
-                    class="btn btn-danger action ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-unchecked"> J'annule mon inscription </span>
-            </a>
-            <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === Inscription::PRINCIPALE) : ?>
+        <?php
+        $instance = $inscription->getSession();
+        $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
+        ?>
+        <div class="row formation-inscription">
+            <div class="col-md-7 description">
+                <?php echo $this->sessionInformations($instance, 'bloc'); ?>
                 <br/>
+            </div>
+            <div class="col-md-5">
                 <a
-                    <?php /** @see \Formation\Controller\InscriptionController::genererConvocationAction() */?>
-                        href="<?php echo $this->url('formation/inscripitoninstance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+                    <?php /** @see \Formation\Controller\InscriptionController::desinscriptionAction() */ ?>
+                        href="<?php echo $this->url('formation/inscription/annuler-inscription', ['inscription' => $inscription->getId()], [], true); ?>"
+                        class="btn btn-danger action ajax-modal" data-event="modification"
                 >
-                    <span class="icon icon-pdf"> Je télécharge ma convocation</span>
+                    <span class="icon icon-unchecked"> J'annule mon inscription </span>
                 </a>
-            <?php endif; ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === Inscription::PRINCIPALE) : ?>
+                    <br/>
+                    <a
+                        <?php /** @see \Formation\Controller\InscriptionController::genererConvocationAction() */ ?>
+                            href="<?php echo $this->url('formation/inscripitoninstance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>"
+                            class="btn btn-primary action"
+                    >
+                        <span class="icon icon-pdf"> Je télécharge ma convocation</span>
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
-    </div>
-    <br/>
-<?php endforeach; ?>
+        <br/>
+    <?php endforeach; ?>
     <?php foreach ($demandesAttentes as $demande) : ?>
         <?php echo $this->demandeExterne($demande); ?>
     <?php endforeach; ?>
@@ -129,7 +131,7 @@ foreach ($inscriptions as $inscription) {
 
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

@@ -349,6 +349,7 @@ return [
         'head_scripts' => [
             '015_jquery' => 'unistrap-1.0.0/js/jquery-3.6.1.min.js',
             '040_bootstrap' => '',
+            '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
         ],
         'inline_scripts' => [
             '020_app' => '',
@@ -360,9 +361,7 @@ return [
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
             '120_bootstrap-select' => '/vendor/bootstrap-select-1.14.0-beta3/js/bootstrap-select.min.js',
             '120_bootstrap-select-fr' => '/vendor/bootstrap-select-1.14.0-beta3/js/i18n/defaults-fr_FR.js',
-            '150_' => 'js/tinymce/js/tinymce/tinymce.js',
-            '151_' => 'js/form_fiche.js',
-            '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
+            '150_' => 'vendor/tinymce-6.8.2/js/tinymce/tinymce.min.js',
         ],
         'stylesheets' => [
             '000_unistra' => 'css/font-local.css',

@@ -26,7 +26,6 @@ class FormationInstanceInscritAssertionFactory
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
-        /** @var FormationInstanceInscritAssertion $assertion */
         $assertion = new FormationInstanceInscritAssertion();
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);

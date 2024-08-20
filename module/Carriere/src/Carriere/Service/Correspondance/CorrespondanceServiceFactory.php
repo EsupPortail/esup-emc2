@@ -7,7 +7,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class CorrespondanceServiceFactory {
+class CorrespondanceServiceFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -15,7 +16,7 @@ class CorrespondanceServiceFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : CorrespondanceService
+    public function __invoke(ContainerInterface $container): CorrespondanceService
     {
         /**
          * @var EntityManager $entityManager
@@ -23,7 +24,7 @@ class CorrespondanceServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new CorrespondanceService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

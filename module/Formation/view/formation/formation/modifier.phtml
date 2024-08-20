@@ -2,7 +2,7 @@
 
 use Formation\Entity\Db\ActionCoutPrevisionnel;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\CoutprevisionnelPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -10,7 +10,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
 /**
  * @see FormationController::editerAction()
  * @var Formation $formation
- * @var FormationInstance[] $instances
+ * @var Session[] $sessions
  * @var string $mode
  * @var ActionCoutPrevisionnel[] $coutsPrevisionnels
  */
@@ -21,6 +21,7 @@ $canAjouterInstance         = $this->isAllowed(FormationinstancePrivileges::getR
 $canHistoriserInstance      = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_HISTORISER));
 $canSupprimerInstance       = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_SUPPRIMER));
 
+$canAfficherEnquete = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
 
 $canAfficherCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_AFFICHER));
 $canAjouterCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_AJOUTER));
@@ -52,6 +53,14 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
                 Modifier les informations
             </a>
         <?php endif; ?>
+        <?php if ($canAfficherEnquete) : ?>
+            <?php /** @see \Formation\Controller\FormationController::resultatEnqueteAction() */ ?>
+            <a href="<?php echo $this->url('formation/resultat-enquete', ['formation' => $formation->getId()], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-diagramme"></span>
+                Afficher le résultat de l'enquête
+            </a>
+        <?php endif; ?>
         <br/>
         <?php /** @see FormationController::indexAction() */ ?>
         <a      href="<?php echo $this->url('formation', [], ['fragment' => "formation"], true); ?>"
@@ -81,28 +90,48 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
 <!-- SESSIONS LIEES FORMATION ----------------------------------------------------------------------------------------->
 
 <div class="row">
-    <div class="col-sm-6 col-md-8">
+    <div class="col-md-5">
         <h2>
             Sessions de formation
-            <span class="badge"><?php echo count($instances); ?></span>
+            <span class="badge"><?php echo !empty($sessions)?count($sessions):"0"; ?></span>
         </h2>
-    </div>
-    <div class="pull-right">
         <?php if ($canAjouterInstance) : ?>
-            <?php /** @see FormationInstanceController::ajouterAction() */ ?>
-            <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
+            <?php /** @see SessionController::ajouterAction() */ ?>
+            <a      href="<?php echo $this->url('formation/session/ajouter', ['formation' => $formation->getId()], [], true); ?>"
                     class="btn btn-primary action"
             >
                 <span class="icon icon-ajouter"></span>
                 Ajouter une session
             </a>
         <?php endif; ?>
-        <br/>
-        <br/>
+    </div>
+    <div class="col-md-7">
+        <?php if ($formation->isPlanActif()) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-information"></span>
+                    Cette action de formation est présente dans un plan de formation actif.
+                </strong>
+                <br>
+                Cette action est affichée aux plans de formations courants.
+            </div>
+        <?php else : ?>
+            <div class="alert alert-warning">
+                <strong>
+                    <span class="icon icon-attention"></span>
+                    Cette action de formation n'est pas présente dans un plan de formation actif.
+                </strong>
+                <br>
+                Par conséquent, elle n'est pas listée sur le plan de formation présenté aux agent·es.
+            </div>
+
+        <?php endif; ?>
     </div>
 </div>
 
-<?php echo $this->formationInstanceArray($instances); ?>
+<?php if (!empty($sessions)) : ?>
+    <?php echo $this->formationInstanceArray($sessions); ?>
+<?php endif; ?>
 
 
 <?php if ($canAfficherCout) : ?>

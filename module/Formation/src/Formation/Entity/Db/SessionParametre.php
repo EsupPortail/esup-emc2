@@ -9,7 +9,7 @@ class SessionParametre implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     private ?int $id = -1;
-    private ?FormationInstance $session = null;
+    private ?Session $session = null;
     private bool $mail = true;
     private bool $evenement = true;
     private bool $enquete = true;
@@ -20,12 +20,12 @@ class SessionParametre implements HistoriqueAwareInterface {
         return $this->id;
     }
 
-    public function getSession(): ?FormationInstance
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function setSession(?FormationInstance $session): void
+    public function setSession(?Session $session): void
     {
         $this->session = $session;
     }

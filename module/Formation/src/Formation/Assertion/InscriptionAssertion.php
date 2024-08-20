@@ -7,7 +7,6 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Provider\Privilege\InscriptionPrivileges;
 use Formation\Provider\Role\FormationRoles;

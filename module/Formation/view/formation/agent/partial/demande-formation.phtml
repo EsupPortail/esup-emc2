@@ -89,12 +89,12 @@ usort($dictionnaryDemandes,
                         (<?php echo $d->getSession()->getPeriode(); ?>)
                         <br/>
                         <?php if ($canVoirInscription) : ?>
-                        <?php /** @see \Formation\Controller\InscriptionController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('formation/inscription/afficher', ['inscription' => $d->getId()], [], true); ?>"
-                           class="ajax-modal">
-                            <span class="icon icon-voir"></span>
-                            Afficher
-                        </a>
+                            <?php /** @see \Formation\Controller\InscriptionController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('formation/inscription/afficher', ['inscription' => $d->getId()], [], true); ?>"
+                               class="ajax-modal">
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
                         <?php endif; ?>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <?php if ($canValiderResponsable && $d->isEtatActif(InscriptionEtats::ETAT_DEMANDE)) : ?>

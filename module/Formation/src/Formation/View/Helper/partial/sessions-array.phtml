@@ -2,60 +2,63 @@
 
 /**
  * @see \UnicaenMail\View\Helper\FormationInstanceArrayViewHelper
- * @var FormationInstance[] $instances
+ * @var Session[] $sessions
  * @var array $options
  */
 
 
 /** Droits pour les actions */
 
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Seance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Privilege\FormationPrivileges;
 
 $displayGestionnaire = true;
-if (isset($options['affichage']) AND isset($options['affichage']['gestionnaires'])) {
+if (isset($options['affichage']) and isset($options['affichage']['gestionnaires'])) {
     $displayGestionnaire = $options['affichage']['gestionnaires'];
 }
 
 $canAfficherInstance = false;
-if (!isset($options['droits']) AND !isset($options['droits']['afficher'])) {
+if (!isset($options['droits']) and !isset($options['droits']['afficher'])) {
     $canAfficherInstance = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 } else {
     $canAfficherInstance = $options['droits']['afficher'];
 }
 $canHistoriserInstance = false;
-if (!isset($options['droits']) AND !isset($options['droits']['historiser'])) {
+if (!isset($options['droits']) and !isset($options['droits']['historiser'])) {
     $canHistoriserInstance = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_HISTORISER));
 } else {
     $canHistoriserInstance = $options['droits']['reenvoyer'];
 }
 $canSupprimerInstance = false;
-if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
+if (!isset($options['droits']) and !isset($options['droits']['supprimer'])) {
     $canSupprimerInstance = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_SUPPRIMER));
 } else {
     $canSupprimerInstance = $options['droits']['supprimer'];
 }
 
-usort($instances, function (FormationInstance $a, FormationInstance $b) { return$a->getDebut(true) <=> $b->getDebut(true); });
-$instances = array_reverse($instances);
+usort($sessions, function (Session $a, Session $b) {
+    return $a->getDebut(true) <=> $b->getDebut(true);
+});
+$sessions = array_reverse($sessions);
 ?>
 
 <table class="datatable table table-condensed">
     <thead>
     <tr>
-        <th> Id </th>
-        <?php if ($displayGestionnaire) : ?> <th> Gestionnaires </th> <?php endif; ?>
-        <th> Période </th>
-        <th> #Plage </th>
-        <th> #Inscrit </th>
-        <th> État </th>
+        <th> Id</th>
+        <?php if ($displayGestionnaire) : ?>
+            <th> Gestionnaires</th> <?php endif; ?>
+        <th> Période</th>
+        <th> #Plage</th>
+        <th> #Inscrit</th>
+        <th> État</th>
         <th class="action"> Action</th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($instances as $instance) : ?>
-        <?php if ($canSupprimerInstance OR $instance->estNonHistorise()) : ?>
+    <?php foreach ($sessions as $instance) : ?>
+        <?php if ($canSupprimerInstance or $instance->estNonHistorise()) : ?>
             <tr <?php if ($instance->estHistorise()) echo 'class="historise"'; ?> >
                 <td class="identification">
                         <span class="badge source <?php echo $instance->getSource(); ?>">
@@ -64,7 +67,7 @@ $instances = array_reverse($instances);
                         </span>
                     <br/>
                     <?php echo $instance->getFormation()->getLibelle(); ?> <br/>
-                    <?php echo ($instance->getFormation()->getGroupe())?$instance->getFormation()->getGroupe()->getLibelle():"Sans thème de formation"; ?>
+                    <?php echo ($instance->getFormation()->getGroupe()) ? $instance->getFormation()->getGroupe()->getLibelle() : "Sans thème de formation"; ?>
                 </td>
                 <?php if ($displayGestionnaire) : ?>
                     <td class="gestionnaire">
@@ -86,32 +89,34 @@ $instances = array_reverse($instances);
                         &emptyset;
                     <?php else: ?>
                         <?php
-                            $seances = array_filter($seances, function (Seance $seance) { return $seance->estNonHistorise(); });
-                            echo count($seances);
+                        $seances = array_filter($seances, function (Seance $seance) {
+                            return $seance->estNonHistorise();
+                        });
+                        echo count($seances);
                         ?>
                     <?php endif; ?>
                 </td>
                 <td class="listes">
                     <?php if ($instance->getInscriptions()) : ?>
-                        Principale : <?php echo count($instance->getListePrincipale())."/".$instance->getNbPlacePrincipale(); ?>
+                        Principale : <?php echo count($instance->getListePrincipale()) . "/" . $instance->getNbPlacePrincipale(); ?>
                         <?php if ($instance->isListePrincipaleComplete()) : ?>
                             <span class="label label-success"> Complète</span>
                         <?php endif; ?>
                         <br/>
-                        Complémentaire : <?php echo count($instance->getListeComplementaire())."/".$instance->getNbPlaceComplementaire(); ?>
+                        Complémentaire : <?php echo count($instance->getListeComplementaire()) . "/" . $instance->getNbPlaceComplementaire(); ?>
                         <?php if ($instance->isListeComplementaireComplete()) : ?>
                             <span class="label label-success"> Complète</span>
                         <?php endif; ?>
                     <?php endif; ?>
                 </td>
                 <td class="etat">
-                    <?php echo ($instance->getEtatActif())?$this->etatinstance($instance->getEtatActif()):"N.C."; ?>
+                    <?php echo ($instance->getEtatActif()) ? $this->etatinstance($instance->getEtatActif()) : "N.C."; ?>
                 </td>
                 <td class="action">
                     <?php if ($canAfficherInstance) : ?>
-                        <?php /** @see FormationInstanceController::afficherAction() */ ?>
-                        <a  href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
-                            data-toogle="tooltip" data-bs-html="true" title="Afficher/Modifier la session de formation">
+                        <?php /** @see SessionController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('formation/session/afficher', ['session' => $instance->getId()], [], true); ?>"
+                           data-toogle="tooltip" data-bs-html="true" title="Afficher/Modifier la session de formation">
                             <span class="icon icon-voir"></span>
                             Accéder
                         </a>
@@ -119,16 +124,17 @@ $instances = array_reverse($instances);
                     <?php if ($canHistoriserInstance) : ?>
                         <br>
                         <?php if ($instance->estNonHistorise()) : ?>
-                            <?php /** @see FormationInstanceController::historiserAction() */ ?>
-                            <a   href="<?php echo $this->url('formation-instance/historiser', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                 data-toogle="tooltip" data-bs-html="true" title="Supprimer la session de formation" class="ajax-modal" data-event="modification">
+                            <?php /** @see SessionController::historiserAction() */ ?>
+                            <a href="<?php echo $this->url('formation/session/historiser', ['session' => $instance->getId()], [], true); ?>"
+                               data-toogle="tooltip" data-bs-html="true" title="Supprimer la session de formation"
+                               class="ajax-modal" data-event="modification">
                                 <span class="icon icon-historiser"></span>
                                 Historiser
                             </a>
                         <?php else : ?>
-                            <?php /** @see FormationInstanceController::restaurerAction() */ ?>
-                            <a   href="<?php echo $this->url('formation-instance/restaurer', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                 data-toogle="tooltip" data-bs-html="true" title="Restaurer la session de formation">
+                            <?php /** @see SessionController::restaurerAction() */ ?>
+                            <a href="<?php echo $this->url('formation/session/restaurer', ['session' => $instance->getId()], [], true); ?>"
+                               data-toogle="tooltip" data-bs-html="true" title="Restaurer la session de formation">
                                 <span class="icon icon-restaurer"></span>
                                 Restaurer
                             </a>
@@ -136,10 +142,11 @@ $instances = array_reverse($instances);
                     <?php endif; ?>
                     <?php if ($canSupprimerInstance) : ?>
                         <br>
-                        <?php /** @see FormationInstanceController::supprimerAction() */ ?>
-                        <a   href="<?php echo $this->url('formation-instance/supprimer', ['formation-instance' => $instance->getId()], [], true); ?>"
-                             class="ajax-modal" data-event="modification"
-                             data-toogle="tooltip" data-bs-html="true" title="Supprimer définitivement la session de formation">
+                        <?php /** @see SessionController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('formation/session/supprimer', ['session' => $instance->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                           data-toogle="tooltip" data-bs-html="true"
+                           title="Supprimer définitivement la session de formation">
                             <span class="text-danger">
                                 <span class="icon icon-unchecked text-danger"></span>
                                 Supprimer
@@ -148,7 +155,7 @@ $instances = array_reverse($instances);
                     <?php endif; ?>
                 </td>
             </tr>
-    <?php endif; ?>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>

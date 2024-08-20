@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\StagiaireExterne;
 use Formation\Form\StagiaireExterne\StagiaireExterneFormAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -12,6 +13,7 @@ use Laminas\View\Model\ViewModel;
 
 class StagiaireExterneController extends AbstractActionController
 {
+    use InscriptionServiceAwareTrait;
     use StagiaireExterneServiceAwareTrait;
     use StagiaireExterneFormAwareTrait;
 
@@ -146,6 +148,19 @@ class StagiaireExterneController extends AbstractActionController
         }
         return $vm;
     }
+
+    public function historiqueAction(): ViewModel
+    {
+        $stagiaire = $this->getStagiaireExterneService()->getRequestedStagiaireExterne($this);
+        $inscriptions = $this->getInscriptionService()->getInscriptionsValideesByStagiaires([$stagiaire],null);
+
+        return new ViewModel([
+            'title' => "Historique des formations de ".$stagiaire->getDenomination(),
+            'stagiaire' => $stagiaire,
+            'inscriptions' => $inscriptions,
+        ]);
+    }
+
 
     /** RECHERCHE *****************************************************************************************************/
 

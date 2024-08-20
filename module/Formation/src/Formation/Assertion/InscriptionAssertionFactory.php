@@ -9,7 +9,6 @@ use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionService;
 use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
@@ -27,7 +26,6 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class InscriptionAssertionFactory
 {
-    use FormationInstanceServiceAwareTrait;
     use PrivilegeCategorieServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
     use AgentServiceAwareTrait;

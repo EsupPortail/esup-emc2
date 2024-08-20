@@ -7,6 +7,7 @@ use Formation\Controller\PresenceControllerFactory;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Presence\PresenceServiceFactory;
+use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -40,13 +41,26 @@ return [
 
     'router'          => [
         'routes' => [
-            'formation-instance' => [
+            'formation' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/formation',
+                ],
+                'may_terminate' => true,
                 'child_routes' => [
+                    'session' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/session',
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
                     'renseigner-presences' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/renseigner-presences/:formation-instance',
+                            'route'    => '/renseigner-presences/:session',
                             'defaults' => [
+                                /** @see PresenceController::renseignerPresencesAction() */
                                 'controller' => PresenceController::class,
                                 'action'     => 'renseigner-presences',
                             ],
@@ -77,13 +91,15 @@ return [
                     'toggle-toutes-presences' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/toggle-toutes-presences/:mode/:formation-instance',
+                            'route'    => '/toggle-toutes-presences/:mode/:session',
                             'defaults' => [
                                 /** @see PresenceController::toggleToutesPresencesAction() */
                                 'controller' => PresenceController::class,
                                 'action'     => 'toggle-toutes-presences',
                             ],
                         ],
+                    ],
+                ],
                     ],
                 ],
             ],

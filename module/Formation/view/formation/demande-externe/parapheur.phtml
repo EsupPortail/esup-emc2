@@ -2,6 +2,7 @@
 
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Inscription;
+use Formation\Provider\Observation\FormationObservations;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 /**
@@ -13,11 +14,11 @@ use Formation\Provider\Privilege\DemandeexternePrivileges;
 $this->headTitle("Parapheur des formations externes");
 
 // ATTENTION : ici pas d'appel à l'assertion pour économiser du temps
-$canAfficher    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
-$canModifier    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
-$canHistoriser  = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
-$canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER));
-$canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH));
+$canAfficher = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
+$canModifier = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
+$canHistoriser = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
+$canSupprimer = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER));
+$canValider = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH));
 
 ?>
 
@@ -33,11 +34,11 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 <table class="table table-condensed table-hover">
     <thead>
     <tr>
-        <th class="agent"> Agent </th>
-        <th class="formation"> Formation </th>
-        <th> Type </th>
-        <th class="etat"> État </th>
-        <th class="action"> Action </th>
+        <th class="agent"> Agent</th>
+        <th class="formation"> Formation</th>
+        <th> Type</th>
+        <th class="etat"> État</th>
+        <th class="action"> Action</th>
     </tr>
     </thead>
     <tbody>
@@ -59,11 +60,13 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                     <span class="icon icon-voir nope"></span>
                 <?php endif; ?>
                 <?php if ($canValider) : ?>
-                    <?php  /** @see \Formation\Controller\InscriptionController::validerDrhAction() */ ?>
-                    <a href="<?php echo $this->url('formation/inscription/valider-drh', ['inscription' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <?php /** @see \Formation\Controller\InscriptionController::validerDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation/inscription/valider-drh', ['inscription' => $demande->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
                         <span class="icon icon-ok text-success"></span></a>
-                    <?php  /** @see \Formation\Controller\InscriptionController::refuserDrhAction() */ ?>
-                    <a href="<?php echo $this->url('formation/inscription/refuser-drh', ['inscription' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <?php /** @see \Formation\Controller\InscriptionController::refuserDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation/inscription/refuser-drh', ['inscription' => $demande->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
                         <span class="icon icon-ko text-danger"></span></a>
                 <?php else: ?>
                     <span class="icon icon-ok nope"></span>
@@ -98,13 +101,14 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 
 <table class="table table-condensed table-hover">
     <thead>
-        <tr>
-            <th class="agent"> Agent             </th>
-            <th class="formation"> Formation </th>
-            <th> Organisme </th>
-            <th class="etat"> État </th>
-            <th class="action"> Action </th>
-        </tr>
+    <tr>
+        <th class="agent"> Agent</th>
+        <th class="formation"> Formation</th>
+        <th> Organisme</th>
+        <th> Observations</th>
+        <th class="etat"> État</th>
+        <th class="action"> Action</th>
+    </tr>
     </thead>
     <tbody>
     <?php foreach ($demandesExternes as $demande) : ?>
@@ -113,15 +117,24 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
             <td> <?php echo $demande->getLibelle(); ?> </td>
             <td> <?php echo $demande->getOrganisme(); ?> </td>
             <td>
+                <?php $observations =$demande->getObservationsWithTypeCode(FormationObservations::OBSERVATION_DEMANDEEXTERNE_BUREAU); ?>
+                <?php foreach ($observations as $observation) : ?>
+                    <span class="observation">
+                        <span class="icon icon-commentaire" data-bs-toggle="tooltip" data-bs-html="true"
+                              title="<?php echo $observation->getHistoCreateur()->getDisplayName(); ?> <br> <?php echo $observation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br><hr> <?php echo $observation->getObservation(); ?>"></span>
+                    </span>
+                <?php endforeach; ?>
+            </td>
+            <td>
                 <?php
                 echo $this->etatinstance($demande->getEtatActif());
                 ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()],[], true); ?>"
-                    class="ajax-modal">
-                    <span class="icon icon-voir"></span></a>
+                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()], [], true); ?>"
+                       class="ajax-modal">
+                        <span class="icon icon-voir"></span></a>
                 <?php else : ?>
                     <span class="icon icon-voir nope"></span>
                 <?php endif; ?>
@@ -146,7 +159,7 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                         >
                             <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
-                <?php /** @see \Formation\Controller\DemandeExterneController::restaurerAction() */ ?>
+                        <?php /** @see \Formation\Controller\DemandeExterneController::restaurerAction() */ ?>
                         <a href="<?php echo $this->url('formation/demande-externe/restaurer', ["demande-externe" => $demande->getId()], [], true); ?>"
                            title="Restaurer la demande externe"
                         >
@@ -163,10 +176,10 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            tinyMCE.editors=[];
+            tinyMCE.editors = [];
             window.location.reload();
         });
     });
@@ -174,21 +187,29 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 
 <style>
     th.etat {
-        min-width:6rem;
-        width:6rem;
+        min-width: 6rem;
+        width: 6rem;
     }
 
     th.action {
-        min-width:7rem;
-        width:7rem;
+        min-width: 7rem;
+        width: 7rem;
     }
 
     th.agent {
-        min-width:20rem;
-        width:20rem;
+        min-width: 20rem;
+        width: 20rem;
     }
+
     th.formation {
-        min-width:30rem;
-        width:30rem;
+        min-width: 30rem;
+        width: 30rem;
     }
+
+     span.observation {
+         display: inline-block;
+         background: lightgrey;
+         border-radius: 0.25rem;
+         padding: 0.1rem 0.5rem;
+     }
 </style>

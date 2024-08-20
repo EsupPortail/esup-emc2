@@ -28,6 +28,7 @@
     "unicaen/console": "^6.0",
 
     "unicaen/utilisateur-ldap-adapter" : "^2.0",
+    "unicaen/enquete": "^0",
     "unicaen/etat": "^6.0",
     "unicaen/validation": "^6.1",
     "unicaen/observation": "^0.0",

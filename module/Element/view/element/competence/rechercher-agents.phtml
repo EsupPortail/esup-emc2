@@ -1,0 +1,412 @@
+<?php
+
+/**
+ * @see \Element\Controller\CompetenceController::rechercherAgentsAction()
+ * @var Niveau[] $niveaux
+ * @var Agent[]|null $agents
+ * @var Competence[] $competences
+ * @var array $criteria
+ * @var Structure|null $structureFiltre
+ * @var Grade|null $gradeFiltre
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentGrade;use Application\Entity\Db\AgentStatut;
+use Application\Provider\Privilege\AgentPrivileges;
+use Carriere\Entity\Db\Grade;
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\Niveau;
+use Structure\Entity\Db\Structure;
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+$this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
+
+?>
+
+<h1 class="page-header">
+    Rechercher des agent·es avec un ensemble de compétences
+</h1>
+
+<div class="card">
+    <div class="card-header bg-default">
+        Critères de recherche
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url(); ?>">
+        <div id="competence-criteres">
+        <span class="header">Compétences</span>
+            <div class="row">
+                <div class="col-md-9">
+                    <div id="competence-bloc">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary" id="ajout-competence">
+                        <span class="icon icon-plus"></span>
+                        Ajouter un critère sur les compétences
+                    </button>
+                    <button class="btn btn-primary" id="raz-competence">
+                        <span class="icon icon-gommer"></span>
+                        Vider les critères sur les compétences
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div>
+        <span class="header">Critères sur les agent·es</span>
+            <div class="row">
+                <div class="col-md-9">
+                    <div id="agent-bloc">
+                        <div class="row">
+                            <div class="col-md-2 ">Affectation</div>
+                            <div class="col-md-10">
+                                <?php
+                                    /** @see  \Structure\Controller\StructureController::rechercherAction() */
+                                    $structureF = new SearchAndSelect('structure');
+                                    $structureF
+                                        ->setAutocompleteSource($this->url('structure/rechercher'))
+                                        ->setSelectionRequired()
+                                        ->setAttributes([
+                                            'id' => 'structure',
+                                            'placeholder' => "Structure de l'affectation",
+                                        ]);
+                                    ?>
+                                    <?php echo $this->formControlGroup($structureF); ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 ">Grade</div>
+                            <div class="col-md-10">
+                                <?php
+                                /** @see  \Carriere\Controller\GradeController::rechercherAction() */
+                                $gradeF = new SearchAndSelect('grade');
+                                $gradeF
+                                    ->setAutocompleteSource($this->url('grade/rechercher'))
+                                    ->setSelectionRequired()
+                                    ->setAttributes([
+                                        'id' => 'grade',
+                                        'placeholder' => "Grade de l'agent·e",
+                                    ]);
+                                ?>
+                                <?php echo $this->formControlGroup($gradeF); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary" id="raz-agent">
+                        <span class="icon icon-gommer"></span>
+                        Vider les critères sur les agent·es
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div>
+            <button class="btn btn-primary" id="rechercher">
+                <span class="icon icon-search"></span>
+                Rechercher des agents
+            </button>
+            <button class="btn btn-primary" id="raz">
+                <span class="icon icon-gommer"></span>
+                Remise à zéro
+            </button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<?php if ($agents === null || empty($agents)) : ?>
+    Aucun·e agent de remonté·e avec les critères de recherche
+<?php else : ?>
+
+
+    <script>
+        let header = ['ligne', 'dénomination', 'affectation principale', 'statuts', 'grades'];
+        <?php foreach ($competences as $competence) : ?>
+            header.push("<?php echo $competence->getLibelle(); ?>");
+        <?php endforeach; ?>
+        let agents = [];
+        let item;
+    </script>
+
+    <span class="btn btn-primary">
+        <span class="icon icon-csv export" id="agents"> Exporter la liste des agents </span>
+    </span>
+    <table class="table table-condensed datatable">
+        <thead>
+            <tr>
+                <th data-type="string"> Dénomination </th>
+                <th> Affectation principale </th>
+                <th> Statut </th>
+                <th> Compétence </th>
+                <th class="action"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $data = []; ?>
+            <?php foreach ($agents as $agent) : ?>
+                <script> item=[]; </script>
+                <tr>
+                    <td data-order="<?php echo $agent->getDenomination(); ?>">
+                        <?php echo $agent->getDenomination(true, true, true); ?>
+                        <script>item["denomination"] = <?php echo '"'.$agent->getDenomination(true).'"'; ?>;</script>
+                    </td>
+                    <td>
+                        <?php $affectation = $agent->getAffectationPrincipale(); ?>
+                        <?php if ($affectation === null) : ?>
+                            <span class="text-warning">
+                                <span class="icon icon-attention"></span>
+                                Aucune affectation principale
+                                <script>item["affectation"] = "Aucune affectation"; </script>
+                            </span>
+                        <?php else : ?>
+                            <?php $structure = $affectation->getStructure(); $niveau2 = $structure?->getNiv2(); ?>
+                            <?php if ($structure === null) : ?>
+                                <span class="text-warning">
+                                    <span class="icon icon-attention"></span>
+                                    Aucune structure pour l'affecation #<?php echo $affectation->getId(); ?>
+                                    <script>item["affectation"] = "Aucune structure"; </script>
+                                </span>
+                            <?php else : ?>
+                                <?php if ($niveau2 AND $niveau2 !== $structure) : ?>
+                                    <?php echo $niveau2->getLibelleCourt(); ?> > <?php echo $structure->getLibelleCourt(); ?>
+                                    <script>item["affectation"] = "<?php echo $niveau2->getLibelleCourt()." > ".$structure->getLibelleCourt(); ?>"; </script>
+                                <?php else : ?>
+                                    <?php echo $structure->getLibelleCourt(); ?>
+                                    <script>item["affectation"] = "<?php echo $structure->getLibelleCourt(); ?>"; </script>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php $statuts = $agent->getStatutsActifs(); ?>
+                        <?php echo implode(" ", AgentStatut::generateStatutsArray($statuts)); ?>
+                        <script>item["statuts"] = "<?php echo implode(" ", AgentStatut::generateStatutsArray($statuts)); ?>"; </script>
+                        <br>
+                        <?php $grades = $agent->getGradesActifs(); ?>
+                        <script>item["grades"] = ""; </script>
+                        <?php foreach ($grades as $grade) : ?>
+                            <?php //echo $grade->getCorps()->getLibelleLong(); ?>
+                            <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                            <br>
+                            <script>item["grades"] = "<?php echo implode(" ", array_map(function (AgentGrade $ag) { return $ag->getGrade()->getLibelleLong(); }, $grades)); ?>"; </script>
+
+                        <?php endforeach; ?>
+                    </td>
+                    <td>
+                        <?php $dictionnaire = $agent->getCompetenceDictionnaire(); ?>
+
+                        <?php foreach ($competences as $competence) : ?>
+                            <?php echo $competence->getLibelle(); ?>
+                            <strong>
+                            <?php if(! isset($dictionnaire[$competence->getId()])) : ?>
+                                Non acquis
+                                <script>item["<?php echo $competence->getLibelle(); ?>"] = "Non acquis"; </script>
+                            <?php else: ?>
+                                <?php echo $dictionnaire[$competence->getId()]['entite']->getNiveauMaitrise()->getLibelle(); ?>
+                                <script>item["<?php echo $competence->getLibelle(); ?>"] = "<?php echo $dictionnaire[$competence->getId()]['entite']->getNiveauMaitrise()->getLibelle(); ?>"; </script>
+                            <?php endif; ?>
+                            </strong>
+                            <br>
+                        <?php endforeach; ?>
+                    </td>
+                    <td class="action">
+                        <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                            <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>">
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <script>agents.push(item); </script>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+
+
+
+<style>
+    .card .card-body span.header {
+        font-variant: small-caps;
+        text-decoration: underline;
+    }
+</style>
+
+
+<script>
+    function generateSas2(idSas) {
+        let text = ''
+            + '<div class="mb-2">'
+            + '     <input type="text" id="competence-filtre_'+idSas+'"              name="competence-filtre_'+idSas+'[id]"     placeholder="Aucune compétence" class="sas" value="" style="display:none;">'
+            + '     <input type="text" id="competence-filtre_'+idSas+'-autocomplete" name="competence-filtre_'+idSas+'[label]"  placeholder="Aucune compétence" class="sas-autocomplete form-control form-control-sm" value="">'
+            + '</div>'
+            + ''
+            ;
+        return text;
+    }
+
+    function generateOperateurSelect(id) {
+        let text =
+            '<div class="col-md-3">'
+            + '    <select id="operateur_'+id+'" name="operateur_'+id+'" class="selectpicker">'
+            + '        <option value="">Aucun opérateur</option>'
+            + '        <option value=">"> &gt; </option>'
+            + '        <option value=">="> &ge; </option>'
+            + '        <option value="="> &equals; </option>'
+            + '        <option value="<="> &le; </option>'
+            + '        <option value="<"> &lt; </option>'
+            + '    </select>'
+            + '</div>';
+        return text;
+    }
+
+    function generateNiveauSelect(id) {
+        let niveauId = 'undefined';
+        let niveauLibelle = 'undefined';
+        let text =
+            '<div class="col-md-3">'
+            + '    <select id="niveau_'+id+'" name="niveau_'+id+'" class="selectpicker">'
+            + '        <option value="">Aucun niveau</option>'
+            ;
+            <?php foreach ($niveaux as $niveau): ?>
+                 niveauId = "<?php echo $niveau->getId(); ?>";
+                 niveauLibelle = "<?php echo $niveau->getLibelle(); ?>";
+                text += '<option value="' + niveauId + '" >'+ niveauLibelle +'</option>';
+            <?php endforeach; ?>
+        text += '    </select>';
+        text += '</div>';
+        return text;
+    }
+
+    function ajouterCompetence(e, id) {
+        if (e !== undefined) e.preventDefault();
+        if (id === undefined) id = Math.floor(Math.random() * 1000000);
+        // let id = 15;
+        $('div#competence-bloc').append(
+            '<div class="row" id="competence_'+id+'">' +
+            '   <div class="col-md-1"> <span class="icon icon-minus text-danger span-action" onclick="retirerCompetence('+id+')"></span></div>' +
+            '   <div class="col-md-5">' + generateSas2(id) + '</div>' +
+            generateOperateurSelect(id) +
+            generateNiveauSelect(id) +
+            '</div>');
+
+
+        var autocomp = $('.sas-autocomplete:last');
+        // console.log(autocomp);
+        // console.log("competence-filtre_"+id);
+        autocomp.autocompleteUnicaen({
+            elementDomId: "competence-filtre_"+id,
+            source: '/element/competence/rechercher',
+            minLength: 2,
+            delay: 750
+        });
+
+        if (e !== undefined && id !== undefined) {
+            $('select#operateur_' + id).selectpicker();
+            $('select#niveau_' + id).selectpicker();
+        }
+    }
+
+    function retirerCompetence(id) { $('div#competence_'+id).remove(); }
+    function retirerCompetences(e) { e.preventDefault(); $('div#competence-bloc').html(""); ajouterCompetence(e);}
+    function retirerAgents(e) { e.preventDefault();
+        $('input[name="structure[id]"]').val(null);
+        $('input[name="structure[label]"]').val(null);
+        $('input[name="grade[id]"]').val(null);
+        $('input[name="grade[label]"]').val(null);
+    }
+
+    $(function () {
+        $('button#ajout-competence').on("click", function(e) { ajouterCompetence(e); });
+        $('button#raz-competence').on("click", function(e) { retirerCompetences(e); });
+        $('button#raz-agent').on("click", function(e) { retirerAgents(e); });
+        $('button#raz').on("click", function(e) { e.preventDefault(); window.location.href = "?"; });
+    });
+
+    downloadCSVFromJson = (filename, headerJson, arrayOfJson) => {
+        // convert JSON to CSV
+        let csv = "";
+        for (let value in headerJson) {
+            csv += headerJson[value] + ";";
+        }
+        csv += "\n";
+
+        for (let line in arrayOfJson) {
+            csv += line + ";";
+            for (let value in arrayOfJson[line]) {
+                csv += arrayOfJson[line][value] + ";";
+            }
+            csv += "\n";
+        }
+        console.log(csv);
+
+        // Create link and download
+        let link = document.createElement('a');
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    $('span.export#agents').on('click', function () {
+        console.log(agents);
+        downloadCSVFromJson('exportation_agents_' + Date.now().toString() + '.csv', header, agents);
+    });
+
+    $(function() {
+        let withit = false;
+        <?php foreach ($criteria as $criterion): ?>
+        {
+            let groupid = "<?php echo $criterion['id']; ?>";
+            let operateur = "<?php echo $criterion['operateur']; ?>";
+            let niveau = "<?php echo $criterion['niveau']; ?>";
+            let competenceId = "<?php echo $criterion['competence']->getId(); ?>";
+            let competenceLabel = "<?php echo $criterion['competence']->getLibelle(); ?>";
+            ajouterCompetence(undefined, groupid);
+            $('input[name="competence-filtre_' + groupid + '[id]"]').val(competenceId);
+            $('input[name="competence-filtre_' + groupid + '[label]"]').val(competenceLabel);
+            if (operateur !== '') {
+                $('select#operateur_' + groupid).val(operateur).change();
+            }
+            if (niveau !== '') {
+                $('select#niveau_' + groupid + ' option[value=' + niveau + ']').prop('selected', true);
+            }
+            withit = true;
+        }
+        <?php endforeach; ?>
+        <?php if ($structureFiltre !== null) : ?>
+            $('input[name="structure[id]"]').val(<?php echo $structureFiltre->getId(); ?>);
+            $('input[name="structure[label]"]').val("<?php echo $structureFiltre->getLibelleLong(); ?>");
+        <?php endif; ?>
+        <?php if ($gradeFiltre !== null) : ?>
+            $('input[name="grade[id]"]').val(<?php echo $gradeFiltre->getId(); ?>);
+            $('input[name="grade[label]"]').val("<?php echo $gradeFiltre->getLibelleLong(); ?>");
+        <?php endif; ?>
+
+        if (withit === false) ajouterCompetence();
+        $('select').selectpicker();
+        $('.datatable').dataTable({
+            'paging': false,
+        });
+    });
+</script>
+
+
+<style>
+    ul.ui-autocomplete {
+        z-index: 5000
+    }
+    .ui-autocomplete-loading {
+        background: white url("//gest.unicaen.fr/images/ajax-loader-r.gif") right center no-repeat;
+    }
+    .span-action {
+        cursor: pointer;
+    }
+</style>

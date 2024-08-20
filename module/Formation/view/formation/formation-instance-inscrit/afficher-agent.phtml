@@ -81,7 +81,7 @@ $formation = $session->getFormation();
                             <?php endif; ?>
                             <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
                                 Séance du <?php echo $journee->getJour()->format('d/m/Y'); ?> de <?php echo $journee->getDebut(); ?> à <?php echo $journee->getFin(); ?>
-                                (<?php echo $journee->getLieu(); ?>)
+                                (<?php echo $journee->getLieu()->getLibelle(); ?>)
                             <?php endif; ?>
                         </li>
                     <?php endforeach; ?>

@@ -25,7 +25,6 @@ class FormationElementFormFactory {
         /** @var FormationElementHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(FormationElementHydrator::class);
 
-        /** @var FormationElementForm $form */
         $form = new FormationElementForm();
         $form->setFormationService($competenceService);
         $form->setHydrator($hydrator);

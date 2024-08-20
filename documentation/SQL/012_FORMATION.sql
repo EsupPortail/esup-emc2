@@ -91,60 +91,6 @@ create table formation_demande_externe_fichier
         primary key (demande_id, fichier_id)
 );
 
-
-create table formation_enquete_categorie
-(
-    id                    serial
-        primary key,
-    libelle               varchar(1024)           not null,
-    description           text,
-    ordre                 integer                 not null,
-    histo_createur_id     integer   default 0     not null
-        constraint formation_enquete_categorie_utilisateur_id_fk_1
-        references unicaen_utilisateur_user,
-    histo_creation        timestamp default now() not null,
-    histo_modificateur_id integer
-        constraint formation_enquete_categorie_utilisateur_id_fk_2
-        references unicaen_utilisateur_user,
-    histo_modification    timestamp,
-    histo_destructeur_id  integer
-        constraint formation_enquete_categorie_utilisateur_id_fk_3
-        references unicaen_utilisateur_user,
-    histo_destruction     timestamp
-);
-
-
-create unique index formation_enquete_categorie_id_uindex
-    on formation_enquete_categorie (id);
-
-create table formation_enquete_question
-(
-    id                    serial
-        primary key,
-    libelle               varchar(1024)           not null,
-    description           text,
-    ordre                 integer                 not null,
-    histo_createur_id     integer   default 0     not null
-        constraint formation_enquete_question_utilisateur_id_fk_1
-        references unicaen_utilisateur_user,
-    histo_creation        timestamp default now() not null,
-    histo_modificateur_id integer
-        constraint formation_enquete_question_utilisateur_id_fk_2
-        references unicaen_utilisateur_user,
-    histo_modification    timestamp,
-    histo_destructeur_id  integer
-        constraint formation_enquete_question_utilisateur_id_fk_3
-        references unicaen_utilisateur_user,
-    histo_destruction     timestamp,
-    categorie_id          integer
-        constraint formation_enquete_question_formation_enquete_categorie_id_fk
-        references formation_enquete_categorie
-);
-
-
-create unique index formation_enquete_question_id_uindex
-    on formation_enquete_question (id);
-
 create table formation_session_parametre
 (
     id                    serial
@@ -622,7 +568,12 @@ create table formation_inscription
     justification_responsable text,
     justification_drh         text,
     justification_refus       text,
-    validation_enquete        timestamp,
+    enquete_instance_id       integer
+        constraint formation_inscription_unicaen_enquete_instance_id_fk
+            references unicaen_enquete_instance
+            on delete set null,
+    rqth                      boolean default false not null,
+    precision_rqth            text,
     source_id                 varchar(128),
     id_source                 varchar(100),
     histo_creation            timestamp default now() not null,
@@ -667,6 +618,29 @@ create table formation_inscription_frais
             references unicaen_utilisateur_user
 );
 
+create table formation_lieu
+(
+    id                    serial                  not null
+        constraint formation_lieu_pk
+            primary key,
+    libelle               varchar(1024),
+    batiment              varchar(1024),
+    campus                varchar(1024),
+    ville                 varchar(1024),
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint formation_lieu_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint formation_lieu_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint formation_lieu_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+
 create table formation_seance
 (
     id                    serial
@@ -679,7 +653,11 @@ create table formation_seance
     jour                  timestamp,
     debut                 varchar(64),
     fin                   varchar(64),
-    lieu                  varchar(1024)                                    not null,
+    lieu_old              varchar(1024),
+    lieu                  integer
+        constraint formation_seance_formation_lieu_id_fk
+        references formation_lieu on delete set null,
+    lien                  varchar(1024),
     remarque              text,
     source_id             varchar(128),
     histo_creation        timestamp                                        not null,
@@ -744,32 +722,6 @@ create table formation_presence
             on delete cascade
 );
 create unique index formation_instance_presence_id_uindex on formation_presence (id);
-
-create table formation_enquete_reponse
-(
-    id                    serial
-        primary key,
-    inscription_id        integer   not null,
-    question_id           integer   not null
-        constraint formation_enquete_reponse_question_id_fk
-            references formation_enquete_question
-            on delete cascade,
-    niveau                integer   not null,
-    description           text,
-    histo_createur_id     integer   not null
-        constraint formation_enquete_reponse_utilisateur_id_fk_1
-            references unicaen_utilisateur_user,
-    histo_creation        timestamp not null,
-    histo_modificateur_id integer
-        constraint formation_enquete_reponse_utilisateur_id_fk_2
-            references unicaen_utilisateur_user,
-    histo_modification    timestamp,
-    histo_destructeur_id  integer
-        constraint formation_enquete_reponse_utilisateur_id_fk_3
-            references unicaen_utilisateur_user,
-    histo_destruction     timestamp
-);
-create unique index formation_enquete_reponse_id_uindex on formation_enquete_reponse (id);
 
 create table formation_action_plan
 (
@@ -867,6 +819,16 @@ create table agent_element_formation
             on delete cascade,
     constraint agent_formation_pk
         primary key (agent_id, formation_element_id)
+);
+
+create table formation_demande_externe_observation
+(
+    demande_id              integer not null
+        constraint fdeo_formation_demande_externe_id_fk references formation_demande_externe on delete cascade,
+    observation_instance_id integer not null
+        constraint fdeo_unicaen_observation_observation_instance_id_fk references unicaen_observation_observation_instance on delete cascade,
+    constraint formation_demande_externe_observation_pk
+        primary key (demande_id, observation_instance_id)
 );
 
 create table lagaf_stagiaire
@@ -976,6 +938,9 @@ INSERT INTO unicaen_validation_type (code, libelle, refusable) VALUES
     ('FORMATION_DEMANDE_DRH', 'Validation d''un demande de formation externe par la DRH', false),
     ('FORMATION_DEMANDE_REFUS', 'Refus d''une demande externe', false);
 
+INSERT INTO unicaen_validation_type (code, libelle, refusable) VALUES
+    ('FORMATION_CHARTE_SIGNEE', 'Signature de la charte de formation', false);
+
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
@@ -998,7 +963,8 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'LIBELLE', 'Libellé de l''établissement', 'Le libellé de l''établissement', 'String', 1020 UNION
     SELECT 'SOUSLIBELLE', 'Sous libellé', 'Un complément au libellé de l''établissement (par exemple : Direction des ressources humaines <br> Formation)', 'String', 1030 UNION
     SELECT 'CONVOCATION_SUPERIEUR_COPIE', 'Mise en copie des supérieur·es hiérarchiques lors de convocation', null, 'Bool', 2000 UNION
-    SELECT 'DEMANDE_EXTERNE_PLAFOND', 'Plafond du montant des formations externes exigeant validation', null , 'String', 3000
+    SELECT 'DEMANDE_EXTERNE_PLAFOND', 'Plafond du montant des formations externes exigeant validation', null , 'String', 3000 UNION
+    SELECT 'CODE_ENQUETE'           ,'Enquête active','Code de l''enquête active' , 'String', 10000
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
@@ -1036,6 +1002,8 @@ VALUES ('INSCRIPTION_STAGE_HORS_PLAN', '<p>Bloc de texte afficher en haut de la 
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
 VALUES ('INSCRIPTION_FORMATION_DU_PLAN', '<p>Bloc en haut de la page d''inscription à une formation du plan de formation sur la page des agents</p>', 'texte', '.', '<p><strong>La demande d''inscription ne vaut pas acceptation.</strong> Votre inscription est soumise à validation et en fonction des places disponibles.</p>', null, 'Formation\Provider\Template');
 
+-- Chartre
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_CHARTE', null, 'texte', 'Charte d''engagement', '<p>Je, VAR[AGENT#Denomination], m''engage à suivre les formations que je demande et à me montrer respectueux des personnes associés à ses formations.</p>', null, 'Formation\Provider\Template');
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE - PDF ------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -1081,6 +1049,20 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p>L\'agent <strong>VAR[AGENT#Denomination]</strong> a suivi les formations suivantes  : ###A REMPLACER###</p>
 <p> </p>
 <p style="text-align: right;">La responsable du bureau conseil, carrière, compétences.<br /><br /></p>', null);
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_ABSENCE', '<p>Document émis pour les inscrit·es qui ont été absent·es à une formation</p>', 'pdf', 'constat_absence_session_VAR[SESSION#id]', e'<p><strong>Université de démonstration</strong><br />DRH - Bureau des formations</p>
+<h1 style="text-align: center;">Constat d\'absence à un stage</h1>
+<p><br />le VAR[EMC2#date]</p>
+<p><br />Je soussigné, Prenom NOM, Président de l’Université de démonstration, certifie que VAR[AGENT#Denomination] n\'a pas participé au stage de formation suivant : </p>
+<p>VAR[SESSION#libelle]</p>
+<p>qui s\'est déroulé du VAR[SESSION#periode] ayant une durée de VAR[SESSION#duree].</p>
+<p> </p>
+<p>VAR[AGENT#Denomination] a suivi une durée de VAR[INSCRIPTION#duree].</p>
+<p> </p>
+<p>Je vous prie de bien vouloir justifier votre absence auprès du bureau de la formation.</p>
+<p> </p>
+<p><br />Le bureau de formation<br />drh.formation@univ-demo.fr<br /><br /><br /><br /></p>
+<p> </p>', null, 'Formation\Provider\Template');
+
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE - MAIL ------------------------------------------------------------------------------------------------------
@@ -1422,6 +1404,12 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <p>Vous pouvez vous désinscrire de ces notifications en allant sur l\'application VAR[MesFormations#AppLink] et en consultant la page "Plan de formation" accessible en suivant le lien VAR[URL#PlanDeFormation].</p>
 <p>En vous souhaitant une bonne journée,<br />VAR[MesFormations#AppLink]</p>
 <p> </p>', null, 'Formation\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_SESSION_ATTESTATION', '<p>Mail pour l''attestation envoyé aux agents</p>', 'mail',
+'La session de formation VAR[SESSION#libelle] du VAR[SESSION#periode] va est maintenant terminée',
+e'<p><strong>Université de démonstration</strong><br />DRH - Bureau des formations<br /><br />le VAR[EMC2#date]<br /><br /> <br />Bonjour VAR[AGENT#Denomination],<br /> <br />La session de formation VAR[SESSION#libelle] (VAR[SESSION#identification]) du VAR[SESSION#periode] à laquelle vous avez participé est maintenant terminée.</p><p>Vous pouvez récupérer votre attestation à l\'adresse suivante : VAR[URL#Attestation].<br />Cette attestation est aussi disponible (et restera disponible) directement sur l\'application VAR[MesFormations#AppLink] dans la rubrique "Mes Formations" &gt; "Mes formations réalisées".<br /><br /> <br />Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br /><br /><br /></p>', null, 'Formation\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_SESSION_ABSENCE', '<p>Mail pour le constat d''absence envoyé aux agents</p>', 'mail', 'La session de formation VAR[SESSION#libelle] du VAR[SESSION#periode] va est maintenant terminée', e'<p><strong>Université de démonstration</strong><br />DRH - Bureau des formations<br /><br />le VAR[EMC2#date]<br /><br /> <br />Bonjour VAR[AGENT#Denomination],<br /> <br />La session de formation VAR[SESSION#libelle] (VAR[SESSION#identification]) du VAR[SESSION#periode] à laquelle vous avez participé est maintenant terminée.</p>
+<p>Des absences ont été renseignées pour cette session de formation. Vous pouvez récupérer votre constat d\'absence à l\'adresse suivante : VAR[URL#Absence].<br />Ce constat est aussi disponible (et restera disponible) directement sur l\'application VAR[MesFormations#AppLink] dans la rubrique "Mes Formations" &gt; "Mes formations réalisées".<br /><br /> <br />Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br /><br /><br /><br /></p>
+<p> </p>', null, 'Formation\Provider\Template');
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- MACROS --------------------------------------------------------------------------------------------------------------
@@ -1430,7 +1418,6 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
     ('URL#PlanDeFormation', '<p>Fourni un lieu vers la page des plans de formation courants</p>', 'UrlService', 'getUrlPlanDeFormation'),
     ('MesFormations#AppLink', '<p>Affiche le nom de l''application de formation et fourni un lien vers celle-ci</p>', 'UrlService', 'getMesFormationsUrl')
 ;
-
 
 -- Macro portant sur les inscriptions
 INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
@@ -1451,7 +1438,9 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
     ('SESSION#libelle', 'retourne le libellé de la session', 'session', 'getInstanceLibelle'),
     ('SESSION#identification', 'retourne l identifiant unique de la session sous la forme <em>ACTION/SESSION</em>', 'session', 'getInstanceCode'),
     ('SESSION#formateurs', 'retourne la liste des formateurs sous la forme d un tableau', 'session', 'getListeFormateurs'),
-    ('SESSION#duree', 'retourne la durée en heure de la session', 'session', 'getDuree');
+    ('SESSION#duree', 'retourne la durée en heure de la session', 'session', 'getDuree'),
+    ('SESSION#id', '<p>Retroune l''id numérique de la session</p>', 'session', 'getId')
+;
 
 -- Macro portant sur les inscrits -- TODO REGROUPER AVEC INSCRIPTION
 INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
@@ -1470,6 +1459,13 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
     ('DEMANDE#lieu', '', 'demande', 'getLieu'),
     ('DEMANDE#motivation', '', 'demande', 'getJustificationAgent'),
     ('DEMANDE#organisme', '<p>Retourne l''organisme de la formation associée à la demande externe</p>', 'demande', 'getOrganisme')
+;
+
+-- Macro portant sur les UrlService et MacroService
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+('URL#Attestation', '<p>Retroune le lien vers le téléchargement de l''inscription</p>', 'UrlService', 'getUrlAttestation'),
+('URL#Convocation', '<p>Retroune le lien vers le téléchargement de la convocation</p>', 'UrlService', 'getUrlConvocation'),
+('URL#Absence', '<p>Retroune le lien vers le téléchargement du constat d''absence</p>', 'UrlService', 'getUrlAbsence')
 ;
 
 
@@ -1564,27 +1560,12 @@ WITH d(code, lib, ordre) AS (
     SELECT 'formationinstancedocument_convocation', 'Génération des convocations', 10 UNION
     SELECT 'formationinstancedocument_emargement', 'Génération des listes d''émargement', 20 UNION
     SELECT 'formationinstancedocument_attestation', 'Génération des attestations de formation', 30 UNION
+    SELECT 'formationinstancedocument_absence', 'Génération des constats d''absence', 35 UNION
     SELECT 'formationinstancedocument_historique', 'Génération des historiques de formation', 40
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstancedocument';
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
-VALUES ('formationenquete', 'Gestion de l''enquête', 'Formation\Provider\Privilege', 1200);
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'enquete_index', 'Accés à la configuration de l''enquête ', 10 UNION
-    SELECT 'enquete_ajouter', 'Ajouter une catégorie ou un question', 20 UNION
-    SELECT 'enquete_modifier', 'Modifier une catégorie ou une question', 30 UNION
-    SELECT 'enquete_historiser', 'Historiser/restaurer une catégorie ou une question', 40 UNION
-    SELECT 'enquete_supprimer', 'Supprimer une catégorie ou une question', 50 UNION
-    SELECT 'enquete_resultat', 'Afficher les résultats', 100 UNION
-    SELECT 'enquete_repondre', 'Répondre à l''enquête', 110
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationenquete';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('formationinstance', 'Gestion des formations - Actions de formation', 'Formation\Provider\Privilege', 313);
@@ -1782,11 +1763,27 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('inscription','Gestion des inscriptions',400,'Formation\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'inscription_afficher', 'Afficher', 20
+    SELECT 'inscription_afficher', 'Afficher', 20 UNION
+    SELECT 'inscription_enquete' ,'Répondre et Valider l''enquete',110
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'inscription';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationlieu','Gestion des lieus',360,'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationlieu_index', 'Accéder à l''index', 10 UNION
+    SELECT 'formationlieu_afficher', 'Afficher', 20 UNION
+    SELECT 'formationlieu_ajouter', 'Ajouter', 30 UNION
+    SELECT 'formationlieu_modifier', 'Modifier', 40 UNION
+    SELECT 'formationlieu_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'formationlieu_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationlieu';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- EVENEMENT -----------------------------------------------------------------------------------------------------------
@@ -1804,5 +1801,12 @@ INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recu
 -- INSERT ELEMENTS MINIMAUX --------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO formation_axe (libelle, description, couleur, ordre)
-VALUES ('Formations externes', '<p>Cet axe est utilis&eacute; pour regrouper tous les th&egrave;mes des formations externes</p>', '#555753', 9999);
+INSERT INTO formation_axe (libelle, description, couleur, ordre) VALUES
+('Formations externes', '<p>Cet axe est utilis&eacute; pour regrouper tous les th&egrave;mes des formations externes</p>', '#555753', 9999);
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- OBSERVATION ---------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_observation_observation_type (code, libelle, categorie) VALUES
+('OBS_DE_COMMENTAIRE', 'Observations émises sur une demande à titre individuel par les bureaux des formations', 'Formation');

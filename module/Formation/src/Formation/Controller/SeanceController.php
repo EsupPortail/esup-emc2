@@ -4,8 +4,8 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\Seance;
 use Formation\Form\Seance\SeanceFormAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -13,19 +13,19 @@ use Laminas\View\Model\ViewModel;
 
 class SeanceController extends AbstractActionController
 {
-    use FormationInstanceServiceAwareTrait;
     use SeanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use SeanceFormAwareTrait;
 
     public function ajouterJourneeAction(): ViewModel
     {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $session = $this->getSessionService()->getRequestedSession($this);
 
         $journee = new Seance();
-        $journee->setInstance($instance);
+        $journee->setInstance($session);
 
         $form = $this->getSeanceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/session/ajouter-journee', ['session' => $session->getId()], [], true));
         $form->bind($journee);
 
         $request = $this->getRequest();
@@ -52,7 +52,7 @@ class SeanceController extends AbstractActionController
         $journee = $this->getSeanceService()->getRequestedSeance($this);
 
         $form = $this->getSeanceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/session/modifier-journee', ['journee' => $journee->getId()], [], true));
         $form->bind($journee);
 
         $request = $this->getRequest();
@@ -77,14 +77,14 @@ class SeanceController extends AbstractActionController
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
         $this->getSeanceService()->historise($journee);
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $journee->getInstance()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $journee->getInstance()->getId()], [], true);
     }
 
     public function restaurerJourneeAction(): Response
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
         $this->getSeanceService()->restore($journee);
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $journee->getInstance()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/session/afficher', ['session' => $journee->getInstance()->getId()], [], true);
     }
 
     public function supprimerJourneeAction()
@@ -105,7 +105,7 @@ class SeanceController extends AbstractActionController
             $vm->setVariables([
                 'title' => "Suppression de la journée de formation du [" . $journee->getDateDebut()->format('d/m/Y') . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('formation-instance/supprimer-journee', ["journee" => $journee->getId()], [], true),
+                'action' => $this->url()->fromRoute('formation/session/supprimer-journee', ["journee" => $journee->getId()], [], true),
             ]);
         }
         return $vm;

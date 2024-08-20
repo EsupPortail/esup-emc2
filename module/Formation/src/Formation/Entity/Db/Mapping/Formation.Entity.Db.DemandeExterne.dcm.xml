@@ -58,7 +58,7 @@
             </join-table>
         </many-to-many>
 
-        <many-to-many field="sessions" target-entity="Formation\Entity\Db\FormationInstance">
+        <many-to-many field="sessions" target-entity="Formation\Entity\Db\Session">
             <join-table name="formation_demande_externe_session">
                 <join-columns>
                     <join-column name="demande_id" referenced-column-name="id"/>
@@ -80,6 +80,16 @@
             </join-table>
         </many-to-many>
 
+        <many-to-many field="observations" target-entity="UnicaenObservation\Entity\Db\ObservationInstance">
+            <join-table name="formation_demande_externe_observation">
+                <join-columns>
+                    <join-column name="demande_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="observation_instance_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
         <field name="justificationAgent"         column="justification_agent"                type="text"  />
         <field name="justificationResponsable"   column="justification_responsable"          type="text"         nullable="true"/>
         <field name="justificationGestionnaire"  column="justification_gestionnaire"         type="text"         nullable="true"/>

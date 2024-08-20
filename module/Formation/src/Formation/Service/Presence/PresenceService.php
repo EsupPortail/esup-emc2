@@ -7,10 +7,10 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
+use Formation\Entity\Db\Session;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 
@@ -136,14 +136,14 @@ class PresenceService
     }
 
     /**
-     * @param FormationInstance $instance
+     * @param Session $session
      * @return Presence[]
      */
-    public function getPresenceByInstance(FormationInstance $instance): array
+    public function getPresenceBySession(Session $session): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('journee.instance = :instance')
-            ->setParameter('instance', $instance);
+            ->andWhere('journee.instance = :session')
+            ->setParameter('session', $session);
 
         return $qb->getQuery()->getResult();
 
@@ -160,7 +160,7 @@ class PresenceService
     }
 
 
-    public function getPresencesManquantes(?FormationInstance $session): array
+    public function getPresencesManquantes(?Session $session): array
     {
         $sql = <<<EOS
 select presence.id, coalesce(concat(agent.prenom, ' ', coalesce(agent.nom_usage, agent.nom_famille)), concat(stagiaire.prenom, ' ', stagiaire.nom)) AS personne, seance.id, inscription.liste, presence.statut
@@ -192,5 +192,19 @@ EOS;
         }
 
         return $tmp;
+    }
+
+    /** Facade ********************************************************************************************************/
+
+    /** QUID :: j'ai oublie mode a vérifier ce que c'est */
+    public function createWith(Inscription $inscription, Seance $seance, string $mode, string $presenceType = "???"): Presence
+    {
+        $presence = new Presence();
+        $presence->setJournee($seance);
+        $presence->setInscription($inscription);
+        $presence->setStatut($mode);
+        $presence->setPresenceType($presenceType);
+        $this->create($presence);
+        return $presence;
     }
 }

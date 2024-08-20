@@ -4,7 +4,6 @@ namespace Formation\Controller;
 
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
-use Formation\Provider\Etat\MesFormationsEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -102,7 +101,6 @@ class AdministrationController extends AbstractActionController
             SessionEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
             InscriptionEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(InscriptionEtats::TYPE),
             DemandeExterneEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE),
-            MesFormationsEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(MesFormationsEtats::TYPE),
         ];
 
         $vm = new ViewModel([

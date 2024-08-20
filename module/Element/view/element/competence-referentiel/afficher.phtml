@@ -5,6 +5,7 @@
  * @var CompetenceReferentiel $referentiel
  */
 
+use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceReferentiel;
 
 $utilisateur = ($referentiel->getHistoModificateur() ?: $referentiel->getHistoCreateur());
@@ -27,7 +28,11 @@ $date = ($referentiel->getHistoModification() ?: $referentiel->getHistoCreation(
     <dd>
 
         <ul>
-            <?php foreach ($referentiel->getCompetences() as $competence) : ?>
+            <?php
+                $competences = $referentiel->getCompetences()->toArray();
+                usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() <=> $b->getLibelle(); });
+            ?>
+            <?php foreach ($competences as $competence) : ?>
                 <li> <?php echo $competence->getLibelle(); ?> </li>
             <?php endforeach; ?>
         </ul>

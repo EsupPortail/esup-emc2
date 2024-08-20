@@ -6,7 +6,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Session;
 use Formation\Entity\Db\Lieu;
 use Formation\Entity\Db\Seance;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -72,7 +72,7 @@ class LieuService {
 
     public function getRequestedLieu(AbstractActionController $controller, string $param = "lieu"): ?Lieu
     {
-        $id = $controller->params()->fromRoute('lieu');
+        $id = $controller->params()->fromRoute($param);
         $result = $this->getLieu($id);
         return $result;
     }
@@ -103,7 +103,7 @@ class LieuService {
     }
 
     /** @return Lieu[] */
-    public function getLieuxBySession(FormationInstance $session, bool $withHisto = false): array
+    public function getLieuxBySession(Session $session, bool $withHisto = false): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('seance.session = :session')->setParameter('session', $session)

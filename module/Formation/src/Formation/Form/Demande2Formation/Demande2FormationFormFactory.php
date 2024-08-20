@@ -2,7 +2,6 @@
 
 namespace Formation\Form\Demande2Formation;
 
-use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 use Formation\Service\Axe\AxeService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Psr\Container\ContainerExceptionInterface;

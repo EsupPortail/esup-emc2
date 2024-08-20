@@ -2,7 +2,6 @@
 
 namespace Formation\Form\Formation;
 
-use Formation\Form\Formateur\FormateurHydrator;
 use Formation\Service\ActionType\ActionTypeService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Interop\Container\ContainerInterface;
@@ -27,7 +26,6 @@ class FormationHydratorFactory
         $actionTypeService = $container->get(ActionTypeService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
 
-        /** @var FormationHydrator $hydrator */
         $hydrator = new FormationHydrator();
         $hydrator->setActionTypeService($actionTypeService);
         $hydrator->setFormationGroupeService($formationGroupeService);

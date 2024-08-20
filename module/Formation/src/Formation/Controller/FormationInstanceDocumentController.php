@@ -5,15 +5,15 @@ namespace Formation\Controller;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use JetBrains\PhpStorm\NoReturn;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -27,7 +27,7 @@ use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 class FormationInstanceDocumentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use MacroServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -36,13 +36,15 @@ class FormationInstanceDocumentController extends AbstractActionController
     use UrlServiceAwareTrait;
 
     private ?PhpRenderer $renderer = null;
+
     public function setRenderer(PhpRenderer $renderer): void
     {
         $this->renderer = $renderer;
     }
 
     private ?array $etablissementInfos = null;
-    public function addValeur(string $clef, ?string $valeur) :void
+
+    public function addValeur(string $clef, ?string $valeur): void
     {
         $this->etablissementInfos[$clef] = $valeur;
     }
@@ -69,14 +71,14 @@ class FormationInstanceDocumentController extends AbstractActionController
         try {
             $exporter->export($filemane);
         } catch (MpdfException $e) {
-            throw new RuntimeException("Une erreur est survenu lors de la génération du PDF",0,$e);
+            throw new RuntimeException("Une erreur est survenu lors de la génération du PDF", 0, $e);
         }
         exit;
     }
 
     #[NoReturn] public function exportTousEmargementsAction(): void
     {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $instance = $this->getSessionService()->getRequestedSession($this);
         $journees = $instance->getSeances();
         $journees = array_filter($journees, function (Seance $a) {
             return $a->estNonHistorise();
@@ -107,7 +109,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->getMpdf()->SetMargins(0,0,50);
+        $exporter->getMpdf()->SetMargins(0, 0, 50);
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
@@ -135,7 +137,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->getMpdf()->SetMargins(0,0,50);
+        $exporter->getMpdf()->SetMargins(0, 0, 50);
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
@@ -163,7 +165,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->getMpdf()->SetMargins(0,0,50);
+        $exporter->getMpdf()->SetMargins(0, 0, 50);
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
@@ -197,7 +199,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             $texte .= "<ul>";
             foreach ($inscriptions as $inscription) {
                 $dureeSuivie = $inscription->getDureePresence();
-                /** @var FormationInstance $session */
+                /** @var Session $session */
                 $session = $inscription->getSession();
                 if ($dureeSuivie != '0 heures ' && ($session->isEtatActif(SessionEtats::ETAT_CLOTURE_INSTANCE) || $session->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS))) {
                     $libelle = $session->getFormation()->getLibelle();

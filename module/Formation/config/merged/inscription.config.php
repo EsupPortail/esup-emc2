@@ -27,6 +27,7 @@ use Formation\Service\Inscription\InscriptionServiceFactory;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceFactory;
 use Formation\View\Helper\InscriptionsViewHelper;
+use Formation\View\Helper\InscriptionViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -144,6 +145,18 @@ return [
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
                     ],
+                ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'repondre-enquete',
+                        'valider-enquete'
+                    ],
+                    'privileges' => [
+                        InscriptionPrivileges::INSCRIPTION_ENQUETE,
+                    ],
+                    //todo creer assertion ...
+                    //'assertion' => InscriptionAssertion::class,
                 ],
             ],
         ],
@@ -392,7 +405,8 @@ return [
                             'creer-inscription' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/creer-inscription/:formation-instance/:agent',
+                                    /** @see InscriptionController::inscriptionAction() */
+                                    'route' => '/creer-inscription/:session/:agent',
                                     'defaults' => [
                                         'action' => 'inscription',
                                     ],
@@ -401,9 +415,31 @@ return [
                             'annuler-inscription' => [
                                 'type' => Segment::class,
                                 'options' => [
+                                    /** @see InscriptionController::desinscriptionAction() */
                                     'route' => '/annuler-inscription/:inscription',
                                     'defaults' => [
                                         'action' => 'desinscription',
+                                    ],
+                                ],
+                            ],
+                            /** ENQUETE ********************************************************************************/
+                            'repondre-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/repondre-enquete/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::repondreEnqueteAction() */
+                                        'action' => 'repondre-enquete',
+                                    ],
+                                ],
+                            ],
+                            'valider-enquete' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/valider-enquete/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::validerEnqueteAction() */
+                                        'action' => 'valider-enquete',
                                     ],
                                 ],
                             ],
@@ -442,6 +478,7 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
+            'inscription' => InscriptionViewHelper::class,
             'inscriptions' => InscriptionsViewHelper::class,
         ],
     ],

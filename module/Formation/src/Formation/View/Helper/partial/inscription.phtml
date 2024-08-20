@@ -1,0 +1,44 @@
+<?php
+
+use Formation\Entity\Db\Inscription;
+
+/**
+ * @see \Formation\View\Helper\InscriptionViewHelper
+ * @var Inscription $inscription
+ */
+
+$session = $inscription->getSession();
+$action = $session->getFormation();
+?>
+
+<div class="inscription">
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-md-4"> Action de formation  </dt>
+                <dd class="col-md-8"> <?php echo $action->getLibelle(); ?> </dd>
+                <dt class="col-md-4"> Session </dt>
+                <dd class="col-md-8"> <?php echo $session->getId(); ?> - <?php echo $session->getPeriode(); ?> </dd>
+                <dt class="col-md-4"> État de la session</dt>
+                <dd class="col-md-8"> <?php echo $this->etatinstance($session->getEtatActif()); ?></dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-md-4"> Volume suivi </dt>
+                <dd class="col-md-8"> <?php echo $inscription->getDureePresence(); ?> / <?php echo $session->getDuree(); ?> heures</dd>
+                <dt class="col-md-4"> État de l'inscription</dt>
+                <dd class="col-md-8"> <?php echo $this->etatinstance($inscription->getEtatActif()); ?></dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<style>
+    div.inscription {
+        background: lightgrey;
+        border-radius: 0.35rem;
+        padding: 1rem 3rem;
+        margin-bottom: 0.25rem;
+    }
+</style>

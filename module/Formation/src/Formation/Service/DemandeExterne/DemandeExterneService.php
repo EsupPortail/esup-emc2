@@ -11,26 +11,24 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\EtatType;
-use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
@@ -44,7 +42,7 @@ class DemandeExterneService
     use EtatTypeServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use SeanceServiceAwareTrait;
     use PresenceServiceAwareTrait;
@@ -180,7 +178,7 @@ class DemandeExterneService
     }
 
     /** @return DemandeExterne[] */
-    public function getDemandesExternesByEtats(array $etatsCodes) : array
+    public function getDemandesExternesByEtats(array $etatsCodes): array
     {
         $qb = $this->createQueryBuilder();
         $qb = DemandeExterne::decorateWithEtatsCodes($qb, 'demande', $etatsCodes);
@@ -349,7 +347,7 @@ class DemandeExterneService
 
     /** FACADE ********************************************************************************************************/
 
-    public function transformer(?DemandeExterne $demande, string $libelle, ?FormationGroupe $groupe, float $volume, float $suivi): FormationInstance
+    public function transformer(?DemandeExterne $demande, string $libelle, ?FormationGroupe $groupe, float $volume, float $suivi): Session
     {
         //theme
         if ($groupe === null) {
@@ -369,7 +367,7 @@ class DemandeExterneService
         $formation = new Formation();
         $formation->setLibelle($libelle);
         $formation->setGroupe($groupe);
-        $description = "<p><strong>Action de formation générée depuis la demande " . $demande->getId(). "</strong></p>";
+        $description = "<p><strong>Action de formation générée depuis la demande " . $demande->getId() . "</strong></p>";
         if ($demande->isCongeFormationSyndicale()) $description .= "<p> La demande est faite au titre de congé de formation syndicale </p>";
         $description .= $demande->toStringDescription();
         $formation->setDescription($description);
@@ -380,17 +378,17 @@ class DemandeExterneService
         $this->getFormationService()->update($formation);
 
         //session
-        $session = new FormationInstance();
+        $session = new Session();
         $session->setFormation($formation);
         $session->setAutoInscription();
         $session->setNbPlacePrincipale(1);
         $session->setNbPlaceComplementaire(0);
         $session->setType("stage externe");
         $session->setSource(HasSourceInterface::SOURCE_EMC2);
-        $this->getFormationInstanceService()->create($session);
+        $this->getSessionService()->create($session);
         $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_CLOTURE_INSTANCE);
         $session->setIdSource($formation->getId() . "-" . $session->getId());
-        $this->getFormationInstanceService()->update($session);
+        $this->getSessionService()->update($session);
 
         //lien demande <-> session
         $demande->addSession($session);
@@ -413,7 +411,7 @@ class DemandeExterneService
             $seance = new Seance();
             $seance->setInstance($session);
             $seance->setVolume($suivi);
-            $seance->setLieu("");
+            $seance->setLieu(null);
             $seance->setType(Seance::TYPE_VOLUME);
             $seance->setVolumeDebut($demande->getDebut());
             $seance->setVolumeFin($demande->getFin());
@@ -437,7 +435,7 @@ class DemandeExterneService
             $seance = new Seance();
             $seance->setInstance($session);
             $seance->setVolume($absence);
-            $seance->setLieu("");
+            $seance->setLieu(null);
             $seance->setType(Seance::TYPE_VOLUME);
             //source ... todo
             $this->getSeanceService()->create($seance);
@@ -477,8 +475,7 @@ class DemandeExterneService
         $qb = $this->createQueryBuilder();
         $qb = $qb->leftJoin('demande.gestionnaires', 'gestionnaire')
             ->andWhere('gestionnaire.id IS NULL')
-            ->andWhere('demande.histoDestruction IS NULL')
-        ;
+            ->andWhere('demande.histoDestruction IS NULL');
         // retrait des états finaux
         $qb = $qb->andWhere('etype.code not in (:etatsfinaux)')->setParameter('etatsfinaux', DemandeExterneEtats::ETATS_FINAUX);
         /** @var DemandeExterne[] $demandes */

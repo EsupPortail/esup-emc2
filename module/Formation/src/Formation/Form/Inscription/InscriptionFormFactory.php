@@ -28,7 +28,7 @@ class InscriptionFormFactory {
         $form = new InscriptionForm();
         $form->setHydrator($hydrator);
 
-        $form->sessionUrl = $renderer->url('formation-instance/rechercher', [], [], true);
+        $form->sessionUrl = $renderer->url('formation/session/rechercher', [], [], true);
         $form->agentUrl = $renderer->url('agent/rechercher-large', [], [], true);
         $form->stagiaireUrl = $renderer->url('stagiaire-externe/rechercher', [], [], true);
         return $form;

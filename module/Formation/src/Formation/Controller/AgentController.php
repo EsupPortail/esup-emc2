@@ -14,7 +14,6 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Provider\Etat\DemandeExterneEtats;
-use Formation\Provider\Etat\MesFormationsEtats;
 use Formation\Provider\Template\TextTemplates;
 use Formation\Provider\Validation\MesFormationsValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
@@ -68,7 +67,7 @@ class AgentController extends AbstractActionController
             return $a->getAutorite();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
-        $formations =  $this->getInscriptionService()->getInscriptionsByAgent($agent);
+        $formations = $this->getInscriptionService()->getInscriptionsByAgent($agent);
         $inscriptions = $this->getInscriptionService()->getInscriptionsByAgent($agent);
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
@@ -136,11 +135,15 @@ class AgentController extends AbstractActionController
         $agents = [];
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE)
             $agents = array_map(
-                function (AgentSuperieur $a) {return $a->getAgent();},
+                function (AgentSuperieur $a) {
+                    return $a->getAgent();
+                },
                 $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
         if ($role->getRoleId() === Agent::ROLE_AUTORITE)
-            $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); },
-            $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+            $agents = array_map(function (AgentAutorite $a) {
+                return $a->getAgent();
+            },
+                $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
 
         usort($agents, function (Agent $a, Agent $b) {
             $aaa = $a->getNomUsuel() . " " . $a->getPrenom() . " " . $a->getId();
@@ -177,6 +180,18 @@ class AgentController extends AbstractActionController
         $this->getAgentService()->update($agent);
 
         return $this->redirect()->toRoute('index-mes-formations', [], [], true);
+    }
+
+    public function historiqueAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $inscriptions = $this->getInscriptionService()->getInscriptionsValideesByAgents([$agent], null);
+
+        return new ViewModel([
+            'title' => "Historique des formations de " . $agent->getDenomination(true),
+            'agent' => $agent,
+            'inscriptions' => $inscriptions,
+        ]);
     }
 
 }

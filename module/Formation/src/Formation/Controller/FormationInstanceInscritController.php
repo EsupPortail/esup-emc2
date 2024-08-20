@@ -11,9 +11,9 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Template\TextTemplates;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -32,7 +32,7 @@ class FormationInstanceInscritController extends AbstractActionController
     use DemandeExterneServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
@@ -47,7 +47,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
     public function inscriptionInterneAction(): ViewModel
     {
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
+        $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
         $utilisateur = $this->getUserService()->getConnectedUser();
 
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
@@ -57,7 +57,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
 
         return new ViewModel([
-            'instances' => $instances,
+            'sessions' => $sessions,
             'inscriptions' => $inscriptions,
             'agent' => $agent,
             'rendu' => $rendu,
@@ -139,7 +139,6 @@ class FormationInstanceInscritController extends AbstractActionController
             'demandes' => $demandesValidees,
         ]);
     }
-
 
 
 }

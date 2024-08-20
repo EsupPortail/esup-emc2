@@ -13,7 +13,6 @@ use Formation\Service\Axe\AxeService;
 use Formation\Service\Domaine\DomaineService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
-use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\PlanDeFormation\PlanDeFormationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -39,7 +38,6 @@ class PlanDeFormationControllerFactory
          * @var DomaineService $domaineService
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
-         * @var FormationInstanceService $formationInstanceService
          * @var PlanDeFormationService $planDeFormationService
          * @var RenduService $renduService
          */
@@ -50,7 +48,6 @@ class PlanDeFormationControllerFactory
         $domaineService = $container->get(DomaineService::class);
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
-        $formationInstanceService = $container->get(FormationInstanceService::class);
         $planDeFormationService = $container->get(PlanDeFormationService::class);
         $renduService = $container->get(RenduService::class);
 
@@ -73,7 +70,6 @@ class PlanDeFormationControllerFactory
         $controller->setDomaineService($domaineService);
         $controller->setFormationService($formationService);
         $controller->setFormationGroupeService($formationGroupeService);
-        $controller->setFormationInstanceService($formationInstanceService);
         $controller->setPlanDeFormationService($planDeFormationService);
         $controller->setRenduService($renduService);
         $controller->setPlanDeFormationForm($planDeFormationForm);

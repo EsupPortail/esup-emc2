@@ -13,7 +13,6 @@ class AxeHydratorFactory
      */
     public function __invoke(ContainerInterface $container): AxeHydrator
     {
-        /** @var AxeHydrator $hydrator */
         $hydrator = new AxeHydrator();
         return $hydrator;
     }

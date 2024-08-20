@@ -4,27 +4,27 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\SessionParametre;
 use Formation\Form\SessionParametre\SessionParametreFormAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\SessionParametre\SessionParametreServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
 class SessionParametreController extends AbstractActionController
 {
-    use FormationInstanceServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use SessionParametreServiceAwareTrait;
     use SessionParametreFormAwareTrait;
 
     public function modifierAction(): ViewModel
     {
-        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+        $session = $this->getSessionService()->getRequestedSession($this);
 
         $parametre = $session->getParametre();
         if ($parametre === null) {
             $parametre = new SessionParametre();
             $parametre = $this->getSessionParametreService()->create($parametre);
             $session->setParametre($parametre);
-            $this->getFormationInstanceService()->update($session);
+            $this->getSessionService()->update($session);
         }
 
         $form = $this->getSessionParametreForm();

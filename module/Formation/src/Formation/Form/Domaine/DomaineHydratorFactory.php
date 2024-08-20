@@ -13,7 +13,6 @@ class DomaineHydratorFactory
      */
     public function __invoke(ContainerInterface $container): DomaineHydrator
     {
-        /** @var DomaineHydrator $hydrator */
         $hydrator = new DomaineHydrator();
         return $hydrator;
     }

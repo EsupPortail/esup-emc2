@@ -23,7 +23,6 @@ class SeanceServiceFactory
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var SeanceService $service */
         $service = new SeanceService();
         $service->setObjectManager($entityManager);
         return $service;

@@ -18,7 +18,7 @@ class HasDescriptionFieldset extends Fieldset {
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
                 'id' => 'description',
             ]
         ]);

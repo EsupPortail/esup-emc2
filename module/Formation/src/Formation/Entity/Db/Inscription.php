@@ -11,6 +11,8 @@ use Exception;
 use Fichier\Entity\Db\Fichier;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
+use UnicaenEnquete\Entity\HasEnqueteInterface;
+use UnicaenEnquete\Entity\HasEnqueteTrait;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -18,10 +20,11 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasValidationsInterface, ResourceInterface {
+class Inscription implements
+    HistoriqueAwareInterface, ResourceInterface,
+    HasEtatsInterface, HasValidationsInterface, HasEnqueteInterface {
     use HistoriqueAwareTrait;
-    use HasEtatsTrait;
-    use HasValidationsTrait;
+    use HasEtatsTrait, HasValidationsTrait, HasEnqueteTrait;
 
     public function getResourceId(): string
     {
@@ -34,7 +37,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?StagiaireExterne $stagiaire = null;
-    private ?FormationInstance $session = null;
+    private ?Session $session = null;
     private ?string $liste = null;
 
     private ?string $missions = null;
@@ -45,9 +48,6 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
 
     private bool $rqth = false;
     private ?string $precisionRqth = null;
-
-    private ?DateTime $validationEnquete = null;
-    private Collection $reponsesEnquete;
 
     private Collection $presences;
     private ?InscriptionFrais $frais = null;
@@ -61,7 +61,6 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $this->etats = new ArrayCollection();
         $this->presences = new ArrayCollection();
         $this->validations = new ArrayCollection();
-        $this->reponsesEnquete = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
     }
 
@@ -90,12 +89,12 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $this->stagiaire = $stagiaire;
     }
 
-    public function getSession(): ?FormationInstance
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function setSession(?FormationInstance $session): void
+    public function setSession(?Session $session): void
     {
         $this->session = $session;
     }
@@ -235,15 +234,15 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         return false;
     }
 
-    /** Enquete *******************************************************************************************************/
-
-    /** @return EnqueteReponse[] */
-    public function getReponsesEnquete(): array
+    public function hasAllPresence(): bool
     {
-        $responses = $this->reponsesEnquete->toArray();
-        $responses = array_filter($responses, function (EnqueteReponse $a) { return $a->estNonHistorise(); });
-        return $responses;
+        /** @var Presence $presence */
+        foreach ($this->presences as $presence) {
+            if ($presence->getStatut() === null || $presence->getStatut() === Presence::PRESENCE_NON_RENSEIGNEE) return false;
+        }
+        return true;
     }
+
 
     /** Gestion des fichiers  *****************************************************************************************/
     // TODO trait et interface ?

@@ -28,4 +28,6 @@ class FormationParametres {
 
     const DEMANDE_EXTERNE_PLAFOND = 'DEMANDE_EXTERNE_PLAFOND';
 
+    const CODE_ENQUETE = 'CODE_ENQUETE';
+
 }

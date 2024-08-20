@@ -16,6 +16,7 @@ use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\StagiaireExterne;
 use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
+use Formation\Provider\Privilege\InscriptionPrivileges;
 use UnicaenRenderer\Entity\Db\Rendu;
 
 $realisees  = array_filter($inscriptions, function (Inscription $a) { return $a->getSession()->estRealisee();} );
@@ -25,7 +26,7 @@ usort($realisees, function (Inscription $a, Inscription $b) { return $a->getSess
 $canGenererAbsence = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_ABSENCE));
 $canGenererAttestation = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_ATTESTATION));
 $canGenererHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE));
-
+$canEnquete = $this->isAllowed(InscriptionPrivileges::getResourceId(InscriptionPrivileges::INSCRIPTION_ENQUETE));
 ?>
 
 <h2>
@@ -42,7 +43,7 @@ $canGenererHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::ge
 
 <?php if ($canGenererHistorique AND $agent !== null) : ?>
 <?php /**  @see \Formation\Controller\FormationInstanceDocumentController::genererHistoriqueAction() */ ?>
-<a href="<?php echo $this->url('formation-instance/generer-historique', ['agent' => $agent->getId()], [], true); ?>"
+<a href="<?php echo $this->url('formation/session/generer-historique', ['agent' => $agent->getId()], [], true); ?>"
    class="btn btn-primary" target="_blank"
 >
     <span class="icon icon-pdf"></span>
@@ -87,19 +88,19 @@ $canGenererHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::ge
 <!--                        --><?php //endif; ?>
                     </div>
                     <?php else : ?>
-                        <?php if ($inscription->getSession()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
+                        <?php if ($canEnquete && $inscription->getSession()->isEnqueteActive() AND $inscription->getEnquete()->getValidation() === null) : ?>
                             <a
-                                <?php /** @see \Formation\Controller\EnqueteQuestionController::repondreQuestionsAction() */?>
-                                    href="<?php echo $this->url('formation/enquete/repondre-questions', ['inscription' => $inscription->getId()], [], true); ?>"
-                                    class="btn btn-primary action <?php if ($inscription->getValidationEnquete() !== null) echo " disabled "; ?>"
+                                <?php /** @see \Formation\Controller\InscriptionController::repondreEnqueteAction() */?>
+                                    href="<?php echo $this->url('formation/inscription/repondre-enquete', ['inscription' => $inscription->getId()], [], true); ?>"
+                                    class="btn btn-primary action <?php if ($inscription->getEnquete()->getValidation() !== null) echo " disabled "; ?>"
                             >
                                 <span class="icon icon-editer"> Je complète l'enquête</span>
                             </a>
                             <br/>
                             <a
-                                <?php /** @see \Formation\Controller\EnqueteQuestionController::validerQuestionsAction() */?>
-                                    href="<?php echo $this->url('formation/enquete/valider-questions', ['inscription' => $inscription->getId()], [], true); ?>"
-                                    class="btn btn-primary ajax-modal action <?php if (empty($inscription->getReponsesEnquete())) echo " disabled "; ?>"
+                                <?php /** @see \Formation\Controller\InscriptionController::validerEnqueteAction() */?>
+                                    href="<?php echo $this->url('formation/inscription/valider-enquete', ['inscription' => $inscription->getId()], [], true); ?>"
+                                    class="btn btn-primary ajax-modal action <?php if ($inscription->getEnquete() === null ) echo " disabled "; ?>"
                                     data-event="modification"
                             >
                                 <span class="icon icon-checked"> Je valide mes réponses</span>
@@ -109,7 +110,7 @@ $canGenererHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::ge
                                 <br/>
                                 <a
                                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
-                                        href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
+                                        href="<?php echo $this->url('formation/session/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
                                         class="btn btn-primary action <?php //if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
                                 >
                                     <span class="icon icon-pdf"> Je télécharge mon attestation</span>
@@ -120,7 +121,7 @@ $canGenererHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::ge
                             <br>
                             <a
                                 <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAbsenceAction()Action() */?>
-                                    href="<?php echo $this->url('formation-instance/generer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
+                                    href="<?php echo $this->url('formation/session/generer-absence', ['inscription' => $inscription->getId()], [], true); ?>"
                                     class="btn btn-primary action <?php //if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
                             >
                                 <span class="icon icon-pdf"> Je télécharge mon constat d'absence</span>
@@ -138,6 +139,12 @@ $canGenererHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::ge
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+    });
+
+    $(function () {
+        $(document).on('hide.bs.modal', '.modal', function () {
+            window.parent.location.reload();
         });
     });
 </script>

@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
@@ -12,28 +13,38 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use UnicaenEnquete\Service\Enquete\EnqueteServiceAwareTrait;
+use UnicaenEnquete\Service\Resultat\ResultatServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 class FormationController extends AbstractActionController
 {
     use ActionCoutPrevisionnelServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
+    use AgentServiceAwareTrait;
+    use EnqueteServiceAwareTrait;
     use FormationElementServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use PlanDeFormationServiceAwareTrait;
+    use ResultatServiceAwareTrait;
+    use SessionServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
     use ApplicationElementServiceAwareTrait;
@@ -51,10 +62,12 @@ class FormationController extends AbstractActionController
         $source = $this->params()->fromQuery('source');
         $historise = $this->params()->fromQuery('historise');
         $planId = $this->params()->fromQuery('planDeFormation');
-        $planDeFormation = ($planId !== null && $planId !== '')?$this->getPlanDeFormationService()->getPlanDeFormation($this->params()->fromQuery('planDeFormation')):null;
+        $planDeFormation = ($planId !== null && $planId !== '') ? $this->getPlanDeFormationService()->getPlanDeFormation($this->params()->fromQuery('planDeFormation')) : null;
 
         $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
-        if ($planDeFormation !== null) $formations = array_filter($formations, function (Formation $formation) use ($planDeFormation) { return $formation->hasPlanDeFormation($planDeFormation); });
+        if ($planDeFormation !== null) $formations = array_filter($formations, function (Formation $formation) use ($planDeFormation) {
+            return $formation->hasPlanDeFormation($planDeFormation);
+        });
 
         if ($source !== null and $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) {
             return $a->getSource() === $source;
@@ -81,7 +94,7 @@ class FormationController extends AbstractActionController
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
         return new ViewModel([
-            'title' => "Action de formation [".$formation->getLibelle()."]",
+            'title' => "Action de formation [" . $formation->getLibelle() . "]",
             'formation' => $formation,
             'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByAction($formation),
         ]);
@@ -90,12 +103,17 @@ class FormationController extends AbstractActionController
     public function ficheAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
+        $sessions = $this->getSessionService()->getSessionsOuvertesByFormation($formation);
+        $agent = $this->getAgentService()->getAgentByConnectedUser();
 
         return new ViewModel([
-            'title' => "Action de formation [".$formation->getLibelle()."]",
+            'title' => "Action de formation [" . $formation->getLibelle() . "]",
             'formation' => $formation,
+            'sessions' => $sessions,
+            'agent' => $agent,
         ]);
     }
+
     public function ajouterAction(): ViewModel
     {
         $formation = new Formation();
@@ -122,7 +140,7 @@ class FormationController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Ajouter une formation',
             'form' => $form,
@@ -148,14 +166,14 @@ class FormationController extends AbstractActionController
             }
         }
 
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
+        $sessions = $this->getSessionService()->getSessionsByFormation($formation);
 
         $vm = new ViewModel();
         $vm->setTemplate('formation/formation/modifier');
         $vm->setVariables([
             'title' => 'Edition d\'une formation',
             'formation' => $formation,
-            'instances' => $instances,
+            'sessions' => $sessions,
             'form' => $form,
             'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByAction($formation),
         ]);
@@ -221,7 +239,7 @@ class FormationController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Modifier les informations de la formation',
             'formation' => $formation,
@@ -258,7 +276,7 @@ class FormationController extends AbstractActionController
                 'title' => "Ajout d'une application",
                 'form' => $form,
             ]);
-            $vm->setTemplate('application/default/default-form');
+            $vm->setTemplate('default/default-form');
             return $vm;
         }
         exit();
@@ -292,7 +310,7 @@ class FormationController extends AbstractActionController
                 'title' => "Ajout d'une competence",
                 'form' => $form,
             ]);
-            $vm->setTemplate('application/default/default-form');
+            $vm->setTemplate('default/default-form');
             return $vm;
         }
         exit();
@@ -342,10 +360,10 @@ class FormationController extends AbstractActionController
                     $this->getFormationElementService()->update($element);
                 }
                 //décalage des instances
-                $instances = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
+                $instances = $this->getSessionService()->getSessionsByFormation($formation);
                 foreach ($instances as $instance) {
                     $instance->setFormation($formationSub);
-                    $this->getFormationInstanceService()->update($instance);
+                    $this->getSessionService()->update($instance);
                 }
 
                 //decalage des applications acquises
@@ -376,7 +394,7 @@ class FormationController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Sélection de la formation qui remplacera [" . $formation->getLibelle() . "]",
             'form' => $form,
@@ -420,4 +438,27 @@ class FormationController extends AbstractActionController
         return $this->redirect()->toRoute('formation/editer', ['formation' => $formation->getId()], [], true);
     }
 
+    public function resultatEnqueteAction(): ViewModel
+    {
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+
+        $code_enquete = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::CODE_ENQUETE);
+        $enquete = $this->getEnqueteService()->getEnqueteByCode($code_enquete);
+
+        $inscriptions = $this->getInscriptionService()->getInscriptionsByFormation($formation);
+        [$counts, $results] = $this->getResultatService()->generateResultatArray($enquete, $inscriptions);
+
+        $vm = new ViewModel([
+            'enquete' => $enquete,
+            'results' => $results,
+            'counts' => $counts,
+            'elements' => $inscriptions,
+            'retourIcone' => "icon icon-retour",
+            'retourLibelle' => "Accéder à l'action de formation",
+            /** @see FormationController::editerAction() */
+            'retourUrl' => $this->url()->fromRoute('formation/editer', ['formation' => $formation->getId()] ,[], true),
+        ]);
+        $vm->setTemplate('unicaen-enquete/resultat/resultats');
+        return $vm;
+    }
 }
