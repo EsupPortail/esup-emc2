@@ -46,6 +46,9 @@ class RepertoireController extends AbstractActionController
             $types = $this->getCompetenceTypeService()->getCompetencesTypes();
 
             $competences = [];
+            $listing = $referentielCompetenceDgafp->getCompetences();
+            $maximum = 0; foreach ($listing as $item) { $maximum = max($maximum, $item->getId()); }
+
             foreach ($json as $fiche) {
                 foreach ($types as $type) {
                     $type_competence = $type->getLibelle();
@@ -61,7 +64,8 @@ class RepertoireController extends AbstractActionController
                                 ];
                                 if ($mode === 'import') {
                                     if ($competences[$type_competence][$competence]['exists'] === null) {
-                                        $competences[$type_competence][$competence]['exists'] = $this->getCompetenceService()->createWith($competences[$type_competence][$competence]['libelle'], null, $type, null, $referentielCompetenceDgafp, -1);
+                                        $maximum++;
+                                        $competences[$type_competence][$competence]['exists'] = $this->getCompetenceService()->createWith($competences[$type_competence][$competence]['libelle'], null, $type, null, $referentielCompetenceDgafp, $maximum);
                                     }
 
                                 }
@@ -90,7 +94,6 @@ class RepertoireController extends AbstractActionController
 
                 }
             }
-            die();
             return new ViewModel(
                 [
                     'form' => $form,
