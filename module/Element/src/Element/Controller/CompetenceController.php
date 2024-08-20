@@ -210,6 +210,8 @@ class CompetenceController extends AbstractActionController
     {
         $query = $this->params()->fromQuery();
         $agents = [];
+        $competences = [];
+        $criteres = [];
 
         if (!empty($query)) {
             $criteres = [];
@@ -220,14 +222,17 @@ class CompetenceController extends AbstractActionController
                     $operateur = $query['operateur_' . $group];
                     $niveau = $query['niveau_' . $group];
 
+                    $competence = $this->getCompetenceService()->getCompetence($competenceId);
                     $criteres[] = [
-                        'competence' => $competenceId,
+                        'id' => $group,
+                        'competence' => $competence,
                         'operateur' => $operateur,
                         'niveau' => $niveau,
                     ];
+                    $competences[] = $competence;
 
-                    $agents = $this->getCompetenceElementService()->getAgentsHavingCompetencesWithCriteres($criteres);
                 }
+                $agents = $this->getCompetenceElementService()->getAgentsHavingCompetencesWithCriteres($criteres);
             }
         }
 
@@ -237,6 +242,8 @@ class CompetenceController extends AbstractActionController
             'niveaux' => $niveaux,
             'query' => $query,
             'agents' => $agents,
+            'competences' => $competences,
+            'criteria' => $criteres,
         ]);
     }
 

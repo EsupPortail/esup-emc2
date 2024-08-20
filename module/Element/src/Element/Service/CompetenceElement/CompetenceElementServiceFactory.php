@@ -21,16 +21,13 @@ class CompetenceElementServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
-         * @var CompetenceService $competenceService
          * @var NiveauService $niveauService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $competenceService = $container->get(CompetenceService::class);
         $niveauService = $container->get(NiveauService::class);
 
         $service = new CompetenceElementService();
         $service->setObjectManager($entityManager);
-        $service->setCompetenceService($competenceService);
         $service->setNiveauService($niveauService);
         return $service;
     }

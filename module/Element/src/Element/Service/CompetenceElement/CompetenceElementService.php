@@ -15,7 +15,6 @@ use UnicaenApp\Exception\RuntimeException;
 
 class CompetenceElementService
 {
-    use CompetenceServiceAwareTrait;
     use NiveauServiceAwareTrait;
     use ProvidesObjectManager;
 
@@ -108,20 +107,21 @@ class CompetenceElementService
     public function getAgentsHavingCompetencesWithCriteres(array $criteria): array
     {
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder("agent")
-            ->join('agent.competences', 'competenceelement')->addSelect('competenceelement')
-            ->join('competenceelement.competence', 'competence')->addSelect('competence')
-            ->join('competenceelement.niveau', 'niveau')->addSelect('niveau');
+            ->join('agent.competences', 'competenceelement')->addSelect('fcompetenceelement')
+            ->join('agent.competences', 'fcompetenceelement')->addSelect('fcompetenceelement')
+            ->join('fcompetenceelement.competence', 'competence')->addSelect('competence')
+            ->join('fcompetenceelement.niveau', 'niveau')->addSelect('niveau');
     ;
 
         foreach ($criteria as $criterion) {
-            $competence = $this->getCompetenceService()->getCompetence($criterion['competence']);
+            $competence = $criterion['competence'];
             $operateur = $criterion['operateur'];
-            $niveau = $this->getNiveauService()->getMaitriseNiveau($criterion['niveau']);
+            $niveau = $this->getNiveauService()->getMaitriseNiveau(($criterion['niveau'] !== '')?$criterion['niveau']:null);
 
-            $qb = $qb
-                ->andWhere('competenceelement.competence = :competence')->setParameter('competence', $competence)
-                ->andWhere('niveau.niveau >= :niveau')->setParameter('niveau', $niveau->getNiveau())
-            ;
+            $qb = $qb->andWhere('fcompetenceelement.competence = :competence')->setParameter('competence', $competence);
+            if ($operateur !== null && $niveau !== null) {
+                $qb = $qb->andWhere('niveau.niveau ' . $operateur . ' :niveau')->setParameter('niveau', $niveau->getNiveau());
+            }
         }
 
         $result = $qb->getQuery()->getResult();

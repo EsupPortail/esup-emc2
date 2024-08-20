@@ -4,9 +4,14 @@
  * @see \Element\Controller\CompetenceController::rechercherAgentsAction()
  * @var Niveau[] $niveaux
  * @var Agent[]|null $agents
+ * @var Competence[] $competences
+ * @var array $criteria
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentGrade;use Application\Entity\Db\AgentStatut;
+use Application\Provider\Privilege\AgentPrivileges;
+use Element\Entity\Db\Competence;
 use Element\Entity\Db\Niveau;
 
 $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
@@ -44,7 +49,7 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
         </div>
         <div>
         <span class="header">Critères sur les agent·es</span>
-            TODO
+            <span class="todo">TODO</span>
         </div>
         <div>
             <button class="btn btn-primary" id="rechercher">
@@ -60,15 +65,23 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
     </div>
 </div>
 
-
-
-<?php if (isset($query)) : ?>
-    <?php var_dump($query); ?>
-<?php endif; ?>
-
-<?php if ($agents === null) : ?>
+<?php if ($agents === null || empty($agents)) : ?>
     Aucun·e agent de remonté·e avec les critères de recherche
 <?php else : ?>
+
+
+    <script>
+        let header = ['ligne', 'dénomination', 'affectation principale', 'statuts', 'grades'];
+        <?php foreach ($competences as $competence) : ?>
+            header.push("<?php echo $competence->getLibelle(); ?>");
+        <?php endforeach; ?>
+        let agents = [];
+        let item;
+    </script>
+
+    <span class="btn btn-primary">
+        <span class="icon icon-csv export" id="agents"> Exporter la liste des agents </span>
+    </span>
     <table class="table table-condensed datatable">
         <thead>
             <tr>
@@ -76,19 +89,25 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                 <th> Affectation principale </th>
                 <th> Statut </th>
                 <th> Compétence </th>
-                <th> Action </th>
+                <th class="action"> Action </th>
             </tr>
         </thead>
         <tbody>
+            <?php $data = []; ?>
             <?php foreach ($agents as $agent) : ?>
+                <script> item=[]; </script>
                 <tr>
-                    <td data-order="<?php echo $agent->getDenomination(); ?>"><?php echo $agent->getDenomination(true, true, true); ?></td>
+                    <td data-order="<?php echo $agent->getDenomination(); ?>">
+                        <?php echo $agent->getDenomination(true, true, true); ?>
+                        <script>item["denomination"] = <?php echo '"'.$agent->getDenomination(true).'"'; ?>;</script>
+                    </td>
                     <td>
                         <?php $affectation = $agent->getAffectationPrincipale(); ?>
                         <?php if ($affectation === null) : ?>
                             <span class="text-warning">
                                 <span class="icon icon-attention"></span>
                                 Aucune affectation principale
+                                <script>item["affectation"] = "Aucune affectation"; </script>
                             </span>
                         <?php else : ?>
                             <?php $structure = $affectation->getStructure(); $niveau2 = $structure?->getNiv2(); ?>
@@ -96,24 +115,67 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                                 <span class="text-warning">
                                     <span class="icon icon-attention"></span>
                                     Aucune structure pour l'affecation #<?php echo $affectation->getId(); ?>
+                                    <script>item["affectation"] = "Aucune structure"; </script>
                                 </span>
                             <?php else : ?>
                                 <?php if ($niveau2 AND $niveau2 !== $structure) : ?>
                                     <?php echo $niveau2->getLibelleCourt(); ?> > <?php echo $structure->getLibelleCourt(); ?>
+                                    <script>item["affectation"] = "<?php echo $niveau2->getLibelleCourt()." > ".$structure->getLibelleCourt(); ?>"; </script>
                                 <?php else : ?>
                                     <?php echo $structure->getLibelleCourt(); ?>
+                                    <script>item["affectation"] = "<?php echo $structure->getLibelleCourt(); ?>"; </script>
                                 <?php endif; ?>
                             <?php endif; ?>
                         <?php endif; ?>
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        <?php $statuts = $agent->getStatutsActifs(); ?>
+                        <?php echo implode(" ", AgentStatut::generateStatutsArray($statuts)); ?>
+                        <script>item["statuts"] = "<?php echo implode(" ", AgentStatut::generateStatutsArray($statuts)); ?>"; </script>
+                        <br>
+                        <?php $grades = $agent->getGradesActifs(); ?>
+                        <script>item["grades"] = ""; </script>
+                        <?php foreach ($grades as $grade) : ?>
+                            <?php //echo $grade->getCorps()->getLibelleLong(); ?>
+                            <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                            <br>
+                            <script>item["grades"] = "<?php echo implode(" ", array_map(function (AgentGrade $ag) { return $ag->getGrade()->getLibelleLong(); }, $grades)); ?>"; </script>
+
+                        <?php endforeach; ?>
+                    </td>
+                    <td>
+                        <?php $dictionnaire = $agent->getCompetenceDictionnaire(); ?>
+
+                        <?php foreach ($competences as $competence) : ?>
+                            <?php echo $competence->getLibelle(); ?>
+                            <strong>
+                            <?php if(! isset($dictionnaire[$competence->getId()])) : ?>
+                                Non acquis
+                                <script>item["<?php echo $competence->getLibelle(); ?>"] = "Non acquis"; </script>
+                            <?php else: ?>
+                                <?php echo $dictionnaire[$competence->getId()]['entite']->getNiveauMaitrise()->getLibelle(); ?>
+                                <script>item["<?php echo $competence->getLibelle(); ?>"] = "<?php echo $dictionnaire[$competence->getId()]['entite']->getNiveauMaitrise()->getLibelle(); ?>"; </script>
+                            <?php endif; ?>
+                            </strong>
+                            <br>
+                        <?php endforeach; ?>
+                    </td>
+                    <td class="action">
+                        <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                            <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>">
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                        <?php endif; ?>
+                    </td>
                 </tr>
+                <script>agents.push(item); </script>
             <?php endforeach; ?>
         </tbody>
     </table>
 <?php endif; ?>
+
 
 
 
@@ -142,11 +204,11 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
             '<div class="col-md-3">'
             + '    <select id="operateur_'+id+'" name="operateur_'+id+'" class="selectpicker">'
             + '        <option value="">Aucun opérateur</option>'
-            + '        <option value="superieur"> &gt; </option>'
-            + '        <option value="superieur_ou_egal"> &ge; </option>'
-            + '        <option value="egale"> &equals; </option>'
-            + '        <option value="inferieur_ou_egal"> &le; </option>'
-            + '        <option value="inferieur"> &lt; </option>'
+            + '        <option value=">"> &gt; </option>'
+            + '        <option value=">="> &ge; </option>'
+            + '        <option value="="> &equals; </option>'
+            + '        <option value="<="> &le; </option>'
+            + '        <option value="<"> &lt; </option>'
             + '    </select>'
             + '</div>';
         return text;
@@ -170,37 +232,105 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
         return text;
     }
 
-    function ajouterCompetence(e) {
+    function ajouterCompetence(e, id) {
         if (e !== undefined) e.preventDefault();
-        let id = Math.floor(Math.random() * 1000000);
+        if (id === undefined) id = Math.floor(Math.random() * 1000000);
         // let id = 15;
         $('div#competence-bloc').append(
-            '<div class="row">' +
-            '   <div class="col-md-1"> <span class="icon icon-minus text-danger"></span></div>' +
+            '<div class="row" id="competence_'+id+'">' +
+            '   <div class="col-md-1"> <span class="icon icon-minus text-danger span-action" onclick="retirerCompetence('+id+')"></span></div>' +
             '   <div class="col-md-5">' + generateSas2(id) + '</div>' +
             generateOperateurSelect(id) +
             generateNiveauSelect(id) +
             '</div>');
-        $('select').selectpicker();
+
 
         var autocomp = $('.sas-autocomplete:last');
-        console.log(autocomp);
-        console.log("competence-filtre_"+id);
+        // console.log(autocomp);
+        // console.log("competence-filtre_"+id);
         autocomp.autocompleteUnicaen({
             elementDomId: "competence-filtre_"+id,
             source: '/element/competence/rechercher',
             minLength: 2,
             delay: 750
         });
+
+        if (e !== undefined && id !== undefined) {
+            $('select#operateur_' + id).selectpicker();
+            $('select#niveau_' + id).selectpicker();
+        }
     }
+
+    function retirerCompetence(id) { $('div#competence_'+id).remove(); }
+    function retirerCompetences(e) { e.preventDefault(); $('div#competence-bloc').html(""); ajouterCompetence(e);}
 
     $(function () {
         $('button#ajout-competence').on("click", function(e) { ajouterCompetence(e); });
+        $('button#raz-competence').on("click", function(e) { retirerCompetences(e); });
+        $('button#raz').on("click", function(e) { e.preventDefault(); window.location.href = "?"; });
     });
 
+    downloadCSVFromJson = (filename, headerJson, arrayOfJson) => {
+        // convert JSON to CSV
+        let csv = "";
+        for (let value in headerJson) {
+            csv += headerJson[value] + ";";
+        }
+        csv += "\n";
 
+        for (let line in arrayOfJson) {
+            csv += line + ";";
+            for (let value in arrayOfJson[line]) {
+                csv += arrayOfJson[line][value] + ";";
+            }
+            csv += "\n";
+        }
+        console.log(csv);
+
+        // Create link and download
+        let link = document.createElement('a');
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    $('span.export#agents').on('click', function () {
+        console.log(agents);
+        downloadCSVFromJson('exportation_agents_' + Date.now().toString() + '.csv', header, agents);
+    });
+
+    $(function() {
+        let withit = false;
+        <?php foreach ($criteria as $criterion): ?>
+        {
+            let groupid = "<?php echo $criterion['id']; ?>";
+            let operateur = "<?php echo $criterion['operateur']; ?>";
+            let niveau = "<?php echo $criterion['niveau']; ?>";
+            let competenceId = "<?php echo $criterion['competence']->getId(); ?>";
+            let competenceLabel = "<?php echo $criterion['competence']->getLibelle(); ?>";
+            ajouterCompetence(undefined, groupid);
+            $('input[name="competence-filtre_' + groupid + '[id]"]').val(competenceId);
+            $('input[name="competence-filtre_' + groupid + '[label]"]').val(competenceLabel);
+            if (operateur !== undefined && operateur !== '') {
+                $('select#operateur_' + groupid).val(operateur).change();
+            }
+            if (niveau !== undefined && niveau !== '') {
+                $('select#niveau_' + groupid + ' option[value=' + niveau + ']').prop('selected', true);
+            }
+            withit = true;
+        }
+        <?php endforeach; ?>
+
+        if (withit === false) ajouterCompetence();
+        $('select').selectpicker();
+        $('.datatable').dataTable({
+            'paging': false,
+        });
+    });
 </script>
-
 
 
 <style>
@@ -210,9 +340,7 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
     .ui-autocomplete-loading {
         background: white url("//gest.unicaen.fr/images/ajax-loader-r.gif") right center no-repeat;
     }
+    .span-action {
+        cursor: pointer;
+    }
 </style>
-<script>
-    $(function() {
-        ajouterCompetence();
-    });
-</script>
