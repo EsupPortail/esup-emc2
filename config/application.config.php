@@ -49,7 +49,7 @@ $modules = [
     'EntretienProfessionnel',
     'Carriere',
     'Metier',
-//    'FicheReferentiel',
+    'FicheReferentiel',
     'FicheMetier',
     'FichePoste',
 

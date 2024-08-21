@@ -169,6 +169,7 @@ class MetierService {
     public function getMetierByReference(string $referentiel, string $reference) : ?Metier
     {
         $qb = $this->createQueryBuilder()
+//            ->join('metier.references', 'reference')->addSelect('reference')
             ->join('reference.referentiel', 'referentiel')->addSelect('referentiel')
             ->andWhere('referentiel.libelleCourt = :referentiel')->setParameter('referentiel', $referentiel)
             ->andWhere('reference.code = :reference')->setParameter('reference', $reference)
@@ -176,7 +177,7 @@ class MetierService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [Metier] partagent la même référence [".$referentiel."|".$reference."].");
+            throw new RuntimeException("Plusieurs [Metier] partagent la même référence [".$referentiel."|".$reference."].", 0, $e);
         }
         return $result;
     }
