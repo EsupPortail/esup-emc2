@@ -83,7 +83,9 @@ class FicheReferentielService {
 
     public function getFicheReferentiel(?int $id): ?FicheReferentiel
     {
-        $qb = $this->createQueryBuilder(true);
+        $qb = $this->createQueryBuilder(true)
+            ->andWhere('fichereferentiel.id = :id')->setParameter('id', $id)
+        ;
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
