@@ -124,4 +124,19 @@ class ReferentielService {
         return $result;
     }
 
+    public function getReferentielByCode(string $referentielCode): ?Referentiel
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('referentiel.libelleCourt = :code')->setParameter('code', $referentielCode)
+            ->andWhere('referentiel.histoDestruction IS NULL')
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Referentiel::class."] partagent le même code [".$referentielCode."]",0, $e);
+        }
+        return $result;
+    }
+
 }

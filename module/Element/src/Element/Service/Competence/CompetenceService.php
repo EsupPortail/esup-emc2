@@ -243,8 +243,12 @@ class CompetenceService {
     }
     /** FACADE ****************************************************************************************************/
 
-    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id) : Competence
+    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id, bool $persist = true) : Competence
     {
+        if ($id === -1) {
+            $id = $this->getCompetenceMaxIdByRefentiel($referentiel) + 1;
+        }
+
         $competence = new Competence();
         $competence->setLibelle($libelle);
         $competence->setDescription($description);
@@ -252,7 +256,7 @@ class CompetenceService {
         $competence->setTheme($theme);
         $competence->setReferentiel($referentiel);
         $competence->setIdSource($id);
-        $this->create($competence);
+        if ($persist) $this->create($competence);
         return $competence;
     }
 
@@ -279,6 +283,34 @@ class CompetenceService {
         if ($wasModified) $this->update($competence);
         return $competence;
     }
+
+    public function getCompetenceByRefentielAndLibelle(?CompetenceReferentiel $referentiel, ?string $libelle): ?Competence
+    {
+        if ($referentiel === null) return null;
+        if ($libelle === null) return null;
+        $qb = $this->createQueryBuilder()
+            ->andWhere('competence.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
+            ->andWhere('competence.libelle = :libelle')->setParameter('libelle', $libelle)
+            ->andWhere('competence.histoDestruction IS NULL')
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Competence::class."] partagent le même référentiel [".$referentiel->getLibelleCourt()."] et le même libellé [".$libelle."]",0,$e);
+        }
+        return $result;
+    }
+
+    private function getCompetenceMaxIdByRefentiel(CompetenceReferentiel $referentiel)
+    {
+        $competences = $this->getCompetencesByRefentiel($referentiel);
+        $max = 0;
+        foreach ($competences as $competence) {
+            $max = max($max, $competence->getId());
+        }
+        return $max;
+    }
+
 
     /**
      * @param Competence[] $competences

@@ -112,7 +112,7 @@ class FamilleProfessionnelleService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FamilleProfessionnelle partagent le même identifiant [".$id."]");
+            throw new RuntimeException("Plusieurs [".FamilleProfessionnelle::class."] partagent le même identifiant [".$id."]");
         }
         return $result;
     }
@@ -122,6 +122,29 @@ class FamilleProfessionnelleService {
         $id = $controller->params()->fromRoute($paramName);
         $famille = $this->getFamilleProfessionnelle($id);
 
+        return $famille;
+    }
+
+    public function getFamilleProfessionnelleByLibelle(string $libelle): ?FamilleProfessionnelle
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('famille.libelle = :libelle')->setParameter('libelle', $libelle)
+            ->andWhere('famille.histoDestruction IS NULL')
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".FamilleProfessionnelle::class."] partagent le même libellé [".$libelle."]");
+        }
+        return $result;
+    }
+
+    public function createWith(string $familleLibelle, bool $persist = true): ?FamilleProfessionnelle
+    {
+        $famille = new FamilleProfessionnelle();
+        $famille->setLibelle($familleLibelle);
+        if ($persist)  $this->create($famille);
         return $famille;
     }
 }

@@ -195,18 +195,19 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
+
                             'fiches' => [
                                 'label' => 'Gestion des fiches',
                                 'route' => 'fiche-metier',
                                 'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
-                                'order'    => 2000,
+                                'order'    => 2030,
                                 'dropdown-header' => true,
                             ],
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
                                 'route' => 'fiche-poste',
                                 'resource' =>  FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_INDEX) ,
-                                'order'    => 2040,
+                                'order'    => 2049,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

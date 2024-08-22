@@ -1,0 +1,237 @@
+<?php
+
+use Element\Entity\Db\CompetenceElement;
+use FicheReferentiel\Entity\Db\FicheReferentiel;
+
+/**
+ * @see \FicheReferentiel\Controller\FicheReferentielController::afficherAction()
+ * @var FicheReferentiel $ficheReferentiel
+ */
+
+$this->headTitle("FicheReferentiel #".$ficheReferentiel->getId());
+
+?>
+
+<h1 class="page-header">
+    Fiche référentiel #<?php echo $ficheReferentiel->getId(); ?>
+</h1>
+
+<h2> Référentiel et métier associé</h2>
+
+<dl class="row">
+    <dt class="col-md-3">Référentiel </dt>
+    <dd class="col-md-9">
+        <?php echo $ficheReferentiel->getReferentiel()->getLibelleLong(); ?>
+        <span class="badge" style="background: slateblue;"><?php echo $ficheReferentiel->getReferentiel()->getLibelleCourt(); ?></span>
+    </dd>
+    <dt class="col-md-3">Métier</dt>
+    <dd class="col-md-9"><?php echo $ficheReferentiel->getMetier()->getLibelle(); ?></dd>
+    <dt class="col-md-3">Domaine</dt>
+    <dd class="col-md-9">
+        <?php $domaines = $ficheReferentiel->getMetier()->getDomaines(); ?>
+        <?php if (empty($domaines)): ?>
+            <span class="text-warning">
+                Aucun domaine connu
+            </span>
+        <?php else : ?>
+            <ul>
+            <?php foreach ($domaines as $domaine): ?>
+                <li><?php echo $domaine->getLibelle(); ?></li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3">Famille professionnelle</dt>
+    <dd class="col-md-9">
+        <?php
+            $domaines = $ficheReferentiel->getMetier()->getDomaines();
+            $familles = [];
+            foreach ($domaines as $domaine) {
+                $familles_ = $domaine->getFamilles();
+                foreach ($familles_ as $famille) {
+                    $familles[$famille->getId()] = $famille;
+                }
+            }
+        ?>
+        <?php if (empty($familles)): ?>
+            <span class="text-warning">
+                Aucune fammille connue
+            </span>
+        <?php else : ?>
+            <ul>
+                <?php foreach ($familles as $famille): ?>
+                    <li><?php echo $famille->getLibelle(); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+</dl>
+
+<h2>Description du métier</h2>
+
+<dl class="row">
+    <dt class="col-md-3"> Définition synthétique </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->getDefinitionSynthetique() === null or $ficheReferentiel->getDefinitionSynthetique() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php $definitions  = explode("\n",$ficheReferentiel->getDefinitionSynthetique()); ?>
+            <?php if (count($definitions) < 2) : ?>
+                <?php echo $ficheReferentiel->getDefinitionSynthetique(); ?>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($definitions as $definition): ?>
+                        <li> <?php echo $definition; ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3"> Libellé compétence managériale </dt>
+    <dd class="col-md-9">
+        <?php if($ficheReferentiel->getCompetenceManageriale() === null or $ficheReferentiel->getCompetenceManageriale() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php $competences  = explode("\n",$ficheReferentiel->getCompetenceManageriale()); ?>
+            <?php if (count($competences) < 2) : ?>
+                <?php echo $ficheReferentiel->getCompetenceManageriale(); ?>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($competences as $competence): ?>
+                        <li> <?php echo $competence; ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3"> Activité de l'emploi </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->getActivite() === null or $ficheReferentiel->getActivite() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php $activites  = explode("\n",$ficheReferentiel->getActivite()); ?>
+            <?php if (count($activites) < 2) : ?>
+                <?php echo $ficheReferentiel->getActivite(); ?>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($activites as $activite): ?>
+                        <li> <?php echo $activite; ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3"> Conditions particulières d'exercice / d'accès </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->getConditionsParticulieres() === null or $ficheReferentiel->getConditionsParticulieres() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php $conditions  = explode("\n",$ficheReferentiel->getConditionsParticulieres()); ?>
+            <?php if (count($conditions) < 2) : ?>
+                <?php echo $ficheReferentiel->getConditionsParticulieres(); ?>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($conditions as $condition): ?>
+                        <li> <?php echo $condition; ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3"> Tendance / évolution </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->getTendanceEvolution() === null or $ficheReferentiel->getTendanceEvolution() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php $tendances  = explode("\n",$ficheReferentiel->getTendanceEvolution()); ?>
+            <?php if (count($tendances) < 2) : ?>
+                <?php echo $ficheReferentiel->getTendanceEvolution(); ?>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($tendances as $tendance): ?>
+                        <li> <?php echo $tendance; ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3"> Impact sur l'emploi / évolution </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->getImpact() === null or $ficheReferentiel->getImpact() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php $impacts  = explode("\n",$ficheReferentiel->getImpact()); ?>
+            <?php if (count($impacts) < 2) : ?>
+                <?php echo $ficheReferentiel->getImpact(); ?>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($impacts as $impact): ?>
+                        <li> <?php echo $impact; ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3"> Accessible </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->isFpe()) : ?>
+            <span class="badge" style="background: #1f5b83">Fonction Public de l'Enseignement</span>
+        <?php endif; ?>
+        <?php if ($ficheReferentiel->isFph()) : ?>
+            <span class="badge" style="background: #a52834">Fonction Public Hospitalière</span>
+        <?php endif; ?>
+        <?php if ($ficheReferentiel->isFpt()) : ?>
+            <span class="badge" style="background: #0c4128">Fonction Public Territoriale</span>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-3"> Code CSP </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->getCodeCsp() === null or $ficheReferentiel->getCodeCsp() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php echo $ficheReferentiel->getCodeCsp(); ?>
+        <?php endif; ?>
+    </dd>
+</dl>
+
+<h2>Compétences liées</h2>
+
+<?php
+    $dictionnaires = [];
+    $dictionnaires['Connaissances'] = [];
+    $dictionnaires['Savoir-faire'] = [];
+    $dictionnaires['Savoir-être'] = [];
+    /** @var CompetenceElement $competence $competence */
+foreach ($ficheReferentiel->getCompetenceCollection() as $competence) {
+        $competence = $competence->getCompetence();
+        $type = $competence->getType()->getLibelle();
+        switch ($type) {
+            case 'Connaissances' :
+                $dictionnaires['Connaissances'][] = $competence;
+                break;
+            case 'Savoir-faire' :
+            case 'Opérationnelle' :
+                $dictionnaires['Savoir-faire'][] = $competence;
+                break;
+            case 'Savoir-être' :
+            case 'Comportementale' :
+                $dictionnaires['Savoir-être'][] = $competence;
+                break;
+        }
+    }
+?>
+
+
+<?php foreach ($dictionnaires as $type => $competences): ?>
+    <?php if (isset($competences) and !empty($competences)) : ?>
+    <?php echo $type; ?>
+    <ul>
+        <?php foreach ($competences as $competence): ?>
+            <li> <?php echo $competence->getLibelle(); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+<?php endforeach; ?>

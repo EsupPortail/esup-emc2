@@ -34,7 +34,7 @@ class Reference implements HistoriqueAwareInterface, HasMetierInterface {
 
     public function getCode() : ?string
     {
-        if ($this->getReferentiel() !== null AND $this->getReferentiel()->getType() === Referentiel::VIDE) return $this->getReferentiel()->getLibelleCourt();
+        if ($this->getReferentiel() !== null AND $this->getReferentiel()->getType() === Referentiel::VIDE) return $this->getReferentiel()->getLibelleCourt() ." - ". $this->code;
         return $this->code;
     }
 

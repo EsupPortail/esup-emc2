@@ -106,22 +106,5 @@ class CompetenceType implements HistoriqueAwareInterface {
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCouleur()
-    {
-        return $this->couleur;
-    }
-
-    /**
-     * @param string $couleur
-     * @return CompetenceType
-     */
-    public function setCouleur($couleur)
-    {
-        $this->couleur = $couleur;
-        return $this;
-    }
 
 }
