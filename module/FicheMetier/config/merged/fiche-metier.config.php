@@ -132,7 +132,7 @@ return [
                                 'label' => 'Fiches métiers',
                                 'route' => 'fiche-metier',
                                 'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
-                                'order'    => 2020,
+                                'order'    => 2045,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

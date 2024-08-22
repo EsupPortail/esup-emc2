@@ -37,6 +37,26 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'fiche-ref' => [
+                                'label' => 'Fiches Référentiels',
+                                'route' => 'fiche-referentiel',
+                                'resource' => PrivilegeController::getResourceId(FicheReferentielController::class, 'index'),
+                                'order'    => 2041,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router' => [
         'routes' => [
             'fiche-referentiel' => [
