@@ -18,6 +18,11 @@ $canFicheAfficher = $this->isAllowed(FichereferentielPrivileges::getResourceId(F
     Fiche Référentiel
 </h1>
 
+<a href="<?php echo $this->url('fiche-referentiel/importer-dgafp-csv'); ?>"
+   class="btn btn-primary">
+    Importer depuis un CSV (format DGAFP)
+</a>
+
 <table class="table table-condensed datatable">
     <thead>
     <tr>
