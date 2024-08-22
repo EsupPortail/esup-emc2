@@ -329,7 +329,7 @@ EOS;
             return $tmp;
     }
 
-    public function createWith(string $libelle, string $referentielCode, string $metierCode, string $domaineLibelle, string $familleLibelle): ?Metier
+    public function createWith(string $libelle, string $referentielCode, string $metierCode, string $domaineLibelle, string $familleLibelle, bool $persist = true): ?Metier
     {
         $domaine = $this->getDomaineService()->getDomaineByLibelle($domaineLibelle);
         if ($domaine === null) { $domaine = $this->getDomaineService()->createWith($domaineLibelle); }
@@ -340,7 +340,7 @@ EOS;
         // metier
         $metier = new Metier();
         $metier->setLibelle($libelle);
-        $this->create($metier);
+        if ($persist) $this->create($metier);
 
         //reference
 
@@ -348,13 +348,13 @@ EOS;
         $reference->setCode($metierCode);
         $reference->setReferentiel($referentiel);
         $reference->setMetier($metier);
-        $this->getReferenceService()->create($reference);
+        if ($persist)  $this->getReferenceService()->create($reference);
 
         // domaine et autre
         $metier->addDomaine($domaine);
         $domaine->addFamille($famille);
-        $this->getDomaineService()->update($domaine);
-        $this->update($metier);
+        if ($persist)  $this->getDomaineService()->update($domaine);
+        if ($persist)  $this->update($metier);
 
         return $metier;
     }

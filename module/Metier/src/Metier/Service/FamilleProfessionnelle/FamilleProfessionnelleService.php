@@ -140,11 +140,11 @@ class FamilleProfessionnelleService {
         return $result;
     }
 
-    public function createWith(string $familleLibelle): ?FamilleProfessionnelle
+    public function createWith(string $familleLibelle, bool $persist = true): ?FamilleProfessionnelle
     {
         $famille = new FamilleProfessionnelle();
         $famille->setLibelle($familleLibelle);
-        $this->create($famille);
+        if ($persist)  $this->create($famille);
         return $famille;
     }
 }

@@ -34,7 +34,7 @@ class RepertoireService {
             $jsonItem = [];
             foreach ($header as $key => $value) {
                 if (strstr($item[$key],PHP_EOL)) {
-                    $jsonItem[$value] = explode("\n",$item[$key]);
+                    $jsonItem[$value] = explode(PHP_EOL,$item[$key]);
                 } else {
                     $jsonItem[$value] = $item[$key];
                 }

@@ -138,11 +138,11 @@ class DomaineService {
         return $result;
     }
 
-    public function createWith(string $domaineLibelle): ?Domaine
+    public function createWith(string $domaineLibelle, bool $persist = true): ?Domaine
     {
         $domaine = new Domaine();
         $domaine->setLibelle($domaineLibelle);
-        $this->create($domaine);
+        if ($persist) $this->create($domaine);
         return $domaine;
     }
 

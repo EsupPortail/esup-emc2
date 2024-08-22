@@ -243,7 +243,7 @@ class CompetenceService {
     }
     /** FACADE ****************************************************************************************************/
 
-    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id) : Competence
+    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id, bool $persist = true) : Competence
     {
         if ($id === -1) {
             $id = $this->getCompetenceMaxIdByRefentiel($referentiel) + 1;
@@ -256,7 +256,7 @@ class CompetenceService {
         $competence->setTheme($theme);
         $competence->setReferentiel($referentiel);
         $competence->setIdSource($id);
-        $this->create($competence);
+        if ($persist) $this->create($competence);
         return $competence;
     }
 
