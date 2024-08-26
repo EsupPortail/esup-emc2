@@ -544,6 +544,9 @@ class InscriptionController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                $plafond = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::INSCRIPTION_PLAFOND_ANNUEL);
+                $volumeAnnuel = $this->getInscriptionService()->getVolumeAnnuelByAgent($agent, $session->getDebut(true)->format("Y")) + $session->getDuree(true);
+
                 $justification = (isset($data['justification']) && trim($data['justification']) !== '') ? trim($data['justification']) : null;
                 if ($justification === null) {
                     $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec de l'inscription  </strong></span> <br/> Veuillez motiver votre demande d'inscription!");
@@ -558,29 +561,38 @@ class InscriptionController extends AbstractActionController
                     $a=1;
                     //check volume
                     if (!empty($probleme)) {
-                        $seances = [] ; foreach ($session->getSeances() as $seance) $seances[$seance->getId()] = $seance;
+                        $seances = [];
+                        foreach ($session->getSeances() as $seance) $seances[$seance->getId()] = $seance;
                         $message = "Vous êtes déjà inscrit·e à des formations pour certaine·s séance·s de cette formation : ";
                         /** @var Seance $item */
                         $message .= "<ul>";
                         foreach ($probleme as $seanceCibleId => $seanceItem) {
                             foreach ($seanceItem as $item) {
                                 $message .= "<li>";
-                                $message .= "vous n'êtes pas disponible pour la séance du ".$seances[$seanceCibleId]->getDateDebut()->format("d/m/Y") . " de " .$seances[$seanceCibleId]->getDateDebut()->format("H:i") . " au ".$seances[$seanceCibleId]->getDateFin()->format("H:i") ." ";
-                                $message .= " car vous êtes inscrit·e à la session ".$item->getInstance()->getInstanceLibelle() . " #" . $item->getInstance()->getId() ;
-                                $message .= " (séance du ".$item->getDateDebut()->format("d/m/Y") . " de " .$item->getDateDebut()->format("H:i") . " au ".$item->getDateFin()->format("H:i").")";
+                                $message .= "vous n'êtes pas disponible pour la séance du " . $seances[$seanceCibleId]->getDateDebut()->format("d/m/Y") . " de " . $seances[$seanceCibleId]->getDateDebut()->format("H:i") . " au " . $seances[$seanceCibleId]->getDateFin()->format("H:i") . " ";
+                                $message .= " car vous êtes inscrit·e à la session " . $item->getInstance()->getInstanceLibelle() . " #" . $item->getInstance()->getId();
+                                $message .= " (séance du " . $item->getDateDebut()->format("d/m/Y") . " de " . $item->getDateDebut()->format("H:i") . " au " . $item->getDateFin()->format("H:i") . ")";
                                 $message .= "</li>";
                             }
                         }
                         $message .= "</ul>";
 //                        $this->flashMessenger()->addErrorMessage("<span class=''>".$message."</span>");
                         $vm = new ViewModel([
-                            'title' => "Inscription à la session ".$session->getInstanceLibelle(). " du ".$session->getPeriode(),
+                            'title' => "Inscription à la session " . $session->getInstanceLibelle() . " du " . $session->getPeriode(),
                             'ok' => false,
                             'message' => $message,
                         ]);
                         $vm->setTemplate('formation/inscription/resultat');
                         return $vm;
-
+                    } elseif ($plafond !== null AND $plafond !== 0 AND ($volumeAnnuel) >= $plafond) {
+                        $message = "Cette inscription vous ferait dépasser le plafond horaire annuel de formation (plafond de ".$plafond." heure·s pour un volume suivi de" . $volumeAnnuel . " heure·s.)";
+                        $vm = new ViewModel([
+                            'title' => "Inscription à la session " . $session->getInstanceLibelle() . " du " . $session->getPeriode(),
+                            'ok' => false,
+                            'message' => $message,
+                        ]);
+                        $vm->setTemplate('formation/inscription/resultat');
+                        return $vm;
                     } else {
                         $inscription->setJustificationAgent($justification);
                         $inscription->setSource(HasSourceInterface::SOURCE_EMC2);

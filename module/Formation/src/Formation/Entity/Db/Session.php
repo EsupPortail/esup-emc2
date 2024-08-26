@@ -743,7 +743,7 @@ class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsI
     }
 
     /** @noinspection PhpUnused */
-    public function getDuree(): string
+    public function getDuree(bool $asNumber = false): string|float
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
         /** @var Seance[] $journees */
@@ -774,10 +774,15 @@ class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsI
         }
 
         $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));
-        $heures = ($result->d * 24 + $result->h);
-        $minutes = ($result->i);
-        $text = $heures . " heures" . (($minutes !== 0) ? (" " . $minutes . " minutes") : "");
-        return $text;
+        if ($asNumber) {
+            $heures = ($result->d * 24 + $result->h) + ($result->i) / 60;
+            return $heures;
+        } else {
+            $heures = ($result->d * 24 + $result->h);
+            $minutes = ($result->i);
+            $text = $heures . " heures" . (($minutes !== 0) ? (" " . $minutes . " minutes") : "");
+            return $text;
+        }
     }
 
     /** @noinspection PhpUnused */
@@ -789,6 +794,17 @@ class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsI
                 return $a->estNonHistorise() and $a->getListe() === $liste;
             });
         return count($inscriptions);
+    }
+
+    public function isAnnee(string $annee): bool
+    {
+        $debut = DateTime::createFromFormat("d/m/Y H:i", "01/01/".$annee." 08:00");
+        $fin = DateTime::createFromFormat("d/m/Y H:i", "31/12/".$annee." 18:00");
+
+        foreach ($this->getSeances() as $seance) {
+            if ($seance->getDateDebut() >= $debut AND $seance->getDateFin() <= $fin)  return true;
+        }
+        return false;
     }
 
 

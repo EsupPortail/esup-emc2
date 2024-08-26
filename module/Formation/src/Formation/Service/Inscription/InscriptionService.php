@@ -327,6 +327,19 @@ class InscriptionService
         return $probleme;
     }
 
+    public function getVolumeAnnuelByAgent(?Agent $agent, string $annee): float
+    {
+        $inscriptions = $this->getInscriptionsByAgent($agent);
+
+        $duree = 0;
+        foreach ($inscriptions as $inscription) {
+            if ($inscription->getSession()->isAnnee($annee)) {
+                $duree += $inscription->getSession()->getDuree(true);
+            }
+        }
+        return $duree;
+    }
+
     /** FACADE ********************************************************************************************************/
 
 
