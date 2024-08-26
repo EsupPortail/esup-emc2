@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Session;
 use Formation\Entity\Db\StagiaireExterne;
 use Formation\Provider\Etat\InscriptionEtats;
@@ -311,6 +312,19 @@ class InscriptionService
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function checkDisponibiliteAgent(?Agent $agent, Seance $seance) : array
+    {
+        $probleme = [];
+        $inscriptions = $this->getInscriptionsByAgent($agent);
+        foreach ($inscriptions as $inscription) {
+            $seances = $inscription->getSession()->getSeances();
+            foreach ($seances as $sessionSeance) {
+                if (Seance::hasIntersectionNonNulle($seance, $sessionSeance)) $probleme[$seance->getId()] = $sessionSeance;
+            }
+        }
+        return $probleme;
     }
 
     /** FACADE ********************************************************************************************************/

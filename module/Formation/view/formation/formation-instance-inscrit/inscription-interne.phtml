@@ -107,5 +107,13 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
             event.div.modal('hide');
             window.location.reload();
         });
+
+        //TODO la c'est toutes les modals
+        //TODO trouver une astuce pour ne considérer que les modales de demande d'examen
+        $(function () {
+            $(document).on('hide.bs.modal', '.modal', function () {
+                window.parent.location.reload();
+            });
+        });
     });
 </script>

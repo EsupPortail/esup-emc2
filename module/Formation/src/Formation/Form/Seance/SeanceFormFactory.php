@@ -2,7 +2,7 @@
 
 namespace Formation\Form\Seance;
 
-use Formation\Controller\LieuController;
+use Formation\Service\Lieu\LieuService;
 use Interop\Container\ContainerInterface;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
@@ -21,11 +21,14 @@ class SeanceFormFactory
     public function __invoke(ContainerInterface $container) : SeanceForm
     {
         /**
+         * @var LieuService $lieuService
          * @var SeanceHydrator $hydrator
          */
+        $lieuService = $container->get(LieuService::class);
         $hydrator = $container->get('HydratorManager')->get(SeanceHydrator::class);
 
         $form = new SeanceForm();
+        $form->setLieuService($lieuService);
         $form->setHydrator($hydrator);
 
         /** @var HelperPluginManager $pluginManager */

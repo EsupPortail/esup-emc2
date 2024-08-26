@@ -13,6 +13,7 @@ use Fichier\Service\Nature\NatureServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\InscriptionFrais;
+use Formation\Entity\Db\Seance;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Form\InscriptionFrais\InscriptionFraisFormAwareTrait;
 use Formation\Form\Justification\JustificationFormAwareTrait;
@@ -545,15 +546,50 @@ class InscriptionController extends AbstractActionController
             if ($form->isValid()) {
                 $justification = (isset($data['justification']) && trim($data['justification']) !== '') ? trim($data['justification']) : null;
                 if ($justification === null) {
-                    $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec de l'inscription  </strong></span> <br/> Veuillez motivier votre demande d'inscription!");
+                    $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec de l'inscription  </strong></span> <br/> Veuillez motiver votre demande d'inscription!");
                 } else {
-                    $inscription->setJustificationAgent($justification);
-                    $inscription->setSource(HasSourceInterface::SOURCE_EMC2);
-                    $this->getInscriptionService()->create($inscription);
-                    $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_DEMANDE);
-                    $this->getInscriptionService()->update($inscription);
-                    $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
-                    $this->getNotificationService()->triggerInscriptionAgent($agent, $session);
+
+                    //check already inscrit
+                    $probleme = [];
+                    foreach ($session->getSeances() as $seance) {
+                        $blocage = $this->getInscriptionService()->checkDisponibiliteAgent($agent, $seance);
+                        if (!empty($blocage)) $probleme[$seance->getId()] = $blocage;
+                    }
+                    $a=1;
+                    //check volume
+                    if (!empty($probleme)) {
+                        $seances = [] ; foreach ($session->getSeances() as $seance) $seances[$seance->getId()] = $seance;
+                        $message = "Vous êtes déjà inscrit·e à des formations pour certaine·s séance·s de cette formation : ";
+                        /** @var Seance $item */
+                        $message .= "<ul>";
+                        foreach ($probleme as $seanceCibleId => $seanceItem) {
+                            foreach ($seanceItem as $item) {
+                                $message .= "<li>";
+                                $message .= "vous n'êtes pas disponible pour la séance du ".$seances[$seanceCibleId]->getDateDebut()->format("d/m/Y") . " de " .$seances[$seanceCibleId]->getDateDebut()->format("H:i") . " au ".$seances[$seanceCibleId]->getDateFin()->format("H:i") ." ";
+                                $message .= " car vous êtes inscrit·e à la session ".$item->getInstance()->getInstanceLibelle() . " #" . $item->getInstance()->getId() ;
+                                $message .= " (séance du ".$item->getDateDebut()->format("d/m/Y") . " de " .$item->getDateDebut()->format("H:i") . " au ".$item->getDateFin()->format("H:i").")";
+                                $message .= "</li>";
+                            }
+                        }
+                        $message .= "</ul>";
+//                        $this->flashMessenger()->addErrorMessage("<span class=''>".$message."</span>");
+                        $vm = new ViewModel([
+                            'title' => "Inscription à la session ".$session->getInstanceLibelle(). " du ".$session->getPeriode(),
+                            'ok' => false,
+                            'message' => $message,
+                        ]);
+                        $vm->setTemplate('formation/inscription/resultat');
+                        return $vm;
+
+                    } else {
+                        $inscription->setJustificationAgent($justification);
+                        $inscription->setSource(HasSourceInterface::SOURCE_EMC2);
+                        $this->getInscriptionService()->create($inscription);
+                        $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_DEMANDE);
+                        $this->getInscriptionService()->update($inscription);
+                        $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
+                        $this->getNotificationService()->triggerInscriptionAgent($agent, $session);
+                    }
                 }
             }
         }

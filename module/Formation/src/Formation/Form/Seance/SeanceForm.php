@@ -2,7 +2,9 @@
 
 namespace Formation\Form\Seance;
 
+use DateTime;
 use Formation\Entity\Db\Seance;
+use Formation\Service\Lieu\LieuServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
@@ -16,7 +18,10 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
 class SeanceForm extends Form
 {
+    use LieuServiceAwareTrait;
 
+
+    private array $seances = [];
     private ?string $url;
 
     public function getUrl(): ?string
@@ -193,7 +198,32 @@ class SeanceForm extends Form
             'volume' => ['required' => false,],
             'volume_debut' => ['required' => false,],
             'volume_fin' => ['required' => false,],
-            'lieu-sas' => ['required' => false,],
+            'lieu-sas' => ['required' => true,
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "Le lieu est déjà utilisée à cette date",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                if ($context['type'] === Seance::TYPE_VOLUME) return true;
+                                $lieu = $this->getLieuService()->getLieu($context['lieu-sas']['id']);
+                                $dateDebut =  DateTime::createFromFormat('d/m/Y H:i', $context['jour'].' '.$context['debut']);
+                                $dateFin =  DateTime::createFromFormat('d/m/Y H:i', $context['jour'].' '.$context['fin']);
+                                if ($lieu !== null) {
+                                    $seances = $lieu->isUtilisee($dateDebut, $dateFin);
+                                }
+                                return (($lieu !== null) AND empty($seances));
+                            },
+                        ],
+                    ]
+//                    [
+//                        'name' => LieuUtiliseValidator::class,
+//                        'options' => [],
+//                    ]
+                ],
+            ],
             'lien' => ['required' => false,],
         ]));
     }

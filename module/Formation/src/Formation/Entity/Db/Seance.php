@@ -132,10 +132,24 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
         if ($this->getDebut() === null) return null;
         switch ($this->type) {
             case Seance::TYPE_SEANCE :
-                $asString = $this->getJour()->format('d/m/y') . " " . $this->getDebut();
+                $asString = $this->getJour()->format('d/m/Y') . " " . $this->getDebut();
                 return DateTime::createFromFormat('d/m/Y H:i', $asString);
             case Seance::TYPE_VOLUME :
-                $asString = $this->getVolumeDebut()->format('d/m/y') . " 08:00";
+                $asString = $this->getVolumeDebut()->format('d/m/Y') . " 08:00";
+                return DateTime::createFromFormat('d/m/Y H:i', $asString);
+        }
+        throw new RuntimeException("Le type de seance est inconnu");
+    }
+
+    public function getDateFin(): null|DateTime
+    {
+        if ($this->getDebut() === null) return null;
+        switch ($this->type) {
+            case Seance::TYPE_SEANCE :
+                $asString = $this->getJour()->format('d/m/Y') . " " . $this->getFin();
+                return DateTime::createFromFormat('d/m/Y H:i', $asString);
+            case Seance::TYPE_VOLUME :
+                $asString = $this->getVolumeFin()->format('d/m/Y') . " 08:00";
                 return DateTime::createFromFormat('d/m/Y H:i', $asString);
         }
         throw new RuntimeException("Le type de seance est inconnu");
@@ -185,4 +199,14 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
         $this->remarque = $remarque;
     }
 
+    public static function hasIntersectionNonNulle(Seance $seance, Seance $sessionSeance): bool
+    {
+        $sDebut = $seance->getDateDebut(); $sFin = $seance->getDateFin();
+        $ssDebut = $sessionSeance->getDateDebut(); $ssFin = $sessionSeance->getDateFin();
+        if ($sDebut <= $ssDebut AND $sFin >= $ssDebut) return true;
+        if ($sDebut <= $ssFin AND $sFin >= $ssFin) return true;
+        if ($sDebut >= $ssDebut AND $sFin <= $ssFin) return true;
+        if ($sDebut <= $ssDebut AND $sFin >= $ssFin) return true;
+        return false;
+    }
 }

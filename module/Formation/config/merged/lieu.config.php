@@ -8,6 +8,8 @@ use Formation\Form\Lieu\LieuForm;
 use Formation\Form\Lieu\LieuFormFactory;
 use Formation\Form\Lieu\LieuHydrator;
 use Formation\Form\Lieu\LieuHydratorFactory;
+use Formation\Form\Validator\LieuUtilise\LieuUtiliseValidator;
+use Formation\Form\Validator\LieuUtilise\LieuUtiliseValidatorFactory;
 use Formation\Provider\Privilege\FormationlieuPrivileges;
 use Formation\Service\Lieu\LieuService;
 use Formation\Service\Lieu\LieuServiceFactory;
@@ -216,6 +218,11 @@ return [
     'hydrators' => [
         'factories' => [
             LieuHydrator::class => LieuHydratorFactory::class,
+        ],
+    ],
+    'validators' => [
+        'factories' => [
+            LieuUtiliseValidator::class => LieuUtiliseValidatorFactory::class,
         ],
     ],
 

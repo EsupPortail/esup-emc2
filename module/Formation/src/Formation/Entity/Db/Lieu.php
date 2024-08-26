@@ -2,6 +2,7 @@
 
 namespace Formation\Entity\Db;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -78,5 +79,20 @@ class Lieu implements HistoriqueAwareInterface {
     }
 
 
+    public function isUtilisee(DateTime $debut, DateTime $fin): array
+    {
+        $used = [];
+        /** @var Seance $seance */
+        foreach ($this->seances as $seance) {
+            $boolDebut = ($debut <= $seance->getDateDebut() && $fin >= $seance->getDateDebut());
+            $boolFin = ($debut <= $seance->getDateFin() && $fin >= $seance->getDateFin());
+            $included = ($debut >= $seance->getDateDebut() && $fin <= $seance->getDateFin());
+            if ($seance->estNonHistorise()
+                AND ($boolDebut OR $boolFin OR $included)
+
+            ) $used[] = $seance;
+        }
+        return $used;
+    }
 
 }
