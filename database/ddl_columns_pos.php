@@ -250,6 +250,8 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'date_debut',
+        'date_fin',
     ],
     'agent_missionspecifique'                           => [
         'id',

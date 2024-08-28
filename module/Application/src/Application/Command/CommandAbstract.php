@@ -12,15 +12,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class CommandAbstract extends Command
 {
+    private ServiceManager $servicemanager;
 
-    /** @var ServiceManager ServiceManager */
-    private $servicemanager;
+    protected function getServicemanager(): ServiceManager
+    {
+        return $this->servicemanager;
+    }
 
-
-
-    /**
-     * OscarCommandAbstract constructor.
-     */
     public function __construct(ServiceManager $sm)
     {
         $this->servicemanager = $sm;
@@ -29,17 +27,7 @@ abstract class CommandAbstract extends Command
 
 
 
-    /**
-     * @return ServiceManager
-     */
-    protected function getServicemanager()
-    {
-        return $this->servicemanager;
-    }
-
-
-
-    public function addOutputStyle(OutputInterface $output)
+    public function addOutputStyle(OutputInterface $output): void
     {
         $outputStyle = new OutputFormatterStyle('cyan', 'default', ['bold']);
         $output->getFormatter()->setStyle('id', $outputStyle);

@@ -2,6 +2,9 @@
 
 namespace Application\Command;
 
+use Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unicaen\BddAdmin\Bdd;
@@ -12,14 +15,16 @@ class UpdateDdlCommand extends CommandAbstract
 
 
 
-    protected function configure()
+    protected function configure(): void
     {
-        $this
-            ->setDescription("Mise à jour de la ddl selon la base de données");
+        $this->setDescription("Mise à jour de la ddl selon la base de données");
     }
 
 
-
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = $this->getIO($input, $output);
@@ -36,7 +41,7 @@ class UpdateDdlCommand extends CommandAbstract
             $ddl = $bdd->getDdl();
             try {
                 $ddl->saveToDir();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $io->error($e->getMessage());
             }
 
