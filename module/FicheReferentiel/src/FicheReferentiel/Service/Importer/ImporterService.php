@@ -24,9 +24,11 @@ class ImporterService
     use MetierServiceAwareTrait;
     use ReferentielServiceAwareTrait;
 
+    // COMPETENCES -----------------------------------------------------------------------------------------------------
+
     public function createCompetencesDgafp(array $listing, bool $persist): array
     {
-        $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('DGAFP'); //todo param ?
+        $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('DGAFP');
         if ($referentiel === null) throw new RuntimeException("Aucun référentiel de compétence pour le direction générale de l'aldministation et de la fonction public [code:DGFAP]");
         $allCompetences = $referentiel->getCompetences();
         $maximum = 0; foreach ($allCompetences as $item) { $maximum = max($maximum, $item->getId()); }
@@ -56,10 +58,35 @@ class ImporterService
         ];
     }
 
-    public function createMetierDgafp(array $listing, bool $persist): array
+    // les compétences ne sont pas sauvegradées car devraient être importées au préalable
+    public function createCompetencesReferens(array $competencesIds): array
     {
-        $referentiel = $this->getReferentielService()->getReferentielByCode('DGAFP'); //todo param ?
-        if ($referentiel === null) throw new RuntimeException("Aucun référentiel de métier pour le direction générale de l'aldministation et de la fonction public [code:DGFAP]");
+        $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('REFERENS');
+        if ($referentiel === null) throw new RuntimeException("Aucun référentiel de compétence [code:REFERENS]");
+
+        $dictionnaires = [];
+        $manquantes = [];
+
+        foreach ($competencesIds as $competenceId) {
+            $competence = $this->getCompetenceService()->getCompetenceByRefentiel($referentiel, $competenceId);
+            if ($competence === null) {
+                $manquantes[$competenceId] = $competenceId;
+            }
+            $dictionnaires[$competenceId] = $competence;
+        }
+
+        return [
+            'dictionnaires' => $dictionnaires,
+            'manquantes' => $manquantes,
+        ];
+    }
+
+    // METIERS ---------------------------------------------------------------------------------------------------------
+
+    public function createMetier(array $listing, string $referentielCode, bool $persist): array
+    {
+        $referentiel = $this->getReferentielService()->getReferentielByCode($referentielCode); //todo param ?
+        if ($referentiel === null) throw new RuntimeException("Aucun référentiel de métier n'a été trouvé avec le code [".$referentielCode."]");
 
         $dictionnaires = [];
         $nouveaux = [];
@@ -71,7 +98,7 @@ class ImporterService
         }
 
         foreach ($tlisting as $metierData) {
-            $metier = $this->getMetierService()->getMetierByReference('DGAFP', $metierData["code"]);
+            $metier = $this->getMetierService()->getMetierByReference($referentielCode, $metierData["code"]);
             if ($metier === null) {
                 $metier = $this->getMetierService()->createWith($metierData["libelle"], "DGAFP", $metierData["code"], $metierData["domaine"], $metierData["famille"], $persist);
                 $nouveaux[$metierData["code"]] = $metier;
@@ -84,6 +111,8 @@ class ImporterService
             'nouveaux' => $nouveaux,
         ];
     }
+
+    // FICHE -----------------------------------------------------------------------------------------------------------
 
     public function createFicheReferentielDgafp(array $listing, array $competenceDictionnaire, array $metierDictionnaire, bool $persist): array
     {
@@ -135,4 +164,52 @@ class ImporterService
             'nouvelles' => $nouvelles,
         ];
     }
+
+
+    public function createFicheReferentielReferens(array $listing, array $competenceDictionnaire, array $metierDictionnaire, bool $persist): array
+    {
+        $referentiel = $this->getReferentielService()->getReferentielByCode('REFERENS'); //todo param ?
+        if ($referentiel === null) throw new RuntimeException("Aucun référentiel de métier pour le code [REFERENS]");
+
+        $dictionnaires = [];
+        $nouvelles = [];
+
+        foreach ($listing as $item) {
+            //fiche
+            $ficheReferentiel = new FicheReferentiel();
+            $ficheReferentiel->setReferentiel($referentiel);
+            $ficheReferentiel->setMetier($metierDictionnaire[$item['code']]);
+            //info
+//            $ficheReferentiel->setDefinitionSynthetique(is_array($item['definition'])?implode("\n",$item['definition']): $item['definition']);
+//            $ficheReferentiel->setCompetenceManageriale(is_array($item['managment'])?implode("\n", $item['managment']): $item['managment']);
+            $ficheReferentiel->setActivite(is_array($item['activite'])?implode("\n",$item['activite']): $item['activite']);
+            $ficheReferentiel->setConditionsParticulieres(is_array($item['conditions'])?implode("\n",$item['conditions']):$item['conditions']);
+            $ficheReferentiel->setTendanceEvolution(is_array($item['tendance'])?implode("\n",$item['tendance']):$item['tendance']);
+            $ficheReferentiel->setImpact(is_array($item['impact'])?implode("\n",$item['impact']):$item['impact']);
+            $ficheReferentiel->setCorrespondanceStatutaire($item['correspondance']);
+//            $ficheReferentiel->setFpt($item['fpt']);
+//            $ficheReferentiel->setFph($item['fph']);
+//            $ficheReferentiel->setFpe($item['fpe']);
+            if ($persist) $this->getFicheReferentielService()->create($ficheReferentiel);
+            //competence
+            foreach ($item["competences"] as $competenceId) {
+                $competence = $competenceDictionnaire[(int) $competenceId];
+                if ($competence !== null) {
+                    $element = new CompetenceElement();
+                    $element->setCompetence($competence);
+                    $element->setCommentaire("Importation FicheReferentiel DGAFP[" . $item['code'] . "] du " . ((new DateTime())->format('d/m/Y H:i:s')));
+                    if ($persist) $this->getCompetenceElementService()->create($element);
+                    $ficheReferentiel->addCompetenceElement($element);
+                }
+            }
+            if ($persist) $this->getFicheReferentielService()->update($ficheReferentiel);
+            $dictionnaires[$item['code']] = $ficheReferentiel;
+        }
+        return [
+            'dictionnaires' => $dictionnaires,
+            'nouvelles' => $nouvelles,
+        ];
+    }
+
+
 }

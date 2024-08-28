@@ -4,6 +4,10 @@ namespace FicheReferentiel;
 
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use FicheReferentiel\Form\Importation\ImportationForm;
+use FicheReferentiel\Form\Importation\ImportationFormFactory;
+use FicheReferentiel\Form\Importation\ImportationHydrator;
+use FicheReferentiel\Form\Importation\ImportationHydratorFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -47,10 +51,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            ImportationForm::class => ImportationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            ImportationHydrator::class => ImportationHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

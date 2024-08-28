@@ -558,7 +558,6 @@ class InscriptionController extends AbstractActionController
                         $blocage = $this->getInscriptionService()->checkDisponibiliteAgent($agent, $seance);
                         if (!empty($blocage)) $probleme[$seance->getId()] = $blocage;
                     }
-                    $a=1;
                     //check volume
                     if (!empty($probleme)) {
                         $seances = [];

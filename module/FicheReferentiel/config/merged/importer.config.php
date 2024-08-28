@@ -18,6 +18,7 @@ return [
                     'controller' => ImporterController::class,
                     'action' => [
                         'importer-dgafp-csv',
+                        'importer-referens3-csv',
                     ],
                     'roles' => [],
                 ],
@@ -37,6 +38,17 @@ return [
                                 /** @see ImporterController::importerDgafpCsvAction() */
                                 'controller' => ImporterController::class,
                                 'action'     => 'importer-dgafp-csv',
+                            ],
+                        ],
+                    ],
+                    'importer-referens3-csv' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/importer-referens3-csv',
+                            'defaults' => [
+                                /** @see ImporterController::importerReferens3CsvAction() */
+                                'controller' => ImporterController::class,
+                                'action'     => 'importer-referens3-csv',
                             ],
                         ],
                     ],

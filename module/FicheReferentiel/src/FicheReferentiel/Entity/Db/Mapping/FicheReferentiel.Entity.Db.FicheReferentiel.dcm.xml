@@ -20,6 +20,7 @@
         <field name="tendanceEvolution"         type="text"                 column="tendance_evolution"         nullable="true"/>
         <field name="impact"                    type="text"                 column="impact"                     nullable="true"/>
         <field name="codeCsp"                   type="string" length="256"  column="code_csp"                   nullable="true"/>
+        <field name="correspondanceStatutaire"  type="text"                 column="correspondance_statutaire"  nullable="true"/>
         <field name="fpt"                       type="boolean"              column="fpt"                        nullable="false"/>
         <field name="fph"                       type="boolean"              column="fph"                        nullable="false"/>
         <field name="fpe"                       type="boolean"              column="fpe"                        nullable="false"/>

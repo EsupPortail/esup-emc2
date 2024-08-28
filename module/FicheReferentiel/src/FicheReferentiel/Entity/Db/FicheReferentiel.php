@@ -27,6 +27,7 @@ class FicheReferentiel implements HistoriqueAwareInterface, HasCompetenceCollect
     private ?string $tendanceEvolution = null;
     private ?string $impact = null;
     private ?string $codeCsp = null;
+    private ?string $correspondanceStatutaire = null;
     private bool $fpt = false;
     private bool $fph = false;
     private bool $fpe = false;
@@ -167,5 +168,14 @@ class FicheReferentiel implements HistoriqueAwareInterface, HasCompetenceCollect
         $this->codeCsp = $codeCsp;
     }
 
+    public function getCorrespondanceStatutaire(): ?string
+    {
+        return $this->correspondanceStatutaire;
+    }
+
+    public function setCorrespondanceStatutaire(?string $correspondanceStatutaire): void
+    {
+        $this->correspondanceStatutaire = $correspondanceStatutaire;
+    }
 
 }

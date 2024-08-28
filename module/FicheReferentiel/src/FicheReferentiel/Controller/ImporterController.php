@@ -3,7 +3,7 @@
 namespace FicheReferentiel\Controller;
 
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
+use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use FicheReferentiel\Service\Importer\ImporterServiceAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -14,12 +14,12 @@ class ImporterController extends AbstractActionController
     use CompetenceTypeServiceAwareTrait;
     use FichierServiceAwareTrait;
     use ImporterServiceAwareTrait;
-    use FicheMetierImportationFormAwareTrait;
+    use ImportationFormAwareTrait;
 
     /** L'importation du répertoire de métier de la Direction Générale de l'Administration et de la Fonction Publique */
     public function importerDgafpCsvAction(): ViewModel
     {
-        $form = $this->getFicheMetierImportationForm();
+        $form = $this->getImportationForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-referentiel/importer-dgafp-csv', ['mode' => 'preview', 'path' => null], [], true));
 
         $request = $this->getRequest();
@@ -63,7 +63,7 @@ class ImporterController extends AbstractActionController
                     'libelle' => $fiche['Intitulé'],
                 ];
             }
-            $resultMetiers = $this->getImporterService()->createMetierDgafp($listing, ($mode === 'import'));
+            $resultMetiers = $this->getImporterService()->createMetier($listing, 'DGAFP', ($mode === 'import'));
 
             /** Génération des fiches *********************************************************************************/
 
@@ -116,6 +116,87 @@ class ImporterController extends AbstractActionController
 
         $vm = new ViewModel([
             'title' => "Importation de fiches référentiels provenant de la DGAFP",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function importerReferens3CsvAction(): ViewModel
+    {
+        $form = $this->getImportationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-referentiel/importer-referens3-csv', ['mode' => 'preview', 'path' => null], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $file = $request->getFiles();
+
+            $fichier_path = $file['fichier']['tmp_name'];
+            $mode = $data['mode'];
+            $json = $this->getFichierService()->readCSV($fichier_path); //explose les multi ligne : est-ce une donne idée ???
+
+            /** Parcours de compétences *******************************************************************************/
+            $listing = [];
+            foreach ($json as $fiche) {
+                $lists = explode("|",$fiche['COMPETENCES_ID']);
+                foreach ($lists as $item) {
+                    $listing[$item] = ((int) $item);
+                }
+            }
+            $resultCompetences = $this->getImporterService()->createCompetencesReferens($listing, ($mode === 'import'));
+
+
+            /** Parcours des métiers **********************************************************************************/
+            $listing = [];
+            foreach ($json as $fiche) {
+                $listing[] = [
+                    'code' => $fiche['Code emploi type'],
+                    'referentiel' => 'REFERENS',
+                    'domaine' => $fiche['Famille d’activité professionnelle'],
+                    'categorie' => $fiche['REFERENS_CATEGORIE_EMPLOI'],
+                    'famille' => $fiche['Famille d’activité professionnelle'],
+                    'libelle' => $fiche['Intitulé de l’emploi type'],
+                    'libelles-alternatifs' => $fiche['Métiers'], //todo ajouter cela au modèle
+                ];
+            }
+            $resultMetiers = $this->getImporterService()->createMetier($listing, 'REFERENS', ($mode === 'import'));
+
+            /** Parcours de fiche *************************************************************************************/
+            $listing = [];
+            foreach ($json as $fiche) {
+                $list = [
+                    'code' => $fiche['Code emploi type'],
+                    'definition' => $fiche['Mission'],
+                    'managment' => null,
+                    'activite' => $fiche["Activités principales"],
+                    'conditions' => $fiche["Conditions particulières d’exercices"],
+                    'tendance' => $fiche["Facteurs d’évolution à moyen terme"],
+                    'impact' => $fiche["Impacts sur l’emploi-type"],
+                    'correspondance' => $fiche["Correspondance statutaire"],
+                    'codeCsp' => null,
+                ];
+
+                //ajout des competences
+                $list["competences"] = explode("|",$fiche['COMPETENCES_ID']);
+                $listing[] = $list;
+            }
+            $resultFiches = $this->getImporterService()->createFicheReferentielReferens($listing, $resultCompetences['dictionnaires'], $resultMetiers['dictionnaires'], ($mode === 'import'));
+
+
+
+            return new ViewModel([
+                'title' => "Importation de fiches référentiels provenant de REFERENS3",
+                'form' => $form,
+                'mode' => $mode,
+                'resultCompetences' => $resultCompetences,
+                'resultMetiers' => $resultMetiers,
+                'resultFiches' => $resultFiches,
+            ]);
+
+        }
+
+        $vm = new ViewModel([
+            'title' => "Importation de fiches référentiels provenant de REFERENS3",
             'form' => $form,
         ]);
         return $vm;

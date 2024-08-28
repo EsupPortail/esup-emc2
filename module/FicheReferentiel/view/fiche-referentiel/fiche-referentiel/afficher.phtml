@@ -195,6 +195,14 @@ $this->headTitle("FicheReferentiel #".$ficheReferentiel->getId());
             <?php echo $ficheReferentiel->getCodeCsp(); ?>
         <?php endif; ?>
     </dd>
+    <dt class="col-md-3"> Correspondance statutaires </dt>
+    <dd class="col-md-9">
+        <?php if ($ficheReferentiel->getCorrespondanceStatutaire() === null or $ficheReferentiel->getCorrespondanceStatutaire() === '') : ?>
+            <span class="text-warning">Champ non renseigné</span>
+        <?php else : ?>
+            <?php echo $ficheReferentiel->getCorrespondanceStatutaire(); ?>
+        <?php endif; ?>
+    </dd>
 </dl>
 
 <h2>Compétences liées</h2>
@@ -213,11 +221,11 @@ foreach ($ficheReferentiel->getCompetenceCollection() as $competence) {
                 $dictionnaires['Connaissances'][] = $competence;
                 break;
             case 'Savoir-faire' :
-            case 'Opérationnelle' :
+            case 'Compétences opérationnelles' :
                 $dictionnaires['Savoir-faire'][] = $competence;
                 break;
             case 'Savoir-être' :
-            case 'Comportementale' :
+            case 'Compétences comportementales' :
                 $dictionnaires['Savoir-être'][] = $competence;
                 break;
         }
@@ -225,13 +233,17 @@ foreach ($ficheReferentiel->getCompetenceCollection() as $competence) {
 ?>
 
 
+<div class="row">
 <?php foreach ($dictionnaires as $type => $competences): ?>
     <?php if (isset($competences) and !empty($competences)) : ?>
-    <?php echo $type; ?>
-    <ul>
-        <?php foreach ($competences as $competence): ?>
-            <li> <?php echo $competence->getLibelle(); ?> </li>
-        <?php endforeach; ?>
-    </ul>
+    <div class="col-md-4">
+        <?php echo $type; ?>
+        <ul>
+            <?php foreach ($competences as $competence): ?>
+                <li> <?php echo $competence->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
     <?php endif; ?>
 <?php endforeach; ?>
+</div>

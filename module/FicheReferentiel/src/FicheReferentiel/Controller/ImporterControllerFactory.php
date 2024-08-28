@@ -3,7 +3,7 @@
 namespace FicheReferentiel\Controller;
 
 use Element\Service\CompetenceType\CompetenceTypeService;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
+use FicheReferentiel\Form\Importation\ImportationForm;
 use FicheReferentiel\Service\Importer\ImporterService;
 use Fichier\Service\Fichier\FichierService;
 use Psr\Container\ContainerExceptionInterface;
@@ -28,15 +28,15 @@ class ImporterControllerFactory
         $importerService = $container->get(ImporterService::class);
 
         /**
-         * @var FicheMetierImportationForm $importationForm
+         * @var ImportationForm $importationForm
          */
-        $importationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
+        $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
 
         $controller = new ImporterController();
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setFichierService($fichierService);
         $controller->setImporterService($importerService);
-        $controller->setFicheMetierImportationForm($importationForm);
+        $controller->setImportationForm($importationForm);
         return $controller;
     }
 }
