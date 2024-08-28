@@ -13,6 +13,7 @@ use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
+use Application\Service\Bdd\BddFactory;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Application\Provider\Role\RoleProvider;
 use Application\Service\Evenement\SynchroOctopusService;
@@ -32,6 +33,7 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
+use Unicaen\BddAdmin\Bdd;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
@@ -295,6 +297,8 @@ return [
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,
             SynchroOctopusService::class => SynchroOctopusServiceFactory::class,
+
+            Bdd::class => BddFactory::class,
         ],
     ],
     'controllers' => [

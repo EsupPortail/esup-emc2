@@ -1,0 +1,76 @@
+<?php
+
+//@formatter:off
+
+return [
+    'schema'      => 'public',
+    'name'        => 'unicaen_aide_faq_question',
+    'temporary'   => FALSE,
+    'logging'     => FALSE,
+    'commentaire' => NULL,
+    'sequence'    => 'unicaen_aide_faq_question_id_seq',
+    'columns'     => [
+        'historisee' => [
+            'name'        => 'historisee',
+            'type'        => 'bool',
+            'bdd-type'    => 'boolean',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => 'false',
+            'position'    => 4,
+            'commentaire' => NULL,
+        ],
+        'id'         => [
+            'name'        => 'id',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => FALSE,
+            'default'     => 'nextval(\'unicaen_aide_faq_question_id_seq\'::regclass)',
+            'position'    => 1,
+            'commentaire' => NULL,
+        ],
+        'ordre'      => [
+            'name'        => 'ordre',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 5,
+            'commentaire' => NULL,
+        ],
+        'question'   => [
+            'name'        => 'question',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 4096,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => NULL,
+            'position'    => 2,
+            'commentaire' => NULL,
+        ],
+        'reponse'    => [
+            'name'        => 'reponse',
+            'type'        => 'clob',
+            'bdd-type'    => 'text',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => NULL,
+            'position'    => 3,
+            'commentaire' => NULL,
+        ],
+    ],
+];
+
+//@formatter:on

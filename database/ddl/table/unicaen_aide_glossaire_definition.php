@@ -1,0 +1,76 @@
+<?php
+
+//@formatter:off
+
+return [
+    'schema'      => 'public',
+    'name'        => 'unicaen_aide_glossaire_definition',
+    'temporary'   => FALSE,
+    'logging'     => FALSE,
+    'commentaire' => NULL,
+    'sequence'    => 'unicaen_aide_glossaire_definition_id_seq',
+    'columns'     => [
+        'alternatives' => [
+            'name'        => 'alternatives',
+            'type'        => 'clob',
+            'bdd-type'    => 'text',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 4,
+            'commentaire' => NULL,
+        ],
+        'definition'   => [
+            'name'        => 'definition',
+            'type'        => 'clob',
+            'bdd-type'    => 'text',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => NULL,
+            'position'    => 3,
+            'commentaire' => NULL,
+        ],
+        'historisee'   => [
+            'name'        => 'historisee',
+            'type'        => 'bool',
+            'bdd-type'    => 'boolean',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => 'false',
+            'position'    => 5,
+            'commentaire' => NULL,
+        ],
+        'id'           => [
+            'name'        => 'id',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => FALSE,
+            'default'     => 'nextval(\'unicaen_aide_glossaire_definition_id_seq\'::regclass)',
+            'position'    => 1,
+            'commentaire' => NULL,
+        ],
+        'terme'        => [
+            'name'        => 'terme',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 1024,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => NULL,
+            'position'    => 2,
+            'commentaire' => NULL,
+        ],
+    ],
+];
+
+//@formatter:on

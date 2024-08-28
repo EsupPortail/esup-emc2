@@ -40,6 +40,7 @@ $modules = [
     'UnicaenAide',
     'UnicaenEnquete',
     'UnicaenIndicateur',
+    'Unicaen\BddAdmin',
     'Unicaen\Console',
     'UnicaenSynchro',
     'UnicaenObservation',
@@ -65,7 +66,7 @@ $modules = [
 
 $moduleListenerOptions = [
     'config_glob_paths'    => [
-        'config/autoload/{,*.}{global,local}.php',
+        'config/autoload/{,*.}{local,global}.php',
     ],
     'module_paths' => [
         './module',
