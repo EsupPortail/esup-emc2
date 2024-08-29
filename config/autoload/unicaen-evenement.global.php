@@ -12,6 +12,7 @@ use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use Formation\Event\Convocation\ConvocationEvent;
 use Formation\Event\DemandeRetour\DemandeRetourEvent;
 use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
+use Formation\Event\NotificationNouvellesSessions\NotificationNouvellesSessionsEvent;
 use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Provider\Event\EvenementProvider as FormationEvenementProvider;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
@@ -34,6 +35,7 @@ return [
             FormationEvenementProvider::CONVOCATION => ConvocationEvent::class,
             FormationEvenementProvider::DEMANDE_RETOUR => DemandeRetourEvent::class,
             FormationEvenementProvider::SESSION_CLOTURE => SessionClotureEvent::class,
+            FormationEvenementProvider::NOTIFICATION_NOUVELLES_SESSIONS => NotificationNouvellesSessionsEvent::class,
 
             EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT_AUTORITE => RappelCampagneAvancementAutoriteService::class,
             EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT_SUPERIEUR => RappelCampagneAvancementSuperieurService::class,

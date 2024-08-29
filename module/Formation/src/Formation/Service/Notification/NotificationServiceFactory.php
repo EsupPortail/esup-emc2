@@ -5,6 +5,7 @@ namespace Formation\Service\Notification;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\Macro\MacroService;
+use Doctrine\ORM\EntityManager;
 use Formation\Service\Url\UrlService;
 use Psr\Container\Containerinterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -26,6 +27,7 @@ class NotificationServiceFactory {
     public function __invoke(ContainerInterface $container) : NotificationService
     {
         /**
+         * @var EntityManager $entityManager
          * @var AgentService $agentService
          * @var AgentSuperieurService $agentSuperieurService
          * @var MailService $mailService
@@ -36,6 +38,7 @@ class NotificationServiceFactory {
          * @var MacroService $macroService
          * @var UserService $userService
          */
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $mailService = $container->get(MailService::class);
@@ -47,6 +50,7 @@ class NotificationServiceFactory {
         $userService = $container->get(UserService::class);
 
         $service = new NotificationService();
+        $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
         $service->setAgentSuperieurService($agentSuperieurService);
         $service->setMailService($mailService);

@@ -14,6 +14,7 @@ use Formation\Entity\Db\Session;
 use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
+use Formation\Provider\Template\MailTemplates;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -513,17 +514,16 @@ class SessionService
         return $result;
     }
 
-    /** !! TODO !! NAZE FAIRE MIEUX */
-    public function getNouvellesSessions()
+    /** @return Session[] */
+    public function getNouvellesSessions(): array
     {
-        $date = (new DateTime())->sub(new DateInterval('P1W'));
+        $qb = $this->createQueryBuilder();
+        $qb = Session::decorateWithEtatsCodes($qb,'Finstance', [SessionEtats::ETAT_INSCRIPTION_OUVERTE]);
 
-        $qb = $this->createQueryBuilder()
-            ->andWhere('Finstance.histoCreation > :date')->setParameter('date', $date)
-            ->andWhere('formation.affichage = :true')->setParameter('true', true);
-        $result = $qb->getQuery()->getResult();
+        $sessions = $qb->getQuery()->getResult();
+        $sessions = array_filter($sessions, function(Session $s) {return !$s->hasMailWithTemplateCode("Template_".MailTemplates::FORMATION_NOUVELLES_FORMATIONS);});
 
-        return $result;
+        return $sessions;
     }
 
     /**

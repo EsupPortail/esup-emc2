@@ -1949,6 +1949,10 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
+    'formation_session_evenement'                       => [
+        'session_id',
+        'evenement_instance_id',
+    ],
 ];
 
 //@formatter:on

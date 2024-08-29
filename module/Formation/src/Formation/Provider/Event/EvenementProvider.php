@@ -10,4 +10,6 @@ class EvenementProvider {
     const CONVOCATION                       = 'convocation_automatique';
     const DEMANDE_RETOUR                    = 'formation_demande_retour';
     const SESSION_CLOTURE                   = 'formation_session_cloture';
+
+    const NOTIFICATION_NOUVELLES_SESSIONS   = 'NOTIFICATION_NOUVELLES_SESSIONS';
 }

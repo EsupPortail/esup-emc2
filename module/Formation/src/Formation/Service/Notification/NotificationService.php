@@ -8,6 +8,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use DateTime;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\Inscription;
@@ -15,6 +16,7 @@ use Formation\Entity\Db\Session;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\MailTemplates;
+use Formation\Service\Session\SessionServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use RuntimeException;
 use UnicaenMail\Entity\Db\Mail;
@@ -26,12 +28,14 @@ use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class NotificationService {
+    use ProvidesObjectManager;
     use AgentServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
     use RoleServiceAwareTrait;
+    use SessionServiceAwareTrait;
     use UserServiceAwareTrait;
     use MacroServiceAwareTrait;
     use UrlServiceAwareTrait;
@@ -684,6 +688,46 @@ class NotificationService {
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
         $this->getMailService()->update($mail);
+        return $mail;
+    }
+
+    /** @var Session[] $sessions */
+    public function triggerNouvellesSessions(array $sessions): ?Mail
+    {
+        //classement ordre alphabetique puis date de début
+        usort($sessions, function (Session $a, Session $b) {
+            if ($a->getInstanceLibelle() !== $b->getInstanceLibelle()) { return $a->getInstanceLibelle() <=> $b->getInstanceLibelle();}
+            return $a->getDebut(true)->format('YmdHis') <=> $b->getDebut(true)->format('YmdHis');
+        });
+
+        $texte = "<ul>";
+        foreach ($sessions as $session) {
+            $texte .= "<li>";
+            $texte .= $session->getInstanceLibelle() . " du ".$session->getPeriode();
+            $texte .= "</li>";
+        }
+        $texte .= "</ul>";
+
+        $macroService = $this->getMacroService();
+        $macroService->setVars(['texte' => $texte]);
+
+        $vars = [
+            'texte' => $texte,
+            'MacroService' => $macroService,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $adresse = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::MAIL_PERSONNEL);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_NOUVELLES_FORMATIONS, $vars);
+        $mail = $this->getMailService()->sendMail($adresse, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+
+        $mots_clefs = [$rendu->getTemplate()->generateTag()];
+        foreach ($sessions as $session) $mots_clefs[] = $session->generateTag();
+        $mail->setMotsClefs($mots_clefs);
+        $this->getMailService()->update($mail);
+        foreach ($sessions as $session) {
+            $session->addMail($mail);
+            $this->getObjectManager()->flush($session);
+        }
         return $mail;
     }
 

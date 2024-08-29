@@ -122,7 +122,6 @@ class SessionController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $session = $this->getSessionService()->getRequestedSession($this);
-        $mails = $this->getMailService()->getMailsByMotClef($session->generateTag());
 
         $presences = $this->getPresenceService()->getPresenceBySession($session);
         $presencesManquantes = $this->getPresenceService()->getPresencesManquantes($session);
@@ -139,7 +138,7 @@ class SessionController extends AbstractActionController
             'presences' => $dictionnaire,
             'fraisManquants' => $fraisManquants,
             'presencesManquantes' => $presencesManquantes,
-            'mails' => $mails,
+            'mails' => $session->getMails(),
         ]);
     }
 

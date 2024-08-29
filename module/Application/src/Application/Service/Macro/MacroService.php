@@ -9,10 +9,16 @@ class MacroService {
 
     /** @var PhpRenderer */
     protected $renderer;
+    protected $vars = [];
 
     public function setRenderer($renderer) : void
     {
         $this->renderer = $renderer;
+    }
+
+    public function setVars(array $vars) : void
+    {
+        $this->vars = $vars;
     }
 
     public function getDate() : string
@@ -32,4 +38,10 @@ class MacroService {
         return 'EMC2';
     }
 
+    /** @noinspection PhpUnused [Macro: EMC2#AfficherTexte] */
+    public function toStringTexte(): string
+    {
+        if (!isset($this->vars['texte'])) return "";
+        else return $this->vars['texte'];
+    }
 }

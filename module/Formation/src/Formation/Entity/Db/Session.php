@@ -17,14 +17,21 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
+use UnicaenEvenement\Entity\HasEvenementsInterface;
+use UnicaenEvenement\Entity\HasEvenementsTrait;
+use UnicaenMail\Entity\HasMailsInterface;
+use UnicaenMail\Entity\HasMailsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
-class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface, ResourceInterface, HasInscriptionsInterfaces
+class Session implements
+    HasInscriptionsInterfaces,
+    HasEvenementsInterface, HasMailsInterface, HasEtatsInterface, HasSourceInterface,
+    HistoriqueAwareInterface, ResourceInterface
 {
     use HasInscriptionsTrait;
-    use HasEtatsTrait,HasSourceTrait;
+    use HasEvenementsTrait, HasMailsTrait, HasEtatsTrait, HasSourceTrait;
     use HistoriqueAwareTrait;
 
     public function getResourceId(): string
@@ -69,6 +76,8 @@ class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsI
     public function __construct()
     {
         $this->etats = new ArrayCollection();
+        $this->mails = new ArrayCollection();
+        $this->evenements = new ArrayCollection();
         $this->journees = new ArrayCollection();
         $this->inscrits = new ArrayCollection();
         $this->externes = new ArrayCollection();

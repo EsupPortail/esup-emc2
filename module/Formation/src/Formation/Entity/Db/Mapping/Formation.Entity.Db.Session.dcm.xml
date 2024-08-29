@@ -17,17 +17,6 @@
         <field name="autoInscription"           type="boolean"                  column="auto_inscription"            nullable="true"/>
         <field name="complement"                type="string" length="4096"     column="complement"                  nullable="true"/>
 
-        <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
-            <join-table name="formation_session_etat">
-                <join-columns>
-                    <join-column name="session_id" referenced-column-name="id" />
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="etat_id" referenced-column-name="id" />
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-
         <one-to-many field="journees"       target-entity="Formation\Entity\Db\Seance"    mapped-by="instance"/>
         <one-to-many field="inscriptions"   target-entity="Formation\Entity\Db\Inscription"    mapped-by="session"/>
 
@@ -76,6 +65,37 @@
         <one-to-one field="parametre" target-entity="Formation\Entity\Db\SessionParametre">
             <join-column name="parametre_id" referenced-column-name="id" />
         </one-to-one>
+
+        <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
+            <join-table name="formation_session_etat">
+                <join-columns>
+                    <join-column name="session_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="etat_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="mails" target-entity="UnicaenMail\Entity\Db\Mail">
+            <join-table name="formation_session_mail">
+                <join-columns>
+                    <join-column name="session_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="mail_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="evenements" target-entity="UnicaenEvenement\Entity\Db\Evenement">
+            <join-table name="formation_session_evenement">
+                <join-columns>
+                    <join-column name="session_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="evenement_instance_id" referenced-column-name="ID" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
         <field name="source"            column="source_id"          type="string"   length="128" nullable="true"/>
         <field name="idSource"          column="id_source"          type="string"   length="256" nullable="true"/>

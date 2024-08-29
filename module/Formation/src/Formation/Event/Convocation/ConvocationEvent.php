@@ -4,6 +4,7 @@ namespace Formation\Event\Convocation;
 
 use DateInterval;
 use DateTime;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Exception;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;

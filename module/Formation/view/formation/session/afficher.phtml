@@ -8,6 +8,7 @@ use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
+use UnicaenEvenement\Provider\Privilege\EvenementinstancePrivileges;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Provider\Privilege\MailPrivileges;
 
@@ -23,9 +24,12 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
 $estAnnulee = ($session->getEtatActif() && $session->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE));
 
 $canInformation = (!$estAnnulee and $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
+//todo un privilege ?
+$canMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
 $canAfficherMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
 $canReEnvoyerMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
 $canAfficherEnquete = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER_INSCRIPTION));
+$canEvenement = $this->isAllowed(EvenementinstancePrivileges::getResourceId(EvenementinstancePrivileges::INSTANCE_CONSULTATION));
 
 $canAnnuler = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
 $canEmargement = (
@@ -204,11 +208,20 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 type="button" role="tab" aria-controls="presences" aria-selected="true">
             Présences aux séances
         </button>
+        <?php if ($canMail) : ?>
         <button class="nav-link" id="mails-tab"
                 data-bs-toggle="tab" data-bs-target="#mails"
                 type="button" role="tab" aria-controls="mails" aria-selected="true">
-            Mails
+            Courriers électroniques &nbsp;  <span class="badge" style="margin-left:1rem;"><?php echo count($mails); ?></span>
         </button>
+        <?php endif; ?>
+        <?php if ($canEvenement) : ?>
+            <button class="nav-link" id="evenements-tab"
+                    data-bs-toggle="tab" data-bs-target="#evenements"
+                    type="button" role="tab" aria-controls="evenements" aria-selected="true">
+                Événements &nbsp; <span class="badge" style="margin-left:1rem;"><?php echo count($session->getEvenements()->toArray()); ?></span>
+            </button>
+        <?php endif; ?>
     </div>
 
     <!-- ONGLET :: PANE------------------------------------------------------------------------------------------------>
@@ -434,12 +447,23 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php echo $this->partial('partial/inscrits', ['instance' => $session], [], null); ?>
         </div>
 
-        <div id="mails" class="tab-pane">
-            <h2> Mails envoyés </h2>
+        <?php if ($canMail) : ?>
+            <div id="mails" class="tab-pane">
+                <h2> Courriers électroniques envoyés </h2>
 
-            <?php echo $this->mails($mails); ?>
+                <?php echo $this->mails($mails); ?>
 
-        </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($canEvenement) : ?>
+            <div id="evenements" class="tab-pane">
+
+                <br/>
+                <div>
+                    <?php echo $this->evenements($session->getEvenements()->toArray()); ?>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <div id="presences" class="tab-pane">
             <h2> Présence aux séances</h2>

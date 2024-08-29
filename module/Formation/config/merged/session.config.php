@@ -7,6 +7,8 @@ use Formation\Assertion\SessionAssertionFactory;
 use Formation\Controller\SessionController;
 use Formation\Controller\SessionControllerFactory;
 use Formation\Controller\InscriptionController;
+use Formation\Event\NotificationNouvellesSessions\NotificationNouvellesSessionsEvent;
+use Formation\Event\NotificationNouvellesSessions\NotificationNouvellesSessionsEventFactory;
 use Formation\Form\Session\SessionForm;
 use Formation\Form\Session\SessionFormFactory;
 use Formation\Form\Session\SessionHydrator;
@@ -461,6 +463,8 @@ return [
         'factories' => [
             SessionService::class => SessionServiceFactory::class,
             SessionAssertion::class => SessionAssertionFactory::class,
+
+            NotificationNouvellesSessionsEvent::class => NotificationNouvellesSessionsEventFactory::class,
         ],
     ],
     'controllers' => [
