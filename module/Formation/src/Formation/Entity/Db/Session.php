@@ -10,6 +10,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Exception;
+use Formation\Entity\Db\Interfaces\HasInscriptionsInterfaces;
+use Formation\Entity\Db\Traits\HasInscriptionsTrait;
 use Formation\Provider\Etat\SessionEtats;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
@@ -19,10 +21,10 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
-class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface, ResourceInterface
+class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface, ResourceInterface, HasInscriptionsInterfaces
 {
-    use HasEtatsTrait;
-    use HasSourceTrait;
+    use HasInscriptionsTrait;
+    use HasEtatsTrait,HasSourceTrait;
     use HistoriqueAwareTrait;
 
     public function getResourceId(): string
@@ -57,7 +59,6 @@ class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsI
     private Collection $inscrits;
     private Collection $externes;
     private Collection $formateurs;
-    private Collection $inscriptions;
     private Collection $demandes;
     private Collection $gestionnaires;
 
@@ -358,14 +359,6 @@ class Session implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsI
         return false;
     }
     /** INSCRIT *******************************************************************************************************/
-
-    /**
-     * @return Inscription[]
-     */
-    public function getInscriptions(): array
-    {
-        return $this->inscriptions->toArray();
-    }
 
     /**
      * @return Inscription[]
