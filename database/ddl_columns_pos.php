@@ -1953,6 +1953,10 @@ return [
         'session_id',
         'evenement_instance_id',
     ],
+    'formation_session_mail'                            => [
+        'session_id',
+        'mail_id',
+    ],
 ];
 
 //@formatter:on
