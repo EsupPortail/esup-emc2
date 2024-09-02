@@ -57,6 +57,15 @@ $canSupprimer   = $this->isAllowed(PlanformationPrivileges::getResourceId(Planfo
                 <?php endif; ?>
             </td>
             <td>
+                <?php if ($plan->isActif()) : ?>
+                    <span class="text-success" title="Le plan de formation est actif">
+                        <span class="icon icon-checked"></span>
+                    </span>
+                <?php else: ?>
+                    <span class="text-danger" title="Le plan de formation est inactif">
+                        <span class="icon icon-unchecked"></span>
+                    </span>
+                <?php endif; ?>
                 <?php echo $plan->getPeriode(); ?>
             </td>
             <td> <?php echo count($plan->getFormations()); ?> </td>
