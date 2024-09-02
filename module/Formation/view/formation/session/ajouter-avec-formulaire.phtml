@@ -11,10 +11,10 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 <form method="post" action="<?php echo $this->url('formation/session/ajouter-avec-formulaire', [], [], true); ?>">
     <label for="formation">Formation associée à la nouvelle session : </label>
     <?php
-    /** @see  \Formation\Controller\FormationController::rechercherFormationAction() */
+    /** @see  \Formation\Controller\FormationController::rechercherFormationsActivesAction() */
     $structureF = new SearchAndSelect('formation');
     $structureF
-        ->setAutocompleteSource($this->url('formation/rechercher-formation'))
+        ->setAutocompleteSource($this->url('formation/rechercher-formations-actives'))
         ->setSelectionRequired()
         ->setAttributes([
             'id' => 'formation',

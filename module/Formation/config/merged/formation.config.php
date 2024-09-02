@@ -62,6 +62,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'rechercher-formation',
+                        'rechercher-formations-actives',
                         'rechercher-formateur',
                     ],
                     'roles' => [],
@@ -351,6 +352,17 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action' => 'rechercher-formation',
+                            ],
+                        ],
+                    ],
+                    'rechercher-formations-actives' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route' => '/rechercher-formations-actives',
+                            'defaults' => [
+                                /** @see FormationController::rechercherFormationsActivesAction() */
+                                'action' => 'rechercher-formations-actives',
                             ],
                         ],
                     ],

@@ -322,7 +322,19 @@ class FormationController extends AbstractActionController
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $formations = $this->getFormationService()->findFormationByTerm($term);
-            $result = $this->getFormationService()->formatFormationtJSON($formations);
+            $result = $this->getFormationService()->formatFormationsJSON($formations);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    /** Retourne la liste des actions de formations dans au moins un plan de formation active (i.e. dont la date du jour
+     *  est comprise dans la période) **/
+    public function rechercherFormationsActivesAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $formations = $this->getFormationService()->findFormationsActivesByTerm($term);
+            $result = $this->getFormationService()->formatFormationsJSON($formations);
             return new JsonModel($result);
         }
         exit;

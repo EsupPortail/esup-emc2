@@ -2,6 +2,7 @@
 
 namespace Formation\Service\Formation;
 
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -279,17 +280,35 @@ class FormationService
     }
 
     /**
+     * @param string $texte
+     * @return Formation[]
+     */
+    public function findFormationsActivesByTerm(string $texte): array
+    {
+        $qb = $this->getObjectManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+            ->join('formation.plans', 'plan')->addSelect('plan')
+            ->andWhere('plan.dateDebut <= :now AND plan.dateFin >= :now')->setParameter('now', new DateTime())
+            ->andWhere("LOWER(formation.libelle) like :search")->setParameter('search', '%' . strtolower($texte) . '%')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param Formation[] $formations
      * @return array
      */
-    public function formatFormationtJSON(array $formations): array
+    public function formatFormationsJSON(array $formations): array
     {
         $result = [];
         foreach ($formations as $formation) {
-            $groupe = $formation->getGroupe();
+            $domaines = $formation->getDomaines();
+            $extra = "";
+            foreach ($domaines as $domaine) { $extra .= " <span class='badge' style='background:".$domaine->getCouleur()."'>".$domaine->getLibelle()."</span>"; }
             $result[] = array(
                 'id' => $formation->getId(),
-                'label' => (($groupe !== null) ? $groupe->getLibelle() : "Sans thème ") . " > " . $formation->getLibelle(),
+                'label' => $formation->getLibelle(),
+                'extra' => $extra,
             );
         }
         usort($result, function ($a, $b) {
