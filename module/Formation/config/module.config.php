@@ -16,8 +16,6 @@ use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Event\SessionCloture\SessionClotureEventFactory;
 use Formation\Provider\IdentityProvider;
 use Formation\Provider\IdentityProviderFactory;
-use Formation\Service\Evenement\NotificationFormationsOuvertesService;
-use Formation\Service\Evenement\NotificationFormationsOuvertesServiceFactory;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use Formation\Service\Evenement\RappelAgentAvantFormationServiceFactory;
 use Formation\Service\Notification\NotificationService;
@@ -169,7 +167,6 @@ return [
             UrlService::class => UrlServiceFactory::class,
 
             //Evenement
-            NotificationFormationsOuvertesService::class => NotificationFormationsOuvertesServiceFactory::class,
             RappelAgentAvantFormationService::class => RappelAgentAvantFormationServiceFactory::class,
             InscriptionClotureEvent::class => InscriptionClotureEventFactory::class,
             ConvocationEvent::class => ConvocationEventFactory::class,

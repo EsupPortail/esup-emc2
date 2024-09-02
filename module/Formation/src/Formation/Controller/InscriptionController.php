@@ -599,7 +599,7 @@ class InscriptionController extends AbstractActionController
                         $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_DEMANDE);
                         $this->getInscriptionService()->update($inscription);
                         $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
-                        $this->getNotificationService()->triggerInscriptionAgent($agent, $session);
+                        $this->getNotificationService()->triggerInscriptionAgent($inscription);
                     }
                 }
             }

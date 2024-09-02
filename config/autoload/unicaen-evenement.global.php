@@ -15,7 +15,6 @@ use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
 use Formation\Event\NotificationNouvellesSessions\NotificationNouvellesSessionsEvent;
 use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Provider\Event\EvenementProvider as FormationEvenementProvider;
-use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use UnicaenEvenement\Entity\Db\Type;
 use UnicaenEvenement\Service\EvenementCollection\EvenementCollectionService;
@@ -29,7 +28,6 @@ return [
             ApplicationEvenementProvider::SYNCHRO_OCTOPUS => SynchroOctopusService::class,
             EvenementProvider::RGPD_UNICAEN_RENDERER => RgpdRendererEvenement::class,
 
-            FormationEvenementProvider::NOTIFICATION_FORMATION_OUVERTE => NotificationFormationsOuvertesService::class,
             FormationEvenementProvider::RAPPEL_FORMATION_AGENT_AVANT => RappelAgentAvantFormationService::class,
             FormationEvenementProvider::INSCRIPTION_CLOTURE => InscriptionClotureEvent::class,
             FormationEvenementProvider::CONVOCATION => ConvocationEvent::class,
