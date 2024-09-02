@@ -12,6 +12,7 @@
 
         <field name="nbPlacePrincipale"         type="integer"                  column="nb_place_principale"         nullable="false"/>
         <field name="nbPlaceComplementaire"     type="integer"                  column="nb_place_complementaire"     nullable="false"/>
+        <field name="dateClotureInscription"    type="datetime"                 column="date_cloture_inscription"    nullable="true"/>
         <field name="lieu"                      type="string" length="256"      column="lieu"                        nullable="true"/>
         <field name="type"                      type="string" length="256"      column="type"                        nullable="true"/>
         <field name="autoInscription"           type="boolean"                  column="auto_inscription"            nullable="true"/>

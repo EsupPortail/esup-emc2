@@ -52,6 +52,7 @@ class Session implements
 
     private int $nbPlacePrincipale = -1;
     private int $nbPlaceComplementaire = -1;
+    private ?DateTime $dateClotureInscription = null;
     private ?string $lieu = null;
     private ?string $type = null;
     private bool $affichage = true;
@@ -177,6 +178,16 @@ class Session implements
     {
         $this->nbPlaceComplementaire = $nbPlaceComplementaire;
         return $this;
+    }
+
+    public function getDateClotureInscription(): ?DateTime
+    {
+        return $this->dateClotureInscription;
+    }
+
+    public function setDateClotureInscription(?DateTime $dateClotureInscription): void
+    {
+        $this->dateClotureInscription = $dateClotureInscription;
     }
 
     /**

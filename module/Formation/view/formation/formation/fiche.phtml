@@ -28,6 +28,7 @@ use Formation\Entity\Db\Seance;
     <tr>
         <th> Identifiant </th>
         <th> Séances et volumes </th>
+        <th> Informations sur la session</th>
         <th> Action </th>
     </tr>
     </thead>
@@ -54,6 +55,15 @@ use Formation\Entity\Db\Seance;
                 </li>
             <?php endforeach; ?>
             </ul>
+        </td>
+        <td>
+            <strong>Taille de la liste principale : </strong> <?php echo $session->getNbPlacePrincipale(); ?> <br>
+            <strong>Clôture des inscriptions </strong> :
+            <?php if ($session->getDateClotureInscription() !== null) : ?>
+                <?php echo $session->getDateClotureInscription()->format('d/m/Y'); ?>
+            <?php else : ?>
+                <em>Aucune date connue</em>
+            <?php endif; ?>
         </td>
         <td>
             <?php if ($agent !== null): ?>

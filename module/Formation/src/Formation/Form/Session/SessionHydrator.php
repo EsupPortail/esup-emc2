@@ -2,19 +2,23 @@
 
 namespace Formation\Form\Session;
 
+use DateTime;
 use Formation\Entity\Db\Session;
 use Laminas\Hydrator\HydratorInterface;
 
 class SessionHydrator implements HydratorInterface
 {
 
-    public function extract($object) : array
+    public function extract(object $object) : array
     {
+        /** @var Session $object */
+        $dateClotureInscription = ($object AND $object->getDateClotureInscription()) ? $object->getDateClotureInscription()->format('d/m/Y') : null;
         /** @var Session $object */
         $data = [
             'description' => ($object AND $object->getComplement()) ?: null,
             'principale' => ($object AND $object->getNbPlacePrincipale()) ?$object->getNbPlacePrincipale(): 0,
             'complementaire' => ($object AND $object->getNbPlaceComplementaire()) ?$object->getNbPlaceComplementaire(): 0,
+            'date_cloture_inscription' => $dateClotureInscription,
             'lieu' => ($object AND $object->getLieu()) ?  $object->getLieu() : null,
             'type' => ($object AND $object->getType()) ? $object->getType() : null,
             'inscription' => ($object) ? $object->isAutoInscription() : null,
@@ -39,10 +43,13 @@ class SessionHydrator implements HydratorInterface
         $coutVacation = (isset($data['cout_vacation']) and trim($data['cout_vacation']) !== "") ? trim($data['cout_vacation']) : null;
         $recetteTtc = (isset($data['recette_ttc']) and trim($data['recette_ttc']) !== "") ? trim($data['recette_ttc']) : null;
 
+        $dateClotureInscription = (isset($data['date_cloture_inscription'])) ? DateTime::createFromFormat('d/m/Y H:i:s', $data['date_cloture_inscription'] . " 23:59:59") : null;
+
         /** @var Session $object */
         $object->setComplement($description);
         $object->setNbPlacePrincipale($principale);
         $object->setNbPlaceComplementaire($complementaire);
+        $object->setDateClotureInscription($dateClotureInscription);
         $object->setLieu($lieu);
         $object->setType($type);
         $object->setAutoInscription($inscription);

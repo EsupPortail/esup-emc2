@@ -30,6 +30,22 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
         <dd class="col-md-9"> <?php echo $session->getNbPlacePrincipale(); ?> </dd>
         <dt class="col-md-3"> Taille liste complémentaire</dt>
         <dd class="col-md-9"> <?php echo $session->getNbPlaceComplementaire(); ?> </dd>
+        <dt class="col-md-3"> Date de clôture des inscriptions</dt>
+        <dd class="col-md-9">
+            <?php if ($session->getDateClotureInscription() != null) : ?>
+                <?php echo $session->getDateClotureInscription()->format('d/m/Y'); ?>
+                <?php if ($session->getDateClotureInscription() > $session->getDebut(true)) : ?>
+                    <span class="text-danger">
+                        <span class="icon icon-attention" title="La date de clôture précède la première séance ou le premier volume"></span>
+                    </span>
+                <?php endif; ?>
+            <?php else: ?>
+                <span class="text text-warning">
+                    <span class="icon icon-attention"></span>
+                    Aucun date de cloture fournie
+                </span>
+            <?php endif; ?>
+        </dd>
         <dt class="col-md-3"> Lieu</dt>
         <dd class="col-md-9"> <?php echo ($session->getLieu()) ?: "Non communiqué"; ?> </dd>
         <?php if ($session->getType() !== null) : ?>
@@ -92,6 +108,13 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
     <?php endif; ?>
     <!--    --->
     <!--    Liste complémentaire --><?php //echo count($session->getListeComplementaire());  ?><!--/--><?php //echo $session->getNbPlaceComplementaire(); ?>
+    <br>
+    Date de clôture des inscriptions :
+    <?php if ($session->getDateClotureInscription() !== null) : ?>
+        <?php echo $session->getDateClotureInscription()->format('d/m/Y'); ?>
+    <?php else : ?>
+        <em>Aucune date connue</em>
+    <?php endif; ?>
 <?php endif; ?>
 
 

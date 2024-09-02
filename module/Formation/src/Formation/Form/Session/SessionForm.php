@@ -4,6 +4,7 @@ namespace Formation\Form\Session;
 
 use Formation\Entity\Db\Session;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\DateTime;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
@@ -11,6 +12,7 @@ use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Regex;
+use UnicaenApp\Form\Element\Date;
 
 class SessionForm extends Form
 {
@@ -52,6 +54,20 @@ class SessionForm extends Form
             ],
             'attributes' => [
                 'id' => 'complementaire',
+            ],
+        ]);
+        /** Cloture Inscription */
+        //jour
+        $this->add([
+            'type' => Date::class,
+            'name' => 'date_cloture_inscription',
+            'options' => [
+                'label' => "Date de clôture des inscription :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'format' => 'd/m/Y',
+            ],
+            'attributes' => [
+                'id' => 'date_cloture_inscription',
             ],
         ]);
         /** Taille liste complementaire */
@@ -163,6 +179,7 @@ class SessionForm extends Form
             'description' => ['required' => false,],
             'principale' => ['required' => true,],
             'complementaire' => ['required' => true,],
+            'date_cloture_inscription' => ['required' => false,],
             'inscription' => ['required' => true,],
             'lieu' => ['required' => true,],
             'type' => ['required' => true,],
