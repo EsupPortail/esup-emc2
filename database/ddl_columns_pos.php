@@ -1168,6 +1168,7 @@ return [
         'parametre_id',
         'cout_vacation',
         'recette_ttc',
+        'date_cloture_inscription',
     ],
     'formation_instance_inscrit'                        => [
         'id',

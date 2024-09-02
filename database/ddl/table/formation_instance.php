@@ -10,7 +10,7 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'formation_instance_id_seq',
     'columns'     => [
-        'affichage'               => [
+        'affichage'                => [
             'name'        => 'affichage',
             'type'        => 'bool',
             'bdd-type'    => 'boolean',
@@ -22,7 +22,7 @@ return [
             'position'    => 19,
             'commentaire' => NULL,
         ],
-        'auto_inscription'        => [
+        'auto_inscription'         => [
             'name'        => 'auto_inscription',
             'type'        => 'bool',
             'bdd-type'    => 'boolean',
@@ -34,7 +34,7 @@ return [
             'position'    => 8,
             'commentaire' => NULL,
         ],
-        'complement'              => [
+        'complement'               => [
             'name'        => 'complement',
             'type'        => 'clob',
             'bdd-type'    => 'text',
@@ -46,7 +46,7 @@ return [
             'position'    => 5,
             'commentaire' => NULL,
         ],
-        'cout_ht'                 => [
+        'cout_ht'                  => [
             'name'        => 'cout_ht',
             'type'        => 'float',
             'bdd-type'    => 'double precision',
@@ -58,7 +58,7 @@ return [
             'position'    => 17,
             'commentaire' => NULL,
         ],
-        'cout_ttc'                => [
+        'cout_ttc'                 => [
             'name'        => 'cout_ttc',
             'type'        => 'float',
             'bdd-type'    => 'double precision',
@@ -70,7 +70,7 @@ return [
             'position'    => 18,
             'commentaire' => NULL,
         ],
-        'cout_vacation'           => [
+        'cout_vacation'            => [
             'name'        => 'cout_vacation',
             'type'        => 'float',
             'bdd-type'    => 'double precision',
@@ -82,7 +82,19 @@ return [
             'position'    => 21,
             'commentaire' => NULL,
         ],
-        'formation_id'            => [
+        'date_cloture_inscription' => [
+            'name'        => 'date_cloture_inscription',
+            'type'        => 'date',
+            'bdd-type'    => 'timestamp without time zone',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 6,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 23,
+            'commentaire' => NULL,
+        ],
+        'formation_id'             => [
             'name'        => 'formation_id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -94,7 +106,7 @@ return [
             'position'    => 2,
             'commentaire' => NULL,
         ],
-        'histo_createur_id'       => [
+        'histo_createur_id'        => [
             'name'        => 'histo_createur_id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -106,7 +118,7 @@ return [
             'position'    => 12,
             'commentaire' => NULL,
         ],
-        'histo_creation'          => [
+        'histo_creation'           => [
             'name'        => 'histo_creation',
             'type'        => 'date',
             'bdd-type'    => 'timestamp without time zone',
@@ -118,7 +130,7 @@ return [
             'position'    => 11,
             'commentaire' => NULL,
         ],
-        'histo_destructeur_id'    => [
+        'histo_destructeur_id'     => [
             'name'        => 'histo_destructeur_id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -130,7 +142,7 @@ return [
             'position'    => 16,
             'commentaire' => NULL,
         ],
-        'histo_destruction'       => [
+        'histo_destruction'        => [
             'name'        => 'histo_destruction',
             'type'        => 'date',
             'bdd-type'    => 'timestamp without time zone',
@@ -142,7 +154,7 @@ return [
             'position'    => 15,
             'commentaire' => NULL,
         ],
-        'histo_modificateur_id'   => [
+        'histo_modificateur_id'    => [
             'name'        => 'histo_modificateur_id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -154,7 +166,7 @@ return [
             'position'    => 14,
             'commentaire' => NULL,
         ],
-        'histo_modification'      => [
+        'histo_modification'       => [
             'name'        => 'histo_modification',
             'type'        => 'date',
             'bdd-type'    => 'timestamp without time zone',
@@ -166,7 +178,7 @@ return [
             'position'    => 13,
             'commentaire' => NULL,
         ],
-        'id'                      => [
+        'id'                       => [
             'name'        => 'id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -178,7 +190,7 @@ return [
             'position'    => 1,
             'commentaire' => NULL,
         ],
-        'id_source'               => [
+        'id_source'                => [
             'name'        => 'id_source',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -190,7 +202,7 @@ return [
             'position'    => 10,
             'commentaire' => NULL,
         ],
-        'lieu'                    => [
+        'lieu'                     => [
             'name'        => 'lieu',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -202,7 +214,7 @@ return [
             'position'    => 6,
             'commentaire' => NULL,
         ],
-        'nb_place_complementaire' => [
+        'nb_place_complementaire'  => [
             'name'        => 'nb_place_complementaire',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -214,7 +226,7 @@ return [
             'position'    => 4,
             'commentaire' => NULL,
         ],
-        'nb_place_principale'     => [
+        'nb_place_principale'      => [
             'name'        => 'nb_place_principale',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -226,7 +238,7 @@ return [
             'position'    => 3,
             'commentaire' => NULL,
         ],
-        'parametre_id'            => [
+        'parametre_id'             => [
             'name'        => 'parametre_id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -238,7 +250,7 @@ return [
             'position'    => 20,
             'commentaire' => NULL,
         ],
-        'recette_ttc'             => [
+        'recette_ttc'              => [
             'name'        => 'recette_ttc',
             'type'        => 'float',
             'bdd-type'    => 'double precision',
@@ -250,7 +262,7 @@ return [
             'position'    => 22,
             'commentaire' => NULL,
         ],
-        'source_id'               => [
+        'source_id'                => [
             'name'        => 'source_id',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -262,7 +274,7 @@ return [
             'position'    => 9,
             'commentaire' => NULL,
         ],
-        'type'                    => [
+        'type'                     => [
             'name'        => 'type',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
