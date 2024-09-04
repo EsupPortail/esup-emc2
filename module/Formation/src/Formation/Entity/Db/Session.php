@@ -319,9 +319,9 @@ class Session implements
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) {
                 if ($journee->getType() === Seance::TYPE_SEANCE) {
-                    $split = explode("/", $journee->getJour()->format('d/m/Y'));
-                    $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
-                    if ($minimum === null or $reversed < $minimum) $minimum = $reversed;
+                    $dateString = $journee->getJour()->format('d/m/Y'). " " . $journee->getDebut();
+                    $date = DateTime::createFromFormat("d/m/Y H:i", $dateString);
+                    if ($minimum === null or $date < $minimum) $minimum = $date;
                 }
                 if ($journee->getType() === Seance::TYPE_VOLUME) {
                     if ($journee->getVolumeDebut()) {
@@ -332,11 +332,8 @@ class Session implements
             }
         }
         if ($minimum !== null) {
-            $split = explode("/", $minimum);
-            $minimum = $split[2] . "/" . $split[1] . "/" . $split[0];
-        }
-        if ($datetime === true) {
-            return ($minimum) ? DateTime::createFromFormat('d/m/Y', $minimum) : null;
+            if ($datetime) return $minimum;
+            else return $minimum->format('d/m/Y H:i');
         }
         return $minimum;
     }

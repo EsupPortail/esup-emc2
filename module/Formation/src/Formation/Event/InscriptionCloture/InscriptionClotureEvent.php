@@ -5,6 +5,7 @@ namespace Formation\Event\InscriptionCloture;
 use DateInterval;
 use DateTime;
 use Exception;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -31,12 +32,13 @@ class InscriptionClotureEvent extends EvenementService
      * @param DateTime|null $dateTraitement
      * @return Evenement
      */
-    public function creer(DateTime $dateTraitement = null): Evenement
+    public function creer(Session $session, DateTime $dateTraitement = null): Evenement
     {
         $type = $this->getTypeService()->findByCode(EvenementProvider::INSCRIPTION_CLOTURE);
         $etat = $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE);
 
         $parametres = [
+            'session'       =>  $session->getId(),
         ];
 
         $description = $type->getDescription();
@@ -54,20 +56,16 @@ class InscriptionClotureEvent extends EvenementService
         $log = "";
 
         try {
-            $closes = [];
-            $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
-            $deadline = (new DateTime())->sub(new DateInterval($this->deadline));
-            foreach ($sessions as $session) {
-                if ($session->isEvenementActive()) {
-                    $dateDebut = ($session->getDebut() !== null) ? DateTime::createFromFormat('d/m/Y', $session->getDebut()) : null;
-                    if ($dateDebut >= $deadline) {
-                        $this->getSessionService()->fermerInscription($session);
-                        $log .= "Fermeture des inscriptions de la session : " . $session->getInstanceLibelle() . "(" . $session->getInstanceCode() . ")";
-                        $closes[] = $session;
-                    }
-                }
+            $parametres = json_decode($evenement->getParametres(), true);
+            /** @var Session|null $session */
+            $session = $this->getSessionService()->getSession($parametres['session']);
+
+            if ($session AND $session->estNonHistorise()
+                AND $session->getEtatActif() AND $session->getEtatActif()->getType()->getCode() === SessionEtats::ETAT_INSCRIPTION_OUVERTE) {
+                $this->getSessionService()->fermerInscription($session);
+                $log = "Session #".$session->getId()." ".$session->getInstanceLibelle()." : Inscriptions closes";
             }
-            $this->getNotificationService()->triggerNotifierInscriptionClotureAutomatique($closes);
+
         } catch (Exception $e) {
             $evenement->setLog($e->getMessage());
             return Etat::ECHEC;

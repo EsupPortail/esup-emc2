@@ -62,7 +62,7 @@ class SessionForm extends Form
             'type' => Date::class,
             'name' => 'date_cloture_inscription',
             'options' => [
-                'label' => "Date de clôture des inscription :",
+                'label' => "Date de clôture des inscriptions :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'd/m/Y',
             ],

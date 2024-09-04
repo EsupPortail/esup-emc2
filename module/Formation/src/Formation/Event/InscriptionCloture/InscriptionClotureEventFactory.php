@@ -10,6 +10,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEvenement\Service\Etat\EtatService;
+use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -28,15 +30,21 @@ class InscriptionClotureEventFactory
          * @var EntityManager $entityManager
          * @var SessionService $sessionService
          * @var NotificationService $notificationService
+         * @var EtatService $etatService
+         * @var TypeService $typeService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $notificationService = $container->get(NotificationService::class);
         $sessionService = $container->get(SessionService::class);
+        $etatService = $container->get(EtatService::class);
+        $typeService = $container->get(TypeService::class);
 
         $event = new InscriptionClotureEvent();
-        $event->setEntityManager($entityManager);
+        $event->setObjectManager($entityManager);
+        $event->setEtatEvenementService($etatService);
         $event->setNotificationService($notificationService);
         $event->setSessionService($sessionService);
+        $event->setTypeService($typeService);
 
         /** @var Parametre $deadline */
         $deadline = $container->get(ParametreService::class)->getParametreByCode(FormationParametres::TYPE, FormationParametres::AUTO_FERMETURE);
