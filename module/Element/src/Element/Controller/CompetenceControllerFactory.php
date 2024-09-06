@@ -2,6 +2,7 @@
 
 namespace Element\Controller;
 
+use Carriere\Service\Corps\CorpsService;
 use Carriere\Service\Grade\GradeService;
 use Element\Form\Competence\CompetenceForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -32,6 +33,7 @@ class CompetenceControllerFactory
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          * @var CompetenceElementService $competenceElementService
+         * @var CorpsService $corpsService
          * @var FicheMetierService $ficherMetierService
          * @var GradeService $gradeService
          * @var MissionPrincipaleService $missionPrincipaleService
@@ -43,6 +45,7 @@ class CompetenceControllerFactory
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
+        $corpsService = $container->get(CorpsService::class);
         $ficherMetierService = $container->get(FicheMetierService::class);
         $gradeService = $container->get(GradeService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
@@ -60,6 +63,7 @@ class CompetenceControllerFactory
         $controller->setCompetenceThemeService($competenceThemeService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCompetenceElementService($competenceElementService);
+        $controller->setCorpsService($corpsService);
         $controller->setFicheMetierService($ficherMetierService);
         $controller->setGradeService($gradeService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);

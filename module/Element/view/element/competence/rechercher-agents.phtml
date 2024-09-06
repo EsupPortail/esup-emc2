@@ -7,13 +7,14 @@
  * @var Competence[] $competences
  * @var array $criteria
  * @var Structure|null $structureFiltre
- * @var Grade|null $gradeFiltre
+ * @var Corps|null $corpsFiltre
  */
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentGrade;use Application\Entity\Db\AgentStatut;
+use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\AgentStatut;
 use Application\Provider\Privilege\AgentPrivileges;
-use Carriere\Entity\Db\Grade;
+use Carriere\Entity\Db\Corps;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\Niveau;
 use Structure\Entity\Db\Structure;
@@ -75,20 +76,20 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-2 ">Grade</div>
+                            <div class="col-md-2 ">Corps</div>
                             <div class="col-md-10">
                                 <?php
-                                /** @see  \Carriere\Controller\GradeController::rechercherAction() */
-                                $gradeF = new SearchAndSelect('grade');
-                                $gradeF
-                                    ->setAutocompleteSource($this->url('grade/rechercher'))
+                                /** @see  \Carriere\Controller\CorpsController::rechercherAction() */
+                                $corpsF = new SearchAndSelect('corps');
+                                $corpsF
+                                    ->setAutocompleteSource($this->url('corps/rechercher'))
                                     ->setSelectionRequired()
                                     ->setAttributes([
-                                        'id' => 'grade',
-                                        'placeholder' => "Grade de l'agent·e",
+                                        'id' => 'corps',
+                                        'placeholder' => "Corps de l'agent·e",
                                     ]);
                                 ?>
-                                <?php echo $this->formControlGroup($gradeF); ?>
+                                <?php echo $this->formControlGroup($corpsF); ?>
                             </div>
                         </div>
                     </div>
@@ -116,13 +117,13 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
     </div>
 </div>
 
-<?php if ($agents === null || empty($agents)) : ?>
+<?php if (empty($agents)) : ?>
     Aucun·e agent de remonté·e avec les critères de recherche
 <?php else : ?>
 
 
     <script>
-        let header = ['ligne', 'dénomination', 'affectation principale', 'statuts', 'grades'];
+        let header = ['ligne', 'dénomination', 'affectation principale', 'statuts', 'corps'];
         <?php foreach ($competences as $competence) : ?>
             header.push("<?php echo $competence->getLibelle(); ?>");
         <?php endforeach; ?>
@@ -187,10 +188,9 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                         <?php $grades = $agent->getGradesActifs(); ?>
                         <script>item["grades"] = ""; </script>
                         <?php foreach ($grades as $grade) : ?>
-                            <?php //echo $grade->getCorps()->getLibelleLong(); ?>
-                            <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                            <?php echo $grade->getCorps()->getLibelleLong(); ?>
                             <br>
-                            <script>item["grades"] = "<?php echo implode(" ", array_map(function (AgentGrade $ag) { return $ag->getGrade()->getLibelleLong(); }, $grades)); ?>"; </script>
+                            <script>item["corps"] = "<?php echo implode(" ", array_map(function (AgentGrade $ag) { return $ag->getCorps()->getLibelleLong(); }, $grades)); ?>"; </script>
 
                         <?php endforeach; ?>
                     </td>
@@ -296,7 +296,7 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
             '</div>');
 
 
-        var autocomp = $('.sas-autocomplete:last');
+        let autocomp = $('.sas-autocomplete:last');
         // console.log(autocomp);
         // console.log("competence-filtre_"+id);
         autocomp.autocompleteUnicaen({
@@ -317,8 +317,8 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
     function retirerAgents(e) { e.preventDefault();
         $('input[name="structure[id]"]').val(null);
         $('input[name="structure[label]"]').val(null);
-        $('input[name="grade[id]"]').val(null);
-        $('input[name="grade[label]"]').val(null);
+        $('input[name="corps[id]"]').val(null);
+        $('input[name="corps[label]"]').val(null);
     }
 
     $(function () {
@@ -385,9 +385,9 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
             $('input[name="structure[id]"]').val(<?php echo $structureFiltre->getId(); ?>);
             $('input[name="structure[label]"]').val("<?php echo $structureFiltre->getLibelleLong(); ?>");
         <?php endif; ?>
-        <?php if ($gradeFiltre !== null) : ?>
-            $('input[name="grade[id]"]').val(<?php echo $gradeFiltre->getId(); ?>);
-            $('input[name="grade[label]"]').val("<?php echo $gradeFiltre->getLibelleLong(); ?>");
+        <?php if ($corpsFiltre !== null) : ?>
+            $('input[name="corps[id]"]').val(<?php echo $corpsFiltre->getId(); ?>);
+            $('input[name="corps[label]"]').val("<?php echo $corpsFiltre->getLibelleLong(); ?>");
         <?php endif; ?>
 
         if (withit === false) ajouterCompetence();

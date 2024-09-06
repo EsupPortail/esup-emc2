@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Grade;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
@@ -824,6 +825,17 @@ class Agent implements
         $affectationPrincipale = $this->getAffectationPrincipale();
         //todo checkbien l'inclusion
         if ($affectationPrincipale AND $affectationPrincipale->getStructure() === $structure) return true;
+        return false;
+    }
+
+    public function hasCorps(?Corps $corps): bool
+    {
+        $gradesActifs = $this->getGradesActifs();
+        if ($gradesActifs AND !empty($gradesActifs)) {
+            foreach ($gradesActifs as $gradeActif) {
+                if ($gradeActif->getCorps() === $corps) return true;
+            }
+        }
         return false;
     }
 

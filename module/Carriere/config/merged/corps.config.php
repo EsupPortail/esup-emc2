@@ -43,6 +43,13 @@ return [
                         CorpsPrivileges::CORPS_MODIFIER,
                     ],
                 ],
+                [
+                    'controller' => CorpsController::class,
+                    'action' => [
+                        'rechercher',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -113,6 +120,18 @@ return [
                                 /** @see CorpsController::toggleSuperieurAutoriteAction() */
                                 'controller' => CorpsController::class,
                                 'action'     => 'toggle-superieur-autorite',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                /** @see CorpsController::rechercherAction() */
+                                'controller' => CorpsController::class,
+                                'action'     => 'rechercher',
                             ],
                         ],
                         'may_terminate' => true,

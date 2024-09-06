@@ -2,6 +2,8 @@
 
 namespace Element\Controller;
 
+use Application\Entity\Db\Agent;
+use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Form\Competence\CompetenceFormAwareTrait;
@@ -26,6 +28,7 @@ class CompetenceController extends AbstractActionController
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use CorpsServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use GradeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
@@ -217,7 +220,7 @@ class CompetenceController extends AbstractActionController
         $competences = [];
         $criteres = [];
         $structure = null;
-        $grade = null;
+        $corps = null;
 
         if (!empty($query)) {
             $criteres = [];
@@ -249,9 +252,9 @@ class CompetenceController extends AbstractActionController
                     $structure = $this->getStructureService()->getStructure($query['structure']['id']);
                     $agents = array_filter($agents, function ($agent) use ($structure) { return $agent->hasAffectationPrincipale($structure); });
                 }
-                if ($query['grade']['id']) {
-                    $grade = $this->getGradeService()->getGrade($query['grade']['id']);
-                    $agents = array_filter($agents, function ($agent) use ($grade) { return $agent->hasGrade($grade); });
+                if ($query['corps']['id']) {
+                    $corps = $this->getCorpsService()->getCorp($query['corps']['id']);
+                    $agents = array_filter($agents, function (Agent $agent) use ($corps) { return $agent->hasCorps($corps); });
                 }
             }
         }
@@ -264,7 +267,7 @@ class CompetenceController extends AbstractActionController
             'competences' => $competences,
             'criteria' => $criteres,
             'structureFiltre' => $structure,
-            'gradeFiltre' => $grade,
+            'corpsFiltre' => $corps,
         ]);
     }
 

@@ -90,4 +90,37 @@ class CorpsService
         }
         return $options;
     }
+
+    /** @return Corps[] */
+    public function getCorpsByTerm(string $term): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('lower(corps.libelleCourt) LIKE :search or lower(corps.libelleLong) LIKE :search or lower(corps.code) LIKE :search')
+            ->setParameter('search', '%' . strtolower($term) . '%')
+//            ->andWhere('corps.histo IS NULL')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Corps[] $corps
+     * @return array
+     */
+    public function formatCorpsJSON(array $corps): array
+    {
+        $result = [];
+        foreach ($corps as $corp) {
+            $result[] = array(
+                'id' => $corp->getId(),
+                'label' => $corp->getLibelleLong(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $corp->getLibelleCourt() . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 }
