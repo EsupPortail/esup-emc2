@@ -43,7 +43,7 @@ class SessionHydrator implements HydratorInterface
         $coutVacation = (isset($data['cout_vacation']) and trim($data['cout_vacation']) !== "") ? trim($data['cout_vacation']) : null;
         $recetteTtc = (isset($data['recette_ttc']) and trim($data['recette_ttc']) !== "") ? trim($data['recette_ttc']) : null;
 
-        $dateClotureInscription = (isset($data['date_cloture_inscription']) AND $data['date_cloture_inscription'] !== "") ? DateTime::createFromFormat('d/m/Y H:i:s', $data['date_cloture_inscription'] . " 23:59:59") : null;
+        $dateClotureInscription = (isset($data['date_cloture_inscription']) AND $data['date_cloture_inscription'] !== ":") ? DateTime::createFromFormat('d/m/Y H:i:s', $data['date_cloture_inscription'] . " 23:59:59") : null;
 
         /** @var Session $object */
         $object->setComplement($description);

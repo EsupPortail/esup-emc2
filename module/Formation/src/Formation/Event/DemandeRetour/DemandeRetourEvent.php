@@ -5,32 +5,34 @@ namespace Formation\Event\DemandeRetour;
 use DateInterval;
 use DateTime;
 use Exception;
+use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\Session\SessionServiceAwareTrait;
+use RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class DemandeRetourEvent extends  EvenementService
 {
     use EntityManagerAwareTrait;
+    use ParametreServiceAwareTrait;
     use SessionServiceAwareTrait;
 
     private ?string  $deadline = null;
     public function setDeadline(?string $deadline): void { $this->deadline = $deadline; }
 
-    /**
-     * @param DateTime|null $dateTraitement
-     * @return Evenement
-     */
-    public function creer(DateTime $dateTraitement = null) : Evenement
+    public function creer(Session $session, DateTime $dateTraitement = null) : Evenement
     {
         $type = $this->getTypeService()->findByCode(EvenementProvider::DEMANDE_RETOUR);
         $etat = $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE);
 
         $parametres = [
+            'session'       =>  $session->getId(),
         ];
 
         $description = $type->getDescription();
@@ -39,32 +41,56 @@ class DemandeRetourEvent extends  EvenementService
         return $evenement;
     }
 
-    /**
-     * @param Evenement $evenement
-     * @return string
-     */
     public function traiter(Evenement $evenement) : string
     {
-        $log = ""; $nbSession = 0;
+        $log = "";
+
         try {
-            $sessions = $this->getSessionService()->getSessionsByEtat(SessionEtats::ETAT_FORMATION_CONVOCATION);
-            $deadline = (new DateTime())->sub(new DateInterval($this->deadline));
-            foreach ($sessions as $session) {
-                if ($session->isEvenementActive()) {
-                    $dateFin = ($session->getFin() !== null) ? DateTime::createFromFormat('d/m/Y', $session->getFin()) : null;
-                    if ($dateFin < $deadline) {
-                        $this->getSessionService()->demanderRetour($session);
-                        $log .= "Traitement de la session " . $session->getInstanceCode() . " " . $session->getInstanceLibelle() . "<br>";
-                        $nbSession++;
-                    }
-                }
+            $parametres = json_decode($evenement->getParametres(), true);
+            /** @var Session|null $session */
+            $session = $this->getSessionService()->getSession($parametres['session']);
+
+            if ($session AND $session->estNonHistorise()
+                AND $session->getEtatActif() AND $session->getEtatActif()->getType()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION) {
+                $this->getSessionService()->demanderRetour($session);
+                $log = "Session #".$session->getId()." ".$session->getInstanceLibelle()." : Demande de retour";
             }
-        } catch(Exception $e) {
+
+        } catch (Exception $e) {
             $evenement->setLog($e->getMessage());
             return Etat::ECHEC;
         }
-        $evenement->setLog($nbSession. " session·s traitée·s <br>" . $log);
+        $evenement->setLog($log);
         $this->update($evenement);
         return Etat::SUCCES;
+    }
+
+    public function updateEvent(Session $session): void
+    {
+        $evenements = $session->getEvenements()->toArray();
+        $evenements = array_filter($evenements, function (Evenement $e) { return $e->getType()->getCode() === EvenementProvider::DEMANDE_RETOUR;});
+        foreach ($evenements as $evenement) {
+            $session->removeEvenement($evenement);
+            $this->getSessionService()->update($session);
+            $this->delete($evenement);
+        }
+
+        //todo calcul valeur par defaut
+        $dateTraitement = null; //si on force une date on la mettra ici.
+        if ($dateTraitement === null) {
+            $dateDebut = $session->getDebut(true);
+            try {
+                $interval = new DateInterval('P' . $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::AUTO_RETOUR) . 'D');
+            } catch (Exception $e) {
+                throw new RuntimeException("Un problème est survenu lors du calcul de l'interval", 0 ,$e);
+            }
+            $dateTraitement = $dateDebut->sub($interval);
+        }
+        if (!$dateTraitement instanceof DateTime) {
+            throw new RuntimeException("La date de traitement de l'evenement [".EvenementProvider::DEMANDE_RETOUR."] n'a pas pu être déterminée.");
+        }
+        $event = $this->creer($session, $dateTraitement);
+        $session->addEvenement($event);
+        $this->getSessionService()->update($session);
     }
 }

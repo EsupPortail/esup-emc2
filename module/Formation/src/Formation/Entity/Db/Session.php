@@ -345,12 +345,12 @@ class Session implements
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) {
                 if ($journee->getType() === Seance::TYPE_SEANCE) {
-                    $split = explode("/", $journee->getJour()->format('d/m/Y'));
-                    $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
-                    if ($maximum === null or $reversed > $maximum) $maximum = $reversed;
+                    $dateString = $journee->getJour()->format('d/m/Y'). " " . $journee->getFin();
+                    $date = DateTime::createFromFormat("d/m/Y H:i", $dateString);
+                    if ($maximum === null or $date > $maximum) $maximum = $date;
                 }
                 if ($journee->getType() === Seance::TYPE_VOLUME) {
-                    if ($journee->getVolumeFin()) {
+                    if ($journee->getVolumeDebut()) {
                         $fin = $journee->getVolumeFin()->format("Y/m/d");
                         if ($maximum === null or $fin > $maximum) $maximum = $fin;
                     }
@@ -358,11 +358,8 @@ class Session implements
             }
         }
         if ($maximum !== null) {
-            $split = explode("/", $maximum);
-            $maximum = $split[2] . "/" . $split[1] . "/" . $split[0];
-        }
-        if ($datetime === true) {
-            return ($maximum) ? DateTime::createFromFormat('d/m/Y', $maximum) : null;
+            if ($datetime) return $maximum;
+            else return $maximum->format('d/m/Y H:i');
         }
         return $maximum;
     }

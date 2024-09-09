@@ -30,11 +30,13 @@ class InscriptionClotureEventFactory
          * @var EntityManager $entityManager
          * @var SessionService $sessionService
          * @var NotificationService $notificationService
+         * @var ParametreService $parametreService
          * @var EtatService $etatService
          * @var TypeService $typeService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $notificationService = $container->get(NotificationService::class);
+        $parametreService = $container->get(ParametreService::class);
         $sessionService = $container->get(SessionService::class);
         $etatService = $container->get(EtatService::class);
         $typeService = $container->get(TypeService::class);
@@ -43,6 +45,7 @@ class InscriptionClotureEventFactory
         $event->setObjectManager($entityManager);
         $event->setEtatEvenementService($etatService);
         $event->setNotificationService($notificationService);
+        $event->setParametreService($parametreService);
         $event->setSessionService($sessionService);
         $event->setTypeService($typeService);
 
