@@ -16,7 +16,6 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Template\MailTemplates;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
-use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
@@ -33,7 +32,6 @@ class SessionService
     use AbonnementServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use RappelAgentAvantFormationServiceAwareTrait;
 
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -347,16 +345,6 @@ class SessionService
                 if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
             }
         }
-
-        $debut = $instance->getDebut();
-        if ($debut !== null) {
-            $dateRappel = DateTime::createFromFormat('d/m/Y H:i', $instance->getDebut() . " 08:00");
-            $dateRappel->sub(new DateInterval('P4D'));
-            $this->getRappelAgentAvantFormationService()->creer($instance, $dateRappel);
-        } else {
-            throw new RuntimeException("Aucun événement/rappel ne peut être créé sans au moins une séance de planifiée", 0);
-        }
-
         return $instance;
     }
 

@@ -46,11 +46,6 @@ class DemandeRetourEventFactory
         $event->setSessionService($sessionService);
         $event->setTypeService($typeService);
 
-        /** @var Parametre $deadline */
-        $deadline = $container->get(ParametreService::class)->getParametreByCode(FormationParametres::TYPE, FormationParametres::AUTO_RETOUR);
-        if ($deadline === null) throw new RuntimeException("Parametre non défini [" . FormationParametres::TYPE . "," . FormationParametres::AUTO_RETOUR . "]");
-        $event->setDeadline($deadline->getValeur());
-
         return $event;
     }
 }

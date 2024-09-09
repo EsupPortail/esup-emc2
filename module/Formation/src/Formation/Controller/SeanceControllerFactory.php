@@ -2,8 +2,11 @@
 
 namespace Formation\Controller;
 
+use Formation\Event\Convocation\ConvocationEvent;
 use Formation\Event\DemandeRetour\DemandeRetourEvent;
 use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
+use Formation\Event\RappelAgent\RappelAgentEvent;
+use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Form\Seance\SeanceForm;
 use Formation\Service\Seance\SeanceService;
 use Formation\Service\Session\SessionService;
@@ -28,11 +31,17 @@ class SeanceControllerFactory
         $sessionService = $container->get(SessionService::class);
 
         /**
+         * @var ConvocationEvent $convocationEvent
          * @var DemandeRetourEvent $demandeRetourEvent
          * @var InscriptionClotureEvent $inscriptionClotureEvent
+         * @var RappelAgentEvent $rappelAgentEvent
+         * @var SessionClotureEvent $sessionClotureEvent
          */
+        $convocationEvent = $container->get(ConvocationEvent::class);
         $demandeRetourEvent = $container->get(DemandeRetourEvent::class);
         $inscriptionClotureEvent = $container->get(InscriptionClotureEvent::class);
+        $rappelAgentEvent = $container->get(RappelAgentEvent::class);
+        $sessionClotureEvent = $container->get(SessionClotureEvent::class);
 
         /**
          * @var SeanceForm $seanceForm
@@ -43,9 +52,11 @@ class SeanceControllerFactory
         $controller->setSeanceService($seanceService);
         $controller->setSessionService($sessionService);
 
+        $controller->setConvocationEvent($convocationEvent);
         $controller->setDemandeRetourEvent($demandeRetourEvent);
         $controller->setInscriptionClotureEvent($inscriptionClotureEvent);
-
+        $controller->setRappelAgentEvent($rappelAgentEvent);
+        $controller->setSessionClotureEvent($sessionClotureEvent);
 
         $controller->setSeanceForm($seanceForm);
         return $controller;

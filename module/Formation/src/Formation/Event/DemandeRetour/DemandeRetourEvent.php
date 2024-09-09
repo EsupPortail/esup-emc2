@@ -23,8 +23,6 @@ class DemandeRetourEvent extends  EvenementService
     use ParametreServiceAwareTrait;
     use SessionServiceAwareTrait;
 
-    private ?string  $deadline = null;
-    public function setDeadline(?string $deadline): void { $this->deadline = $deadline; }
 
     public function creer(Session $session, DateTime $dateTraitement = null) : Evenement
     {

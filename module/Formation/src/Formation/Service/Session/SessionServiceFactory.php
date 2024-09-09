@@ -4,7 +4,6 @@ namespace Formation\Service\Session;
 
 use Doctrine\ORM\EntityManager;
 use Formation\Service\Abonnement\AbonnementService;
-use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -31,7 +30,6 @@ class SessionServiceFactory
          * @var AbonnementService $abonnementService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
-         * @var RappelAgentAvantFormationService $rappelAgentAvantForamtionService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $abonnementService = $container->get(AbonnementService::class);
@@ -39,7 +37,6 @@ class SessionServiceFactory
         $etatTypeService = $container->get(EtatTypeService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
-        $rappelAgentAvantForamtionService = $container->get(RappelAgentAvantFormationService::class);
 
         $service = new SessionService();
         $service->setObjectManager($entityManager);
@@ -48,7 +45,6 @@ class SessionServiceFactory
         $service->setEtatTypeService($etatTypeService);
         $service->setNotificationService($notificationService);
         $service->setParametreService($parametreService);
-        $service->setRappelAgentAvantFormationService($rappelAgentAvantForamtionService);
         return $service;
     }
 }

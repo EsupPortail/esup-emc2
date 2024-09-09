@@ -2,14 +2,13 @@
 
 namespace Formation\Event\Convocation;
 
-use Formation\Provider\Parametre\FormationParametres;
-use Formation\Service\Notification\NotificationService;
+use Doctrine\ORM\EntityManager;
 use Formation\Service\Session\SessionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenParametre\Entity\Db\Parametre;
+use UnicaenEvenement\Service\Etat\EtatService;
+use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
 class ConvocationEventFactory
@@ -24,20 +23,25 @@ class ConvocationEventFactory
     public function __invoke(ContainerInterface $container): ConvocationEvent
     {
         /**
+         * @var EntityManager $entityManager
+         * @var EtatService $etatService
+         * @var ParametreService $parametreService
          * @var SessionService $sessionService
-         * @var NotificationService $notificationService
+         * @var TypeService $typeService
          */
-        $notificationService = $container->get(NotificationService::class);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $etatService = $container->get(EtatService::class);
+        $parametreService = $container->get(ParametreService::class);
         $sessionService = $container->get(SessionService::class);
+        $typeService = $container->get(TypeService::class);
 
         $event = new ConvocationEvent();
-        $event->setNotificationService($notificationService);
+        $event->setEntityManager($entityManager);
+        $event->setObjectManager($entityManager);
+        $event->setEtatEvenementService($etatService);
+        $event->setParametreService($parametreService);
         $event->setSessionService($sessionService);
-
-        /** @var Parametre $deadline */
-        $deadline = $container->get(ParametreService::class)->getParametreByCode(FormationParametres::TYPE, FormationParametres::AUTO_CONVOCATION);
-        if ($deadline === null) throw new RuntimeException("Parametre non défini [" . FormationParametres::TYPE . "," . FormationParametres::AUTO_CONVOCATION . "]");
-        $event->setDeadline($deadline->getValeur());
+        $event->setTypeService($typeService);
 
         return $event;
     }

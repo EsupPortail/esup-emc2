@@ -3,8 +3,11 @@
 namespace Formation\Controller;
 
 use Formation\Entity\Db\Seance;
+use Formation\Event\Convocation\ConvocationEventAwareTrait;
 use Formation\Event\DemandeRetour\DemandeRetourEventAwareTrait;
 use Formation\Event\InscriptionCloture\InscriptionClotureEventAwareTrait;
+use Formation\Event\RappelAgent\RappelAgentEventAwareTrait;
+use Formation\Event\SessionCloture\SessionClotureEventAwareTrait;
 use Formation\Form\Seance\SeanceFormAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Formation\Service\Session\SessionServiceAwareTrait;
@@ -19,8 +22,11 @@ class SeanceController extends AbstractActionController
     use SeanceServiceAwareTrait;
     use SessionServiceAwareTrait;
 
-    use InscriptionClotureEventAwareTrait;
+    use ConvocationEventAwareTrait;
     use DemandeRetourEventAwareTrait;
+    use InscriptionClotureEventAwareTrait;
+    use RappelAgentEventAwareTrait;
+    use SessionClotureEventAwareTrait;
 
     use SeanceFormAwareTrait;
 
@@ -41,8 +47,7 @@ class SeanceController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getSeanceService()->create($seance);
-                if ($seance->isPremiereSeance()) $this->getInscriptionClotureEvent()->updateEvent($seance->getInstance());
-                if ($seance->isDerniereSeance()) $this->getDemandeRetourEvent()->updateEvent($seance->getInstance());
+                $this->gererEvenement($seance);
             }
         }
 
@@ -69,8 +74,7 @@ class SeanceController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getSeanceService()->update($seance);
-                if ($seance->isPremiereSeance()) $this->getInscriptionClotureEvent()->updateEvent($seance->getInstance());
-                if ($seance->isDerniereSeance()) $this->getDemandeRetourEvent()->updateEvent($seance->getInstance());
+                $this->gererEvenement($seance);
             }
         }
 
@@ -86,8 +90,7 @@ class SeanceController extends AbstractActionController
     public function historiserJourneeAction(): Response
     {
         $seance = $this->getSeanceService()->getRequestedSeance($this);
-        if ($seance->isPremiereSeance()) $this->getInscriptionClotureEvent()->updateEvent($seance->getInstance());
-        if ($seance->isDerniereSeance()) $this->getDemandeRetourEvent()->updateEvent($seance->getInstance());
+        $this->gererEvenement($seance);
         $this->getSeanceService()->historise($seance);
 
         return $this->redirect()->toRoute('formation/session/afficher', ['session' => $seance->getInstance()->getId()], [], true);
@@ -97,8 +100,7 @@ class SeanceController extends AbstractActionController
     {
         $seance = $this->getSeanceService()->getRequestedSeance($this);
         $this->getSeanceService()->restore($seance);
-        if ($seance->isPremiereSeance()) $this->getInscriptionClotureEvent()->updateEvent($seance->getInstance());
-        if ($seance->isDerniereSeance()) $this->getDemandeRetourEvent()->updateEvent($seance->getInstance());
+        $this->gererEvenement($seance);
 
         return $this->redirect()->toRoute('formation/session/afficher', ['session' => $seance->getInstance()->getId()], [], true);
     }
@@ -112,8 +114,7 @@ class SeanceController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") {
-                if ($seance->isPremiereSeance()) $this->getInscriptionClotureEvent()->updateEvent($seance->getInstance());
-                if ($seance->isDerniereSeance()) $this->getDemandeRetourEvent()->updateEvent($seance->getInstance());
+                $this->gererEvenement($seance);
                 $this->getSeanceService()->delete($seance);
 
             }
@@ -130,5 +131,19 @@ class SeanceController extends AbstractActionController
             ]);
         }
         return $vm;
+    }
+
+
+    public function gererEvenement(Seance $seance): void
+    {
+        if ($seance->isPremiereSeance()) {
+            $this->getInscriptionClotureEvent()->updateEvent($seance->getInstance());
+            $this->getConvocationEvent()->updateEvent($seance->getInstance());
+            $this->getRappelAgentEvent()->updateEvent($seance->getInstance());
+        }
+        if ($seance->isDerniereSeance()) {
+            $this->getDemandeRetourEvent()->updateEvent($seance->getInstance());
+            $this->getSessionClotureEvent()->updateEvent($seance->getInstance());
+        }
     }
 }

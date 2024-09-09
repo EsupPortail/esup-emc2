@@ -12,19 +12,18 @@ use Formation\Event\DemandeRetour\DemandeRetourEvent;
 use Formation\Event\DemandeRetour\DemandeRetourEventFactory;
 use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
 use Formation\Event\InscriptionCloture\InscriptionClotureEventFactory;
+use Formation\Event\RappelAgent\RappelAgentEvent;
+use Formation\Event\RappelAgent\RappelAgentEventFactory;
 use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Event\SessionCloture\SessionClotureEventFactory;
 use Formation\Provider\IdentityProvider;
 use Formation\Provider\IdentityProviderFactory;
-use Formation\Service\Evenement\RappelAgentAvantFormationService;
-use Formation\Service\Evenement\RappelAgentAvantFormationServiceFactory;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
 use Formation\Service\Url\UrlServiceFactory;
 use Laminas\Router\Http\Literal;
 use UnicaenPrivilege\Guard\PrivilegeController;
-
 
 
 return [
@@ -73,33 +72,33 @@ return [
 //              Configuration faites au niveau de config/autoload/local.php
                 'child_routes' => [
                     'home' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/',
+                            'route' => '/',
                             'defaults' => [
                                 'controller' => IndexController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
                     ],
                     'apropos' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/mes-formations-apropos',
+                            'route' => '/mes-formations-apropos',
                             'defaults' => [
                                 'controller' => IndexController::class,
-                                'action'     => 'apropos',
+                                'action' => 'apropos',
                             ],
                         ],
                     ],
                     'contact' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/mes-formations-contact',
+                            'route' => '/mes-formations-contact',
                             'defaults' => [
                                 'controller' => IndexController::class,
-                                'action'     => 'contact',
+                                'action' => 'contact',
                             ],
                         ],
                     ],
@@ -108,52 +107,52 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'formation' => [
             'home' => [
                 'label' => _("Accueil"),
                 'route' => 'home',
                 'pages' => [
-                    'apropos'                  => [
-                        'label'    => _("À propos"),
-                        'title'    => _("À propos de cette application"),
-                        'route'    => 'mes-formations/apropos',
-                        'class'    => 'apropos',
-                        'visible'  => false,
-                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
-                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
-                        'order'    => 1001,
+                    'apropos' => [
+                        'label' => _("À propos"),
+                        'title' => _("À propos de cette application"),
+                        'route' => 'mes-formations/apropos',
+                        'class' => 'apropos',
+                        'visible' => false,
+                        'footer' => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap' => true, // propriété maison pour inclure cette page dans le plan
+                        'order' => 1001,
                     ],
-                    'contact'                  => [
-                        'label'    => _("Contact"),
-                        'title'    => _("Contact concernant l'application"),
-                        'route'    => 'contact',
-                        'class'    => 'contact',
-                        'visible'  => false,
-                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
-                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
+                    'contact' => [
+                        'label' => _("Contact"),
+                        'title' => _("Contact concernant l'application"),
+                        'route' => 'contact',
+                        'class' => 'contact',
+                        'visible' => false,
+                        'footer' => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap' => true, // propriété maison pour inclure cette page dans le plan
                         'resource' => 'controller/UnicaenApp\Controller\Application:contact',
-                        'order'    => 1002,
+                        'order' => 1002,
                     ],
-                    'mentions-legales'         => [
-                        'label'    => _("Mentions légales"),
-                        'title'    => _("Mentions légales"),
-                        'uri'      => 'https://www.unicaen.fr/acces-direct/mentions-legales/',
-                        'class'    => 'ml',
-                        'visible'  => false,
-                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
-                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
-                        'order'    => 1004,
+                    'mentions-legales' => [
+                        'label' => _("Mentions légales"),
+                        'title' => _("Mentions légales"),
+                        'uri' => 'https://www.unicaen.fr/acces-direct/mentions-legales/',
+                        'class' => 'ml',
+                        'visible' => false,
+                        'footer' => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap' => true, // propriété maison pour inclure cette page dans le plan
+                        'order' => 1004,
                     ],
                     'informatique-et-libertes' => [
-                        'label'    => _("Vie privée"),
-                        'title'    => _("Vie privée"),
-                        'uri'      => 'https://www.unicaen.fr/acces-direct/vie-privee/',
-                        'class'    => 'il',
-                        'visible'  => false,
-                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
-                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
-                        'order'    => 1005,
+                        'label' => _("Vie privée"),
+                        'title' => _("Vie privée"),
+                        'uri' => 'https://www.unicaen.fr/acces-direct/vie-privee/',
+                        'class' => 'il',
+                        'visible' => false,
+                        'footer' => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap' => true, // propriété maison pour inclure cette page dans le plan
+                        'order' => 1005,
                     ],
                 ],
             ],
@@ -167,14 +166,14 @@ return [
             UrlService::class => UrlServiceFactory::class,
 
             //Evenement
-            RappelAgentAvantFormationService::class => RappelAgentAvantFormationServiceFactory::class,
             InscriptionClotureEvent::class => InscriptionClotureEventFactory::class,
             ConvocationEvent::class => ConvocationEventFactory::class,
             DemandeRetourEvent::class => DemandeRetourEventFactory::class,
+            RappelAgentEvent::class => RappelAgentEventFactory::class,
             SessionClotureEvent::class => SessionClotureEventFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             IndexController::class => IndexControllerFactory::class,
         ]
@@ -197,17 +196,17 @@ return [
         ],
         'template_map' => [
             'mes-formations/layout' => realpath('./module/Formation/view/layout/layout.phtml'),
-            'error/403'     => realpath('./module/Formation/view/error/403.phtml'),
+            'error/403' => realpath('./module/Formation/view/error/403.phtml'),
         ],
     ],
 
     'public_files' => [
-        'head_scripts'   => [
+        'head_scripts' => [
         ],
         'inline_scripts' => [
         ],
         'stylesheets' => [
-            '090_appcss'                  => 'css/mes-formations.css',
+            '090_appcss' => 'css/mes-formations.css',
         ],
     ],
 ];
