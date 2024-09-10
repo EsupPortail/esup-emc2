@@ -35,7 +35,21 @@ $formation = $journee->getInstance()->getFormation();
         </td>
     </tr><tr>
         <th style="width:8rem; text-align:left; ">Lieu </th>
-        <td><?php echo $journee->getLieu(); ?></td>
+        <td>
+            <?php if ($journee->getLieu()): ?>
+                <?php echo $journee->getLieu()->getBatiment(); ?>
+                <?php echo $journee->getLieu()->getLibelle(); ?>
+                -
+                <?php echo $journee->getLieu()->getVille(); ?>
+                <?php echo $journee->getLieu()->getCampus(); ?>
+            <?php else: ?>
+                <?php if ($journee->getOldLieu()): ?>
+                    <?php echo $journee->getOldLieu(); ?>
+                <?php else : ?>
+                    Aucun lieu de renseigné
+                <?php endif; ?>
+            <?php endif; ?>
+        </td>
     </tr>
     <?php if (!empty($formateurs)) : ?>
     <tr>
