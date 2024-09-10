@@ -672,7 +672,11 @@ class Session implements
                         $text .= $seance->getLieu()->getLibelle() . " - " . $seance->getLieu()->getBatiment() . " / ";
                         $text .= $seance->getLieu()->getCampus() . " - " . $seance->getLieu()->getVille();
                     } else {
-                        $text .= "Lieu non renseigné";
+                        if ($seance->getOldLieu()) {
+                            $text .= $seance->getOldLieu();
+                        } else {
+                            $text .= "Lieu non renseigné";
+                        }
                     }
                 }
                 if ($seance->getType() === Seance::TYPE_VOLUME) {
