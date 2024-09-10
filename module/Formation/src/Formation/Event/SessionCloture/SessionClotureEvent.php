@@ -5,6 +5,7 @@ namespace Formation\Event\SessionCloture;
 use DateInterval;
 use DateTime;
 use Exception;
+use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;
@@ -33,8 +34,7 @@ class SessionClotureEvent extends  EvenementService
             'session'       =>  $session->getId(),
         ];
 
-        $description = $type->getDescription();
-        $evenement = $this->createEvent($description, $description, $etat, $type, $parametres, $dateTraitement);
+        $evenement = $this->createEvent($type->getLibelle() . " (session #".$session->getId().")", $type->getDescription(), $etat, $type, $parametres, $dateTraitement);
         $this->ajouter($evenement);
         return $evenement;
     }
@@ -63,8 +63,9 @@ class SessionClotureEvent extends  EvenementService
         return Etat::SUCCES;
     }
 
-    public function updateEvent(Session $session): void
+    public function updateEvent(Seance $seance): void
     {
+        $session = $seance->getInstance();
         $evenements = $session->getEvenements()->toArray();
         $evenements = array_filter($evenements, function (Evenement $e) { return $e->getType()->getCode() === EvenementProvider::SESSION_CLOTURE;});
         foreach ($evenements as $evenement) {
@@ -76,13 +77,13 @@ class SessionClotureEvent extends  EvenementService
         //todo calcul valeur par defaut
         $dateTraitement = null; //si on force une date on la mettra ici.
         if ($dateTraitement === null) {
-            $dateDebut = $session->getDebut(true);
+            $dateFin = $seance->getDateFin();
             try {
                 $interval = new DateInterval('P' . $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::AUTO_CLOTURE) . 'D');
             } catch (Exception $e) {
                 throw new RuntimeException("Un problème est survenu lors du calcul de l'interval", 0 ,$e);
             }
-            $dateTraitement = $dateDebut->sub($interval);
+            $dateTraitement = $dateFin->sub($interval);
         }
         if (!$dateTraitement instanceof DateTime) {
             throw new RuntimeException("La date de traitement de l'evenement [".EvenementProvider::SESSION_CLOTURE."] n'a pas pu être déterminée.");

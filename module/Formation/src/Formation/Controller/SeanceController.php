@@ -15,12 +15,14 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenEvenement\Service\Evenement\EvenementServiceAwareTrait;
 
 
 class SeanceController extends AbstractActionController
 {
     use SeanceServiceAwareTrait;
     use SessionServiceAwareTrait;
+    use EvenementServiceAwareTrait;
 
     use ConvocationEventAwareTrait;
     use DemandeRetourEventAwareTrait;
@@ -93,6 +95,12 @@ class SeanceController extends AbstractActionController
         $this->gererEvenement($seance);
         $this->getSeanceService()->historise($seance);
 
+        if ($seance->isPremiereSeance() and $seance->isDerniereSeance()) {
+            foreach ($seance->getInstance()->getEvenements() as $evenement) {
+                $this->getEvenementService()->delete($evenement);
+            }
+        }
+
         return $this->redirect()->toRoute('formation/session/afficher', ['session' => $seance->getInstance()->getId()], [], true);
     }
 
@@ -117,6 +125,12 @@ class SeanceController extends AbstractActionController
                 $this->gererEvenement($seance);
                 $this->getSeanceService()->delete($seance);
 
+                if ($seance->isPremiereSeance() and $seance->isDerniereSeance()) {
+                    foreach ($seance->getInstance()->getEvenements() as $evenement) {
+                        $this->getEvenementService()->delete($evenement);
+                    }
+                }
+
             }
             exit();
         }
@@ -137,13 +151,13 @@ class SeanceController extends AbstractActionController
     public function gererEvenement(Seance $seance): void
     {
         if ($seance->isPremiereSeance()) {
-            $this->getInscriptionClotureEvent()->updateEvent($seance->getInstance());
-            $this->getConvocationEvent()->updateEvent($seance->getInstance());
-            $this->getRappelAgentEvent()->updateEvent($seance->getInstance());
+            $this->getInscriptionClotureEvent()->updateEvent($seance);
+            $this->getConvocationEvent()->updateEvent($seance);
+            $this->getRappelAgentEvent()->updateEvent($seance);
         }
         if ($seance->isDerniereSeance()) {
-            $this->getDemandeRetourEvent()->updateEvent($seance->getInstance());
-            $this->getSessionClotureEvent()->updateEvent($seance->getInstance());
+            $this->getDemandeRetourEvent()->updateEvent($seance);
+            $this->getSessionClotureEvent()->updateEvent($seance);
         }
     }
 }

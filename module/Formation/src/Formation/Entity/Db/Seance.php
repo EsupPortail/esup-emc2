@@ -213,13 +213,12 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     public function isPremiereSeance(): bool
     {
         $session = $this->getInstance();
-        return $this->getDateDebut()->format('d/m/Y H:i') === $session->getDebut();
+        return ($session->getSeances() === null OR $session->getSeances() === [] OR $this->getDateDebut()->format('d/m/Y H:i') === $session->getDebut());
     }
 
     public function isDerniereSeance(): bool
     {
         $session = $this->getInstance();
-        $res  = $this->getDateFin()->format('d/m/Y H:i') === $session->getFin();
-        return $this->getDateFin()->format('d/m/Y H:i') === $session->getFin();
+        return ($session->getSeances() === null OR $session->getSeances() === [] OR $this->getDateFin()->format('d/m/Y H:i') === $session->getFin());
     }
 }

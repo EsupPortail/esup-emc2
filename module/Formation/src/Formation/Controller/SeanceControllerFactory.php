@@ -13,6 +13,7 @@ use Formation\Service\Session\SessionService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class SeanceControllerFactory
 {
@@ -24,9 +25,11 @@ class SeanceControllerFactory
     public function __invoke(ContainerInterface $container): SeanceController
     {
         /**
+         * @var EvenementService $evenementService
          * @var SeanceService $seanceService
          * @var SessionService $sessionService
          */
+        $evenementService = $container->get(EvenementService::class);
         $seanceService = $container->get(SeanceService::class);
         $sessionService = $container->get(SessionService::class);
 
@@ -49,6 +52,7 @@ class SeanceControllerFactory
         $seanceForm = $container->get('FormElementManager')->get(SeanceForm::class);
 
         $controller = new SeanceController();
+        $controller->setEvenementService($evenementService);
         $controller->setSeanceService($seanceService);
         $controller->setSessionService($sessionService);
 

@@ -300,10 +300,11 @@ class Session implements
     /**
      * @return Seance[]|null
      */
-    public function getSeances(): ?array
+    public function getSeances(bool $withHisto = false): ?array
     {
         if (!isset($this->journees)) return null;
         $seances = $this->journees->toArray();
+        if (!$withHisto) $seances = array_filter($seances, function(Seance $seance) { return $seance->estNonHistorise();});
         usort($seances, function (Seance $a, Seance $b) {
             $debutA = $a->getDateDebut();
             $debutB = $b->getDateDebut();

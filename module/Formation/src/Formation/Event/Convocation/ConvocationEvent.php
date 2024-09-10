@@ -5,6 +5,7 @@ namespace Formation\Event\Convocation;
 use DateInterval;
 use DateTime;
 use Exception;
+use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;
@@ -33,8 +34,7 @@ class ConvocationEvent extends  EvenementService
             'session'       =>  $session->getId(),
         ];
 
-        $description = $type->getDescription();
-        $evenement = $this->createEvent($description, $description, $etat, $type, $parametres, $dateTraitement);
+        $evenement = $this->createEvent($type->getLibelle() . " (session #".$session->getId().")", $type->getDescription(), $etat, $type, $parametres, $dateTraitement);
         $this->ajouter($evenement);
         return $evenement;
     }
@@ -63,10 +63,11 @@ class ConvocationEvent extends  EvenementService
         return Etat::SUCCES;
     }
 
-    public function updateEvent(Session $session): void
+    public function updateEvent(Seance $seance): void
     {
+        $session = $seance->getInstance();
         $evenements = $session->getEvenements()->toArray();
-        $evenements = array_filter($evenements, function (Evenement $e) { return $e->getType()->getCode() === EvenementProvider::DEMANDE_RETOUR;});
+        $evenements = array_filter($evenements, function (Evenement $e) { return $e->getType()->getCode() === EvenementProvider::CONVOCATION;});
         foreach ($evenements as $evenement) {
             $session->removeEvenement($evenement);
             $this->getSessionService()->update($session);
@@ -76,7 +77,7 @@ class ConvocationEvent extends  EvenementService
         //todo calcul valeur par defaut
         $dateTraitement = null; //si on force une date on la mettra ici.
         if ($dateTraitement === null) {
-            $dateDebut = $session->getDebut(true);
+            $dateDebut = $seance->getDateDebut();
             try {
                 $interval = new DateInterval('P' . $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::AUTO_CONVOCATION) . 'D');
             } catch (Exception $e) {

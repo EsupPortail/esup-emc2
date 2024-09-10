@@ -40,7 +40,7 @@ $canEmargement = (
 $retour = $this->url('formation/session/afficher', ['session' => $session->getId()], ['force_canonical' => true], true);
 
 $formation = $session->getFormation();
-$seances = $session->getSeances();
+$seances = $session->getSeances(true);
 $inscriptions = $session->getInscriptions();
 
 $this->headTitle("Formation Instance: #" . $session->getInstanceCode() . " - " . $session->getFormation()->getLibelle());

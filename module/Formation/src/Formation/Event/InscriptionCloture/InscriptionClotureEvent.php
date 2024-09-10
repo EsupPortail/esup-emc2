@@ -5,6 +5,7 @@ namespace Formation\Event\InscriptionCloture;
 use DateInterval;
 use DateTime;
 use Exception;
+use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Session;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;
@@ -25,12 +26,6 @@ class InscriptionClotureEvent extends EvenementService
     use ParametreServiceAwareTrait;
     use SessionServiceAwareTrait;
 
-    private ?string $deadline = null;
-
-    public function setDeadline(?string $deadline): void
-    {
-        $this->deadline = $deadline;
-    }
 
     public function creer(Session $session, DateTime $dateTraitement = null): Evenement
     {
@@ -41,8 +36,7 @@ class InscriptionClotureEvent extends EvenementService
             'session'       =>  $session->getId(),
         ];
 
-        $description = $type->getDescription();
-        $evenement = $this->createEvent($description, $description, $etat, $type, $parametres, $dateTraitement);
+        $evenement = $this->createEvent($type->getLibelle() . " (session #".$session->getId().")", $type->getDescription(), $etat, $type, $parametres, $dateTraitement);
         $this->ajouter($evenement);
         return $evenement;
     }
@@ -71,8 +65,9 @@ class InscriptionClotureEvent extends EvenementService
         return Etat::SUCCES;
     }
 
-    public function updateEvent(Session $session): void
+    public function updateEvent(Seance $seance): void
     {
+        $session = $seance->getInstance();
         $evenements = $session->getEvenements()->toArray();
         $evenements = array_filter($evenements, function (Evenement $e) { return $e->getType()->getCode() === EvenementProvider::INSCRIPTION_CLOTURE;});
         foreach ($evenements as $evenement) {
@@ -84,7 +79,7 @@ class InscriptionClotureEvent extends EvenementService
         //todo calcul valeur par defaut
         $dateTraitement = $session->getDateClotureInscription();
         if ($dateTraitement === null) {
-            $dateDebut = $session->getDebut(true);
+            $dateDebut = $seance->getDateDebut();
             try {
                 $interval = new DateInterval('P' . $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::AUTO_CLOTURE) . 'D');
             } catch (Exception $e) {
