@@ -243,6 +243,18 @@ class SessionService
         return $sessions;
     }
 
+    public function getSessionsInPlansActifs(): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = $qb->leftJoin('formation.plans', 'plan')
+            ->andWhere('plan.dateDebut <= :now and (plan.dateFin IS NULL or plan.dateFin >= :now)')
+            ->setParameter('now', new DateTime());
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
     /** @return Session[] */
     public function getSessionsWithParams(array $params): array
     {
@@ -559,4 +571,33 @@ class SessionService
         $session->removeFormateur($formateur);
         $this->update($session);
     }
+
+    /**
+     * @param Session[] $sessions
+     * @return array
+     */
+    public function sortByGestionnaireAndEtat(array $sessions): array
+    {
+        $types = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE);
+        $dictionnaires = [];
+        foreach ($types as $type) $dictionnaires[-1][$type->getId()] = [];
+
+        foreach ($sessions as $session) {
+            $gestionnaires = $session->getGestionnaires();
+            if (empty($gestionnaires)) {
+                $dictionnaires[-1][$session->getEtatActif()->getType()->getId()][] = $session->getId();
+            } else {
+                foreach ($gestionnaires as $gestionnaire) {
+                    if (!isset($dictionnaires[$gestionnaire->getId()])) {
+                        $dictionnaires[$gestionnaire->getId()] = [];
+                        foreach ($types as $type) $dictionnaires[$gestionnaire->getId()][$type->getId()] = [];
+                    }
+                    $dictionnaires[$gestionnaire->getId()][$session->getEtatActif()->getType()->getId()][] = $session;
+                }
+            }
+        }
+
+        return $dictionnaires;
+    }
+
 }

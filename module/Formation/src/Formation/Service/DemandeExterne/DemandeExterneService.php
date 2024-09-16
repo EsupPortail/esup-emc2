@@ -248,6 +248,26 @@ class DemandeExterneService
         return $inscriptions;
     }
 
+    public function getDemandesExternesByAnnee(?int $annee = null): array
+    {
+        if ($annee === null) $annee = Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y H:i', '01/09/' . $annee . ' 08:00');
+        $fin = DateTime::createFromFormat('d/m/Y H:i', '31/08/' . ($annee + 1) . ' 18:00');
+
+        $qb = $this->createQueryBuilder()->orderBy('demande.histoCreation', 'asc')
+            ->andWhere('demande.histoCreation >= :debut')->setParameter('debut', $debut)
+            ->andWhere('demande.histoCreation <= :fin')->setParameter('fin', $fin);
+        /** @var Inscription[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $inscriptions = [];
+        foreach ($result as $item) {
+            $inscriptions[$item->getAgent()->getId()][] = $item;
+        }
+
+        return $inscriptions;
+    }
+
     /** FONCTION POUR LA RECHERCHE ************************************************************************************/
 
     /**
@@ -482,6 +502,33 @@ class DemandeExterneService
         $demandes = $qb->getQuery()->getResult();
 
         return $demandes;
+    }
+
+    /**
+     * @param DemandeExterne[] $demandes
+     * @return array
+     */
+    public function sortByGestionnaireAndEtat(array $demandes): array
+    {
+        $types = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
+        $dictionnaires = [];
+        foreach ($types as $type) $dictionnaires[-1][$type->getId()] = [];
+
+        foreach ($demandes as $demande) {
+            $gestionnaires = $demande->getGestionnaires();
+            if (empty($gestionnaires)) {
+                $dictionnaires[-1][$demande->getEtatActif()->getType()->getId()][] = $demande->getId();
+            } else {
+                foreach ($gestionnaires as $gestionnaire) {
+                    if (!isset($dictionnaires[$gestionnaire->getId()])) {
+                        $dictionnaires[$gestionnaire->getId()] = [];
+                        foreach ($types as $type) $dictionnaires[$gestionnaire->getId()][$type->getId()] = [];
+                    }
+                    $dictionnaires[$gestionnaire->getId()][$demande->getEtatActif()->getType()->getId()][] = $demande;
+                }
+            }
+        }
+        return $dictionnaires;
     }
 
 

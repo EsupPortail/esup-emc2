@@ -37,9 +37,15 @@ class IndexController extends AbstractActionController
         $connectedUser = $this->getUserService()->getConnectedUser();
         $connectedRole = $this->getUserService()->getConnectedRole();
 
-        if ($connectedRole and $connectedRole->getRoleId() === FormationRoles::GESTIONNAIRE_FORMATION) {
-            /** @see IndexController::indexGestionnaireAction() */
-            return $this->redirect()->toRoute('index-gestionnaire', [], [], true);
+        if ($connectedRole) {
+          switch ($connectedRole->getRoleId()) {
+              case FormationRoles::GESTIONNAIRE_FORMATION :
+                /** @see IndexController::indexGestionnaireAction() */
+                return $this->redirect()->toRoute('index-gestionnaire', [], [], true);
+              case FormationRoles::RESPONSABLE_FORMATION :
+                  /** @see IndexController::indexResponsableAction() */
+                  return $this->redirect()->toRoute('index-responsable', [], [], true);
+            }
         }
 
         $agent = $this->getAgentService()->getAgentByUser($connectedUser);
@@ -101,6 +107,34 @@ class IndexController extends AbstractActionController
 
             'dictionnaireDemande' => $dictionnaireDemande,
             'demandesSansGestionnaire' => $demandesSansGestionnaire,
+        ]);
+    }
+
+    public function indexResponsableAction(): ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $role = $this->getUserService()->getConnectedRole();
+
+        $sessions = $this->getSessionService()->getSessionsInPlansActifs();
+        $sessionTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE);
+        $dictionnaireSessions = $this->getSessionService()->sortByGestionnaireAndEtat($sessions);
+
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAnnee();
+        $demandeTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
+        $dictionnairesDemandes = $this->getDemandeExterneService()->sortByGestionnaireAndEtat($demandes);
+
+        $gestionnaires = $this->getUserService()->getRoleService()->getUtilisateursByRoleId(FormationRoles::GESTIONNAIRE_FORMATION);
+        usort($gestionnaires, function (User $a, User $b) { return $a->getDisplayName() <=> $b->getDisplayName();});
+
+        return new ViewModel([
+            'user' => $user,
+            'role' => $role,
+
+            'gestionnaires' => $gestionnaires,
+            'dictionnaireSessions' => $dictionnaireSessions,
+            'sessionTypes' => $sessionTypes,
+            'dictionnaireDemandes' => $dictionnairesDemandes,
+            'demandeTypes' => $demandeTypes,
         ]);
     }
 

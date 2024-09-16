@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * @see \Formation\Controller\IndexController::indexResponsableAction()
+ * @var User $user
+ * @var Role $role
+ *
+ * @var User[] $gestionnaires
+ *
+ * @var array $dictionnaireSessions
+ * @var EtatType[] $sessionTypes
+ *
+ * @var array $dictionnaireDemandes
+ * @var EtatType[] $demandeTypes
+ */
+
+use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\User;
+
+$this->headTitle("Index de gestion des formations");
+
+
+?>
+
+<h1 class="page-header">
+    Index de gestion des formations
+</h1>
+
+<h2> Liste des sessions aux plans de formations ouverts </h2>
+
+<table class="table table-condensed datatable">
+    <thead>
+    <tr>
+        <th> Gestionnaires </th>
+        <?php foreach($sessionTypes as $sessionType): ?>
+            <th>
+                <?php echo $this->etattype($sessionType); ?>
+                <?php //echo $sessionType->getLibelle(); ?>
+            </th>
+        <?php endforeach; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($gestionnaires as $gestionnaire) : ?>
+        <tr>
+            <td>
+                <?php echo $gestionnaire->getDisplayName(); ?>
+                <?php /** @see \Formation\Controller\SessionController::indexAction() */ ?>
+                <a href="<?php echo $this->url('formation/session',[],['query' => ['gestionnaires' => $gestionnaire->getId()]], true); ?>"
+                   title="Accéder à la liste des sessions de <?php echo $gestionnaire->getDisplayName(); ?>"
+                >
+                    <span class="icon icon-voir"></span>
+                </a>
+            </td>
+            <?php foreach($sessionTypes as $sessionType): ?>
+                <td>
+                    <?php if (isset($dictionnaireSessions[$gestionnaire->getId()][$sessionType->getId()])): ?>
+                        <?php echo count($dictionnaireSessions[$gestionnaire->getId()][$sessionType->getId()]); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+    <tr>
+        <td> Sans gestionnaire</td>
+        <?php foreach($sessionTypes as $sessionType): ?>
+            <td>
+                <?php if (isset($dictionnaireSessions[-1][$sessionType->getId()])): ?>
+                    <?php $nb = count($dictionnaireSessions[-1][$sessionType->getId()]); ?>
+                    <?php echo ($nb !== 0)?"<span class='text-danger'><span class='icon icon-attention'></span>".$nb."</span> ":0; ?>
+                <?php else: ?>
+                    -
+                <?php endif; ?>
+            </td>
+        <?php endforeach; ?>
+    </tr>
+    </tbody>
+</table>
+
+<span class="todo">Lien vers les sessions sans gestionnaires (pour le moment pas possible directement) </span>
+
+<h2> Liste des demandes externes pour l'années courantes </h2>
+
+<table class="table table-condensed datatable">
+    <thead>
+    <tr>
+        <th> Gestionnaires </th>
+        <?php foreach($demandeTypes as $demandeType): ?>
+            <th>
+                <?php echo $this->etattype($demandeType); ?>
+                <?php //echo $sessionType->getLibelle(); ?>
+            </th>
+        <?php endforeach; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($gestionnaires as $gestionnaire) : ?>
+        <tr>
+            <td>
+                <?php echo $gestionnaire->getDisplayName(); ?>
+                <?php /** @see \Formation\Controller\DemandeExterneController::indexAction() */ ?>
+                <a href="<?php echo $this->url('formation/demande-externe',[],['query' => ['gestionnaires' => $gestionnaire->getId()]], true); ?>"
+                   title="Accéder à la liste des demandess de <?php echo $gestionnaire->getDisplayName(); ?>"
+                >
+                    <span class="icon icon-voir"></span>
+                </a>
+            </td>
+            <?php foreach($demandeTypes as $demandeType): ?>
+                <td>
+                    <?php if (isset($dictionnaireDemandes[$gestionnaire->getId()][$demandeType->getId()])): ?>
+                        <?php echo count($dictionnaireDemandes[$gestionnaire->getId()][$demandeType->getId()]); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+    <tr>
+        <td> Sans gestionnaire</td>
+        <?php foreach($demandeTypes as $demandeType): ?>
+            <td>
+                <?php if (isset($dictionnaireDemandes[-1][$demandeType->getId()])): ?>
+                    <?php $nb = count($dictionnaireDemandes[-1][$demandeType->getId()]); ?>
+                    <?php echo ($nb !== 0)?"<span class='text-danger'><span class='icon icon-attention'></span>".$nb."</span> ":0; ?>
+                <?php else: ?>
+                    -
+                <?php endif; ?>
+            </td>
+        <?php endforeach; ?>
+    </tr>
+    </tbody>
+</table>
+
+
+<span class="todo">Lien vers les demandes sans gestionnaires (pour le moment pas possible directement) </span>

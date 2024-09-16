@@ -132,6 +132,15 @@ return [
                     ],
                 ],
                 [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'index-responsable',
+                    ],
+                    'roles' => [
+                        FormationRoles::RESPONSABLE_FORMATION,
+                    ],
+                ],
+                [
                     'controller' => FormationController::class,
                     'action' => [
                         'resultat-enquete',
@@ -199,6 +208,18 @@ return [
                         /** @see IndexController::indexGestionnaireAction **/
                         'controller' => IndexController::class,
                         'action'     => 'index-gestionnaire',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
+            'index-responsable' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/index-responsable',
+                    'defaults' => [
+                        /** @see IndexController::indexResponsableAction() **/
+                        'controller' => IndexController::class,
+                        'action'     => 'index-responsable',
                     ],
                 ],
                 'may_terminate' => true,
