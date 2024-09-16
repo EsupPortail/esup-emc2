@@ -57,6 +57,10 @@ class RappelEntretienProfessionnelService extends EvenementService {
                 $evenement->setLog("L'entretien professionnel a été historisé");
                 return Etat::ECHEC;
             }
+            if ($entretien->isDepasse()) {
+                $evenement->setLog("La date de l'entretien est dépassée");
+                return Etat::ECHEC;
+            }
             $this->getNotificationService()->triggerRappelEntretien($entretien);
         } catch(Exception $e) {
             $evenement->setLog($e->getMessage());
