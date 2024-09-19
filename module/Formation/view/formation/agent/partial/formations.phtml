@@ -46,7 +46,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                         Formation gérée par <?php echo $inscription->getSource(); ?>
                     </div>
                 <?php else : ?>
-                    <?php if ($inscription->getSession()->isEnqueteActive() AND $inscription->getEnquete() AND $inscription->getEnquete()->getValidation() === null) : ?>
+                    <?php if ($inscription->getSession()->isEnqueteActive() AND (!$inscription->getEnquete() OR $inscription->getEnquete()->getValidation() === null)): ?>
                         <div class="alert alert-warning">
                             <span class="icon icon-information"></span>
                             Enquête non remplie

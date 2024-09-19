@@ -116,7 +116,12 @@ class SessionService
         if ($addJointure) {
             $qb = $qb->leftJoin('Finstance.gestionnaires', 'decorateurGestionnaire')->addSelect('decorateurGestionnaire');
         }
-        $qb = $qb->andWhere('decorateurGestionnaire.id = (:gestionnaires)')->setParameter('gestionnaires', $gestionnaires);
+        if (in_array("-1",$gestionnaires[0])) {
+            $qb = $qb->andWhere('decorateurGestionnaire IS NULL OR decorateurGestionnaire.id = (:gestionnaires)')
+                ->setParameter('gestionnaires', $gestionnaires);
+        } else {
+            $qb = $qb->andWhere('decorateurGestionnaire.id = (:gestionnaires)')->setParameter('gestionnaires', $gestionnaires);
+        }
         return $qb;
     }
 
@@ -210,7 +215,7 @@ class SessionService
     }
 
     /** @return Session[][] */
-    public function getSessionsByGestionnaires(UserInterface $gestionnaire): array
+    public function getSessionsByGestionnaire(UserInterface $gestionnaire): array
     {
         $qb = $this->createQueryBuilder();
         $qb = SessionService::decorateWithGestionnairesId($qb, [$gestionnaire->getId()]);

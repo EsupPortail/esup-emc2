@@ -23,6 +23,7 @@ use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Session\SessionService;
 use Formation\Service\Session\SessionServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
@@ -50,6 +51,21 @@ class DemandeExterneService
     use StructureServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
+
+    private static function decorateWithEtatsCodes(QueryBuilder $qb, string $entityName, mixed $etats)
+    {
+        $qb = $qb
+            ->leftJoin($entityName . '.etats', 'decorateurEtat')->addSelect('decorateurEtat')
+            ->leftJoin('decorateurEtat.type', 'decorateurEtatType')->addSelect('decorateurEtatType')
+            ->andWhere('decorateurEtat.histoDestruction IS NULL')
+        ;
+
+        if (!empty($etats)) {
+            $qb = $qb->andWhere('decorateurEtatType.code in (:etats)')
+                ->setParameter('etats', $etats);
+        }
+        return $qb;
+    }
 
     /** GESTION ENTITE ************************************************************************************************/
 
@@ -143,18 +159,26 @@ class DemandeExterneService
 
         if (isset($params['agent'])) $qb = $qb->andWhere('demande.agent = :agent')->setParameter('agent', $params['agent']);
         if (isset($params['organisme']) && trim($params['organisme'] !== '')) $qb = $qb->andWhere('demande.organisme = :organisme')->setParameter('organisme', $params['organisme']);
-        if (isset($params['etat'])) $qb = $qb->andWhere('etat.type = :etat')->setParameter('etat', $params['etat'])->andWhere('etat.histoDestruction IS NULL');
-        if (isset($params['historise'])) {
-            if ($params['historise'] === '1') $qb = $qb->andWhere('demande.histoDestruction IS NOT NULL');
-            if ($params['historise'] === '0') $qb = $qb->andWhere('demande.histoDestruction IS NULL');
-        }
-        if (isset($params['annee']) and $params['annee'] !== '') {
+//        if (isset($params['etat'])) $qb = $qb->andWhere('etat.type = :etat')->setParameter('etat', $params['etat'])->andWhere('etat.histoDestruction IS NULL');
+
+        if (isset($params['annee']) AND $params['annee'] != '') {
             $annee = (int)$params['annee'];
             $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
             $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
             $qb = $qb
                 ->andWhere('demande.fin >= :debut')->setParameter('debut', $debut)
                 ->andWhere('demande.debut <= :fin')->setParameter('fin', $fin);
+        }
+        if (isset($params['gestionnaires']) and $params['gestionnaires'] != '') {
+            $qb = DemandeExterneService::decorateWithGestionnairesId($qb,  $params['gestionnaires']);
+        }
+        if (isset($params['historise']) and $params['historise'] != '') {
+            if ($params['historise'] == 1) $qb = $qb->andWhere('demande.histoDestruction IS NOT NULL');
+            if ($params['historise'] == 0) $qb = $qb->andWhere('demande.histoDestruction IS NULL');
+        }
+        if (isset($params['etats']) and $params['etats'] != '') {
+            $etats = $params['etats'];
+            $qb = DemandeExterneService::decorateWithEtatsCodes($qb, 'demande', $etats);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -361,7 +385,13 @@ class DemandeExterneService
         if ($addJointure) {
             $qb = $qb->leftJoin('demande.gestionnaires', 'decorateurGestionnaire')->addSelect('decorateurGestionnaire');
         }
-        $qb = $qb->andWhere('decorateurGestionnaire.id = (:gestionnaires)')->setParameter('gestionnaires', $gestionnaires);
+        $listing = []; foreach ($gestionnaires as $id) $listing[] = $id;
+        if (in_array("-1",$listing)) {
+            $qb = $qb->andWhere('decorateurGestionnaire IS NULL OR decorateurGestionnaire.id in (:gestionnaires)')
+                ->setParameter('gestionnaires', $listing);
+        } else {
+            $qb = $qb->andWhere('decorateurGestionnaire.id in (:gestionnaires)')->setParameter('gestionnaires',$listing);
+        }
         return $qb;
     }
 

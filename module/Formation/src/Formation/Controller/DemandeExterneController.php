@@ -18,6 +18,7 @@ use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Parametre\FormationParametres;
+use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
@@ -32,6 +33,7 @@ use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
@@ -46,6 +48,7 @@ class DemandeExterneController extends AbstractActionController {
     use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
 
     use DemandeExterneFormAwareTrait;
@@ -65,7 +68,18 @@ class DemandeExterneController extends AbstractActionController {
             'historise' => $fromQueries['historise']??null,
             'annee' =>  $fromQueries['annee']??null,
         ];
-
+        $liste = $this->getRequest()->getUri()->getQuery();
+        if ($liste AND $liste !== '') {
+            $liste = explode('&', $liste);
+            foreach ($liste as $item) {
+                [$key, $value] = explode('=', $item);
+                if ($key === "gestionnaires" or $key === "etats") {
+                    $params[$key][] = $value;
+                }
+            }
+        } else {
+            $params['etats'] = DemandeExterneEtats::ETATS_OUVERTS;
+        }
         $demandes = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($params);
 
         $etats = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
@@ -75,6 +89,7 @@ class DemandeExterneController extends AbstractActionController {
             'etats' => $etats,
 
             'params' => $params,
+            'gestionnaires' => $this->getUserService()->getUtilisateursByRoleIdAsOptions(FormationRoles::GESTIONNAIRE_FORMATION),
             'plafond' => $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::DEMANDE_EXTERNE_PLAFOND),
         ]);
     }

@@ -170,7 +170,7 @@ class SeanceForm extends Form
             'attributes' => [
                 'id' => 'creer',
                 'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-success',
             ],
         ]);
         //inputFilter

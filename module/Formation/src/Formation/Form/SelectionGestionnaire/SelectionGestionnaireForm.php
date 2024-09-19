@@ -43,7 +43,7 @@ class SelectionGestionnaireForm extends Form
             'attributes' => [
                 'id' => 'enregistrer',
                 'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-success',
             ],
         ]);
         //inputfilter

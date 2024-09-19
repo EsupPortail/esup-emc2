@@ -320,13 +320,12 @@ class Session implements
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) {
                 if ($journee->getType() === Seance::TYPE_SEANCE) {
-                    $dateString = $journee->getJour()->format('d/m/Y'). " " . $journee->getDebut();
-                    $date = DateTime::createFromFormat("d/m/Y H:i", $dateString);
-                    if ($minimum === null or $date < $minimum) $minimum = $date;
+                    $date = $journee->getDateDebut();
+                    if ($date !== null and ($minimum === null or $date < $minimum)) $minimum = $date;
                 }
                 if ($journee->getType() === Seance::TYPE_VOLUME) {
                     if ($journee->getVolumeDebut()) {
-                        $debut = $journee->getVolumeDebut()->format("Y/m/d");
+                        $debut = $journee->getVolumeDebut();
                         if ($minimum === null or $debut < $minimum) $minimum = $debut;
                     }
                 }
@@ -346,23 +345,20 @@ class Session implements
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) {
                 if ($journee->getType() === Seance::TYPE_SEANCE) {
-                    $dateString = $journee->getJour()->format('d/m/Y'). " " . $journee->getFin();
-                    $date = DateTime::createFromFormat("d/m/Y H:i", $dateString);
-                    if ($maximum === null or $date > $maximum) $maximum = $date;
+                    $date = $journee->getDateFin();
+                    if ($date !== null and ($maximum === null or $date > $maximum)) $maximum = $date;
                 }
                 if ($journee->getType() === Seance::TYPE_VOLUME) {
-                    if ($journee->getVolumeDebut()) {
-                        $fin = $journee->getVolumeFin()->format("Y/m/d");
+                    if ($journee->getVolumeFin()) {
+                        $fin = $journee->getVolumeFin();
                         if ($maximum === null or $fin > $maximum) $maximum = $fin;
                     }
                 }
             }
         }
-        if ($maximum !== null) {
-            if ($datetime) return $maximum;
-            else return $maximum->format('d/m/Y H:i');
-        }
-        return $maximum;
+        if ($maximum === null) return null;
+        if ($datetime) return $maximum;
+        return $maximum->format('d/m/Y H:i');
     }
 
     public function hasJournee(): bool

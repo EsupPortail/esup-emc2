@@ -96,7 +96,7 @@ class JustificationForm extends Form {
             ],
             'attributes' => [
                 'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-success',
             ],
         ]);
         $this->setInputFilter((new Factory())->createInputFilter([

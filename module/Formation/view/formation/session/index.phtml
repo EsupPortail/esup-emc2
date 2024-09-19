@@ -17,7 +17,7 @@ use UnicaenEtat\Entity\Db\EtatType;
 
 $this->headTitle("Index des sessions");
 
-usort($instances, function (Session $a, Session $b) { return $a->getDebut() <=> $b->getDebut();});
+usort($instances, function (Session $a, Session $b) { return $a->getDebut(true) <=> $b->getDebut(true);});
 
 $canVoir = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 ?>

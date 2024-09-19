@@ -37,7 +37,10 @@ use UnicaenEtat\Entity\Db\EtatType;
                     <div class="col-md-4">
                         <label for="gestionnaires">Gestionnaires :</label>
                         <select  id="gestionnaires" name="gestionnaires" class="selectpicker" data-live-search="true" multiple="multiple">
-<!--                            <option value=""> Peu importe </option>-->
+                            <option value="-1"
+                                <?php if (isset($params['gestionnaires']) AND in_array("".-1, (is_string($params['gestionnaires'])?[$params['gestionnaires']]:$params['gestionnaires']))) echo " selected "; ?>>
+                                    Sans gestionnaire
+                            </option>
                             <?php foreach ($gestionnaires as $id => $displayname) : ?>
                                 <option value="<?php echo $id; ?>"   <?php if( isset($params['gestionnaires']) AND in_array("".$id, (is_string($params['gestionnaires'])?[$params['gestionnaires']]:$params['gestionnaires']))) echo " selected "; ?>>
                                     <?php echo $displayname; ?>

@@ -3,11 +3,13 @@
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenUtilisateur\Entity\Db\User;
 
 /**
  * @see \Formation\Controller\DemandeExterneController::indexAction()
  * @var DemandeExterne[] $demandes
  * @var EtatType[] $etats
+ * @var User[] $gestionnaires
  * @var array $params
  * @var float $plafond
  */
@@ -23,7 +25,7 @@ $canAjouter = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
     Demandes de formations externes
 </h1>
 
-<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'params' => $params], [], true); ?>
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'params' => $params, 'gestionnaires' => $gestionnaires], [], true); ?>
 
 <?php if ($canAjouter) : ?>
     <?php /** @see \Formation\Controller\DemandeExterneController::creerPourAgentAction() */ ?>

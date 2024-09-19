@@ -90,7 +90,7 @@ class IndexController extends AbstractActionController
 
         $etatsTypesSession = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE);
         $etatsTypesDemande = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
-        $dictionnaireSession = $this->getSessionService()->getSessionsByGestionnaires($user);
+        $dictionnaireSession = $this->getSessionService()->getSessionsByGestionnaire($user);
         $sessionsSansGestionnaire = $this->getSessionService()->getSessionsSansGestionnaires();
 
         $dictionnaireDemande = $this->getDemandeExterneService()->getDemandesExternesByGestionnaires($user);

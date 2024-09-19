@@ -20,6 +20,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
 class DemandeExterneControllerFactory
@@ -43,6 +44,7 @@ class DemandeExterneControllerFactory
          * @var NatureService $natureService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
+         * @var UserService $userService
          * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
@@ -54,6 +56,7 @@ class DemandeExterneControllerFactory
         $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
+        $userService = $container->get(UserService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         /**
@@ -82,6 +85,7 @@ class DemandeExterneControllerFactory
         $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
+        $controller->setUserService($userService);
         $controller->setValidationInstanceService($validationInstanceService);
 
         $controller->setDemandeExterneForm($demandeExterneForm);

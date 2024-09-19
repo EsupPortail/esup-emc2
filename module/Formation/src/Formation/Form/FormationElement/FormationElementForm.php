@@ -80,7 +80,7 @@ class FormationElementForm extends Form
             ],
             'attributes' => [
                 'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-success',
             ],
         ]);
 

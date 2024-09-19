@@ -65,7 +65,15 @@ $this->headTitle("Index de gestion des formations");
         </tr>
     <?php endforeach; ?>
     <tr>
-        <td> Sans gestionnaire</td>
+        <td>
+            Sans gestionnaire
+            <?php /** @see \Formation\Controller\SessionController::indexAction() */ ?>
+            <a href="<?php echo $this->url('formation/session',[],['query' => ['gestionnaires' => -1]], true); ?>"
+               title="Accéder à la liste des sessions sans gestionnaire"
+            >
+                <span class="icon icon-voir"></span>
+            </a>
+        </td>
         <?php foreach($sessionTypes as $sessionType): ?>
             <td>
                 <?php if (isset($dictionnaireSessions[-1][$sessionType->getId()])): ?>
@@ -80,7 +88,6 @@ $this->headTitle("Index de gestion des formations");
     </tbody>
 </table>
 
-<span class="todo">Lien vers les sessions sans gestionnaires (pour le moment pas possible directement) </span>
 
 <h2> Liste des demandes externes pour l'années courantes </h2>
 
@@ -120,7 +127,15 @@ $this->headTitle("Index de gestion des formations");
         </tr>
     <?php endforeach; ?>
     <tr>
-        <td> Sans gestionnaire</td>
+        <td>
+            Sans gestionnaire
+            <?php /** @see \Formation\Controller\DemandeExterneController::indexAction() */ ?>
+            <a href="<?php echo $this->url('formation/demande-externe',[],['query' => ['gestionnaires' => -1]], true); ?>"
+               title="Accéder à la liste des demandes sans gestionnaire"
+            >
+                <span class="icon icon-voir"></span>
+            </a>
+        </td>
         <?php foreach($demandeTypes as $demandeType): ?>
             <td>
                 <?php if (isset($dictionnaireDemandes[-1][$demandeType->getId()])): ?>
@@ -136,4 +151,3 @@ $this->headTitle("Index de gestion des formations");
 </table>
 
 
-<span class="todo">Lien vers les demandes sans gestionnaires (pour le moment pas possible directement) </span>
