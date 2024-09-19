@@ -125,6 +125,16 @@ class SessionService
         return $qb;
     }
 
+    static public function decorateWithGestionnaireId(QueryBuilder $qb, int $gestionnaireId, bool $addJointure = true): QueryBuilder
+    {
+        if ($addJointure) {
+            $qb = $qb->leftJoin('Finstance.gestionnaires', 'decorateurGestionnaire')->addSelect('decorateurGestionnaire');
+        }
+        if ($gestionnaireId === -1) $qb = $qb->andWhere('decorateurGestionnaire IS NULL');
+        else  $qb = $qb->andWhere('decorateurGestionnaire.id = :gestionnaire')->setParameter('gestionnaire', $gestionnaireId);
+        return $qb;
+    }
+
     static public function decorateWithGroupeId(QueryBuilder $qb, array $themes, bool $addJointure = true): QueryBuilder
     {
         if ($addJointure) {
@@ -218,7 +228,7 @@ class SessionService
     public function getSessionsByGestionnaire(UserInterface $gestionnaire): array
     {
         $qb = $this->createQueryBuilder();
-        $qb = SessionService::decorateWithGestionnairesId($qb, [$gestionnaire->getId()]);
+        $qb = SessionService::decorateWithGestionnaireId($qb, $gestionnaire->getId());
         $qb = $qb->andWhere('Finstance.histoDestruction IS NULL');
         /** @var Session[] $sessions */
         $sessions = $qb->getQuery()->getResult();
