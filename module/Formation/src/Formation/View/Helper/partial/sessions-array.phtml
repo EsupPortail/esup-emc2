@@ -110,7 +110,7 @@ $sessions = array_reverse($sessions);
                     <?php endif; ?>
                 </td>
                 <td class="etat">
-                    <?php echo ($instance->getEtatActif()) ? $this->etatinstance($instance->getEtatActif()) : "N.C."; ?>
+                    <?php echo ($instance->getEtatActif()) ? $this->etatinstance($instance->getEtatActif(), ['display-categorie' => false]) : "N.C."; ?>
                 </td>
                 <td class="action">
                     <?php if ($canAfficherInstance) : ?>
