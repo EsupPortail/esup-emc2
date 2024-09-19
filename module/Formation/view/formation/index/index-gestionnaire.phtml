@@ -46,7 +46,7 @@ foreach ($dictionnaireDemande as $etatCode => $demandes) {
     <?php if (!empty($sessions)) : ?>
     <div class="card">
         <div class="card-header bg-default">
-            <?php echo $this->etattype($etatsTypesSession[$etatCode]); ?>
+            <?php echo $this->etattype($etatsTypesSession[$etatCode], ['display-categorie' => false]); ?>
             <?php echo count($sessions); ?> session·s à l'états [<?php echo $etatsTypesSession[$etatCode]->getLibelle(); ?>]
         </div>
         <?php if (count($sessions) > 0) : ?>
@@ -77,7 +77,7 @@ foreach ($dictionnaireDemande as $etatCode => $demandes) {
     <?php if (!empty($demandes)) : ?>
     <div class="card">
         <div class="card-header bg-default">
-            <?php echo $this->etattype($etatsTypesDemande[$etatCode]); ?>
+            <?php echo $this->etattype($etatsTypesDemande[$etatCode], ['display-categorie' => false]); ?>
             <?php echo count($demandes); ?> demande·s externe·s à l'états [<?php echo $etatsTypesDemande[$etatCode]->getLibelle(); ?>]
         </div>
         <?php if (count($demandes) > 0) : ?>

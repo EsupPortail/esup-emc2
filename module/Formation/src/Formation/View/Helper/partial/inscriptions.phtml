@@ -93,7 +93,7 @@ $complementaireComplete = $session->isListeComplementaireComplete();
                 <?php if ($displayListe) : ?>
                     <td> <?php echo $inscription->getListe() ?? "Aucune"; ?> </td>
                 <?php endif; ?>
-                <td> <?php echo $this->etatinstance($inscription->getEtatActif()); ?> </td>
+                <td> <?php echo $this->etatinstance($inscription->getEtatActif(), ['display-categorie' => false]); ?> </td>
                 <?php if ($displayDocument) : ?>
                     <td class="action">
                         <?php if ($canTeleverserAttestation) : ?>

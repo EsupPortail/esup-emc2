@@ -52,7 +52,7 @@ usort($dictionnaryDemandes,
 
                     <?php foreach ($ds as $d) : ?>
                         <br/>
-                        <?php echo $this->etatinstance($d->getEtatActif()); ?>
+                        <?php echo $this->etatinstance($d->getEtatActif(), ['display-categorie' => false]); ?>
                         <?php echo $d->getSession()->getFormation()->getLibelle(); ?>
                         (<?php echo $d->getSession()->getPeriode(); ?>)
                         <br/>
@@ -85,7 +85,7 @@ usort($dictionnaryDemandes,
 
                     <?php foreach ($ds as $d) : ?>
                         <br/>
-                        <?php echo $this->etatinstance($d->getEtatActif()); ?>
+                        <?php echo $this->etatinstance($d->getEtatActif(), ['display-categorie' => false]); ?>
                         <?php echo $d->getLibelle(); ?>
                         (<?php echo $d->getPeriodeAsString(); ?>)
                     <?php endforeach; ?>

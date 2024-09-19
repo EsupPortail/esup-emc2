@@ -15,7 +15,7 @@ use UnicaenEtat\Entity\Db\EtatType;
     La session de formation <strong><?php echo $session->getFormation()->getLibelle(); ?></strong>
     (<?php echo $session->getPeriode(); ?>) est actuellement à l'état
     <strong><?php echo $session->getEtatActif()->getType()->getLibelle(); ?></strong>
-    <?php echo $this->etatinstance($session->getEtatActif()); ?>.
+    <?php echo $this->etatinstance($session->getEtatActif(), ['display-categorie' => false]); ?>.
 </div>
 
 <form method="POST"
@@ -25,7 +25,7 @@ use UnicaenEtat\Entity\Db\EtatType;
         <?php foreach ($etats as $etat) : ?>
             <option
                     value="<?php echo $etat->getId(); ?>"
-                    data-content='<?php echo $this->etattype($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
+                    data-content='<?php echo $this->etattype($etat, ['display-categorie' => false]); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
             >
                 <?php echo $etat->getLibelle(); ?>
             </option>

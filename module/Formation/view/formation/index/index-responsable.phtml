@@ -35,7 +35,7 @@ $this->headTitle("Index de gestion des formations");
         <th> Gestionnaires </th>
         <?php foreach($sessionTypes as $sessionType): ?>
             <th>
-                <?php echo $this->etattype($sessionType); ?>
+                <?php echo $this->etattype($sessionType, ['display-categorie' => false]); ?>
                 <?php //echo $sessionType->getLibelle(); ?>
             </th>
         <?php endforeach; ?>
@@ -97,7 +97,7 @@ $this->headTitle("Index de gestion des formations");
         <th> Gestionnaires </th>
         <?php foreach($demandeTypes as $demandeType): ?>
             <th>
-                <?php echo $this->etattype($demandeType); ?>
+                <?php echo $this->etattype($demandeType, ['display-categorie' => false]); ?>
                 <?php //echo $sessionType->getLibelle(); ?>
             </th>
         <?php endforeach; ?>

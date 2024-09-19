@@ -20,7 +20,7 @@ $action = $session->getFormation();
                 <dt class="col-md-4"> Session </dt>
                 <dd class="col-md-8"> <?php echo $session->getId(); ?> - <?php echo $session->getPeriode(); ?> </dd>
                 <dt class="col-md-4"> État de la session</dt>
-                <dd class="col-md-8"> <?php echo $this->etatinstance($session->getEtatActif()); ?></dd>
+                <dd class="col-md-8"> <?php echo $this->etatinstance($session->getEtatActif(), ['display-categorie' => false]); ?></dd>
             </dl>
         </div>
         <div class="col-md-6">
@@ -28,7 +28,7 @@ $action = $session->getFormation();
                 <dt class="col-md-4"> Volume suivi </dt>
                 <dd class="col-md-8"> <?php echo $inscription->getDureePresence(); ?> / <?php echo $session->getDuree(); ?> heures</dd>
                 <dt class="col-md-4"> État de l'inscription</dt>
-                <dd class="col-md-8"> <?php echo $this->etatinstance($inscription->getEtatActif()); ?></dd>
+                <dd class="col-md-8"> <?php echo $this->etatinstance($inscription->getEtatActif(), ['display-categorie' => false]); ?></dd>
             </dl>
         </div>
     </div>

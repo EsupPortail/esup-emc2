@@ -92,7 +92,7 @@ foreach ($etatTypes as $type => $etattypes) {
         <tbody>
         <?php foreach ($types as $type) : ?>
             <tr>
-                <td> <?php echo $this->etattype($type); ?>  </td>
+                <td> <?php echo $this->etattype($type, ['display-categorie' => false]); ?>  </td>
                 <td> <?php echo $type->getCode(); ?> </td>
                 <td> <?php echo $type->getLibelle(); ?> </td>
                 <td> <?php echo $type->getOrdre(); ?> </td>

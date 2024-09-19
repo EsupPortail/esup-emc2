@@ -27,7 +27,7 @@ use UnicaenEtat\Entity\Db\EtatType;
 <!--                            <option value=""> Peu importe </option>-->
                             <?php foreach ($etats as $etat) : ?>
                                 <option value="<?php echo $etat->getCode(); ?>" <?php if( isset($params['etats']) AND in_array($etat->getCode(), (is_string($params['etats'])?[$params['etats']]:$params['etats']))) echo " selected "; ?>
-                                        data-content='<?php  echo $this->etattype($etat); ?> <?php echo $etat->getLibelle(); ?>'
+                                        data-content='<?php  echo $this->etattype($etat, ['display-categorie' => false]); ?> <?php echo $etat->getLibelle(); ?>'
                                 >
                                     <?php echo $etat->getLibelle(); ?>
                                 </option>

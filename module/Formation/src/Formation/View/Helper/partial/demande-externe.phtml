@@ -22,7 +22,7 @@ $action = $options['action'] ?? true;
     <div class="col-md-7 description">
 
         <div>
-        <?php echo $this->etatinstance($demande->getEtatActif()); ?>
+        <?php echo $this->etatinstance($demande->getEtatActif(),['display-categorie' => false]); ?>
         <strong><?php echo $demande->getLibelle(); ?></strong>
         <br/>
         <?php echo $demande->getOrganisme(); ?> -

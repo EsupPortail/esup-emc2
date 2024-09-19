@@ -130,7 +130,7 @@ if (isset($options['affichage']) and isset($options['affichage']['gestionnaires'
                     </span>
                 <?php endforeach; ?>
             </td>
-            <td> <?php echo $this->etatinstance($demande->getEtatActif()); ?> </td>
+            <td> <?php echo $this->etatinstance($demande->getEtatActif(), ['display-categorie' => false]); ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>

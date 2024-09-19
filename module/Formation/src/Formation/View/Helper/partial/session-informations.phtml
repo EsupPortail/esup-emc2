@@ -21,7 +21,7 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
 <?php if ($mode === 'liste') : ?>
     <dl class="row">
         <dt class="col-md-3"> État</dt>
-        <dd class="col-md-9">  <?php echo ($session->getEtatActif()) ? $this->etattype($session->getEtatActif()->getType()) . " " . $session->getEtatActif()->getType()->getLibelle() : "N.C."; ?> </dd>
+        <dd class="col-md-9">  <?php echo ($session->getEtatActif()) ? $this->etattype($session->getEtatActif()->getType(), ['display-categorie' => false]) . " " . $session->getEtatActif()->getType()->getLibelle() : "N.C."; ?> </dd>
         <?php if ($session->getComplement() !== null) : ?>
             <dt class="col-md-3"> Compléments</dt>
             <dd class="col-md-9"> <?php echo $session->getComplement(); ?></dd>
@@ -94,7 +94,7 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
 <?php endif; ?>
 
 <?php if ($mode === 'bloc') : ?>
-    <?php echo $this->etatinstance($session->getEtatActif()); ?>
+    <?php echo $this->etatinstance($session->getEtatActif(), ['display-categorie' => false]); ?>
     <strong><?php echo $session->getFormation()->getLibelle(); ?></strong>
     <br/>
     Session <?php echo $session->getId(); ?> du <?php echo $session->getDebut(); ?> au <?php echo $session->getFin(); ?>

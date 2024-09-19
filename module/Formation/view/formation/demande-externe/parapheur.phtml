@@ -48,7 +48,7 @@ $canValider = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
             <td> <?php echo $demande->getSession()->getFormation()->getLibelle(); ?> </td>
             <td> <?php echo $demande->getSession()->getType(); ?> </td>
             <td> <?php
-                echo $this->etatinstance($demande->getEtatActif());
+                echo $this->etatinstance($demande->getEtatActif(), ['display-categorie' => false]);
                 ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
@@ -127,7 +127,7 @@ $canValider = $this->isAllowed(DemandeexternePrivileges::getResourceId(Demandeex
             </td>
             <td>
                 <?php
-                echo $this->etatinstance($demande->getEtatActif());
+                echo $this->etatinstance($demande->getEtatActif(),['display-categorie' => false]);
                 ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
