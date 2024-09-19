@@ -149,7 +149,7 @@ button {
 }
 
 .btn-secondary {
-    background: var(--bs-info);
+    background: var(--bs-secondary);
 }
 
 .btn-secondary:hover,
