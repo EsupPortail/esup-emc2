@@ -62,6 +62,14 @@ span.action a
     text-decoration: none;
 }
 
+a.action {
+    text-decoration: none;
+    padding: 0 1rem;
+    border-radius : 0.25rem;
+}
+a.action:hover {
+    background: lightgray;
+}
 /** TAB *****************************************/
 
 div.tab-content {

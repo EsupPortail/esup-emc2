@@ -92,7 +92,8 @@ return [
                         'creer-pour-agent',
                         'modifier',
                         'ajouter-devis',
-                        'retirer-devis',
+                        'ajouter-programme',
+                        'retirer-justificatif',
                         'selectionner-gestionnaires',
                     ],
                     'privileges' => [
@@ -296,18 +297,28 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter-devis/:demande-externe',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
+                                        /** @see DemandeExterneController::ajouterDevisAction() */
                                         'action' => 'ajouter-devis'
                                     ],
                                 ],
                             ],
-                            'retirer-devis' => [
+                            'ajouter-programme' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/retirer-devis/:devis',
+                                    'route'    => '/ajouter-programme/:demande-externe',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
-                                        'action' => 'retirer-devis'
+                                        /** @see DemandeExterneController::ajouterProgrammeAction() */
+                                        'action' => 'ajouter-programme'
+                                    ],
+                                ],
+                            ],
+                            'retirer-justificatif' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/retirer-justificatif/:justificatif',
+                                    'defaults' => [
+                                        /** @see DemandeExterneController::retirerJustificatifAction() */
+                                        'action' => 'retirer-justificatif'
                                     ],
                                 ],
                             ],

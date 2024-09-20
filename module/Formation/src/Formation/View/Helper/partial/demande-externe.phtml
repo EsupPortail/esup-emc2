@@ -3,7 +3,8 @@
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Provider\Etat\DemandeExterneEtats;
-use Formation\Provider\Privilege\DemandeexternePrivileges;use Formation\Provider\Validation\DemandeExterneValidations;
+use Formation\Provider\Privilege\DemandeexternePrivileges;
+use Formation\Provider\Validation\DemandeExterneValidations;
 
 /**
  * @see \Formation\View\Helper\DemandeExterneViewHelper
@@ -36,20 +37,48 @@ $action = $options['action'] ?? true;
             </div>
         <?php else : ?>
             <?php /** @var Fichier  $devis */
-            foreach ($demande->getDevis() as $devis) : ?>
-                <a href="<?php echo $this->url('download-fichier', ['fichier' => $devis->getId()], [], true); ?>">
+            foreach ($demande->getDevis() as $justificatif) : ?>
+                <strong>Devis</strong>
+                <a href="<?php echo $this->url('download-fichier', ['fichier' => $justificatif->getId()], [], true); ?>">
                     <span class="icon icon-fichier"></span>
-                    <?php echo $devis->getNomOriginal(); ?>
+                    <?php echo $justificatif->getNomOriginal(); ?>
                 </a>&nbsp;
                 <?php if ($canModifierDemande) : ?>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::retirerDevisAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/retirer-devis', ['devis' => $devis->getId()], [], true); ?>">
-                        <span class="icon icon-unchecked text-danger"></span></a>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::retirerJustificatifAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/retirer-justificatif', ['justificatif' => $justificatif->getId()], [], true); ?>" class="action">
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span>
+                            Retirer le devis
+                        </span>
+                    </a>
                 <?php endif; ?>
                 <br/>
             <?php endforeach; ?>
         <?php endif; ?>
-            <br/>
+        <?php if (empty($demande->getProgrammes())) : ?>
+            <div class="alert alert-danger">
+                <span class="text-danger"><span class="icon icon-attention"></span> Aucun programme ! Pour pouvoir valider une demande, le programme de la formation doit être déposé.</span>
+            </div>
+        <?php else : ?>
+            <?php /** @var Fichier  $devis */
+            foreach ($demande->getDevis() as $justificatif) : ?>
+                <strong>Programme</strong>
+                <a href="<?php echo $this->url('download-fichier', ['fichier' => $justificatif->getId()], [], true); ?>">
+                    <span class="icon icon-fichier"></span>
+                    <?php echo $justificatif->getNomOriginal(); ?>
+                </a>&nbsp;
+                <?php if ($canModifierDemande) : ?>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::retirerJustificatifAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/retirer-justificatif', ['justificatif' => $justificatif->getId()], [], true); ?>" class="action">
+                    <span class="text-danger">
+                        <span class="icon icon-unchecked"></span>
+                        Retirer le programme
+                    </span>
+                    </a>
+                <?php endif; ?>
+                <br/>
+            <?php endforeach; ?>
+        <?php endif; ?>
         </div>
     </div>
     <div class="col-md-5">
@@ -65,7 +94,7 @@ $action = $options['action'] ?? true;
             <?php $canValiderAgentDemande = $this->isAllowed($demande, DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT); ?>
             <?php /** @see \Formation\Controller\DemandeExterneController::validerAgentAction() */?>
             <a  href="<?php echo $this->url('formation/demande-externe/valider-agent', ['demande-externe' => $demande->getId()], [], true); ?>"
-                class="btn btn-success ajax-modal <?php if (!$canValiderAgentDemande OR empty($demande->getDevis())) echo " disabled "; ?> " data-event="modification">
+                class="btn btn-success ajax-modal <?php if (!$canValiderAgentDemande OR empty($demande->isJustificatifsOk())) echo " disabled "; ?> " data-event="modification">
                 <span class="icon icon-valider"></span>
                 Valider la demande (Agent)
             </a>
@@ -81,6 +110,10 @@ $action = $options['action'] ?? true;
                 <a href="<?php echo $this->url('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], [], true); ?>"
                    class="btn btn-primary ajax-modal" data-event="modification">
                     <span class="icon icon-televerser"></span>Ajouter un devis</a><br/>
+            <?php /** @see \Formation\Controller\DemandeExterneController::ajouterProgrammeAction() */ ?>
+            <a href="<?php echo $this->url('formation/demande-externe/ajouter-programme', ['demande-externe' => $demande->getId()], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon icon-televerser"></span>Ajouter un programme</a><br/>
         <?php endif ?>
         <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
         <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], ['query' => ['retour' => $retour]], true); ?>"

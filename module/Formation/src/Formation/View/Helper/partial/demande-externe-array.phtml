@@ -88,9 +88,12 @@ if (isset($options['affichage']) and isset($options['affichage']['gestionnaires'
                             <?php echo $devis->getNomOriginal(); ?>
                         <?php endif; ?>
                         <?php if ($canTeleverserDevis && $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) : ?>
-                            <?php /** @see \Formation\Controller\DemandeExterneController::retirerDevisAction() */ ?>
-                            <a href="<?php echo $this->url('formation/demande-externe/retirer-devis', ['devis' => $devis->getId()], ['query' => ['retour' => $this->url()]], true); ?>">
-                                <span class="icon icon-unchecked text-danger"></span>
+                            <?php /** @see \Formation\Controller\DemandeExterneController::retirerJustificatifAction() */ ?>
+                            <a href="<?php echo $this->url('formation/demande-externe/retirer-justificatif', ['justificatif' => $devis->getId()], ['query' => ['retour' => $this->url()]], true); ?>">
+                                <span class="text-danger">
+                                    <span class="icon icon-unchecked"></span>
+
+                                </span>
                             </a>
                         <?php endif; ?>
                         <br>

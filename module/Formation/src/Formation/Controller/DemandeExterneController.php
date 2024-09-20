@@ -581,7 +581,7 @@ class DemandeExterneController extends AbstractActionController {
             if ($file['name'] != '') {
                 $nature = $this->getNatureService()->getNature($data['nature']);
                 $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
-                $demande->addDevis($fichier);
+                $demande->addJustificatif($fichier);
                 $this->getDemandeExterneService()->update($demande);
             }
 
@@ -592,21 +592,64 @@ class DemandeExterneController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('formation/default/default-form');
         $vm->setVariables([
-            'title' => 'Téléverserment d\'un fichier',
+            'title' => "Téléverserment d'un devis pour la formation",
             'form' => $form,
         ]);
         return $vm;
     }
 
-    public function retirerDevisAction() : Response
+    public function ajouterProgrammeAction(): ViewModel|Response
     {
-        $fichier = $this->getFichierService()->getRequestedFichier($this, 'devis');
+        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $fichier = new Fichier();
+        $devisNature = $this->getNatureService()->getNatureByCode(FichierNature::DEMANDEEXTERNE_PROGRAMME);
+        $fichier->setNature($devisNature);
+        $form = $this->getUploadForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-programme', ['demande-externe' => $demande->getId()], ['query' => ['retour' => $retour]], true));
+        /** @var Select $select */
+        $select = $form->get('nature');
+        $select->setValueOptions([$devisNature->getId() => $devisNature->getLibelle()]);
+        $form->bind($fichier);
+
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $files = $request->getFiles();
+            $file = $files['fichier'];
+
+            if ($file['name'] != '') {
+                $nature = $this->getNatureService()->getNature($data['nature']);
+                $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                $demande->addJustificatif($fichier);
+                $this->getDemandeExterneService()->update($demande);
+            }
+
+            if ($retour) return $this->redirect()->toUrl($retour);
+            return $this->redirect()->toRoute('inscription-externe', [], [], true);
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('formation/default/default-form');
+        $vm->setVariables([
+            'title' => 'Téléverserment du programme de la formation',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function retirerJustificatifAction() : Response
+    {
+        $fichier = $this->getFichierService()->getRequestedFichier($this, 'justificatif');
         $this->getFichierService()->delete($fichier);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
 
-        return $this->redirect()->toRoute('inscription-externe', [], ['fragment' => "demandes"], true);
+        return $this->redirect()->toRoute('inscription-externe', [], [], true);
     }
 
     /** ENVOYER DANS LE PARAPHEUR *************************************************************************************/

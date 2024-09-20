@@ -6,6 +6,8 @@ use Application\Entity\Db\Agent;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Fichier\Entity\Db\Fichier;
+use Formation\Provider\FichierNature\FichierNature;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
@@ -51,7 +53,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $justificationGestionnaire = null;
     private ?string $justificationDrh = null;
     private ?string $justificationRefus = null;
-    private ?Collection $devis;
+    private ?Collection $fichiers;
 
     private Collection $gestionnaires;
     private Collection $sessions;
@@ -59,7 +61,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     public function __construct()
     {
         $this->etats = new ArrayCollection();
-        $this->devis = new ArrayCollection();
+        $this->fichiers = new ArrayCollection();
         $this->gestionnaires = new ArrayCollection();
         $this->sessions = new ArrayCollection();
         $this->observations = new ArrayCollection();
@@ -311,15 +313,64 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         $this->justificationRefus = $justificationRefus;
     }
 
-    public function getDevis(): array
+    /** GESTION DES PIECES JUSTIFICATIVES *****************************************************************************/
+
+    public function isJustificatifsOk(): bool
     {
-        return $this->devis->toArray();
+        if (! $this->hasDevis()) return false;
+        if (! $this->hasProgramme()) return false;
+        return true;
     }
 
-    public function addDevis($fichier): void
+    public function hasDevis(): bool
     {
-        $this->devis->add($fichier);
+        $fichiers = $this->getJustificatifs();
+        foreach ($fichiers as $fichier) {
+            if ($fichier->getNature()->getCode() === FichierNature::DEMANDEEXTERNE_DEVIS AND $fichier->estNonHistorise()) return true;
+        }
+        return false;
     }
+
+    public function hasProgramme(): bool
+    {
+        $fichiers = $this->getJustificatifs();
+        foreach ($fichiers as $fichier) {
+            if ($fichier->getNature()->getCode() === FichierNature::DEMANDEEXTERNE_PROGRAMME AND $fichier->estNonHistorise()) return true;
+        }
+        return false;
+    }
+
+    /** @return Fichier[] */
+    public function getJustificatifs() : array
+    {
+        return $this->fichiers->toArray();
+    }
+
+    public function addJustificatif($fichier): void
+    {
+        $this->fichiers->add($fichier);
+    }
+
+    /** @return Fichier[] */
+    public function getDevis(): array
+    {
+        $fichiers = $this->getJustificatifs();
+        $devis = array_filter($fichiers, function (Fichier $fichier) {
+            return $fichier->getNature()->getCode() === FichierNature::DEMANDEEXTERNE_DEVIS AND $fichier->estNonHistorise();
+        });
+        return $devis;
+    }
+
+    /** @return Fichier[] */
+    public function getProgrammes(): array
+    {
+        $fichiers = $this->getJustificatifs();
+        $programme = array_filter($fichiers, function (Fichier $fichier) {
+            return $fichier->getNature()->getCode() === FichierNature::DEMANDEEXTERNE_PROGRAMME AND $fichier->estNonHistorise(); });
+        return $programme;
+    }
+
+    /** Gestion des sessions rattachées *******************************************************************************/
 
     /** @return Session[] */
     public function getSessions(): array
