@@ -89,7 +89,6 @@ class DemandeExterneForm extends Form
             ],
             'attributes' => [
                 'id' => 'montant',
-                'class' => 'tinymce',
             ],
         ]);
 
@@ -260,7 +259,7 @@ class DemandeExterneForm extends Form
 
             'motivation' => ['required' => true,],
 
-            'prise-en-charge' => ['required' => true,],
+            'prise-en-charge' => ['required' => false,],
             'cofinanceur' => ['required' => false,],
         ]));
     }
