@@ -59,7 +59,7 @@ class EntretienProfessionnelForm extends Form {
         ]);
 
         //Agent
-        $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+        $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)
@@ -74,7 +74,7 @@ class EntretienProfessionnelForm extends Form {
             'name' => 'campagne',
             'type' => Select::class,
             'options' => [
-                'label' => "Campagne  <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> : ",
+                'label' => "Campagne  <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> : ",
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -94,7 +94,7 @@ class EntretienProfessionnelForm extends Form {
             'type' => Date::class,
             'name' => 'date_entretien',
             'options' => [
-                'label' => "Date de l'entretien <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Date de l'entretien <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
 //                'format' => 'd/m/Y',
             ],
@@ -108,7 +108,7 @@ class EntretienProfessionnelForm extends Form {
             'type' => Time::class,
             'name' => 'heure_entretien',
             'options' => [
-                'label' => "Heure de l'entretien <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Heure de l'entretien <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'H:i',
             ],
@@ -122,7 +122,7 @@ class EntretienProfessionnelForm extends Form {
             'type' => Text::class,
             'name' => 'lieu_entretien',
             'options' => [
-                'label' => "Lieu de l'entretien <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Lieu de l'entretien <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [

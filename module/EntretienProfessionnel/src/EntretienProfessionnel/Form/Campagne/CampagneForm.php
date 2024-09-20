@@ -27,7 +27,7 @@ class CampagneForm extends Form
             'name' => 'annee',
             'type' => Select::class,
             'options' => [
-                'label' => "Année de la campagne <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Année de la campagne <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
@@ -46,7 +46,7 @@ class CampagneForm extends Form
             'name' => 'date_debut',
             'type' => Date::class,
             'options' => [
-                'label' => "Date de début de la campagne <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Date de début de la campagne <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
@@ -62,7 +62,7 @@ class CampagneForm extends Form
             'name' => 'date_fin',
             'type' => Date::class,
             'options' => [
-                'label' => "Date de fin de la campagne <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Date de fin de la campagne <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
@@ -93,7 +93,7 @@ class CampagneForm extends Form
             'name' => 'date_en_poste',
             'type' => Date::class,
             'options' => [
-                'label' => "Date pour prise de poste <span class='icon icon-information' title=\"L'agent·e doit être en poste à la date donnée\"></span> <span class='icon obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Date pour prise de poste <span class='icon icon-information' title=\"L'agent·e doit être en poste à la date donnée\"></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',

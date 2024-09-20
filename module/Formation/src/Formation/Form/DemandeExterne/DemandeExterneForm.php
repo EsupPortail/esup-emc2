@@ -24,7 +24,7 @@ class DemandeExterneForm extends Form
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Intitulé du stage <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Intitulé du stage <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -37,7 +37,7 @@ class DemandeExterneForm extends Form
             'type' => Text::class,
             'name' => 'organisme',
             'options' => [
-                'label' => "Organisme de formation <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Organisme de formation <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -50,7 +50,7 @@ class DemandeExterneForm extends Form
             'type' => Email::class,
             'name' => 'contact',
             'options' => [
-                'label' => "Adresse électronique de contact de l'organisme <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Adresse électronique de contact de l'organisme <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -62,7 +62,8 @@ class DemandeExterneForm extends Form
             'type' => Textarea::class,
             'name' => 'missions',
             'options' => [
-                'label' => "Missions en lien avec le demande de formation: ",
+                'label' => "Mission·s actuellement exercée·s sur votre poste:  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>",
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'missions',
@@ -85,7 +86,8 @@ class DemandeExterneForm extends Form
             'type' => Text::class,
             'name' => 'montant',
             'options' => [
-                'label' => "Montant des frais associés : ",
+                'label' => "Montant des frais associés <span class='icon icon-obligatoire' title='Champ obligatoire'></span>",
+                'label_options' => ['disable_html_escape' => true,]
             ],
             'attributes' => [
                 'id' => 'montant',
@@ -97,7 +99,7 @@ class DemandeExterneForm extends Form
             'type' => Text::class,
             'name' => 'lieu',
             'options' => [
-                'label' => "Lieu (ville) <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Lieu (ville) <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -111,7 +113,7 @@ class DemandeExterneForm extends Form
             'type' => Date::class,
             'name' => 'debut',
             'options' => [
-                'label' => "Date de début <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Date de début <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
 //                'format' => HasPeriodeFieldset::format,
             ],
@@ -125,7 +127,7 @@ class DemandeExterneForm extends Form
             'type' => Date::class,
             'name' => 'fin',
             'options' => [
-                'label' => "Date de fin <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Date de fin <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
 //                'format' => 'd/m/Y'
             ],
@@ -139,7 +141,7 @@ class DemandeExterneForm extends Form
             'type' => Radio::class,
             'name' => 'modalite',
             'options' => [
-                'label' => "Modalité de la session de formation  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Modalité de la session de formation  <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => [
                     "présentiel" => "Je suivrai la formation en présentiel",
@@ -156,7 +158,7 @@ class DemandeExterneForm extends Form
             'type' => Textarea::class,
             'name' => 'motivation',
             'options' => [
-                'label' => "Motivation <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Motivation <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -170,7 +172,7 @@ class DemandeExterneForm extends Form
             'type' => Radio::class,
             'name' => 'conge-formation-syndicale',
             'options' => [
-                'label' => "Demandez-vous cette formation au titre du congé de formation syndicale ? <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Demandez-vous cette formation au titre du congé de formation syndicale ? <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => [
                     true => "Oui",
@@ -189,7 +191,7 @@ class DemandeExterneForm extends Form
             'type' => Radio::class,
             'name' => 'prise-en-charge',
             'options' => [
-                'label' => "Votre composante accepte-t-elle de prendre en charge les frais de mission de l’agent ?  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Votre composante accepte-t-elle de prendre en charge les frais de mission de l’agent ?  <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => [
                     true => "Oui",
@@ -235,7 +237,7 @@ class DemandeExterneForm extends Form
             'libelle' => ['required' => true,],
             'organisme' => ['required' => true,],
             'contact' => ['required' => true,],
-            'missions' => ['required' => false,],
+            'missions' => ['required' => true,],
             'pourquoi' => ['required' => false,],
             'montant' => [
                 'required' => true,

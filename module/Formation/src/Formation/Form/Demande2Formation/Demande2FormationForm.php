@@ -23,7 +23,7 @@ class Demande2FormationForm extends Form {
             'type' => Select::class,
             'name' => 'groupe',
             'options' => [
-                'label' => "Groupe de formation <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Groupe de formation <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => 'Sélectionner un groupe ...',
                 'value_options' => $this->getFormationGroupeService()->getFormationsGroupesByAxeAsOption($axe),
@@ -40,7 +40,7 @@ class Demande2FormationForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Intitulé du stage <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Intitulé du stage <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [

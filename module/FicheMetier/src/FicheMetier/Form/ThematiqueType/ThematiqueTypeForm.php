@@ -29,7 +29,7 @@ class ThematiqueTypeForm extends Form
             'type' => Text::class,
             'name' => 'code',
             'options' => [
-                'label' => "Code associé au type <span class='icon obligatoire text-danger' title='Champ obligatoire et unique'></span> :",
+                'label' => "Code associé au type <span class='icon icon-obligatoire text-danger' title='Champ obligatoire et unique'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -40,7 +40,7 @@ class ThematiqueTypeForm extends Form
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libellé du type <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Libellé du type <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -62,7 +62,7 @@ class ThematiqueTypeForm extends Form
             'type' => Radio::class,
             'name' => 'obligatoire',
             'options' => [
-                'label' => "Type de thématique obligatoire <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Type de thématique obligatoire <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => [
                     true => "Oui",
@@ -77,7 +77,7 @@ class ThematiqueTypeForm extends Form
             'type' => Number::class,
             'name' => 'ordre',
             'options' => [
-                'label' => "Ordre <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Ordre <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [

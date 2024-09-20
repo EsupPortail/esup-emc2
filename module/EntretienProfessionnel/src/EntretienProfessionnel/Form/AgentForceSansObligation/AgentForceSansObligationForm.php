@@ -27,7 +27,7 @@ class AgentForceSansObligationForm extends Form
     {
         //agent
         //Agent
-        $agent = new SearchAndSelect('agentsearch', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+        $agent = new SearchAndSelect('agentsearch', ['label' => "Agent <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)
@@ -55,7 +55,7 @@ class AgentForceSansObligationForm extends Form
             'type' => Radio::class,
             'name' => 'type',
             'options' => [
-                'label' => "Type de forçage  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Type de forçage  <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => AgentForceSansObligation::FORCAGE_ARRAY,
             ],

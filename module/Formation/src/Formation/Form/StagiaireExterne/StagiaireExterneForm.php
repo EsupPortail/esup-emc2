@@ -19,7 +19,7 @@ class StagiaireExterneForm extends Form {
             'type' => Text::class,
             'name' => 'prenom',
             'options' => [
-                'label' => "Prénom <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Prénom <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
@@ -31,7 +31,7 @@ class StagiaireExterneForm extends Form {
             'type' => Text::class,
             'name' => 'nom',
             'options' => [
-                'label' => "Nom d'usage<span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Nom d'usage<span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
@@ -82,7 +82,7 @@ class StagiaireExterneForm extends Form {
             'type' => Email::class,
             'name' => 'email',
             'options' => [
-                'label' => "Adresse électronique <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Adresse électronique <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [

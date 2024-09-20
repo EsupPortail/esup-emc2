@@ -19,7 +19,7 @@ class ThematiqueElementForm extends Form
             'type' => Select::class,
             'name' => 'niveau',
             'options' => [
-                'label' => "Niveau <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Niveau <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => 'Sélectionner un niveau ...',
                 'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions('Thematique'),
