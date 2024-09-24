@@ -431,4 +431,20 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         $text .= "</dl>";
         return $text;
     }
+
+    public function getAnnee(): string
+    {
+        $debut = $this->getDebut();
+        if (!$debut) return "Année inconnue";
+        return $debut->format('Y');
+    }
+
+    public function getPeriode(): string
+    {
+        $debut = $this->getDebut()->format('d/m/Y');
+        $fin = $this->getFin()->format('d/m/Y');
+
+        if ($debut === $fin) return $debut;
+        return $debut." au ".$fin;
+    }
 }

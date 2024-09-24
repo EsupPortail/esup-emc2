@@ -201,6 +201,22 @@ class DemandeExterneService
         return $result;
     }
 
+
+    /**
+     * @var Agent[] $agents
+     * @var bool $withHisto
+     * @return DemandeExterne[]
+     */
+    public function getDemandesExternesByAgents(array $agents, bool $withHisto = false): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('demande.agent in (:agents)')->setParameter('agents', $agents);
+        if (!$withHisto) $qb->andWhere('demande.histoDestruction IS NULL');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
     /** @return DemandeExterne[] */
     public function getDemandesExternesByEtats(array $etatsCodes): array
     {
@@ -560,6 +576,7 @@ class DemandeExterneService
         }
         return $dictionnaires;
     }
+
 
 
 }

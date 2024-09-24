@@ -4,6 +4,7 @@ namespace Formation\Assertion;
 
 
 use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -99,6 +100,9 @@ class InscriptionAssertion extends AbstractAssertion
         switch ($action) {
             case 'afficher' :
                 return $this->computeAssertion($entity, InscriptionPrivileges::INSCRIPTION_AFFICHER);
+            case 'afficher-agent' :
+                return $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER);
+
         }
 
         return true;

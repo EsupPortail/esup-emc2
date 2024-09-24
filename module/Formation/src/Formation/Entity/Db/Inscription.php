@@ -17,6 +17,7 @@ use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
@@ -159,6 +160,19 @@ class Inscription implements
         $this->justificationRefus = $justificationRefus;
     }
 
+    public function getLastValidation(): ?ValidationInstance
+    {
+        $validations = array_filter($this->getValidations(), function (ValidationInstance $validation) {
+            return $validation->estNonHistorise();
+        });
+        if (empty($validations)) return null;
+
+        usort($validations, function (ValidationInstance $a, ValidationInstance $b) {
+            return $a->getHistoCreation() <=> $b->getHistoCreation();
+        });
+        return $validations[0];
+    }
+
     public function isRqth(): bool
     {
         return $this->rqth;
@@ -177,16 +191,6 @@ class Inscription implements
     public function setPrecisionRqth(?string $precisionRqth): void
     {
         $this->precisionRqth = $precisionRqth;
-    }
-
-    public function getValidationEnquete(): ?DateTime
-    {
-        return $this->validationEnquete;
-    }
-
-    public function setValidationEnquete(?DateTime $validationEnquete): void
-    {
-        $this->validationEnquete = $validationEnquete;
     }
 
     public function getSource(): string

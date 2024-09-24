@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @var \Formation\Entity\Db\Inscription $inscription
+ * @var \Formation\Entity\Db\Session $session
+ */
+
+use Formation\Entity\Db\Inscription;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
+
+?>
+
+<?php if ($session->isEtatActif(SessionEtats::ETAT_CLOTURE_INSTANCE)) : ?>
+    <?php if ($inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH)
+        AND $inscription->getListe() === Inscription::PRINCIPALE) : ?>
+        <?php $presence = $inscription->getDureePresence(); ?>
+        <?php $duree = $inscription->getSession()->getDuree(); ?>
+        <?php echo  $presence; ?> sur <?php echo $duree; ?>
+        <br>
+        <?php if ($presence != $duree) : ?>
+            <span class="badge" style="background: var(--bs-danger);">
+                                        L'agent·e a été absent·e
+                                    </span>
+        <?php endif; ?>
+    <?php else : ?>
+        <?php if ($inscription->getListe() !== null) : ?>
+            Liste <?php echo $inscription->getListe(); ?>
+        <?php else: ?>
+            Inscription non classée
+        <?php endif; ?>
+    <?php endif; ?>
+<?php else: ?>
+    Dernière validation le <?php echo $inscription->getEtatActif()->getHistoCreation()->format('d/m/Y'); ?>
+    <br>
+    par
+    <?php echo $inscription->getEtatActif()->getHistoCreateur()->getDisplayName(); ?>
+<?php endif; ?>

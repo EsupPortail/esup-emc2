@@ -2,6 +2,7 @@
 
 namespace Formation;
 
+use Application\Provider\Privilege\AgentPrivileges;
 use Formation\Assertion\InscriptionAssertion;
 use Formation\Assertion\InscriptionAssertionFactory;
 use Formation\Controller\FormationController;
@@ -67,10 +68,21 @@ return [
                 [
                     'controller' => InscriptionController::class,
                     'action' => [
-                        'afficher'
+                        'afficher',
                     ],
                     'privileges' => [
                         InscriptionPrivileges::INSCRIPTION_AFFICHER,
+                    ],
+                    'assertion' => InscriptionAssertion::class,
+                ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'afficher-agent',
+                    ],
+                    'privileges' => [
+                        //AgentPrivileges::AGENT_AFFICHER, // !!! peg-leg
+                        'agent-agent_afficher',
                     ],
                     'assertion' => InscriptionAssertion::class,
                 ],
@@ -193,6 +205,16 @@ return [
                                     'defaults' => [
                                         /** @see InscriptionController::afficherAction() */
                                         'action' => 'afficher',
+                                    ],
+                                ],
+                            ],
+                            'afficher-agent' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/afficher-agent/:agent',
+                                    'defaults' => [
+                                        /** @see InscriptionController::afficherAgentAction() */
+                                        'action' => 'afficher-agent',
                                     ],
                                 ],
                             ],

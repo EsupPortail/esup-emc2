@@ -815,5 +815,13 @@ class Session implements
         return false;
     }
 
+    public function getAnnee(): string
+    {
+        $debut = $this->getDebut(true);
+        if (!$debut) return "Année inconnue";
+        return $debut->format('Y');
+    }
+
+
 
 }

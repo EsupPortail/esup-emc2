@@ -13,7 +13,10 @@ use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Template\TextTemplates;
 use Formation\Provider\Validation\MesFormationsValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
@@ -108,10 +111,10 @@ class AgentController extends AbstractActionController
             return $a->getAgent();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
 
-        $inscriptionsValidees = $this->getInscriptionService()->getInscriptionsValideesByAgents($agents, null);
-        $inscriptionsNonValidees = $this->getInscriptionService()->getInscriptionsNonValideesByAgents($agents, null);
-        $demandesValidees = $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($agents, Formation::getAnnee());
-        $demandesNonValidees = $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($agents, Formation::getAnnee());
+        $inscriptions = $this->getInscriptionService()->getInscriptionsByAgents($agents);
+        $inscriptionsEnAttente = array_filter($inscriptions, function (Inscription $inscription) { return $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE AND $inscription->getSession()->isEtatActif(SessionEtats::ETAT_INSCRIPTION_OUVERTE)); });
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgents($agents);
+        $demandesEnAttente = array_filter($demandes, function (DemandeExterne $demande) { return $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_AGENT); });
 
 
         return new ViewModel([
@@ -119,10 +122,10 @@ class AgentController extends AbstractActionController
             'role' => $role,
             'agents' => $agents,
 
-            'inscriptionsValidees' => $inscriptionsValidees,
-            'inscriptionsNonValidees' => $inscriptionsNonValidees,
-            'demandesValidees' => $demandesValidees,
-            'demandesNonValidees' => $demandesNonValidees,
+            'inscriptions' => $inscriptions,
+            'inscriptionsEnAttente' => $inscriptionsEnAttente,
+            'demandes' => $demandes,
+            'demandesEnAttente' => $demandesEnAttente,
         ]);
     }
 

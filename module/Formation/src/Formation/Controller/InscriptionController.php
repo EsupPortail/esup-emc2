@@ -2,8 +2,12 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
 use Fichier\Controller\FichierController;
 use Fichier\Entity\Db\Fichier;
@@ -40,6 +44,8 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class InscriptionController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use EnqueteServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
@@ -739,5 +745,26 @@ class InscriptionController extends AbstractActionController
         return $vm;
     }
 
+    /** Affichage d'information **************************************************************************************/
 
+    public function afficherAgentAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $inscriptions = $this->getInscriptionService()->getInscriptionsByAgent($agent);
+        $superieurs = array_map(function (AgentSuperieur $a) {
+            return $a->getSuperieur();
+        }, $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
+        $autorites = array_map(function (AgentAutorite $a) {
+            return $a->getAutorite();
+        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
+
+
+        return new ViewModel([
+            'title' => "Affichage des informations pour ".$agent->getDenomination(),
+            'agent' => $agent,
+            'inscriptions' => $inscriptions,
+            'superieurs' => $superieurs,
+            'autorites' => $autorites,
+        ]);
+    }
 }

@@ -29,3 +29,14 @@
     text-align: center;
     height: 1.75rem;
 }
+
+
+.cartouche {
+    border-radius: 0.25rem;
+    border: 1px gray solid;
+    padding: 1rem;
+}
+
+.element {
+    padding: 0.25rem;
+}

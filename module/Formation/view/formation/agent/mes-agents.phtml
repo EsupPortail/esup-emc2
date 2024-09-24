@@ -1,8 +1,12 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Inscription;
+use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -12,10 +16,10 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var User $user
  * @var Role $role
  *
- * @var Inscription[] $inscriptionsValidees
- * @var DemandeExterne[] $demandesValidees
- * @var Inscription[] $inscriptionsNonValidees
- * @var DemandeExterne[] $demandesNonValidees
+ * @var Inscription[] $inscriptions
+ * @var Inscription[] $inscriptionsEnAttente
+ * @var DemandeExterne[] $demandes
+ * @var DemandeExterne[] $demandesEnAttente
  */
 
 $nbAgent = count($agents)
@@ -27,43 +31,260 @@ $nbAgent = count($agents)
 
 <div class="row">
     <div class="col-md-7">
-        Vous êtes le <?php echo $role->getLibelle(); ?> de <?php echo $nbAgent; ?> agent·s.
+        Vous êtes le <?php echo $role->getLibelle(); ?> de <?php echo $nbAgent; ?> agent·es.
     </div>
     <div class="col-md-5">
         <?php /** @see \Formation\Controller\AgentController::listerMesAgentsAction() */ ?>
         <a href="<?php echo $this->url('formation/mes-agents/lister', [], [], true); ?>"
            class="btn btn-secondary ajax-modal">
             <span class="icon icon-lister"></span>
-            Lister les agents dont je suis responsable
+            Lister les agent·es dont je suis responsable
         </a>
     </div>
 </div>
+
+<!-- DECLARATION DES ONGLETS --------------------------------------------------------------------------------->
 
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
     <button class="nav-link active" id="formation-demande-tab"
             data-bs-toggle="tab" data-bs-target="#formation-demande"
             type="button" role="tab" aria-controls="formation-demande" aria-selected="true">
-        Demandes de formations
+        Demandes au plan de formation
+        <br>
+        <?php if (!empty($inscriptionsEnAttente)): ?>
+            <span class="badge" style="background:var(--bs-warning);">
+                <span class="icon icon-attention"></span>
+                <?php echo count($demandesEnAttente); ?> demande·s en attente
+            </span>
+        <?php endif; ?>
     </button>
     <button class="nav-link" id="formation-liste-tab"
             data-bs-toggle="tab" data-bs-target="#formation-liste"
             type="button" role="tab" aria-controls="formation-liste" aria-selected="true">
-        Listes des formations
+        Demandes à titre individuel
+        <br>
+        <?php if (!empty($demandesEnAttente)): ?>
+            <span class="badge" style="background:var(--bs-warning);">
+                <span class="icon icon-attention"></span>
+                <?php echo count($demandesEnAttente); ?> demande·s en attente
+            </span>
+        <?php endif; ?>
     </button>
 </div>
 
+
 <div class="tab-content">
+<!-- DEMANDES AU PLAN DE FORMATION --------------------------------------------------------------------------------->
+
     <div id="formation-demande" class="tab-pane">
-        <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptionsNonValidees, 'demandes' => $demandesNonValidees]); ?>
+        <h2> Inscriptions à des formations au plan de formation </h2>
+
+        <div class="alert alert-primary">
+            Vous avez <?php echo count($inscriptionsEnAttente); ?> demande·s d'inscription en attente :
+            <ul>
+                <?php foreach ($inscriptionsEnAttente as $inscription) : ?>
+                    <li>
+                        Demande de <strong><?php echo $inscription->getIndividu()->getDenomination(); ?></strong>
+                        pour la formation <strong><?php echo $inscription->getSession()->getFormation()->getLibelle(); ?></strong>
+<!--                        <a href="#inscription_--><?php //echo $inscription->getId(); ?><!--" class="action primary">-->
+<!--                            <span class="icon icon-voir"></span>-->
+<!--                            Visualiser-->
+<!--                        </a>-->
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+        </div>
+
+        <div class="row">
+        <table class="table table-condensed datatable" id="inscription_interne">
+            <thead>
+                <tr>
+                    <th class="col-md-2"> Année </th>
+                    <th class="col-md-3"> Agent </th>
+                    <th class="col-md-4" data-type="num"> Formation </th>
+                    <th class="col-md-3"> État de l'inscription </th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($inscriptions as $inscription): ?>
+                <?php
+                    $stagiaire = $inscription->getIndividu();
+                    $session = $inscription->getSession();
+                    $enAttente = $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE) && $session->isEtatActif(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
+                ?>
+                <tr id="inscription_<?php echo $inscription->getId(); ?>"
+                    style="<?php if ($enAttente) echo 'background: var(--unistrap-color-light)'; ?>"
+                >
+                    <td> <?php echo $session->getAnnee(); ?></td>
+                    <td>
+                        <?php echo $stagiaire->getDenomination(); ?><br>
+                        <?php if ($this->isAllowed($stagiaire, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                            <?php /** @see \Formation\Controller\InscriptionController::afficherAgentAction() */ ?>
+                            <a      href="<?php echo $this->url('formation/inscription/afficher-agent',['agent' => $stagiaire->getId()], [], true); ?>"
+                                    class="action secondary ajax-modal">
+                                <span class="icon icon-voir"></span>
+                                Visualiser
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                    <td data-order="<?php echo -1*($session->getDebut(true)->getTimestamp()); ?>">
+                        <div style="display: flex;  align-items: center;">
+                            <div style="padding-right: 1rem;">
+                                <?php echo $this->etatinstance($session->getEtatActif(), ['display-categorie' => false]); ?>
+                            </div>
+                            <div >
+                                <?php echo $session->getFormation()->getLibelle(); ?> <br>
+                                <?php echo $session->getPeriode(); ?>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex;  align-items: center;">
+                            <div style="padding-right: 1rem;">
+                                <?php echo $this->etatinstance($inscription->getEtatActif(), ['display-categorie' => false]); ?>
+                            </div>
+                            <div>
+                            <?php if ($session->isEtatActif(SessionEtats::ETAT_CLOTURE_INSTANCE)) : ?>
+                                <?php if ($inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH)
+                                    AND $inscription->getListe() === Inscription::PRINCIPALE) : ?>
+                                    <?php $presence = $inscription->getDureePresence(); ?>
+                                    <?php $duree = $inscription->getSession()->getDuree(); ?>
+                                    <?php echo  $presence; ?> sur <?php echo $duree; ?>
+                                    <br>
+                                    <?php if ($presence != $duree) : ?>
+                                        <span class="badge" style="background: var(--bs-danger);">
+                                            L'agent·e a été absent·e
+                                        </span>
+                                    <?php endif; ?>
+                                <?php else : ?>
+                                    <?php if ($inscription->getListe() !== null) : ?>
+                                        Liste <?php echo $inscription->getListe(); ?>
+                                    <?php else: ?>
+                                        Inscription non classée
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <?php if ($enAttente) : ?>
+                                    <?php /** @see \Formation\Controller\InscriptionController::validerResponsableAction() */?>
+                                    <a href="<?php echo $this->url('formation/inscription/valider-responsable', ['inscription' => $inscription->getId()], [], true); ?>"
+                                       class="action success ajax-modal" data-event="modification">
+                                        <span class="icon icon-checked"></span>
+                                        Valider
+                                    </a>
+                                <br>
+                                    <?php /** @see \Formation\Controller\InscriptionController::refuserResponsableAction() */?>
+                                    <a href="<?php echo $this->url('formation/inscription/refuser-responsable', ['inscription' => $inscription->getId()], [], true); ?>"
+                                       class="action danger ajax-modal" data-event="modification"
+                                    >
+                                        <span class="icon icon-unchecked"></span>
+                                        Refuser
+                                    </a>
+                                <?php else: ?>
+                                        Validée le <?php echo $inscription->getEtatActif()->getHistoCreation()->format('d/m/Y'); ?>
+                                        <br>
+                                        par
+                                        <?php echo $inscription->getEtatActif()->getHistoCreateur()->getDisplayName(); ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        </div>
     </div>
 
+
+    <!-- DEMANDES A TITRE INDIVIDUEL ---------------------------------------------------------------------------------->
     <div id="formation-liste" class="tab-pane">
-        <?php echo $this->partial('partial/liste-formation', ['inscriptions' => $inscriptionsValidees, 'demandes' => $demandesValidees]); ?>
-    </div>
 
-    <!-- Extraction ------------------------------------------------------------------------------------->
-    <div id="extraction" class="tab-pane">
-<!--        --><?php //echo $this->partial('partial/extraction', ['structure' => $structure]); ?>
+        <h2> Inscriptions à des formations à titre individuel </h2>
+
+        <div class="alert alert-primary">
+            Vous avez <?php echo count($demandesEnAttente); ?> demande·s d'inscription en attente :
+            <ul>
+                <?php foreach ($demandesEnAttente as $demande) : ?>
+                    <li>
+                        Demande de <strong><?php echo $demande->getAgent()->getDenomination(); ?></strong>
+                        pour la formation <strong><?php echo $demande->getLibelle(); ?></strong>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+        </div>
+        <table class="table table-condensed datatable" id="inscription_externe">
+            <thead>
+            <tr>
+                <th class="col-md-2"> Année </th>
+                <th class="col-md-3"> Agent </th>
+                <th class="col-md-4" data-type="num"> Formation </th>
+                <th class="col-md-3"> État de l'inscription </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($demandes as $demande): ?>
+                <?php
+                $stagiaire = $demande->getAgent();
+                $enAttente = $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_AGENT);
+                ?>
+                <tr id="demande_<?php echo $demande->getId(); ?>"
+                    style="<?php if ($enAttente) echo 'background: var(--unistrap-color-light)'; ?>"
+                >
+                    <td> <?php echo $demande->getAnnee(); ?></td>
+                    <td>
+                        <?php echo $stagiaire->getDenomination(); ?>
+                        <br>
+                        <a href="" class="action secondary">
+                            <span class="icon icon-voir"></span>
+                            Visualiser
+                        </a>
+                    </td>
+                    <td data-order="<?php echo -1*($demande->getDebut()->getTimestamp()); ?>">
+                        <div style="display: flex;  align-items: center;">
+                            <div style="padding-right: 1rem;">
+                                <?php echo $this->etatinstance($demande->getEtatActif(), ['display-categorie' => false]); ?>
+                            </div>
+                            <div >
+                                <?php echo $demande->getLibelle(); ?> <br>
+                                <?php echo $demande->getPeriode(); ?>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex;  align-items: center;">
+                            <div style="padding-right: 1rem;">
+                                <?php echo $this->etatinstance($demande->getEtatActif(), ['display-categorie' => false]); ?>
+                            </div>
+                            <div>
+                                <?php if ($enAttente) : ?>
+                                    <?php /** @see \Formation\Controller\DemandeExterneController::validerResponsableAction() */ ?>
+                                    <a      href="<?php echo $this->url('formation/demande-externe/valider-responsable', ['demande-externe' => $demande->getId()], [], true); ?>"
+                                            class="action success ajax-modal" data-event="modification">
+                                        <span class="icon icon-checked"></span>
+                                        Valider
+                                    </a>
+                                    <br>
+                                    <?php /** @see \Formation\Controller\DemandeExterneController::refuserResponsableAction() */ ?>
+                                    <a      href="<?php echo $this->url('formation/demande-externe/refuser-responsable', ['demande-externe' => $demande->getId()], [], true); ?>"
+                                            class="action danger ajax-modal" data-event="modification">
+                                        <span class="icon icon-unchecked"></span>
+                                        Refuser
+                                    </a>
+                                <?php else: ?>
+                                    Validée le <?php echo $demande->getEtatActif()->getHistoCreation()->format('d/m/Y'); ?>
+                                    <br>
+                                    par
+                                    <?php echo $demande->getEtatActif()->getHistoCreateur()->getDisplayName(); ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -97,5 +318,15 @@ $nbAgent = count($agents)
             window.location.reload();
         });
     });
-</script>
 
+    $(function() {
+        $('table#inscription_interne').dataTable({
+            paging: false,
+            autoWidth: false,
+        });
+        $('table#inscription_externe').dataTable({
+            paging: false,
+            autoWidth: false,
+        });
+    });
+</script>

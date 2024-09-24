@@ -154,8 +154,8 @@ class InscriptionService
             ->leftJoin('session.etats', 'etat')->addSelect('etat')
             ->leftJoin('etat.type', 'etype')->addSelect('etype')
             ->andWhere('etat.histoDestruction IS NULL')
-            ->andWhere('etype.code <> :code')->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE);
-
+//            ->andWhere('etype.code <> :code')->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE)
+            ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }

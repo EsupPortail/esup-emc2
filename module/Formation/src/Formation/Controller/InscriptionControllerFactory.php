@@ -3,6 +3,8 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAutorite\AgentAutoriteService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
@@ -35,6 +37,8 @@ class InscriptionControllerFactory
     {
         /**
          * @var AgentService $agentService
+         * @var AgentAutoriteService $agentAutoriteService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var EtatInstanceService $etatInstanceService
          * @var EnqueteService $enqueteService
          * @var FichierService $fichierService
@@ -47,6 +51,8 @@ class InscriptionControllerFactory
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAutoriteService = $container->get(AgentAutoriteService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $enqueteService = $container->get(EnqueteService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $fichierService = $container->get(FichierService::class);
@@ -72,6 +78,8 @@ class InscriptionControllerFactory
 
         $controller = new InscriptionController();
         $controller->setAgentService($agentService);
+        $controller->setAgentAutoriteService($agentAutoriteService);
+        $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setEnqueteService($enqueteService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFichierService($fichierService);

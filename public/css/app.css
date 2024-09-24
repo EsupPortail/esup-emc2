@@ -67,9 +67,36 @@ a.action {
     padding: 0 1rem;
     border-radius : 0.25rem;
 }
+a.action.success {
+    color: var(--bs-success);
+}
+a.action.danger {
+    color: var(--bs-danger);
+}
+a.action.primary {
+    color: var(--bs-primary);
+}
+a.action.secondary {
+    color: var(--bs-secondary);
+}
 a.action:hover {
     background: lightgray;
 }
+
+a.action.success:hover {
+    background: lightgreen;
+}
+a.action.danger:hover {
+    background: #ffa6c4;
+}
+a.action.primary:hover {
+    background: lightblue;
+}
+
+a.action.secondary:hover {
+    background: lightgray;
+}
+
 /** TAB *****************************************/
 
 div.tab-content {

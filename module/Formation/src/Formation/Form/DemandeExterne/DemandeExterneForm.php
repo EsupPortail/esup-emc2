@@ -62,7 +62,7 @@ class DemandeExterneForm extends Form
             'type' => Textarea::class,
             'name' => 'missions',
             'options' => [
-                'label' => "Mission·s actuellement exercée·s sur votre poste:  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>",
+                'label' => "Quelles sont vos missions actuelles sur votre poste ?  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -86,7 +86,7 @@ class DemandeExterneForm extends Form
             'type' => Text::class,
             'name' => 'montant',
             'options' => [
-                'label' => "Montant des frais associés <span class='icon icon-obligatoire' title='Champ obligatoire'></span>",
+                'label' => "Liste des frais annexes à prévoir (transport, hébergement, restauration, ...) <span class='icon icon-obligatoire' title='Champ obligatoire'></span>",
                 'label_options' => ['disable_html_escape' => true,]
             ],
             'attributes' => [
@@ -158,7 +158,7 @@ class DemandeExterneForm extends Form
             'type' => Textarea::class,
             'name' => 'motivation',
             'options' => [
-                'label' => "Motivation <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Pour quelles raisons souhaitez-vous vous inscrire à cette formation ? <span class='icon icon-obligatoire' title='Champ obligatoire'></span>",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
