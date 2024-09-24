@@ -73,7 +73,7 @@ return [
                             ],
                             [
                                 'order' => 320,
-                                'label' => 'Stage hors plan de formation',
+                                'label' => 'Formation hors plan de formation',
                                 'route' => 'inscription-externe',
                                 'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-externe'),
                             ],

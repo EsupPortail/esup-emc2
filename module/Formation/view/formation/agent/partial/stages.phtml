@@ -21,21 +21,21 @@ foreach ($stages as $demande) {
 }
 ?>
 
-<h2> Stages validés </h2>
+<h2> Foramtions hors plan de formation validées </h2>
 
 <?php if (empty($demandesValidees)) : ?>
-    <em> Aucun stage validé </em>
+    <em> Aucune formation validée </em>
 <?php else : ?>
     <?php foreach ($demandesValidees as $stage) : ?>
         <?php echo $this->demandeExterne($stage, ['action' => false]); ?>
     <?php endforeach; ?>
 <?php endif; ?>
 
-<h2> Stages en attentes </h2>
+<h2> Formations hors plan de formation en attentes </h2>
 
 
 <?php if (empty($demandesAttentes)) : ?>
-    <em> Aucun stage en attente de validation </em>
+    <em> Aucune formation en attente de validation </em>
 <?php else : ?>
     <?php foreach ($demandesAttentes as $stage) : ?>
         <?php echo $this->demandeExterne($stage, ['action' => false]); ?>

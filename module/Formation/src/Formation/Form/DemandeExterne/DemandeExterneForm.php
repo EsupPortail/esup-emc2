@@ -17,14 +17,14 @@ class DemandeExterneForm extends Form
 
     public function init(): void
     {
-        //-- Stage demandé -----------------------------
+        //-- Formation demandée -----------------------------
 
         // libelle
         $this->add([
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Intitulé du stage <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Intitulé de la formation <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
