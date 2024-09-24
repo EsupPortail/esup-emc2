@@ -2,6 +2,7 @@
 
 namespace Formation;
 
+use Application\Assertion\AgentAssertion;
 use Formation\Assertion\DemandeExterneAssertion;
 use Formation\Assertion\DemandeExterneAssertionFactory;
 use Formation\Controller\DemandeExterneController;
@@ -75,6 +76,17 @@ return [
                         DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER,
                     ],
                     'assertion' => DemandeExterneAssertion::class
+                ],
+                [
+                    'controller' => DemandeExterneController::class,
+                    'action' => [
+                        'afficher-agent',
+                    ],
+                    'privileges' => [
+                        //AgentPrivileges::AGENT_AFFICHER, // !!! peg-leg
+                        'agent-agent_afficher',
+                    ],
+                    'assertion' => DemandeExterneAssertion::class,
                 ],
                 [
                     'controller' => DemandeExterneController::class,
@@ -279,6 +291,16 @@ return [
                                     'defaults' => [
                                         /** @see DemandeExterneController::afficherAction() */
                                         'action' => 'afficher'
+                                    ],
+                                ],
+                            ],
+                            'afficher-agent' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher-agent/:agent',
+                                    'defaults' => [
+                                        /** @see DemandeExterneController::afficherAgentAction() */
+                                        'action' => 'afficher-agent'
                                     ],
                                 ],
                             ],

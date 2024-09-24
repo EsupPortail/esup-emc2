@@ -29,20 +29,19 @@ $nbAgent = count($agents)
     Mes agents
 </h1>
 
-<div class="row">
-    <div class="col-md-7">
-        Vous êtes le <?php echo $role->getLibelle(); ?> de <?php echo $nbAgent; ?> agent·es.
-    </div>
-    <div class="col-md-5">
-        <?php /** @see \Formation\Controller\AgentController::listerMesAgentsAction() */ ?>
-        <a href="<?php echo $this->url('formation/mes-agents/lister', [], [], true); ?>"
-           class="btn btn-secondary ajax-modal">
-            <span class="icon icon-lister"></span>
-            Lister les agent·es dont je suis responsable
-        </a>
-    </div>
-</div>
+<p>
+Vous êtes le <?php echo $role->getLibelle(); ?> de <?php echo $nbAgent; ?> agent·es.
 
+    <br>
+
+<?php /** @see \Formation\Controller\AgentController::listerMesAgentsAction() */ ?>
+<a href="<?php echo $this->url('formation/mes-agents/lister', [], [], true); ?>"
+   class="btn btn-secondary ajax-modal">
+    <span class="icon icon-lister"></span>
+    Lister les agent·es dont je suis responsable
+</a>
+
+</p>
 <!-- DECLARATION DES ONGLETS --------------------------------------------------------------------------------->
 
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -79,22 +78,30 @@ $nbAgent = count($agents)
     <div id="formation-demande" class="tab-pane">
         <h2> Inscriptions à des formations au plan de formation </h2>
 
-        <div class="alert alert-primary">
-            Vous avez <?php echo count($inscriptionsEnAttente); ?> demande·s d'inscription en attente :
-            <ul>
-                <?php foreach ($inscriptionsEnAttente as $inscription) : ?>
-                    <li>
-                        Demande de <strong><?php echo $inscription->getIndividu()->getDenomination(); ?></strong>
-                        pour la formation <strong><?php echo $inscription->getSession()->getFormation()->getLibelle(); ?></strong>
-<!--                        <a href="#inscription_--><?php //echo $inscription->getId(); ?><!--" class="action primary">-->
-<!--                            <span class="icon icon-voir"></span>-->
-<!--                            Visualiser-->
-<!--                        </a>-->
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+        <?php if (!empty($inscriptionsEnAttente)): ?>
+            <div class="alert alert-primary">
+                Vous avez <?php echo count($inscriptionsEnAttente); ?> demande·s d'inscription en attente :
+                <ul>
+                    <?php foreach ($inscriptionsEnAttente as $inscription) : ?>
+                        <li>
+                            Demande de <strong><?php echo $inscription->getIndividu()->getDenomination(); ?></strong>
+                            pour la formation <strong><?php echo $inscription->getSession()->getFormation()->getLibelle(); ?></strong>
+    <!--                        <a href="#inscription_--><?php //echo $inscription->getId(); ?><!--" class="action primary">-->
+    <!--                            <span class="icon icon-voir"></span>-->
+    <!--                            Visualiser-->
+    <!--                        </a>-->
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
 
-        </div>
+        <?php /** @see \Formation\Controller\AgentController::extraireInscriptionsAction() */ ?>
+        <a href="<?php echo $this->url('formation/mes-agents/extraire-inscriptions', [], [], true); ?>"
+           class="btn btn-secondary" target="_blank">
+            <span class="icon icon-csv"></span>
+            Extraire les inscriptions
+        </a>
 
         <div class="row">
         <table class="table table-condensed datatable" id="inscription_interne">
@@ -202,18 +209,27 @@ $nbAgent = count($agents)
 
         <h2> Inscriptions à des formations à titre individuel </h2>
 
-        <div class="alert alert-primary">
-            Vous avez <?php echo count($demandesEnAttente); ?> demande·s d'inscription en attente :
-            <ul>
-                <?php foreach ($demandesEnAttente as $demande) : ?>
-                    <li>
-                        Demande de <strong><?php echo $demande->getAgent()->getDenomination(); ?></strong>
-                        pour la formation <strong><?php echo $demande->getLibelle(); ?></strong>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+        <?php if (!empty($demandesEnAttente)) : ?>
+            <div class="alert alert-primary">
+                Vous avez <?php echo count($demandesEnAttente); ?> demande·s d'inscription en attente :
+                <ul>
+                    <?php foreach ($demandesEnAttente as $demande) : ?>
+                        <li>
+                            Demande de <strong><?php echo $demande->getAgent()->getDenomination(); ?></strong>
+                            pour la formation <strong><?php echo $demande->getLibelle(); ?></strong>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
 
-        </div>
+        <?php /** @see \Formation\Controller\AgentController::extraireDemandesAction() */ ?>
+        <a href="<?php echo $this->url('formation/mes-agents/extraire-demandes', [], [], true); ?>"
+           class="btn btn-secondary" target="_blank">
+            <span class="icon icon-csv"></span>
+            Extraire les demandes
+        </a>
+
         <table class="table table-condensed datatable" id="inscription_externe">
             <thead>
             <tr>
@@ -236,7 +252,9 @@ $nbAgent = count($agents)
                     <td>
                         <?php echo $stagiaire->getDenomination(); ?>
                         <br>
-                        <a href="" class="action secondary">
+                        <?php /** @see \Formation\Controller\DemandeExterneController::afficherAgentAction() */ ?>
+                        <a href="<?php echo $this->url('formation/demande-externe/afficher-agent',['agent' => $stagiaire->getId()]); ?>"
+                           class="action secondary ajax-modal">
                             <span class="icon icon-voir"></span>
                             Visualiser
                         </a>

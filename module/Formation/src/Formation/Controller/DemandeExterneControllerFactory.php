@@ -4,6 +4,8 @@ namespace Formation\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAutorite\AgentAutoriteService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
@@ -36,6 +38,8 @@ class DemandeExterneControllerFactory
     {
         /**
          * @var AgentService $agentService
+         * @var AgentAutoriteService $agentAutoriteService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var DemandeExterneService $demandeExterneService
          * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
@@ -48,6 +52,8 @@ class DemandeExterneControllerFactory
          * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAutoriteService = $container->get(AgentAutoriteService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
@@ -77,6 +83,8 @@ class DemandeExterneControllerFactory
 
         $controller = new DemandeExterneController();
         $controller->setAgentService($agentService);
+        $controller->setAgentAutoriteService($agentAutoriteService);
+        $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setDemandeExterneService($demandeExterneService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);

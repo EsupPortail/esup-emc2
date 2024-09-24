@@ -2,14 +2,15 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentStatut;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 
 /**
- * @see \Formation\Controller\InscriptionController::afficherAgentAction()
+ * @see \Formation\Controller\DemandeExterneController::afficherAgentAction()
  * @var Agent $agent
- * @var Inscription[] $inscriptions
+ * @var DemandeExterne[] $demandes
  * @var Agent[] $superieurs
  * @var Agent[] $autorites
  */
@@ -128,30 +129,32 @@ $statuts = AgentStatut::generateStatutsArray($agentStatuts);
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($inscriptions as $inscription) : ?>
-        <?php $session = $inscription->getSession(); ?>
+    <?php foreach ($demandes as $demande) : ?>
         <tr>
             <td>
-                <?php echo $session->getAnnee(); ?>
+                <?php echo $demande->getAnnee(); ?>
             </td>
             <td>
                 <div style="display: flex;  align-items: center;">
                     <div style="padding-right: 1rem;">
-                        <?php echo $this->etatinstance($session->getEtatActif(), ['display-categorie' => false]); ?>
+                        <?php echo $this->etatinstance($demande->getEtatActif(), ['display-categorie' => false]); ?>
                     </div>
                     <div >
-                        <?php echo $session->getFormation()->getLibelle(); ?> <br>
-                        <?php echo $session->getPeriode(); ?>
+                        <?php echo $demande->getLibelle(); ?> <br>
+                        <?php echo $demande->getPeriode(); ?>
                     </div>
                 </div>
             </td>
             <td>
                 <div style="display: flex;  align-items: center;">
                     <div style="padding-right: 1rem;">
-                        <?php echo $this->etatinstance($inscription->getEtatActif(), ['display-categorie' => false]); ?>
+                        <?php echo $this->etatinstance($demande->getEtatActif(), ['display-categorie' => false]); ?>
                     </div>
                     <div>
-                        <?php echo $this->partial('partial/inscription', ['session' => $session, 'inscription' => $inscription], [], true); ?>
+                        Dernière validation le <?php echo $demande->getEtatActif()->getHistoCreation()->format('d/m/Y'); ?>
+                        <br>
+                        par
+                        <?php echo $demande->getEtatActif()->getHistoCreateur()->getDisplayName(); ?>
                     </div>
                 </div>
             </td>

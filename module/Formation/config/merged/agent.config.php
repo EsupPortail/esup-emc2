@@ -39,6 +39,8 @@ return [
                     'action' => [
                         'mes-agents',
                         'lister-mes-agents',
+                        'extraire-inscriptions',
+                        'extraire-demandes',
                     ],
                     'privilege' => [
                         FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_MESAGENTS),
@@ -159,8 +161,29 @@ return [
                                     /** @see AgentController::indexAction() */
                                     'route'    => '/lister',
                                     'defaults' => [
-                                        'controller' => AgentController::class,
                                         'action'     => 'lister-mes-agents',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'extraire-inscriptions' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    /** @see AgentController::extraireInscriptionsAction() */
+                                    'route'    => '/extraire-inscriptions',
+                                    'defaults' => [
+                                        'action'     => 'extraire-inscriptions',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'extraire-demandes' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    /** @see AgentController::extraireDemandesAction() */
+                                    'route'    => '/extraire-demandes',
+                                    'defaults' => [
+                                        'action'     => 'extraire-demandes',
                                     ],
                                 ],
                                 'may_terminate' => true,

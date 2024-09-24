@@ -2,8 +2,12 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
@@ -40,6 +44,8 @@ use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareT
 
 class DemandeExterneController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
@@ -265,6 +271,29 @@ class DemandeExterneController extends AbstractActionController {
         return $vm;
     }
 
+
+    /** Affichage d'information **************************************************************************************/
+
+    public function afficherAgentAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
+        $superieurs = array_map(function (AgentSuperieur $a) {
+            return $a->getSuperieur();
+        }, $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
+        $autorites = array_map(function (AgentAutorite $a) {
+            return $a->getAutorite();
+        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
+
+
+        return new ViewModel([
+            'title' => "Affichage des informations pour ".$agent->getDenomination(),
+            'agent' => $agent,
+            'demandes' => $demandes,
+            'superieurs' => $superieurs,
+            'autorites' => $autorites,
+        ]);
+    }
     /** VALIDATION ***************************************************************************************/
 
     public function validerAgentAction() : ViewModel
@@ -686,6 +715,8 @@ class DemandeExterneController extends AbstractActionController {
         return $vm;
 
     }
+
+
 
     /** FONCTIONS POUR LE FILTRE **************************************************************************************/
 

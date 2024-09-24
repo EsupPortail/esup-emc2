@@ -11,8 +11,8 @@ use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use DateTime;
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
@@ -23,7 +23,9 @@ use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use UnicaenApp\View\Model\CsvModel;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -112,9 +114,13 @@ class AgentController extends AbstractActionController
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
 
         $inscriptions = $this->getInscriptionService()->getInscriptionsByAgents($agents);
-        $inscriptionsEnAttente = array_filter($inscriptions, function (Inscription $inscription) { return $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE AND $inscription->getSession()->isEtatActif(SessionEtats::ETAT_INSCRIPTION_OUVERTE)); });
+        $inscriptionsEnAttente = array_filter($inscriptions, function (Inscription $inscription) {
+            return $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE and $inscription->getSession()->isEtatActif(SessionEtats::ETAT_INSCRIPTION_OUVERTE));
+        });
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgents($agents);
-        $demandesEnAttente = array_filter($demandes, function (DemandeExterne $demande) { return $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_AGENT); });
+        $demandesEnAttente = array_filter($demandes, function (DemandeExterne $demande) {
+            return $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_AGENT);
+        });
 
 
         return new ViewModel([
@@ -159,6 +165,101 @@ class AgentController extends AbstractActionController
             'role' => $role,
             'agents' => $agents,
         ]);
+    }
+
+    public function extraireInscriptionsAction(): CsvModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $role = $this->getUserService()->getConnectedRole();
+        $agent = $this->getAgentService()->getAgentByUser($user);
+
+        $agents = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE)
+            $agents = array_map(
+                function (AgentSuperieur $a) {
+                    return $a->getAgent();
+                },
+                $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE)
+            $agents = array_map(function (AgentAutorite $a) {
+                return $a->getAgent();
+            },
+                $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+
+        $inscriptions = $this->getInscriptionService()->getInscriptionsByAgents($agents);
+        $headers = ["annee", "prenom", "nom", "action de formation", "session", "etat de la session", "etat de l'inscription", "liste", "duree", "presence"];
+        $records = [];
+        foreach ($inscriptions as $inscription) {
+            $records[] = [
+                "annee" => $inscription->getSession()->getAnnee(),
+                "prenom" => $inscription->getAgent()->getPrenom(),
+                "nom" => $inscription->getAgent()->getNomUsuel(),
+                "action de formation" => $inscription->getSession()->getFormation()->getLibelle(),
+                "session" => $inscription->getSession()->getPeriode(),
+                "etat de la session" => $inscription->getSession()->getEtatActif()->getType()->getLibelle(),
+                "etat de l'inscription" => $inscription->getEtatActif()->getType()->getLibelle(),
+                "liste" => ($inscription->getListe()??"Non classée"),
+                "duree" => $inscription->getSession()->getDuree(),
+                "presence" => $inscription->getDureePresence(),
+            ];
+        }
+
+        $date = (new DateTime())->format('Ymd-His');
+        $filename="export_mesformations_inscriptions_".$date.".csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($headers);
+        $CSV->setData($records);
+        $CSV->setFilename($filename);
+        return $CSV;
+    }
+
+    public function extraireDemandesAction(): CsvModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $role = $this->getUserService()->getConnectedRole();
+        $agent = $this->getAgentService()->getAgentByUser($user);
+
+        $agents = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE)
+            $agents = array_map(
+                function (AgentSuperieur $a) {
+                    return $a->getAgent();
+                },
+                $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE)
+            $agents = array_map(function (AgentAutorite $a) {
+                return $a->getAgent();
+            },
+                $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgents($agents);
+        $headers = ["annee", "prenom", "nom", "action de formation", "date", "organisme", "lieu", "montant", "etat de la demande"];
+        $records = [];
+        foreach ($demandes as $demande) {
+            $records[] = [
+                "annee" => $demande->getAnnee(),
+                "prenom" => $demande->getAgent()->getPrenom(),
+                "nom" => $demande->getAgent()->getNomUsuel(),
+                "action de formation" => $demande->getLibelle(),
+                "date" => $demande->getPeriode(),
+                "organisme" => $demande->getOrganisme(),
+                "lieu" => $demande->getLieu(),
+                "montant" => $demande->getMontant(),
+                "etat de la demande" => $demande->getEtatActif()->getTypeLibelle(),
+            ];
+        }
+
+        $date = (new DateTime())->format('Ymd-His');
+        $filename="export_mesformations_inscriptions_".$date.".csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($headers);
+        $CSV->setData($records);
+        $CSV->setFilename($filename);
+        return $CSV;
     }
 
     public function afficherCharteAction(): ViewModel
