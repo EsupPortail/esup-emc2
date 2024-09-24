@@ -56,7 +56,16 @@ $this->headTitle("Index de gestion des formations");
             <?php foreach($sessionTypes as $sessionType): ?>
                 <td>
                     <?php if (isset($dictionnaireSessions[$gestionnaire->getId()][$sessionType->getId()])): ?>
-                        <?php echo count($dictionnaireSessions[$gestionnaire->getId()][$sessionType->getId()]); ?>
+                        <?php $nb = count($dictionnaireSessions[$gestionnaire->getId()][$sessionType->getId()]); ?>
+                        <?php if ($nb !== 0): ?>
+                            <a href="<?php echo $this->url('formation/session',[],['query' => ['gestionnaires' => $gestionnaire->getId(), 'etats' => $sessionType->getCode()]], true); ?>"
+                               title="Accéder à la liste des sessions de <?php echo $gestionnaire->getDisplayName(); ?> à l'état <?php echo htmlentities($sessionType->getLibelle()); ?>" style="text-decoration:none;"
+                            >
+                                <?php echo $nb; ?>
+                            </a>
+                        <?php else: ?>
+                            0
+                        <?php endif; ?>
                     <?php else: ?>
                         -
                     <?php endif; ?>
@@ -118,7 +127,16 @@ $this->headTitle("Index de gestion des formations");
             <?php foreach($demandeTypes as $demandeType): ?>
                 <td>
                     <?php if (isset($dictionnaireDemandes[$gestionnaire->getId()][$demandeType->getId()])): ?>
-                        <?php echo count($dictionnaireDemandes[$gestionnaire->getId()][$demandeType->getId()]); ?>
+                        <?php $nb = count($dictionnaireDemandes[$gestionnaire->getId()][$demandeType->getId()]); ?>
+                        <?php if ($nb !== 0): ?>
+                            <a href="<?php echo $this->url('formation/demande-externe',[],['query' => ['gestionnaires' => $gestionnaire->getId(), 'etats' => $demandeType->getCode()]], true); ?>"
+                               title="Accéder à la liste des demandess de <?php echo $gestionnaire->getDisplayName(); ?> à l'état <?php echo htmlentities($demandeType->getLibelle()); ?>"
+                            >
+                                <?php echo $nb; ?>
+                            </a>
+                        <?php else: ?>
+                            0
+                        <?php endif; ?>
                     <?php else: ?>
                         -
                     <?php endif; ?>

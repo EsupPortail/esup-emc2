@@ -302,7 +302,7 @@ class DemandeExterneService
 
         $inscriptions = [];
         foreach ($result as $item) {
-            $inscriptions[$item->getAgent()->getId()][] = $item;
+            $inscriptions[$item->getId()] = $item;
         }
 
         return $inscriptions;
