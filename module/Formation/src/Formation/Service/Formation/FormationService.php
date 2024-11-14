@@ -360,12 +360,6 @@ class FormationService
 
     /** FACADE *************************************************************************************/
 
-    public function getGestionnaires(): array
-    {
-        $gestionnaires = $this->getUserService()->getUtilisateursByRoleIdAsOptions(FormationRoles::GESTIONNAIRE_FORMATION);
-        return $gestionnaires;
-    }
-
     public function createFormation(string $libelle, ?FormationGroupe $theme): Formation
     {
         $formation = new Formation();

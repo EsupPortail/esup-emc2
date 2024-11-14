@@ -1,7 +1,6 @@
 <?php
 
 use Application\Provider\IdentityProvider;
-use Application\Provider\IdentityProviderFactory;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;
@@ -40,13 +39,13 @@ return [
          * to specify roles in a config file and one to load roles using a
          * Laminas\Db adapter.
          */
-        'role_providers'    => [
+        'role_providers' => [
             /**
              * Fournit les rôles issus de la base de données éventuelle de l'appli.
              * NB: si le rôle par défaut 'guest' est fourni ici, il ne sera pas ajouté en double dans les ACL.
              * NB: si la connexion à la base échoue, ce n'est pas bloquant!
              */
-            UnicaenUtilisateur\Provider\Role\DbRole::class   => [],
+            UnicaenUtilisateur\Provider\Role\DbRole::class => [],
             /**
              * Fournit le rôle correspondant à l'identifiant de connexion de l'utilisateur.
              * Cela est utile lorsque l'on veut gérer les habilitations d'un utilisateur unique
@@ -67,14 +66,13 @@ return [
 
     'unicaen-utilisateur' => [
         'recherche-individu' => [
-            'app'       => UserService::class,
-            'ldap'      => LdapService::class,
+            'app' => UserService::class,
+            'ldap' => LdapService::class,
 //            'octopus'   => OctopusService::class,
         ],
         'identity-provider' => [
             IdentityProvider::class,
             \Structure\Provider\IdentityProvider::class,
-            \Formation\Provider\IdentityProvider::class,
         ],
         'application-username' => 'preecog',
         'default-user' => 0,
@@ -83,7 +81,7 @@ return [
 
     // pour la mise a jour des champs d'historisation ...
     'doctrine' => [
-        'eventmanager'  => [
+        'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
                     'UnicaenUtilisateur\HistoriqueListener',
@@ -94,7 +92,6 @@ return [
     'service_manager' => [
         'factories' => [
             'UnicaenUtilisateur\HistoriqueListener' => HistoriqueListenerFactory::class,
-            IdentityProvider::class => IdentityProviderFactory::class
         ],
     ],
 
@@ -105,31 +102,31 @@ return [
                     'administration' => [
                         'pages' => [
                             'unicaen-utilisateur' =>
-                            [
-                                'label' => 'Gestion des rôles et utilisateurs',
-                                'route' => 'unicaen-utilisateur',
-                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-                                'order'    => 20000,
-                                'dropdown-header' => true,
-                            ],
+                                [
+                                    'label' => 'Gestion des rôles et utilisateurs',
+                                    'route' => 'unicaen-utilisateur',
+                                    'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                    'order' => 20000,
+                                    'dropdown-header' => true,
+                                ],
                             'utilisateur' => [
                                 'label' => 'Utilisateurs',
                                 'route' => 'unicaen-utilisateur',
                                 'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-                                'order'    => 20200,
+                                'order' => 20200,
                                 'icon' => 'fas fa-angle-right',
                                 'pages' => [
                                     'listing-utilisateur' => [
                                         'label' => 'Listing',
                                         'route' => 'unicaen-utilisateur/lister',
                                         'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-                                        'order'    => 20210,
+                                        'order' => 20210,
                                     ],
                                     'ajouter-utilisateur' => [
                                         'label' => 'Listing',
                                         'route' => 'unicaen-utilisateur/ajouter',
                                         'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER),
-                                        'order'    => 20220,
+                                        'order' => 20220,
                                     ],
                                 ],
                             ],
@@ -137,7 +134,7 @@ return [
                                 'label' => 'Rôles',
                                 'route' => 'unicaen-role',
                                 'resource' => RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER),
-                                'order'    => 20100,
+                                'order' => 20100,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

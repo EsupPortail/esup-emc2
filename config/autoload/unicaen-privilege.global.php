@@ -22,7 +22,6 @@ $settings = [
             020 => 'Application\Provider\IdentityProvider',             // en 3e
             011 => 'EntretienProfessionnel\Provider\Identity\IdentityProvider',  // en 3e
             010 => 'Structure\Provider\IdentityProvider',  // en 3e
-            001 => 'Formation\Provider\IdentityProvider',  // en 3e
         ],
     ],
     'navigation' => [
@@ -36,7 +35,7 @@ $settings = [
                                 'title' => "Gérer les privilèges",
                                 'route' => 'unicaen-privilege',
                                 'resource' => RolePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_VOIR),
-                                'order'    => 20050,
+                                'order' => 20050,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -59,7 +58,7 @@ if ($settings['unicaen-auth']['enable_privileges']) {
              * - 'role_entity_class'      : 'UnicaenAuth\Entity\Db\Role'
              * - 'privilege_entity_class' : 'UnicaenAuth\Entity\Db\Privilege'
              */
-            'role_entity_class'      => Role::class,
+            'role_entity_class' => Role::class,
             'privilege_entity_class' => Privilege::class,
         ],
 
@@ -73,7 +72,7 @@ if ($settings['unicaen-auth']['enable_privileges']) {
                 PrivilegeService::class => [],
             ],
 
-            'rule_providers'     => [
+            'rule_providers' => [
                 PrivilegeRuleProvider::class => [],
             ],
         ],

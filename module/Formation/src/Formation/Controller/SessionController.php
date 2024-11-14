@@ -77,7 +77,6 @@ class SessionController extends AbstractActionController
 
             'params' => $params,
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
-            'gestionnaires' => $this->getUserService()->getUtilisateursByRoleIdAsOptions(FormationRoles::GESTIONNAIRE_FORMATION),
             'themes' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
         ]);
     }

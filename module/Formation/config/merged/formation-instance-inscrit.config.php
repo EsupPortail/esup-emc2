@@ -28,7 +28,7 @@ return [
                         'formations',
                     ],
                     'roles' => [
-                        'Agent', 'Stagiaire externe'
+                        'Agent',
                     ],
                 ],
                 [

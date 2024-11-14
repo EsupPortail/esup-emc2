@@ -7,10 +7,10 @@ use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
+use Application\Service\Macro\MacroService;
 use Application\Service\Url\UrlService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
-use Formation\Service\DemandeExterne\DemandeExterneService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -39,6 +39,7 @@ class IndexControllerFactory
          * @var AgentSuperieurService $agentSuperieurService
          * @var AgentService $agentService
          * @var CampagneService $campagneService
+         * @var MacroService $macroService
          * @var ParametreService $parametreService
          * @var RenduService $renduService
          * @var RoleService $roleService
@@ -49,7 +50,6 @@ class IndexControllerFactory
          *
          * @var FichePosteService $fichePosteService
          * @var EntretienProfessionnelService $entretienProfessionelService
-         * @var DemandeExterneService $demandeExterneService
          *
          */
         $agentService = $container->get(AgentService::class);
@@ -57,6 +57,7 @@ class IndexControllerFactory
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
+        $macroService = $container->get(MacroService::class);
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
         $roleService = $container->get(RoleService::class);
@@ -67,9 +68,7 @@ class IndexControllerFactory
 
         $fichePosteService = $container->get(FichePosteService::class);
         $entretienProfessionelService = $container->get(EntretienProfessionnelService::class);
-        $demandeExterneService = $container->get(DemandeExterneService::class);
 
-        /** @var IndexController $controller */
         $controller = new IndexController();
         $controller->setAgentService($agentService);
         $controller->setAgentAutoriteService($agentAutoriteService);
@@ -77,6 +76,7 @@ class IndexControllerFactory
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setAgentService($agentService);
         $controller->setCampagneService($campagneService);
+        $controller->setMacroService($macroService);
         $controller->setParametreService($parametreService);
         $controller->setRenduService($renduService);
         $controller->setRoleService($roleService);
@@ -87,7 +87,6 @@ class IndexControllerFactory
 
         $controller->setFichePosteService($fichePosteService);
         $controller->setEntretienProfessionnelService($entretienProfessionelService);
-        $controller->setDemandeExterneService($demandeExterneService);
         return $controller;
     }
 

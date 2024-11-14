@@ -21,12 +21,6 @@ class SessionAssertion extends AbstractAssertion {
 
     public function isScopeCompatible(?Session $session, UserInterface $user, ?RoleInterface $role): bool
     {
-        if ($role->getRoleId() === FormationRoles::FORMATEUR) {
-            foreach ($session->getFormateurs() as $formateur) {
-                if  ($formateur->getUtilisateur() === $user) return true;
-            }
-            return false;
-        }
         return true;
     }
 

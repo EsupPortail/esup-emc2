@@ -29,7 +29,6 @@ class ElementController extends AbstractActionController
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use FormationElementServiceAwareTrait;
     use NiveauServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
@@ -52,9 +51,6 @@ class ElementController extends AbstractActionController
                 break;
             case ElementController::TYPE_COMPETENCE :
                 $element = $this->getCompetenceElementService()->getCompetenceElement($elementId);
-                break;
-            case ElementController::TYPE_FORMATION :
-                $element = $this->getFormationElementService()->getFormationElement($elementId);
                 break;
         }
 
@@ -81,10 +77,6 @@ class ElementController extends AbstractActionController
             case ElementController::TYPE_COMPETENCE :
                 $element = $this->getCompetenceElementService()->getCompetenceElement($elementId);
                 $service = $this->getCompetenceElementService();
-                break;
-            case ElementController::TYPE_FORMATION :
-                $element = $this->getFormationElementService()->getFormationElement($elementId);
-                $service = $this->getFormationElementService();
                 break;
         }
 

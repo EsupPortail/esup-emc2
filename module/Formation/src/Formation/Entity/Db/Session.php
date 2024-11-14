@@ -42,8 +42,6 @@ class Session implements
     const TYPE_INTERNE = "formation interne";
     const TYPE_EXTERNE = "formation externe";
     const TYPE_REGIONALE = "formation régionale";
-    const RATTACHEMENT_PREVENTION = 'prévention';
-    const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
 
     private ?int $id = null;
     private ?Formation $formation = null;
@@ -66,7 +64,6 @@ class Session implements
     private Collection $journees;
     private Collection $inscrits;
     private Collection $externes;
-    private Collection $formateurs;
     private Collection $demandes;
     private Collection $gestionnaires;
 
@@ -86,7 +83,6 @@ class Session implements
         $this->demandes = new ArrayCollection();
         $this->gestionnaires = new ArrayCollection();
 
-        $this->formateurs = new ArrayCollection();
 
     }
 
@@ -262,31 +258,6 @@ class Session implements
 
 
 
-    /** FORMATEURS ****************************************************************************************************/
-
-    /**
-     * @return Formateur[]|null
-     */
-    public function getFormateurs(bool $withHisto = false): ?array
-    {
-        if (!isset($this->formateurs)) return null;
-        /** @var Formateur[] $formateurs */
-        $formateurs = $this->formateurs->toArray();
-        if (!$withHisto) $formateurs = array_filter($formateurs, function (Formateur $formateur) {return $formateur->estNonHistorise();});
-        usort($formateurs, function (Formateur $a, Formateur $b) { return $a->getDenomination() <=> $b->getDenomination(); });
-        return $formateurs;
-    }
-
-    public function addFormateur(Formateur $formateur): void
-    {
-        $this->formateurs->add($formateur);
-    }
-
-    public function removeFormateur(Formateur $formateur): void
-    {
-        $this->formateurs->removeElement($formateur);
-    }
-
     /** DEMANDES EXTERNES *********************************************************************************************/
 
     /** @return DemandeExterne[] */
@@ -436,13 +407,11 @@ class Session implements
         return $liste;
     }
 
-    public function hasIndividu(Agent|StagiaireExterne $individu): bool
+    public function hasIndividu(Agent $individu): bool
     {
-        $isStagiaire = ($individu instanceof StagiaireExterne);
         $isAgent = ($individu instanceof Agent);
         /** @var Inscription $inscription */
         foreach ($this->inscriptions as $inscription) {
-            if ($isStagiaire && $individu === $inscription->getStagiaire()) return true;
             if ($isAgent && $individu === $inscription->getAgent()) return true;
         }
         return false;
@@ -605,34 +574,6 @@ class Session implements
         return $this->getFormation()->getId() . "/" . $this->getId();
     }
 
-    /** @noinspection PhpUnused */
-    public function getListeFormateurs(): string
-    {
-        /** @var Formateur[] $formateurs */
-        $formateurs = $this->getFormateurs();
-        usort($formateurs, function (Formateur $a, Formateur $b) {
-            return ($a->getNom() . " " . $a->getPrenom()) <=> ($b->getNom() . " " . $b->getPrenom());
-        });
-
-        $text = "<table style='width:100%;'>";
-        $text .= "<thead>";
-        $text .= "<tr style='border-bottom:1px solid black;'>";
-        $text .= "<th>Dénomination  </th>";
-        $text .= "<th>Structure de rattachement / Organisme  </th>";
-        $text .= "</tr>";
-        $text .= "</thead>";
-        $text .= "<tbody>";
-        foreach ($formateurs as $formateur) {
-            $text .= "<tr>";
-            $text .= "<td>" . $formateur->getPrenom() . " " . $formateur->getNom() . "</td>";
-            $text .= "<td>" . $formateur->getAttachement() . "</td>";
-            $text .= "</tr>";
-        }
-        $text .= "</tbody>";
-        $text .= "</table>";
-
-        return $text;
-    }
 
     /** @noinspection PhpUnused */
     public function getListeJournees(): string

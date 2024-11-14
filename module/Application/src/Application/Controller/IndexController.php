@@ -12,22 +12,20 @@ use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\Macro\MacroServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\Controller\ObservateurController;
-use Laminas\View\Model\JsonModel;
-use Structure\Controller\ObservateurController as StructureObservateurController;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienProfessionnelRoleProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
-use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Structure\Controller\ObservateurController as StructureObservateurController;
 use Structure\Controller\StructureController;
 use Structure\Entity\Db\StructureAgentForce;
-use Structure\Provider\Parametre\StructureParametres;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
@@ -45,6 +43,7 @@ class IndexController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use MacroServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
     use RoleServiceAwareTrait;
@@ -53,17 +52,16 @@ class IndexController extends AbstractActionController
     use UserContextServiceAwareTrait;
     use UrlServiceAwareTrait;
 
+
     use FichePosteServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
-    use InscriptionServiceAwareTrait;
-    use DemandeExterneServiceAwareTrait;
 
 
     public function indexAction(): ViewModel|Response
     {
         /** Failsafe :: le routing semble merdé ... */
         $r = $this->getRequest()->getUri();
-        if (str_contains($r,'mes-formations')) {
+        if (str_contains($r, 'mes-formations')) {
             return $this->redirect()->toRoute('index-mes-formations', [], ['force_canonical' => true], true);
         }
 
@@ -139,9 +137,6 @@ class IndexController extends AbstractActionController
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
-        if ($user === null) {
-
-        }
         $structureMere = $this->getStructureService()->getStructureMere();
 
 
@@ -161,7 +156,8 @@ class IndexController extends AbstractActionController
         });
 
         /** Récuperation des eps **************************************************************************************/
-        $entretiens = []; $agentsByCampagne = [];
+        $entretiens = [];
+        $agentsByCampagne = [];
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
@@ -221,15 +217,16 @@ class IndexController extends AbstractActionController
         });
 
         /** Récuperation des eps **************************************************************************************/
-        $entretiens = []; $agentsByCampagne = [];
+        $entretiens = [];
+        $agentsByCampagne = [];
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
             foreach ($agents as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
             foreach ($agentsS as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
-            [$obligatoires, $facultatifs, $raison]  = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
-            $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison] ;
+            [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
+            $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
         }
 
         /** Récupération des fiches de postes *************************************************************************/
@@ -266,5 +263,20 @@ class IndexController extends AbstractActionController
     {
         $user = $this->getUserService()->getConnectedUser();
         return new JsonModel(["connection" => $user !== null]);
+    }
+
+    public function aproposAction(): ViewModel
+    {
+        $vars = [
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::APROPOS, $vars, false);
+
+        $vm = new ViewModel([
+            'rendu' => $rendu,
+        ]);
+        $vm->setTemplate('default/default-renderer');
+        return $vm;
     }
 }

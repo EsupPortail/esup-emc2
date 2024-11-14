@@ -7,25 +7,13 @@
         </id>
 
         <field name="libelle"       column="libelle"        type="string"       length="256"   />
-        <field name="description"   column="description"    type="string"       length="9999"  />
-        <field name="ordre"         column="ordre"          type="integer"   />
-        <field name="couleur"       column="couleur"        type="string"       length="64"   />
+       <one-to-many target-entity="Formation\Entity\Db\Formation" mapped-by="axe" field="formations"/>
 
-       <one-to-many target-entity="Formation\Entity\Db\FormationGroupe" mapped-by="axe" field="groupes"/>
-
-        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
-        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
-            <join-column name="histo_createur_id" referenced-column-name="ID"/>
-        </many-to-one>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
-            <join-column name="histo_modificateur_id" referenced-column-name="ID"/>
-        </many-to-one>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
-            <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
-        </many-to-one>
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                 column="source_id"        type="string" length="128"/>
 
     </entity>
 </doctrine-mapping>

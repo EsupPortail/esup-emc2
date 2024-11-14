@@ -37,17 +37,6 @@ class IndexController extends AbstractActionController
         $connectedUser = $this->getUserService()->getConnectedUser();
         $connectedRole = $this->getUserService()->getConnectedRole();
 
-        if ($connectedRole) {
-          switch ($connectedRole->getRoleId()) {
-              case FormationRoles::GESTIONNAIRE_FORMATION :
-                /** @see IndexController::indexGestionnaireAction() */
-                return $this->redirect()->toRoute('index-gestionnaire', [], [], true);
-              case FormationRoles::RESPONSABLE_FORMATION :
-                  /** @see IndexController::indexResponsableAction() */
-                  return $this->redirect()->toRoute('index-responsable', [], [], true);
-            }
-        }
-
         $agent = $this->getAgentService()->getAgentByUser($connectedUser);
         if ($agent !== null && $agent->getUtilisateur() === null) {
             $previous = $agent->getUtilisateur();
@@ -123,8 +112,6 @@ class IndexController extends AbstractActionController
         $demandeTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
         $dictionnairesDemandes = $this->getDemandeExterneService()->sortByGestionnaireAndEtat($demandes);
 
-        $gestionnaires = $this->getUserService()->getRoleService()->getUtilisateursByRoleId(FormationRoles::GESTIONNAIRE_FORMATION);
-        usort($gestionnaires, function (User $a, User $b) { return $a->getDisplayName() <=> $b->getDisplayName();});
 
         return new ViewModel([
             'user' => $user,
@@ -149,5 +136,9 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel([]);
     }
+
+
+
+
 
 }

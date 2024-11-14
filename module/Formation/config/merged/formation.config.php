@@ -122,24 +122,7 @@ return [
                         FormationPrivileges::FORMATION_SUPPRIMER,
                     ],
                 ],
-                [
-                    'controller' => IndexController::class,
-                    'action' => [
-                        'index-gestionnaire',
-                    ],
-                    'roles' => [
-                        FormationRoles::GESTIONNAIRE_FORMATION,
-                    ],
-                ],
-                [
-                    'controller' => IndexController::class,
-                    'action' => [
-                        'index-responsable',
-                    ],
-                    'roles' => [
-                        FormationRoles::RESPONSABLE_FORMATION,
-                    ],
-                ],
+
                 [
                     'controller' => FormationController::class,
                     'action' => [
@@ -199,30 +182,6 @@ return [
                         'action'     => 'index',
                     ],
                 ],
-            ],
-            'index-gestionnaire' => [
-                'type'  => Literal::class,
-                'options' => [
-                    'route'    => '/index-gestionnaire',
-                    'defaults' => [
-                        /** @see IndexController::indexGestionnaireAction **/
-                        'controller' => IndexController::class,
-                        'action'     => 'index-gestionnaire',
-                    ],
-                ],
-                'may_terminate' => true,
-            ],
-            'index-responsable' => [
-                'type'  => Literal::class,
-                'options' => [
-                    'route'    => '/index-responsable',
-                    'defaults' => [
-                        /** @see IndexController::indexResponsableAction() **/
-                        'controller' => IndexController::class,
-                        'action'     => 'index-responsable',
-                    ],
-                ],
-                'may_terminate' => true,
             ],
             'formation' => [
                 'type' => Literal::class,

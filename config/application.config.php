@@ -54,7 +54,7 @@ $modules = [
     'FicheMetier',
     'FichePoste',
 
-    'Formation',
+//    'Formation',
     'Fichier',
     'Element',
     'Application',

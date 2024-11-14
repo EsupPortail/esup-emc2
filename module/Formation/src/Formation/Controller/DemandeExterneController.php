@@ -95,7 +95,6 @@ class DemandeExterneController extends AbstractActionController {
             'etats' => $etats,
 
             'params' => $params,
-            'gestionnaires' => $this->getUserService()->getUtilisateursByRoleIdAsOptions(FormationRoles::GESTIONNAIRE_FORMATION),
             'plafond' => $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::DEMANDE_EXTERNE_PLAFOND),
         ]);
     }

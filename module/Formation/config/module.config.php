@@ -16,8 +16,6 @@ use Formation\Event\RappelAgent\RappelAgentEvent;
 use Formation\Event\RappelAgent\RappelAgentEventFactory;
 use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Event\SessionCloture\SessionClotureEventFactory;
-use Formation\Provider\IdentityProvider;
-use Formation\Provider\IdentityProviderFactory;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
@@ -161,7 +159,6 @@ return [
 
     'service_manager' => [
         'factories' => [
-            IdentityProvider::class => IdentityProviderFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 

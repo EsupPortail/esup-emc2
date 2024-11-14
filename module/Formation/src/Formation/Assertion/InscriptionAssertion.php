@@ -39,11 +39,6 @@ class InscriptionAssertion extends AbstractAssertion
         $agent = $this->getAgentService()->getAgentByLogin($user->getUsername());
 
         switch ($role->getRoleId()) {
-            case FormationRoles::FORMATEUR :
-                foreach ($inscription->getSession()->getFormateurs() as $formateur) {
-                    if ($formateur->getUtilisateur() === $user) return true;
-                }
-                return false;
             case Agent::ROLE_AGENT :
                 return $inscription->getIndividu()->getUtilisateur() === $user;
             case Agent::ROLE_SUPERIEURE :

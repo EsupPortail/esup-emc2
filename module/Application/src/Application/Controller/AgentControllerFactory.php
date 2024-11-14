@@ -28,10 +28,6 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
-use Formation\Form\FormationElement\FormationElementForm;
-use Formation\Service\Formation\FormationService;
-use Formation\Service\FormationElement\FormationElementService;
-use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -58,15 +54,12 @@ class AgentControllerFactory
          * @var CategorieService $categorieService
          * @var CompetenceElementService $competenceElementService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
-         * @var FormationElementService $formationElementService
-         * @var HasFormationCollectionService $hasFormationElementService
          * @var ParametreService $parametreService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
          * @var NatureService $natureService
          * @var FichierService $fichierService
          * @var ApplicationService $applicationService
-         * @var FormationService $formationService
          * @var StructureService $structureService
          * @var UserService $userService
          */
@@ -103,8 +96,6 @@ class AgentControllerFactory
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
-        $formationElementService = $container->get(FormationElementService::class);
-        $hasFormationElementService = $container->get(HasFormationCollectionService::class);
         $categorieService = $container->get(CategorieService::class);
 
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -112,18 +103,15 @@ class AgentControllerFactory
         $natureService = $container->get(NatureService::class);
         $fichierService = $container->get(FichierService::class);
         $applicationService = $container->get(ApplicationService::class);
-        $formationService = $container->get(FormationService::class);
         $structureService = $container->get(StructureService::class);
 
         /**
          * @var ApplicationElementForm $applicationElementForm
          * @var CompetenceElementForm $competenceElementForm
-         * @var FormationElementForm $formationElementForm
          * @var UploadForm $uploadForm
          */
         $applicationElementForm = $container->get('FormElementManager')->get(ApplicationElementForm::class);
         $competenceElementForm = $container->get('FormElementManager')->get(CompetenceElementForm::class);
-        $formationElementForm = $container->get('FormElementManager')->get(FormationElementForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
         $controller = new AgentController();
@@ -147,8 +135,6 @@ class AgentControllerFactory
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setHasCompetenceCollectionService($hasCompetenceCollectionService);
-        $controller->setFormationElementService($formationElementService);
-        $controller->setHasFormationCollectionService($hasFormationElementService);
 
         $controller->setCategorieService($categorieService);
 
@@ -156,14 +142,12 @@ class AgentControllerFactory
         $controller->setValidationTypeService($validationTypeService);
         $controller->setNatureService($natureService);
         $controller->setFichierService($fichierService);
-        $controller->setFormationService($formationService);
         $controller->setApplicationService($applicationService);
 
         $controller->setStructureService($structureService);
 
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);
-        $controller->setFormationElementForm($formationElementForm);
         $controller->setUploadForm($uploadForm);
 
         /**
