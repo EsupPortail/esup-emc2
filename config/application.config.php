@@ -27,7 +27,6 @@ $modules = [
     'UnicaenPrivilege',
     'UnicaenAuthentification',
     'UnicaenUtilisateurLdapAdapter',
-//    'UnicaenUtilisateurOctopusAdapter',
     'UnicaenUtilisateur',
     'UnicaenAutoform',
     'UnicaenEtat',
@@ -54,13 +53,11 @@ $modules = [
     'FicheMetier',
     'FichePoste',
 
-//    'Formation',
     'Fichier',
     'Element',
     'Application',
 
     'Laminas\DeveloperTools',
-//    'UnicaenTest',
 
 ];
 

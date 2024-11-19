@@ -7,6 +7,7 @@ use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
 /**
  * Données synchronisées depuis Octopus :

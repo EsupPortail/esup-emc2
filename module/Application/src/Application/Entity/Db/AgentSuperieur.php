@@ -3,20 +3,28 @@
 namespace Application\Entity\Db;
 
 use Doctrine\ORM\QueryBuilder;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class AgentSuperieur implements HistoriqueAwareInterface
+class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterface
 {
     use HistoriqueAwareTrait;
+    use IsSynchronisableTrait;
 
-    private ?int $id = null;
+    private ?string $id = null;
     private ?Agent $agent = null;
     private ?Agent $superieur = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function setId(?string $id): void
+    {
+        $this->id = $id;
     }
 
     public function getAgent(): ?Agent
