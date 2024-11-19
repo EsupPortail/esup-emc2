@@ -8,7 +8,7 @@ return [
     'table'       => 'unicaen_utilisateur_user',
     'rtable'      => 'unicaen_utilisateur_role',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'NO ACTION',
+    'delete_rule' => 'SET NULL',
     'index'       => 'unicaen_utilisateur_role_pkey',
     'columns'     => [
         'last_role_id' => 'id',

@@ -1,8 +1,10 @@
 <?php
 
-use Application\Service\Bdd\BddFactory;
 use Application\Command\UpdateBddCommand;
+use Application\Command\UpdateBddCommandFactory;
 use Application\Command\UpdateDdlCommand;
+use Application\Command\UpdateDdlCommandFactory;
+use Application\Service\Bdd\BddFactory;
 use Unicaen\BddAdmin\Bdd;
 
 
@@ -25,7 +27,9 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            Bdd::class => BddFactory::class,
+            Bdd::class              => BddFactory::class,
+            UpdateBddCommand::class => UpdateBddCommandFactory::class,
+            UpdateDDlCommand::class => UpdateDdlCommandFactory::class,
         ],
         'aliases'   => [
             'bddDefault' => Bdd::class,

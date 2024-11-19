@@ -10,6 +10,18 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'unicaen_parametre_parametre_id_seq',
     'columns'     => [
+        'affichable'        => [
+            'name'        => 'affichable',
+            'type'        => 'bool',
+            'bdd-type'    => 'boolean',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => 'true',
+            'position'    => 10,
+            'commentaire' => NULL,
+        ],
         'categorie_id'      => [
             'name'        => 'categorie_id',
             'type'        => 'int',
@@ -68,6 +80,18 @@ return [
             'nullable'    => FALSE,
             'default'     => NULL,
             'position'    => 4,
+            'commentaire' => NULL,
+        ],
+        'modifiable'        => [
+            'name'        => 'modifiable',
+            'type'        => 'bool',
+            'bdd-type'    => 'boolean',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => 'true',
+            'position'    => 9,
             'commentaire' => NULL,
         ],
         'ordre'             => [

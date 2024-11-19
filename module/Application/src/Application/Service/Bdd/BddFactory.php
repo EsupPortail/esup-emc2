@@ -20,19 +20,11 @@ class BddFactory
      */
     public function __invoke(ContainerInterface $container): Bdd
     {
-        $configs = $container->get('Config')['bdd-admin'];
+        $config = $container->get('Config')['doctrine']['connection']['orm_default'];
+        $configOptions = $container->get('Config')['bdd-admin'];
 
-        $bdd = new Bdd($configs['bdd']);
-        $bdd->setOptions([
-            /* Facultatif, permet de spécifier une fois pour toutes le répertoire où sera renseignée la DDL de votre BDD */
-            Bdd::OPTION_DDL_DIR                => $configs[Bdd::OPTION_DDL_DIR],
-
-            /* Facultatif, spécifie le répertoire où seront stockés vos scripts de migration si vous en avez */
-            Bdd::OPTION_MIGRATION_DIR          => $configs[Bdd::OPTION_MIGRATION_DIR],
-
-            /* Facultatif, permet de personnaliser l'ordonnancement des colonnes dans les tables */
-            Bdd::OPTION_COLUMNS_POSITIONS_FILE => $configs[Bdd::OPTION_COLUMNS_POSITIONS_FILE],
-        ]);
+        $bdd = new Bdd($config['params']);
+        $bdd->setOptions($configOptions);
 
         return $bdd;
     }
