@@ -38,14 +38,6 @@ return [
                 'from_name' => 'EMC2-test | Emploi, Mobilité, Carrière, Compétence',
                 'from_email' => 'drh.biatss@XXXX.fr',
             ],
-            'Formation' => [
-                'redirect_to' => [ 'PPP.NNN@XXX.fr', ],
-                'do_not_send' => false,
-                'redirect' => true,
-                'subject_prefix' => 'Mes formations (test)',
-                'from_name' => 'mes-formations.unicaen.fr | Application de gestion des formations du personnel',
-                'from_email' => 'drh.formations@unicaen.fr',
-            ]
         ]
     ],
 

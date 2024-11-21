@@ -71,7 +71,7 @@ class MissionSpecifiqueForm extends Form
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control',
+                'class' => 'tinymce form-control',
             ]
         ]);
 

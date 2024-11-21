@@ -104,6 +104,7 @@ VALUES ('parametre', 'UnicaenParametre - Gestion des paramètres', 70001, 'Unica
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'parametre_afficher', 'Afficher un paramètre', 10 UNION
+    SELECT 'parametre_afficher_masquer', 'Afficher un paramètre masqué', 15 UNION
     SELECT 'parametre_ajouter', 'Ajouter un paramètre', 20 UNION
     SELECT 'parametre_modifier', 'Modifier un paramètre', 30 UNION
     SELECT 'parametre_supprimer', 'Supprimer un paramètre', 50 UNION
@@ -470,17 +471,10 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'CODE_UNIV', 'Code de l''établissement porteur principal', '<p>Sert notamment pour l''affichage des status</p>', 'String',  1000 UNION
     SELECT 'INSTALL_PATH', 'Chemin d''installation (utiliser pour vérification)', null, 'String', 1000 UNION
     SELECT 'EMAIL_ASSISTANCE', 'Adresse électronique de l''assistance', null, 'String', 100 UNION
-    SELECT 'FAVICON','Chemin vers le favicon', null,'String',1000
-)
-SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
-FROM d
-JOIN unicaen_parametre_categorie cp ON cp.CODE = 'GLOBAL';
-
-INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE, MODIFIABLE, AFFICHABLE)
-WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE, MODIFIABLE, AFFICHABLE) AS (
-    SELECT 'VERSION', 'Version de l''application', null, 'String',  11, false, true UNION
-    SELECT 'APP_NAME', 'Nom de l''application', null, 'String', 10, true, true UNION
-    SELECT 'RELEASE_DATE', 'Date de la publication de la version', null, 'String', 12, true, true
+    SELECT 'FAVICON','Chemin vers le favicon', null,'String',1000 UNION
+    SELECT 'VERSION', 'Version de l''application', null, 'String',  11  UNION
+    SELECT 'APP_NAME', 'Nom de l''application', null, 'String', 10 UNION
+    SELECT 'RELEASE_DATE', 'Date de la publication de la version', null, 'String', 12
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
 FROM d

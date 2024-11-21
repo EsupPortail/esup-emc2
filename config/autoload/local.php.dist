@@ -1,16 +1,6 @@
 <?php
 
-use Unicaen\Console\Console;
-
 $env = getenv('APPLICATION_ENV') ?: 'production';
-
-
-
-$hostname = match (getenv('APPLICATION_ENV')) {
-    'development' => 'mes-formations.ma-machine.mon-etablissement.fr:8443',
-    'test' => 'mes-formations-pp.mon-etablissement.fr',
-    default => 'mes-formations.mon-etablissement.fr',
-};
 
 return [
     'module_listener_options' => [
@@ -28,21 +18,4 @@ return [
         'display_exceptions'       => true,
     ],
 
-    'router' => [
-        'routes' => [
-            'mes-formations' => [
-                'type' => 'Hostname',
-                'options' => [
-                    'route' => ':hostname',
-                    'constraints' => [
-                        'hostname' => $hostname,
-                    ],
-                    'defaults' => [
-                        'hostname' => !Console::isConsole() ? $hostname : '',
-                    ],
-                ],
-                'may_terminate' => true,
-            ],
-        ],
-    ],
 ];

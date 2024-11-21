@@ -10,7 +10,7 @@ use MissionSpecifique\Entity\Db\MissionSpecifiqueTheme;
  * @var MissionSpecifiqueTheme[] $themes
  */
 
-$this->headTitle("Liste des thèmes de mission spécifique");
+$this->headTitle("Thèmes de mission spécifique");
 
 $canIndexMissionSpecifique = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX));
 $canIndexMissionSpecifiqueType = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_INDEX));
@@ -26,7 +26,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
 <div class="row">
     <div class="col-md-9">
         <h1 class="page-header">
-            Liste des thèmes de mission spécifique
+            Thèmes de mission spécifique
         </h1>
 
         <?php if ($canAjouter) : ?>
@@ -41,14 +41,14 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
     <div class="col-md-3">
         <?php if ($canIndexMissionSpecifique) : ?>
             <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::indexAction() */ ?>
-            <a href="<?php echo $this->url("mission-specifique"); ?>" class="btn btn-primary">
+            <a href="<?php echo $this->url("mission-specifique"); ?>" class="btn btn-secondary">
                 <span class="icon icon-listing"></span>
                 Accéder aux missions
             </a>
         <?php endif; ?>
         <?php if ($canIndexMissionSpecifiqueType) : ?>
             <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::indexAction() */ ?>
-            <a href="<?php echo $this->url("mission-specifique-type"); ?>" class="btn btn-primary">
+            <a href="<?php echo $this->url("mission-specifique-type"); ?>" class="btn btn-secondary">
                 <span class="icon icon-listing"></span>
                 Accéder aux types
             </a>
@@ -75,7 +75,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
                 <?php if ($canAfficher) : ?>
                     <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique-theme/afficher', ['theme' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal"
+                       class="ajax-modal action secondary"
                     >
                         <span class="icon icon-voir"></span>
                         Afficher
@@ -85,7 +85,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
                     <br>
                     <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique-theme/modifier', ['theme' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
+                       class="ajax-modal action primary" data-event="modification"
                     >
                         <span class="icon icon-editer"></span>
                         Modifier
@@ -96,6 +96,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
                     <?php if ($theme->estNonHistorise()) : ?>
                         <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('mission-specifique-theme/historiser', ['theme' => $theme->getId()], [], true); ?>"
+                           class="action warning"
                         >
                             <span class="icon icon-historiser"></span>
                             Historiser
@@ -103,6 +104,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
                     <?php else : ?>
                         <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('mission-specifique-theme/restaurer', ['theme' => $theme->getId()], [], true); ?>"
+                           class="action warning"
                         >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
@@ -113,12 +115,10 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
                     <br>
                     <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::detruireAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique-theme/detruire', ['theme' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
+                       class="ajax-modal action danger" data-event="modification"
                     >
-                        <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
                     </a>
                 <?php endif; ?>
             </td>
@@ -136,10 +136,17 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
             window.location.reload();
         });
 
-        $('.datatable').DataTable( {
+        $('.datatable').DataTable({
+            autoWidth: false,
+            paging: false,
+            order: [[0, 'asc'], [1, 'asc']],
+            columnDefs: [{
+                "targets": 2,
+                "orderable": false
+            }],
             language: {
-                url: '/localisation/fr_FR.json'
+                url: '/js/datatables_fr.json'
             }
-        } );
+        });
     });
 </script>

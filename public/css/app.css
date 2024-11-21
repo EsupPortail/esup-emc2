@@ -73,6 +73,9 @@ a.action.success {
 a.action.danger {
     color: var(--bs-danger);
 }
+a.action.warning {
+    color: var(--bs-warning);
+}
 a.action.primary {
     color: var(--bs-primary);
 }
@@ -88,6 +91,9 @@ a.action.success:hover {
 }
 a.action.danger:hover {
     background: #ffa6c4;
+}
+a.action.warning:hover {
+    background: #ffd2b9;
 }
 a.action.primary:hover {
     background: lightblue;
