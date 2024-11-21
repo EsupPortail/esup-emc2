@@ -8,6 +8,7 @@
     }
   ],
   "require": {
+    "laminas/laminas-cli": "*",
     "unicaen/app": "^6.1",
     "unicaen/authentification": "^6.1",
     "unicaen/utilisateur": "^6",
@@ -32,7 +33,8 @@
     "unicaen/etat": "^6.0",
     "unicaen/validation": "^6.1",
     "unicaen/observation": "^0.0",
-    "ext-iconv": "*"
+    "ext-iconv": "*",
+    "unicaen/bddadmin": "0.9.9"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"

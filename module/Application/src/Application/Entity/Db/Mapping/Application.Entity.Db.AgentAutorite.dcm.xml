@@ -2,8 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\AgentAutorite" table="agent_hierarchie_autorite">
 
-        <id name="id" type="integer" column="id">
-            <generator strategy="IDENTITY"/>
+        <id name="id" type="string" column="id">
         </id>
 
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
@@ -26,5 +25,11 @@
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
         </many-to-one>
+
+        <!-- SYNCHRO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="createdOn"         type="datetime"                 column="created_on"                   />
+        <field name="updatedOn"         type="datetime"                 column="updated_on"  nullable="true"  />
+        <field name="deletedOn"         type="datetime"                 column="deleted_on"  nullable="true"  />
+        <field name="sourceId"          type="string" length="128"      column="source_id"                    />
     </entity>
 </doctrine-mapping>

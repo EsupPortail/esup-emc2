@@ -91,6 +91,20 @@ return [
                         CompetencePrivileges::COMPETENCE_SUBSTITUER,
                     ],
                 ],
+                [
+                    'controller' => CompetenceController::class,
+                    'action' => [
+                        'rechercher',
+                    ],
+                    'roles' => [],
+                ],
+                [
+                    'controller' => CompetenceController::class,
+                    'action' => [
+                        'rechercher-agents',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -190,6 +204,28 @@ return [
                                         /** @see CompetenceController::substituerAction() */
                                         'controller' => CompetenceController::class,
                                         'action' => 'substituer',
+                                    ],
+                                ],
+                            ],
+                            'rechercher' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/rechercher',
+                                    'defaults' => [
+                                        /** @see CompetenceController::rechercherAction() */
+                                        'controller' => CompetenceController::class,
+                                        'action' => 'rechercher',
+                                    ],
+                                ],
+                            ],
+                            'rechercher-agents' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/rechercher-agents',
+                                    'defaults' => [
+                                        /** @see CompetenceController::rechercherAgentsAction() */
+                                        'controller' => CompetenceController::class,
+                                        'action' => 'rechercher-agents',
                                     ],
                                 ],
                             ],

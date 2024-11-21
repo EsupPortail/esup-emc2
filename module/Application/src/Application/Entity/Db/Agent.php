@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Carriere\Entity\Db\Corps;
+use Carriere\Entity\Db\Grade;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\Collection;
@@ -20,8 +22,8 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
 use Fichier\Entity\Db\Fichier;
-use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
-use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
+//use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
+//use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -32,12 +34,12 @@ use UnicaenValidation\Entity\HasValidationsTrait;
 
 class Agent implements
     ResourceInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, //HasFormationCollectionInterface,
     HasValidationsInterface
 {
     use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
-    use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
+    use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  //use HasFormationCollectionTrait;
     use HasValidationsTrait;
     use AgentMacroTrait;
 
@@ -717,45 +719,12 @@ class Agent implements
     public function getCompetenceDictionnaireComplet() : array
     {
         $dictionnaire = $this->getCompetenceDictionnaire();
-        foreach ($this->getFormationDictionnaire() as $item) {
-            $formation = $item['entite']->getFormation();
-            foreach ($formation->getCompetenceDictionnaire() as $competenceObtenue) {
-                $competenceId = $competenceObtenue['entite']->getCompetence()->getId();
-                if (isset($dictionnaire[$competenceId])) {
-                    $dictionnaire[$competenceId]["raison"][] = $formation;
-                } else {
-                    $element = [];
-                    $element['entite'] = $competenceObtenue['entite'];
-                    $element['raison'][] = $formation;
-                    $element['conserve'] = true;
-                    $dictionnaire[$competenceId] = $element;
-                }
-            }
-        }
         return $dictionnaire;
     }
 
     public function getApplicationDictionnaireComplet() : array
     {
         $dictionnaire = $this->getApplicationDictionnaire();
-        foreach ($this->getFormationDictionnaire() as $item) {
-            $formation = $item['entite']->getFormation();
-            foreach ($formation->getApplicationDictionnaire() as $applicationObtenue) {
-                $applicationId = $applicationObtenue['entite']->getApplication()->getId();
-                if (isset($dictionnaire[$applicationId])) {
-                    $obtenueNiveau = ($applicationObtenue['entite']->getNiveauMaitrise())?$applicationObtenue['entite']->getNiveauMaitrise()->getNiveau():0;
-                    $currentNiveau = ($dictionnaire[$applicationId]['entite']->getNiveauMaitrise())?$dictionnaire[$applicationId]['entite']->getNiveauMaitrise()->getNiveau():0;
-                    if ($obtenueNiveau > $currentNiveau) $dictionnaire[$applicationId]['entite'] = $applicationObtenue['entite'];
-                    $dictionnaire[$applicationId]["raison"][] = $formation;
-                } else {
-                    $element = [];
-                    $element['entite'] = $applicationObtenue['entite'];
-                    $element['raison'][] = $formation;
-                    $element['conserve'] = true;
-                    $dictionnaire[$applicationId] = $element;
-                }
-            }
-        }
         return $dictionnaire;
     }
 
@@ -817,4 +786,36 @@ class Agent implements
         foreach ($statuts as $statut) if ($statut->isAdministratif()) return true;
         return false;
     }
+
+    public function hasAffectationPrincipale(?Structure $structure): bool
+    {
+        $affectationPrincipale = $this->getAffectationPrincipale();
+        //todo checkbien l'inclusion
+        if ($affectationPrincipale AND $affectationPrincipale->getStructure() === $structure) return true;
+        return false;
+    }
+
+    public function hasCorps(?Corps $corps): bool
+    {
+        $gradesActifs = $this->getGradesActifs();
+        if ($gradesActifs AND !empty($gradesActifs)) {
+            foreach ($gradesActifs as $gradeActif) {
+                if ($gradeActif->getCorps() === $corps) return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasGrade(?Grade $grade): bool
+    {
+        $gradesActifs = $this->getGradesActifs();
+        if ($gradesActifs AND !empty($gradesActifs)) {
+            foreach ($gradesActifs as $gradeActif) {
+                if ($gradeActif->getGrade() === $grade) return true;
+            }
+        }
+        return false;
+    }
+
+
 }

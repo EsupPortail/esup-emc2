@@ -18,7 +18,7 @@ class RecoursForm extends Form
             'type' => Date::class,
             'name' => 'date_procedure',
             'options' => [
-                'label' => "Date de la procédure <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Date de la procédure <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
 //                'format' => 'd/m/Y',
             ],

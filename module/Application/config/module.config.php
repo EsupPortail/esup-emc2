@@ -8,13 +8,15 @@ use Application\Event\RgpdRenderer\RgpdRendererEvenementFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
+use Application\Provider\IdentityProvider;
+use Application\Provider\IdentityProviderFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
-use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Application\Provider\Role\RoleProvider;
+use Application\Service\Bdd\BddFactory;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
 use Application\Service\Macro\MacroService;
@@ -26,19 +28,20 @@ use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Carriere\Provider\Privilege\CorpsPrivileges;
-use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
-use Formation\Provider\Privilege\FormationPrivileges;
+use Laminas\Router\Http\Literal;
 use Metier\Provider\Privilege\MetierPrivileges;
+use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
+use Unicaen\BddAdmin\Bdd;
+use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
-use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
-use Laminas\Router\Http\Literal;
 
 return [
     'bjyauthorize' => [
@@ -67,7 +70,6 @@ return [
                         AgentPrivileges::AGENT_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
                         MetierPrivileges::METIER_INDEX,
-                        FormationPrivileges::FORMATION_ACCES,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         StructurePrivileges::STRUCTURE_INDEX,
                     ],
@@ -107,6 +109,7 @@ return [
                     'controller' => IndexController::class,
                     'action' => [
                         'check-connection',
+                        'apropos',
                     ],
                     'roles' => [],
                 ],
@@ -172,6 +175,18 @@ return [
 
     'router' => [
         'routes' => [
+            'apropos' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/apropos',
+                    'defaults' => [
+                        /** @see IndexController::aproposAction() */
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'apropos',
+                    ],
+                ],
+                'priority' => 9999,
+            ],
             'home' => [
                 'type' => Literal::class,
                 'may_terminate' => true,
@@ -295,6 +310,9 @@ return [
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,
             SynchroOctopusService::class => SynchroOctopusServiceFactory::class,
+
+            IdentityProvider::class => IdentityProviderFactory::class,
+            Bdd::class => BddFactory::class,
         ],
     ],
     'controllers' => [
@@ -361,6 +379,7 @@ return [
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
             '120_bootstrap-select' => '/vendor/bootstrap-select-1.14.0-beta3/js/bootstrap-select.min.js',
             '120_bootstrap-select-fr' => '/vendor/bootstrap-select-1.14.0-beta3/js/i18n/defaults-fr_FR.js',
+            '125_select2    ' => '/vendor/select2/select2-4.1.0.min.js',
             '150_' => 'vendor/tinymce-6.8.2/js/tinymce/tinymce.min.js',
         ],
         'stylesheets' => [

@@ -15,16 +15,15 @@ class GradeServiceFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : GradeService
+    public function __invoke(ContainerInterface $container): GradeService
     {
         /**
          * @var EntityManager $entityManager
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var GradeService $service */
         $service = new GradeService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

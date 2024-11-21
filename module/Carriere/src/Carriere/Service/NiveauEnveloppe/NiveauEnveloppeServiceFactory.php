@@ -23,7 +23,7 @@ class NiveauEnveloppeServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new NiveauEnveloppeService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

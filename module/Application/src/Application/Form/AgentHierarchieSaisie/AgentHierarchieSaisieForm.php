@@ -19,7 +19,7 @@ class AgentHierarchieSaisieForm extends Form {
     public function init(): void
     {
         //agent
-        $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+        $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)

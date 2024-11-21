@@ -10,7 +10,6 @@ use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -30,7 +29,6 @@ use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
-use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
@@ -374,15 +372,13 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $structure = $this->getStructureService()->getRequestedStructure($this);
-
-        $structureMere = $this->getStructureService()->getStructureMere();
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         if ($structure === null) { throw new RuntimeException("Aucune structure de trouvée."); }
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(),true);
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
         $agentsForces = array_map(function(StructureAgentForce $agentForce) { return $agentForce->getAgent(); }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
         foreach ($agentsForces as $agentForce) {
             if (!in_array($agentForce, $agents)) { $agents[] = $agentForce; }
@@ -429,7 +425,6 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $superieur = $this->getAgentService()->getRequestedAgent($this);
-        $structureMere = $this->getStructureService()->getStructureMere();
 
         if ($superieur === null) {
             $user = $this->getUserService()->getConnectedUser();
@@ -440,7 +435,6 @@ class CampagneController extends AbstractActionController {
         }
         
         $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
-        //TODO trierAgents
 
         //$entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, false, false);
         $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
@@ -464,7 +458,6 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $autorite = $this->getAgentService()->getRequestedAgent($this);
-        $structureMere = $this->getStructureService()->getStructureMere();
 
         if ($autorite === null) {
             $user = $this->getUserService()->getConnectedUser();
@@ -475,7 +468,6 @@ class CampagneController extends AbstractActionController {
         }
 
         $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
-        //todo trierAgents
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
 
@@ -515,17 +507,15 @@ class CampagneController extends AbstractActionController {
                     'reponse' => ($mail)?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
 
                 ]);
-                $vm->setTemplate('default/reponse');
-                return $vm;
             } else {
                 $vm = new ViewModel([
                     'title' => "Notification de " . $autorite->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
                     'error' => "L'agent n'est l'autorité d'aucune personne pour la campagne",
 
                 ]);
-                $vm->setTemplate('default/reponse');
-                return $vm;
             }
+            $vm->setTemplate('default/reponse');
+            return $vm;
         }
 
         $form = $this->getSelectionAgentForm();
@@ -562,17 +552,16 @@ class CampagneController extends AbstractActionController {
                     'reponse' => $mail?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
 
                 ]);
-                $vm->setTemplate('default/reponse');
-                return $vm;
+
             } else {
                 $vm = new ViewModel([
                     'title' => "Notification de " . $superieur->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
                     'error' => "L'agent n'est le ou la supérieur·e d'aucune personne pour la campagne",
 
                 ]);
-                $vm->setTemplate('default/reponse');
-                return $vm;
             }
+            $vm->setTemplate('default/reponse');
+            return $vm;
         }
 
         $form = $this->getSelectionAgentForm();

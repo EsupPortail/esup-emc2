@@ -178,9 +178,6 @@ if ($agent !== null) {
                     <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
 <!--                --><?php //endif; ?>
 
-                <!-- FORMATION ------------------------------------------------------------------------------------------------------->
-                <?php //echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
-<!--                Formation desactiver pour le moment-->
             </div>
             <?php endif; ?>
             <?php if (!isset($parametres[AgentParametres::ONGLET_PORTFOLIO]) || $parametres[AgentParametres::ONGLET_PORTFOLIO]->getValeur() !== "false") : ?>

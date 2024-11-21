@@ -10,6 +10,7 @@ use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use Laminas\Http\Response;
+use Laminas\View\Model\JsonModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -96,5 +97,15 @@ class CorpsController extends AbstractActionController {
         $this->getCorpsService()->update($corps);
 
         return $this->redirect()->toRoute('corps', [], [],true);
+    }
+
+    public function rechercherAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $corps = $this->getCorpsService()->getCorpsByTerm($term);
+            $result = $this->getCorpsService()->formatCorpsJSON($corps);
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

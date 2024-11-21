@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
@@ -37,12 +36,6 @@ use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
-use Formation\Entity\Db\FormationElement;
-use Formation\Form\FormationElement\FormationElementForm;
-use Formation\Form\FormationElement\FormationElementFormAwareTrait;
-use Formation\Service\Formation\FormationServiceAwareTrait;
-use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
-use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -74,23 +67,19 @@ class AgentController extends AbstractActionController
 
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
-    use FormationElementServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
-    use HasFormationCollectionServiceAwareTrait;
 
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
     use FichierServiceAwareTrait;
     use ApplicationServiceAwareTrait;
-    use FormationServiceAwareTrait;
     use CategorieServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
     use CompetenceElementFormAwareTrait;
-    use FormationElementFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
 
@@ -196,41 +185,6 @@ class AgentController extends AbstractActionController
         ]);
     }
 
-    /** Gestion des ACQUIS ***************************************************************************************/
-
-    public function ajouterFormationAction(): ViewModel
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $formation = $this->getFormationService()->getRequestedFormation($this);
-
-        $formationElement = new FormationElement();
-
-        /** @var FormationElementForm $form */
-        $form = $this->getFormationElementForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-formation', ['agent' => $agent->getId()], [], true));
-        $formationElement->setFormation($formation);
-        $form->bind($formationElement);
-
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getHasFormationCollectionService()->addFormation($agent, $formationElement);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une formation suivie par l'agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
     /** Validation élement associée à l'agent *************************************************************************/
 
     public function validerElementAction(): ViewModel
@@ -251,11 +205,6 @@ class AgentController extends AbstractActionController
                 $entity = $this->getCompetenceElementService()->getCompetenceElement($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_COMPETENCE");
                 $elementText = "la compétence [" . $entity->getCompetence()->getLibelle() . "]";
-                break;
-            case 'AGENT_FORMATION' :
-                $entity = $this->getFormationElementService()->getFormationElement($entityId);
-                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_FORMATION");
-                $elementText = "la formation [" . $entity->getFormation()->getLibelle() . "]";
                 break;
         }
 
@@ -284,9 +233,6 @@ class AgentController extends AbstractActionController
                         break;
                     case 'AGENT_COMPETENCE' :
                         $this->getCompetenceElementService()->update($entity);
-                        break;
-                    case 'AGENT_FORMATION' :
-                        $this->getFormationElementService()->update($entity);
                         break;
                 }
             }
@@ -319,9 +265,6 @@ class AgentController extends AbstractActionController
                 break;
             case 'AGENT_COMPETENCE' :
                 $entity = $this->getCompetenceElementService()->getCompetenceElement($entityId);
-                break;
-            case 'AGENT_FORMATION' :
-                $entity = $this->getFormationElementService()->getFormationElement($entityId);
                 break;
         }
 

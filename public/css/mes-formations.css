@@ -19,6 +19,12 @@
 html#mes-formations .btn-primary {
     background: var(--bs-primary);
 }
+
+
+html#mes-formations .secondary {
+    background: var(--bs-secondary);
+}
+
 html#mes-formations .btn-primary:hover {
     background: var(--bs-primary-lighter);
 }
@@ -84,3 +90,4 @@ html#mes-formations div.tab-content {
     top:-9;
     border-top: 1px solid black;
 }
+

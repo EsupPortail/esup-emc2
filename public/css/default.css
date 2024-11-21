@@ -5,11 +5,11 @@
     --bs-danger-rgb: 200,0,0;
     --bs-info: rgb(0, 0, 100);
     --bs-info-rgb: 0,0,255;
-    --bs-warning: Sienna;
-    --bs-warning-rgb: 160, 82, 45;
+    --bs-warning: rgb(245, 121, 0);
+    --bs-warning-rgb: rgb(245, 121, 0);
     --bs-primary: #0d6efd;
     --bs-primary-rgb: 13, 110, 253;
-    --bs-secondary: #6c757d;
+    --bs-secondary: rgb(100,100,100);
     --bs-secondary-rgb: 108, 117, 125;
 
     --bs-body-font-family: "Ubuntu", Helvetica;
@@ -24,8 +24,9 @@
 .unistrap.unistrap-th-formations {
     --unistrap-color-main: rgb(121, 78, 171);
     --unistrap-color-dark: rgb(71,58,121);
-    --unistrap-color-light: rgb(246, 229, 255);
+    --unistrap-color-light: rgb(236, 219, 245);
 }
+
 
 
 footer div#etablissement {

@@ -9,7 +9,6 @@ use Element\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\View\Helper\FormationBlocViewHelper;
 use Element\Provider\Privilege\ApplicationPrivileges;
-use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -25,7 +24,6 @@ return [
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
-                        FormationPrivileges::FORMATION_AFFICHER,
                         AgentPrivileges::AGENT_ACQUIS_AFFICHER,
                     ],
                 ],
@@ -37,7 +35,6 @@ return [
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EFFACER,
                         CompetencePrivileges::COMPETENCE_EFFACER,
-                        FormationPrivileges::FORMATION_SUPPRIMER,
                         AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                     ],
                 ],

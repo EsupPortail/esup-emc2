@@ -7,7 +7,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class EmploiTypeServiceFactory {
+class EmploiTypeServiceFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -15,7 +16,7 @@ class EmploiTypeServiceFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : EmploiTypeService
+    public function __invoke(ContainerInterface $container): EmploiTypeService
     {
         /**
          * @var EntityManager $entityManager
@@ -23,7 +24,7 @@ class EmploiTypeServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new EmploiTypeService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

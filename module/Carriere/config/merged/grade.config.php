@@ -33,6 +33,13 @@ return [
                         GradePrivileges::GRADE_LISTER_AGENTS
                     ],
                 ],
+                [
+                    'controller' => GradeController::class,
+                    'action' => [
+                        'rechercher',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
 
@@ -80,6 +87,18 @@ return [
                                 /** @see GradeController::afficherAgentsAction() */
                                 'controller' => GradeController::class,
                                 'action'     => 'afficher-agents',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                /** @see GradeController::rechercherAction() */
+                                'controller' => GradeController::class,
+                                'action'     => 'rechercher',
                             ],
                         ],
                         'may_terminate' => true,

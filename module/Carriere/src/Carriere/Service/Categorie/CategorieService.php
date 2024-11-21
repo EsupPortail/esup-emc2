@@ -3,71 +3,49 @@
 namespace Carriere\Service\Categorie;
 
 use Carriere\Entity\Db\Categorie;
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class CategorieService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     public function create(Categorie $categorie): Categorie
     {
-        try {
-            $this->getEntityManager()->persist($categorie);
-            $this->getEntityManager()->flush($categorie);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", 0, $e);
-        }
+        $this->getObjectManager()->persist($categorie);
+        $this->getObjectManager()->flush($categorie);
         return $categorie;
     }
 
     public function update(Categorie $categorie): Categorie
     {
-        try {
-            $this->getEntityManager()->flush($categorie);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", 0, $e);
-        }
+        $this->getObjectManager()->flush($categorie);
         return $categorie;
     }
 
     public function historise(Categorie $categorie): Categorie
     {
-        try {
-            $categorie->historiser();
-            $this->getEntityManager()->flush($categorie);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", 0, $e);
-        }
+        $categorie->historiser();
+        $this->getObjectManager()->flush($categorie);
         return $categorie;
     }
 
     public function restore(Categorie $categorie): Categorie
     {
-        try {
-            $categorie->dehistoriser();
-            $this->getEntityManager()->flush($categorie);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", 0, $e);
-        }
+        $categorie->dehistoriser();
+        $this->getObjectManager()->flush($categorie);
         return $categorie;
     }
 
     public function delete(Categorie $categorie): Categorie
     {
-        try {
-            $this->getEntityManager()->remove($categorie);
-            $this->getEntityManager()->flush($categorie);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", 0, $e);
-        }
+        $this->getObjectManager()->remove($categorie);
+        $this->getObjectManager()->flush($categorie);
         return $categorie;
     }
 
@@ -75,11 +53,7 @@ class CategorieService
 
     public function createQueryBuider(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(Categorie::class)->createQueryBuilder('categorie');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenulors de la création du QueryBuilder de [" . Categorie::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(Categorie::class)->createQueryBuilder('categorie');
         return $qb;
     }
 

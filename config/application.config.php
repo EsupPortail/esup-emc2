@@ -27,7 +27,6 @@ $modules = [
     'UnicaenPrivilege',
     'UnicaenAuthentification',
     'UnicaenUtilisateurLdapAdapter',
-//    'UnicaenUtilisateurOctopusAdapter',
     'UnicaenUtilisateur',
     'UnicaenAutoform',
     'UnicaenEtat',
@@ -38,8 +37,8 @@ $modules = [
     'UnicaenValidation',
     'UnicaenEvenement',
     'UnicaenAide',
-    'UnicaenEnquete',
     'UnicaenIndicateur',
+    'Unicaen\BddAdmin',
     'Unicaen\Console',
     'UnicaenSynchro',
     'UnicaenObservation',
@@ -49,23 +48,21 @@ $modules = [
     'EntretienProfessionnel',
     'Carriere',
     'Metier',
-//    'FicheReferentiel',
+    'FicheReferentiel',
     'FicheMetier',
     'FichePoste',
 
-    'Formation',
     'Fichier',
     'Element',
     'Application',
 
     'Laminas\DeveloperTools',
-//    'UnicaenTest',
 
 ];
 
 $moduleListenerOptions = [
     'config_glob_paths'    => [
-        'config/autoload/{,*.}{global,local}.php',
+        'config/autoload/{,*.}{local,global}.php',
     ],
     'module_paths' => [
         './module',
