@@ -476,12 +476,31 @@ SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'GLOBAL';
 
+INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE, MODIFIABLE, AFFICHABLE)
+WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE, MODIFIABLE, AFFICHABLE) AS (
+    SELECT 'VERSION', 'Version de l''application', null, 'String',  11, false, true UNION
+    SELECT 'APP_NAME', 'Nom de l''application', null, 'String', 10, true, true UNION
+    SELECT 'RELEASE_DATE', 'Date de la publication de la version', null, 'String', 12, true, true
+)
+SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
+FROM d
+JOIN unicaen_parametre_categorie cp ON cp.CODE = 'GLOBAL';
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE GENERAUX ---------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('EMC2_ACCUEIL', '<p>Texte de la page d''accueil</p>', 'texte', 'Instance de démonstration de EMC2', e'<p>Instance de démonstration de EMC2.</p>
-<p><em>Ce texte est template modifiable dans la partie Administration &gt; Template.</em></p>', null, 'Application\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('EMC2_ACCUEIL', '<p>Texte de la page d''accueil</p>', 'texte',
+'Instance de démonstration de EMC2',
+e'<p>Instance de démonstration de EMC2.</p>
+<p><em>Ce texte est template modifiable dans la partie Administration &gt; Template.</em></p>',
+null,
+'Application\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('EMC2_APROPOS', '<p>Texte affiché dans la partie "À propos" présentée en pied de page de l''application.</p>', 'texte',
+'À propos de VAR[Macro#Parametre|GLOBAL;APP_NAME]',
+'<p>La version courante de <strong>VAR[Macro#Parametre|GLOBAL;APP_NAME]</strong> est  VAR[Macro#Parametre|GLOBAL;VERSION] (Date de publication: VAR[Macro#Parametre|GLOBAL;RELEASE_DATE])</p>',
+null,
+'Application\Provider\Template');
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- MACROS --------------------------------------------------------------------------------------------------------------
@@ -491,5 +510,7 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
 VALUES
     ('EMC2#AppName', '', 'MacroService', 'getAppName'),
     ('EMC2#date', 'Affiche la date du jour d/m/Y', 'MacroService', 'getDate'),
-    ('EMC2#datetime', 'Affiche la date et l heure d/m/Y à H:i', 'MacroService', 'getDateTime')
+    ('EMC2#datetime', 'Affiche la date et l heure d/m/Y à H:i', 'MacroService', 'getDateTime'),
+    ('Macro#Parametre', '<p>Retourne la valeur d''un paramètre (Attention il faut préciser la catégorie et le paramètre de la façon suivante :  VAR[Macro#Parametre|CATEGORIE;PARAMETRE])</p>', 'MacroService', 'getValeurParametre');
+
 ;
