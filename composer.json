@@ -8,6 +8,9 @@
     }
   ],
   "require": {
+    "ext-json": "*",
+    "ext-gettext": "*",
+    "ext-iconv": "*",
     "laminas/laminas-cli": "*",
     "unicaen/app": "^6.1",
     "unicaen/authentification": "^6.1",
@@ -22,22 +25,14 @@
     "unicaen/evenement": "^6",
     "unicaen/autoform": "^6",
     "unicaen/aide": "^0",
-    "ext-json": "*",
-    "ext-gettext": "*",
     "unicaen/indicateur": "^6.0",
     "unicaen/synchro": "^6.0",
     "unicaen/console": "^6.0",
-
     "unicaen/utilisateur-ldap-adapter" : "^2.0",
-    "unicaen/enquete": "^0",
     "unicaen/etat": "^6.0",
     "unicaen/validation": "^6.1",
     "unicaen/observation": "^0.0",
-    "ext-iconv": "*",
     "unicaen/bddadmin": "0.9.9"
-  },
-  "require-dev": {
-    "laminas/laminas-developer-tools": ">=1.0"
   },
   "config": {
     "allow-plugins": {
