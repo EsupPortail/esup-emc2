@@ -37,7 +37,6 @@ $modules = [
     'UnicaenValidation',
     'UnicaenEvenement',
     'UnicaenAide',
-    'UnicaenEnquete',
     'UnicaenIndicateur',
     'Unicaen\BddAdmin',
     'Unicaen\Console',
