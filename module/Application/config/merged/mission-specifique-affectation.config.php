@@ -7,6 +7,7 @@ use Application\Assertion\AgentMissionSpecifiqueAssertionFactory;
 use Application\Controller\MissionSpecifiqueAffectationController;
 use Application\Controller\MissionSpecifiqueAffectationControllerFactory;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
+use Application\View\Helper\AffectationsMissionSpecifiqueViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -200,6 +201,11 @@ return [
     ],
     'hydrators' => [
         'factories' => [
+        ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            "affectationsMissionSpecifique" => AffectationsMissionSpecifiqueViewHelper::class,
         ],
     ]
 

@@ -224,38 +224,38 @@ class AgentMissionSpecifiqueService
         return $result;
     }
 
-    /**
-     * @param Agent|null $agent
-     * @param MissionSpecifique|null $mission
-     * @param Structure|null $structure
-     * @param bool $actif
-     * @return array
-     */
-    public function getAgentMissionsSpecifiquesByAgentAndMissionAndStructure(?Agent $agent, ?MissionSpecifique  $mission, ?Structure $structure, bool $actif = true) : array
+    public function getAgentMissionsSpecifiquesWithFiltre(array $params)
     {
         $qb = $this->createQueryBuilder();
 
-        if ($agent) {
-            $qb = $qb->andWhere('agentmission.agent = :agent')
-                ->setParameter('agent', $agent);
+        if (isset($params['type']) AND $params['type'] !== '') {
+            $qb = $qb->join('mission.type', 'type')
+                ->andWhere('type.id = :type')->setParameter('type', $params['type']);
         }
-
-        if ($mission) {
-            $qb = $qb->andWhere('agentmission.mission = :mission')
-                ->setParameter('mission', $mission);
+        if (isset($params['theme']) AND $params['theme'] !== '') {
+            $qb = $qb->join('mission.theme', 'theme')
+                ->andWhere('theme.id = :theme')->setParameter('theme', $params['theme']);
         }
-
-        if ($structure) {
-            $structures = $this->getStructureService()->getStructuresFilles($structure);
-            $structures[] = $structure;
-
+        if (isset($params['mission']) AND $params['mission'] !== '') {
             $qb = $qb
-                ->andWhere('agentmission.structure in (:structures)')
-                ->setParameter('structures', $structures)
-            ;
+                ->andWhere('mission.id = :mission')->setParameter('mission', $params['mission']);
         }
-
-        if ($actif === true) $qb = AgentMissionSpecifique::decorateWithActif($qb, 'agentmission');
+        if (isset($params['agent-filtre']) AND isset($params['agent-filtre']['id']) AND $params['agent-filtre']['id'] !== '') {
+            $qb = $qb
+                ->andWhere('agent.id = :agent')->setParameter('agent', $params['agent-filtre']['id']);
+        }
+        if (isset($params['structure-filtre']) AND isset($params['structure-filtre']['id']) AND $params['structure-filtre']['id'] !== '') {
+            $structureIds = [];
+            $structure = $this->getStructureService()->getStructure($params['structure-filtre']['id']);
+            if ($structure) {
+                $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+                foreach ($structures as $structure_) {
+                    $structureIds[$structure_->getId()] = $structure_->getId();
+                }
+            }
+            $qb = $qb
+                ->andWhere('structure.id in (:structureIds)')->setParameter('structureIds', $structureIds);
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;

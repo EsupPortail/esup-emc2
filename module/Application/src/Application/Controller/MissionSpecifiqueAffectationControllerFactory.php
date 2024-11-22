@@ -8,6 +8,8 @@ use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueService;
+use MissionSpecifique\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeService;
+use MissionSpecifique\Service\MissionSpecifiqueType\MissionSpecifiqueTypeService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -30,6 +32,8 @@ class MissionSpecifiqueAffectationControllerFactory {
          * @var AgentSuperieurService $agentSuperieurService
          * @var RenduService $renduService
          * @var MissionSpecifiqueService $missionSpecifiqueService
+         * @var MissionSpecifiqueThemeService $missionSpecifiqueThemeService
+         * @var MissionSpecifiqueTypeService $missionSpecifiqueTypeService
          * @var StructureService $structureService
          * @var UserService $userService
          */
@@ -39,6 +43,8 @@ class MissionSpecifiqueAffectationControllerFactory {
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $renduService = $container->get(RenduService::class);
         $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
+        $missionSpecifiqueThemeService = $container->get(MissionSpecifiqueThemeService::class);
+        $missionSpecifiqueTypeService = $container->get(MissionSpecifiqueTypeService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
@@ -55,6 +61,8 @@ class MissionSpecifiqueAffectationControllerFactory {
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setRenduService($renduService);
         $controller->setMissionSpecifiqueService($missionSpecifiqueService);
+        $controller->setMissionSpecifiqueThemeService($missionSpecifiqueThemeService);
+        $controller->setMissionSpecifiqueTypeService($missionSpecifiqueTypeService);
         $controller->setStructureService($structureService);
         $controller->setUserService($userService);
 

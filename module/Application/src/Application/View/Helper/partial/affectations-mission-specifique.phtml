@@ -1,0 +1,184 @@
+<?php
+
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
+
+/**
+ * @see \Application\View\Helper\AffectationsMissionSpecifiqueViewHelper
+ * @var AgentMissionSpecifique[] $affectations
+ * @var array $options
+ */
+
+
+$canVoir = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
+$canLettre = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
+$canAjouter = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AJOUTER));
+$canEditer = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
+$canhistoriser = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER));
+$canDetruire = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
+
+$retour = $options['retour']??$this->url();
+$displayAgent = (!isset($options['display-agent']) OR $options['display-agent'] !== false);
+
+?>
+
+<table class="table table-condensed datatable table-hover" id="affectation">
+    <thead>
+    <tr>
+        <?php if ($displayAgent): ?>
+            <th data-type="string"> Agent</th>
+        <?php endif; ?>
+        <th> Mission</th>
+        <th> Structure</th>
+        <th data-type="num"> Début</th>
+        <th data-type="num"> Fin</th>
+        <th class="cell-action"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($affectations as $affectation) : ?>
+        <tr <?php if ($affectation->estHistorise()) echo "class='historise'"; ?>>
+            <?php if ($displayAgent): ?>
+                <td data-order="<?php echo $affectation->getAgent()->getDenomination(); ?>">
+                    <?php echo $affectation->getAgent()->getDenomination(); ?>
+                </td>
+            <?php endif; ?>
+            <td>
+                <?php if($affectation->getMission()):  ?>
+                    <?php $mission = $affectation->getMission(); ?>
+                    <?php echo $mission->getLibelle(); ?>
+                    <br>
+                    <?php if ($mission->getType()) : ?>
+                        <span class="type-mission"><?php echo $mission->getType()->getLibelle(); ?></span>
+                    <?php endif; ?>
+                    <?php if ($mission->getTheme()) : ?>
+                        <?php echo $mission->getTheme()->getLibelle(); ?>
+                    <?php endif; ?>
+                    <br>
+                    <span class="type-mission">Décharge</span>
+                    <?php if ($affectation->getDecharge()) : ?>
+                        <?php echo $affectation->getDechargeTexte(); ?>
+                    <?php else : ?>
+                        Aucune
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span class="text-warning">
+                                Mission absente
+                            </span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($affectation->getStructure()) : ?>
+                    <?php echo  $affectation->getStructure()->getLibelleLong(); ?>
+                    <?php if ($affectation->getStructure() !== $affectation->getStructure()->getNiv2()) : ?>
+                        <br/>
+                        <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        Aucune structure
+                    </span>
+                <?php endif; ?>
+            </td>
+            <td data-order="<?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->getTimestamp():0; ?>"> <?php echo($affectation->getDateDebut() ? $affectation->getDateDebut()->format('d/m/Y') : "--"); ?> </td>
+            <td data-order="<?php echo $affectation->getDateFin()?$affectation->getDateFin()->getTimestamp():0; ?>"> <?php echo($affectation->getDateFin() ? $affectation->getDateFin()->format('d/m/Y') : "--"); ?> </td>
+            <td class="action">
+                <?php if ($canVoir) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique-affectation/afficher', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
+                       class="ajax-modal action secondary"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Visualiser
+                    </a>
+                    <br>
+                <?php endif; ?>
+
+                <?php if ($canLettre) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique-affectation/generer-lettre-type', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
+                       target="_blank" class="action secondary"
+                    >
+                        <span class="icon icon-pdf"></span>
+                        Générer la lettre
+                    </a>
+                    <br/>
+                <?php endif; ?>
+
+
+                <?php if ($canEditer) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique-affectation/modifier', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
+                       class="ajax-modal action primary" data-event="modification"
+                    >
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a><br>
+                <?php endif; ?>
+
+                <?php if ($affectation->estNonHistorise()) : ?>
+                    <?php if ($canhistoriser) : ?>
+                        <?php /** @see MissionSpecifiqueAffectationController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('mission-specifique-affectation/historiser', ['agent-mission-specifique' => $affectation->getId()], ["query" => ['retour' => $retour]], true); ?>"
+                           class="action warning"
+                        >
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
+                        <br/>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <?php if ($canhistoriser) : ?>
+                        <?php /** @see MissionSpecifiqueAffectationController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('mission-specifique-affectation/restaurer', ['agent-mission-specifique' => $affectation->getId()], ["query" => ['retour' => $retour]], true); ?>"
+                           class="action warning"
+                        >
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                        <br/>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($canDetruire) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::detruireAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique-affectation/detruire', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
+                       class="ajax-modal action danger" data-event="modification"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+
+<script>
+    $(function () {
+        $('.datatable').DataTable({
+            autoWidth: false,
+            paging: false,
+            columnDefs: [{
+                "targets": <?php if ($displayAgent) echo "5"; else echo "4"; ?>,
+                "orderable": false
+            }],
+            language: {
+                url: '/js/datatables_fr.json'
+            }
+        });
+    });
+</script>
+
+<style>
+    span.type-mission {
+        border: 1px solid black;
+        border-radius: 0.25rem;
+        padding: 0.1rem 0.5rem;
+        margin: 0.1rem 0.5rem 0.1rem 0.1rem;
+    }
+</style>
+

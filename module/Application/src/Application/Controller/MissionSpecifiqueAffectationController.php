@@ -15,6 +15,8 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use MissionSpecifique\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeServiceAwareTrait;
+use MissionSpecifique\Service\MissionSpecifiqueType\MissionSpecifiqueTypeServiceAwareTrait;
 use Mpdf\MpdfException;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
@@ -33,6 +35,8 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use RenduServiceAwareTrait;
     use MissionSpecifiqueServiceAwareTrait;
+    use MissionSpecifiqueThemeServiceAwareTrait;
+    use MissionSpecifiqueTypeServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -41,22 +45,20 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
     public function indexAction(): ViewModel
     {
         $fromQueries = $this->params()->fromQuery();
-        $agentId = $fromQueries['agent'] ?? '';
-        $structureId = $fromQueries['structure'] ?? '';
-        $missionId = (isset($fromQueries['mission']) and $fromQueries['mission'] !== '') ? ((int)$fromQueries['mission']) : null;
-        $agent = ($agentId !== '') ? $this->getAgentService()->getAgent($agentId) : null;
-        $structure = ($structureId !== '') ? $this->getStructureService()->getStructure($structureId) : null;
-        $mission = $this->getMissionSpecifiqueService()->getMissionSpecifique($missionId);
-        $affectations = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgentAndMissionAndStructure($agent, $mission, $structure, false);
+        $affectations = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesWithFiltre($fromQueries);
+
         $missions = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
+        $types = $this->getMissionSpecifiqueTypeService()->getMissionsSpecifiquesTypes();
+        $themes = $this->getMissionSpecifiqueThemeService()->getMissionsSpecifiquesThemes();
 
         return new ViewModel([
-            'agent' => $agent,
-            'structure' => $structure,
-            'mission' => $mission,
+            'params' => $fromQueries,
             'affectations' => $affectations,
 
             'missions' => $missions,
+            'themes' => $themes,
+            'types' => $types,
+
         ]);
     }
 
@@ -82,7 +84,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
         $affectation = new AgentMissionSpecifique();
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
-        $agentSS = $form->get('agent');
+        $agentSS = $form->get('agent-sas');
         $url = $this->getRouteRechercherAgent($structure);
         $agentSS->setAutocompleteSource($url);
 
@@ -130,7 +132,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
         $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
-        $agentSS = $form->get('agent');
+        $agentSS = $form->get('agent-sas');
         $url = $this->getRouteRechercherAgent();
         $agentSS->setAutocompleteSource($url);
         if ($structure === null) {
@@ -254,6 +256,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
             /** @see AgentController::rechercherWithStructureMereAction() */
             return $this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true);
         }
+        /** @see AgentController::rechercherLargeAction() */
         return $this->url()->fromRoute('agent/rechercher-large', [], [], true);
     }
 }
