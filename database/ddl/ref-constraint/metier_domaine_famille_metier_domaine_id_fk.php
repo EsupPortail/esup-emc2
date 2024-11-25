@@ -9,7 +9,7 @@ return [
     'rtable'      => 'metier_domaine',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',
-    'index'       => 'domaine_pk',
+    'index'       => 'domaine_id_uindex',
     'columns'     => [
         'domaine_id' => 'id',
     ],

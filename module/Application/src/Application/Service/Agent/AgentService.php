@@ -393,8 +393,7 @@ EOS;
     /** Recuperation des supérieures et autorités *********************************************************************/
 
     /**
-     * TODO :: a conserver pour init des superieurs depuis les structures
-     * Agent[]
+     * @return StructureResponsable[]
      */
     public function computeSuperieures(Agent $agent, ?DateTime $date = null): array
     {
@@ -408,18 +407,15 @@ EOS;
             $affectationPrincipale = reset($affectationsPrincipales);
             $structure = $affectationPrincipale->getStructure();
             do {
-                $responsablesAll = array_map(function (StructureResponsable $a) {
-                    return $a->getAgent();
-                }, $this->getStructureService()->getResponsables($structure, $date));
+                $responsablesAll = $this->getStructureService()->getResponsables($structure, $date);
                 if (!in_array($agent, $responsablesAll)) {
                     $responsables = [];
                     foreach ($responsablesAll as $responsable) {
-                        $responsables["structure_" . $responsable->getId()] = $responsable;
+                        $responsables["structure_" . $responsable->getAgent()->getId()] = $responsable;
                     }
                     if (!empty($responsables)) return $responsables;
                 }
-
-                $structure = $structure->getParent();
+                $structure = ($structure AND $structure->getParent() !== $structure) ? $structure->getParent() : null;
             } while ($structure !== null);
         }
 
@@ -447,21 +443,21 @@ EOS;
                 else return []; //throw new LogicException("Différentes structures de niveau2 affectations principales pour l'agent");
             }
         }
+
+        $banAgent = array_map(function(StructureResponsable $sr) { return $sr->getAgent();}, $superieurs);
         do {
-            $responsablesAll = array_map(function (StructureResponsable $a) {
-                return $a->getAgent();
-            }, $this->getStructureService()->getResponsables($structure, $date));
+            $responsablesAll = $this->getStructureService()->getResponsables($structure, $date);
             if (!in_array($agent, $responsablesAll)) {
                 $responsables = [];
                 foreach ($responsablesAll as $responsable) {
-                    if (!in_array($responsable, $superieurs)) {
-                        $responsables["structure_" . $responsable->getId()] = $responsable;
+                    //retirer les niv2 deja dans supereieurs
+                    if (!in_array($responsable->getAgent(), $banAgent)) {
+                        $responsables["structure_" . $responsable->getAgent()->getId()] = $responsable;
                     }
                 }
                 if (!empty($responsables)) return $responsables;
             }
-
-            $structure = ($structure) ? $structure->getParent() : null;
+            $structure = ($structure AND $structure->getParent() !== $structure) ? $structure->getParent() : null;
         } while ($structure !== null);
 
         return [];

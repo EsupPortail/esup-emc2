@@ -232,7 +232,7 @@ class ElementController extends AbstractActionController
                 'title' => "Ajout d'une application",
                 'form' => $form,
             ]);
-            $vm->setTemplate('application/default/default-form');
+            $vm->setTemplate('default/default-form');
             return $vm;
         }
         exit();

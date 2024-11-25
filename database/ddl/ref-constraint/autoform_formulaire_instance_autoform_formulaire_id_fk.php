@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_autoform_formulaire',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',
-    'index'       => 'autoform_formulaire_pk',
+    'index'       => 'autoform_formulaire_id_uindex',
     'columns'     => [
         'formulaire' => 'id',
     ],

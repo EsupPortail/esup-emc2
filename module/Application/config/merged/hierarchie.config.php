@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\ChaineAssertion;
+use Application\Assertion\ChaineAssertionFactory;
 use Application\Controller\AgentHierarchieController;
 use Application\Controller\AgentHierarchieControllerFactory;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;
@@ -16,7 +18,7 @@ use Application\Form\Chaine\ChaineForm;
 use Application\Form\Chaine\ChaineFormFactory;
 use Application\Form\Chaine\ChaineHydrator;
 use Application\Form\Chaine\ChaineHydratorFactory;
-use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\ChainePrivileges;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentAutorite\AgentAutoriteServiceFactory;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
@@ -26,28 +28,83 @@ use Application\View\Helper\AgentSuperieurViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'Chaine' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            ChainePrivileges::CHAINE_AFFICHER,
+                            ChainePrivileges::CHAINE_SYNCHRONISER,
+                            ChainePrivileges::CHAINE_GERER,
+                        ],
+                        'resources' => ['Chaine'],
+                        'assertion' => ChaineAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
                     'controller' => AgentHierarchieController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        ChainePrivileges::CHAINE_INDEX
+                    ],
+                ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
                         'afficher',
-                        'importer',
-                        'calculer',
-                        'chaine-hierarchique-json',
-
+                    ],
+                    'privileges' => [
+                        ChainePrivileges::CHAINE_AFFICHER,
+                    ],
+                    'assertion'  => ChaineAssertion::class,
+                ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
                         'ajouter',
                         'modifier',
-                        'historiser',
-                        'restaurer',
                         'supprimer',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AGENT_INDEX, //todo "Faites mieux !!!"
+                        ChainePrivileges::CHAINE_GERER
+                    ],
+                    'assertion'  => ChaineAssertion::class,
+                ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        ChainePrivileges::CHAINE_SYNCHRONISER
+                    ],
+                    'assertion'  => ChaineAssertion::class,
+                ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
+                        'importer',
+                        'calculer',
+                        'chaine-hierarchique-json',
+                    ],
+                    'privileges' => [
+                        ChainePrivileges::CHAINE_IMPORTER,
                     ],
                 ],
                 [
@@ -250,6 +307,7 @@ return [
         'factories' => [
             AgentAutoriteService::class => AgentAutoriteServiceFactory::class,
             AgentSuperieurService::class => AgentSuperieurServiceFactory::class,
+            ChaineAssertion::class => ChaineAssertionFactory::class,
         ],
     ],
     'controllers'     => [

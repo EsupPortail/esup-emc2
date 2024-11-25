@@ -9,7 +9,7 @@ return [
     'rtable'      => 'missionprincipale_activite',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'activite_description_pk',
+    'index'       => 'activite_description_id_uindex',
     'columns'     => [
         'description_id' => 'id',
     ],

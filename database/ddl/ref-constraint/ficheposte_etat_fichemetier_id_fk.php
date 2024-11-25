@@ -9,7 +9,7 @@ return [
     'rtable'      => 'ficheposte',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'ficheposte_pkey',
+    'index'       => 'fiche_metier_id_uindex',
     'columns'     => [
         'ficheposte_id' => 'id',
     ],

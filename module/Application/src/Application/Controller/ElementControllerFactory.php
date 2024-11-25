@@ -12,14 +12,15 @@ use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\Niveau\NiveauService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
-use Formation\Service\FormationElement\FormationElementService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ElementControllerFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return ElementController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : ElementController
     {
@@ -30,7 +31,6 @@ class ElementControllerFactory {
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
          * @var FicheMetierService $ficheMetierService
-         * @var FormationElementService $formationElementService
          * @var NiveauService $niveauService
          */
         $agentService = $container->get(AgentService::class);
@@ -39,7 +39,6 @@ class ElementControllerFactory {
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $formationElementService = $container->get(FormationElementService::class);
         $niveauService = $container->get(NiveauService::class);
 
         /**
@@ -58,7 +57,6 @@ class ElementControllerFactory {
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setFormationElementService($formationElementService);
         $controller->setNiveauService($niveauService);
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);

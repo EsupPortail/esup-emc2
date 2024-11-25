@@ -81,7 +81,6 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
         $agent = $this->getAgentService()->getAgent($agentId);
 
         $affectation = new AgentMissionSpecifique();
-        if ($structure) $affectation->setStructure($structure);
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
         $agentSS = $form->get('agent-sas');

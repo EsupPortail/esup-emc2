@@ -4,7 +4,6 @@ namespace Element\Form\Application;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
 use Element\Service\ApplicationTheme\ApplicationThemeServiceAwareTrait;
-use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
@@ -12,7 +11,6 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
 class ApplicationForm extends Form {
-    use FormationServiceAwareTrait;
     use ApplicationThemeServiceAwareTrait;
 
     public function init(): void

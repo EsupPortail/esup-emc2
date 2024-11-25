@@ -8,7 +8,7 @@ return [
     'temporary'   => FALSE,
     'logging'     => FALSE,
     'commentaire' => NULL,
-    'sequence'    => 'agent_hierarchie_superieur_id_seq',
+    'sequence'    => NULL,
     'columns'     => [
         'agent_id'              => [
             'name'        => 'agent_id',
@@ -29,8 +29,8 @@ return [
             'length'      => 0,
             'scale'       => NULL,
             'precision'   => 6,
-            'nullable'    => TRUE,
-            'default'     => NULL,
+            'nullable'    => FALSE,
+            'default'     => 'now()',
             'position'    => 12,
             'commentaire' => NULL,
         ],

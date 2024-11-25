@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_etat_instance',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'SET NULL',
-    'index'       => 'unicaen_etat_instance_pkey',
+    'index'       => 'unicaen_etat_instance_id_index',
     'columns'     => [
         'etat_id' => 'id',
     ],

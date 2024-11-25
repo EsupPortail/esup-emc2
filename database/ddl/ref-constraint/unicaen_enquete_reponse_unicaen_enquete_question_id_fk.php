@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_enquete_question',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'formation_enquete_question_pkey',
+    'index'       => 'formation_enquete_question_id_uindex',
     'columns'     => [
         'question_id' => 'id',
     ],

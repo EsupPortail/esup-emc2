@@ -684,6 +684,7 @@ class Agent implements
         /** @var AgentAutorite[] $result */
         $result = $this->autorites->toArray();
         $result = array_filter($result, function (AgentAutorite $a) { return !$a->isDeleted();});
+        $result = array_filter($result, function (AgentAutorite $a) { return $a->estEnCours();});
         if ($histo === false) {
             $result = array_filter($result, function (AgentAutorite $a) { return $a->estNonHistorise();});
         }
@@ -696,6 +697,7 @@ class Agent implements
         /** @var AgentSuperieur[] $result */
         $result = $this->superieurs->toArray();
         $result = array_filter($result, function (AgentSuperieur $a) { return !$a->isDeleted();});
+        $result = array_filter($result, function (AgentSuperieur $a) { return $a->estEnCours();});
         if ($histo === false) {
             $result = array_filter($result, function (AgentSuperieur $a) { return $a->estNonHistorise();});
         }

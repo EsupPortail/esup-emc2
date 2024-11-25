@@ -156,7 +156,7 @@ class AgentHierarchieController extends AbstractActionController
             $agents = $this->getAgentService()->getAgentsByStructures($structures);
 
             $superieurs = [];
-            $autorites = [];
+//            $autorites = [];
             foreach ($agents as $agent) {
                 $superieurs[$agent->getId()] = $this->getAgentService()->computeSuperieures($agent);
                 $autorites[$agent->getId()] = $this->getAgentService()->computeAutorites($agent, $superieurs[$agent->getId()]);
@@ -170,7 +170,22 @@ class AgentHierarchieController extends AbstractActionController
                         $warning[] = "Aucune autorité n'a pu être déterminée pour " . $agent->getDenomination();
                     } else {
                         foreach ($autorites[$agent->getId()] as $autorite) {
-                            $this->getAgentAutoriteService()->createAgentAutorite($agent, $autorite);
+                            $agentAutorite = new AgentAutorite();
+                            $agentAutorite->setAgent($agent);
+                            $agentAutorite->setAutorite($autorite->getAgent());
+                            $agentAutorite->setDateDebut($autorite->getDateDebut());
+                            $agentAutorite->setDateFin($autorite->getDateFin());
+                            $agentAutorite->setSourceId('EMC2');
+
+                            $id = $agentAutorite->generateId();
+                            $old = $this->getAgentAutoriteService()->getAgentAutorite($id);
+                            if ($old !== null) {
+                                $this->getAgentAutoriteService()->restore($old);
+                            } else {
+                                $agentAutorite->setId($id);
+                                $agentAutorite->setCreatedOn(new DateTime());
+                                $this->getAgentAutoriteService()->create($agentAutorite);
+                            }
                         }
                     }
                     $this->getAgentSuperieurService()->historiseAll($agent);
@@ -178,7 +193,22 @@ class AgentHierarchieController extends AbstractActionController
                         $warning[] = "Aucun supérieur n'a pu être déterminée pour " . $agent->getDenomination();
                     } else {
                         foreach ($superieurs[$agent->getId()] as $superieur) {
-                            $this->getAgentSuperieurService()->createAgentSuperieur($agent, $superieur);
+                            $agentSuperieur = new AgentSuperieur();
+                            $agentSuperieur->setAgent($agent);
+                            $agentSuperieur->setSuperieur($superieur->getAgent());
+                            $agentSuperieur->setDateDebut($superieur->getDateDebut());
+                            $agentSuperieur->setDateFin($superieur->getDateFin());
+                            $agentSuperieur->setSourceId('EMC2');
+
+                            $id = $agentSuperieur->generateId();
+                            $old = $this->getAgentSuperieurService()->getAgentSuperieur($id);
+                            if ($old !== null) {
+                                $this->getAgentSuperieurService()->restore($old);
+                            } else {
+                                $agentSuperieur->setId($id);
+                                $agentSuperieur->setCreatedOn(new DateTime());
+                                $this->getAgentSuperieurService()->create($agentSuperieur);
+                            }
                         }
                     }
                 }
@@ -312,6 +342,7 @@ class AgentHierarchieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => $titre,
             'form' => $form,
+            'js' => ($agent)?"$('#agent-autocomplete').parent().hide();":"",
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
@@ -363,6 +394,7 @@ class AgentHierarchieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => $titre,
             'form' => $form,
+            'js' => ($chaine->getAgent())?"$('#agent-autocomplete').parent().hide();":"",
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
@@ -413,7 +445,6 @@ class AgentHierarchieController extends AbstractActionController
         if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $chaine->getAgent()->getId()], ['fragment' => 'informations'], true);
     }
-
 
     public function supprimerAction(): ViewModel
     {
