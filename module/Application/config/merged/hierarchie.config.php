@@ -12,10 +12,10 @@ use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormFactory;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationHydrator;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationHydratorFactory;
-use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieForm;
-use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieFormFactory;
-use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieHydrator;
-use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieHydratorFactory;
+use Application\Form\Chaine\ChaineForm;
+use Application\Form\Chaine\ChaineFormFactory;
+use Application\Form\Chaine\ChaineHydrator;
+use Application\Form\Chaine\ChaineHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentAutorite\AgentAutoriteServiceFactory;
@@ -38,8 +38,13 @@ return [
                         'afficher',
                         'importer',
                         'calculer',
-                        'saisir',
-                        'chaine-hierarchique-json'
+                        'chaine-hierarchique-json',
+
+                        'ajouter',
+                        'modifier',
+                        'historiser',
+                        'restaurer',
+                        'supprimer',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX, //todo "Faites mieux !!!"
@@ -101,18 +106,67 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'saisir' => [
-                                'type'  => Literal::class,
+                            'ajouter' => [
+                                'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/saisir',
+                                    'route'    => '/ajouter/:agent/:type',
                                     'defaults' => [
-                                        /** @see AgentHierarchieController::saisirAction(): */
+                                        /** @see AgentHierarchieController::ajouterAction() */
                                         'controller' => AgentHierarchieController::class,
-                                        'action'     => 'saisir',
+                                        'action'     => 'ajouter',
                                     ],
                                 ],
                                 'may_terminate' => true,
                             ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:chaine/:type',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::modifierAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'modifier',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:chaine/:type',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::historiserAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'historiser',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:chaine/:type',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::restaurerAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'restaurer',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'supprimer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/supprimer/:chaine/:type',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::supprimerAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'supprimer',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+
                             'afficher' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -207,14 +261,14 @@ return [
         'factories' => [
             AgentHierarchieCalculForm::class => AgentHierarchieCalculFormFactory::class,
             AgentHierarchieImportationForm::class => AgentHierarchieImportationFormFactory::class,
-            AgentHierarchieSaisieForm::class => AgentHierarchieSaisieFormFactory::class,
+            ChaineForm::class => ChaineFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             AgentHierarchieCalculHydrator::class => AgentHierarchieCalculHydratorFactory::class,
             AgentHierarchieImportationHydrator::class => AgentHierarchieImportationHydratorFactory::class,
-            AgentHierarchieSaisieHydrator::class => AgentHierarchieSaisieHydratorFactory::class,
+            ChaineHydrator::class => ChaineHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

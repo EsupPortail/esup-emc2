@@ -4,7 +4,7 @@ namespace Application\Controller;
 
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
-use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieForm;
+use Application\Form\Chaine\ChaineForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
@@ -38,11 +38,11 @@ class AgentHierarchieControllerFactory
         /**
          * @var AgentHierarchieImportationForm $importationForm
          * @var AgentHierarchieCalculForm $calculForm
-         * @var AgentHierarchieSaisieForm $saisieForm
+         * @var ChaineForm $chaineForm
          */
         $importationForm = $container->get('FormElementManager')->get(AgentHierarchieImportationForm::class);
         $calculForm = $container->get('FormElementManager')->get(AgentHierarchieCalculForm::class);
-        $saisieForm = $container->get('FormElementManager')->get(AgentHierarchieSaisieForm::class);
+        $chaineForm = $container->get('FormElementManager')->get(ChaineForm::class);
 
         $controller = new AgentHierarchieController();
         $controller->setAgentService($agentService);
@@ -51,7 +51,7 @@ class AgentHierarchieControllerFactory
         $controller->setStructureService($structureService);
         $controller->setAgentHierarchieCalculForm($calculForm);
         $controller->setAgentHierarchieImportationForm($importationForm);
-        $controller->setAgentHierarchieSaisieForm($saisieForm);
+        $controller->setChaineForm($chaineForm);
         return $controller;
     }
 

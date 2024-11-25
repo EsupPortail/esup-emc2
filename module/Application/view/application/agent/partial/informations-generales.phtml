@@ -6,8 +6,6 @@
  * @var AgentAffectation[] $affectations
  * @var AgentGrade[] $grades
  * @var AgentEchelon[] $echelons
- * @var Agent[] $superieures
- * @var Agent[] $autorites
  * @var AgentQuotite $quotite
  */
 
@@ -18,6 +16,7 @@ use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStatut;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
+use Application\Provider\Privilege\AgentPrivileges;
 
 // TODO fix that >>>  on rentre dans la mauvaise assertion ... AgentAssertion et non AgentAffichageAssertion
 $canAfficherAutorite = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE);
@@ -28,150 +27,232 @@ $canAfficherInfoSource = $this->isAllowed($agent, AgentaffichagePrivileges::AGEN
 $canAfficherTemoinAffectation = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION);
 $canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT);
 
+$canModifierChaine = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 
 ?>
-<h2> Informations générales sur l'agent </h2>
+    <h2> Informations générales sur l'agent </h2>
 
-<div class="row">
-    <div class="col-md-4">
-        <dl>
-            <dt> Prénom </dt>
-            <dd>
-                <?php echo $agent->getPrenom(); ?>
-            </dd>
-            <dt> Nom </dt>
-            <dd>
-                <?php echo $agent->getNomUsuel(); ?>
-            </dd>
-            <dt> Modalité de service </dt>
-            <dd>
-                <?php echo $agent->toStringModaliteDeService(); ?>
-            </dd>
-        </dl>
-
-        <?php if ($agent->isContratLong() !== true) : ?>
-            <div class="alert alert-warning">
-                <span class="icon icon-attention"></span> En contrat de moins de 12 mois.
-            </div>
-        <?php endif; ?>
-    </div>
-    <div class="col-md-4">
-        <?php
-            $affectation = $agent->getAffectationPrincipale();
-            $structure = ($affectation)?$affectation->getStructure():null;
-            $niveau2   = ($structure)?$structure->getNiv2():null;
-        ?>
-        <?php if ($structure) : ?>
-        <dl>
-            <dt> Affectation principale </dt>
-            <dd>
-                <?php echo $structure->getLibelleLong(); ?> <br/>
-                <?php if ($niveau2 !== $structure) : ?>
-                    Rattaché&middot;e à <?php echo ($niveau2)?$niveau2->getLibelleLong():"aucune structure de renseignée"; ?>
-                <?php endif; ?>
-            </dd>
-
-            <?php if ($canAfficherAutorite) : ?>
-                <dt> Autorité hiérarchique </dt>
-                <dd>
-                    <?php if ($autorites AND !empty($autorites)) : ?>
-                        <ul>
-                            <?php foreach ($autorites as $key => $autorite) : ?>
-                                <li>
-                                    <?php echo $autorite->getDenomination(); ?>
-                                    <?php if (substr($key, 0, 10) === "complement") : ?>
-                                        <span class="icon icon-information" title="Complément non déduit de la structure"></span>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else : ?>
-                        <span class="probleme">
-                            <span class="icon icon-attention"></span>
-                            Aucun·e autorité hiérarchique
-                        </span>
-                    <?php endif; ?>
-                </dd>
-            <?php endif; ?>
-            <?php if ($canAfficherSuperieure) : ?>
-                <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
-                <dd>
-                    <?php if (!empty($superieures)) : ?>
-                        <ul>
-                            <?php foreach ($superieures as $key => $superieure) : ?>
-                                <li> <?php echo $superieure->getDenomination(); ?>
-                                    <?php if (substr($key, 0, 10) === "complement") : ?>
-                                        <span class="icon icon-information" title="Complément non déduit de la structure"></span>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else : ?>
-                        <span class="probleme">
-                            <span class="icon icon-attention"></span>
-                            Aucun·e supérieur·e hiérarchique direct·e
-                        </span>
-                    <?php endif; ?>
-                </dd>
-            <?php endif; ?>
-        </dl>
-        <?php else : ?>
-            <div class="alert alert-danger"> Aucune affectation principale </div>
-        <?php endif; ?>
-    </div>
-
-    <div class="col-md-4">
-        <?php if ($canAfficherInfoSource) : ?>
+    <div class="row">
+        <div class="col-md-4">
             <dl>
-                <dt> Identifiant sources </dt>
+                <dt> Prénom</dt>
                 <dd>
-                    <?php echo $agent->getId(); ?> <br/>
-                <dt> Compte associé </dt>
+                    <?php echo $agent->getPrenom(); ?>
+                </dd>
+                <dt> Nom</dt>
                 <dd>
-                    Agent : <?php echo $agent->getLogin(); ?> <br/> &Rightarrow; <?php echo $agent->getEmail(); ?> <br/>
-                    <?php if($agent->getUtilisateur()) : ?>
-                        Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?> <br/> &Rightarrow;<?php echo $agent->getUtilisateur()->getEmail(); ?>
-                    <?php else: ?>
-                        <span class="probleme">
+                    <?php echo $agent->getNomUsuel(); ?>
+                </dd>
+                <dt> Modalité de service</dt>
+                <dd>
+                    <?php echo $agent->toStringModaliteDeService(); ?>
+                </dd>
+            </dl>
+
+            <?php if ($agent->isContratLong() !== true) : ?>
+                <div class="alert alert-warning">
+                    <span class="icon icon-attention"></span> En contrat de moins de 12 mois.
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="col-md-4">
+            <?php
+            $affectation = $agent->getAffectationPrincipale();
+            $structure = ($affectation) ? $affectation->getStructure() : null;
+            $niveau2 = ($structure) ? $structure->getNiv2() : null;
+            ?>
+            <?php if ($structure) : ?>
+                <dl>
+                    <dt> Affectation principale</dt>
+                    <dd>
+                        <?php echo $structure->getLibelleLong(); ?> <br/>
+                        <?php if ($niveau2 !== $structure) : ?>
+                            Rattaché&middot;e à <?php echo ($niveau2) ? $niveau2->getLibelleLong() : "aucune structure de renseignée"; ?>
+                        <?php endif; ?>
+                    </dd>
+
+                    <?php if ($canAfficherAutorite) : ?>
+                        <dt> Autorité hiérarchique</dt>
+                        <dd>
+                            <?php if ($canModifierChaine) : ?>
+                                <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "autorite"], [], true); ?>"
+                                   class="ajax-modal btn btn-primary" data-event="modification"
+                                >
+                                    <span class="icon icon-ajouter"></span>
+                                    Ajouter une autorité
+                                </a>
+                            <?php endif; ?>
+                            <?php $autorites = $agent->getAutorites($canModifierChaine); ?>
+                            <?php if (!empty($autorites)) : ?>
+                                <ul>
+                                    <?php foreach ($autorites as $autorite) : ?>
+                                        <li>
+                                            <span class=" <?php if ($autorite->estHistorise()) echo " historise "; ?> ">
+                                                <span class="badge"> <?php echo $autorite->getSourceId(); ?> </span>
+                                                <?php echo $autorite->getAutorite()->getDenomination(); ?>
+                                            </span>
+                                            <?php if ($autorite->getSourceId() === 'EMC2' and $canModifierChaine) : ?>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                   class="ajax-modal action primary" data-event="modification">
+                                                    <span class="icon icon-modifier"></span>
+                                                    Modifier
+                                                </a>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::supprimerAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/supprimer', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                   class="ajax-modal action danger" data-event="modification">
+                                                    <span class="icon icon-unchecked"></span>
+                                                    Supprimer
+                                                </a>
+                                            <?php else : ?>
+                                                <?php if ($autorite->estHistorise()) : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                       class="action warning" >
+                                                        <span class="icon icon-restaurer"></span>
+                                                        Ré-établir
+                                                    </a>
+                                                <?php else : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::historiserAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/historiser', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                       class="action warning">
+                                                        <span class="icon icon-historiser"></span>
+                                                        Révoquer
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else : ?>
+                                <div class="alert alert-warning">
+                                    <span class="icon icon-attention"></span>
+                                    Aucun·e autorité hiérarchique
+                                </div>
+                            <?php endif; ?>
+                        </dd>
+                    <?php endif; ?>
+                    <?php if ($canAfficherSuperieure) : ?>
+                        <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
+                        <dd>
+                            <?php if ($canModifierChaine) : ?>
+                                <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "superieur"], [], true); ?>"
+                                   class="ajax-modal btn btn-primary" data-event="modification"
+                                >
+                                    <span class="icon icon-ajouter"></span>
+                                    Ajouter un·e supérieur·e
+                                </a>
+                            <?php endif; ?>
+                            <?php $superieures = $agent->getSuperieurs($canModifierChaine); ?>
+                            <?php if (!empty($superieures)) : ?>
+                                <ul>
+                                    <?php foreach ($superieures as $superieure) : ?>
+                                        <li>
+                                            <span class=" <?php if ($superieure->estHistorise()) echo " historise "; ?> ">
+                                                <span class="badge"> <?php echo $superieure->getSourceId(); ?> </span>
+                                                <?php echo $superieure->getSuperieur()->getDenomination(); ?>
+                                            </span>
+                                            <?php if ($superieure->getSourceId() === 'EMC2' and $canModifierChaine) : ?>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                   class="ajax-modal action primary" data-event="modification">
+                                                    <span class="icon icon-modifier"></span>
+                                                    Modifier
+                                                </a>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::supprimerAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/supprimer', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                   class="ajax-modal action danger" data-event="modification">
+                                                    <span class="icon icon-unchecked"></span>
+                                                    Supprimer
+                                                </a>
+                                            <?php else : ?>
+                                                <?php if ($superieure->estHistorise()) : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                       class="action warning" >
+                                                        <span class="icon icon-restaurer"></span>
+                                                        Ré-établir
+                                                    </a>
+                                                <?php else : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::historiserAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/historiser', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                       class="action warning">
+                                                        <span class="icon icon-historiser"></span>
+                                                        Révoquer
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else : ?>
+                                <div class="alert alert-warning">
+                                    <span class="icon icon-attention"></span>
+                                    Aucun·e supérieur·e hiérarchique direct·e
+                                </div>
+                            <?php endif; ?>
+                        </dd>
+                    <?php endif; ?>
+                </dl>
+            <?php else : ?>
+                <div class="alert alert-danger"> Aucune affectation principale</div>
+            <?php endif; ?>
+        </div>
+
+        <div class="col-md-4">
+            <?php if ($canAfficherInfoSource) : ?>
+                <dl>
+                    <dt> Identifiant sources</dt>
+                    <dd>
+                        <?php echo $agent->getId(); ?> <br/>
+                    <dt> Compte associé</dt>
+                    <dd>
+                        Agent : <?php echo $agent->getLogin(); ?> <br/> &Rightarrow; <?php echo $agent->getEmail(); ?>
+                        <br/>
+                        <?php if ($agent->getUtilisateur()) : ?>
+                            Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?>
+                            <br/> &Rightarrow;<?php echo $agent->getUtilisateur()->getEmail(); ?>
+                        <?php else: ?>
+                            <span class="probleme">
                                 <span class="icon icon-attention"></span>
                                 Aucun compte lié à l'agent
                             </span>
-                    <?php endif; ?>
-                </dd>
-            </dl>
-        <?php endif; ?>
+                        <?php endif; ?>
+                    </dd>
+                </dl>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
 
-<h2>Carrière et positionnement dans la structure</h2>
+    <h2>Carrière et positionnement dans la structure</h2>
 
-<div class="row">
-    <div class="col-md-3">
-        <h3>Affectation</h3>
-        <?php foreach ($affectations as $affectation) : ?>
-            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => $canAfficherTemoinAffectation]); ?>
-        <?php endforeach; ?>
+    <div class="row">
+        <div class="col-md-3">
+            <h3>Affectation</h3>
+            <?php foreach ($affectations as $affectation) : ?>
+                <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => $canAfficherTemoinAffectation]); ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="col-md-3">
+            <h3>Statut</h3>
+            <?php foreach ($statuts as $statut) : ?>
+                <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => $canAfficherTemoinStatut]); ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="col-md-6">
+            <h3>Grade</h3>
+            <?php foreach ($grades as $grade) : ?>
+                <?php echo $this->agentGrade($grade, ['echelons' => $echelons, 'structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => true]); ?>
+            <?php endforeach; ?>
+        </div>
     </div>
-    <div class="col-md-3">
-        <h3>Statut</h3>
-        <?php foreach ($statuts as $statut) : ?>
-            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => $canAfficherTemoinStatut]); ?>
-        <?php endforeach; ?>
-    </div>
-    <div class="col-md-6">
-        <h3>Grade</h3>
-        <?php foreach ($grades as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['echelons' => $echelons, 'structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => true]); ?>
-        <?php endforeach; ?>
-    </div>
-</div>
 
 <?php if ($canAfficherCarriereComplete) : ?>
-<a
-    <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */?>
-    href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
-    class="ajax-modal"
->
-    <span class="icon icon-voir"></span> Listing de toutes les affectations, statuts et grades
-</a>
+    <a
+        <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */ ?>
+            href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
+            class="ajax-modal"
+    >
+        <span class="icon icon-voir"></span> Listing de toutes les affectations, statuts et grades
+    </a>
 <?php endif; ?>

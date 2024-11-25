@@ -76,12 +76,12 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
 
     public function ajouterAction(): ViewModel
     {
-        $structureId = $this->params()->fromQuery('structure');
-        $structure = $this->getStructureService()->getStructure($structureId);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
         $agentId = $this->params()->fromQuery('agent');
         $agent = $this->getAgentService()->getAgent($agentId);
 
         $affectation = new AgentMissionSpecifique();
+        if ($structure) $affectation->setStructure($structure);
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
         $agentSS = $form->get('agent-sas');

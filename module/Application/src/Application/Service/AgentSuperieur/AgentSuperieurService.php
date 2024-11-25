@@ -66,7 +66,7 @@ class AgentSuperieurService
         return $qb;
     }
 
-    public function getAgentSuperieur(?int $id) : ?AgentSuperieur
+    public function getAgentSuperieur(?string $id) : ?AgentSuperieur
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.id = :id')->setParameter('id', $id);

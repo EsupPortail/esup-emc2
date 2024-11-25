@@ -6,13 +6,16 @@ use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormAwareTrait;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormAwareTrait;
-use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieFormAwareTrait;
+use Application\Form\Chaine\ChaineFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use DateTime;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 
 class AgentHierarchieController extends AbstractActionController
@@ -23,7 +26,7 @@ class AgentHierarchieController extends AbstractActionController
     use StructureServiceAwareTrait;
     use AgentHierarchieCalculFormAwareTrait;
     use AgentHierarchieImportationFormAwareTrait;
-    use AgentHierarchieSaisieFormAwareTrait;
+    use ChaineFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -206,43 +209,6 @@ class AgentHierarchieController extends AbstractActionController
         ]);
     }
 
-    public function saisirAction(): ViewModel
-    {
-        $form = $this->getAgentHierarchieSaisieForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/saisir', [], [], true));
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-
-            $agent = $this->getAgentService()->getAgent($data['agent']['id']);
-            $sup1 = (isset($data['superieur1']['id'])) ? $this->getAgentService()->getAgent($data['superieur1']['id']) : null;
-            $sup2 = (isset($data['superieur2']['id'])) ? $this->getAgentService()->getAgent($data['superieur2']['id']) : null;
-            $sup3 = (isset($data['superieur3']['id'])) ? $this->getAgentService()->getAgent($data['superieur3']['id']) : null;
-            $aut1 = (isset($data['superieur1']['id'])) ? $this->getAgentService()->getAgent($data['autorite1']['id']) : null;
-            $aut2 = (isset($data['superieur2']['id'])) ? $this->getAgentService()->getAgent($data['autorite2']['id']) : null;
-            $aut3 = (isset($data['superieur3']['id'])) ? $this->getAgentService()->getAgent($data['autorite3']['id']) : null;
-
-            $this->getAgentSuperieurService()->historiseAll($agent);
-            if ($sup1 !== null) $this->getAgentSuperieurService()->createAgentSuperieur($agent, $sup1);
-            if ($sup2 !== null) $this->getAgentSuperieurService()->createAgentSuperieur($agent, $sup2);
-            if ($sup3 !== null) $this->getAgentSuperieurService()->createAgentSuperieur($agent, $sup3);
-            $this->getAgentAutoriteService()->historiseAll($agent);
-            if ($aut1 !== null) $this->getAgentAutoriteService()->createAgentAutorite($agent, $aut1);
-            if ($aut2 !== null) $this->getAgentAutoriteService()->createAgentAutorite($agent, $aut2);
-            if ($aut3 !== null) $this->getAgentAutoriteService()->createAgentAutorite($agent, $aut3);
-
-            exit();
-        }
-
-        $vm = new ViewModel([
-            'title' => "Saisie de la chaîne hiérarchique d'un agent",
-            'form' => $form,
-        ]);
-//        $vm->setTemplate('default/default-form');
-        return $vm;
-    }
-
     public function chaineHierarchiqueJsonAction(): JsonModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
@@ -298,4 +264,194 @@ class AgentHierarchieController extends AbstractActionController
         exit();
     }
 
+    public function ajouterAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $type = $this->params()->fromRoute('type');
+
+        $chaine = match ($type) {
+            'superieur' => new AgentSuperieur(),
+            'autorite' => new AgentAutorite(),
+            default => throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu"),
+        };
+
+        $chaine->setAgent($agent);
+
+        $form = $this->getChaineForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => $type], [], true));
+        $form->bind($chaine);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $id = $chaine->generateId();
+                $chaine->setId($id);
+                $chaine->setCreatedOn(new DateTime());
+                switch ($type) {
+                    case 'superieur':
+                        $this->getAgentSuperieurService()->create($chaine);
+                        break;
+                    case 'autorite':
+                        $this->getAgentAutoriteService()->create($chaine);
+                        break;
+                    default :
+                        throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu");
+                }
+                exit();
+            }
+        }
+
+        $titre = match ($type) {
+            'superieur' => "Ajout d'un·e supérieur·e",
+            'autorite' => "Ajout d'une autorité",
+            default => throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu"),
+        };
+
+        $vm = new ViewModel([
+            'title' => $titre,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function modifierAction(): ViewModel
+    {
+        $type = $this->params()->fromRoute('type');
+        $chaineId = $this->params()->fromRoute('chaine');
+
+        $chaine = match ($type) {
+            'superieur' => $this->getAgentSuperieurService()->getAgentSuperieur($chaineId),
+            'autorite' => $this->getAgentAutoriteService()->getAgentAutorite($chaineId),
+            default => throw new RuntimeException("AgentHierarchieController::modifierAction() : Le type [" . $type . "] est inconnu"),
+        };
+
+        $form = $this->getChaineForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/modifier', ['chaine' => $chaine->getId(), 'type' => $type], [], true));
+        $form->bind($chaine);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $id = $chaine->generateId();
+                $chaine->setId($id);
+                $chaine->setUpdatedOn(new DateTime());
+                switch ($type) {
+                    case 'superieur':
+                        $this->getAgentSuperieurService()->update($chaine);
+                        break;
+                    case 'autorite':
+                        $this->getAgentAutoriteService()->update($chaine);
+                        break;
+                    default :
+                        throw new RuntimeException("AgentHierarchieController::modifierAction() : Le type [" . $type . "] est inconnu");
+                }
+                exit();
+            }
+        }
+
+        $titre = match ($type) {
+            'superieur' => "Modification d'un·e supérieur·e",
+            'autorite' => "Modification d'une autorité",
+            default => throw new RuntimeException("AgentHierarchieController::modifierAction() : Le type [" . $type . "] est inconnu"),
+        };
+
+        $vm = new ViewModel([
+            'title' => $titre,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function historiserAction(): Response
+    {
+        $type = $this->params()->fromRoute('type');
+        $chaineId = $this->params()->fromRoute('chaine');
+
+        switch ($type) {
+            case 'superieur' :
+                $chaine = $this->getAgentSuperieurService()->getAgentSuperieur($chaineId);
+                $this->getAgentSuperieurService()->historise($chaine);
+                break;
+            case 'autorite' :
+                $chaine = $this->getAgentAutoriteService()->getAgentAutorite($chaineId);
+                $this->getAgentAutoriteService()->historise($chaine);
+                break;
+            default :
+                throw new RuntimeException("AgentHierarchieController::historiserAction() : Le type [" . $type . "] est inconnu");
+        }
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $chaine->getAgent()->getId()], ['fragment' => 'informations'], true);
+    }
+
+    public function restaurerAction(): Response
+    {
+        $type = $this->params()->fromRoute('type');
+        $chaineId = $this->params()->fromRoute('chaine');
+
+        switch ($type) {
+            case 'superieur' :
+                $chaine = $this->getAgentSuperieurService()->getAgentSuperieur($chaineId);
+                $this->getAgentSuperieurService()->restore($chaine);
+                break;
+            case 'autorite' :
+                $chaine = $this->getAgentAutoriteService()->getAgentAutorite($chaineId);
+                $this->getAgentAutoriteService()->restore($chaine);
+                break;
+            default :
+                throw new RuntimeException("AgentHierarchieController::historiserAction() : Le type [" . $type . "] est inconnu");
+        }
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $chaine->getAgent()->getId()], ['fragment' => 'informations'], true);
+    }
+
+
+    public function supprimerAction(): ViewModel
+    {
+        $type = $this->params()->fromRoute('type');
+        $chaineId = $this->params()->fromRoute('chaine');
+
+        $chaine = match ($type) {
+            'superieur' => $this->getAgentSuperieurService()->getAgentSuperieur($chaineId),
+            'autorite' => $this->getAgentAutoriteService()->getAgentAutorite($chaineId),
+            default => throw new RuntimeException("AgentHierarchieController::modifierAction() : Le type [" . $type . "] est inconnu"),
+        };
+
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                switch ($type) {
+                    case 'superieur' :
+                        $this->getAgentSuperieurService()->delete($chaine);
+                        break;
+                    case 'autorite' :
+                        $this->getAgentAutoriteService()->delete($chaine);
+                        break;
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($chaine !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression d'une la chaîne hiérarchique de  " . $chaine->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/hierarchie/supprimer', ["chaine" => $chaine->getId(), 'type' => $type], [], true),
+            ]);
+        }
+        return $vm;
+    }
 }

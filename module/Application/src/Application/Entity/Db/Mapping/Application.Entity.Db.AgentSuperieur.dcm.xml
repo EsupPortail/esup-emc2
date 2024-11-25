@@ -12,6 +12,9 @@
             <join-column name="superieur_id" referenced-column-name="c_individu"/>
         </many-to-one>
 
+        <field name="dateDebut"               column="date_debut"       type="datetime"/>
+        <field name="dateFin"                 column="date_fin"         type="datetime"/>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
@@ -25,5 +28,13 @@
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
         </many-to-one>
+
+        <!-- DB IMPORT #############################  -->
+        <field name="createdOn"               column="created_on"       type="datetime"/>
+        <field name="updatedOn"               column="updated_on"       type="datetime"/>
+        <field name="deletedOn"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                column="source_id"        type="string" length="256"/>
+
+
     </entity>
 </doctrine-mapping>

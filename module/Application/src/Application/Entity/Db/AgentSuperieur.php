@@ -2,7 +2,9 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Doctrine\ORM\QueryBuilder;
+use RuntimeException;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -12,6 +14,7 @@ class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterf
 {
     use HistoriqueAwareTrait;
     use IsSynchronisableTrait;
+    use HasPeriodeTrait;
 
     private ?string $id = null;
     private ?Agent $agent = null;
@@ -25,6 +28,16 @@ class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterf
     public function setId(?string $id): void
     {
         $this->id = $id;
+    }
+
+    public function generateId(): ?string
+    {
+        if ($this->getAgent() === null) { throw new RuntimeException("AgentSupeieur::generateId() : Agent manquant");}
+        if ($this->getSuperieur() === null) { throw new RuntimeException("AgentSupeieur::generateId() : Superieur manquant");}
+        if ($this->getDateDebut() === null) { throw new RuntimeException("AgentSupeieur::generateId() : Date de début manquant");}
+        if ($this->sourceId === null) $this->sourceId = 'EMC2';
+        $id = $this->sourceId . "-". $this->getAgent()->getId() . "-" . $this->getSuperieur()->getId() . "-". $this->getDateDebut()->format('dmYHi');
+        return $id;
     }
 
     public function getAgent(): ?Agent

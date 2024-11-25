@@ -93,7 +93,7 @@ class AgentAutoriteService
         return $qb;
     }
 
-    public function getAgentAutorite(?int $id) : ?AgentAutorite
+    public function getAgentAutorite(?string $id) : ?AgentAutorite
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.id = :id')->setParameter('id', $id);

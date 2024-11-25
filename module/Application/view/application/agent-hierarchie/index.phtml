@@ -56,22 +56,7 @@ Les règles exploitées sont les suivantes :
 
 <h2> Saisie manuelle pour un·e agent </h2>
 
-Saisie manuelle à partir d'un·e agent :
-<ul>
-    <li> il est possible de saisir jusqu'à trois supérieur·es ou autorités ; </li>
-    <li> laisser vide les cases sans propos. </li>
-</ul>
-
-<div class="alert alert-warning">
-    La chaîne hiérarchique de l'agent saisie sera historisée
-</div>
-
-<?php /** @see \Application\Controller\AgentHierarchieController::saisirAction() */ ?>
-<a href="<?php echo $this->url('agent/hierarchie/saisir', [], [], true); ?>"
-   class="btn btn-primary ajax-modal" data-event="modification"
->
-    Saisir pour un·e agent
-</a>
+La saisie manuelle est réalisable depuis la fiche de l'agent.
 
 <script>
     $(function() {
