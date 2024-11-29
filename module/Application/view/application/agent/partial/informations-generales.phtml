@@ -180,7 +180,8 @@ $canModifierChaine = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivil
                             Ajouter un·e supérieur·e
                         </a>
                     <?php endif; ?>
-                    <?php $superieures = $agent->getSuperieurs($canModifierChaine); ?>
+                    <?php $superieures = $agent->getSuperieurs($canModifierChaine);
+                    ?>
                     <?php if (!empty($superieures)) : ?>
                         <ul>
                             <?php foreach ($superieures as $superieure) : ?>

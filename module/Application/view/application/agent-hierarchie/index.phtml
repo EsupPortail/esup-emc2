@@ -2,6 +2,8 @@
 
 /** @see \Application\Controller\AgentHierarchieController::indexAction() */
 
+use Application\Entity\Db\Agent;
+
 $this->headTitle("Gestion des chaînes hiérarchiques");
 ?>
 
@@ -15,27 +17,26 @@ $this->headTitle("Gestion des chaînes hiérarchiques");
 
 <h2> Importation des chaînes </h2>
 
-<div class="alert alert-warning">
-    <span class="icon icon-attention"></span>
-    Le format du fichier csv doit être rediscuter pour voir comment intégrer les dates de début et de fin.
-
-    <br>
-    <br>
-    <strong> Action désactivée en attendant le format de ce nouveau fichier </strong>
-</div>
-<!--Le format du CSV exploité est le suivant :-->
-<!--<code>agent_id ; superieur1_id ; superieur2_id ; superieur3_id ; autorite1_id ; autorite2_id ; autorite3_id</code>. <br/>-->
-<!--Un identifiant peut être laissé vide si un·e agent·e ne possèdent pas trois supétieur·es ou autorité·s.-->
+Le format du CSV exploité est le suivant :
+<code>agent_id ; reponsable_id ; date_debut; date_fin</code>. <br/>
+Un·e agent·e peut avoir plusieurs lignes dans ce fichier si plusieurs responsables sont lié·es.
 
 <div class="alert alert-warning">
     Tous les agent·es listé·es dans le fichier CSV verront leur chaîne hiérarchique historisée.
 </div>
 
 <?php /** @see \Application\Controller\AgentHierarchieController::importerAction() */ ?>
-<a href="<?php echo $this->url('agent/hierarchie/importer', [], [], true); ?>"
-   class="btn btn-primary ajax-modal disabled"
+<a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => Agent::ROLE_SUPERIEURE ], [], true); ?>"
+   class="btn btn-primary ajax-modal"
 >
-    Importer depuis csv
+    Importer les supérieur·es depuis csv
+</a>
+
+<?php /** @see \Application\Controller\AgentHierarchieController::importerAction() */ ?>
+<a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => Agent::ROLE_AUTORITE ], [], true); ?>"
+   class="btn btn-primary ajax-modal"
+>
+    Importer les autorités depuis csv
 </a>
 
 <h2> Calcul des chaînes </h2>

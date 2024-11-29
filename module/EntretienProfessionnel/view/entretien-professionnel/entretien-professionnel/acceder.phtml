@@ -134,6 +134,19 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     </div>
 <?php endif; ?>
 
+<?php $canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER); ?>
+<?php if ($canRenseigner) : ?>
+    <div class="alert alert-success">
+        <span class="icon icon-checked"></span>
+        Vous pouvez modifier les comptes-rendus.
+    </div>
+<?php else : ?>
+    <div class="alert alert-danger">
+        <span class="icon icon-unchecked"></span>
+        Vous ne pouvez pas modifier les comptes-rendus.
+    </div>
+<?php endif; ?>
+
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
     <button class="nav-link active" id="formulaire-tab"
             data-bs-toggle="tab" data-bs-target="#formulaire"

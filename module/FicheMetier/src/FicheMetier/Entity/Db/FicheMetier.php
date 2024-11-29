@@ -31,6 +31,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
 
+    public Collection $competencesSpecifiques;
+
     private Collection $activites;
     private Collection $missions;
     private Collection $thematiques;
@@ -42,6 +44,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
+        $this->competencesSpecifiques = new ArrayCollection();
+
         $this->thematiques = new ArrayCollection();
     }
 

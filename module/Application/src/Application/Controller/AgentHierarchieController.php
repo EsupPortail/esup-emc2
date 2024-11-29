@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormAwareTrait;
@@ -55,6 +56,8 @@ class AgentHierarchieController extends AbstractActionController
 
     public function importerAction(): ViewModel
     {
+        $type = $this->params()->fromRoute('type');
+
         $form = $this->getAgentHierarchieImportationForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/importer', ['mode' => 'preview', 'path' => null], [], true));
 
@@ -70,6 +73,9 @@ class AgentHierarchieController extends AbstractActionController
 
             //reading
             $array = [];
+            $warning = [];
+            $chaines = [];
+
             if ($fichier_path === null or $fichier_path === '') {
                 $error[] = "Aucun fichier !";
             } else {
@@ -79,37 +85,51 @@ class AgentHierarchieController extends AbstractActionController
                     $array[] = $content;
                 }
 
-                $agentsId = [];
-                foreach ($array as $line) {
-                    foreach ($line as $id) $agentsId[$id] = $id;
-                }
 
-                $agents = [];
-                $warning = [];
-                foreach ($agentsId as $agentId) {
-                    if ($agentId !== '') {
-                        $agent = $this->getAgentService()->getAgent($agentId);
-                        if ($agent === null) {
-                            $warning[] = "Aucun agent de trouvé avec l'identifiant [" . $agentId . "]";
-                        } else {
-                            $agents[$agentId] = $agent;
-                        }
-                    }
+
+                foreach ($array as $line) {
+                    $agent_id = $line[0]??null;
+                    $agent = $this->getAgentService()->getAgent($agent_id);
+                    if ($agent === null) $warning[] = "Aucun·e agent·e de trouvé·e avec l'identifiant [" . $agent_id . "]";
+                    $responsable_id = $line[1]??null;
+                    $responsable = $this->getAgentService()->getAgent($responsable_id);
+                    if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
+                    $date_debut_st = $line[2]??null;
+                    $dateDebut = DateTime::createFromFormat('d/m/Y', $date_debut_st);
+                    if ($dateDebut === false) $warning[] = "Impossibilité de calculé la date de début à partir de [".$date_debut_st."]";
+                    $date_fin_st = $line[3]??null;
+                    $dateFin = DateTime::createFromFormat('d/m/Y', $date_fin_st);
+                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculé la date de fin à partir de [".$date_fin_st."]";
+
+                    $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
+                    $agents[$agent->getId()] = $agent;
                 }
             }
 
             if ($mode === 'import' and empty($error)) {
-                $warning = [];
-                foreach ($array as $line) {
-                    $agentId = $line[0];
-                    $agent = $agents[$agentId];
-                    $superieurs = array_slice($line, 1, 3);
-                    $autorites = array_slice($line, 4, 3);
-                    $this->getAgentSuperieurService()->historiseAll($agent);
-                    $logS = $this->getAgentSuperieurService()->createAgentSuperieurWithArray($agent, $superieurs, $agents);
-                    $this->getAgentAutoriteService()->historiseAll($agent);
-                    $logA = $this->getAgentAutoriteService()->createAgentAutoriteWithArray($agent, $autorites, $agents);
-                    $warning = array_merge($warning, $logA['warning'], $logS['warning']);
+                foreach ($agents as $agent) {
+                    switch($type) {
+                        case Agent::ROLE_SUPERIEURE :
+                            $this->getAgentSuperieurService()->historiseAll($agent);
+                            break;
+                        case Agent::ROLE_AUTORITE :
+                            $this->getAgentAutoriteService()->historiseAll($agent);
+                            break;
+                        default:
+                            throw new RuntimeException("Type de responsabilité [".$type."] inconnu");
+                    }
+                }
+                foreach ($chaines as $chaine) {
+                    switch($type) {
+                        case Agent::ROLE_SUPERIEURE :
+                            $this->getAgentSuperieurService()->createAgentSuperieurWithArray($chaine);
+                            break;
+                        case Agent::ROLE_AUTORITE :
+                            $this->getAgentAutoriteService()->createAgentAutoriteWithArray($chaine);
+                            break;
+                        default:
+                            throw new RuntimeException("Type de responsabilité [".$type."] inconnu");
+                    }
                 }
             }
 
@@ -121,13 +141,13 @@ class AgentHierarchieController extends AbstractActionController
             }
             return new ViewModel([
                 'title' => $title,
+                'type' => $type,
                 'fichier_path' => $fichier_path,
                 'form' => $form,
                 'mode' => $mode,
                 'error' => $error,
                 'warning' => $warning,
-                'agents' => $agents,
-                'array' => $array,
+                'chaines' => $chaines,
             ]);
         }
 

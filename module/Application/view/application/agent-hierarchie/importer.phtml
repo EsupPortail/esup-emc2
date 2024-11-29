@@ -4,10 +4,10 @@
  * @see \Application\Controller\AgentHierarchieController::importerAction()
  * @var string $title
  * @var AgentHierarchieImportationForm $form
+ * @var string $type
  * @var string[] $error
  * @var string[] $warning
- * @var Agent[] $agents
- * @var array $array
+ * @var Agent[] $chaines
  */
 
 use Application\Entity\Db\Agent;
@@ -35,47 +35,23 @@ use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
     </div>
 <?php endif; ?>
 
-    <?php if (isset($array)) : ?>
+    <?php if (isset($chaines) AND $chaines !== []) : ?>
     <table class="table table-condensed">
         <thead>
         <tr>
             <th> Agent </th>
-            <th> Supérieur·es hiérachique·s </th>
-            <th> Autorité·s hiérachique·s </th>
+            <th> <?php echo $type; ?> </th>
+            <th> Date de début </th>
+            <th> Date de fin </th>
         </tr>
         </thead>
         <tbody>
-            <?php foreach ($array as $line) : ?>
+            <?php foreach ($chaines as [$agent, $responsable, $dateDebut, $dateFin]) : ?>
                 <tr>
-                    <?php
-                        $agent = $line[0];
-                        $superieurs = array_slice($line, 1, 3);
-                        $autorites = array_slice($line, 4, 3);
-                    ?>
-
-                    <td>
-                        <?php if ($agent !== null AND isset($agents[$agent])) : ?>
-                            <?php echo $agents[$agent]->getDenomination(); ?>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <ul>
-                            <?php foreach ($superieurs as $superieur) : ?>
-                                <?php if ($superieur !== null AND isset($agents[$superieur])) : ?>
-                                    <li> <?php echo $agents[$superieur]->getDenomination(); ?></li>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <?php foreach ($autorites as $autorite) : ?>
-                                <?php if ($autorite !== null AND isset($agents[$autorite])) : ?>
-                                    <li> <?php echo $agents[$autorite]->getDenomination(); ?></li>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </ul>
-                    </td>
+                    <td> <?php echo $agent->getDenomination(); ?> </td>
+                    <td> <?php echo $responsable->getDenomination(); ?> </td>
+                    <td> <?php echo ($dateDebut)?$dateDebut->format('d/m/Y'):"---"; ?> </td>
+                    <td> <?php echo ($dateFin)?$dateFin->format('d/m/Y'):"---"; ?> </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

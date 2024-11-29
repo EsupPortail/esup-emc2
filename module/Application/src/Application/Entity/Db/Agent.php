@@ -193,7 +193,6 @@ class Agent implements
         if ($date === null) {
             $date = new DateTime();
         }
-        /** @var AgentAffectation $affectation */
         foreach ($this->getAffectations() as $affectation) {
             if ($affectation->isPrincipale()
                 and ($affectation->getDateDebut() === null OR $affectation->getDateDebut() <= $date)
@@ -685,6 +684,13 @@ class Agent implements
         $result = $this->autorites->toArray();
         $result = array_filter($result, function (AgentAutorite $a) { return !$a->isDeleted();});
         $result = array_filter($result, function (AgentAutorite $a) { return $a->estEnCours();});
+        $result = array_filter($result, function (AgentAutorite $a) {
+            return (
+                ($a->getSourceId() === 'EMC2' AND $a->estNonHistorise())
+                OR
+                ($a->getSourceId() !== "EMC2")
+            );}
+        );
         if ($histo === false) {
             $result = array_filter($result, function (AgentAutorite $a) { return $a->estNonHistorise();});
         }
@@ -698,6 +704,13 @@ class Agent implements
         $result = $this->superieurs->toArray();
         $result = array_filter($result, function (AgentSuperieur $a) { return !$a->isDeleted();});
         $result = array_filter($result, function (AgentSuperieur $a) { return $a->estEnCours();});
+        $result = array_filter($result, function (AgentSuperieur $a) {
+            return (
+                ($a->getSourceId() === 'EMC2' AND $a->estNonHistorise())
+                OR
+                ($a->getSourceId() !== "EMC2")
+            );}
+        );
         if ($histo === false) {
             $result = array_filter($result, function (AgentSuperieur $a) { return $a->estNonHistorise();});
         }

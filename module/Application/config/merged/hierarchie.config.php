@@ -249,9 +249,9 @@ return [
                                 'may_terminate' => true,
                             ],
                             'importer' => [
-                                'type'  => Literal::class,
+                                'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/importer',
+                                    'route'    => '/importer/:type',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::importerAction() */
                                         'controller' => AgentHierarchieController::class,
