@@ -3,7 +3,7 @@
 namespace EntretienProfessionnel\Controller;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;

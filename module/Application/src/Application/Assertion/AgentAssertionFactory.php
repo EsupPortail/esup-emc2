@@ -3,7 +3,7 @@
 namespace Application\Assertion;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\AgentAffectation\AgentAffectationService;
+use Agent\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Interop\Container\ContainerInterface;

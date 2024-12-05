@@ -1,30 +1,27 @@
 <?php
 
-namespace Application\Service\AgentAffectation;
+namespace Agent\Service\AgentGrade;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class AgentAffectationServiceFactory
-{
+class AgentGradeServiceFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return AgentAffectationService
+     * @return AgentGradeService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): AgentAffectationService
+    public function __invoke(ContainerInterface $container) : AgentGradeService
     {
-        /**
-         * @var EntityManager $entityManager
-         */
+        /** @var EntityManager $entityManager */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        $service = new AgentAffectationService();
-        $service->setEntityManager($entityManager);
+        $service = new AgentGradeService();
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

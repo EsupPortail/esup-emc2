@@ -2,15 +2,13 @@
 
 namespace Structure\Service\Notification;
 
-use Application\Service\Agent\AgentService;
 use Application\Service\Macro\MacroService;
-use Formation\Service\Url\UrlService;
+use Application\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenMail\Service\Mail\MailService;
-use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenUtilisateur\Service\User\UserService;

@@ -3,7 +3,7 @@
 namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentAffectation;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;

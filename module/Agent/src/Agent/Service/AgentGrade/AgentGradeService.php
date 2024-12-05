@@ -1,19 +1,19 @@
 <?php
 
-namespace Application\Service\AgentGrade;
+namespace Agent\Service\AgentGrade;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\EmploiType;
 use Carriere\Entity\Db\Grade;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Structure\Entity\Db\Structure;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class AgentGradeService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** REQUETAGE *****************************************************************************************************/
 
@@ -22,13 +22,13 @@ class AgentGradeService {
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
+        $qb = $this->getObjectManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
             ->join('agentgrade.agent', 'agent')->addSelect('agent')
             ->join('agentgrade.structure', 'structure')->addSelect('structure')
             ->leftjoin('agentgrade.grade', 'grade')->addSelect('grade')
             ->leftjoin('agentgrade.corps', 'corps')->addSelect('corps')
             ->leftjoin('agentgrade.correspondance', 'correspondance')->addSelect('correspondance')
-            ->andWhere('agentgrade.deleted_on IS NULL')
+            ->andWhere('agentgrade.deletedOn IS NULL')
         ;
         return $qb;
     }

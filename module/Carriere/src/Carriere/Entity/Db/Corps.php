@@ -2,7 +2,7 @@
 
 namespace Carriere\Entity\Db;
 
-use Application\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentGrade;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;

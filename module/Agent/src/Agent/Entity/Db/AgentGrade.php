@@ -1,22 +1,20 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Agent\Entity\Db;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\EmploiType;
 use Carriere\Entity\Db\Grade;
 use Structure\Entity\Db\Structure;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-/**
- * Données synchronisées depuis Octopus :
- * - pas de setter sur les données ainsi remontées
- */
-class AgentGrade implements HasPeriodeInterface {
-    use DbImportableAwareTrait;
+class AgentGrade implements HasPeriodeInterface, IsSynchronisableInterface {
+    use IsSynchronisableTrait;
     use HasPeriodeTrait;
 
     private ?string $id = null;
@@ -26,6 +24,8 @@ class AgentGrade implements HasPeriodeInterface {
     private ?Grade $grade = null;
     private ?Correspondance $correspondance = null;
     private ?EmploiType $emploiType = null;
+
+    /** Données : cette donnée est synchronisée >> par conséquent, il n'y a que des getters */
 
     public function getId() : string
     {

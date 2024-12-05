@@ -21,7 +21,7 @@
         </many-to-one>
 
         <one-to-many target-entity="Structure\Entity\Db\StructureAgentForce" mapped-by="structure" field="agentsForces"/>
-        <one-to-many target-entity="Application\Entity\Db\AgentAffectation" mapped-by="structure" field="affectations"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentAffectation" mapped-by="structure" field="affectations"/>
 
         <one-to-many field="gestionnaires"  target-entity="Structure\Entity\Db\StructureGestionnaire" mapped-by="structure"/>
         <one-to-many field="responsables"  target-entity="Structure\Entity\Db\StructureResponsable" mapped-by="structure"/>

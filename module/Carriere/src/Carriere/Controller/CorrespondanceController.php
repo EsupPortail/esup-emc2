@@ -2,7 +2,7 @@
 
 namespace Carriere\Controller;
 
-use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
+use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;

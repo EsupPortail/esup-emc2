@@ -3,7 +3,7 @@
 namespace Structure\Service\Structure;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
@@ -485,7 +485,7 @@ EOS;
             ->setParameter('N', 'N')
             ->andWhere('affectation.dateDebut <= :currentdate')
             ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :currentdate')
-            ->andWhere('affectation.deleted_on IS NULL')
+            ->andWhere('affectation.deletedOn IS NULL')
             ->setParameter('currentdate', $date)//            ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 

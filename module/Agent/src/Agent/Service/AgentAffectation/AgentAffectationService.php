@@ -1,16 +1,16 @@
 <?php
 
-namespace Application\Service\AgentAffectation;
+namespace Agent\Service\AgentAffectation;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentAffectation;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Structure\Entity\Db\Structure;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class AgentAffectationService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** REQUETAGE *****************************************************************************************************/
 
@@ -19,10 +19,10 @@ class AgentAffectationService {
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(AgentAffectation::class)->createQueryBuilder('agentaffectation')
+        $qb = $this->getObjectManager()->getRepository(AgentAffectation::class)->createQueryBuilder('agentaffectation')
             ->join('agentaffectation.agent', 'agent')->addSelect('agent')
             ->join('agentaffectation.structure', 'structure')->addSelect('structure')
-            ->andWhere('agentaffectation.deleted_on IS NULL')
+            ->andWhere('agentaffectation.deletedOn IS NULL')
         ;
         return $qb;
     }
@@ -72,7 +72,7 @@ class AgentAffectationService {
     /** @return AgentAffectation[]|null */
     public function getAgentAffectationHierarchiquePrincipaleByAgent(Agent $agent) : ?array
     {
-        $result = $this->getAgentAffectationsByAgent($agent, true);
+        $result = $this->getAgentAffectationsByAgent($agent);
         $result = array_filter($result, function (AgentAffectation $a) { return $a->isPrincipale() && $a->isHierarchique();});
         $nb = count($result);
         //        if ( $nb > 1) throw new RuntimeException("Plusieurs affections hiérarchique principale pour l'agent [".$agent->getDenomination()."]");

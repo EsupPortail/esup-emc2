@@ -59,6 +59,7 @@
 
         <field name="hasExpertise"      type="boolean"                  column="expertise"          nullable="true"  />
         <field name="raison"            type="string" length="9999"     column="raison"             nullable="true"  />
+        <field name="codeFonction"      type="string" length="256"      column="code_fonction"      nullable="true"  />
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

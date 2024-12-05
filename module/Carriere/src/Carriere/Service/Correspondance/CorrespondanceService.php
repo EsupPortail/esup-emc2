@@ -2,7 +2,7 @@
 
 namespace Carriere\Service\Correspondance;
 
-use Application\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\CorrespondanceType;
 use Doctrine\ORM\NonUniqueResultException;
@@ -39,7 +39,7 @@ class CorrespondanceService {
         if ($avecAgent) {
             $qb = $qb
                 ->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
-                ->andWhere('agentGrade.deleted_on IS NULL')
+                ->andWhere('agentgrade.deletedOn IS NULL')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
                 ->andWhere('agent.deletedOn IS NULL')
             ;

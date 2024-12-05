@@ -2,7 +2,7 @@
 
 namespace Carriere\Controller;
 
-use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
+use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Provider\Parametre\CarriereParametres;

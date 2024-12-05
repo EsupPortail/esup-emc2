@@ -16,7 +16,6 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;

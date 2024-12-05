@@ -2,7 +2,7 @@
 
 namespace Carriere\Service\Corps;
 
-use Application\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Corps;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -42,7 +42,7 @@ class CorpsService
             $qb = $qb->addSelect('agentGrade')->join('corps.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent', 'agent')
                 ->andWhere('agent.deletedOn IS NULL')
-                ->andWhere('agentGrade.deleted_on IS NULL');
+                ->andWhere('agentgrade.deletedOn IS NULL');
             $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
         }
 

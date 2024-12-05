@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\AgentAffectation" table="agent_carriere_affectation">
+    <entity name="Agent\Entity\Db\AgentAffectation" table="agent_carriere_affectation">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
@@ -10,19 +10,19 @@
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
         <many-to-one target-entity="Structure\Entity\Db\Structure"  field="structure">
-            <join-column name="structure_id" referenced-column-name="id"/>
+            <join-column name="structure_id"/>
         </many-to-one>
         <field name="dateDebut"               column="date_debut"       type="datetime"/>
         <field name="dateFin"                 column="date_fin"         type="datetime"/>
-        <field name="principale"              column="t_principale"     type="string" length="1"/>
-        <field name="hierarchique"            column="t_hierarchique"   type="string" length="1"/>
-        <field name="fonctionnelle"           column="t_fonctionnelle"  type="string" length="1"/>
+        <field name="principale"              column="t_principale"     length="1"/>
+        <field name="hierarchique"            column="t_hierarchique"   length="1"/>
+        <field name="fonctionnelle"           column="t_fonctionnelle"  length="1"/>
         <field name="quotite"                 column="quotite"          type="integer"/>
 
         <!-- DB IMPORT #############################  -->
-        <field name="created_on"               column="created_on"       type="datetime"/>
-        <field name="updated_on"               column="updated_on"       type="datetime"/>
-        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
-        <field name="sourceId"                 column="source_id"        type="string" length="128"/>
+        <field name="createdOn"               column="created_on"       type="datetime"/>
+        <field name="updatedOn"               column="updated_on"       type="datetime"/>
+        <field name="deletedOn"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                 column="source_id"       length="128"/>
     </entity>
 </doctrine-mapping>

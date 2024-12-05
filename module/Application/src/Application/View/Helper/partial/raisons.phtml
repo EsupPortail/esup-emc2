@@ -10,7 +10,6 @@ use Application\Entity\Db\Agent;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use Formation\Entity\Db\Formation;
 
 
 ?>
@@ -32,11 +31,6 @@ use Formation\Entity\Db\Formation;
                 $text = "Obtenue grâce à la mission [" . $raison->getLibelle()."]";
                 $label = "Mission";
                 $class = 'mission';
-                break;
-            case $raison instanceof Formation :
-                $text = "Obtenue grâce à la formation <span class='highlight formation'>" . $raison->getLibelle() . "</span>";
-                $label = "Formation";
-                $class = 'raison formation';
                 break;
             case $raison instanceof Agent :
                 $text = "Liée à l'agent <span class='highlight agent'>" . $raison->getDenomination(true) . "</span>";

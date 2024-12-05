@@ -5,7 +5,6 @@ namespace Application\Entity\Db\MacroContent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Element\Entity\Db\CompetenceType;
-use Formation\Entity\Db\Formation;
 use Metier\Entity\Db\Reference;
 
 trait FichePosteMacroTrait {
@@ -15,7 +14,6 @@ trait FichePosteMacroTrait {
      */
     public function toStringFicheMetierPrincipal() : string
     {
-        /** @var FichePoste $ficheposte */
         $ficheposte = $this;
 
         $texte  = "";
@@ -30,7 +28,6 @@ trait FichePosteMacroTrait {
     {
         $texte  = "";
 
-        /** @var FichePoste $ficheposte */
         $ficheposte = $this;
         if ($ficheposte->getLibelle() !== null AND trim($ficheposte->getLibelle()) !== '') {
             $texte .= "<br/>" . trim($ficheposte->getLibelle());
@@ -44,7 +41,6 @@ trait FichePosteMacroTrait {
      */
     public function toStringCompositionFichesMetiers() : string
     {
-        /** @var FichePoste $ficheposte */
         $ficheposte = $this;
 
         $quotiteTotal = 0;
@@ -183,42 +179,6 @@ trait FichePosteMacroTrait {
     public function toStringAllCompetencesComportementales() : string
     {
         return $this->toStringCompetencesByTypes(CompetenceType::CODE_COMPORTEMENTALE, true);
-    }
-
-    /**
-     * @return string
-     */
-    public function toStringFormations() : string
-    {
-        /** @var FichePoste $ficheposte */
-        $ficheposte = $this;
-        $formations = $ficheposte->getDictionnaire('formations');
-        $formations = array_filter($formations, function ($a) { return $a["conserve"] === true;});
-
-        if (empty($formations)) return "";
-
-        $result = [];
-        foreach ($formations as $formation) {
-            /** @var Formation $entite */
-            $entite = $formation["object"];
-            $result [$entite->getGroupe()?$entite->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
-        }
-        ksort($result);
-        $texte = "<h3> Formations </h3>";
-        $texte .= "<ul>";
-        foreach ($result as $groupe => $liste) {
-            usort($liste, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
-            $texte .= "<li>";
-            $texte .= $groupe;
-            $texte .= "<ul>";
-            foreach ($liste as $item) {
-                $texte .= "<li>".$item->getLibelle()."</li>";
-            }
-            $texte .= "</ul>";
-            $texte .= "</li>";
-        }
-        $texte .= "</ul>";
-        return $texte;
     }
 
     /**

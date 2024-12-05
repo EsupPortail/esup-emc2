@@ -2,11 +2,11 @@
 
 namespace Application\Controller;
 
+use Agent\Service\AgentAffectation\AgentAffectationService;
+use Agent\Service\AgentGrade\AgentGradeService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAccompagnement\AgentAccompagnementService;
-use Application\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
-use Application\Service\AgentGrade\AgentGradeService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMobilite\AgentMobiliteService;
 use Application\Service\AgentPPP\AgentPPPService;

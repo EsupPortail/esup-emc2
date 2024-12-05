@@ -11,10 +11,9 @@ use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Formation\Entity\Db\Formation;
-use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Form\Element\Select;
 use Laminas\Http\Request;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
@@ -26,7 +25,6 @@ class ConfigurationController extends AbstractActionController  {
     use ConfigurationServiceAwareTrait;
     use ApplicationServiceAwareTrait;
     use CompetenceServiceAwareTrait;
-    use FormationServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FormulaireServiceAwareTrait;
     use ConfigurationFicheMetierFormAwareTrait;
@@ -36,7 +34,6 @@ class ConfigurationController extends AbstractActionController  {
     {
         $applications = $this->getConfigurationService()->getConfigurationsFicheMetier(Application::class);
         $competences  = $this->getConfigurationService()->getConfigurationsFicheMetier(Competence::class);
-        $formations   = $this->getConfigurationService()->getConfigurationsFicheMetier(Formation::class);
 
         $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
         $formulaire_crep = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREP);
@@ -58,7 +55,6 @@ class ConfigurationController extends AbstractActionController  {
         return new ViewModel([
             'applications' => $applications,
             'competences' => $competences,
-            'formations' => $formations,
 
             'recopies' => $recopies,
             'champsCREP' => $champs_crep,
@@ -80,10 +76,6 @@ class ConfigurationController extends AbstractActionController  {
             case 'competence' :
                 $select = $this->getCompetenceService()->getCompetencesAsGroupOptions();
                 $type = Competence::class;
-                break;
-            case 'formation' :
-                $select = $this->getFormationService()->getFormationsAsOptions();
-                $type = Formation::class;
                 break;
         }
         $configuration = new ConfigurationFicheMetier();
@@ -117,14 +109,14 @@ class ConfigurationController extends AbstractActionController  {
         return $vm;
     }
 
-    public function detruireConfigurationFicheMetierAction()
+    public function detruireConfigurationFicheMetierAction(): Response
     {
         $configuration = $this->getConfigurationService()->getRequestedConfigurationFicheMetier($this);
         $this->getConfigurationService()->delete($configuration);
         return $this->redirect()->toRoute('configuration', [], [],true);
     }
 
-    public function reappliquerConfigurationFicheMetierAction()
+    public function reappliquerConfigurationFicheMetierAction(): Response
     {
         $fiches = $this->getFicheMetierService()->getFichesMetiers();
         foreach ($fiches as $fiche) {

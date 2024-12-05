@@ -528,11 +528,9 @@ class EntretienProfessionnelController extends AbstractActionController
     public function exporterCrefAction(): string
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getCampagne()->getAnnee());
         $vars = [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
-            'formations' => $formations,
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREF, $vars);

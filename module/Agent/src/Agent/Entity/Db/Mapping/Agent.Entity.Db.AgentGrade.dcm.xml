@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\AgentGrade" table="agent_carriere_grade">
+    <entity name="Agent\Entity\Db\AgentGrade" table="agent_carriere_grade">
 
         <id name="id" type="string" column="id" />
 
@@ -9,32 +9,33 @@
         </many-to-one>
 
         <many-to-one target-entity="Structure\Entity\Db\Structure"  field="structure">
-            <join-column name="structure_id" referenced-column-name="id"/>
+            <join-column name="structure_id"/>
         </many-to-one>
 
         <many-to-one target-entity="Carriere\Entity\Db\Corps"  field="corps">
-            <join-column name="corps_id" referenced-column-name="id"/>
+            <join-column name="corps_id"/>
         </many-to-one>
 
         <many-to-one target-entity="Carriere\Entity\Db\Grade"  field="grade">
-            <join-column name="grade_id" referenced-column-name="id"/>
+            <join-column name="grade_id"/>
         </many-to-one>
 
         <many-to-one target-entity="Carriere\Entity\Db\Correspondance"  field="correspondance">
-            <join-column name="correspondance_id" referenced-column-name="id"/>
+            <join-column name="correspondance_id"/>
         </many-to-one>
 
         <many-to-one target-entity="Carriere\Entity\Db\EmploiType"  field="emploiType">
-            <join-column name="emploitype_id" referenced-column-name="id"/>
+            <join-column name="emploitype_id"/>
         </many-to-one>
 
-        <field name="dateDebut"     type="datetime"                 column="d_debut"     nullable="false"/>
-        <field name="dateFin"       type="datetime"                 column="d_fin"       nullable="false"/>
+        <field name="dateDebut"     type="datetime"                 column="d_debut" />
+        <field name="dateFin"       type="datetime"                 column="d_fin"   />
 
         <!-- DB IMPORT #############################  -->
-        <field name="created_on"               column="created_on"       type="datetime"/>
-        <field name="updated_on"               column="updated_on"       type="datetime"/>
-        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+        <field name="createdOn"               column="created_on"       type="datetime"/>
+        <field name="updatedOn"               column="updated_on"       type="datetime"/>
+        <field name="deletedOn"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                 column="source_id"       length="128"/>
 
     </entity>
 </doctrine-mapping>

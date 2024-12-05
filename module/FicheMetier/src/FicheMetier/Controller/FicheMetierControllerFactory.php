@@ -6,6 +6,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Service\FichePoste\FichePosteService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
+use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
@@ -22,7 +23,8 @@ use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
-class FicheMetierControllerFactory {
+class FicheMetierControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -30,7 +32,7 @@ class FicheMetierControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FicheMetierController
+    public function __invoke(ContainerInterface $container): FicheMetierController
     {
         /**
          * @var DomaineService $domaineService
@@ -54,6 +56,7 @@ class FicheMetierControllerFactory {
         $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
         /**
+         * @var CodeFonctionForm $codeFonctionForm ;
          * @var FicheMetierImportationForm $importationForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var RaisonForm $raisonForm
@@ -62,6 +65,7 @@ class FicheMetierControllerFactory {
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          */
+        $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $importationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
@@ -71,6 +75,7 @@ class FicheMetierControllerFactory {
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
         $controller = new FicheMetierController();
+        $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setDomaineService($domaineService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);

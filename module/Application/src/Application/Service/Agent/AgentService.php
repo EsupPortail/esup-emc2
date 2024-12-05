@@ -3,10 +3,10 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
@@ -14,7 +14,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Fichier\Entity\Db\Fichier;
-use Formation\Entity\Db\FormationElement;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
@@ -22,7 +21,6 @@ use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -62,7 +60,7 @@ class AgentService
             ->andWhere('agent.deletedOn IS NULL')
         ;
 
-        if (!$enAffectation) $qb = $qb->andWhere('affectation.deleted_on IS NULL');
+        if (!$enAffectation) $qb = $qb->andWhere('affectation.deletedOn IS NULL');
 
         return $qb;
     }
@@ -305,7 +303,7 @@ EOS;
                 ->join('agent.affectations', 'affectation')
 //                ->addSelect('affectation_structure')
                 ->join('affectation.structure', 'affectation_structure')
-                ->andWhere('affectation.deleted_on IS NULL')
+                ->andWhere('affectation.deletedOn IS NULL')
                 //STATUS
 //            ->addSelect('statut')
                 ->leftjoin('agent.statuts', 'statut')
@@ -466,23 +464,6 @@ EOS;
     /** AgentFormation ************************************************************************************************/
 
     /**
-     * @param Agent $agent
-     * @param string $annee
-     * @return FormationElement[]
-     */
-    public function getFormationsSuiviesByAnnee(Agent $agent, string $annee): array
-    {
-        $result = [];
-        $formations = $agent->getFormationListe();
-        foreach ($formations as $formation) {
-            $anneeFormation = explode(' - ', $formation->getCommentaire())[0];
-            if ($anneeFormation === $annee) $result[] = $formation;
-        }
-
-        return $result;
-    }
-
-    /**
      * @param Agent[] $agents
      * @return array
      */
@@ -589,7 +570,7 @@ EOS;
         }
         if ($encours === '1') {
             $qb = AgentAffectation::decorateWithActif($qb, 'affectation')
-                ->andWhere('affectation.deleted_on IS NULL');
+                ->andWhere('affectation.deletedOn IS NULL');
         }
 
 

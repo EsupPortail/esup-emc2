@@ -189,7 +189,6 @@ class FichePosteController extends AbstractActionController
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         return new ViewModel([
@@ -197,7 +196,6 @@ class FichePosteController extends AbstractActionController
             'fiche' => $fiche,
             'applications' => $applications,
             'competences' => $competences,
-            'formations' => $formations,
             'activites' => $activites,
             'structure' => $structure,
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
@@ -290,7 +288,6 @@ class FichePosteController extends AbstractActionController
         $agent = $ficheposte->getAgent();
         $ficheposte->addDictionnaire('applications', $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
-        $ficheposte->addDictionnaire('formations', $this->getFichePosteService()->getFormationsDictionnaires($ficheposte));
 
         $vars = [
             'ficheposte' => $ficheposte,

@@ -2,7 +2,7 @@
 
 namespace Carriere\Controller;
 
-use Application\Service\AgentGrade\AgentGradeService;
+use Agent\Service\AgentGrade\AgentGradeService;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Corps\CorpsService;

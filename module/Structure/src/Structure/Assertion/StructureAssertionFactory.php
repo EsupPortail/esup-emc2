@@ -32,7 +32,6 @@ class StructureAssertionFactory
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
-        /** @var StructureAssertion $assertion */
         $assertion = new StructureAssertion();
         $assertion->setAgentService($agentService);
         $assertion->setObservateurService($observateurService);

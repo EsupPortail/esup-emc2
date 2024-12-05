@@ -2,8 +2,7 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\AgentAffectation;
-use Application\Entity\Db\AgentStatut;
+use Agent\Entity\Db\AgentAffectation;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
 use Laminas\View\Renderer\PhpRenderer;

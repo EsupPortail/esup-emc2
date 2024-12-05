@@ -11,7 +11,7 @@ use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;

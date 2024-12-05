@@ -31,6 +31,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?int $id = -1;
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
+    private ?string $codeFonction = null;
 
     public Collection $competencesSpecifiques;
 
@@ -73,6 +74,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setRaison(?string $raison): void
     {
         $this->raison = $raison;
+    }
+
+    public function getCodeFonction(): ?string
+    {
+        return $this->codeFonction;
+    }
+
+    public function setCodeFonction(?string $codeFonction): void
+    {
+        $this->codeFonction = $codeFonction;
     }
 
     /** @return FicheMetierMission[] */

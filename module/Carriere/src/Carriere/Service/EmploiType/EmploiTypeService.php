@@ -2,7 +2,7 @@
 
 namespace Carriere\Service\EmploiType;
 
-use Application\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\EmploiType;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -42,7 +42,7 @@ class EmploiTypeService
             $qb = $qb->addSelect('agentGrade')->join('emploitype.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent', 'agent')
                 ->andWhere('agent.deletedOn IS NULL')
-                ->andWhere('agentGrade.deleted_on IS NULL');
+                ->andWhere('agentgrade.deletedOn IS NULL');
             $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
         }
 

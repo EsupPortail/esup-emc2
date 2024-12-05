@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Agent\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentGrade;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Entity\Db\Corps;

@@ -4,6 +4,10 @@ namespace FichePoste;
 
 use FicheMetier\Controller\FicheMetierController;
 use FicheMetier\Controller\FicheMetierControllerFactory;
+use FicheMetier\Form\CodeFonction\CodeFonctionForm;
+use FicheMetier\Form\CodeFonction\CodeFonctionFormFactory;
+use FicheMetier\Form\CodeFonction\CodeFonctionHydrator;
+use FicheMetier\Form\CodeFonction\CodeFonctionHydratorFactory;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
 use FicheMetier\Form\FicheMetierImportation\FichierMetierImportationHydrator;
@@ -92,6 +96,7 @@ return [
                         'modifier-expertise',
                         'modifier-metier',
                         'modifier-raison',
+                        'modifier-code-fonction',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -163,7 +168,6 @@ return [
                             'route'    => '/afficher/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::afficherAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
                             ],
                         ],
@@ -174,7 +178,6 @@ return [
                             'route'    => '/exporter/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::exporterAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'exporter',
                             ],
                         ],
@@ -185,7 +188,6 @@ return [
                             'route'    => '/ajouter',
                             'defaults' => [
                                 /** @see FicheMetierController::ajouterAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -196,7 +198,6 @@ return [
                             'route'    => '/importer',
                             'defaults' => [
                                 /** @see FicheMetierController::importerAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'importer',
                             ],
                         ],
@@ -207,7 +208,6 @@ return [
                             'route'    => '/dupliquer/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::dupliquerAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'dupliquer',
                             ],
                         ],
@@ -218,7 +218,6 @@ return [
                             'route'    => '/modifier/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier',
                             ],
                         ],
@@ -229,7 +228,6 @@ return [
                             'route'    => '/historiser/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::historiserAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -240,7 +238,6 @@ return [
                             'route'    => '/restaurer/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::restaurerAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -251,7 +248,6 @@ return [
                             'route'    => '/supprimer/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'supprimer',
                             ],
                         ],
@@ -262,7 +258,6 @@ return [
                             'route'    => '/modifier-etat/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierEtatAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-etat',
                             ],
                         ],
@@ -273,7 +268,6 @@ return [
                             'route'    => '/modifier-expertise/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierExpertiseAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-expertise',
                             ],
                         ],
@@ -284,7 +278,6 @@ return [
                             'route'    => '/modifier-metier/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierMetierAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-metier',
                             ],
                         ],
@@ -295,8 +288,17 @@ return [
                             'route'    => '/modifier-raison/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierRaisonAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-raison',
+                            ],
+                        ],
+                    ],
+                    'modifier-code-fonction' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-code-fonction/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierCodeFonctionAction() */
+                                'action'     => 'modifier-code-fonction',
                             ],
                         ],
                     ],
@@ -384,6 +386,7 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            CodeFonctionForm::class => CodeFonctionFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
@@ -391,6 +394,7 @@ return [
     ],
     'hydrators' => [
         'factories' => [
+            CodeFonctionHydrator::class => CodeFonctionHydratorFactory::class,
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],

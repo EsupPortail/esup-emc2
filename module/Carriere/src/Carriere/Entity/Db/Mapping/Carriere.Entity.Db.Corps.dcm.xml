@@ -18,7 +18,7 @@
             <join-column name="niveaux_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="corps"/>
+        <one-to-many field="agentGrades" target-entity="Agent\Entity\Db\AgentGrade" mapped-by="corps"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>

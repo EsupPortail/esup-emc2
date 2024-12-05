@@ -20,10 +20,6 @@ use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
-use Application\Service\AgentAffectation\AgentAffectationService;
-use Application\Service\AgentAffectation\AgentAffectationServiceFactory;
-use Application\Service\AgentGrade\AgentGradeService;
-use Application\Service\AgentGrade\AgentGradeServiceFactory;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
 use Application\Service\AgentPoste\AgentPosteService;
@@ -102,7 +98,7 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
                     ],
-                    'assertion'  => AgentAssertion::class,
+                    'assertion' => AgentAssertion::class,
                 ],
                 [
                     'controller' => AgentController::class,
@@ -131,15 +127,13 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_VOIR,
                     ],
-                    'assertion'  => AgentAssertion::class,
+                    'assertion' => AgentAssertion::class,
                 ],
                 [
                     'controller' => AgentController::class,
                     'action' => [
                         'upload-fichier',
-                        'ajouter-formation',
                         'ajouter-application',
-                        'modifier-formation',
                         'upload-fiche-poste-pdf',
                     ],
                     'privileges' => [
@@ -156,7 +150,7 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_VALIDER,
                     ],
-                    'assertion'  => AgentAssertion::class,
+                    'assertion' => AgentAssertion::class,
                 ],
                 /** NEW STUFFS CCC */
 
@@ -188,78 +182,78 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'agent' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/agent',
+                    'route' => '/agent',
                     'defaults' => [
                         'controller' => AgentController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
                     'verifier-lien' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/verifier-lien[/:utilisateur]',
+                            'route' => '/verifier-lien[/:utilisateur]',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'verifier-lien',
+                                'action' => 'verifier-lien',
                             ],
                         ],
                     ],
                     /** Fonctions de recherche ************************************************************************/
                     'rechercher' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/rechercher',
+                            'route' => '/rechercher',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'rechercher',
+                                'action' => 'rechercher',
                             ],
                         ],
                     ],
                     'rechercher-large' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/rechercher-large',
+                            'route' => '/rechercher-large',
                             'defaults' => [
                                 /** @see AgentController::rechercherLargeAction() */
                                 'controller' => AgentController::class,
-                                'action'     => 'rechercher-large',
+                                'action' => 'rechercher-large',
                             ],
                         ],
                     ],
                     'rechercher-with-structure-mere' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/rechercher-with-structure-mere/:structure',
+                            'route' => '/rechercher-with-structure-mere/:structure',
                             'defaults' => [
                                 /** @see AgentController::rechercherWithStructureMereAction() */
-                                'action'     => 'rechercher-with-structure-mere',
+                                'action' => 'rechercher-with-structure-mere',
                             ],
                         ],
                     ],
                     'rechercher-responsable' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/rechercher-responsable',
+                            'route' => '/rechercher-responsable',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'rechercher-responsable',
+                                'action' => 'rechercher-responsable',
                             ],
                         ],
                     ],
                     'rechercher-gestionnaire' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/rechercher-gestionnaire',
+                            'route' => '/rechercher-gestionnaire',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'rechercher-gestionnaire',
+                                'action' => 'rechercher-gestionnaire',
                             ],
                         ],
                     ],
@@ -267,34 +261,12 @@ return [
                     /** Routes de gestion des applications*************************************************************/
 
                     'ajouter-application' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-application/:agent[/:application]',
+                            'route' => '/ajouter-application/:agent[/:application]',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'ajouter-application',
-                            ],
-                        ],
-                    ],
-                    //TODO changer dans formation-bloc
-                    'ajouter-formation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-formation/:agent[/:formation]',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'ajouter-formation',
-                            ],
-                        ],
-                    ],
-                    //TODO changer dans formation-bloc
-                    'modifier-formation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-formation/:agent/:formation-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier-formation',
+                                'action' => 'ajouter-application',
                             ],
                         ],
                     ],
@@ -302,22 +274,22 @@ return [
                     /** VALIDATION D'ELEMENT **************************************************************************/
 
                     'valider-element' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/valider-element/:type/:id',
+                            'route' => '/valider-element/:type/:id',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'valider-element',
+                                'action' => 'valider-element',
                             ],
                         ],
                     ],
                     'revoquer-element' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/revoquer-element/:validation',
+                            'route' => '/revoquer-element/:validation',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'revoquer-element',
+                                'action' => 'revoquer-element',
                             ],
                         ],
                     ],
@@ -325,44 +297,44 @@ return [
                     /** AUTRE  ****************************************************************************************/
 
                     'upload-fichier' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/upload-fichier/:agent',
+                            'route' => '/upload-fichier/:agent',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'upload-fichier',
+                                'action' => 'upload-fichier',
                             ],
                         ],
                     ],
                     'afficher' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/afficher[/:agent]',
+                            'route' => '/afficher[/:agent]',
                             'defaults' => [
                                 /** @see AgentController::afficherAction() */
                                 'controller' => AgentController::class,
-                                'action'     => 'afficher',
+                                'action' => 'afficher',
                             ],
                         ],
                     ],
                     'afficher-statuts-grades' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/afficher-statuts-grades/:agent',
+                            'route' => '/afficher-statuts-grades/:agent',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'afficher-statuts-grades',
+                                'action' => 'afficher-statuts-grades',
                             ],
                         ],
                     ],
                     'upload-fiche-poste-pdf' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/upload-fiche-poste-pdf/:agent',
+                            'route' => '/upload-fiche-poste-pdf/:agent',
                             'defaults' => [
                                 /** @see AgentController::uploadFichePostePdfAction() */
                                 'controller' => AgentController::class,
-                                'action'     => 'upload-fiche-poste-pdf',
+                                'action' => 'upload-fiche-poste-pdf',
                             ],
                         ],
                     ],
@@ -371,7 +343,7 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
@@ -380,14 +352,14 @@ return [
                         'label' => 'Suivis',
                         'title' => "suivis",
                         'route' => 'agent',
-                        'resource' => PrivilegeController::getResourceId(AgentController::class, 'index') ,
+                        'resource' => PrivilegeController::getResourceId(AgentController::class, 'index'),
 
                         'pages' => [
                             'agent' => [
-                                'label'    => 'Agents',
-                                'route'    => 'agent',
-                                'resource' => PrivilegeController::getResourceId(AgentController::class, 'index') ,
-                                'order'    => 10,
+                                'label' => 'Agents',
+                                'route' => 'agent',
+                                'resource' => PrivilegeController::getResourceId(AgentController::class, 'index'),
+                                'order' => 10,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -417,15 +389,13 @@ return [
             AgentAffichageAssertion::class => AgentAffichageAssertionFactory::class,
 
             AgentService::class => AgentServiceFactory::class,
-            AgentAffectationService::class => AgentAffectationServiceFactory::class,
-            AgentGradeService::class => AgentGradeServiceFactory::class,
             AgentMissionSpecifiqueService::class => AgentMissionSpecifiqueServiceFactory::class,
             AgentPosteService::class => AgentPosteServiceFactory::class,
             AgentQuotiteService::class => AgentQuotiteServiceFactory::class,
             AgentStatutService::class => AgentStatutServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             AgentController::class => AgentControllerFactory::class,
         ],

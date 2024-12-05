@@ -9,6 +9,7 @@ use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
@@ -40,6 +41,7 @@ class FicheMetierController extends AbstractActionController {
     use ThematiqueElementServiceAwareTrait;
     use ThematiqueTypeServiceAwareTrait;
 
+    use CodeFonctionFormAwareTrait;
     use FicheMetierImportationFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use RaisonFormAwareTrait;
@@ -321,6 +323,31 @@ class FicheMetierController extends AbstractActionController {
         $this->getFicheMetierService()->update($fichemetier);
 
         return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
+    public function modifierCodeFonctionAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $form = $this->getCodeFonctionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modification du code fonction",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
     }
 
     public function modifierMetierAction() : ViewModel

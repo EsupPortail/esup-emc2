@@ -59,12 +59,6 @@ class IndexController extends AbstractActionController
 
     public function indexAction(): ViewModel|Response
     {
-        /** Failsafe :: le routing semble merdé ... */
-        $r = $this->getRequest()->getUri();
-        if (str_contains($r, 'mes-formations')) {
-            return $this->redirect()->toRoute('index-mes-formations', [], ['force_canonical' => true], true);
-        }
-
         $vars = ['UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, $vars, false);
         $texte = $rendu->getCorps();

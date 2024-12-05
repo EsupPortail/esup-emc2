@@ -61,7 +61,7 @@ $metier = $fichemetier->getMetier();
         <?php if ($mode === 'edition-fiche-metier') : ?>
             <a
                 <?php /** @see FicheMetierController::modifierExpertiseAction() */ ?>
-                    href="<?php echo $this->url('fiche-metier/modifier-expertise', ['fiche-fiche' => $fichemetier->getId()], [], true); ?>"
+                    href="<?php echo $this->url('fiche-metier/modifier-expertise', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
             >
                 <span class="icon icon-synchroniser"></span>
             </a>
@@ -75,6 +75,23 @@ $metier = $fichemetier->getMetier();
             à <?php echo $enveloppe->getBorneSuperieure()->getLibelle(); ?> (<?php echo $enveloppe->getBorneSuperieure()->getEtiquette(); ?>)
         <?php else : ?>
             Non renseigné
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Code fonction</dt>
+    <dd class="col-md-8">
+        <?php $code = $fichemetier->getCodeFonction(); ?>
+        <?php if ($code !== null) : ?>
+            <code> <?php echo $code; ?> </code>
+        <?php else : ?>
+            Non renseigné
+        <?php endif; ?>
+        <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
+            <?php /** @see FicheMetierController::modifierCodeFonctionAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-editer"></span>
+            </a>
         <?php endif; ?>
     </dd>
 </dl>

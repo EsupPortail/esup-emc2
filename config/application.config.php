@@ -43,6 +43,8 @@ $modules = [
     'UnicaenSynchro',
     'UnicaenObservation',
 
+
+    'Agent',
     'MissionSpecifique',
     'Structure',
     'EntretienProfessionnel',
@@ -54,6 +56,7 @@ $modules = [
 
     'Fichier',
     'Element',
+
     'Application',
 
     'Laminas\DeveloperTools',

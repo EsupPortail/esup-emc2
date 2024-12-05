@@ -2,7 +2,7 @@
 
 namespace Carriere\Controller;
 
-use Application\Service\AgentGrade\AgentGradeService;
+use Agent\Service\AgentGrade\AgentGradeService;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;

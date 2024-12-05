@@ -670,38 +670,6 @@ EOS;
      * @param DateTime $date
      * @return array
      */
-    public function getFormationsDictionnaires(FichePoste $fiche): array
-    {
-        $dictionnaire = [];
-
-        /**
-         * @var FicheMetier[] $ficheMetier
-         * @var Mission[] $missions
-         */
-        $fichesMetiers = [];
-        $missions = [];
-
-        /** Recuperation des fiches metiers */
-        foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
-            $ficheMetier = $ficheTypeExterne->getFicheType();
-            $fichesMetiers[] = $ficheMetier;
-            $activitesId = explode(';',$ficheTypeExterne->getActivites());
-            foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
-                $id = $metierTypeActivite->getMission()->getId();
-                if (in_array($id, $activitesId)) {
-                    $missions[] = $metierTypeActivite->getMission();
-                }
-            }
-        }
-
-        return $dictionnaire;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @param DateTime $date
-     * @return array
-     */
     public function getCompetencesDictionnaires(FichePoste $fiche): array
     {
         $dictionnaire = [];

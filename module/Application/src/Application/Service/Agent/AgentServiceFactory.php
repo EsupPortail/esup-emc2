@@ -2,7 +2,7 @@
 
 namespace Application\Service\Agent;
 
-use Application\Service\AgentAffectation\AgentAffectationService;
+use Agent\Service\AgentAffectation\AgentAffectationService;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -34,7 +34,6 @@ class AgentServiceFactory {
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
-        /** @var AgentService $service */
         $service = new AgentService();
         $service->setObjectManager($entityManager);
         $service->setAgentAffectationService($agentAffectationService);

@@ -67,6 +67,13 @@ $this->headTitle($titre);
 
 <script>
 $(function () {
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
     $('.datatable').DataTable({
             paging: false,
         });
