@@ -159,8 +159,7 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'ONGLET_FICHES', 'Affichage de la partie - Fiches de poste et missions spécifiques -', null, 'Boolean', 20 UNION
     SELECT 'ONGLET_MOBILITES', 'Affichage de la partie - Déclaration de mobilités -', null, 'Boolean', 30 UNION
     SELECT 'ONGLET_ACQUIS', 'Affichage de la partie - Acquis de l''agent -', null, 'Boolean', 40 UNION
-    SELECT 'ONGLET_PORTFOLIO', 'Affichage de la partie - Portfolio -', null, 'Boolean', 50 UNION
-    SELECT 'ONGLET_CCC', 'Affichage de la partie - Gestion CCC -', null, 'Boolean', 60
+    SELECT 'ONGLET_PORTFOLIO', 'Affichage de la partie - Portfolio -', null, 'Boolean', 50
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
@@ -173,4 +172,3 @@ update unicaen_parametre_parametre set valeur='true' where code='ONGLET_FICHES';
 update unicaen_parametre_parametre set valeur='true' where code='ONGLET_MOBILITES';
 update unicaen_parametre_parametre set valeur='true' where code='ONGLET_ACQUIS';
 update unicaen_parametre_parametre set valeur='false' where code='ONGLET_PORTFOLIO';
-update unicaen_parametre_parametre set valeur='false' where code='ONGLET_CCC';

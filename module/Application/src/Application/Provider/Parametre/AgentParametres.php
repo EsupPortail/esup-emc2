@@ -10,5 +10,4 @@ class AgentParametres {
     const ONGLET_MOBILITES = 'ONGLET_MOBILITES';
     const ONGLET_ACQUIS = 'ONGLET_ACQUIS';
     const ONGLET_PORTFOLIO = 'ONGLET_PORTFOLIO';
-    const ONGLET_CCC = 'ONGLET_CCC';
 }

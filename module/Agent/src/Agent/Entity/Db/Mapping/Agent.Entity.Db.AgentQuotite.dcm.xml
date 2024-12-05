@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Agent\Entity\Db\AgentQuotite" table="agent_carriere_quotite">
+
+        <id name="id" type="string" column="id" />
+
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
+        </many-to-one>
+
+        <field name="dateDebut" type="datetime"                     column="d_debut"     />
+        <field name="dateFin"   type="datetime"                     column="d_fin"       />
+        <field name="quotite"   type="integer"                      column="quotite"   />
+        <field name="modaliteDeService"   length="1024" column="modalite_de_service"   />
+
+        <!-- DB IMPORT #############################  -->
+        <field name="createdOn"               column="created_on"       type="datetime"/>
+        <field name="updatedOn"               column="updated_on"       type="datetime"/>
+        <field name="deletedOn"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                 column="source_id"       length="128"/>
+
+    </entity>
+</doctrine-mapping>

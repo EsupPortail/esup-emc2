@@ -2,28 +2,24 @@
 
 use Agent\Entity\Db\AgentAffectation;
 use Agent\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentQuotite;
 use Agent\Entity\Db\AgentStatut;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentMobilite;
-use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Parametre\AgentParametres;
 use Application\Provider\Privilege\AgentPrivileges;
-use Entity\Db\AgentAccompagnement;
-use Entity\Db\AgentPPP;
-use Entity\Db\AgentStageObservation;
-use Entity\Db\AgentTutorat;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see Application\Controller\AgentController::afficherAction()
- * @var Agent   $agent
+ * @var Agent $agent
  * @var EntretienProfessionnel[] $entretiens
- * @var Agent[]  $superieures
- * @var Agent[]  $autorites
+ * @var Agent[] $superieures
+ * @var Agent[] $autorites
  * @var FichePoste[] $fichespostes
  * @var FichePoste $ficheposte
  * @var AgentMissionSpecifique[] $missions
@@ -36,10 +32,6 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var array $applications
  * @var string $intranet
  *
- * @var AgentPPP[] $ppps
- * @var AgentStageObservation[] $stages
- * @var AgentTutorat[] $tutorats
- * @var AgentAccompagnement[] $accompagnements
  * @var AgentMobilite[] $mobilites
  * @var Parametre[] $parametres
  *
@@ -89,18 +81,18 @@ if ($agent !== null) {
 
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <?php if (!isset($parametres[AgentParametres::ONGLET_INFORMATIONS]) || $parametres[AgentParametres::ONGLET_INFORMATIONS]->getValeur() !== "false") : ?>
-        <button class="nav-link active" id="informations-tab"
-                data-bs-toggle="tab" data-bs-target="#informations"
-                type="button" role="tab" aria-controls="informations" aria-selected="true">
-            Informations <br/> générales
-        </button>
+            <button class="nav-link active" id="informations-tab"
+                    data-bs-toggle="tab" data-bs-target="#informations"
+                    type="button" role="tab" aria-controls="informations" aria-selected="true">
+                Informations <br/> générales
+            </button>
         <?php endif; ?>
         <?php if (!isset($parametres[AgentParametres::ONGLET_FICHES]) || $parametres[AgentParametres::ONGLET_FICHES]->getValeur() !== "false") : ?>
-        <button class="nav-link" id="fiches-tab"
-                data-bs-toggle="tab" data-bs-target="#fiches"
-                type="button" role="tab" aria-controls="fiches" aria-selected="true">
-            Fiches de poste et <br/> missions spécifiques
-        </button>
+            <button class="nav-link" id="fiches-tab"
+                    data-bs-toggle="tab" data-bs-target="#fiches"
+                    type="button" role="tab" aria-controls="fiches" aria-selected="true">
+                Fiches de poste et <br/> missions spécifiques
+            </button>
         <?php endif; ?>
         <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>
             <button class="nav-link" id="acquis-tab"
@@ -116,23 +108,11 @@ if ($agent !== null) {
                 Portfolio <br/> &nbsp;
             </button>
         <?php endif; ?>
-        <?php if (!isset($parametres[AgentParametres::ONGLET_CCC]) || $parametres[AgentParametres::ONGLET_CCC]->getValeur() !== "false") : ?>
-            <button class="nav-link" id="ppp-tab"
-                    data-bs-toggle="tab" data-bs-target="#ppp"
-                    type="button" role="tab" aria-controls="ppp" aria-selected="true">
-                Projet professionnel <br/> &nbsp;personnel
-            </button>
-            <button class="nav-link" id="tutorat-tab"
-                    data-bs-toggle="tab" data-bs-target="#tutorat"
-                    type="button" role="tab" aria-controls="tutorat" aria-selected="true">
-                Tutorats et <br/> encadrements
-            </button>
-        <?php endif; ?>
         <?php if (!isset($parametres[AgentParametres::ONGLET_MOBILITES]) || $parametres[AgentParametres::ONGLET_MOBILITES]->getValeur() !== "false") : ?>
             <button class="nav-link" id="mobilite-tab"
                     data-bs-toggle="tab" data-bs-target="#mobilite"
                     type="button" role="tab" aria-controls="mobilite" aria-selected="true">
-                Déclaration de  <br/> mobilités
+                Déclaration de <br/> mobilités
             </button>
         <?php endif; ?>
     </div>
@@ -140,63 +120,57 @@ if ($agent !== null) {
     <div>
         <div class="tab-content">
             <?php if (!isset($parametres[AgentParametres::ONGLET_INFORMATIONS]) || $parametres[AgentParametres::ONGLET_INFORMATIONS]->getValeur() !== "false") : ?>
-            <div id="informations" class="tab-pane fade show" role="tabpanel" aria-labelledby="informations-tab">
+                <div id="informations" class="tab-pane fade show" role="tabpanel" aria-labelledby="informations-tab">
 
-                <?php echo $this->partial('partial/informations-generales',
-                    ['agent' => $agent,
-                        'affectations' => $affectations,
-                        'superieures' => $superieures, 'autorites' => $autorites,
-                        'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite]); ?>
-            </div>
+                    <?php echo $this->partial('partial/informations-generales',
+                        ['agent' => $agent,
+                            'affectations' => $affectations,
+                            'superieures' => $superieures, 'autorites' => $autorites,
+                            'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite]); ?>
+                </div>
 
             <?php endif; ?>
             <?php if (!isset($parametres[AgentParametres::ONGLET_FICHES]) || $parametres[AgentParametres::ONGLET_FICHES]->getValeur() !== "false") : ?>
 
                 <div id="fiches" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/fiche-poste',
-                    ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
-                <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
-            </div>
+                    <?php echo $this->partial('partial/fiche-poste',
+                        ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
+                    <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
+                </div>
 
 
             <?php endif; ?>
             <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>
 
-            <div id="acquis" class="tab-pane " role="tabpanel">
-                <h2> Applications, compétences et formations</h2>
+                <div id="acquis" class="tab-pane " role="tabpanel">
+                    <h2> Applications, compétences et formations</h2>
 
-                <div class="alert alert-info">
-                    <strong><span class="icon icon-attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong> <br/>
-                    Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
-                </div>
+                    <div class="alert alert-info">
+                        <strong><span class="icon icon-attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong>
+                        <br/>
+                        Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un
+                        agent ne sont pas mentionnées.
+                    </div>
 
-<!--                --><?php //if ($displayAcquis === true) : ?>
+                    <!--                --><?php //if ($displayAcquis === true) : ?>
                     <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
                     <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
 
                     <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
                     <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
-<!--                --><?php //endif; ?>
+                    <!--                --><?php //endif; ?>
 
-            </div>
+                </div>
             <?php endif; ?>
             <?php if (!isset($parametres[AgentParametres::ONGLET_PORTFOLIO]) || $parametres[AgentParametres::ONGLET_PORTFOLIO]->getValeur() !== "false") : ?>
-            <div id="portfolio" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
-            </div>
-            <?php endif; ?>
-            <?php if (!isset($parametres[AgentParametres::ONGLET_CCC]) || $parametres[AgentParametres::ONGLET_CCC]->getValeur() !== "false") : ?>
-            <div id="ppp" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/ppp', ['agent' => $agent, 'ppps' => $ppps, 'stages' => $stages, 'droits' => $droits], []); ?>
-            </div>
-            <div id="tutorat" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/tutorat', ['agent' => $agent, 'tutorats' => $tutorats, 'accompagnements' => $accompagnements, 'droits' => $droits], []); ?>
-            </div>
+                <div id="portfolio" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
+                </div>
             <?php endif; ?>
             <?php if (!isset($parametres[AgentParametres::ONGLET_MOBILITES]) || $parametres[AgentParametres::ONGLET_MOBILITES]->getValeur() !== "false") : ?>
-            <div id="mobilite" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/mobilite', ['agent' => $agent, 'mobilites' => $mobilites], []); ?>
-            </div>
+                <div id="mobilite" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/mobilite', ['agent' => $agent, 'mobilites' => $mobilites], []); ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -227,7 +201,7 @@ if ($agent !== null) {
         });
     });
 
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

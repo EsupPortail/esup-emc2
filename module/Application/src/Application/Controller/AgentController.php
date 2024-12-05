@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
+use Agent\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\AgentParametres;
@@ -12,7 +13,6 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
-use Application\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
@@ -31,16 +31,11 @@ use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
-use Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
-use Service\AgentPPP\AgentPPPServiceAwareTrait;
-use Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
-use Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -82,12 +77,6 @@ class AgentController extends AbstractActionController
     use CompetenceElementFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
-
-    use AgentPPPServiceAwareTrait;
-    use AgentStageObservationServiceAwareTrait;
-    use AgentTutoratServiceAwareTrait;
-    use AgentAccompagnementServiceAwareTrait;
-    use AgentAccompagnementFormAwareTrait;
 
     use AgentMobiliteServiceAwareTrait;
 
@@ -152,10 +141,6 @@ class AgentController extends AbstractActionController
             'quotite' => $this->getAgentQuotiteService()->getAgentQuotiteCurrent($agent),
             'missions' => $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgent($agent, false),
 
-            'ppps' => $this->getAgentPPPService()->getAgentPPPsByAgent($agent),
-            'stages' => $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
-            'tutorats' => $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
-            'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
             'intranet' => $lienIntranet,
 
             'mobilites' => $mobilites,

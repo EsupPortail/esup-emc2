@@ -1,20 +1,24 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Agent\Entity\Db;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class AgentQuotite implements HasPeriodeInterface
+class AgentQuotite implements HasPeriodeInterface, IsSynchronisableInterface
 {
     use HasPeriodeTrait;
-    use DbImportableAwareTrait;
+    use IsSynchronisableTrait;
 
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?int $quotite = null;
     private ?string $modaliteDeService = null;
+
+    /** Données : cette donnée est synchronisée >> par conséquent, il n'y a que des getters */
 
     public function getId(): int
     {

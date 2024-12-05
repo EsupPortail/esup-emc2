@@ -1,26 +1,23 @@
 <?php
 
-namespace Application\Service\AgentQuotite;
+namespace Agent\Service\AgentQuotite;
 
+use Agent\Entity\Db\AgentQuotite;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentQuotite;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class AgentQuotiteService {
-    use EntityManagerAwareTrait;
-
-    /** GESTION ENTITE ************************************************************************************************/
-    // Complétement importées et jamais modifiées
+    use ProvidesObjectManager;
 
     /** REQUETAGE *****************************************************************************************************/
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(AgentQuotite::class)->createQueryBuilder('agentquotite')
+        $qb = $this->getObjectManager()->getRepository(AgentQuotite::class)->createQueryBuilder('agentquotite')
             ->join('agentquotite.agent', 'agent')->addSelect('agent')
-            ->andWhere('agentquotite.deleted_on IS NULL')
+            ->andWhere('agentquotite.deletedOn IS NULL')
         ;
         return $qb;
     }
@@ -34,7 +31,7 @@ class AgentQuotiteService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentquotite.agent = :agent')
-            ->andWhere('agentquotite.deleted_on IS NULL')
+            ->andWhere('agentquotite.deletedOn IS NULL')
             ->setParameter('agent', $agent)
         ;
 

@@ -5,11 +5,11 @@ namespace Application\Controller;
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Agent\Service\AgentGrade\AgentGradeService;
 use Agent\Service\AgentStatut\AgentStatutService;
+use Agent\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMobilite\AgentMobiliteService;
-use Application\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use Carriere\Service\Categorie\CategorieService;
@@ -27,10 +27,6 @@ use Fichier\Service\Nature\NatureService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Service\AgentAccompagnement\AgentAccompagnementService;
-use Service\AgentPPP\AgentPPPService;
-use Service\AgentStageObservation\AgentStageObservationService;
-use Service\AgentTutorat\AgentTutoratService;
 use Structure\Service\Structure\StructureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
@@ -149,22 +145,6 @@ class AgentControllerFactory
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);
         $controller->setUploadForm($uploadForm);
-
-        /**
-         * @var AgentPPPService $agentPppService
-         * @var AgentStageObservationService $agentStageObservationService
-         * @var AgentTutoratService $agentTutoratService
-         * @var AgentAccompagnementService $agentAccompagnementService
-         */
-        $agentPppService = $container->get(AgentPPPService::class);
-        $agentStageObservationService = $container->get(AgentStageObservationService::class);
-        $agentTutoratService = $container->get(AgentTutoratService::class);
-        $agentAccompagnementService = $container->get(AgentAccompagnementService::class);
-
-        $controller->setAgentPPPService($agentPppService);
-        $controller->setAgentStageObservationService($agentStageObservationService);
-        $controller->setAgentTutoratService($agentTutoratService);
-        $controller->setAgentAccompagnementService($agentAccompagnementService);
 
         return $controller;
     }

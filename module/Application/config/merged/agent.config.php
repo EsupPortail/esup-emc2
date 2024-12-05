@@ -26,8 +26,6 @@ use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
 use Application\Service\AgentPoste\AgentPosteService;
 use Application\Service\AgentPoste\AgentPosteServiceFactory;
-use Application\Service\AgentQuotite\AgentQuotiteService;
-use Application\Service\AgentQuotite\AgentQuotiteServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
