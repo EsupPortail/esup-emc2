@@ -2,17 +2,17 @@
 
 namespace Application;
 
-use Application\Controller\AgentAccompagnementController;
-use Application\Controller\AgentAccompagnementControllerFactory;
-use Application\Form\AgentAccompagnement\AgentAccompagnementForm;
-use Application\Form\AgentAccompagnement\AgentAccompagnementFormFactory;
-use Application\Form\AgentAccompagnement\AgentAccompagnementHydrator;
-use Application\Form\AgentAccompagnement\AgentAccompagnementHydratorFactory;
+use AgentAccompagnementController;
+use AgentAccompagnementControllerFactory;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Service\AgentAccompagnement\AgentAccompagnementService;
-use Application\Service\AgentAccompagnement\AgentAccompagnementServiceFactory;
+use Form\AgentAccompagnement\AgentAccompagnementForm;
+use Form\AgentAccompagnement\AgentAccompagnementFormFactory;
+use Form\AgentAccompagnement\AgentAccompagnementHydrator;
+use Form\AgentAccompagnement\AgentAccompagnementHydratorFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use Service\AgentAccompagnement\AgentAccompagnementService;
+use Service\AgentAccompagnement\AgentAccompagnementServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [

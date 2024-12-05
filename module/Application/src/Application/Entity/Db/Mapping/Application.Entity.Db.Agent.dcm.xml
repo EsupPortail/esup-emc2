@@ -18,7 +18,7 @@
         <one-to-many target-entity="Agent\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
         <one-to-many target-entity="Application\Entity\Db\AgentEchelon" mapped-by="agent" field="echelons"/>
         <one-to-many target-entity="Agent\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>
-        <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
 
         <one-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="utilisateur">
             <join-column name="utilisateur_id" referenced-column-name="ID" />

@@ -1,25 +1,25 @@
 <?php
 
-namespace Application\Service\AgentStatut;
+namespace Agent\Service\AgentStatut;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AgentStatutServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return AgentStatutService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : AgentStatutService
     {
-        /**
-         * @var EntityManager $entityManager
-         */
+        /** @var EntityManager $entityManager */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new AgentStatutService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

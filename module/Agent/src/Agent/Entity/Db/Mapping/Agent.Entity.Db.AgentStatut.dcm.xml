@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Agent\Entity\Db\AgentStatut" table="agent_carriere_statut">
+
+        <id    name="id"                        column="id"                 type="string" length="40" >
+        </id>
+
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
+        </many-to-one>
+        <many-to-one target-entity="Structure\Entity\Db\Structure"  field="structure">
+            <join-column name="structure_id"/>
+        </many-to-one>
+        <field name="dateDebut"         type="datetime"                     column="d_debut"                   />
+        <field name="dateFin"           type="datetime"                     column="d_fin"                     nullable="true"/>
+
+        <field name="titulaire"     length="1"            column="t_titulaire"               nullable="true"/>
+        <field name="cdi"           length="1"            column="t_cdi"                     nullable="true"/>
+        <field name="cdd"           length="1"            column="t_cdd"                     nullable="true"/>
+        <field name="vacataire"     length="1"            column="t_vacataire"               nullable="true"/>
+        <field name="enseignant"    length="1"            column="t_enseignant"              nullable="true"/>
+        <field name="administratif" length="1"            column="t_administratif"           nullable="true"/>
+        <field name="chercheur"     length="1"            column="t_chercheur"               nullable="true"/>
+        <field name="doctorant"     length="1"            column="t_doctorant"               nullable="true"/>
+        <field name="detacheIn"     length="1"            column="t_detache_in"              nullable="true"/>
+        <field name="detacheOut"    length="1"            column="t_detache_out"             nullable="true"/>
+        <field name="dispo"         length="1"            column="t_dispo"                   nullable="true"/>
+        <field name="heberge"       length="1"            column="t_heberge"                 nullable="true"/>
+        <field name="emerite"       length="1"            column="t_emerite"                 nullable="true"/>
+        <field name="retraite"      length="1"            column="t_retraite"                nullable="true"/>
+        <field name="longueMaladie" length="1"            column="t_longue_maladie"          nullable="true"/>
+        <field name="congeParental" length="1"            column="t_conge_parental"          nullable="true"/>
+
+        <!-- DB IMPORT #############################  -->
+        <field name="createdOn"               column="created_on"       type="datetime"/>
+        <field name="updatedOn"               column="updated_on"       type="datetime"/>
+        <field name="deletedOn"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                 column="source_id"        length="128"/>
+    </entity>
+</doctrine-mapping>

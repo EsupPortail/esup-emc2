@@ -11,3 +11,4 @@ vendor
 /public/css/logos.css
 !public/unicaen/app/vendor
 documentation/SQL/USER.sql
+save_ccc/

@@ -1,21 +1,18 @@
 <?php
 
-namespace Agent\src\Agent\Entity\Db;
+namespace Agent\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-/**
- * Données synchronisées depuis Octopus :
- * - pas de setter sur les données ainsi remontées
- */
-class AgentStatut implements HasPeriodeInterface {
+class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     use HasPeriodeTrait;
-    use DbImportableAwareTrait;
+    use IsSynchronisableTrait;
 
     private ?string $id = null;
     private ?Agent $agent = null;
@@ -40,6 +37,9 @@ class AgentStatut implements HasPeriodeInterface {
     private ?string $congeParental = 'N';
     private ?string $longueMaladie = 'N';
 
+
+    /** Données : cette donnée est synchronisée >> par conséquent, il n'y a que des getters */
+
     public function getId() : ?string
     {
         return $this->id;
@@ -54,8 +54,6 @@ class AgentStatut implements HasPeriodeInterface {
     {
         return $this->structure;
     }
-
-    /** Gestion des témoins ***************************************************************************************/
 
     const TEMOINS = [
         'cdi', 'cdd', 'titulaire', 'vacataire',

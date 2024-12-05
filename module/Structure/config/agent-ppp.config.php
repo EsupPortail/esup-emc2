@@ -2,17 +2,17 @@
 
 namespace Application;
 
-use Application\Controller\AgentTutoratController;
-use Application\Controller\AgentTutoratControllerFactory;
-use Application\Form\AgentTutorat\AgentTutoratForm;
-use Application\Form\AgentTutorat\AgentTutoratFormFactory;
-use Application\Form\AgentTutorat\AgentTutoratHydrator;
-use Application\Form\AgentTutorat\AgentTutoratHydratorFactory;
+use AgentPppController;
+use AgentPppControllerFactory;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Service\AgentTutorat\AgentTutoratService;
-use Application\Service\AgentTutorat\AgentTutoratServiceFactory;
+use Form\AgentPPP\AgentPPPForm;
+use Form\AgentPPP\AgentPPPFormFactory;
+use Form\AgentPPP\AgentPPPHydrator;
+use Form\AgentPPP\AgentPPPHydratorFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use Service\AgentPPP\AgentPPPService;
+use Service\AgentPPP\AgentPPPServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -20,7 +20,7 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => AgentTutoratController::class,
+                    'controller' => AgentPppController::class,
                     'action' => [
                         'ajouter',
                         'modifier',
@@ -44,12 +44,12 @@ return [
                     'route'    => '/agent',
                 ],
                 'child_routes' => [
-                    'tutorat' => [
+                    'ppp' => [
                         'type'  => Literal::class,
                         'options' => [
-                            'route'    => '/stage-tutorat',
+                            'route'    => '/ppp',
                             'defaults' => [
-                                'controller' => AgentTutoratController::class,
+                                'controller' => AgentPppController::class,
                             ],
                         ],
                         'may_terminate' => false,
@@ -59,7 +59,7 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter/:agent',
                                     'defaults' => [
-                                        'controller' => AgentTutoratController::class,
+                                        'controller' => AgentPppController::class,
                                         'action' => 'ajouter'
                                     ],
                                 ],
@@ -67,9 +67,9 @@ return [
                             'modifier' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/modifier/:tutorat',
+                                    'route'    => '/modifier/:ppp',
                                     'defaults' => [
-                                        'controller' => AgentTutoratController::class,
+                                        'controller' => AgentPppController::class,
                                         'action' => 'modifier'
                                     ],
                                 ],
@@ -77,9 +77,9 @@ return [
                             'historiser' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/historiser/:tutorat',
+                                    'route'    => '/historiser/:ppp',
                                     'defaults' => [
-                                        'controller' => AgentTutoratController::class,
+                                        'controller' => AgentPppController::class,
                                         'action' => 'historiser'
                                     ],
                                 ],
@@ -87,9 +87,9 @@ return [
                             'restaurer' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/restaurer/:tutorat',
+                                    'route'    => '/restaurer/:ppp',
                                     'defaults' => [
-                                        'controller' => AgentTutoratController::class,
+                                        'controller' => AgentPppController::class,
                                         'action' => 'restaurer'
                                     ],
                                 ],
@@ -97,9 +97,9 @@ return [
                             'detruire' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/detruire/:tutorat',
+                                    'route'    => '/detruire/:ppp',
                                     'defaults' => [
-                                        'controller' => AgentTutoratController::class,
+                                        'controller' => AgentPppController::class,
                                         'action' => 'detruire'
                                     ],
                                 ],
@@ -113,22 +113,22 @@ return [
 
     'service_manager' => [
         'factories' => [
-            AgentTutoratService::class => AgentTutoratServiceFactory::class,
+            AgentPPPService::class => AgentPPPServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            AgentTutoratController::class => AgentTutoratControllerFactory::class,
+            AgentPppController::class => AgentPppControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            AgentTutoratForm::class => AgentTutoratFormFactory::class,
+            AgentPPPForm::class => AgentPPPFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            AgentTutoratHydrator::class => AgentTutoratHydratorFactory::class,
+            AgentPPPHydrator::class => AgentPPPHydratorFactory::class,
         ],
     ]
 

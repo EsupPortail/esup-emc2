@@ -7,9 +7,9 @@
  */
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentPPP;
-use Application\Entity\Db\AgentStageObservation;
 use Application\Provider\Privilege\AgentPrivileges;
+use Entity\Db\AgentPPP;
+use Entity\Db\AgentStageObservation;
 
 $canAjouterPPP      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_GESTION_CCC));
 $canModifierPPP     = $canAjouterPPP;

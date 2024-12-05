@@ -2,18 +2,18 @@
 
 namespace Application;
 
-use Application\Controller\AgentStageObservationController;
-use Application\Controller\AgentStageObservationControllerFactory;
-use Application\Form\AgentStageObservation\AgentStageObservationForm;
-use Application\Form\AgentStageObservation\AgentStageObservationFormFactory;
-use Application\Form\AgentStageObservation\AgentStageObservationHydrator;
-use Application\Form\AgentStageObservation\AgentStageObservationHydratorFactory;
+use AgentStageObservationController;
+use AgentStageObservationControllerFactory;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Service\AgentStageObservation\AgentStageObservationService;
-use Application\Service\AgentStageObservation\AgentStageObservationServiceFactory;
-use UnicaenPrivilege\Guard\PrivilegeController;
+use Form\AgentStageObservation\AgentStageObservationForm;
+use Form\AgentStageObservation\AgentStageObservationFormFactory;
+use Form\AgentStageObservation\AgentStageObservationHydrator;
+use Form\AgentStageObservation\AgentStageObservationHydratorFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use Service\AgentStageObservation\AgentStageObservationService;
+use Service\AgentStageObservation\AgentStageObservationServiceFactory;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [

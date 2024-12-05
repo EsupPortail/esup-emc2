@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Agent\Service\AgentStatut\AgentStatutService;
+use Agent\Service\AgentStatut\AgentStatutServiceFactory;
 use Application\Assertion\AgentAffichageAssertion;
 use Application\Assertion\AgentAffichageAssertionFactory;
 use Application\Assertion\AgentAssertion;
@@ -26,8 +28,6 @@ use Application\Service\AgentPoste\AgentPosteService;
 use Application\Service\AgentPoste\AgentPosteServiceFactory;
 use Application\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\AgentQuotite\AgentQuotiteServiceFactory;
-use Application\Service\AgentStatut\AgentStatutService;
-use Application\Service\AgentStatut\AgentStatutServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
