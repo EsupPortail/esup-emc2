@@ -59,7 +59,7 @@ class AgentService
             //quotite de l'agent
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
-            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
         ;
 
         if (!$enAffectation) $qb = $qb->andWhere('affectation.deleted_on IS NULL');
@@ -90,7 +90,7 @@ class AgentService
             ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
 //            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
-            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom');
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -109,7 +109,7 @@ class AgentService
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
-            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             // Devrait être un filtrage ... et pas une requete même si cela accélère les choses
             ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
             ->andWhere('statut.enseignant = :false')
@@ -267,7 +267,7 @@ EOS;
         //en utilisant l'username si echec
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.login = :username')
-            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->setParameter('username', $user->getUsername());
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -295,7 +295,7 @@ EOS;
             ->andWhere('affectationfilter.dateDebut <= :today')
             ->setParameter('today', $date)
 
-            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
 
         if ($withJoin) {

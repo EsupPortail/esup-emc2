@@ -117,7 +117,7 @@ ksort($groupes);
         <?php $groupe = $groupes[$type->getLibelle()]??null; ?>
         <?php if ($groupe !== null AND !empty($groupe)) : ?>
             <h4> <?php echo $type->getLibelle(); ?> </h4>
-        <table id="competence-bloc_<?php echo $type->getId(); ?>" class="datatable">
+        <table id="competence-bloc_<?php echo $type->getId(); ?>" >
             <thead>
             <tr>
                 <th style="width:40%;"> Libellé </th>

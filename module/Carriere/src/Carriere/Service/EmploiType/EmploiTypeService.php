@@ -41,7 +41,7 @@ class EmploiTypeService
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('emploitype.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent', 'agent')
-                ->andWhere('agent.deleted_on IS NULL')
+                ->andWhere('agent.deletedOn IS NULL')
                 ->andWhere('agentGrade.deleted_on IS NULL');
             $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
         }
@@ -63,7 +63,7 @@ class EmploiTypeService
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('emploitype.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent', 'agent')
-                ->andWhere('agent.deleted_on IS NULL');
+                ->andWhere('agent.deletedOn IS NULL');
         }
 
         try {

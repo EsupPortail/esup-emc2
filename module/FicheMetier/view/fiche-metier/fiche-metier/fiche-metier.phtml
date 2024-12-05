@@ -8,6 +8,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @see \FicheMetier\Controller\FicheMetierController::afficherAction()
  * @var FicheMetier $fiche
  * @var array $competences
+ * @var array $competencesSpecifiques
  * @var array $applications
  * @var array $missions
  * @var array $thematiquestypes
@@ -50,6 +51,10 @@ $this->headTitle($titre);
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/competences',            ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode ],       [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/competences-specifiques',            ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode ],       [], true); ?>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICAITON]) || $parametres[FicheMetierParametres::DISPLAY_APPLICAITON]->getValeur() !== "false") : ?>

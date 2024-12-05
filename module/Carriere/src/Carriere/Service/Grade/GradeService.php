@@ -30,7 +30,7 @@ class GradeService
         $qb = $qb
             ->join('grade.agentGrades', 'agentGrade')->addSelect('agentGrade')
             ->join('agentGrade.agent', 'agent')->addSelect('agent')
-            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->andWhere('agentGrade.deleted_on IS NULL');
         return $qb;
     }

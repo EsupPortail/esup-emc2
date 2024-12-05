@@ -77,6 +77,7 @@ class FicheMetierController extends AbstractActionController {
         $missions = $fichemetier->getMissions() ;
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences =  $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
+        $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
@@ -86,6 +87,7 @@ class FicheMetierController extends AbstractActionController {
             'fiche' => $fichemetier,
             'missions' => $missions,
             'competences' => $competences,
+            'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
             'thematiquestypes' => $thematiquestypes,
             'thematiqueselements' => $thematiqueselements,
@@ -136,6 +138,7 @@ class FicheMetierController extends AbstractActionController {
         $missions = $fichemetier->getMissions();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
+        $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
@@ -144,14 +147,13 @@ class FicheMetierController extends AbstractActionController {
             'fiche' => $fichemetier,
             'missions' => $missions,
             'competences' => $competences,
+            'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
             'thematiquestypes' => $thematiquestypes,
             'thematiqueselements' => $thematiqueselements,
 
-
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE),
             'mode' => 'edition-fiche-metier',
-
         ]);
         $vm->setTemplate('fiche-metier/fiche-metier/fiche-metier');
         return $vm;
@@ -478,6 +480,35 @@ class FicheMetierController extends AbstractActionController {
 
         $vm = new ViewModel([
             'title' => "Gestion des compétences associées à la fiche métier",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+
+    public function gererCompetencesSpecifiquesAction() : ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $form = $this->getSelectionCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->getHydrator()->setCollection($fichemetier->getCompetencesSpecifiquesCollection());
+        $form->bind($fichemetier);
+
+
+        //todo modifier hydrator
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Gestion des compétences spécifiques associées à la fiche métier",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');

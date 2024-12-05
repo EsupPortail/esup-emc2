@@ -419,15 +419,25 @@ class FicheMetierService
             $dictionnaire[$competence->getId()]["conserve"] = true;
         }
 
-        //todo se rebaser sur mission
-//        foreach ($fiche->getActivites() as $activite) {
-//            foreach ($activite->getActivite()->getCompetenceListe() as $competenceElement) {
-//                $competence = ($asElement)?$competenceElement:$competenceElement->getCompetence();
-//                $dictionnaire[$competence->getId()]["entite"] = $competence;
-//                $dictionnaire[$competence->getId()]["raison"][] = $activite;
-//                $dictionnaire[$competence->getId()]["conserve"] = true;
-//            }
-//        }
+        return $dictionnaire;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param bool $asElement
+     * @return array
+     */
+    public function getCompetencesSpecifiquesDictionnaires(FicheMetier $fiche, bool $asElement = false): array
+    {
+        $dictionnaire = [];
+
+        foreach ($fiche->getCompetenceSpecifiqueListe() as $competenceElement) {
+            $competence = ($asElement) ? $competenceElement : $competenceElement->getCompetence();
+            $dictionnaire[$competence->getId()]["entite"] = $competence;
+            $dictionnaire[$competence->getId()]["raison"][] = $fiche;
+            $dictionnaire[$competence->getId()]["conserve"] = true;
+        }
+
         return $dictionnaire;
     }
 

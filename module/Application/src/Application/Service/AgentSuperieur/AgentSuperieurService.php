@@ -7,10 +7,8 @@ use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -73,15 +71,8 @@ class AgentSuperieurService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs AgentSuperieur partagent le même id ['.$id.']');
+            throw new RuntimeException('Plusieurs AgentSuperieur partagent le même id ['.$id.']',0,$e);
         }
-        return $result;
-    }
-
-    public function getRequestedAgentSuperieur(AbstractActionController $controller, string $param='agent-superieur') : ?AgentSuperieur
-    {
-        $id = $controller->params()->fromRoute($param);
-        $result = $this->getAgentSuperieur($id);
         return $result;
     }
 
@@ -101,7 +92,7 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent', $agent)
-            ->andWhere('agent.deleted_on  IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
 
@@ -125,7 +116,7 @@ class AgentSuperieurService
     public function getAgentsWithSuperieur(?Agent $superieur, DateTime $dateDebut = null, DateTime $dateFin = null): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agent.deleted_on  IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
             ->andWhere('agentsuperieur.histoCreation IS NULL OR agentsuperieur.histoCreation < :fin')->setParameter('fin', $dateFin)
             ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction > :debut')->setParameter('debut', $dateDebut);
@@ -145,7 +136,7 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder();
         //superieur
-        $qb = $qb   ->andWhere('agent.deleted_on  IS NULL')
+        $qb = $qb   ->andWhere('agent.deletedOn IS NULL')
                     ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
                     ->andWhere('agentsuperieur.histoDestruction IS NULL')
         ;
@@ -159,15 +150,6 @@ class AgentSuperieurService
     }
 
     /** FACADE ********************************************************************************************************/
-
-    public function createAgentSuperieur(Agent $agent, Agent $superieur) : AgentSuperieur
-    {
-        $agentSuperieur = new AgentSuperieur();
-        $agentSuperieur->setAgent($agent);
-        $agentSuperieur->setSuperieur($superieur);
-        $this->create($agentSuperieur);
-        return $agentSuperieur;
-    }
 
     /**
      * @param array{Agent, Agent, DateTime, ?Datetime} $chaine
@@ -196,9 +178,7 @@ class AgentSuperieurService
         }
     }
 
-    /**
-     * @return User[]
-     */
+    /** @return User[] */
     public function getUsersInSuperieurs() : array
     {
         $qb = $this->getObjectManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('asuperieur')

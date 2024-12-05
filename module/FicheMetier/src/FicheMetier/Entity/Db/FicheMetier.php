@@ -20,7 +20,8 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface {
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+{
     use HistoriqueAwareTrait;
     use HasMetierTrait;
     use HasEtatsTrait;
@@ -49,17 +50,17 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->thematiques = new ArrayCollection();
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function hasExpertise() : bool
+    public function hasExpertise(): bool
     {
         return ($this->hasExpertise === true);
     }
 
-    public function setExpertise(?bool $has) : void
+    public function setExpertise(?bool $has): void
     {
         $this->hasExpertise = $has;
     }
@@ -75,11 +76,64 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @return FicheMetierMission[] */
-    public function getMissions() : array
+    public function getMissions(): array
     {
-        $missions =  $this->missions->toArray();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() <=> $b->getOrdre();});
+        $missions = $this->missions->toArray();
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
+            return $a->getOrdre() <=> $b->getOrdre();
+        });
         return $missions;
+    }
+
+    /** Compétences ***************************************************************************************************/
+
+    /** Les compétences "standards" sont gérées dans le trait HasCompetenceCollection */
+
+    public function getCompetencesSpecifiquesCollection(): Collection
+    {
+        return $this->competencesSpecifiques;
+    }
+
+
+    /** @return CompetenceElement[] */
+    public function getCompetencesSpecifiques(bool $histo = false): array
+    {
+        $competences = $this->competencesSpecifiques->toArray();
+        if (!$histo) $competences = array_filter($competences, function (CompetenceElement $element) {
+            return $element->estNonHistorise();
+        });
+        return $competences;
+    }
+
+    /** @return CompetenceElement[] */
+    public function getCompetenceSpecifiqueListe(bool $avecHisto = false) : array
+    {
+        $competences = [];
+        /** @var CompetenceElement $competenceElement */
+        foreach ($this->competencesSpecifiques as $competenceElement) {
+            if ($avecHisto OR $competenceElement->estNonHistorise()) $competences[$competenceElement->getCompetence()->getId()] = $competenceElement;
+        }
+        return $competences;
+    }
+
+    public function hasCompetenceSpecifique(CompetenceElement $element): bool
+    {
+        return $this->competencesSpecifiques->contains($element);
+    }
+
+    public function addCompetenceSpecifique(CompetenceElement $element): void
+    {
+        if ($this->hasCompetenceSpecifique($element)) $this->competencesSpecifiques->add($element);
+    }
+
+    public function removeCompetenceSpecifique(CompetenceElement $element): void
+    {
+        if ($this->hasCompetenceSpecifique($element)) $this->competencesSpecifiques->removeElement($element);
+    }
+
+    public function clearCompetencesSpecifiques(): void
+    {
+        $this->competencesSpecifiques->clear();
     }
 
     /** FONCTION POUR MACRO *******************************************************************************************/
@@ -87,20 +141,22 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     /**
      * @return string
      */
-    public function getActivitesFromFicheMetierAsText() : string
+    public function getActivitesFromFicheMetierAsText(): string
     {
         $texte = '<ul>';
         $missions = $this->getMissions();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {return $a->getOrdre() <=> $b->getOrdre();});
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
+            return $a->getOrdre() <=> $b->getOrdre();
+        });
         foreach ($missions as $activite) {
-            $texte .= '<li>'.$activite->getMission()->getLibelle().'</li>';
+            $texte .= '<li>' . $activite->getMission()->getLibelle() . '</li>';
         }
         $texte .= '</ul>';
         return $texte;
     }
 
     /** @noinspection PhpUnused */
-    public function getIntitule() : string
+    public function getIntitule(): string
     {
         $metier = $this->getMetier();
         if ($metier === null) return "Aucun métier est associé.";
@@ -111,7 +167,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
      * Utiliser dans la macro FICHE_METIER#MISSIONS_PRINCIPALES
      * @noinspection PhpUnused
      */
-    public function getMissionsAsList() : string
+    public function getMissionsAsList(): string
     {
         $texte = "";
         foreach ($this->getMissions() as $mission) {
@@ -129,7 +185,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @noinspection PhpUnused */
-    public function getCompetences() : string
+    public function getCompetences(): string
     {
         $competences = $this->getCompetenceListe();
 
@@ -144,24 +200,36 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @noinspection PhpUnused */
-    public function getComptencesByType(int $typeId) : string
+    public function getComptencesByType(int $typeId): string
     {
         $competences = $this->getCompetenceListe();
-        $competences = array_map(function (CompetenceElement $c) { return $c->getCompetence();}, $competences);
-        $competences = array_filter($competences, function (Competence $c) use ($typeId) { return $c->getType()->getId() === $typeId;});
-        usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() <=> $b->getLibelle();});
+        $competences = array_map(function (CompetenceElement $c) {
+            return $c->getCompetence();
+        }, $competences);
+        $competences = array_filter($competences, function (Competence $c) use ($typeId) {
+            return $c->getType()->getId() === $typeId;
+        });
+        usort($competences, function (Competence $a, Competence $b) {
+            return $a->getLibelle() <=> $b->getLibelle();
+        });
 
         if (empty($competences)) return "";
 
         $competence = $competences[0];
         $competenceType = "";
-        switch($competence->getCompetence()->getType()->getId()) {
-            case 1 : $competenceType = "Compétences comportementales"; break;
-            case 2 : $competenceType = "Compétences opérationnelles"; break;
-            case 3 : $competenceType = "Connaissances"; break;
+        switch ($competence->getCompetence()->getType()->getId()) {
+            case 1 :
+                $competenceType = "Compétences comportementales";
+                break;
+            case 2 :
+                $competenceType = "Compétences opérationnelles";
+                break;
+            case 3 :
+                $competenceType = "Connaissances";
+                break;
         }
 
-        $texte = "<h3>".$competenceType."</h3>";
+        $texte = "<h3>" . $competenceType . "</h3>";
         $texte .= "<ul>";
         foreach ($competences as $competence) {
             $texte .= "<li>";
@@ -173,25 +241,25 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @noinspection PhpUnused */
-    public function getConnaissances() : string
+    public function getConnaissances(): string
     {
         return $this->getComptencesByType(CompetenceType::CODE_CONNAISSANCE);
     }
 
     /** @noinspection PhpUnused */
-    public function getCompetencesOperationnelles() : string
+    public function getCompetencesOperationnelles(): string
     {
         return $this->getComptencesByType(CompetenceType::CODE_OPERATIONNELLE);
     }
 
     /** @noinspection PhpUnused */
-    public function getCompetencesComportementales() : string
+    public function getCompetencesComportementales(): string
     {
         return $this->getComptencesByType(CompetenceType::CODE_COMPORTEMENTALE);
     }
 
     /** @noinspection PhpUnused */
-    public function getApplicationsAffichage() : string
+    public function getApplicationsAffichage(): string
     {
         $applications = $this->getApplicationListe();
 
@@ -199,7 +267,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         /** @var ApplicationElement $applicationElement */
         foreach ($applications as $applicationElement) {
             $application = $applicationElement->getApplication();
-            $texte .= "<li>".$application->getLibelle()."</li>";
+            $texte .= "<li>" . $application->getLibelle() . "</li>";
         }
         $texte .= "</ul>";
         return $texte;
@@ -210,21 +278,25 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     {
         /** @var ThematiqueElement[] $thematiques */
         $thematiques = $this->thematiques->toArray();
-        $thematiques = array_filter($thematiques, function (ThematiqueElement $a) { return $a->estNonHistorise() && $a->getType()->estNonHistorise();});
-        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) { return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();});
+        $thematiques = array_filter($thematiques, function (ThematiqueElement $a) {
+            return $a->estNonHistorise() && $a->getType()->estNonHistorise();
+        });
+        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) {
+            return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
+        });
 
-        $texte  = "<table>";
+        $texte = "<table>";
         $texte .= "<thead><tr><th>Libelle</th><th>Niveau</th></tr></thead>";
         $texte .= "<tbody>";
         foreach ($thematiques as $thematique) {
-            $texte .="<tr>";
-            $texte .="<td>".$thematique->getType()->getLibelle()."</td>";
-            $texte .="<td>".$thematique->getNiveauMaitrise()->getLibelle()."</td>";
-            $texte .="</tr>";
+            $texte .= "<tr>";
+            $texte .= "<td>" . $thematique->getType()->getLibelle() . "</td>";
+            $texte .= "<td>" . $thematique->getNiveauMaitrise()->getLibelle() . "</td>";
+            $texte .= "</tr>";
         }
         $texte .= "</tbody>";
         $texte .= "</table>";
         return $texte;
-
     }
+
 }

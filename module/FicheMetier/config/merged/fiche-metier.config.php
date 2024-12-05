@@ -113,6 +113,7 @@ return [
                     'action' => [
                         'gerer-applications',
                         'gerer-competences',
+                        'gerer-competences-specifiques',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -351,6 +352,17 @@ return [
                                 /** @see FicheMetierController::gererCompetencesAction() */
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'gerer-competences',
+                            ],
+                        ],
+                    ],
+                    'gerer-competences-specifiques' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-competences-specifiques/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::gererCompetencesSpecifiquesAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'gerer-competences-specifiques',
                             ],
                         ],
                     ],

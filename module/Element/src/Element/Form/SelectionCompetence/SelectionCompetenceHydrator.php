@@ -2,6 +2,7 @@
 
 namespace Element\Form\SelectionCompetence;
 
+use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
@@ -14,13 +15,28 @@ class SelectionCompetenceHydrator implements HydratorInterface {
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
 
+    private ?Collection $collection = null;
+
+    public function getCollection(): ?Collection
+    {
+        return $this->collection;
+    }
+
+    public function setCollection(?Collection $collection): void
+    {
+        $this->collection = $collection;
+    }
+
+
     /**
      * @param HasCompetenceCollectionInterface $object
      * @return array
      */
     public function extract($object): array
     {
-        $competences = array_map(function (CompetenceElement $a) { return $a->getCompetence(); }, $object->getCompetenceListe());
+        $collection = ($this->getCollection() !== null)?$this->getCollection():$object->getCompetenceCollection();
+        $array = $collection->toArray();
+        $competences = array_map(function (CompetenceElement $a) { return $a->getCompetence(); }, $collection->toArray());
         $competenceIds = array_map(function (Competence $f) { return $f->getId();}, $competences);
         $data = [
             'competences' => $competenceIds,
@@ -35,6 +51,7 @@ class SelectionCompetenceHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object) : object
     {
+        $collection = ($this->getCollection() !== null)?$this->getCollection():$object->getCompetenceCollection();
         $competenceIds = $data["competences"];
 
         $competences = [];
@@ -43,9 +60,9 @@ class SelectionCompetenceHydrator implements HydratorInterface {
             if ($competence) $competences[$competence->getId()] = $competence;
         }
 
-        foreach ($object->getCompetenceCollection() as $competenceElement) {
+        foreach ($collection as $competenceElement) {
             if (! isset($competences[$competenceElement->getCompetence()->getId()])) {
-                $this->getCompetenceElementService()->delete($competenceElement);
+                $collection->removeElement($competenceElement);
             }
         }
 
@@ -54,7 +71,7 @@ class SelectionCompetenceHydrator implements HydratorInterface {
                 $element = new CompetenceElement();
                 $element->setCompetence($competence);
                 $this->getCompetenceElementService()->create($element);
-                $object->addCompetenceElement($element);
+                $collection->add($element);
             }
         }
 

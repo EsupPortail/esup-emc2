@@ -6,6 +6,7 @@ use FicheMetier\Entity\Db\FicheMetier;
  * @see \FicheMetier\Controller\FicheMetierController::modifierAction()
  * @var FicheMetier $fiche
  * @var array $competences
+ * @var array $competencesSpecifiques
  * @var array $applications
  * @var array $thematiquestypes
  * @var array $thematiqueselements
@@ -20,6 +21,7 @@ echo $this->partial('partial/entete', ['fichemetier' => $fiche, 'mode' => $mode]
 echo $this->messenger()->addMessagesFromFlashMessenger();
 echo $this->partial('partial/missions-principales', ['fichemetier' => $fiche, 'missionsprincipales' => $fiche->getMissions(), 'mode' => $mode], [], true);
 echo $this->partial('partial/competences', ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode], [], true);
+echo $this->partial('partial/competences', ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode], [], true);
 echo $this->partial('partial/applications', ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode], [], true);
 
 

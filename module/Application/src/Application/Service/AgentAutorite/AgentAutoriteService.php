@@ -140,7 +140,7 @@ class AgentAutoriteService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
-            ->andWhere('agent.deleted_on  IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->orderBy('agentautorite.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentautorite.histoDestruction IS NULL');
 
@@ -153,7 +153,7 @@ class AgentAutoriteService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
-            ->andWhere('agent.deleted_on  IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
             ->andWhere('agentautorite.histoCreation IS NULL OR agentautorite.histoCreation < :fin')->setParameter('fin', $dateFin)
             ->andWhere('agentautorite.histoDestruction IS NULL OR agentautorite.histoDestruction > :debut')->setParameter('debut', $dateDebut);
 
@@ -172,7 +172,7 @@ class AgentAutoriteService
     {
         $qb = $this->createQueryBuilder();
         //autorite
-        $qb = $qb   ->andWhere('agent.deleted_on  IS NULL')
+        $qb = $qb   ->andWhere('agent.deletedOn IS NULL')
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
             ->andWhere('agentautorite.histoDestruction IS NULL')
         ;

@@ -2,6 +2,7 @@
 
 namespace Element\Form\SelectionCompetence;
 
+use Doctrine\Common\Collections\Collection;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
@@ -10,6 +11,20 @@ use Laminas\InputFilter\Factory;
 
 class SelectionCompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
+
+    private ?Collection $collection = null;
+
+    public function getCollection(): ?Collection
+    {
+        return $this->collection;
+    }
+
+    public function setCollection(?Collection $collection): void
+    {
+        $this->collection = $collection;
+    }
+
+
 
     public function init(): void
     {

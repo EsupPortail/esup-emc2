@@ -19,26 +19,26 @@ if ($mode === 'edition-fiche-metier') {
 <div class="card info">
     <div class="card-header">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <h2>
                     <span class="icon competence"></span>
-                    Compétences
+                    Compétences spécifiques
                     <span class="badge"><?php echo count($competences); ?></span>
                 </h2>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-9">
                 <div class="float-end">
-                    <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
-                    <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                       class="btn btn-secondary ajax-modal"
-                    >
-                        <span class="icon icon-diagramme"></span>
-                        Afficher les compétences
-                    </a>
+<!--                    --><?php ///** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('graphique/competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?><!--"-->
+<!--                       class="btn btn-secondary action ajax-modal"-->
+<!--                    >-->
+<!--                        <span class="icon icon-diagramme"></span>-->
+<!--                        Afficher les compétences-->
+<!--                    </a>-->
 
                     <?php if ($actions['modifier'] === true) : ?>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                        <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesSpecifiquesAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                            class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
                            data-event="modification"
                         >

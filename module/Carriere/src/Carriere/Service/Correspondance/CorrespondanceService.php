@@ -41,7 +41,7 @@ class CorrespondanceService {
                 ->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
                 ->andWhere('agentGrade.deleted_on IS NULL')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
-                ->andWhere('agent.deleted_on IS NULL')
+                ->andWhere('agent.deletedOn IS NULL')
             ;
             $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
         }
@@ -74,7 +74,7 @@ class CorrespondanceService {
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
-                ->andWhere('agent.deleted_on IS NULL')
+                ->andWhere('agent.deletedOn IS NULL')
             ;
         }
 
