@@ -15,7 +15,7 @@
         <field name="tContratLong"             column="T_CONTRAT_LONG"       length="1" nullable="true"/>
 
         <one-to-many target-entity="Agent\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
-        <one-to-many target-entity="Application\Entity\Db\AgentEchelon" mapped-by="agent" field="echelons"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentEchelon" mapped-by="agent" field="echelons"/>
         <one-to-many target-entity="Agent\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>
         <one-to-many target-entity="Agent\Entity\Db\AgentQuotite" mapped-by="agent" field="quotites"/>
         <one-to-many target-entity="Agent\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>

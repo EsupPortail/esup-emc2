@@ -4,7 +4,7 @@ namespace Application\Entity\Db\MacroContent;
 
 use Agent\Entity\Db\AgentQuotite;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentEchelon;
+use Agent\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentMissionSpecifique;
 
 /**

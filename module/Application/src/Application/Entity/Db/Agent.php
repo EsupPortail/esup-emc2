@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Agent\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentEchelon;
 use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentQuotite;
 use Agent\Entity\Db\AgentStatut;
