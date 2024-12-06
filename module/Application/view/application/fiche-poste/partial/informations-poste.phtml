@@ -10,6 +10,7 @@
 use Application\Entity\Db\AgentPoste;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Provider\Parametre\FichePosteParametres;
 
 $canAfficher = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER_POSTE));
 $canModifier = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER_POSTE));
@@ -34,7 +35,36 @@ $canModifier = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePr
                 </div>
             </div>
         </div>
+
         <div class="card-body">
+            <?php if (!isset($parametres[FichePosteParametres::CODE_FONCTION]) || $parametres[FichePosteParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
+            <dl class="row">
+                <dt class="col-md-3">
+                    Code fonction
+                </dt>
+                <dd class="col-md-9">
+                    <?php if ($fiche->getCodeFonction()) : ?>
+                        <code> <?php echo $fiche->getCodeFonction(); ?> </code>
+                    <?php else : ?>
+                        Non renseigné
+                    <?php endif; ?>
+
+                    <?php if ($mode === 'edition' AND $canModifier) : ?>
+                        <?php /** @see FichePosteController::modifierCodeFonctionAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-poste/modifier-code-fonction', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                           class="ajax-modal action primary" data-event="modification"
+                        >
+                            <small>
+                                <span class="icon icon-editer"></span>
+                                Modifier
+                            </small>
+                        </a>
+                    <?php endif; ?>
+                </dd>
+            </dl>
+            <?php endif; ?>
+
+
             <?php if (empty($postes)) : ?>
                 Informations non renseignées
             <?php else : ?>

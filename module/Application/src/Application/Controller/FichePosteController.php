@@ -15,7 +15,9 @@ use Application\Form\Expertise\ExpertiseFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
+use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FichePoste\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Parametre\FichePosteParametres;
 use FichePoste\Provider\Template\PdfTemplate;
 use FichePoste\Provider\Validation\FichePosteValidations;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
@@ -42,6 +44,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -64,6 +67,7 @@ class FichePosteController extends AbstractActionController
     use FichePosteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
@@ -72,6 +76,7 @@ class FichePosteController extends AbstractActionController
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
     use AssocierTitreFormAwareTrait;
+    use CodeFonctionFormAwareTrait;
     use ExpertiseFormAwareTrait;
     use RifseepFormAwareTrait;
     use SelectionEtatFormAwareTrait;
@@ -199,6 +204,8 @@ class FichePosteController extends AbstractActionController
             'activites' => $activites,
             'structure' => $structure,
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
+
+            'parametres' => $this->getParametreService()->getParametresByCategorieCode(FichePosteParametres::TYPE),
         ]);
     }
 
@@ -227,6 +234,8 @@ class FichePosteController extends AbstractActionController
             'competences' => $competences,
             'activites' => $activites,
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
+
+            'parametres' => $this->getParametreService()->getParametresByCategorieCode(FichePosteParametres::TYPE),
         ]);
     }
 
@@ -308,6 +317,30 @@ class FichePosteController extends AbstractActionController
         }
     }
 
+    public function modifierCodeFonctionAction(): ViewModel
+    {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
+        $form = $this->getCodeFonctionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/modifier-code-fonction', ['fiche-poste' => $ficheposte->getId()], [], true));
+        $form->bind($ficheposte);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFichePosteService()->update($ficheposte);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modification du code fonction",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
 
     /** GESTION DES ETATS DES FICHES POSTES ***************************************************************************/
 

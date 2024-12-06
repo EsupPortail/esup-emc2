@@ -52,6 +52,8 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     private Collection $competencesRetirees;
     private Collection $missionsAdditionnelles;
 
+    public ?string $codeFonction;
+
     /** @var array */
     private array $dictionnaires = [];
 
@@ -194,6 +196,17 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         }
         return $result;
     }
+
+    public function getCodeFonction(): ?string
+    {
+        return $this->codeFonction;
+    }
+
+    public function setCodeFonction(?string $codeFonction): void
+    {
+        $this->codeFonction = $codeFonction;
+    }
+
 
     /** Descriptions Retirées ******************************************************************************************/
 

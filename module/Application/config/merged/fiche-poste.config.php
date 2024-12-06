@@ -144,6 +144,8 @@ return [
                         'historiser-expertise',
                         'restaurer-expertise',
                         'supprimer-expertise',
+
+                        'modifier-code-fonction',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER,
                     'assertion'  => FichePosteAssertion::class,
@@ -404,6 +406,17 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'modifier-information-poste',
+                            ],
+                        ],
+                    ],
+                    'modifier-code-fonction' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/modifier-code-fonction/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'modifier-code-fonction',
                             ],
                         ],
                     ],

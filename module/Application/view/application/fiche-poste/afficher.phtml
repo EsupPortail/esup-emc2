@@ -7,6 +7,7 @@
  * @var Application[] $applications
  * @var Structure $structure
  * @var AgentPoste[] $postes
+ * @var Parametre[] $parametres
  */
 
 use Application\Entity\Db\AgentPoste;
@@ -16,6 +17,7 @@ use Application\Entity\Db\FicheTypeExterne;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Element\Entity\Db\Competence;
 use Structure\Entity\Db\Structure;
+use UnicaenParametre\Entity\Db\Parametre;
 
 $date = new DateTime();
 $this->headTitle("Fiche de poste #" . $fiche->getId());
@@ -86,7 +88,7 @@ $canExport   = $canAfficher;
     </div>
 
     <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'structure' => $structure, 'mode' => 'affichage']); ?>
-    <?php echo $this->partial('partial/informations-poste', ['postes' => $postes, 'mode' => 'affichage']); ?>
+    <?php echo $this->partial('partial/informations-poste', ['postes' => $postes, 'mode' => 'affichage', 'parametres' => $parametres]); ?>
 
     <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
 

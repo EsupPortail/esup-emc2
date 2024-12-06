@@ -16,6 +16,7 @@ use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\Expertise\ExpertiseService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
+use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FichePoste\Service\Notification\NotificationService;
@@ -25,6 +26,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
@@ -52,6 +54,7 @@ class FichePosteControllerFactory
          * @var ExpertiseService $expertiseService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NotificationService $notificationService
+         * @var ParametreService $parametreService
          * @var SpecificitePosteService $specificitePosteService
          * @var ValidationInstanceService $validationInstanceService
          */
@@ -69,12 +72,14 @@ class FichePosteControllerFactory
         $expertiseService = $container->get(ExpertiseService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $notificationService = $container->get(NotificationService::class);
+        $parametreService = $container->get(ParametreService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
          * @var AssocierTitreForm $associerTitreForm
+         * @var CodeFonctionForm $codeFonctionForm
          * @var ExpertiseForm $expertiseForm
          * @var RifseepForm $rifseepForm
          * @var SelectionEtatForm $selectionEtatForm
@@ -82,6 +87,7 @@ class FichePosteControllerFactory
          */
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
+        $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
         $rifseepForm = $container->get('FormElementManager')->get(RifseepForm::class);
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
@@ -104,11 +110,13 @@ class FichePosteControllerFactory
         $controller->setExpertiseService($expertiseService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNotificationService($notificationService);
+        $controller->setParametreService($parametreService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setValidationInstanceService($validationInstanceService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierTitreForm($associerTitreForm);
+        $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setExpertiseForm($expertiseForm);
         $controller->setRifseepForm($rifseepForm);
         $controller->setSelectionEtatForm($selectionEtatForm);

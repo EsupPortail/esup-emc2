@@ -12,6 +12,7 @@
             <join-column name="agent" referenced-column-name="c_individu" />
         </many-to-one>
 
+        <field name="codeFonction" length="256" column="code_fonction" nullable="true" />
         <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste" mapped-by="fiche"/>
 
         <one-to-many target-entity="Application\Entity\Db\Expertise"                mapped-by="ficheposte" field="expertises"/>

@@ -15,4 +15,6 @@ class FicheMetierParametres {
     const DISPLAY_APPLICAITON = 'DISPLAY_APPLICATION';
     const DISPLAY_CONTEXTE = 'DISPLAY_CONTEXTE';
 
+    const CODE_FONCTION = 'CODE_FONCTION';
+
 }

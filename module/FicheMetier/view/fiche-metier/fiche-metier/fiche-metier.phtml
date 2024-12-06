@@ -36,7 +36,7 @@ $this->headTitle($titre);
     </div>
     <div class="col-md-4">
         <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RESUME]) || $parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() !== "false") : ?>
-            <?php echo $this->partial('partial/resume',   ['fichemetier' => $fiche, 'mode' => $mode ],  [], true); ?>
+            <?php echo $this->partial('partial/resume',   ['fichemetier' => $fiche, 'mode' => $mode, 'parametres' => $parametres ],  [], true); ?>
         <?php endif; ?>
     </div>
 </div>
