@@ -4,14 +4,16 @@ namespace Carriere\Entity\Db;
 
 use Agent\Entity\Db\AgentGrade;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class Grade  implements HasPeriodeInterface {
-    use DbImportableAwareTrait;
+class Grade implements HasPeriodeInterface, IsSynchronisableInterface
+{
+    use IsSynchronisableTrait;
     use HasPeriodeTrait;
 
     private ?int $id = null;
@@ -26,37 +28,37 @@ class Grade  implements HasPeriodeInterface {
         $this->agentGrades = new ArrayCollection();
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getLibelleCourt() : ?string
+    public function getLibelleCourt(): ?string
     {
         return $this->libelleCourt;
     }
 
-    public function getLibelleLong() : ?string
+    public function getLibelleLong(): ?string
     {
         return $this->libelleLong;
     }
 
-    public function getCode() : ?string
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function setCode(?string $code) : void
+    public function setCode(?string $code): void
     {
         $this->code = $code;
     }
 
-    public function getHisto() : ?DateTime
+    public function getHisto(): ?DateTime
     {
         return $this->histo;
     }
 
-    public function setHisto(?DateTime $histo) : void
+    public function setHisto(?DateTime $histo): void
     {
         $this->histo = $histo;
     }
@@ -64,23 +66,23 @@ class Grade  implements HasPeriodeInterface {
     /**
      * @return AgentGrade[]
      */
-    public function getAgentGrades() : array
+    public function getAgentGrades(): array
     {
         return $this->agentGrades->toArray();
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->getLibelleCourt();
     }
 
-    public function generateTooltip() : string
+    public function generateTooltip(): string
     {
-        $text  = "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text = "Libelle court : <strong>" . $this->getLibelleCourt() . "</strong>";
         $text .= "<br/>";
-        $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
+        $text .= "Libelle long : <strong>" . $this->getLibelleLong() . "</strong>";
         $text .= "<br/>";
-        $text .= "Code : <strong>". $this->getCode() . "</strong>";
+        $text .= "Code : <strong>" . $this->getCode() . "</strong>";
         return $text;
     }
 }

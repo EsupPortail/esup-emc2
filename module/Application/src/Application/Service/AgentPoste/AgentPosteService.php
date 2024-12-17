@@ -24,7 +24,7 @@ class AgentPosteService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('poste.agent = :agent')->setParameter('agent', $agent)
-            ->andWhere('poste.deleted_on IS NULL');
+            ->andWhere('poste.deletedOn IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;

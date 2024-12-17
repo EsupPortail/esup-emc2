@@ -25,7 +25,7 @@ class CorrespondanceService {
     {
         $qb = $this->getObjectManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance')
             ->leftJoin('correspondance.type', 'ctype')->addSelect('ctype')
-            ->andWhere('correspondance.deleted_on IS NULL');
+            ->andWhere('correspondance.deletedOn IS NULL');
         return $qb;
     }
 

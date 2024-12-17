@@ -1,16 +1,16 @@
 <?php
 
-namespace Application;
+namespace Agent;
 
-use Application\Controller\AgentMobiliteController;
-use Application\Controller\AgentMobiliteControllerFactory;
-use Application\Form\AgentMobilite\AgentMobiliteForm;
-use Application\Form\AgentMobilite\AgentMobiliteFormFactory;
-use Application\Form\AgentMobilite\AgentMobiliteHydrator;
-use Application\Form\AgentMobilite\AgentMobiliteHydratorFactory;
-use Application\Provider\Privilege\AgentmobilitePrivileges;
-use Application\Service\AgentMobilite\AgentMobiliteService;
-use Application\Service\AgentMobilite\AgentMobiliteServiceFactory;
+use Agent\Controller\AgentMobiliteController;
+use Agent\Controller\AgentMobiliteControllerFactory;
+use Agent\Form\AgentMobilite\AgentMobiliteForm;
+use Agent\Form\AgentMobilite\AgentMobiliteFormFactory;
+use Agent\Form\AgentMobilite\AgentMobiliteHydrator;
+use Agent\Form\AgentMobilite\AgentMobiliteHydratorFactory;
+use Agent\Provider\Privilege\AgentmobilitePrivileges;
+use Agent\Service\AgentMobilite\AgentMobiliteService;
+use Agent\Service\AgentMobilite\AgentMobiliteServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -145,17 +145,17 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
                             'agent-mobilite' => [
-                                'label'    => 'Gestion des statuts de mobilités des agents',
-                                'route'    => 'agent/mobilite',
-                                'resource' => PrivilegeController::getResourceId(AgentMobiliteController::class, 'index') ,
-                                'order'    => 100000,
+                                'label' => 'Gestion des statuts de mobilités des agents',
+                                'route' => 'agent/mobilite',
+                                'resource' => PrivilegeController::getResourceId(AgentMobiliteController::class, 'index'),
+                                'order' => 100000,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -167,12 +167,12 @@ return [
 
     'service_manager' => [
         'factories' => [
-            AgentMobiliteService::class => AgentMobiliteServiceFactory::class
+            AgentMobiliteService::class => AgentMobiliteServiceFactory::class,
         ],
     ],
     'controllers' => [
         'factories' => [
-            AgentMobiliteController::class => AgentMobiliteControllerFactory::class
+            AgentMobiliteController::class => AgentMobiliteControllerFactory::class,
         ],
     ],
     'form_elements' => [

@@ -1,8 +1,7 @@
 <?php
 
-namespace Application\Form\AgentMobilite;
+namespace Agent\Form\AgentMobilite;
 
-use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Form\Element\Button;

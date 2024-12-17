@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Provider\Privilege;
+namespace Agent\Provider\Privilege;
 
 use UnicaenPrivilege\Provider\Privilege\Privileges;
 

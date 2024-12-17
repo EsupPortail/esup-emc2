@@ -1,19 +1,17 @@
 <?php
 
-namespace Application\Service\AgentMobilite;
+namespace Agent\Service\AgentMobilite;
 
+use Agent\Entity\Db\AgentMobilite;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentMobilite;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Entity\Db\Mobilite;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
-use UnicaenUtilisateur\Entity\Db\User;
 
 class AgentMobiliteService
 {
@@ -63,8 +61,7 @@ class AgentMobiliteService
     {
         $qb = $this->getObjectManager()->getRepository(AgentMobilite::class)->createQueryBuilder('agentmobilite')
             ->join('agentmobilite.agent', 'agent')->addSelect('agent')
-            ->join('agentmobilite.mobilite', 'mobilite')->addSelect('mobilite')
-        ;
+            ->join('agentmobilite.mobilite', 'mobilite')->addSelect('mobilite');
         return $qb;
     }
 
@@ -75,7 +72,7 @@ class AgentMobiliteService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs ['.AgentMobilite::class.'] partagent le même id [' . $id . ']',0,$e);
+            throw new RuntimeException('Plusieurs [' . AgentMobilite::class . '] partagent le même id [' . $id . ']', 0, $e);
         }
         return $result;
     }

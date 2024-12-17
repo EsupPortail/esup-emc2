@@ -44,12 +44,7 @@ use UnicaenUtilisateur\Entity\Db\User;
 
     <?php else: ?>
 
-        <?php
-        $appConnection = $this->appConnection();
-        $link = $appConnection->getView()->plugin('userConnection')->computeConnectionLink();
-        ?>
-
-        <a class="btn btn-success btn-large" href="<?php echo $link; ?>">
+        <a class="btn btn-success btn-large" href="<?php echo $this->url('zfcuser/login') ?>">
             <span class="icon icon-user"></span>
             <?php echo $this->translate('Se connecter') ?>
         </a>

@@ -4,17 +4,19 @@ namespace Structure\Entity\Db;
 
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class Structure implements ResourceInterface, HasDescriptionInterface {
-    use DbImportableAwareTrait;
+class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchronisableInterface
+{
+    use IsSynchronisableTrait;
     use HasDescriptionTrait;
 
-    public function getResourceId() : string
+    public function getResourceId(): string
     {
         return 'Structure';
     }
@@ -22,7 +24,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     /**
      * @return string
      */
-    public function generateTag()  : string
+    public function generateTag(): string
     {
         return 'Structure_' . $this->getId();
     }
@@ -59,43 +61,43 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
 
     private Collection $fichesPostesRecrutements; //[FichePoste]
 
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function getCode() : string
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    public function getLibelleCourt() : ?string
+    public function getLibelleCourt(): ?string
     {
         return $this->libelleCourt;
     }
 
-    public function getLibelleLong() : ?string
+    public function getLibelleLong(): ?string
     {
         return $this->libelleLong;
     }
 
-    public function getType() : ?StructureType
+    public function getType(): ?StructureType
     {
         return $this->type;
     }
 
-    public function getOuverture() : ?DateTime
+    public function getOuverture(): ?DateTime
     {
         return $this->ouverture;
     }
 
-    public function getFermeture() : ?DateTime
+    public function getFermeture(): ?DateTime
     {
         if ($this->getFermetureOW() !== null) return $this->getFermetureOW();
         return $this->fermeture;
     }
 
-    public function getFermetureOW() : ?DateTime
+    public function getFermetureOW(): ?DateTime
     {
         return $this->fermetureOW;
     }
@@ -104,17 +106,17 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     {
         if ($date === null) $date = new DateTime();
         if ($this->ouverture > $date) return false;
-        if ($this->getFermeture() !== null AND $this->getFermeture() <= $date) return false;
+        if ($this->getFermeture() !== null and $this->getFermeture() <= $date) return false;
         return true;
     }
 
-    public function getDescriptionComplete() : string
+    public function getDescriptionComplete(): string
     {
         $text = "";
-        if ($this->getRepriseResumeMere() AND $this->parent !== null) {
+        if ($this->getRepriseResumeMere() and $this->parent !== null) {
             $text .= $this->parent->getDescriptionComplete() . "<br/>";
         }
-        return $text . $this->description ;
+        return $text . $this->description;
     }
 
     public function getAdresseFonctionnelle(): ?string
@@ -122,13 +124,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $this->adresseFonctionnelle;
     }
 
-//    public function setAdresseFonctionnelle(?string $adresseFonctionnelle): Structure
-//    {
-//        $this->adresseFonctionnelle = $adresseFonctionnelle;
-//        return $this;
-//    }
-
-    public function computeChemin() : string {
+    public function computeChemin(): string
+    {
         $chemin = $this->getLibelleCourt();
 
         $parent = "";
@@ -143,42 +140,46 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     /**
      * @return StructureGestionnaire[]
      */
-    public function getGestionnaires() : array
+    public function getGestionnaires(): array
     {
         //if ($this->gestionnaires === null) return [];
         $array = $this->gestionnaires->toArray();
-        $array = array_filter($array, function (StructureGestionnaire $a) { return !$a->isDeleted();});
+        $array = array_filter($array, function (StructureGestionnaire $a) {
+            return !$a->isDeleted();
+        });
         return $array;
     }
 
     /**
      * @return StructureResponsable[]
      */
-    public function getResponsables() : array
+    public function getResponsables(): array
     {
         //if ($this->responsables === null) return [];
         $array = $this->responsables->toArray();
-        $array = array_filter($array, function (StructureResponsable $a) { return !$a->isDeleted() ;});
+        $array = array_filter($array, function (StructureResponsable $a) {
+            return !$a->isDeleted();
+        });
         return $array;
     }
 
-    public function getMissions() : array
+    public function getMissions(): array
     {
         return $this->missions->toArray();
     }
 
-    public function getParent() : ?Structure
+    public function getParent(): ?Structure
     {
         return $this->parent;
     }
 
-    public function getNiv2() : ?Structure
+    public function getNiv2(): ?Structure
     {
         if ($this->getNiv2OW() !== null) return $this->getNiv2OW();
         return $this->niv2;
     }
 
-    public function getNiv2OW() : ?Structure
+    public function getNiv2OW(): ?Structure
     {
         return $this->niv2OverWriten;
     }
@@ -186,19 +187,21 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     /**
      * @return Structure[]
      */
-    public function getEnfants() : array
+    public function getEnfants(): array
     {
         $enfants = $this->enfants->toArray();
-        $enfants = array_filter($enfants, function(Structure $a) { return $a->isOuverte(); });
+        $enfants = array_filter($enfants, function (Structure $a) {
+            return $a->isOuverte();
+        });
         return $enfants;
     }
 
-    public function getRepriseResumeMere() : bool
+    public function getRepriseResumeMere(): bool
     {
         return $this->repriseResumeMere;
     }
 
-    public function setRepriseResumeMere(bool $repriseResumeMere) : void
+    public function setRepriseResumeMere(bool $repriseResumeMere): void
     {
         $this->repriseResumeMere = $repriseResumeMere;
     }
@@ -216,11 +219,13 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     /**
      * @return StructureAgentForce[]
      */
-    public function getAgentsForces(bool $keepHisto = false) : array
+    public function getAgentsForces(bool $keepHisto = false): array
     {
         $result = $this->agentsForces->toArray();
-        if (! $keepHisto) {
-            $result = array_filter($result, function (StructureAgentForce $a) { return $a->estNonHistorise();});
+        if (!$keepHisto) {
+            $result = array_filter($result, function (StructureAgentForce $a) {
+                return $a->estNonHistorise();
+            });
         }
 
         return $result;
@@ -231,30 +236,30 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     /**
      * @return FichePoste[]
      */
-    public function getFichesPostesRecrutements() : array
+    public function getFichesPostesRecrutements(): array
     {
         return $this->fichesPostesRecrutements->toArray();
     }
 
-    public function addFichePosteRecrutement(?FichePoste $fiche) : void
+    public function addFichePosteRecrutement(?FichePoste $fiche): void
     {
         $this->fichesPostesRecrutements->add($fiche);
     }
 
-    public function removeFichePosteRecrutement(?FichePoste $fiche) : void
+    public function removeFichePosteRecrutement(?FichePoste $fiche): void
     {
         $this->fichesPostesRecrutements->removeElement($fiche);
     }
 
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        $text = "[".$this->getType()."] ";
+        $text = "[" . $this->getType() . "] ";
         $text .= $this->getLibelleCourt();
         return $text;
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return $this->__toString();
     }
@@ -262,34 +267,33 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     /** MACRO *********************************************************************************************************/
 
     /** @noinspection PhpUnused */
-    public function toStringLibelle() : string
+    public function toStringLibelle(): string
     {
         $texte = $this->getLibelleLong();
         return $texte;
     }
 
     /** @noinspection PhpUnused */
-    public function toStringLibelleLong() : string
+    public function toStringLibelleLong(): string
     {
         $texte = "";
 
         $niv2 = $this->getNiv2();
-        if ($niv2 !== null AND $niv2 !== $this) $texte .= $niv2->getLibelleLong() . " > ";
+        if ($niv2 !== null and $niv2 !== $this) $texte .= $niv2->getLibelleLong() . " > ";
         $texte .= $this->getLibelleLong();
 
         return $texte;
     }
 
     /** @noinspection PhpUnused */
-    public function toStringResume() : string
+    public function toStringResume(): string
     {
-        /** @var Structure $structure */
         $structure = $this;
         $texte = "";
         if ($structure->getRepriseResumeMere()) {
             $texte .= $structure->getParent()->toStringResume();
         }
-        if ($structure->getDescription() !== null AND trim($structure->getDescription() !== '')) {
+        if ($structure->getDescription() !== null and trim($structure->getDescription() !== '')) {
             $texte .= "<h3>" . $structure->toStringLibelle() . "</h3>";
             $texte .= $structure->getDescription();
         }
@@ -297,9 +301,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     }
 
     /** @noinspection PhpUnused */
-    public function toStringStructureBloc() : string
+    public function toStringStructureBloc(): string
     {
-        /** @var Structure $structure */
         $structure = $this;
         $texte = "";
         if ($structure->getRepriseResumeMere()) {
@@ -311,19 +314,19 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     }
 
     /** @noinspection PhpUnused */
-    public function toStringResponsables() : string
+    public function toStringResponsables(): string
     {
-        $date = new DateTime();
         $responsables = $this->getResponsables();
-        $responsables = array_filter($responsables, function (StructureResponsable $a) use ($date) {
+        $responsables = array_filter($responsables, function (StructureResponsable $a) {
+            $date = new DateTime();
             $encours = $a->estEnCours($date);
             $effacer = $a->isDeleted($date);
-            return ($encours AND !$effacer);
+            return ($encours and !$effacer);
         });
 
         if (empty($responsables)) return "aucun·e responsable";
-        $texte  = "<ul>";
-        foreach ($responsables as $responsable) $texte .= "<li>".$responsable->getAgent()->getDenomination()."</li>";
+        $texte = "<ul>";
+        foreach ($responsables as $responsable) $texte .= "<li>" . $responsable->getAgent()->getDenomination() . "</li>";
         $texte .= "</ul>";
         return $texte;
     }

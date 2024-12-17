@@ -1,17 +1,19 @@
 <?php
 
-namespace Application\Controller;
+namespace Agent\Controller;
 
-use Application\Entity\Db\AgentMobilite;
-use Application\Form\AgentMobilite\AgentMobiliteFormAwareTrait;
+use Agent\Entity\Db\AgentMobilite;
+use Agent\Form\AgentMobilite\AgentMobiliteFormAwareTrait;
+use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 
-class AgentMobiliteController extends AgentController {
+class AgentMobiliteController extends AbstractActionController
+{
     use AgentServiceAwareTrait;
     use AgentMobiliteServiceAwareTrait;
     use MobiliteServiceAwareTrait;
@@ -33,12 +35,18 @@ class AgentMobiliteController extends AgentController {
         }
         $mobilite = null;
         if ($mobiliteId = $this->params()->fromQuery('mobilite')) {
-            $mobilite = $this->getMobiliteService()->getMobilite((int) $mobiliteId);
+            $mobilite = $this->getMobiliteService()->getMobilite((int)$mobiliteId);
         }
 
-        if ($agent) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($agent) { return $a->getAgent() === $agent;});
-        if ($structure) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($structure) { return !empty($a->getAgent()->getAffectationsActifs(null, [$structure])); });
-        if ($mobilite) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($mobilite) { return $a->getMobilite() === $mobilite;});
+        if ($agent) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($agent) {
+            return $a->getAgent() === $agent;
+        });
+        if ($structure) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($structure) {
+            return !empty($a->getAgent()->getAffectationsActifs(null, [$structure]));
+        });
+        if ($mobilite) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($mobilite) {
+            return $a->getMobilite() === $mobilite;
+        });
 
         return new ViewModel([
             'mobilites' => $mobilites,
@@ -49,14 +57,14 @@ class AgentMobiliteController extends AgentController {
         ]);
     }
 
-    public function ajouterAction() : ViewModel
+    public function ajouterAction(): ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $agentMobilite = new AgentMobilite();
         $agentMobilite->setAgent($agent);
 
         $form = $this->getAgentMobiliteForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/mobilite/ajouter', ['agent' => ($agent)?$agent->getId():null], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('agent/mobilite/ajouter', ['agent' => ($agent) ? $agent->getId() : null], [], true));
         $form->bind($agentMobilite);
 
         $request = $this->getRequest();
@@ -84,7 +92,7 @@ class AgentMobiliteController extends AgentController {
 
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $agentMobilite = $this->getAgentMobiliteService()->getRequestedAgentMobilite($this);
 
@@ -111,7 +119,7 @@ class AgentMobiliteController extends AgentController {
         return $vm;
     }
 
-    public function historiserAction() : ViewModel
+    public function historiserAction(): ViewModel
     {
         $agentMobilite = $this->getAgentMobiliteService()->getRequestedAgentMobilite($this);
         $this->getAgentMobiliteService()->historise($agentMobilite);
@@ -135,7 +143,7 @@ class AgentMobiliteController extends AgentController {
         return $vm;
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $agentMobilite = $this->getAgentMobiliteService()->getRequestedAgentMobilite($this);
         $this->getAgentMobiliteService()->restore($agentMobilite);
@@ -145,7 +153,7 @@ class AgentMobiliteController extends AgentController {
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMobilite->getAgent()->getId()], ['fragment' => "mobilite"], true);
     }
 
-    public function supprimerAction() : ViewModel
+    public function supprimerAction(): ViewModel
     {
         $agentMobilite = $this->getAgentMobiliteService()->getRequestedAgentMobilite($this);
 

@@ -2,14 +2,12 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\Db\Interfaces\HasSourceInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
-use Application\Entity\Db\Traits\HasSourceTrait;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class AgentPoste implements HasSourceInterface
+class AgentPoste implements IsSynchronisableInterface
 {
-    use DbImportableAwareTrait;
-    use HasSourceTrait;
+    use IsSynchronisableTrait;
 
     private ?int $id = null;
     private ?Agent $agent = null;

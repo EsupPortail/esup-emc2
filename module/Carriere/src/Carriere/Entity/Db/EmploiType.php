@@ -4,14 +4,15 @@ namespace Carriere\Entity\Db;
 
 use Agent\Entity\Db\AgentGrade;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class EmploiType implements HasPeriodeInterface
+class EmploiType implements HasPeriodeInterface, IsSynchronisableInterface
 {
-    use DbImportableAwareTrait;
+    use IsSynchronisableTrait;
     use HasPeriodeTrait;
 
     private ?int $id = null;
@@ -26,22 +27,22 @@ class EmploiType implements HasPeriodeInterface
         $this->agentGrades = new ArrayCollection();
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCode() : ?string
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function setCode(?string $code) : void
+    public function setCode(?string $code): void
     {
         $this->code = $code;
     }
 
-    public function getLibelleCourt() : ?string
+    public function getLibelleCourt(): ?string
     {
         return $this->libelleCourt;
     }
@@ -52,23 +53,23 @@ class EmploiType implements HasPeriodeInterface
     }
 
     /** @return AgentGrade[] */
-    public function getAgentGrades() : array
+    public function getAgentGrades(): array
     {
         return $this->agentGrades->toArray();
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->getLibelleCourt();
     }
 
-    public function generateTooltip() : string
+    public function generateTooltip(): string
     {
-        $text  = "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text = "Libelle court : <strong>" . $this->getLibelleCourt() . "</strong>";
         $text .= "<br/>";
-        $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
+        $text .= "Libelle long : <strong>" . $this->getLibelleLong() . "</strong>";
         $text .= "<br/>";
-        $text .= "Code : <strong>". $this->getCode() . "</strong>";
+        $text .= "Code : <strong>" . $this->getCode() . "</strong>";
         return $text;
     }
 }

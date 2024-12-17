@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\AgentMobilite;
+namespace Agent\Service\AgentMobilite;
 
 trait AgentMobiliteServiceAwareTrait {
 

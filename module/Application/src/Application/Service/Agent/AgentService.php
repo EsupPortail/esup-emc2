@@ -288,7 +288,7 @@ EOS;
             // AFFECTATION FILTER
 //            ->addSelect('affectationfilter')
             ->join('agent.affectations', 'affectationfilter')
-            ->andWhere('affectationfilter.deleted_on IS NULL')
+            ->andWhere('affectationfilter.deletedOn IS NULL')
             ->andWhere('affectationfilter.dateFin >= :today OR affectationfilter.dateFin IS NULL')
             ->andWhere('affectationfilter.dateDebut <= :today')
             ->setParameter('today', $date)
@@ -307,7 +307,7 @@ EOS;
                 //STATUS
 //            ->addSelect('statut')
                 ->leftjoin('agent.statuts', 'statut')
-            ->andWhere('statut.deleted_on IS NULL')
+            ->andWhere('statut.deletedOn IS NULL')
                 //GRADE
 //            ->addSelect('grade')
                 ->leftjoin('agent.grades', 'grade')
@@ -321,7 +321,7 @@ EOS;
                 ->leftjoin('grade.correspondance', 'gcorrespondance')
 //            ->addSelect('gcorps')
                 ->leftjoin('grade.corps', 'gcorps')
-            ->andWhere('grade.deleted_on IS NULL')
+            ->andWhere('grade.deletedOn IS NULL')
                 //FICHE DE POSTE
 //            ->addSelect('ficheposte')
                 ->leftJoin('agent.fiches', 'ficheposte')
@@ -497,7 +497,7 @@ EOS;
         $qb = $this->getObjectManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
             ->andWhere('sr.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('sr.deleted_on IS NULL');
+            ->andWhere('sr.deletedOn IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -514,7 +514,7 @@ EOS;
         $qb = $this->getObjectManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('sg')
             ->andWhere('sg.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('sg.deleted_on IS NULL');
+            ->andWhere('sg.deletedOn IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }

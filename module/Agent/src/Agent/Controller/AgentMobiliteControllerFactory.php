@@ -1,17 +1,18 @@
 <?php
 
-namespace Application\Controller;
+namespace Agent\Controller;
 
-use Application\Form\AgentMobilite\AgentMobiliteForm;
+use Agent\Form\AgentMobilite\AgentMobiliteForm;
+use Agent\Service\AgentMobilite\AgentMobiliteService;
 use Application\Service\Agent\AgentService;
-use Application\Service\AgentMobilite\AgentMobiliteService;
 use Carriere\Service\Mobilite\MobiliteService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 
-class AgentMobiliteControllerFactory {
+class AgentMobiliteControllerFactory
+{
 
     /**
      * @throws ContainerExceptionInterface

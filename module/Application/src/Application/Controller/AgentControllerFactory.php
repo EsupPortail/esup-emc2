@@ -4,12 +4,12 @@ namespace Application\Controller;
 
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Agent\Service\AgentGrade\AgentGradeService;
-use Agent\Service\AgentStatut\AgentStatutService;
+use Agent\Service\AgentMobilite\AgentMobiliteService;
 use Agent\Service\AgentQuotite\AgentQuotiteService;
+use Agent\Service\AgentStatut\AgentStatutService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
-use Application\Service\AgentMobilite\AgentMobiliteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use Carriere\Service\Categorie\CategorieService;

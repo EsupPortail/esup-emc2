@@ -4,15 +4,15 @@ namespace Application\Controller;
 
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
-use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
+use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Agent\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
+use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\AgentParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
-use Application\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\AgentMobilite;
+namespace Agent\Form\AgentMobilite;
 
 trait AgentMobiliteFormAwareTrait {
 

@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Carriere\Entity\Db\Corps" table="carriere_corps">
 
-        <id name="id"               column="id"             type="integer">
+        <id name="id" column="id" type="integer">
         </id>
 
-        <field name="libelleCourt"  column="lib_court"      type="string"       length="20"  />
-        <field name="libelleLong"   column="lib_long"       type="string"       length="200" />
-        <field name="code"          column="code"           type="string"       length="10"  />
-        <field name="categorie"     column="categorie"      type="string"       length="10"  />
-        <field name="dateDebut"     column="d_ouverture"    type="datetime"  />
-        <field name="dateFin"       column="d_fermeture"    type="datetime"  />
+        <field name="libelleCourt" column="lib_court" length="20"/>
+        <field name="libelleLong" column="lib_long" length="200"/>
+        <field name="code" column="code" length="10"/>
+        <field name="categorie" column="categorie" length="10"/>
+        <field name="dateDebut" column="d_ouverture" type="datetime"/>
+        <field name="dateFin" column="d_fermeture" type="datetime"/>
 
-        <field name="superieurAsAutorite"       column="superieur_as_autorite"    type="boolean"  />
+        <field name="superieurAsAutorite" column="superieur_as_autorite" type="boolean"/>
 
-        <many-to-one target-entity="Carriere\Entity\Db\NiveauEnveloppe"  field="niveaux">
-            <join-column name="niveaux_id" referenced-column-name="id"/>
+        <many-to-one target-entity="Carriere\Entity\Db\NiveauEnveloppe" field="niveaux">
+            <join-column name="niveaux_id"/>
         </many-to-one>
 
         <one-to-many field="agentGrades" target-entity="Agent\Entity\Db\AgentGrade" mapped-by="corps"/>
 
         <!-- DB IMPORT #############################  -->
-        <field name="created_on"               column="created_on"       type="datetime"/>
-        <field name="updated_on"               column="updated_on"       type="datetime"/>
-        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+        <field name="createdOn" column="created_on" type="datetime"/>
+        <field name="updatedOn" column="updated_on" type="datetime"/>
+        <field name="deletedOn" column="deleted_on" type="datetime"/>
+        <field name="sourceId" column="source_id" length="128"/>
+
     </entity>
 </doctrine-mapping>

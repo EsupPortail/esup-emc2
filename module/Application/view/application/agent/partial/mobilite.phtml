@@ -6,8 +6,8 @@
  */
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentMobilite;
-use Application\Provider\Privilege\AgentmobilitePrivileges;
+use Agent\Entity\Db\AgentMobilite;
+use Agent\Provider\Privilege\AgentmobilitePrivileges;
 
 $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AJOUTER));
 $canModifier = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_MODIFIER));

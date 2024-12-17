@@ -28,7 +28,7 @@ class CorpsService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Corps::class)->createQueryBuilder('corps')
-            ->andWhere('corps.deleted_on IS NULL');
+            ->andWhere('corps.deletedOn IS NULL');
         return $qb;
     }
 

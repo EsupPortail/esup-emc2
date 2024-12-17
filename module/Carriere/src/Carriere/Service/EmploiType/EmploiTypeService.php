@@ -28,7 +28,7 @@ class EmploiTypeService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(EmploiType::class)->createQueryBuilder('emploitype')
-            ->andWhere('emploitype.deleted_on IS NULL');
+            ->andWhere('emploitype.deletedOn IS NULL');
         return $qb;
     }
 

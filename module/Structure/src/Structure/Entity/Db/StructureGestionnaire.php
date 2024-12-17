@@ -4,15 +4,14 @@ namespace Structure\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
-use Application\Entity\Db\Traits\HasSourceTrait;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class StructureGestionnaire implements HasPeriodeInterface
+class StructureGestionnaire implements HasPeriodeInterface, IsSynchronisableInterface
 {
-    use DbImportableAwareTrait;
+    use IsSynchronisableTrait;
     use HasPeriodeTrait;
-    use HasSourceTrait;
 
     private ?int $id = -1;
     private ?Structure $structure = null;

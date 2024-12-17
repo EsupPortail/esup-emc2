@@ -2,14 +2,16 @@
 
 namespace Carriere\Entity\Db;
 
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class CorrespondanceType  {
-    use DbImportableAwareTrait;
+class CorrespondanceType implements IsSynchronisableInterface
+{
+    use IsSynchronisableTrait;
     use HasDescriptionTrait;
 
     private ?int $id = null;

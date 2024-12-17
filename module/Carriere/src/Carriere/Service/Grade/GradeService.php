@@ -21,7 +21,7 @@ class GradeService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Grade::class)->createQueryBuilder('grade')
-            ->andWhere('grade.deleted_on IS NULL');
+            ->andWhere('grade.deletedOn IS NULL');
         return $qb;
     }
 

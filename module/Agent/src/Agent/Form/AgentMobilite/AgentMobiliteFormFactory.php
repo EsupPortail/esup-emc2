@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\AgentMobilite;
+namespace Agent\Form\AgentMobilite;
 
 use Application\Service\Agent\AgentService;
 use Carriere\Service\Corps\CorpsService;

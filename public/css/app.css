@@ -1,3 +1,9 @@
+/** Est utilisé pour échapper le titre qui chevauche la div **/
+.unistrap div#contenu-principal {
+    margin-top: 2rem !important;
+}
+
+
 table.xdebug-error {
     margin-top: 4rem;
 }

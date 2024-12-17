@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\AgentMobilite;
+namespace Agent\Form\AgentMobilite;
 
-use Application\Entity\Db\AgentMobilite;
+use Agent\Entity\Db\AgentMobilite;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;

@@ -54,7 +54,7 @@ class StructureService
             ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
             ->leftJoin('responsable.agent', 'rAgent')->addSelect('rAgent')
             ->addSelect('type')->leftjoin('structure.type', 'type')
-            ->andWhere('structure.deleted_on IS NULL')
+            ->andWhere('structure.deletedOn IS NULL')
             ->orderBy('structure.code');
         return $qb;
     }
@@ -109,7 +109,7 @@ class StructureService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('structure.code = :code')->setParameter('code', $code)
-            ->andWhere('structure.deleted_on IS NULL');
+            ->andWhere('structure.deletedOn IS NULL');
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
@@ -134,7 +134,7 @@ class StructureService
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%' . strtolower($term) . '%')
             ->andWhere('structure.fermeture IS NULL');
-        if (!$histo) $qb = $qb->andWhere('structure.deleted_on IS NULL');
+        if (!$histo) $qb = $qb->andWhere('structure.deletedOn IS NULL');
 
         if ($structures !== null) {
             $qb = $qb->andWhere('structure IN (:structures)')
@@ -155,7 +155,7 @@ class StructureService
             ->andWhere('structure.parent = :structure')
             ->setParameter('structure', $structure)
             ->orderBy('structure.code')
-            ->andWhere("structure.deleted_on IS NULL");
+            ->andWhere("structure.deletedOn IS NULL");
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
         $result = $qb->getQuery()->getResult();
 
@@ -517,7 +517,7 @@ EOS;
 //            ->join('responsable.source', 'source')->addSelect('source')
             ->join('responsable.agent', 'agent')->addSelect('agent')
             ->andWhere('responsable.structure = :structure')->setParameter('structure', $structure)
-            ->andWhere('responsable.deleted_on IS NULL')
+            ->andWhere('responsable.deletedOn IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom');
         if ($date !== null) $qb = StructureResponsable::decorateWithActif($qb, 'responsable', $date);
 
