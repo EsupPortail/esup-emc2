@@ -16,7 +16,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
 <div class="card">
     <div class="card-header bg-default">
-        Filtre des demandes de mobilité
+        Filtre de recherche des demandes de mobilité
     </div>
     <div class="card-body">
         <form method="get" action="<?php echo $this->url(); ?>">
@@ -30,7 +30,6 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             $agentF = new SearchAndSelect('agent');
                             $agentF
                                 ->setAutocompleteSource($this->url('agent/rechercher'))
-                                ->setSelectionRequired(true)
                                 ->setAttributes([
                                     'id' => 'agent',
                                     'placeholder' => "Sélectionner un·e agent·e",
@@ -45,7 +44,6 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             $structureF = new SearchAndSelect('structure');
                             $structureF
                                 ->setAutocompleteSource($this->url('structure/rechercher'))
-                                ->setSelectionRequired(true)
                                 ->setAttributes([
                                     'id' => 'structure',
                                     'placeholder' => "Sélectionner une structure",
@@ -54,9 +52,9 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             <?php echo $this->formControlGroup($structureF); ?>
                         </div>
                         <div class="col-md-4">
-                            <label for="mobilite">Type de mobilité</label>
-                            <select id="mobilite" name="mobilite" data-live-search="true">
-                                <option>Tous les type de mobilités</option>
+                            <label for="mobilite">Type de mobilité : </label>
+                            <select id="mobilite" name="mobilite" data-live-search="true" class="form-control">
+                                <option>Tous les types de mobilités</option>
                                 <?php foreach($mobilites as $mobilite_): ?>
                                     <option value="<?php echo $mobilite_->getId();?>"
                                     >

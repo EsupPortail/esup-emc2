@@ -42,7 +42,7 @@ class CorpsService
             $qb = $qb->addSelect('agentGrade')->join('corps.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent', 'agent')
                 ->andWhere('agent.deletedOn IS NULL')
-                ->andWhere('agentgrade.deletedOn IS NULL');
+                ->andWhere('agentGrade.deletedOn IS NULL');
             $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
         }
 

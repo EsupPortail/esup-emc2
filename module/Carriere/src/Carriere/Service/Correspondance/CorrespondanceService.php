@@ -39,7 +39,7 @@ class CorrespondanceService {
         if ($avecAgent) {
             $qb = $qb
                 ->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
-                ->andWhere('agentgrade.deletedOn IS NULL')
+                ->andWhere('agentGrade.deletedOn IS NULL')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
                 ->andWhere('agent.deletedOn IS NULL')
             ;
