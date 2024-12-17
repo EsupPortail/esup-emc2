@@ -22,6 +22,18 @@ return [
             'position'    => 3,
             'commentaire' => NULL,
         ],
+        'code_fonction'         => [
+            'name'        => 'code_fonction',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 256,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 13,
+            'commentaire' => NULL,
+        ],
         'fin_validite'          => [
             'name'        => 'fin_validite',
             'type'        => 'date',

@@ -289,6 +289,7 @@ return [
         'source_id',
         'id_source',
         'id',
+        'code_fonction',
     ],
     'agent_validation'                                  => [
         'agent_id',
@@ -713,6 +714,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
         'raison',
+        'code_fonction',
     ],
     'fichemetier_application'                           => [
         'fichemetier_id',
@@ -772,6 +774,7 @@ return [
         'histo_createur_id',
         'histo_modificateur_id',
         'histo_destructeur_id',
+        'code_fonction',
     ],
     'ficheposte_activitedescription_retiree'            => [
         'id',
@@ -1560,6 +1563,10 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+    ],
+    'fichemetier_competence_specifique'                 => [
+        'fichemetier_id',
+        'competence_element_id',
     ],
 ];
 

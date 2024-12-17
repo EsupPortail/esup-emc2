@@ -10,7 +10,7 @@ return [
     'commentaire' => NULL,
     'sequence'    => NULL,
     'columns'     => [
-        'agent_id'   => [
+        'agent_id'      => [
             'name'        => 'agent_id',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -22,7 +22,19 @@ return [
             'position'    => 1,
             'commentaire' => NULL,
         ],
-        'code_poste' => [
+        'code_fonction' => [
+            'name'        => 'code_fonction',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 256,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 10,
+            'commentaire' => NULL,
+        ],
+        'code_poste'    => [
             'name'        => 'code_poste',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -34,7 +46,7 @@ return [
             'position'    => 2,
             'commentaire' => NULL,
         ],
-        'created_on' => [
+        'created_on'    => [
             'name'        => 'created_on',
             'type'        => 'date',
             'bdd-type'    => 'timestamp without time zone',
@@ -46,7 +58,7 @@ return [
             'position'    => 4,
             'commentaire' => NULL,
         ],
-        'deleted_on' => [
+        'deleted_on'    => [
             'name'        => 'deleted_on',
             'type'        => 'date',
             'bdd-type'    => 'timestamp without time zone',
@@ -58,7 +70,7 @@ return [
             'position'    => 6,
             'commentaire' => NULL,
         ],
-        'id'         => [
+        'id'            => [
             'name'        => 'id',
             'type'        => 'int',
             'bdd-type'    => 'bigint',
@@ -70,7 +82,7 @@ return [
             'position'    => 9,
             'commentaire' => NULL,
         ],
-        'id_source'  => [
+        'id_source'     => [
             'name'        => 'id_source',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -82,7 +94,7 @@ return [
             'position'    => 8,
             'commentaire' => NULL,
         ],
-        'intitule'   => [
+        'intitule'      => [
             'name'        => 'intitule',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -94,7 +106,7 @@ return [
             'position'    => 3,
             'commentaire' => NULL,
         ],
-        'source_id'  => [
+        'source_id'     => [
             'name'        => 'source_id',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -106,7 +118,7 @@ return [
             'position'    => 7,
             'commentaire' => NULL,
         ],
-        'updated_on' => [
+        'updated_on'    => [
             'name'        => 'updated_on',
             'type'        => 'date',
             'bdd-type'    => 'timestamp without time zone',

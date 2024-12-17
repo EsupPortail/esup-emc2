@@ -10,6 +10,18 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'fichemetier_id_seq',
     'columns'     => [
+        'code_fonction'         => [
+            'name'        => 'code_fonction',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 256,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 11,
+            'commentaire' => NULL,
+        ],
         'expertise'             => [
             'name'        => 'expertise',
             'type'        => 'bool',
