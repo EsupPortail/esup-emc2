@@ -35,7 +35,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
 <?php if ($canAjouter) : ?>
     <a  <?php /** @see \Metier\Controller\MetierController::ajouterAction() */ ?>
             href="<?php echo $this->url('metier/ajouter', [], [], true);?>"
-            class="btn btn-primary action ajax-modal"
+            class="btn btn-primary ajax-modal"
             data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
@@ -113,7 +113,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                         <a
                             <?php /** @see \Metier\Controller\ReferenceController::ajouterAction() */ ?>
                                 href="<?php echo $this->url('metier/reference/ajouter', ['metier' => $metier->getId()], [], true); ?>"
-                                class="ajax-modal"
+                                class="ajax-modal action primary"
                                 data-event="modification"
                         >
                             <span class="icon icon-ajouter"></span>
@@ -137,9 +137,10 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                         </a>
                     <?php else : ?>
                         <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                        <br>
                         <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        ><br>
+                           class="ajax-modal action primary" data-event="modification"
+                        >
                             <span class="icon icon-ajouter"></span>
                             Ajouter
                         </a>
@@ -152,7 +153,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                     <a
                         <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
                             href="<?php echo $this->url('metier/afficher', ['metier' => $metier->getId()], [], true); ?>"
-                            class="ajax-modal"
+                            class="ajax-modal action secondary"
                     >
                         <span class="icon icon-voir"></span>
                         Afficher
@@ -163,7 +164,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                     <a
                         <?php /** @see \Metier\Controller\MetierController::listerAgentsAction() */ ?>
                             href="<?php echo $this->url('metier/lister-agents', ['metier' => $metier->getId()], [], true); ?>"
-                            class="ajax-modal"
+                            class="ajax-modal action secondary"
                     >
                         <span class="icon icon-users"></span>
                         Lister les agents
@@ -174,7 +175,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                     <a
                         <?php /** @see \Metier\Controller\MetierController::modifierAction() */ ?>
                             href="<?php echo $this->url('metier/modifier', ['metier' => $metier->getId()], [], true); ?>"
-                            class="ajax-modal"
+                            class="ajax-modal action primary"
                             data-event="modification"
                     >
                         <span class="icon icon-editer"></span>
@@ -186,6 +187,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                     <?php if ($metier->estNonHistorise()) : ?>
                         <a  <?php /** @see \Metier\Controller\MetierController::historiserAction() */ ?>
                                 href="<?php echo $this->url('metier/historiser', ['metier' => $metier->getId()], [], true); ?>"
+                                class="action warning"
                         >
                             <span class="icon icon-historiser"></span>
                             Historiser
@@ -193,6 +195,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                     <?php else : ?>
                         <a  <?php /** @see \Application\Controller\MetierController::restaurerAction() */ ?>
                                 href="<?php echo $this->url('metier/restaurer', ['metier' => $metier->getId()], [], true); ?>"
+                                class="action warning"
                         >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
@@ -203,12 +206,10 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                     <br>
                     <a  <?php /** @see \Metier\Controller\MetierController::supprimerAction() */ ?>
                             href="<?php echo $this->url('metier/supprimer', ['metier' => $metier->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
+                            class="ajax-modal action danger" data-event="modification"
                     >
-                        <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
                     </a>
                 <?php endif; ?>
             </td>
@@ -221,22 +222,20 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
 <br/>
 
 <script>
-    $(document).ready(function() {
-        $('#metiers').DataTable( {
-            // sorting: false,
-            // paging: false,
-            language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
-    } );
-</script>
-
-<script>
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+        $('table#metiers').dataTable({
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [5], orderable: false }
+            ]
         });
     });
 </script>

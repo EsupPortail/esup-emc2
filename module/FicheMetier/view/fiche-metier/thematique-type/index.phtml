@@ -32,7 +32,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
     </a>
 </div>
 
-<table class="table table-condensed datatable">
+<table class="table table-condensed datatable" id="thematiques">
     <thead>
     <tr>
         <th> Libellé </th>
@@ -53,7 +53,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier/thematique-type/afficher', ['thematique-type' => $thematiqueType->getId()], [], true); ?>"
-                       class="ajax-modal"
+                       class="ajax-modal action secondary"
                        >
                         <span class="icon icon-voir"></span>
                         Afficher
@@ -63,7 +63,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
                     <br>
                     <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier/thematique-type/modifier', ['thematique-type' => $thematiqueType->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
+                       class="ajax-modal action primary" data-event="modification"
                     >
                         <span class="icon icon-modifier"></span>
                         Modifier
@@ -74,6 +74,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
                     <?php if ($thematiqueType->estNonHistorise()) : ?>
                         <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier/thematique-type/historiser', ['thematique-type' => $thematiqueType->getId()], [], true); ?>"
+                           class="action warning"
                         >
                             <span class="icon icon-historiser"></span>
                             Historiser
@@ -81,6 +82,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
                     <?php else : ?>
                         <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::restaurerAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier/thematique-type/restaurer', ['thematique-type' => $thematiqueType->getId()], [], true); ?>"
+                           class="action warning"
                         >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
@@ -91,12 +93,10 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
                     <br>
                     <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier/thematique-type/supprimer', ['thematique-type' => $thematiqueType->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
+                       class="ajax-modal action danger" data-event="modification"
                     >
-                        <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
                     </a>
                 <?php endif; ?>
             </td>
@@ -110,6 +110,17 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+        $('table#thematiques').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
         });
     });
 </script>

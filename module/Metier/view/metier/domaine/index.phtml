@@ -18,7 +18,7 @@ use Metier\Provider\Privilege\DomainePrivileges;
 
 $canAfficher       = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_AFFICHER));
 $canAjouter        = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_AJOUTER));
-$canEditer         = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_MODIFIER));;
+$canEditer         = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_MODIFIER));
 $canHistoriser     = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_HISTORISER));
 $canEffacer        = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_SUPPRIMER));
 
@@ -37,7 +37,7 @@ $this->headTitle('Liste des domaines')
     <a
         <?php /** @see \Metier\Controller\DomaineController::ajouterAction() */ ?>
             href="<?php echo $this->url('domaine/ajouter', [], [], true);?>"
-            class="btn btn-primary action ajax-modal"
+            class="btn btn-primary ajax-modal"
             data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
@@ -48,12 +48,12 @@ $this->headTitle('Liste des domaines')
 <table id="domaines" class="datatable table table-condensed table-hover">
     <thead>
     <tr>
-        <th> Libelle </th>
-        <th> Type </th>
-        <th> Famille professionnelle </th>
-        <th> #metier </th>
+        <th  class="col-md-3"> Libelle </th>
+        <th  class="col-md-2"> Type </th>
+        <th  class="col-md-3"> Famille professionnelle </th>
+        <th  class="col-md-2"> #metier </th>
         <?php if ($canAction) : ?>
-            <th style="min-width: 10rem;"> Action </th>
+            <th class="col-md-"> Action </th>
         <?php endif; ?>
     </tr>
     </thead>
@@ -81,7 +81,7 @@ $this->headTitle('Liste des domaines')
                 <?php if ($canAfficher) : ?>
                     <a  <?php /** @see \Metier\Controller\DomaineController::afficherAction() */ ?>
                             href="<?php echo $this->url('domaine/afficher', ['domaine' => $domaine->getId()], [], true); ?>"
-                            class="ajax-modal"
+                            class="ajax-modal action secondary"
                     >
                         <span class="icon icon-voir"></span>
                         Afficher
@@ -91,7 +91,7 @@ $this->headTitle('Liste des domaines')
                     <br/>
                     <a  <?php /** @see \Metier\Controller\DomaineController::modifierAction() */ ?>
                         href="<?php echo $this->url('domaine/modifier', ['domaine' => $domaine->getId()], [], true); ?>"
-                        class="ajax-modal"
+                        class="ajax-modal action primary"
                         data-event="modification"
                     >
                         <span class="icon icon-editer"></span>
@@ -103,6 +103,7 @@ $this->headTitle('Liste des domaines')
                     <?php if ($domaine->estNonHistorise()) : ?>
                         <a  <?php /** @see \Metier\Controller\DomaineController::historiserAction() */ ?>
                             href="<?php echo $this->url('domaine/historiser', ['domaine' => $domaine->getId()], [], true); ?>"
+                            class="action warning"
                         >
                             <span class="icon icon-historiser"></span>
                             Historiser
@@ -110,6 +111,7 @@ $this->headTitle('Liste des domaines')
                     <?php else : ?>
                         <a  <?php /** @see \Metier\Controller\DomaineController::restaurerAction() */ ?>
                             href="<?php echo $this->url('domaine/restaurer', ['domaine' => $domaine->getId()], [], true); ?>"
+                            class="action secondary"
                         >
                             <span class="icon icon-restaurer"></span>
                             Supprimer
@@ -120,7 +122,7 @@ $this->headTitle('Liste des domaines')
                     <br/>
                     <a  <?php /** @see \Metier\Controller\DomaineController::supprimerAction() */ ?>
                         href="<?php echo $this->url('domaine/supprimer', ['domaine' => $domaine->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
+                        class="ajax-modal action danger" data-event="modification"
                     >
                         <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
@@ -142,13 +144,15 @@ $this->headTitle('Liste des domaines')
             event.div.modal('hide');
             window.location.reload();
         });
-
-        $('#domaines').DataTable( {
-            sorting: false,
-            paging: false,
+        $('table#domaines').dataTable({
+            info: false,
+            autoWidth: false,
             language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
+        });
     });
 </script>

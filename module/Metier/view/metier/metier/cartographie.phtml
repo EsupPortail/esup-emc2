@@ -33,7 +33,7 @@ $this->headTitle('Cartographie des métiers');
 
     </div>
 
-    <table class="datatable table table-condensed">
+    <table class="datatable table table-condensed" id="cartographie">
         <thead>
             <tr>
                 <th> Métier </th>
@@ -66,13 +66,13 @@ $this->headTitle('Cartographie des métiers');
 
 <script>
     $(document).ready(function() {
-        $('.datatable').DataTable( {
-            // sorting: false,
-            paging: false,
+        $('table#cartographie').dataTable({
+            info: false,
+            autoWidth: false,
             language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
+                "url": "/js/datatables_fr.json",
+            },
+        });
     } );
 
     downloadCSVFromJson = (filename, arrayOfJson) => {
