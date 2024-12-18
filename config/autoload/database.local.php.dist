@@ -34,11 +34,13 @@ return [
             'orm_default' => [
                 'driverClass' => Driver::class,
                 'params' => [
+                    'driver' => 'Postgresql',
                     'host' => 'pgsql.mon-etablissement.fr',
                     'port' => '5432',
                     'charset' => 'utf8',
                     'driverOptions' => [1002 => 'SET NAMES utf8'],
                     'user' => 'USERNAME',
+                    'username' => 'USERNAME',
                     'password' => 'PASSWORD',
                     'dbname' => 'DB_NAME',
                 ],
