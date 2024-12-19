@@ -59,7 +59,6 @@ $this->headTitle("Configuration de l'application");
 
                     <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Applications', 'type' => 'application', 'configurations' => $applications, 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
                     <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Compétences',  'type' => 'competence',  'configurations' => $competences , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
-                    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Formations',   'type' => 'formation',   'configurations' => $formations  , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
                 </div>
 
                 <!-- ONGLET ENTRETIEN PROFESSIONNEL ------------------------------------------------------------------->

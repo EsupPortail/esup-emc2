@@ -19,12 +19,9 @@ class AgentMobiliteForm extends Form
 
     public function init(): void
     {
-        //--agent déduiu de l'action
-        //Cible
         $cible = new SearchAndSelect('agent', ['label' => "Agent·e :"]);
         $cible
             ->setAutocompleteSource($this->urlAgent)
-            ->setSelectionRequired(true)
             ->setAttributes([
                 'id' => 'agent',
                 'placeholder' => "Agent·e concerné·e ...",

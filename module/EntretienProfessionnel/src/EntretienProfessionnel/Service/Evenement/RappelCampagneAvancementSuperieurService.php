@@ -82,7 +82,7 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
                     try {
                         $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur->getSuperieur());
                         $message .= "Notification faites vers " . $superieur->getSuperieur()->getDenomination() . "<br/>\n";
-                    } catch (\Laminas\Mail\Protocol\Exception\RuntimeException $e ) {
+                    } catch (Exception $e ) {
                         $message .= "<span class='text-danger'>Notification impossible vers ".$superieur->getSuperieur()->getDenomination()."</span><br/>\n";
                     };
                 }

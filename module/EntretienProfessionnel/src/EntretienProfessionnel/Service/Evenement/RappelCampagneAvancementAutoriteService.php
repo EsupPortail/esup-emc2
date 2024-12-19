@@ -81,7 +81,7 @@ class RappelCampagneAvancementAutoriteService extends EvenementService {
                     try {
                         $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
                         $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
-                    } catch (\Laminas\Mail\Protocol\Exception\RuntimeException $e ) {
+                    } catch (Exception $e ) {
                         $message .= "<span class='text-danger'>Notification impossible vers ".$autorite->getSuperieur()->getDenomination()."</span><br/>\n";
                     };
                 }

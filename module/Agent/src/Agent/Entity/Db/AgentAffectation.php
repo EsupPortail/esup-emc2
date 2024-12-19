@@ -86,8 +86,7 @@ class AgentAffectation implements HasPeriodeInterface, IsSynchronisableInterface
         $affectations = [];
         foreach ($agentAffectations as $agentAffectation) {
             $structure = $agentAffectation->getStructure();
-            $niveau2 = null;
-            if ($structure) $niveau2 = $structure->getNiv2();
+            $niveau2 = $structure?->getNiv2();
             if ($structure) {
                 $texte = $structure->getLibelleCourt();
                 if ($niveau2 !== null and $niveau2 !== $structure) $texte = $niveau2->getLibelleCourt() . " > " . $texte;

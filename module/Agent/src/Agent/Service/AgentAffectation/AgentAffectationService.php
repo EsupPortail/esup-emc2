@@ -75,7 +75,7 @@ class AgentAffectationService {
         $result = $this->getAgentAffectationsByAgent($agent);
         $result = array_filter($result, function (AgentAffectation $a) { return $a->isPrincipale() && $a->isHierarchique();});
         $nb = count($result);
-        //        if ( $nb > 1) throw new RuntimeException("Plusieurs affections hiérarchique principale pour l'agent [".$agent->getDenomination()."]");
+        //        if ($nb > 1) throw new RuntimeException("Plusieurs affections hiérarchiques principales pour l'agent [".$agent->getDenomination()."]");
         if ($nb === 0 ) return null;
         return $result;
     }
