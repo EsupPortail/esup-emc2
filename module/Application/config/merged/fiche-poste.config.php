@@ -14,10 +14,6 @@ use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormFactory;
 use Application\Form\AssocierTitre\AssocierTitreHydrator;
 use Application\Form\AssocierTitre\AssocierTitreHydratorFactory;
-use Application\Form\Expertise\ExpertiseForm;
-use Application\Form\Expertise\ExpertiseFormFactory;
-use Application\Form\Expertise\ExpertiseHydrator;
-use Application\Form\Expertise\ExpertiseHydratorFactory;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\Rifseep\RifseepFormFactory;
 use Application\Form\Rifseep\RifseepHydrator;
@@ -33,8 +29,6 @@ use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceFactory;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceFactory;
-use Application\Service\Expertise\ExpertiseService;
-use Application\Service\Expertise\ExpertiseServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
@@ -101,7 +95,7 @@ return [
                         'exporter',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_AFFICHER,
-                    'assertion'  => FichePosteAssertion::class,
+                    'assertion' => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,
@@ -110,7 +104,7 @@ return [
                         'dupliquer',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_AJOUTER,
-                    'assertion'  => FichePosteAssertion::class,
+                    'assertion' => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,
@@ -148,7 +142,7 @@ return [
                         'modifier-code-fonction',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER,
-                    'assertion'  => FichePosteAssertion::class,
+                    'assertion' => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,
@@ -156,7 +150,7 @@ return [
                         'changer-etat',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_ETAT,
-                    'assertion'  => FichePosteAssertion::class,
+                    'assertion' => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,
@@ -168,7 +162,7 @@ return [
                         FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT,
                         FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE,
                     ],
-                    'assertion'  => FichePosteAssertion::class,
+                    'assertion' => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,
@@ -177,7 +171,7 @@ return [
                         'restaurer',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_HISTORISER,
-                    'assertion'  => FichePosteAssertion::class,
+                    'assertion' => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,
@@ -185,13 +179,13 @@ return [
                         'detruire',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_DETRUIRE,
-                    'assertion'  => FichePosteAssertion::class,
+                    'assertion' => FichePosteAssertion::class,
                 ],
             ],
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
@@ -201,15 +195,15 @@ return [
                             'fiches' => [
                                 'label' => 'Gestion des fiches',
                                 'route' => 'fiche-metier',
-                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
-                                'order'    => 2030,
+                                'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX),
+                                'order' => 2030,
                                 'dropdown-header' => true,
                             ],
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
                                 'route' => 'fiche-poste',
-                                'resource' =>  FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_INDEX) ,
-                                'order'    => 2049,
+                                'resource' => FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_INDEX),
+                                'order' => 2049,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -219,159 +213,159 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'fiche-poste' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/fiche-poste',
+                    'route' => '/fiche-poste',
                     'defaults' => [
                         'controller' => FichePosteController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'child_routes' => [
                     'ajouter' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/ajouter[/:agent]',
+                            'route' => '/ajouter[/:agent]',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'ajouter',
+                                'action' => 'ajouter',
                             ],
                         ],
                     ],
                     'dupliquer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/dupliquer/:structure/:agent',
+                            'route' => '/dupliquer/:structure/:agent',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'dupliquer',
+                                'action' => 'dupliquer',
                             ],
                         ],
                     ],
                     'afficher' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/afficher/:fiche-poste',
+                            'route' => '/afficher/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'afficher',
+                                'action' => 'afficher',
                             ],
                         ],
                     ],
                     'action' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/action/:fiche-poste',
+                            'route' => '/action/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'action',
+                                'action' => 'action',
                             ],
                         ],
                     ],
                     'valider' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/valider/:fiche-poste/:type',
+                            'route' => '/valider/:fiche-poste/:type',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'valider',
+                                'action' => 'valider',
                             ],
                         ],
                     ],
                     'revoquer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/revoquer/:fiche-poste/:validation',
+                            'route' => '/revoquer/:fiche-poste/:validation',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'revoquer',
+                                'action' => 'revoquer',
                             ],
                         ],
                     ],
                     'export' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/export/:fiche-poste',
+                            'route' => '/export/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'export',
+                                'action' => 'export',
                             ],
                         ],
                     ],
                     'exporter' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/exporter/:fiche-poste',
+                            'route' => '/exporter/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'exporter',
+                                'action' => 'exporter',
                             ],
                         ],
                     ],
                     'changer-etat' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/changer-etat/:fiche-poste',
+                            'route' => '/changer-etat/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'changer-etat',
+                                'action' => 'changer-etat',
                             ],
                         ],
                     ],
                     'editer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/editer[/:fiche-poste]',
+                            'route' => '/editer[/:fiche-poste]',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'editer',
+                                'action' => 'editer',
                             ],
                         ],
                     ],
                     'historiser' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/historiser/:fiche-poste',
+                            'route' => '/historiser/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'historiser',
+                                'action' => 'historiser',
                             ],
                         ],
                     ],
                     'restaurer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/restaurer/:fiche-poste',
+                            'route' => '/restaurer/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'restaurer',
+                                'action' => 'restaurer',
                             ],
                         ],
                     ],
                     'detruire' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/detruire/:fiche-poste',
+                            'route' => '/detruire/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'detruire',
+                                'action' => 'detruire',
                             ],
                         ],
                     ],
@@ -379,10 +373,10 @@ return [
                         'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/associer-agent/:fiche-poste',
+                            'route' => '/associer-agent/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'associer-agent',
+                                'action' => 'associer-agent',
                             ],
                         ],
                     ],
@@ -390,210 +384,210 @@ return [
                         'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/associer-titre/:fiche-poste',
+                            'route' => '/associer-titre/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'associer-titre',
+                                'action' => 'associer-titre',
                             ],
                         ],
                     ],
                     /** @see FichePosteController::modifierInformationPosteAction() */
                     'modifier-information-poste' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/modifier-information-poste/:fiche-poste',
+                            'route' => '/modifier-information-poste/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'modifier-information-poste',
+                                'action' => 'modifier-information-poste',
                             ],
                         ],
                     ],
                     'modifier-code-fonction' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/modifier-code-fonction/:fiche-poste',
+                            'route' => '/modifier-code-fonction/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'modifier-code-fonction',
+                                'action' => 'modifier-code-fonction',
                             ],
                         ],
                     ],
                     'ajouter-fiche-metier' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/ajouter-fiche-metier/:fiche-poste',
+                            'route' => '/ajouter-fiche-metier/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'ajouter-fiche-metier',
+                                'action' => 'ajouter-fiche-metier',
                             ],
                         ],
                     ],
                     'modifier-fiche-metier' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/modifier-fiche-metier/:fiche-poste/:fiche-type-externe',
+                            'route' => '/modifier-fiche-metier/:fiche-poste/:fiche-type-externe',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'modifier-fiche-metier',
+                                'action' => 'modifier-fiche-metier',
                             ],
                         ],
                     ],
                     'modifier-repartition' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/modifier-repartition/:fiche-poste/:fiche-type',
+                            'route' => '/modifier-repartition/:fiche-poste/:fiche-type',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'modifier-repartition',
+                                'action' => 'modifier-repartition',
                             ],
                         ],
                     ],
                     'retirer-fiche-metier' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/retirer-fiche-metier/:fiche-poste/:fiche-type-externe',
+                            'route' => '/retirer-fiche-metier/:fiche-poste/:fiche-type-externe',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'retirer-fiche-metier',
+                                'action' => 'retirer-fiche-metier',
                             ],
                         ],
                     ],
                     'selectionner-activite' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-activite/:fiche-poste/:fiche-type-externe',
+                            'route' => '/selectionner-activite/:fiche-poste/:fiche-type-externe',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-activite',
+                                'action' => 'selectionner-activite',
                             ],
                         ],
                     ],
                     'editer-rifseep' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/editer-rifseep/:fiche-poste',
+                            'route' => '/editer-rifseep/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'editer-rifseep',
+                                'action' => 'editer-rifseep',
                             ],
                         ],
                     ],
                     'editer-specificite' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/editer-specificite/:fiche-poste',
+                            'route' => '/editer-specificite/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'editer-specificite',
+                                'action' => 'editer-specificite',
                             ],
                         ],
                     ],
                     'selectionner-applications-retirees' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-applications-retirees/:fiche-poste',
+                            'route' => '/selectionner-applications-retirees/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-applications-retirees',
+                                'action' => 'selectionner-applications-retirees',
                             ],
                         ],
                     ],
                     'selectionner-competences-retirees' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-competences-retirees/:fiche-poste',
+                            'route' => '/selectionner-competences-retirees/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-competences-retirees',
+                                'action' => 'selectionner-competences-retirees',
                             ],
                         ],
                     ],
                     'selectionner-formations-retirees' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-formations-retirees/:fiche-poste',
+                            'route' => '/selectionner-formations-retirees/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-formations-retirees',
+                                'action' => 'selectionner-formations-retirees',
                             ],
                         ],
                     ],
                     'selectionner-descriptions-retirees' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-descriptions-retirees/:fiche-poste/:fiche-metier/:mission-principale',
+                            'route' => '/selectionner-descriptions-retirees/:fiche-poste/:fiche-metier/:mission-principale',
                             'defaults' => [
                                 /** @see FichePosteController::selectionnerDescriptionsRetireesAction() */
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-descriptions-retirees',
+                                'action' => 'selectionner-descriptions-retirees',
                             ],
                         ],
                     ],
                     'ajouter-expertise' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/ajouter-expertise/:fiche-poste',
+                            'route' => '/ajouter-expertise/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'ajouter-expertise',
+                                'action' => 'ajouter-expertise',
                             ],
                         ],
                     ],
                     'modifier-expertise' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/modifier-expertise/:expertise',
+                            'route' => '/modifier-expertise/:expertise',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'modifier-expertise',
+                                'action' => 'modifier-expertise',
                             ],
                         ],
                     ],
                     'historiser-expertise' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/historiser-expertise/:expertise',
+                            'route' => '/historiser-expertise/:expertise',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'historiser-expertise',
+                                'action' => 'historiser-expertise',
                             ],
                         ],
                     ],
                     'restaurer-expertise' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/restaurer-expertise/:expertise',
+                            'route' => '/restaurer-expertise/:expertise',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'restaurer-expertise',
+                                'action' => 'restaurer-expertise',
                             ],
                         ],
                     ],
                     'supprimer-expertise' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/supprimer-expertise/:expertise',
+                            'route' => '/supprimer-expertise/:expertise',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'supprimer-expertise',
+                                'action' => 'supprimer-expertise',
                             ],
                         ],
                     ],
@@ -609,12 +603,11 @@ return [
             ActivitesDescriptionsRetireesService::class => ActivitesDescriptionsRetireesServiceFactory::class,
             ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
-            ExpertiseService::class => ExpertiseServiceFactory::class,
             FichePosteService::class => FichePosteServiceFactory::class,
             SpecificitePosteService::class => SpecificitePosteServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             FichePosteController::class => FichePosteControllerFactory::class,
         ],
@@ -623,7 +616,6 @@ return [
         'factories' => [
             AjouterFicheMetierForm::class => AjouterFicheMetierFormFactory::class,
             AssocierTitreForm::class => AssocierTitreFormFactory::class,
-            ExpertiseForm::class => ExpertiseFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             RifseepForm::class => RifseepFormFactory::class,
         ],
@@ -635,7 +627,6 @@ return [
         'factories' => [
             AjouterFicheMetierHydrator::class => AjouterFicheMetierHydratorFactory::class,
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
-            ExpertiseHydrator::class => ExpertiseHydratorFactory::class,
             RifseepHydrator::class => RifseepHydratorFactory::class,
         ],
     ],

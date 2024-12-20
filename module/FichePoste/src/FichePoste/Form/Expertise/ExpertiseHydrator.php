@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\Expertise;
+namespace FichePoste\Form\Expertise;
 
-use Application\Entity\Db\Expertise;
+use FichePoste\Entity\Db\Expertise;
 use Laminas\Hydrator\HydratorInterface;
 
 class ExpertiseHydrator implements HydratorInterface {
@@ -26,7 +26,7 @@ class ExpertiseHydrator implements HydratorInterface {
      * @param Expertise $object
      * @return Expertise
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
         $object->setLibelle($data['libelle']);
         $object->setDescription($data['description']);

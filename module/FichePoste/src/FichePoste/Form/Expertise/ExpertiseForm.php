@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Expertise;
+namespace FichePoste\Form\Expertise;
 
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Text;

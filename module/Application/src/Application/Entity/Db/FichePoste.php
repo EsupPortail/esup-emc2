@@ -11,6 +11,7 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
+use FichePoste\Entity\Db\Expertise;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenApp\Exception\RuntimeException;

@@ -38,7 +38,6 @@ $modules = [
     'UnicaenAide',
     'UnicaenIndicateur',
     'Unicaen\BddAdmin',
-    'Unicaen\Console',
     'UnicaenSynchro',
     'UnicaenObservation',
 

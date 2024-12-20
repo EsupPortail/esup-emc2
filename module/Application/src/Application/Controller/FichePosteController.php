@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\AgentSuperieur;
-use Application\Entity\Db\Expertise;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
@@ -11,28 +10,29 @@ use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
-use Application\Form\Expertise\ExpertiseFormAwareTrait;
+use FichePoste\Form\Expertise\ExpertiseFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
-use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
-use FichePoste\Provider\Etat\FichePosteEtats;
-use FichePoste\Provider\Parametre\FichePosteParametres;
-use FichePoste\Provider\Template\PdfTemplate;
-use FichePoste\Provider\Validation\FichePosteValidations;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
-use Application\Service\Expertise\ExpertiseServiceAwareTrait;
+use FichePoste\Service\Expertise\ExpertiseServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
 use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FichePoste\Entity\Db\Expertise;
+use FichePoste\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Parametre\FichePosteParametres;
+use FichePoste\Provider\Template\PdfTemplate;
+use FichePoste\Provider\Validation\FichePosteValidations;
 use FichePoste\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -120,7 +120,7 @@ class FichePosteController extends AbstractActionController
         $fiche = new FichePoste();
         $fiche->setAgent($agent);
         $this->getFichePosteService()->create($fiche);
-        $this->getEtatInstanceService()->setEtatActif($fiche,FichePosteEtats::ETAT_CODE_REDACTION);
+        $this->getEtatInstanceService()->setEtatActif($fiche, FichePosteEtats::ETAT_CODE_REDACTION);
         $this->getFichePosteService()->update($fiche);
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
     }
@@ -157,7 +157,7 @@ class FichePosteController extends AbstractActionController
             }
 
             $nouvelleFiche->setAgent($agent);
-            $this->getEtatInstanceService()->setEtatActif($nouvelleFiche,FichePosteEtats::ETAT_CODE_REDACTION);
+            $this->getEtatInstanceService()->setEtatActif($nouvelleFiche, FichePosteEtats::ETAT_CODE_REDACTION);
             $this->getFichePosteService()->update($nouvelleFiche);
 
             /**  Commenter pour eviter perte de temps et clignotement de la fenêtre modal */
@@ -931,19 +931,19 @@ class FichePosteController extends AbstractActionController
             }
             switch ($type) {
                 case FichePosteValidations::VALIDATION_RESPONSABLE :
-                    $this->getEtatInstanceService()->setEtatActif($ficheposte,FichePosteEtats::ETAT_CODE_OK);
+                    $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_OK);
                     $this->getFichePosteService()->update($ficheposte);
                     $this->getNotificationService()->triggerValidationResponsableFichePoste($ficheposte, $validation);
                     break;
 
                 case FichePosteValidations::VALIDATION_AGENT :
                     $oldFiches = $this->getFichePosteService()->getFichesPostesSigneesActives($agent);
-                    $this->getEtatInstanceService()->setEtatActif($ficheposte,FichePosteEtats::ETAT_CODE_SIGNEE);
+                    $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_SIGNEE);
                     $this->getFichePosteService()->update($ficheposte);
 
                     $newFiche = $this->getFichePosteService()->clonerFichePoste($ficheposte, true);
                     $newFiche->setAgent($ficheposte->getAgent());
-                    $this->getEtatInstanceService()->setEtatActif($newFiche,FichePosteEtats::ETAT_CODE_REDACTION);
+                    $this->getEtatInstanceService()->setEtatActif($newFiche, FichePosteEtats::ETAT_CODE_REDACTION);
                     $this->getFichePosteService()->update($newFiche);
 
                     $date = new DateTime();

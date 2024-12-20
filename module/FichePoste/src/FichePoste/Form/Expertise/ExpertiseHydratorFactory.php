@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\Expertise;
+namespace FichePoste\Form\Expertise;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ExpertiseHydratorFactory {
 
@@ -10,9 +10,8 @@ class ExpertiseHydratorFactory {
      * @param ContainerInterface $container
      * @return ExpertiseHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): ExpertiseHydrator
     {
-        /** @var  ExpertiseHydrator $hydrator*/
         $hydrator = new ExpertiseHydrator();
         return $hydrator;
     }
