@@ -69,6 +69,23 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'ficheposte';
 
 -- ---------------------------------------------------------------------------------------------------------------------
+-- PARAMETRE -----------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+
+INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
+VALUES ('FICHE_POSTE', 'Paramètres liés aux fiches de poste', 200, null);
+INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE)
+WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
+    SELECT 'CODE_FONCTION', 'Utilisation de code fonction', '<p>Le code fonction est une codification associ&eacute; au niveau associ&eacute; au poste li&eacute; &agrave; la fiche de poste utilis&eacute;e dans certains &eacute;tablissement.<br>Si ce param&egrave;tre est &agrave; la valeur <em>false</em> alors le code fonction n''est plus affich&eacute; sur la fiche de poste.</p>', 'Boolean', 10000
+)
+SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
+FROM d
+JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FICHE_POSTE';
+
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- MACROS --------------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 

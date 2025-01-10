@@ -137,6 +137,23 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'agent';
 
+
+-- Privileges
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('chaine', 'Gestion des chaînes hiérarchiques', 900, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+ SELECT 'chaine_index', 'Accèder à l''index', 10 UNION
+ SELECT 'chaine_afficher', 'Afficher', 20 UNION
+ SELECT 'chaine_synchroniser', 'Gérer les chaînes importées', 30 UNION
+ SELECT 'chaine_gerer', 'Gérer les chaînes internes', 40 UNION
+ SELECT 'chaine_importer', 'Accéder à l''importation et aux calculs', 100
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'chaine';
+
 -- --------------------------------------------------------------------------------------------------------------------
 -- ROLE ---------------------------------------------------------------------------------------------------------------
 -- --------------------------------------------------------------------------------------------------------------------

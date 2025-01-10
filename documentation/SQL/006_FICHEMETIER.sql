@@ -120,7 +120,8 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'DISPLAY_MISSION', 'Affichage du bloc "Missions principales "', null, 'Boolean',  40 UNION
     SELECT 'DISPLAY_COMPETENCE', 'Affichage du bloc "Compétences"', null, 'Boolean', 50 UNION
     SELECT 'DISPLAY_APPLICATION', 'Affichage du bloc "Applications"', null, 'Boolean', 60 UNION
-    SELECT 'DISPLAY_CONTEXTE', 'Affichage du bloc "Contexte et environnement de travail"', null, 'Boolean', 70
+    SELECT 'DISPLAY_CONTEXTE', 'Affichage du bloc "Contexte et environnement de travail"', null, 'Boolean', 70 UNION
+    SELECT 'CODE_FONCTION', 'Utilisation de code fonction', '<p>Le code fonction est une codification associ&eacute; au niveau associ&eacute; au poste li&eacute; &agrave; la fiche de poste utilis&eacute;e dans certains &eacute;tablissement.<br>Si ce param&egrave;tre est &agrave; la valeur <em>false</em> alors le code fonction n''est plus affich&eacute; sur la fiche de poste.</p>', 'Boolean', 10000
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
 FROM d
