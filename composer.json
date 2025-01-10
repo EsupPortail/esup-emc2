@@ -9,9 +9,9 @@
   ],
   "require": {
     "laminas/laminas-cli": "*",
-    "unicaen/app": "^6.2",
-    "unicaen/authentification": "^6.1",
-    "unicaen/utilisateur": "^6.3",
+    "unicaen/app": "^7.0",
+    "unicaen/authentification": "^6.4",
+    "unicaen/utilisateur": "^7.0",
     "unicaen/privilege": "^6.2",
     "unicaen/renderer": "^6",
     "unicaen/pdf": "^6",

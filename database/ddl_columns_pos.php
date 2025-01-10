@@ -1423,6 +1423,7 @@ return [
         'mots_clefs',
         'log',
         'copies',
+        'attachment_paths',
     ],
     'unicaen_observation_observation_instance'          => [
         'id',

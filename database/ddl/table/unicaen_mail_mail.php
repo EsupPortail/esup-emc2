@@ -10,6 +10,18 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'unicaen_mail_mail_id_seq',
     'columns'     => [
+        'attachment_paths'       => [
+            'name'        => 'attachment_paths',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 2056,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 11,
+            'commentaire' => NULL,
+        ],
         'copies'                 => [
             'name'        => 'copies',
             'type'        => 'clob',
