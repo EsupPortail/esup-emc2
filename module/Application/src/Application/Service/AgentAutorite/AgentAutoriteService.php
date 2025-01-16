@@ -211,7 +211,7 @@ class AgentAutoriteService
         }
         $id = $autorite->generateId();
         $autorite->setId($id);
-        $autorite->setCreatedOn(new DateTime());
+        $autorite->setInsertedOn(new DateTime());
 
         $this->create($autorite);
     }

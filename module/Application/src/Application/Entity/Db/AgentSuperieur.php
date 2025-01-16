@@ -32,9 +32,9 @@ class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterf
 
     public function generateId(): ?string
     {
-        if ($this->getAgent() === null) { throw new RuntimeException("AgentSupeieur::generateId() : Agent manquant");}
-        if ($this->getSuperieur() === null) { throw new RuntimeException("AgentSupeieur::generateId() : Superieur manquant");}
-        if ($this->getDateDebut() === null) { throw new RuntimeException("AgentSupeieur::generateId() : Date de début manquant");}
+        if ($this->getAgent() === null) { throw new RuntimeException("AgentSuperieur::generateId() : Agent manquant");}
+        if ($this->getSuperieur() === null) { throw new RuntimeException("AgentSuperieur::generateId() : Superieur manquant");}
+        if ($this->getDateDebut() === null) { throw new RuntimeException("AgentSuperieur::generateId() : Date de début manquant");}
         if ($this->sourceId === null) $this->sourceId = 'EMC2';
         $id = $this->sourceId . "-". $this->getAgent()->getId() . "-" . $this->getSuperieur()->getId() . "-". $this->getDateDebut()->format('dmYHi');
         return $id;

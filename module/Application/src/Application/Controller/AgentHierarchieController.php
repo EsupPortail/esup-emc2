@@ -203,7 +203,7 @@ class AgentHierarchieController extends AbstractActionController
                                 $this->getAgentAutoriteService()->restore($old);
                             } else {
                                 $agentAutorite->setId($id);
-                                $agentAutorite->setCreatedOn(new DateTime());
+                                $agentAutorite->setInsertedOn(new DateTime());
                                 $this->getAgentAutoriteService()->create($agentAutorite);
                             }
                         }
@@ -226,7 +226,7 @@ class AgentHierarchieController extends AbstractActionController
                                 $this->getAgentSuperieurService()->restore($old);
                             } else {
                                 $agentSuperieur->setId($id);
-                                $agentSuperieur->setCreatedOn(new DateTime());
+                                $agentSuperieur->setInsertedOn(new DateTime());
                                 $this->getAgentSuperieurService()->create($agentSuperieur);
                             }
                         }
@@ -338,7 +338,8 @@ class AgentHierarchieController extends AbstractActionController
             if ($form->isValid()) {
                 $id = $chaine->generateId();
                 $chaine->setId($id);
-                $chaine->setCreatedOn(new DateTime());
+                $chaine->setSourceId("EMC2");
+                $chaine->setInsertedOn(new DateTime());
                 switch ($type) {
                     case 'superieur':
                         $this->getAgentSuperieurService()->create($chaine);

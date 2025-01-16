@@ -119,6 +119,7 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'DISPLAY_RAISON', 'Affichage du bloc "Raison d''être du métier dans l''établissement"', null, 'Boolean',  30 UNION
     SELECT 'DISPLAY_MISSION', 'Affichage du bloc "Missions principales "', null, 'Boolean',  40 UNION
     SELECT 'DISPLAY_COMPETENCE', 'Affichage du bloc "Compétences"', null, 'Boolean', 50 UNION
+    SELECT 'DISPLAY_COMPETENCE_SPECIFIQUE', 'Affichage du bloc "Compétences spécifiques"', null, 'Boolean', 55 UNION
     SELECT 'DISPLAY_APPLICATION', 'Affichage du bloc "Applications"', null, 'Boolean', 60 UNION
     SELECT 'DISPLAY_CONTEXTE', 'Affichage du bloc "Contexte et environnement de travail"', null, 'Boolean', 70 UNION
     SELECT 'CODE_FONCTION', 'Utilisation de code fonction', '<p>Le code fonction est une codification associ&eacute; au niveau associ&eacute; au poste li&eacute; &agrave; la fiche de poste utilis&eacute;e dans certains &eacute;tablissement.<br>Si ce param&egrave;tre est &agrave; la valeur <em>false</em> alors le code fonction n''est plus affich&eacute; sur la fiche de poste.</p>', 'Boolean', 10000

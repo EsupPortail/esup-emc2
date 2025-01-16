@@ -165,7 +165,7 @@ class AgentSuperieurService
         }
         $id = $superieur->generateId();
         $superieur->setId($id);
-        $superieur->setCreatedOn(new DateTime());
+        $superieur->setInsertedOn(new DateTime());
 
         $this->create($superieur);
     }
