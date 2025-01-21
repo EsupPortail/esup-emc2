@@ -452,6 +452,11 @@ class EntretienProfessionnelService
         $qb = $this->createQueryBuilder($withAffectation)
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents);
+        //gestion de l'affectation en date de la campagne
+        $qb = $qb
+            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= :dateDebut')->setParameter('dateDebut', $campagne->getDateDebut())
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :dateFin')->setParameter('dateFin', $campagne->getDateFin())
+        ;
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();

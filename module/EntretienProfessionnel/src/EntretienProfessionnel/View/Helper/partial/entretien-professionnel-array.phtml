@@ -12,7 +12,7 @@ use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations
 
 $isEnCours = (!empty($entretiens) && current($entretiens)->getCampagne()->estEnCours());
 
-$dropdowns = false;
+$dropdowns = true;
 
 // recuperation des données à afficher
 $displayAnnee = true;
@@ -239,13 +239,20 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 </a>
             <?php endif; ?>
             <?php if ($dropdowns) : ?>
-                <div class="dropdown action-dd">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" onclick="setActions(<?php echo $entretien->getId(); ?>)">
-                        <span class="icon actions" title="Actions possible pour l'entretien #<?php echo $entretien->getId(); ?>"></span>
-                    </button>
-                    <ul id="drop_<?php echo $entretien->getId(); ?>" class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    </ul>
-                </div>
+<!--                <div class="dropdown action-dd">-->
+<!--                    <button class="btn btn-default dropdown-toggle"-->
+<!--                            type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"-->
+<!--                            onclick="alert('clicked');  setActions(--><?php //echo $entretien->getId(); ?>//)">
+//                        <span class="icon actions" title="Actions possible pour l'entretien #<?php //echo $entretien->getId(); ?><!--"></span>-->
+<!--                    </button>-->
+<!--                    <ul id="drop_--><?php //echo $entretien->getId(); ?><!--" class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
+<!--                    </ul>-->
+
+<!--                </div>-->
+                <a href="<?php echo $this->url('entretien-professionnel/action', ['entretien-professionnel' => $entretien->getId()], [], true); ?>" class="ajax-modal"
+                   >
+                    Action
+                </a>
             <?php endif; ?>
         </td>
         <?php endif; ?>
@@ -253,6 +260,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
     <?php endforeach; ?>
     </tbody>
 </table>
+
 
 <style>
     div.action-dd button {
@@ -281,7 +289,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
     });
 
     function setActions(id) {
-        let url = '../../entretien-professionnel/action/' + id;
+        let url = '../../../../entretien-professionnel/action/' + id;
         // console.log(url);
         $.ajax({
             type: "POST",
@@ -298,4 +306,36 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         });
         // alert(ficheId);
     }
+    document.addEventListener('DOMContentLoaded', function () {
+        const button = document.getElementById('myPopoverButton');
+
+        // Initialisation du popover
+        const popover = new bootstrap.Popover(button, {
+            content: 'Chargement en cours...', // Contenu initial
+            trigger: 'click', // Le popover s'affiche au clic
+        });
+
+        // Gestionnaire d'événement au clic
+        button.addEventListener('click', function () {
+            // URL de l'API ou ressource
+            const url = 'https://api.example.com/data';
+
+            // Requête AJAX
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau');
+                    }
+                    return response.text(); // Ou response.json() selon le format attendu
+                })
+                .then(data => {
+                    // Mise à jour dynamique du contenu du popover
+                    popover.setContent({ content: data });
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                    popover.setContent({ content: 'Erreur lors du chargement des données.' });
+                });
+        });
+    });
 </script>

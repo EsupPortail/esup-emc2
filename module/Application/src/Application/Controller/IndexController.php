@@ -105,8 +105,6 @@ class IndexController extends AbstractActionController
 
 
         return new ViewModel([
-            'user' => $connectedUser,
-            'role' => $connectedRole,
             'texte' => $texte,
         ]);
     }

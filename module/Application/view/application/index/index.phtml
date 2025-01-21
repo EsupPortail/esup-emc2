@@ -2,158 +2,36 @@
 
 /**
  * @see \Application\Controller\IndexController::indexAction()
- * @var User $user
- * @var Role $role
  * @var string $texte
  */
 
-use UnicaenUtilisateur\Entity\Db\Role;
-use UnicaenUtilisateur\Entity\Db\User;
-
 ?>
-
-<?php //echo $this->alertes()->withMatchingPlanning()->renderAsBootstrapAlerts(); ?>
-
-<div class="jumbotron" id="preecog">
-    <div class="row">
-        <div class="col-md-3">
-            <span style="font-size: 22pt;">
-                <strong style="color:#19bd81;">E</strong>mploi <br/>
-                &nbsp; <strong style="color:#19bd81;">M</strong>obilité <br/>
-                &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>arrière <br/>
-                &nbsp; &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>ompétences
-                </span>
-        </div>
-        <div class="col-md-8">
-                <?php echo $texte; ?>
-        </div>
-    </div>
-
-    <br/>
-
-<!--    <textarea class="tinymce-autoform" id="choucroute">-->
-<!---->
-<!--    </textarea>-->
-
-
-    <?php if ($user): ?>
-    <p>
-        Vous êtes connecté&middot;e en tant que <strong><?php echo $user->getDisplayName(); ?></strong>. <br/>
-        Vous assumez le rôle de <strong><?php echo ($role)?$role->getLibelle():"???"; ?></strong>.
-    </p>
-
-    <?php else: ?>
-
-        <a class="btn btn-success btn-large" href="<?php echo $this->url('zfcuser/login') ?>">
-            <span class="icon icon-user"></span>
-            <?php echo $this->translate('Se connecter') ?>
-        </a>
-
-    <br/>
-    <?php endif; ?>
+<br>
+<div>
+    <?php echo $texte; ?>
 </div>
 
-<style>
-    div.jumbotron {
-        margin-top: auto;
-        margin-bottom: auto;
-        border-radius: 0.5rem ;
-        padding: 1rem;
-    }
-    div#contenu-principal {
-        background: var(--body-background);
-    }
+<button>
+    Button
+</button>
 
-    div#preecog {
-        border: 1px var(--body-color) solid;
-        background: var(--content-background);
-        margin: 1rem;
-    }
-
-    .jumbo-title {
-        font-size: xx-large;
-        font-weight: bold;
-        vertical-align: top;
-        width:49%;
-        display:inline-block;
-    }
-
-    .jumbo-logo {
-        font-size: xx-large;
-        font-weight: bold;
-        vertical-align: top;
-        text-align: center;
-        width:49%;
-        display:inline-block;
-    }
-
-    .jumbo-subtitle {
-        margin: 1rem;
-        padding: 1rem;
-        text-align: justify;
-        font-size: larger;
-    }
-
-    @media (min-width: 0) and (max-width: 767px) {
-        .jumbo-title {
-            width:100%;
-            text-align: left;
-            padding-left: 2rem;
-        }
-
-        .jumbo-logo {
-            width:100%;
-            text-align: center;
-        }
-    }
-</style>
 
 <script>
-    $(document).ready(function() {
-        tinymce.remove();
-        tinymce.init({
-            selector: '.tinymce-autoform',
-            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
-            resize: true,
-            language: 'fr_FR',
-            plugins: 'lists',
-            statusbar: true,
-            browser_spellcheck : true,
-            branding: false,
-            menu: {},
-            setup: function (editor) {
-                editor.on("focusout", function () {
-                    // console.log(tinymce.get('description').getContent());
-                    //
-                    // alert("out");
+    $('button').on("click", function () {
+        // alert('clicked');
+        const url = '<?php echo $this->url('entretien-professionnel/action', ['entretien-professionnel' => 1], [], true); ?>';
 
-                    let id = $(this).attr('id');
-                    let content = tinymce.get(id).getContent();
-                    $('textarea').val(tinymce.get(id).getContent());
-
-
-                    //ajax
-                    $.ajax({
-                        url: "",
-                        method: "POST",
-                        data: {
-                            champ_id: id,
-                            value: content
-                        },
-                        success: function () {
-                            let notification = editor.notificationManager.open({
-                                text: 'success ! [' + id + '|' + content + ']',
-                                type: 'success',
-                            });
-                        },
-                        error: function () {
-                            let notification = editor.notificationManager.open({
-                                text: 'failure ! [' + id + '|' + content + ']',
-                                type: 'error',
-                            });
-                        },
-                    });
-                });
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function (data) {
+                // Mise à jour dynamique du contenu du popover
+                // popover.setContent({content: data});
+                console.log(data);
+            },
+            error: function () {
+                console.error('Erreur lors de la récupération des données');
+                // popover.setContent({content: 'Erreur lors du chargement des données.'});
             }
         });
     });

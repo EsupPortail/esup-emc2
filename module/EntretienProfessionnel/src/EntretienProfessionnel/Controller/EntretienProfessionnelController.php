@@ -578,10 +578,13 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function actionAction(): ViewModel
     {
-        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $this->layout()->setTemplate(false);
+        $date = new DateTime();
+//        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
 
         $vm = new ViewModel([
-            'entretien' => $entretien,
+            'date' => $date,
+//            'entretien' => $entretien,
         ]);
         return $vm;
     }
