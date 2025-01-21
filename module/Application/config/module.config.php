@@ -367,6 +367,8 @@ return [
         'head_scripts' => [
             '015_jquery' => 'unistrap-1.0.0/js/jquery-3.6.1.min.js',
             '040_bootstrap' => '',
+            '050_select2' => "vendor/select2-4.0.13/dist/js/select2.min.js",
+            '050_select2_fr' => "vendor/select2-4.0.13/dist/js/i18n/fr.js",
             '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
 
         ],
@@ -380,7 +382,6 @@ return [
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
             '120_bootstrap-select' => '/vendor/bootstrap-select-1.14.0-beta3/js/bootstrap-select.min.js',
             '120_bootstrap-select-fr' => '/vendor/bootstrap-select-1.14.0-beta3/js/i18n/defaults-fr_FR.js',
-            '125_select2' => '/vendor/select2/select2-4.1.0.min.js',
             '150_' => 'vendor/tinymce-6.8.2/js/tinymce/tinymce.min.js',
         ],
         'stylesheets' => [
@@ -388,6 +389,7 @@ return [
             '040_bootstrap' => 'unistrap-1.0.0/lib/bootstrap-5.2.2/dist/css/bootstrap.min.css',
             '041_ubuntu' => 'unistrap-1.0.0/css/font-ubuntu.css',
             '042_unistrap' => 'unistrap-1.0.0/css/unistrap.css',
+            '050_select2' => "vendor/select2-4.0.13/dist/css/select2.css",
             '060_unicaen' => '',
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.css',
             '112_' => 'vendor/font-awesome-5.15.2/css/all.min.css',
