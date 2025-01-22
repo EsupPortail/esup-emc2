@@ -129,9 +129,6 @@ class IndexController extends AbstractActionController
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
-        $structureMere = $this->getStructureService()->getStructureMere();
-
-
         $agents = array_map(function (AgentSuperieur $a) {
             return $a->getAgent();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));

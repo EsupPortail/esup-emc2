@@ -12,7 +12,7 @@ use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations
 
 $isEnCours = (!empty($entretiens) && current($entretiens)->getCampagne()->estEnCours());
 
-$dropdowns = true;
+$dropdowns = false;
 
 // recuperation des données à afficher
 $displayAnnee = true;

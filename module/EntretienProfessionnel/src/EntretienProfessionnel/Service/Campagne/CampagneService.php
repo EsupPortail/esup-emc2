@@ -71,8 +71,13 @@ class CampagneService
     {
         $qb = $this->getObjectManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
             ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
-            ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien');
-//            $qb = EntretienProfessionnel::decorateWithEtats($qb, "entretien");
+            /**
+             * NB : Retirer, car si on a besoin des entretiens, on les récupère avec
+             * @see EntretienProfessionnelService::getEntretiensProfessionnelsByCampagne
+             */
+//            ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien');
+//            $qb = EntretienProfessionnel::decorateWithEtats($qb, "entretien")
+;
         return $qb;
     }
 

@@ -155,7 +155,7 @@ class NotificationService
         $vars['UrlService'] = $url;
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ENVOI, $vars);
-        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
+        $mail = $this->getMailService()->sendMail(implode(',',$this->getEmailAgent($entretien)), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
