@@ -548,7 +548,7 @@ class FicheMetierService
         $competences = [];
         $competencesListe = [];
         foreach ($competences_ids as $competence_id) {
-            $competence = $this->getCompetenceService()->getCompetenceByRefentiel($referens, (int) $competence_id);
+            $competence = $this->getCompetenceService()->getCompetenceByRefentiel($referens, $competence_id);
             if ($competence !== null) {
                 $competences[$competence->getType()->getLibelle()][$competence->getId()] = $competence;
                 $competencesListe[$competence->getId()] = $competence;

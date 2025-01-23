@@ -4,6 +4,8 @@ namespace Application\Service\Url;
 
 use DateTime;
 use Laminas\View\Renderer\PhpRenderer;
+use UnicaenAuthentification\Controller\AuthController;
+use UnicaenUtilisateur\Entity\Db\AbstractRole;
 
 class UrlService {
 
@@ -68,6 +70,14 @@ class UrlService {
     {
         $ficheposte = $this->variables['ficheposte'];
         $url = $this->renderer->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], ['force_canonical' => true], true);
+        return UrlService::trueLink($url);
+    }
+
+    public function getTest(?AbstractRole $role) : string
+    {
+        $urlCible = $this->renderer->url('home', [], ['force_canonical' => true], true);
+        /** @see AuthController::loginAction() $url */
+        $url = $this->renderer->url('zfcuser/authenticate', ['type' => 'cas'], ['query' => ['role' => $role?->getRoleId(), 'redirect' => $urlCible], 'force_canonical' => true], true);
         return UrlService::trueLink($url);
     }
 
