@@ -12,6 +12,7 @@ Version 5.x
 * Refonte des données associées aux chaînes hierarchiques (pour ne plus avoir à faire de déduction)
 * Chaînes hiérarchiques importables (sans retirer les précédents systèmes)
 * Ajout de la notion de code fonction sur les fiches métiers et les fiches de postes
+* Ajout de la notion de périmètres pour les indicateurs
 
 [CORRECTION]
 * Amélioration de l'assertion contrôlant les personnant pouvant modifié les comptes-rendus
