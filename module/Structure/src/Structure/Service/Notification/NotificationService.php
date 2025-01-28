@@ -29,51 +29,15 @@ class NotificationService
 
     /** RECUPERATION DES MAILS *************************/
 
-    public function getMailsAdministrationFonctionnelle(): array
+    public function getMailsAdministrationFonctionnelle(): ?string
     {
         $role = $this->getRoleService()->findByRoleId(AppRoleProvider::ADMIN_FONC);
         $users = $this->getUserService()->findByRole($role);
         $mails = array_map(function (User $a) {
             return $a->getEmail();
         }, $users);
-        return $mails;
+        return implode(',', $mails);
 
-    }
-
-    /** GESTION DES INSCRIPTIONS **************************************************************************************/
-
-    public function triggerInformations(Structure $structure): ?Mail
-    {
-        $vars = [
-            'structure' => $structure,
-            'MacroService' => $this->getMacroService(),
-            'UrlService' => $this->getUrlService(),
-        ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::UPDATE_INFOS, $vars);
-
-        $emails = [];
-
-        if (empty($emails)) {
-            $gestionnaires = $this->getStructureService()->getGestionnaires($structure);
-            if (!empty($gestionnaires)) $emails = array_map(function (StructureGestionnaire $a) {
-                return $a->getAgent()->getEmail();
-            }, $gestionnaires);
-        }
-        if (empty($emails)) {
-            $responsables = $this->getStructureService()->getResponsables($structure);
-            if (!empty($responsables)) $emails = array_map(function (StructureResponsable $a) {
-                return $a->getAgent()->getEmail();
-            }, $responsables);
-        }
-//        if (empty($emails)) {
-//            $emails = $this->getMailsAdministrationFonctionnelle();
-//        }
-
-        if (empty($emails)) return null;
-        $mail = $this->getMailService()->sendMail($emails, $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$structure->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-        return $mail;
     }
 
 }

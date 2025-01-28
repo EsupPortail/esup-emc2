@@ -1512,6 +1512,7 @@ return [
         'document_corps',
         'document_css',
         'namespace',
+        'engine',
     ],
     'unicaen_utilisateur_role'                          => [
         'id',
@@ -1568,6 +1569,24 @@ return [
     'fichemetier_competence_specifique'                 => [
         'fichemetier_id',
         'competence_element_id',
+    ],
+    'unicaen_workflow_step'                             => [
+        'id',
+        'workflow_id',
+        'code',
+        'libelle',
+        'description',
+        'etattype_id',
+        'step_activee',
+        'route',
+        'template_id',
+        'notification_activee',
+    ],
+    'unicaen_workflow_workflow'                         => [
+        'id',
+        'code',
+        'libelle',
+        'description',
     ],
 ];
 

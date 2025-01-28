@@ -82,6 +82,18 @@ return [
             'position'    => 4,
             'commentaire' => NULL,
         ],
+        'engine'         => [
+            'name'        => 'engine',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 256,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => '\'default\'',
+            'position'    => 9,
+            'commentaire' => NULL,
+        ],
         'id'             => [
             'name'        => 'id',
             'type'        => 'int',

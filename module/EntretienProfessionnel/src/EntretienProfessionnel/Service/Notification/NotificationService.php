@@ -43,44 +43,35 @@ class NotificationService
 
     public ?PhpRenderer $renderer = null;
 
-    /** Méthodes de récupération des adresses électroniques ***********************************************************/
+    /** Méthodes de récupération des adresses électroniques ************************************************************
+     * Ces méthodes sont à favoriser, car permettent un refactoring plus rapide
+     **/
 
-    /**
-     * Retourne l'adresse electronique de l'agent
-     * @param EntretienProfessionnel|null $entretienProfessionnel
-     * @return string[]
-     */
-    public function getEmailAgent(?EntretienProfessionnel $entretienProfessionnel): array
+    /** Retourne l'adresse de l'agent·e **/
+    public function getEmailAgent(?EntretienProfessionnel $entretienProfessionnel): ?string
     {
         $emails = [];
         if ($entretienProfessionnel !== null) {
             $agent = $entretienProfessionnel->getAgent();
             if ($agent and $agent->getEmail()) $emails[] = $agent->getEmail();
         }
-        return $emails;
+        return implode(',', $emails);
     }
 
-    /**
-     * Retourne l'adresse electronique du responsable d'entretien
-     * @param EntretienProfessionnel|null $entretienProfessionnel
-     * @return string[]
-     */
-    public function getEmailResponsable(?EntretienProfessionnel $entretienProfessionnel): array
+    /** Retourne l'adresse du reponsable de l'entretien professionnel */
+    public function getEmailResponsable(?EntretienProfessionnel $entretienProfessionnel): ?string
     {
         $emails = [];
         if ($entretienProfessionnel !== null) {
             $agent = $entretienProfessionnel->getResponsable();
             if ($agent and !$agent->isDeleted() and $agent->getEmail()) $emails[] = $agent->getEmail();
         }
-        return $emails;
+        return implode(',', $emails);
     }
 
-    /**
-     * Retourne l'adresse des supérieures hiérarchiques de l'agent
-     * @param EntretienProfessionnel|null $entretienProfessionnel
-     * @return string[]
-     */
-    public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel): array
+    /** Retourne l'adresse DES supérieures hiérarchiques de l'agent **/
+
+    public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel): ?string
     {
         $agent = $entretienProfessionnel->getAgent();
         $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
@@ -89,15 +80,11 @@ class NotificationService
         foreach ($superieurs as $superieur) {
             if (!$superieur->getSuperieur()->isDeleted()) $emails[] = $superieur->getSuperieur()->getEmail();
         }
-        return $emails;
+        return implode(',', $emails);
     }
 
-    /**
-     * Retourne l'adresse des autorités hiérarchiques de l'agent
-     * @param EntretienProfessionnel|null $entretienProfessionnel
-     * @return string[]
-     */
-    public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel): array
+    /** Retourne l'adresse DES autorités hiérarchiques de l'agent */
+    public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel): ?string
     {
         $agent = $entretienProfessionnel->getAgent();
         $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent);
@@ -106,7 +93,7 @@ class NotificationService
         foreach ($autorites as $autorite) {
             if (!$autorite->getAutorite()->isDeleted()) $emails[] = $autorite->getAutorite()->getEmail();
         }
-        return $emails;
+        return implode(',', $emails);
     }
 
     /** Notifications liées à une campagne d'entretiens professionnels ************************************************/
@@ -155,7 +142,7 @@ class NotificationService
         $vars['UrlService'] = $url;
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ENVOI, $vars);
-        $mail = $this->getMailService()->sendMail(implode(',',$this->getEmailAgent($entretien)), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
+        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 

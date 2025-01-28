@@ -26,36 +26,28 @@ class NotificationService
 
     /** Méthodes de récupération des adresses électroniques ***********************************************************/
 
-    /**
-     * Retourne l'adresse electronique de l'agent
-     * @param FichePoste|null $ficheposte
-     * @return string[]
-     */
-    public function getEmailAgent(?FichePoste $ficheposte): array
+    /** Retourne l'adresse electronique de l'agent */
+    public function getEmailAgent(?FichePoste $ficheposte): ?string
     {
         $emails = [];
         if ($ficheposte !== null) {
             $agent = $ficheposte->getAgent();
             if ($agent and $agent->getEmail()) $emails[] = $agent->getEmail();
         }
-        return $emails;
+        return implode(',',$emails);
     }
 
-    /**
-     * Retourne l'adresse electronique du responsable d'entretien
-     * @param FichePoste|null $ficheposte
-     * @return string[]
-     */
-    public function getEmailResponsable(?FichePoste $ficheposte): array
+    /** Retourne l'adresse electronique du responsable d'entretien */
+    public function getEmailResponsable(?FichePoste $ficheposte): ?string
     {
         $responsables = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($ficheposte->getAgent());
-        $email = array_map(
+        $emails = array_map(
             function (AgentSuperieur $a) {
                 return $a->getSuperieur()->getEmail();
             },
             $responsables
         );
-        return $email;
+        return implode(',',$emails);
     }
 
     /** Notifications liées aux validations de la fiche de poste ******************************************************/

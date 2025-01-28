@@ -65,9 +65,11 @@ class IndexController extends AbstractActionController
 
         /** @var User $connectedUser */
         $connectedUser = $this->getUserService()->getConnectedUser();
-        if ($connectedUser === null) return new ViewModel(['user' => null, 'texte' => $texte,
-            'url' => $this->getUrlService()->getTest($this->getRoleService()->getRepo()->findOneBy(['roleId' => AppRoleProvider::AGENT])),
-        ]);
+        if ($connectedUser === null)
+            return new ViewModel([
+                'user' => null,
+                'texte' => $texte,
+            ]);
 
         $agent = $this->getAgentService()->getAgentByUser($connectedUser);
         if ($agent !== null && $agent->getUtilisateur() === null) {
@@ -108,7 +110,6 @@ class IndexController extends AbstractActionController
 
         return new ViewModel([
             'texte' => $texte,
-            'url' => null,
         ]);
     }
 

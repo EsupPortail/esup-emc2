@@ -3,7 +3,6 @@
 /**
  * @see \Application\Controller\IndexController::indexAction()
  * @var string $texte
- * @var string $url
  */
 
 ?>
@@ -12,31 +11,3 @@
     <?php echo $texte; ?>
 </div>
 
-<?php echo $url; ?>
-
-
-<button>
-    Button
-</button>
-
-
-<script>
-    $('button').on("click", function () {
-        // alert('clicked');
-        const url = '<?php echo $this->url('entretien-professionnel/action', ['entretien-professionnel' => 1], [], true); ?>';
-
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function (data) {
-                // Mise à jour dynamique du contenu du popover
-                // popover.setContent({content: data});
-                console.log(data);
-            },
-            error: function () {
-                console.error('Erreur lors de la récupération des données');
-                // popover.setContent({content: 'Erreur lors du chargement des données.'});
-            }
-        });
-    });
-</script>
