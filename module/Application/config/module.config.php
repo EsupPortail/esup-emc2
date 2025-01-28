@@ -23,6 +23,8 @@ use Application\Service\Macro\MacroService;
 use Application\Service\Macro\MacroServiceFactory;
 use Application\Service\Notification\NotificationService;
 use Application\Service\Notification\NotificationServiceFactory;
+use Application\Service\Perimetre\PerimetreService;
+use Application\Service\Perimetre\PerimetreServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
@@ -307,6 +309,7 @@ return [
             MacroService::class => MacroServiceFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
+            PerimetreService::class => PerimetreServiceFactory::class,
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,
             SynchroOctopusService::class => SynchroOctopusServiceFactory::class,

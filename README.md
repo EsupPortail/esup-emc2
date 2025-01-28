@@ -1,2 +1,2 @@
-Module pgsql :
-unaccent
+
+

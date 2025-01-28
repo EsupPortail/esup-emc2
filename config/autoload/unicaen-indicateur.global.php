@@ -1,5 +1,6 @@
 <?php
 
+use Application\Service\Perimetre\PerimetreService;
 use UnicaenIndicateur\Controller\IndexController;
 use UnicaenIndicateur\Controller\IndicateurController;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -29,6 +30,15 @@ return [
                     ],
                 ],
             ],
+        ],
+    ],
+
+    'unicaen-indicateur' => [
+        'perimetreService' => PerimetreService::class,
+
+        'perimetres' => [
+            'structure' => "Périmètre restraignant les résultats à respecter les structures d'affectation (perimetre_structure_id)",
+            'role' => "Périmètre restraignant les résultats à respecter un rôle (perimetre_role_id)",
         ],
     ],
 ];

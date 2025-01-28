@@ -1400,6 +1400,7 @@ return [
         'code',
         'nb_elements',
         'categorie_id',
+        'perimetre',
     ],
     'unicaen_indicateur_tableau_indicateur'             => [
         'tableau_id',

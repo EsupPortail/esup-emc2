@@ -15,5 +15,5 @@ Version 5.x
 
 [CORRECTION]
 * Amélioration de l'assertion contrôlant les personnant pouvant modifié les comptes-rendus
-* Correction du problème lié à l'affichage des bloc raison d'être et mission dans la fiche métier
+* Correction du problème lié à l'affichage des blocs "Raison d'être" et "Missions" dans la fiche métier
 * Correction de la méthode de remonté des EPs excluant certains agents en retraite maintenant mais en poste à lors de la campagne

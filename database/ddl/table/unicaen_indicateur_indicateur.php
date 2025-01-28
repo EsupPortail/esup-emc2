@@ -106,6 +106,18 @@ return [
             'position'    => 10,
             'commentaire' => NULL,
         ],
+        'perimetre'                => [
+            'name'        => 'perimetre',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 256,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 12,
+            'commentaire' => NULL,
+        ],
         'requete'                  => [
             'name'        => 'requete',
             'type'        => 'string',
