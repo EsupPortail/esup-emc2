@@ -42,10 +42,8 @@ Liste des fichiers distants :
 Lancez la commande suivante pour exécuter le processus d'installation :
 
 ```bash
-./vendor/bin/laminas bddadmin:install
+./vendor/bin/laminas update-ddl
 ```
-
-Après l'installation, vérifiez que les données ont été correctement insérées par la mise à jour.
 
 ## Création des répertoires nécessaires
 
@@ -67,16 +65,16 @@ Vérifiez que les paramètres suivants dans PHP sont correctement configurés à
 
 Pour vérifier, consultez la configuration PHP :
 
-php -i | grep session.cookie_lifetime
-php -i | grep session.gc_maxlifetime
+    php -i | grep session.cookie_lifetime
+    php -i | grep session.gc_maxlifetime
 
 Modification des paramètres
 
 Si les valeurs ne sont pas correctes, modifiez le fichier /etc/php/8.2/fpm/php.ini et assurez-vous que les lignes
 suivantes sont définies :
 
-session.cookie_lifetime = 0
-session.gc_maxlifetime = 0
+    session.cookie_lifetime = 0
+    session.gc_maxlifetime = 0
 
 Redémarrez le service PHP-FPM pour appliquer les modifications :
 
