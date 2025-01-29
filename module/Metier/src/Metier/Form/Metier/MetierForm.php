@@ -28,8 +28,8 @@ class MetierForm extends Form {
             ],
             'attributes' => [
                 'id' => 'domaines',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'class'             => 'select2',
+                //'data-live-search'  => 'true',
                 'multiple'          => 'multiple',
             ],
         ]);
