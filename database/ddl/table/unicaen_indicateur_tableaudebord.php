@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'unicaen_indicateur_tableaudebord',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'unicaen_indicateur_tableaudebord_id_seq',
     'columns'     => [

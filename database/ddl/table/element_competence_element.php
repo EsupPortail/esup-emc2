@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'element_competence_element',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'element_competence_element_id_seq',
     'columns'     => [

@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'structure_agent_force',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'structure_agent_force_id_seq',
     'columns'     => [

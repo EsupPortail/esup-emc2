@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'missionprincipale',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'missionprincipale_id_seq',
     'columns'     => [

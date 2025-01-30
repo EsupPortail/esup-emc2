@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'agent_carriere_grade',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => NULL,
     'columns'     => [

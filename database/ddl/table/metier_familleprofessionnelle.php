@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'metier_familleprofessionnelle',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'metier_familleprofessionnelle_id_seq',
     'columns'     => [

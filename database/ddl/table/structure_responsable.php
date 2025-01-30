@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'structure_responsable',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'structure_responsable_id_seq',
     'columns'     => [

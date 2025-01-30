@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'carriere_mobilite',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'carriere_mobilite_id_seq',
     'columns'     => [

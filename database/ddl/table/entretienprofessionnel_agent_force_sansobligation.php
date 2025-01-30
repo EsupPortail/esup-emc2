@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'entretienprofessionnel_agent_force_sansobligation',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'entretienprofessionnel_agent_force_sansobligation_id_seq',
     'columns'     => [

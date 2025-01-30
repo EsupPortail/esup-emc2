@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'ficheposte_specificite',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'ficheposte_specificite_id_seq',
     'columns'     => [

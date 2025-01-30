@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'entretienprofessionnel_campagne',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'entretienprofessionnel_campagne_id_seq',
     'columns'     => [

@@ -2,6 +2,8 @@
 
 namespace Metier\Controller;
 
+use Laminas\Http\Header\Accept\FieldValuePart\AbstractFieldValuePart;
+use Laminas\View\Model\JsonModel;
 use Metier\Entity\Db\Domaine;
 use Metier\Form\Domaine\DomaineFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
@@ -10,6 +12,7 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Metier\View\Helper\TypeFonctionViewHelper;
 
 class DomaineController extends AbstractActionController {
     use DomaineServiceAwareTrait;
@@ -151,5 +154,11 @@ class DomaineController extends AbstractActionController {
             ]);
         }
         return $vm;
+    }
+
+    public function domainesAsJsonAction() : JsonModel
+    {
+        $domaines = $this->getDomaineService()->getDomainesAsJson(true);
+        return new JsonModel($domaines);
     }
 }

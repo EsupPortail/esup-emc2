@@ -80,6 +80,13 @@ return [
                         DomainePrivileges::DOMAINE_SUPPRIMER
                     ],
                 ],
+                [
+                    'controller' => DomaineController::class,
+                    'action' => [
+                        'domaines-as-json',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -109,6 +116,17 @@ return [
                                 /** @see DomaineController::afficherAction() */
                                 'controller' => DomaineController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'domaines-as-json' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/domaines-as-json',
+                            'defaults' => [
+                                /** @see DomaineController::domainesAsJsonAction() */
+                                'controller' => DomaineController::class,
+                                'action'     => 'domaines-as-json',
                             ],
                         ],
                     ],

@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'fichereferentiel_fiche',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'fichereferentiel_fiche_id_seq',
     'columns'     => [

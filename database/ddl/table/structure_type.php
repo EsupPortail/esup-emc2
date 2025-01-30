@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'structure_type',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => NULL,
     'columns'     => [

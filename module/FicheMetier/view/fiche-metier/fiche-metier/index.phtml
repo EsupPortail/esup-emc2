@@ -33,13 +33,13 @@ $this->headTitle('Index des fiches métiers');
         <?php if ($canAjouter) : ?>
             <?php /** @see FicheMetierController::ajouterAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier/ajouter', [], [], true); ?>"
-               class="btn btn-primary action ajax-modal" data-event="creation">
+               class="btn btn-primary ajax-modal" data-event="creation">
                 <span class="icon icon-ajouter"></span>
                 Ajouter une fiche métier
             </a>
             <?php /** @see FicheMetierController::importerAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier/importer', [], [], true); ?>"
-               class="btn btn-primary action">
+               class="btn btn-primary">
                 <span class="icon icon-ajouter"></span>
                 Importer depuis CSV
             </a>

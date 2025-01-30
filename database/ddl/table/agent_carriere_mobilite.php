@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'agent_carriere_mobilite',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'agent_carriere_mobilite_id_seq',
     'columns'     => [

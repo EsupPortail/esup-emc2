@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'ficheposte_expertise',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'ficheposte_expertise_id_seq',
     'columns'     => [

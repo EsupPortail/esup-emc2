@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'element_application',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'element_application_id_seq',
     'columns'     => [

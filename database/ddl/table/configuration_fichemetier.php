@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'configuration_fichemetier',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'configuration_fichemetier_id_seq',
     'columns'     => [

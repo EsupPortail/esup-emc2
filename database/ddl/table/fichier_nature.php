@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'fichier_nature',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'fichier_nature_id_seq',
     'columns'     => [

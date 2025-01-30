@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'ficheposte_competence_retiree',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'ficheposte_competence_retiree_id_seq',
     'columns'     => [

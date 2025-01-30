@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'configuration_entretienpro',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'configuration_entretienpro_id_seq',
     'columns'     => [

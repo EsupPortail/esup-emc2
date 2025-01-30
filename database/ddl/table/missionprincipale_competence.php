@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'missionprincipale_competence',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => NULL,
     'columns'     => [

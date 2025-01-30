@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'ficheposte_missionsadditionnelles',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'ficheposte_missionsadditionnelles_id_seq',
     'columns'     => [

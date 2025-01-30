@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'entretienprofessionnel_recours',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'entretienprofessionnel_recours_id_seq',
     'columns'     => [

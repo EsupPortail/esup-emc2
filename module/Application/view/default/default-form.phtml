@@ -25,7 +25,7 @@ use Laminas\Form\Form;
 <?php echo $this->form($form); ?>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         //$('select').select2();
 
         tinymce.remove();
@@ -36,7 +36,7 @@ use Laminas\Form\Form;
             language: 'fr_FR',
             plugins: 'lists',
             statusbar: true,
-            browser_spellcheck : true,
+            browser_spellcheck: true,
             branding: false,
             menu: {},
             menubar: false,
@@ -52,18 +52,16 @@ use Laminas\Form\Form;
     });
 
 
-
-    $(function() {
+    $(function () {
         $('select:not(.select2)').selectpicker();
         $('.select2').select2();
     });
 
 
-
     $('input#agent[id]').hide()
 
     <?php if (isset($js)): ?>
-        <?php echo $js; ?>
+    <?php echo $js; ?>
     <?php endif; ?>
 </script>
 
@@ -77,19 +75,18 @@ use Laminas\Form\Form;
 </script>
 
 
-
-
 <style>
-    .ui-datepicker{
+    .ui-datepicker {
         position: absolute;
-        z-index:1050 !important;
+        z-index: 1050 !important;
     }
-   /*div.ui-datepicker {*/
-   /*    position: absolute;*/
-   /*     z-index:1050;*/
-   /* }*/
-   /* select.ui-datepicker-year option{*/
-   /* position: absolute;*/
-   /*     z-index:3151 !important;*/
-   /* }*/
+
+    /*div.ui-datepicker {*/
+    /*    position: absolute;*/
+    /*     z-index:1050;*/
+    /* }*/
+    /* select.ui-datepicker-year option{*/
+    /* position: absolute;*/
+    /*     z-index:3151 !important;*/
+    /* }*/
 </style>

@@ -16,7 +16,6 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Application\Provider\Role\RoleProvider;
-use Application\Service\Bdd\BddFactory;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
 use Application\Service\Macro\MacroService;
@@ -37,7 +36,6 @@ use Laminas\Router\Http\Literal;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
-use Unicaen\BddAdmin\Bdd;
 use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
@@ -315,7 +313,6 @@ return [
             SynchroOctopusService::class => SynchroOctopusServiceFactory::class,
 
             IdentityProvider::class => IdentityProviderFactory::class,
-            Bdd::class => BddFactory::class,
         ],
     ],
     'controllers' => [

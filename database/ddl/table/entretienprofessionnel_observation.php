@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'entretienprofessionnel_observation',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'entretienprofessionnel_observation_id_seq',
     'columns'     => [

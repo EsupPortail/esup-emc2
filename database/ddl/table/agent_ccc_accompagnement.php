@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'agent_ccc_accompagnement',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'agent_ccc_accompagnement_id_seq',
     'columns'     => [

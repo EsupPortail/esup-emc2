@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'structure_observateur',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'structure_observateur_id_seq',
     'columns'     => [

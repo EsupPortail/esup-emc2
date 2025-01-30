@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'entretienprofessionnel_agent_force',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => 'Table de jointure reliant les entretiens professionnels aux événements qui leurs sont associés',
     'sequence'    => 'entretienprofessionnel_agent_force_id_seq',
     'columns'     => [

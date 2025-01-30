@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'metier_metier',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'metier_metier_id_seq',
     'columns'     => [

@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'carriere_categorie',
     'temporary'   => FALSE,
-    'logging'     => FALSE,
+    'logging'     => TRUE,
     'commentaire' => NULL,
     'sequence'    => 'carriere_categorie_id_seq',
     'columns'     => [

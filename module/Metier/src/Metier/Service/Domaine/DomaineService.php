@@ -81,11 +81,13 @@ class DomaineService {
     }
 
     /** @return Domaine[] */
-    public function getDomaines(string $champ = 'libelle', string $ordre = 'ASC') : array
+    public function getDomaines(bool $withHisto = false, string $champ = 'libelle', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('domaine.' . $champ, $ordre)
         ;
+        if (!$withHisto) $qb= $qb->andWhere('domaine.histoDestruction IS NULL');
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -100,6 +102,26 @@ class DomaineService {
                 $options[$domaine->getId()] = $domaine->getLibelle();
         }
         return $options;
+    }
+
+    public function getDomainesAsJson(bool $asArray = false): string|array
+    {
+        $domaines = $this->getDomaines();
+        $data = [];
+        foreach ($domaines as $domaine) {
+            $vh = match ($domaine->getTypeFonction()) {
+                'support' => "<span class='badge' style='background:darkblue;'>Support</span>",
+                'soutien' => "<span class='badge' style='background:darkgreen;'>Soutien</span>",
+                default => "<span class='badge' style='background:gray;'>N.C.</span>",
+            };
+            $data[] = [
+                'libellé' => $domaine->getLibelle(),
+                'type-fonction' => $vh,
+            ];
+        }
+
+        if ($asArray) return $data;
+        return json_encode($data);
     }
 
     public function getDomaine(?int $id) : ?Domaine
