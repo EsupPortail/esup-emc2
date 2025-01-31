@@ -4,8 +4,6 @@ namespace Application;
 
 use Application\Assertion\FichePosteAssertion;
 use Application\Assertion\FichePosteAssertionFactory;
-use Application\Controller\FichePosteController;
-use Application\Controller\FichePosteControllerFactory;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormFactory;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydrator;
@@ -21,16 +19,12 @@ use Application\Form\Rifseep\RifseepHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
-use Application\Provider\Privilege\FicheMetierPrivileges;
-use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceFactory;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceFactory;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceFactory;
-use Application\Service\FichePoste\FichePosteService;
-use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FicheMetierExterneViewHelper;
@@ -38,6 +32,12 @@ use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelperFactory;
 use Application\View\Helper\RaisonsViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
+use FichePoste\Controller\FichePosteController;
+use FichePoste\Controller\FichePosteControllerFactory;
+use FichePoste\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Service\FichePoste\FichePosteService;
+use FichePoste\Service\FichePoste\FichePosteServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -62,8 +62,10 @@ return [
                             FichePostePrivileges::FICHEPOSTE_HISTORISER,
                             FichePostePrivileges::FICHEPOSTE_DETRUIRE,
                             FichePostePrivileges::FICHEPOSTE_ETAT,
+
                             FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE,
                             FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT,
+                            FichePostePrivileges::FICHEPOSTE_VALIDER_DRH,
                         ],
                         'resources' => ['FichePoste'],
                         'assertion' => FichePosteAssertion::class
@@ -150,18 +152,6 @@ return [
                         'changer-etat',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_ETAT,
-                    'assertion' => FichePosteAssertion::class,
-                ],
-                [
-                    'controller' => FichePosteController::class,
-                    'action' => [
-                        'valider',
-                        'revoquer',
-                    ],
-                    'privileges' => [
-                        FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT,
-                        FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE,
-                    ],
                     'assertion' => FichePosteAssertion::class,
                 ],
                 [
@@ -267,28 +257,6 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action' => 'action',
-                            ],
-                        ],
-                    ],
-                    'valider' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/valider/:fiche-poste/:type',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action' => 'valider',
-                            ],
-                        ],
-                    ],
-                    'revoquer' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/revoquer/:fiche-poste/:validation',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action' => 'revoquer',
                             ],
                         ],
                     ],
@@ -599,11 +567,11 @@ return [
     'service_manager' => [
         'factories' => [
             FichePosteAssertion::class => FichePosteAssertionFactory::class,
+            FichePosteService::class => FichePosteServiceFactory::class,
 
             ActivitesDescriptionsRetireesService::class => ActivitesDescriptionsRetireesServiceFactory::class,
             ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
-            FichePosteService::class => FichePosteServiceFactory::class,
             SpecificitePosteService::class => SpecificitePosteServiceFactory::class,
         ],
     ],

@@ -150,7 +150,7 @@ class CompetenceService {
             });
 
             foreach ($listing as $competence) {
-                $optionsoptions[$competence->getId()] = $this->competenceOptionify($competence);
+                $optionsoptions[$competence->getId()] = $this->competenceOptionify($competence,9999);
             }
 
             $options[] = [

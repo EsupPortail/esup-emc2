@@ -776,6 +776,7 @@ class Agent implements
 
     /**
      * @return FichePoste|null
+     * //todo reecrire cela
      */
     public function getFichePosteBest(): ?FichePoste
     {
@@ -783,10 +784,7 @@ class Agent implements
         /** @var FichePoste $fiche */
         foreach ($this->fiches as $fiche) {
             if ($fiche->isEnCours() and $fiche->estNonHistorise()) {
-                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) $best = $fiche;
-                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_OK) && ($best === NULL or !$best->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE))) $best = $fiche;
-                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_REDACTION) && ($best === NULL or (!$best->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) && !$best->isEtatActif(FichePosteEtats::ETAT_CODE_OK))) $best = $fiche;
-                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_MASQUEE) && ($best === NULL)) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_OK)) $best = $fiche;
             }
         }
         return $best;

@@ -1,0 +1,30 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+
+/**
+ * @var FichePoste $ficheposte
+ */
+
+$ficheprincipale = null;
+if ($ficheposte->getFicheTypeExternePrincipale()) {
+    $ficheprincipale = $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
+}else {
+    $ficheprincipale = "Aucune fiche métier principale";
+}
+$saisielibre = $ficheposte->getLibelle();
+
+?>
+
+<?php if ($saisielibre) : ?>
+    <strong>
+        <?php echo $saisielibre; ?>
+    </strong>
+    Rattaché à
+    <strong> <?php echo $ficheprincipale; ?> </strong>
+<?php else : ?>
+    <strong> <?php echo $ficheprincipale; ?> </strong>
+<?php endif; ?>
+
+
+

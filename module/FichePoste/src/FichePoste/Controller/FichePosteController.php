@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Controller;
+namespace FichePoste\Controller;
 
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
@@ -21,7 +21,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use FichePoste\Service\Expertise\ExpertiseServiceAwareTrait;
-use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use FichePoste\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
 use FicheMetier\Entity\Db\MissionActivite;
@@ -217,7 +217,7 @@ class FichePosteController extends AbstractActionController
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
 
-        if ($fiche->getEtatActif() && $fiche->getEtatActif()->getType()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [], true);
+        if ($fiche->getEtatActif() && $fiche->getEtatActif()->getType()->getCode() !== FichePosteEtats::ETAT_CODE_REDACTION) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [], true);
         $agent = $fiche->getAgent();
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
@@ -908,111 +908,6 @@ class FichePosteController extends AbstractActionController
         ]);
     }
 
-    public function validerAction(): ViewModel
-    {
-        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
-        $agent = $ficheposte->getAgent();
-        $type = $this->params()->fromRoute('type');
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $validation = $ficheposte->getValidationActiveByTypeCode($type);
-            if ($validation === null) {
-                if ($data["reponse"] === "oui") {
-                    $this->getValidationInstanceService()->setValidationActive($ficheposte, $type);
-                    $this->getFichePosteService()->update($ficheposte);
-                }
-                if ($data["reponse"] === "non") {
-                    $this->getValidationInstanceService()->setValidationActive($ficheposte, $type, 'Refus');
-                    $this->getFichePosteService()->update($ficheposte);
-                }
-            }
-            switch ($type) {
-                case FichePosteValidations::VALIDATION_RESPONSABLE :
-                    $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_OK);
-                    $this->getFichePosteService()->update($ficheposte);
-                    $this->getNotificationService()->triggerValidationResponsableFichePoste($ficheposte, $validation);
-                    break;
-
-                case FichePosteValidations::VALIDATION_AGENT :
-                    $oldFiches = $this->getFichePosteService()->getFichesPostesSigneesActives($agent);
-                    $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_SIGNEE);
-                    $this->getFichePosteService()->update($ficheposte);
-
-                    $newFiche = $this->getFichePosteService()->clonerFichePoste($ficheposte, true);
-                    $newFiche->setAgent($ficheposte->getAgent());
-                    $this->getEtatInstanceService()->setEtatActif($newFiche, FichePosteEtats::ETAT_CODE_REDACTION);
-                    $this->getFichePosteService()->update($newFiche);
-
-                    $date = new DateTime();
-                    foreach ($oldFiches as $fiche) {
-                        $fiche->setFinValidite($date);
-                        $this->getFichePosteService()->update($fiche);
-                    }
-
-                    $this->getNotificationService()->triggerValidationAgentFichePoste($ficheposte, $validation);
-                    break;
-            }
-            exit();
-        }
-
-        $titre = "Validation de la fiche de poste";
-        $texte = "Validation de la fiche de poste";
-        switch ($type) {
-            case FichePosteValidations::VALIDATION_RESPONSABLE :
-                $titre = "Validation du responsable de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
-                $texte = "Cette validation rendra visible la fiche de poste à l'agent (" . $ficheposte->getAgent()->getDenomination() . ").<br/>";
-                $texte .= "Suite à cette validation un courrier électronique sera envoyé à l'agent associé à la fiche de poste  (" . $ficheposte->getAgent()->getDenomination() . ") afin qu'il puisse valider à son tour celle-ci.<br/>";
-                break;
-            case FichePosteValidations::VALIDATION_AGENT :
-                $responsables = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
-                usort($responsables, function (AgentSuperieur $a, AgentSuperieur $b) {
-                    $aaa = $a->getSuperieur()->getNomUsuel() . " " . $a->getSuperieur()->getPrenom();
-                    $bbb = $b->getSuperieur()->getNomUsuel() . " " . $b->getSuperieur()->getPrenom();
-                    return $aaa > $bbb;
-                });
-                $responsables = array_map(function (AgentSuperieur $a) {
-                    return $a->getAgent()->getDenomination();
-                }, $responsables);
-                $responsables = implode(', ', $responsables);
-                $titre = "Validation de l'agent de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
-                $texte = "Cette validation finalise la fiche de poste de l'agent.<br/>";
-                $texte .= "Suite à cette validation un courrier électronique sera envoyé au·x supérieur·e·s hiérachique·s direct·e·s de l'agent (" . $responsables . ") pour le·s informer de la validation de celle-ci.<br/>";
-                break;
-        }
-        $vm = new ViewModel();
-        $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
-        $vm->setVariables([
-            'title' => $titre,
-            'text' => $texte,
-            'action' => $this->url()->fromRoute('fiche-poste/valider', ["type" => $type, "fiche-poste" => $ficheposte->getId()], [], true),
-            'refus' => false,
-        ]);
-        return $vm;
-    }
-
-    public function revoquerAction(): Response
-    {
-        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
-        $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
-        $this->getValidationInstanceService()->historise($validation);
-
-        switch ($validation->getType()->getCode()) {
-            case FichePosteValidations::VALIDATION_RESPONSABLE :
-                $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_REDACTION);
-                $this->getFichePosteService()->update($ficheposte);
-                break;
-            case FichePosteValidations::VALIDATION_AGENT :
-                $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_OK);
-                $this->getFichePosteService()->update($ficheposte);
-                break;
-        }
-
-        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $ficheposte->getId()], [], true);
-
-    }
 
     public function actionAction(): ViewModel
     {

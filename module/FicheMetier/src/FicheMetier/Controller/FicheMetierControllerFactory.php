@@ -3,7 +3,7 @@
 namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Service\FichePoste\FichePosteService;
+use FichePoste\Service\FichePoste\FichePosteService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;

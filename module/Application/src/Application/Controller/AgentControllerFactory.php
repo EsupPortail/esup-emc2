@@ -11,7 +11,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
-use Application\Service\FichePoste\FichePosteService;
+use FichePoste\Service\FichePoste\FichePosteService;
 use Carriere\Service\Categorie\CategorieService;
 use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Form\CompetenceElement\CompetenceElementForm;

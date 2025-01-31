@@ -4,7 +4,7 @@ namespace Application;
 
 use Application\Controller\SpecificiteController;
 use Application\Controller\SpecificiteControllerFactory;
-use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Provider\Privilege\FichePostePrivileges;
 use Application\Service\SpecificiteActivite\SpecificiteActiviteService;
 use Application\Service\SpecificiteActivite\SpecificiteActiviteServiceFactory;
 use Application\View\Helper\SpecificiteActiviteViewHelper;

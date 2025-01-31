@@ -5,7 +5,6 @@ namespace EntretienProfessionnel\Controller;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
-use Application\Service\FichePoste\FichePosteService;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
@@ -27,7 +26,8 @@ use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
-class EntretienProfessionnelControllerFactory {
+class EntretienProfessionnelControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -35,7 +35,7 @@ class EntretienProfessionnelControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : EntretienProfessionnelController
+    public function __invoke(ContainerInterface $container): EntretienProfessionnelController
     {
         /**
          * @var AgentService $agentService
@@ -48,7 +48,6 @@ class EntretienProfessionnelControllerFactory {
          * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var EvenementService $evenementService
-         * @var FichePosteService $fichePosteService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ObservateurService $observateurService
@@ -67,7 +66,6 @@ class EntretienProfessionnelControllerFactory {
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $evenementService = $container->get(EvenementService::class);
-        $fichePosteService = $container->get(FichePosteService::class);
 
         $entretienProfesionnelService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -99,7 +97,6 @@ class EntretienProfessionnelControllerFactory {
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setEvenementService($evenementService);
-        $controller->setFichePosteService($fichePosteService);
         $controller->setCampagneService($campagneService);
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setMailService($mailService);

@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @see \Application\Controller\FichePosteController::selectionnerCompetencesRetireesAction()
+ *
+ * @var FichePoste $ficheposte
+ * @var array $competences
+ */
+
+use Application\Entity\Db\FichePoste;
+
+$listings = [];
+$listings["Connaissances"] = [];
+$listings["Opérationnelles"] = [];
+$listings["Comportementales"] = [];
+
+foreach ($competences as $item) {
+    if (isset($item['entite'])) {
+        $listings[$item['entite']->getType()->getLibelle()][] = $item;
+    }
+}
+?>
+
+
+<form
+        action="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+        method="post"
+>
+
+    <?php foreach ($listings as $key => $items) : ?>
+        <h3> <?php echo $key; ?> </h3>
+        <?php foreach ($items as $item) : ?>
+            <div class="checkbox">
+                <label>
+                    <input
+                            type="checkbox"
+                            id="<?php echo $item['entite']->getId(); ?>"
+                            name="<?php echo $item['entite']->getId(); ?>"
+                        <?php if ($item['conserve']) echo "checked"; ?>
+                    />
+                    <?php echo $item['entite']->getLibelle(); ?>
+                </label>
+            </div>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+
+
+    <input type="submit" class="btn btn-primary action" value="Enregistrer"/>
+</form>

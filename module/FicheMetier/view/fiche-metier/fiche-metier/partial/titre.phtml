@@ -1,7 +1,7 @@
 <?php
 
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 
 /**
  * @var FicheMetier $fichemetier
@@ -12,13 +12,13 @@ use FicheMetier\Entity\Db\FicheMetier;
 $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 
 $metier = $fichemetier->getMetier();
-$libelle = $metier?$metier->getLibelle():"Aucun métier";
+$libelle = $metier ? $metier->getLibelle() : "Aucun métier";
 
 ?>
 
 
 <h1 class="page-header">
-    <?php echo ($mode === 'affichage')?'Affichage':'Modication'; ?> de la fiche métier
+    <?php echo ($mode === 'affichage') ? 'Affichage' : 'Modication'; ?> de la fiche métier
     <br>
     <span style="font-weight:bold; color: var(--unistrap-color-main);"> <?php echo $libelle; ?> </span>
 </h1>

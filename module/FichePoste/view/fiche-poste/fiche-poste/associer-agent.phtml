@@ -1,0 +1,39 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+use Structure\Entity\Db\Structure;
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+/**
+ * @see \Application\Controller\FichePosteController::associerAgentAction()
+ * @var FichePoste $ficheposte
+ * @var Structure $structure
+ */
+
+?>
+
+<form method="post" action="<?php echo $this->url('fiche-poste/associer-agent', ['fiche-poste' => $ficheposte->getId()], ['query' => ['structure' => ($structure)?$structure->getId():null]], true); ?>">
+    <label for="formation">Agent·e a associé à la fiche de poste : </label>
+    <?php
+
+    $structureF = new SearchAndSelect('agent');
+    if ($structure !== null) {
+        /** @see  \Application\Controller\AgentController::rechercherWithStructureMereAction() */
+        $structureF->setAutocompleteSource($this->url('agent/rechercher-with-structure-mere', ['strcture' => $structure->getId()], [], true));
+    } else {
+        /** @see  \Application\Controller\AgentController::rechercherAction() */
+        $structureF->setAutocompleteSource($this->url('agent/rechercher'));
+    }
+    $structureF
+        ->setSelectionRequired(true)
+        ->setAttributes([
+            'id' => 'agent',
+            'placeholder' => "Sélectionner un agent",
+        ]);
+    ?>
+    <?php echo $this->formControlGroup($structureF); ?>
+    <input type="submit" value="Associer l'agent" class="btn btn-primary action">
+</form>
+
+<div id="description">
+</div>

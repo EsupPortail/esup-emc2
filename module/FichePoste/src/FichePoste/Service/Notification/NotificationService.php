@@ -66,6 +66,20 @@ class NotificationService
         return $mail;
     }
 
+    public function triggerRefusFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): Mail
+    {
+        $vars = ['ficheposte' => $ficheposte, 'agent' => $ficheposte->getAgent(), 'validation' => $validation];
+        $UrlService = $this->getUrlService()->setVariables($vars);
+        $vars['UrlService'] = $UrlService;
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FICHE_POSTE_VALIDATION_RESPONSABLE, $vars);
+        $mail = $this->getMailService()->sendMail($this->getEmailAgent($ficheposte), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$ficheposte->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
     public function triggerValidationAgentFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): Mail
     {
 
@@ -74,6 +88,21 @@ class NotificationService
         $vars['UrlService'] = $UrlService;
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FICHE_POSTE_VALIDATION_AGENT, $vars);
+        $mail = $this->getMailService()->sendMail($this->getEmailResponsable($ficheposte), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$ficheposte->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerValidationDrhFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): Mail
+    {
+
+        $vars = ['ficheposte' => $ficheposte, 'agent' => $ficheposte->getAgent(), 'validation' => $validation];
+        $UrlService = $this->getUrlService()->setVariables($vars);
+        $vars['UrlService'] = $UrlService;
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FICHE_POSTE_VALIDATION_DRH, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailResponsable($ficheposte), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$ficheposte->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);

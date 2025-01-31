@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Controller;
+namespace FichePoste\Controller;
 
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
@@ -12,13 +12,13 @@ use Application\Service\AgentPoste\AgentPosteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
-use Application\Service\FichePoste\FichePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FichePoste\Form\Expertise\ExpertiseForm;
 use FichePoste\Service\Expertise\ExpertiseService;
+use FichePoste\Service\FichePoste\FichePosteService;
 use FichePoste\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

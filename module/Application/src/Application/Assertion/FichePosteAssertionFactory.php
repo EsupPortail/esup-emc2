@@ -5,7 +5,7 @@ namespace Application\Assertion;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
-use Application\Service\FichePoste\FichePosteService;
+use FichePoste\Service\FichePoste\FichePosteService;
 use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;

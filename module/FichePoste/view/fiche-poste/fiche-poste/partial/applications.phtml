@@ -1,0 +1,47 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+
+/**
+ * @var FichePoste $fiche
+ * @var array $applications
+ * @var string $mode
+ */
+
+/** @var  array $cApplications */
+$cApplications = [];
+foreach ($applications as $item) {
+    if ($item["conserve"] === true) $cApplications[] = $item;
+}
+
+?>
+
+<div class="row">
+    <div class="col-md-10" style="margin-left:5rem;background-color:#d9edf7;">
+        <h3 style="color:#3c6c8b;">
+            <span class="icon application"></span>
+            Applications
+            <span class="badge" style="background:#3c6c8b;">
+                <?php echo count($cApplications); ?>
+            </span>
+        </h3>
+    </div>
+    <div class="col-md-1" style="background-color:#d9edf7;">
+        <h3>
+        <?php if ($mode === 'edition') : ?>
+            <a <?php /** @see \Application\Controller\FichePosteController::selectionnerApplicationsRetireesAction() */ ?>
+                    href="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                    class="ajax-modal" data-event="modification">
+                <span class="icon icon-listing" title="Sélection des applications liées à la fiche de poste"></span></a>
+        <?php endif; ?>
+            &nbsp;
+        </h3>
+    </div>
+</div>
+
+<div class="row" style="margin: 1rem;">
+    <div class="col-md-11">
+        <br/>
+        <?php echo $this->applicationBloc($cApplications, $fiche->getAgent(), ['display' => ['titre' => false]]); ?>
+    </div>
+</div>

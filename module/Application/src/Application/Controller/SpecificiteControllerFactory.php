@@ -2,7 +2,7 @@
 
 namespace Application\Controller;
 
-use Application\Service\FichePoste\FichePosteService;
+use FichePoste\Service\FichePoste\FichePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FichePoste\Service\MissionAdditionnelle\MissionAdditionnelleService;

@@ -1,8 +1,8 @@
 <?php
 
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use UnicaenParametre\Entity\Db\Parametre;
 
 /**
@@ -89,7 +89,7 @@ $metier = $fichemetier->getMetier();
             <?php else : ?>
                 Non renseigné
             <?php endif; ?>
-            <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
+            <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
                 <?php /** @see FicheMetierController::modifierCodeFonctionAction() */ ?>
                 <a href="<?php echo $this->url('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                    class="ajax-modal action primary" data-event="modification"

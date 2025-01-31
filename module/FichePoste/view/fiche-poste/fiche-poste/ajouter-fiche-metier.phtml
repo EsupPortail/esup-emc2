@@ -1,0 +1,60 @@
+<?php
+
+
+/**
+ * @see \Application\Controller\FichePosteController::ajouterFicheMetierAction()
+ *
+ * @var AjouterFicheMetierForm $form
+ */
+
+use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<br/>
+<div id="preview-fiche-metier">Prévisulation de la fiche métier.</div>
+
+<script>
+    function getFicheMetier() {
+        let value =  $('select#fiche_type').find(":selected").val();
+        console.log(value);
+
+        if (value !== undefined && value !== "")
+        {
+            let url = "../../fiche-metier/afficher/" + value + '?popup=true';
+            $.ajax({
+                type: "POST",
+                url: url,
+                beforeSend:
+                    function () {
+                        document.getElementById('preview-fiche-metier').innerHTML = "Récupération de la fiche métier ...";
+                    },
+                success:
+                    function (retour) {
+                        // var texte = "";
+                        // if (retour["value"] == 1) texte = "<span class='glyphicon glyphicon-ok text-success'></span>";
+                        // else var texte = "<span class='glyphicon glyphicon-remove text-danger'></span>";
+                        document.getElementById('preview-fiche-metier').innerHTML = retour;
+                    }
+            });
+        }
+    }
+    $('select').selectpicker();
+    getFicheMetier();
+
+    $('select#quotite').on ("change", function(event) {
+        let value = $('select#quotite').find(":selected").val();
+       if (value > 50) {
+           $('input#est_principale').prop('checked', true);
+       }
+        if (value < 50) {
+            $('input#est_principale').prop('checked', false);
+        }
+    });
+
+    $('select#fiche_type').on("change", function(event) {
+        getFicheMetier();
+    });
+</script>

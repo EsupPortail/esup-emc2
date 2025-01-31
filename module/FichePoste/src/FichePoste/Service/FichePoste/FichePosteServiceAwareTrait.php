@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\FichePoste;
+namespace FichePoste\Service\FichePoste;
 
 Trait FichePosteServiceAwareTrait {
 

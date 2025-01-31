@@ -14,7 +14,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use FichePoste\Service\FichePoste\FichePosteServiceAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;

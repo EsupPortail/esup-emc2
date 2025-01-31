@@ -15,7 +15,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Provider\Privilege\FichePostePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Fichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
@@ -146,9 +146,9 @@ $date = new DateTime();
                                 </td>
                                 <td class="encours">
                                     <?php $fin = ($ficheposte->getFinValidite()); ?>
-                                    <?php if (($fin === null OR $fin >= $date) AND  $ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE))  echo "<span class='icon icon-checked' style='color:darkgreen;' title='Fiche de poste en cours de validité'></span>"; ?>
-                                    <?php if ($fin !== null AND $fin < $date   AND  $ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE))  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-bs-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
-                                    <?php if ($fin === null                    AND  !$ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE))  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
+                                    <?php if (($fin === null OR $fin >= $date) AND  $ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_OK))  echo "<span class='icon icon-checked' style='color:darkgreen;' title='Fiche de poste en cours de validité'></span>"; ?>
+                                    <?php if ($fin !== null AND $fin < $date   AND  $ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_OK))  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-bs-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
+                                    <?php if ($fin === null                    AND  !$ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_OK))  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
                                 </td>
                                 <td class="etat">
                                     <?php echo $this->etatinstance($ficheposte->getEtatActif()); ?>
@@ -170,7 +170,7 @@ $date = new DateTime();
                                     <?php else :?>
                                         <span class="icon icon-pdf nope" ></span>
                                     <?php endif; ?>
-                                    <?php if ($canModifierFichePoste AND !$ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) : ?>
+                                    <?php if ($canModifierFichePoste AND !$ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_OK)) : ?>
                                         <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
                                         <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $ficheposte->getId()], [], true); ?>"
                                            target="_blank">
@@ -178,7 +178,7 @@ $date = new DateTime();
                                     <?php else :?>
                                         <span class="icon icon-editer nope"></span>
                                     <?php endif; ?>
-                                    <?php if ($canHistoriserFichePoste AND !$ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) : ?>
+                                    <?php if ($canHistoriserFichePoste AND !$ficheposte->isEtatActif(FichePosteEtats::ETAT_CODE_OK)) : ?>
                                         <?php if ($ficheposte->estHistorise()) : ?>
                                             <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
                                             <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $ficheposte->getId()], ['query' => ['retour' => $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >

@@ -2,7 +2,7 @@
 
 use Application\Entity\Db\FichePoste;
 use FichePoste\Provider\Etat\FichePosteEtats;
-use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Provider\Privilege\FichePostePrivileges;
 use Structure\Entity\Db\Structure;
 use UnicaenEtat\Entity\Db\EtatType;
 
@@ -170,7 +170,7 @@ if ($retour)    $query['retour'] = $retour;
                 <?php endif; ?>
                 <?php if ($displays['en-cours'] AND $displays['validite']) : ?>
                     <td style="text-align: center;">
-                        <?php if ($etat === FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+                        <?php if ($etat === FichePosteEtats::ETAT_CODE_SIGNEE_DRH) : ?>
                             <?php if ($isEnCours) : ?>
                                 <span class="icon icon-checked" style="color:darkgreen;" title="Fiche en cours de validité"></span>
                             <?php else : ?>

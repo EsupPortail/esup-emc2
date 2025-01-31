@@ -4,7 +4,7 @@ namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
-use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use FichePoste\Service\FichePoste\FichePosteServiceAwareTrait;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;

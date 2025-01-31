@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @see \Application\Controller\FichePosteController::dupliquerAction()
+ * @var FichePoste[] $fiches
+ * @var Structure $structure
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
+use FichePoste\Provider\Etat\FichePosteEtats;
+use Structure\Entity\Db\Structure;
+
+?>
+
+<div class="alert alert-info">
+    <span class="icon icon-information"></span>
+    Les fiches listées ci-dessous ne correspondent qu'aux fiches de postes :
+    <ul>
+        <li> qui sont complètes ;</li>
+        <li> qui ne sont pas dans l'état masquée <?php echo $this->etattype(FichePosteEtats::ETAT_CODE_MASQUEE); ?> ;</li>
+        <li> associées à un·e agent·e de niveau compatible. </li>
+    </ul>
+</div>
+
+<form
+    method="post"
+    action="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
+>
+    <label for="fiche">Fiche de poste à dupliquer :</label> <br/>
+    <select id="fiche" name="fiche" class="bootstrap-selectpicker show-tick" data-live-search="true" data-width="70%">
+        <option value="null"> Aucune fiche de poste </option>
+        <?php foreach ($fiches as $fiche) : ?>
+            <option value="<?php echo $fiche->getId(); ?>"
+                    data-content="<strong><?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?></strong> - <?php echo $fiche->getLibelleMetierPrincipal() ?>"
+            >
+                <?php echo $fiche->getLibelleMetierPrincipal() ?> - <strong><?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?></strong>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <input type="submit" value="Utiliser cette fiche de poste" class="btn btn-primary" style="margin-top: 2rem;">
+</form>
+
+<script>
+    $('select').selectpicker();
+</script>

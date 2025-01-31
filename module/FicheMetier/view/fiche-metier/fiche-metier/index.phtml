@@ -1,7 +1,7 @@
 <?php
 
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use Metier\Entity\Db\Domaine;
 use UnicaenEtat\Entity\Db\EtatType;
 
@@ -96,7 +96,7 @@ $this->headTitle('Index des fiches métiers');
                     >
                         <?php endif; ?>
                         <?php $etat = $fiche->getEtatActif(); ?>
-                        <?php echo ($etat)?$this->etattype($etat->getType()):"N.C."; ?>
+                        <?php echo ($etat) ? $this->etattype($etat->getType()) : "N.C."; ?>
                         <?php if ($canEditer) : ?>
                     </a>
                 <?php endif; ?>
@@ -176,7 +176,7 @@ $this->headTitle('Index des fiches métiers');
     </table>
 
     <script>
-        $(function() {
+        $(function () {
             $('table#fiches').DataTable({
                 "paging": false
             });
@@ -188,7 +188,7 @@ $this->headTitle('Index des fiches métiers');
 
 
 <script>
-    $(function() {
+    $(function () {
         $('#datatable').DataTable({
             language: {
                 url: '/localisation/fr_FR.json'

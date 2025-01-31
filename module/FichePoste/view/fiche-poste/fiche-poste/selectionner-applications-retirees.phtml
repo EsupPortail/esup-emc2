@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @see \Application\Controller\FichePosteController::selectionnerApplicationsRetireesAction()
+ *
+ * @var FichePoste $ficheposte
+ * @var array $applications
+ */
+
+use Application\Entity\Db\FichePoste;
+
+usort($applications, function($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle();});
+?>
+
+
+<form
+    action="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+    method="post"
+>
+
+<?php foreach ($applications as $item) : ?>
+    <div class="checkbox">
+        <label>
+            <input
+                    type="checkbox"
+                    id="<?php echo $item['entite']->getId(); ?>"
+                    name="<?php echo $item['entite']->getId(); ?>"
+                    <?php if ($item['conserve']) echo "checked"; ?>
+            />
+            <?php echo $item['entite']->getLibelle(); ?>
+        </label>
+    </div>
+<?php endforeach; ?>
+
+    <input type="submit" class="btn btn-primary action" value="Enregistrer"/>
+</form>

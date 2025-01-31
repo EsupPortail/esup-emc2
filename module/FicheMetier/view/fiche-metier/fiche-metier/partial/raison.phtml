@@ -1,7 +1,7 @@
 <?php
 
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 
 /**
  * @var FicheMetier $fichemetier
@@ -22,7 +22,7 @@ $libelle = $metier->getLibelle();
                 <h3>Raison d'être du métier dans l'établissement</h3>
             </div>
             <div class="col-md-4">
-                <?php if ($canEditer AND $mode === 'edition-fiche-metier' ) : ?>
+                <?php if ($canEditer and $mode === 'edition-fiche-metier') : ?>
                     <div class="float-end">
                         <?php /** @see FicheMetierController::modifierRaisonAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier/modifier-raison', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
@@ -39,7 +39,7 @@ $libelle = $metier->getLibelle();
     <div class="card-body">
         <?php if ($fichemetier->getRaison() !== null) : ?>
             <?php echo $fichemetier->getRaison(); ?>
-        <?php else :?>
+        <?php else : ?>
             Aucune raison de fournie
         <?php endif; ?>
     </div>

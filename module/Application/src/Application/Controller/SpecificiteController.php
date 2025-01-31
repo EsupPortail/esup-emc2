@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\SpecificitePoste;
-use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use FichePoste\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FichePoste\Service\MissionAdditionnelle\MissionAdditionnelleServiceAwareTrait;

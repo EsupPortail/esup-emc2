@@ -1,0 +1,47 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+
+/**
+ * @var FichePoste $fiche
+ * @var array $competences
+ * @var string $mode
+ */
+
+/** @var  array $cCompetences */
+$cCompetences = [];
+foreach ($competences as $item) {
+    if ($item["conserve"] === true) $cCompetences[] = $item;
+}
+
+?>
+
+<div class="row">
+    <div class="col-md-10" style="margin-left:5rem;background-color:#d9edf7;">
+        <h3 style="color:#3c6c8b;">
+            <span class="icon competence"></span>
+            Competences
+            <span class="badge" style="background:#3c6c8b;">
+                <?php echo count($cCompetences); ?>
+            </span>
+        </h3>
+    </div>
+    <div class="col-md-1" style="background-color:#d9edf7;">
+        <h3>
+            <?php if ($mode === 'edition') : ?>
+                <a <?php /** @see \Application\Controller\FichePosteController::selectionnerCompetencesRetireesAction() */ ?>
+                        href="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification">
+                    <span class="icon icon-listing" title="Sélection des compétences liées à la fiche de poste"></span></a>
+            <?php endif; ?>
+            &nbsp;
+        </h3>
+    </div>
+</div>
+
+<div class="row" style="margin: 1rem;">
+    <div class="col-md-11">
+        <br/>
+        <?php echo $this->competenceBloc($cCompetences, $fiche->getAgent(), ['display' => ['titre' => false]]); ?>
+    </div>
+</div>

@@ -11,7 +11,6 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\Controller\ObservateurController;
@@ -19,6 +18,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienProfessionnelRoleProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use FichePoste\Service\FichePoste\FichePosteServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
@@ -43,6 +43,7 @@ class IndexController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
     use MacroServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -53,7 +54,6 @@ class IndexController extends AbstractActionController
     use UrlServiceAwareTrait;
 
 
-    use FichePosteServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
 
 

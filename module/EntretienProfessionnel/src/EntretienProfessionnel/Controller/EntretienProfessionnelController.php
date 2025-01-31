@@ -10,7 +10,6 @@ use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -58,7 +57,6 @@ class EntretienProfessionnelController extends AbstractActionController
     use EvenementServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
-    use FichePosteServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;

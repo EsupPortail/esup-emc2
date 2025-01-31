@@ -6,7 +6,7 @@ use Application\Controller\ElementController;
 use Application\Controller\ElementControllerFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Element\Provider\Privilege\CompetencePrivileges;
-use Application\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use Application\View\Helper\FormationBlocViewHelper;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
