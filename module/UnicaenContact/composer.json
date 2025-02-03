@@ -1,0 +1,21 @@
+{
+  "name": "unicaen/contact",
+  "description": "Module de gestion des etats et actions associés au passage d'état",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://gest.unicaen.fr/packagist"
+    }
+  ],
+  "require": {
+    "unicaen/utilisateur":                          "^6.0||^7.0",
+    "unicaen/privilege":                            "^6.0||^7.0"
+  },
+  "autoload": {
+    "psr-0": {
+    },
+    "classmap": [
+      "./Module.php"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @var Rendu $rendu
+ */
+
+use UnicaenRenderer\Entity\Db\Rendu;
+
+$this->headTitle($rendu->getSujet());
+
+?>
+
+<h1 class="page-header">
+    <?php echo $rendu->getSujet(); ?>
+</h1>
+
+<?php echo $rendu->getCorps(); ?>
+
+<style>
+    <?php echo $rendu->getTemplate()->getCss(); ?>
+</style>

@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @var Form $form
+ * @var string|null $info
+ * @var string|null $warning
+ */
+
+use Laminas\Form\Form;
+
+?>
+
+<?php if (isset($info)) : ?>
+    <div class="alert alert-info">
+        <?php echo $info; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($warning)) : ?>
+    <div class="alert alert-warning">
+        <?php echo $warning; ?>
+    </div>
+<?php endif; ?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function () {
+        //$('select').select2();
+
+        tinymce.remove();
+        tinymce.init({
+            selector: '.tinymce',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            menubar: false,
+            height: 200,
+            body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+    });
+
+
+    $(function () {
+        $('select:not(.select2)').selectpicker();
+        $('.select2').select2();
+    });
+
+
+    $('input#agent[id]').hide()
+
+    <?php if (isset($js)): ?>
+    <?php echo $js; ?>
+    <?php endif; ?>
+</script>
+
+
+<script defer>
+    $(document).on('shown.bs.modal', function () {
+        $('.select2').select2({
+            dropdownParent: $('.modal.show')
+        });
+    })
+</script>
+
+
+<style>
+    .ui-datepicker {
+        position: absolute;
+        z-index: 1050 !important;
+    }
+
+    /*div.ui-datepicker {*/
+    /*    position: absolute;*/
+    /*     z-index:1050;*/
+    /* }*/
+    /* select.ui-datepicker-year option{*/
+    /* position: absolute;*/
+    /*     z-index:3151 !important;*/
+    /* }*/
+</style>

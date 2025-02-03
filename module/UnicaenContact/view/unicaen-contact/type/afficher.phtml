@@ -1,0 +1,29 @@
+<?php
+
+use UnicaenContact\Entity\Db\Contact;
+use UnicaenEvenement\Entity\Db\Type;
+
+/**
+ * @see \UnicaenContact\Controller\TypeController::afficherAction()
+ * @var Type $type
+ * @var Contact[] $contacts
+ */
+
+$this->headTitle("Affichage du type de contact ".$type->getCode());
+
+?>
+
+<dl class="row">
+    <dt class="col-md-4"> Code </dt>
+    <dd class="col-md-8"> <?php echo $type->getCode(); ?> </dd>
+    <dt class="col-md-4"> Libellé </dt>
+    <dd class="col-md-8"> <?php echo $type->getLibelle(); ?> </dd>
+    <dt class="col-md-4"> Description </dt>
+    <dd class="col-md-8"> <?php echo $type->getDescription(); ?> </dd>
+    <dt class="col-md-4"> #contacts </dt>
+    <dd class="col-md-8"> <?php echo count($contacts) ?> </dd>
+</dl>
+
+<span class="todo">
+    Afficher les contacts ?
+</span>

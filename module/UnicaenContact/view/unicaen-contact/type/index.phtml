@@ -1,0 +1,123 @@
+<?php
+
+use UnicaenContact\Entity\Db\Type;
+use UnicaenContact\Provider\Privilege\ContacttypePrivileges;
+
+/**
+ * @see \UnicaenContact\Controller\TypeController::indexAction()
+ * @var Type[] $types
+ */
+
+$this->headTitle('Types de contact');
+
+$canAjouter = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_AJOUTER));
+$canAfficher = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_AFFICHER));
+$canModifier = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_MODIFIER));
+$canHistoriser = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_HISTORISER));
+$canSupprimer = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_SUPPRIMER));
+?>
+
+<h1 class="page-header">
+    Types de contacts
+</h1>
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \UnicaenContact\Controller\TypeController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('unicaen-contact/type/ajouter', [],[], true); ?>"
+    class="btn btn-primary ajax-modal" data-event="modification">
+        <span class="icon icon-ajouter"></span>
+        Ajouter un type de contact
+    </a>
+<?php endif; ?>
+
+<table class="table table-condensed datatable" id="types">
+    <thead>
+    <tr>
+        <th> Code </th>
+        <th> Libellé </th>
+        <th class="action"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($types as $type): ?>
+        <tr class="<?php if ($type->estHistorise()) echo " historise"; ?>">
+            <td> <code> <?php echo $type->getCode(); ?> </code> </td>
+            <td>
+                <?php echo $type->getLibelle(); ?>
+                <?php if($type->getDescription() !== null): ?>
+                    <span class="icon icon-information" title="<?php echo htmlentities($type->getDescription()); ?>"
+                          data-bs-toggle="tooltip" data-bs-html="true"
+                    ></span>
+                <?php endif; ?>
+            </td>
+            <td class="action">
+                <?php if ($canAjouter) : ?>
+                    <?php /** @see \UnicaenContact\Controller\TypeController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('unicaen-contact/type/afficher', ['contact-type' => $type->getId()], [], true); ?>"
+                       class="action secondary ajax-modal">
+                        <span class="icon icon-voir"></span>
+                        Visualiser
+                    </a>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <br>
+                    <?php /** @see \UnicaenContact\Controller\TypeController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('unicaen-contact/type/modifier', ['contact-type' => $type->getId()], [], true); ?>"
+                       class="action primary ajax-modal" data-event="modification">
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <br>
+                    <?php if ($type->estNonHistorise()) : ?>
+                        <?php /** @see \UnicaenContact\Controller\TypeController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('unicaen-contact/type/historiser', ['contact-type' => $type->getId()], [], true); ?>"
+                           class="action warning">
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
+                    <?php else : ?>
+                        <?php /** @see \UnicaenContact\Controller\TypeController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('unicaen-contact/type/restaurer', ['contact-type' => $type->getId()], [], true); ?>"
+                           class="action warning">
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <br>
+                    <?php /** @see \UnicaenContact\Controller\TypeController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('unicaen-contact/type/supprimer', ['contact-type' => $type->getId()], [], true); ?>"
+                       class="action danger ajax-modal" data-event="modification">
+                        <span class="icon icon-unchecked"></span>
+                        Restaurer
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
+        $('table#types').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [2], orderable: false }
+            ]
+        });
+    });
+</script>

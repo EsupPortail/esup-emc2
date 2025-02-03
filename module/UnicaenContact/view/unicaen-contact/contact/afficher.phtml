@@ -1,0 +1,37 @@
+<?php
+
+use UnicaenContact\Controller\ContactController;
+use UnicaenContact\Entity\Db\Contact;
+use UnicaenEvenement\Entity\Db\Type;
+
+/**
+ * @see ContactController::afficherAction
+ * @var Contact $contact
+ * @var Type $type
+ */
+
+$this->headTitle("Affichage du contact");
+
+?>
+
+<dl class="row">
+    <dt class="col-md-4"> Type </dt>
+    <dd class="col-md-8">
+        <?php echo $type->getLibelle(); ?>
+        <code> <?php echo $type->getCode(); ?> </code>
+    </dd>
+    <dt class="col-md-4"> Service </dt>
+    <dd class="col-md-8"> <?php echo $contact->getService()??"Aucun service de renseigné"; ?> </dd>
+    <dt class="col-md-4"> Prénom </dt>
+    <dd class="col-md-8"> <?php echo $contact->getPrenom()??"Aucun prénom de renseigné"; ?> </dd>
+    <dt class="col-md-4"> Nom </dt>
+    <dd class="col-md-8"> <?php echo $contact->getNom()??"Aucun nom de renseigné"; ?> </dd>
+    <dt class="col-md-4"> Téléphone </dt>
+    <dd class="col-md-8"> <?php echo $contact->getService()??"Aucun téléphone de renseigné"; ?> </dd>
+    <dt class="col-md-4"> Adresse électronique </dt>
+    <dd class="col-md-8"> <?php echo $contact->getEmail()??"Aucune adresse électronique de renseignée"; ?> </dd>
+</dl>
+
+<span class="todo">
+    Afficher le viewhelper
+</span>
