@@ -184,10 +184,10 @@ class SpecificitePoste {
     public function getActivites(): array
     {
         $result = [];
-        $activites = ($this->activites === null) ? [] : $this->activites->toArray();
-        foreach ($activites as $activite) {
-            $result[$activite->getId()] = $activite;
-        }
+//        $activites = ($this->activites === null) ? [] : $this->activites->toArray();
+//        foreach ($activites as $activite) {
+//            $result[$activite->getId()] = $activite;
+//        }
         return $result;
     }
 
@@ -203,13 +203,6 @@ class SpecificitePoste {
         $result->setMoyens($this->getMoyens());
         $result->setFormations($this->getFormations());
 
-        foreach ($this->getActivites() as $activite) {
-            $newActivite = new SpecificiteActivite();
-            $newActivite->setSpecificite($result);
-            $newActivite->setActivite($activite->getActivite());
-            $newActivite->setRetrait($activite->getRetrait());
-            $newActivite->setDescription($activite->getDescription());
-        }
         return $result;
     }
 
