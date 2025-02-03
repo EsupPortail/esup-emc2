@@ -6,8 +6,10 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenContact\Entity\Db\Contact;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
@@ -61,6 +63,13 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
 
     private Collection $fichesPostesRecrutements; //[FichePoste]
 
+    private Collection $contacts;
+
+
+    public function __construct()
+    {
+        $this->contacts = new ArrayCollection();
+    }
     public function getId(): string
     {
         return $this->id;
@@ -229,6 +238,25 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         }
 
         return $result;
+    }
+
+    /** @return Contact[] */
+    public function getContacts(bool $withHisto = false, bool $niv2IfEmpty = true) : array
+    {
+        $contacts =  $this->contacts->toArray();
+        if (!$withHisto) {
+            $contacts = array_filter($contacts, function (Contact $contact) { return $contact->estNonHistorise(); });
+        }
+
+        if ($niv2IfEmpty AND empty($contacts) AND $this->getNiv2() !== null AND $this->getNiv2() !== $this) {
+            $contacts = $this->getNiv2()->getContacts($withHisto);
+        }
+        return $contacts;
+    }
+
+    public function addContact(Contact $contact): void
+    {
+        $this->contacts->add($contact);
     }
 
     /** FICHES POSTES RECRUTEMENTS ************************************************************************************/

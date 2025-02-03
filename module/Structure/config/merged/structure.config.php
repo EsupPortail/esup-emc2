@@ -90,6 +90,7 @@ return [
                     'action' => [
                         'editer-description',
                         'toggle-resume-mere',
+                        'ajouter-contact',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION,
                     'assertion'  => StructureAssertion::class,
@@ -177,6 +178,17 @@ return [
                                 /** @see StructureController::agentsAction() */
                                 'controller' => StructureController::class,
                                 'action'     => 'agents',
+                            ],
+                        ],
+                    ],
+                    'ajouter-contact' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-contact/:structure',
+                            'defaults' => [
+                                /** @see StructureController::ajouterContactAction() */
+                                'controller' => StructureController::class,
+                                'action'     => 'ajouter-contact',
                             ],
                         ],
                     ],

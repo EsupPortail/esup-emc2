@@ -32,6 +32,6 @@ $this->headTitle("Affichage du contact");
     <dd class="col-md-8"> <?php echo $contact->getEmail()??"Aucune adresse électronique de renseignée"; ?> </dd>
 </dl>
 
-<span class="todo">
-    Afficher le viewhelper
-</span>
+<hr>
+
+<?php echo $this->contact($contact, ['display-type' => true, 'display-action' => false]); ?>

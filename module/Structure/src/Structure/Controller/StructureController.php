@@ -34,6 +34,10 @@ use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Form\Contact\ContactForm;
+use UnicaenContact\Form\Contact\ContactFormAwareTrait;
+use UnicaenContact\Service\Contact\ContactServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
@@ -49,12 +53,14 @@ class StructureController extends AbstractActionController {
     use StructureAgentForceServiceAwareTrait;
     use ObservateurServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
+    use ContactServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
 
 
     use AgentMissionSpecifiqueFormAwareTrait;
+    use ContactFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use HasDescriptionFormAwareTrait;
 
@@ -102,6 +108,7 @@ class StructureController extends AbstractActionController {
             'responsables' => $responsables,
             'gestionnaires' => $gestionnaires,
             'observateurs' => $observateurs,
+            'contacts' => $structure->getContacts(),
 
             'niveau2' => $niveau2,
             'parent' => $parent,
@@ -434,6 +441,34 @@ class StructureController extends AbstractActionController {
             'url' => $this->url()->fromRoute('structure/dupliquer-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true),
         ]);
         $vm->setTemplate('structure/structure/dupliquer-fiche-poste');
+        return $vm;
+    }
+
+    public function ajouterContactAction(): ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $contact = new Contact();
+        $form = $this->getContactForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-contact', ['structure' => $structure->getId()], [], true));
+        $form->bind($contact);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getContactService()->create($contact);
+                $structure->addContact($contact);
+                $this->getStructureService()->update($structure);
+                exit();
+            }
+        }
+        $vm =  new ViewModel([
+            'title' => "Ajout d'un contact",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 

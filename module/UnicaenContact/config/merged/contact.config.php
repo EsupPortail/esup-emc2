@@ -13,6 +13,7 @@ use UnicaenContact\Form\Contact\ContactHydratorFactory;
 use UnicaenContact\Provider\Privilege\ContactPrivileges;
 use UnicaenContact\Service\Contact\ContactService;
 use UnicaenContact\Service\Contact\ContactServiceFactory;
+use UnicaenContact\View\Helper\ContactViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -185,6 +186,11 @@ return [
         'factories' => [
             ContactHydrator::class => ContactHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'contact' => ContactViewHelper::class,
+        ],
+    ],
 
 ];

@@ -57,6 +57,18 @@
             <join-column name="niv2_id_ow"/>
         </many-to-one>
 
+        <many-to-many field="contacts" target-entity="UnicaenContact\Entity\Db\Contact"
+                      inversed-by="structure">
+            <join-table name="structure_contact">
+                <join-columns>
+                    <join-column name="structure_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="contact_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <!-- DB IMPORT #############################  -->
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>

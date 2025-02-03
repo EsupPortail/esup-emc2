@@ -5,6 +5,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use Structure\Entity\Db\Observateur;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
+use UnicaenContact\Entity\Db\Contact;
 
 /**
  * @see \Structure\Controller\StructureController::descriptionAction()
@@ -18,6 +19,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Structure $niveau2
  * @var Structure $parent
  * @var Structure[] $filles
+ * @var Contact[] $contacts
  *
  * @var Campagne[] $campagnes
  *
@@ -111,6 +113,20 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                 <dd class="col-md-8"> <?php echo $structure->getAdresseFonctionnelle(); ?></dd>
             <?php endif; ?>
         </dl>
+
+        <h3> Contacts <span class="badge"><?php echo count($contacts); ?></span></h3>
+
+        <?php /** @see \Structure\Controller\StructureController::ajouterContact() */ ?>
+        <a href="<?php echo $this->url("structure/ajouter-contact", ["structure" => $structure->getId()], [], true); ?>"
+           class="btn btn-primary ajax-modal" data-event="modification"
+        >
+            <span class="icon icon-ajouter"></span>
+                Ajouter un contact
+        </a>
+
+        <?php foreach ($contacts as $contact) : ?>
+            <?php echo $this->contact($contact, ["display-type" => true, "display-action" => true]); ?>
+        <?php endforeach; ?>
     </div>
     <div class="col-md-6">
         <h2> Responsable·s </h2>

@@ -19,6 +19,8 @@ use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
+use UnicaenContact\Form\Contact\ContactForm;
+use UnicaenContact\Service\Contact\ContactService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -36,6 +38,7 @@ class StructureControllerFactory {
          * @var AgentService $agentService
          * @var AgentAffectationService $agentAffectationService
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
+         * @var ContactService $contactService
          * @var EntretienProfessionnelService $entretienService
          * @var EtatTypeService $etatTypeService
          * @var CampagneService $campagneService
@@ -49,6 +52,7 @@ class StructureControllerFactory {
         $agentService = $container->get(AgentService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
+        $contactService = $container->get(ContactService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -61,10 +65,12 @@ class StructureControllerFactory {
 
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
+         * @var ContactForm $contactForm
          * @var SelectionAgentForm $selectionAgentForm
          * @var HasDescriptionFormAwareTrait $hasDescriptionForm
          */
         $affectationForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
+        $contactForm = $container->get('FormElementManager')->get(ContactForm::class);
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
         $hasDescriptionForm = $container->get('FormElementManager')->get(HasDescriptionForm::class);
 
@@ -73,6 +79,7 @@ class StructureControllerFactory {
         $controller->setAgentService($agentService);
         $controller->setAgentAffectationService($agentAffectationService);
         $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
+        $controller->setContactService($contactService);
         $controller->setEntretienProfessionnelService($entretienService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setCampagneService($campagneService);
@@ -84,6 +91,7 @@ class StructureControllerFactory {
         $controller->setStructureAgentForceService($structureAgentForceService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
+        $controller->setContactForm($contactForm);
         $controller->setSelectionAgentForm($selectionAgentForm);
         $controller->setHasDescriptionForm($hasDescriptionForm);
 

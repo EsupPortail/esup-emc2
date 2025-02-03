@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * @see UnicaenContact\View\Helper\ContactViewHelper
+ * @var Contact $contact
+ * @var array $options
+ */
+
+
+use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Provider\Privilege\ContactPrivileges;
+
+$displayType = isset($options["display-type"]) && $options["display-type"] === true;
+$displayAction = isset($options["display-action"]) && $options["display-action"] === true;
+$retour = $options["retour"] ?? null;
+
+$canModifier = $displayType && $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
+$canHistoriser = $displayType && $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
+$canSupprimer = $displayType && $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
+
+$main = ($canModifier or $canHistoriser or $canSupprimer) ? 'col-md-8' : null;
+?>
+
+<div class="row">
+    <div class="<?php echo $main; ?>">
+        <?php if ($displayType === true) : ?>
+            <strong>
+                <?php echo ($contact->getType()) ? $contact->getType()->getLibelle() : "Aucun type de contact connu"; ?>
+            </strong>
+
+            <dl class="row"
+                <?php if ($contact->estHistorise()): ?>
+                    style="text-decoration: line-through darkred 2px;"
+                <?php endif; ?>
+            >
+                <?php if ($contact->getService()) : ?>
+                    <dt class="col-md-4"> Service</dt>
+                    <dd class="col-md-8"> <?php echo $contact->getService(); ?> </dd>
+                <?php endif; ?>
+                <?php if ($contact->getPrenom() or $contact->getNom()) : ?>
+                    <dt class="col-md-4"> Contact</dt>
+                    <dd class="col-md-8"><?php echo $contact->getPrenom(); ?> <?php echo $contact->getNom(); ?></dd>
+                <?php endif; ?>
+                <?php if ($contact->getTelephone()) : ?>
+                    <dt class="col-md-4"> Téléphone</dt>
+                    <dd class="col-md-8"> <?php echo $contact->getTelephone(); ?> </dd>
+                <?php endif; ?>
+                <?php if ($contact->getEmail()) : ?>
+                    <dt class="col-md-4"> Adresse électronique</dt>
+                    <dd class="col-md-8"><a
+                                href="mailto:<?php echo $contact->getEmail(); ?>"><?php echo $contact->getEmail(); ?></a>
+                    </dd>
+                <?php endif; ?>
+            </dl>
+        <?php endif; ?>
+    </div>
+    <?php if ($main AND $displayAction) : ?>
+        <div class="col-md-4">
+            <?php if ($canModifier) : ?>
+                <a href="<?php echo $this->url('unicaen-contact/contact/modifier', ['contact' => $contact->getId()], [], true); ?>"
+                    class="btn btn-primary ajax-modal" data-event="modification"
+                >
+                    <span class="icon icon-modifier"></span>
+                    Modifier
+                </a>
+            <?php endif; ?>
+            <?php if ($canHistoriser) : ?>
+                <br>
+                <?php if ($contact->estNonHistorise()) : ?>
+                    <a href="<?php echo $this->url('unicaen-contact/contact/historiser', ['contact' => $contact->getId()], ["query" => ['retour' => $retour]], true); ?>"
+                       class="btn btn-warning"
+                    >
+                        <span class="icon icon-historiser"></span>
+                        Historiser
+                    </a>
+                <?php else : ?>
+                    <a href="<?php echo $this->url('unicaen-contact/contact/restaurer', ['contact' => $contact->getId()],  ["query" => ['retour' => $retour]], true); ?>"
+                       class="btn btn-warning"
+                    >
+                        <span class="icon icon-restaurer"></span>
+                        Restaurer
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($canSupprimer) : ?>
+                <br>
+                <a href="<?php echo $this->url('unicaen-contact/contact/supprimer', ['contact' => $contact->getId()], [], true); ?>"
+                   class="btn btn-danger ajax-modal" data-event="modification"
+                >
+                    <span class="icon icon-unchecked"></span>
+                    Supprimer
+                </a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+
