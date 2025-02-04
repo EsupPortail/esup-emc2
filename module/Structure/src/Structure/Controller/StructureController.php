@@ -35,7 +35,6 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenContact\Entity\Db\Contact;
-use UnicaenContact\Form\Contact\ContactForm;
 use UnicaenContact\Form\Contact\ContactFormAwareTrait;
 use UnicaenContact\Service\Contact\ContactServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -130,12 +129,11 @@ class StructureController extends AbstractActionController {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
         $debug .= "Récupération des informations de l'utilisateur : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
 
-        $structureMere = $this->getStructureService()->getStructureMere();
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $debug .= "Récupération des informations des structures : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
 
-        $agents = $this->getAgentService()->getAgentsByStructures($structures,null, true);
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $debug .= "Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
         [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents);
         $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
@@ -422,8 +420,6 @@ class StructureController extends AbstractActionController {
                 $structure->addFichePosteRecrutement($nouvelleFiche);
                 $this->getStructureService()->update($structure);
             }
-
-
         }
 
         $structures = $this->getStructureService()->getStructuresFilles($structure);
