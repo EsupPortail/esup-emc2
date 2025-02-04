@@ -370,7 +370,7 @@ class Agent implements
         $temoins = $parametre->getTemoins();
 
         $count = [];
-        $statuts = $this->getStatutsActifs($date, $structures);
+        $statuts = $this->getStatutsActifs($date);
         if (empty($statuts)) return $emptyResult;
 
         foreach ($statuts as $statut) {
@@ -389,7 +389,7 @@ class Agent implements
         $temoins = $parametre->getTemoins();
 
         $count = [];
-        $grades = $this->getEmploiTypesActifs($date, $structures);
+        $grades = $this->getEmploiTypesActifs($date);
         if (empty($grades)) return $emptyResult;
         foreach ($grades as $grade) {
             if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
