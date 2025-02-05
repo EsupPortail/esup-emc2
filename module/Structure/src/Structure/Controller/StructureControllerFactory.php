@@ -8,7 +8,9 @@ use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
 use Agent\Service\AgentAffectation\AgentAffectationService;
+use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
@@ -35,7 +37,9 @@ class StructureControllerFactory {
         /**
          * @var AgentService $agentService
          * @var AgentAffectationService $agentAffectationService
+         * @var AgentAutoriteService $agentAutoriteService
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var EntretienProfessionnelService $entretienService
          * @var EtatTypeService $etatTypeService
          * @var CampagneService $campagneService
@@ -48,7 +52,9 @@ class StructureControllerFactory {
          */
         $agentService = $container->get(AgentService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
+        $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -72,7 +78,9 @@ class StructureControllerFactory {
 
         $controller->setAgentService($agentService);
         $controller->setAgentAffectationService($agentAffectationService);
+        $controller->setAgentAutoriteService($agentAutoriteService);
         $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
+        $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setEntretienProfessionnelService($entretienService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setCampagneService($campagneService);
