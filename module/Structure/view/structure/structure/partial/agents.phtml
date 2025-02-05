@@ -39,7 +39,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 <table class="datatable table table-condensed" id="<?php echo $options['id']; ?>" style="font-size: 14px;">
     <thead>
         <tr>
-            <th> Dénomination</th>
+            <th data-type="string"> Dénomination</th>
             <th> Structures fines</th>
             <th> Supérieur&middot;e hiérarchique direct&middot;e </th>
             <th> Autorité hiérarchique </th>
@@ -55,9 +55,9 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 //            $affectations = array_filter($affectations, function (AgentAffectation $a) { return $a->isPrincipale(); });
         ?>
         <tr class="<?php if ($agent->isAdministratif()) echo " administratif "; ?>">
-            <td>
+            <td data-order="<?php echo $agent->getDenomination(); ?>">
                 <?php if ($canVoirAgent) : ?>
-                        <?php echo $agent->getDenomination(); ?>
+                        <?php echo $agent->getDenomination(true); ?>
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
@@ -68,17 +68,6 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
             </td>
             <td>
                 <!-- STRUCTURE --------------------------------------------------------------------------------------->
-<!--                --><?php //foreach ($agent->getStructures() as $structure) : ?>
-<!--                    --><?php
-//                    $niveau2   =  ($structure AND $structure->getNiv2())?$structure->getNiv2():null;
-//                    ?>
-<!--                    --><?php //if ($structure) : ?>
-<!--                        <span class="icon application" title="Déterminé par EMC2"></span>-->
-<!--                        --><?php //echo $structure->getLibelleCourt(); ?><!--<br/>-->
-<!--                    --><?php //else : ?>
-<!--                        Pas de structure fines<br/>-->
-<!--                    --><?php //endif ?>
-<!--                --><?php //endforeach; ?>
                 <?php /** @var AgentAffectation $affectation */ ?>
                 <?php if (isset($affectations[$agent->getId()]) AND !empty($affectations[$agent->getId()])):?>
                     <?php foreach($affectations[$agent->getId()] as $affectation) :?>
@@ -163,7 +152,15 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 
     $(document).ready(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
-            'paging' : false,
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
         });
     });
 </script>

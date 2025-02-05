@@ -79,7 +79,7 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
 
 <?php if ($canAjouterAgent) : ?>
     <?php /** @see \Structure\Controller\StructureController::ajouterManuellementAgentAction(); */ ?>
-    <a class="btn btn-primary action ajax-modal" data-event="modification"
+    <a class="btn btn-primary ajax-modal" data-event="modification"
        href="<?php echo $this->url("structure/ajouter-manuellement-agent", ["structure" => $structure->getId()], [], true); ?>"
     >
         <span class="icon icon-utilisateur-ajouter"></span> Ajouter manuellement un agent

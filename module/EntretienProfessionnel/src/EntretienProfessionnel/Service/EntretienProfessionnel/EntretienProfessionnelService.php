@@ -90,8 +90,15 @@ class EntretienProfessionnelService
             ->addSelect('ovalidation')->leftjoin('observation.validations', 'ovalidation')
             ->addSelect('vtype')->leftjoin('validation.type', 'vtype');
 
+        //cette jointure fait exploser le temps de récupération ...
+//        $qb  = $qb->leftJoin('agent.superieurs', 'agentsuperieur')->addSelect('agentsuperieur');
+//        $qb  = $qb->leftJoin('agent.autorites', 'agentautorite')->addSelect('agentautorite');
+
+
         $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien'); //todo remettre
         if ($withAffectation) $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
+
+
         return $qb;
     }
 
