@@ -8,6 +8,8 @@ use Application\Entity\Db\FichePoste;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -40,8 +42,10 @@ use UnicaenPdf\Exporter\PdfExporter;
 
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -118,12 +122,10 @@ class StructureController extends AbstractActionController {
     {
         $debug = "";
 
-
         $date_debut = new DateTime();
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
         $debug .= "Récupération des informations de l'utilisateur : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
 
-        $structureMere = $this->getStructureService()->getStructureMere();
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $debug .= "Récupération des informations des structures : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
@@ -139,15 +141,10 @@ class StructureController extends AbstractActionController {
            $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
            return $aaa <=> $bbb;
         });
-        $superieurs = []; $autorites = [];
-//        foreach ($allAgents as $agent) {
-//            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
-//            $sup = $this->getAgentService()->computeSuperieures($agent);
-//            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
-//            $superieurs[$agent->getId()] = $sup;
-//            $autorites[$agent->getId()] = $aut;
-//        }
 
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
+        $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgents($agents);
+        $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgents($agents);
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
@@ -168,6 +165,8 @@ class StructureController extends AbstractActionController {
             'agentsRetires' => $retirer,
             'raison' => $raison,
             'agentsForces' => $agentsForces,
+
+            'affectations' => $affectations,
             'superieurs' => $superieurs,
             'autorites' => $autorites,
 

@@ -149,6 +149,34 @@ class AgentSuperieurService
         return array_map(function (AgentSuperieur $agentSuperieur) { return $agentSuperieur->getAgent(); }, $result);
     }
 
+
+
+    public function getAgentsSuperieursByAgents(array $agents, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->createQueryBuilder();
+        $qb = $qb   ->andWhere('agentsuperieur.deletedOn IS NULL')
+                    ->andWhere('agentsuperieur.histoDestruction IS NULL')
+        ;
+        $qb = $qb
+                    ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :date')
+                    ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :date')
+                    ->setParameter('date', $date)
+        ;
+        $qb = $qb->andWhere('agentsuperieur.agent in (:agents)')->setParameter('agents', $agents);
+        $qb = $qb->orderBy('coalesce(superieur.nomUsuel,superieur.nomFamille), superieur.prenom', 'ASC');
+        $result = $qb->getQuery()->getResult();
+
+        /** @var AgentSuperieur $agentSuperieur */
+        $superieurs = [];
+        foreach ($result as $agentSuperieur) {
+            $agent = $agentSuperieur->getAgent();
+            $superieurs[$agent->getId()][] = $agentSuperieur;
+        }
+        return $superieurs;
+    }
+
     /** FACADE ********************************************************************************************************/
 
     /**

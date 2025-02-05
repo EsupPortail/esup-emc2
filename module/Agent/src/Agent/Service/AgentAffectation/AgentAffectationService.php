@@ -97,4 +97,30 @@ class AgentAffectationService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    public function getAgentsAffectationsByAgents(array $agents, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->createQueryBuilder();
+        $qb = $qb   ->andWhere('agentaffectation.deletedOn IS NULL')
+        ;
+        $qb = $qb
+            ->andWhere('agentaffectation.dateDebut IS NULL OR agentaffectation.dateDebut <= :date')
+            ->andWhere('agentaffectation.dateFin IS NULL OR agentaffectation.dateFin >= :date')
+            ->setParameter('date', $date)
+        ;
+        $qb = $qb->andWhere('agentaffectation.agent in (:agents)')->setParameter('agents', $agents);
+        $qb = $qb->orderBy('structure.libelleCourt', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+
+        /** @var AgentAffectation $agentAffectation */
+        $affectations = [];
+        foreach ($result as $agentAffectation) {
+            $agent = $agentAffectation->getAgent();
+            $affectations[$agent->getId()][] = $agentAffectation;
+        }
+        return $affectations;
+    }
 }

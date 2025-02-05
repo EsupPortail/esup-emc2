@@ -185,6 +185,32 @@ class AgentAutoriteService
         return array_map(function (AgentAutorite $agentAutorite) { return $agentAutorite->getAgent(); }, $result);
     }
 
+    public function getAgentsAutoritesByAgents(array $agents, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->createQueryBuilder();
+        $qb = $qb   ->andWhere('agentautorite.deletedOn IS NULL')
+            ->andWhere('agentautorite.histoDestruction IS NULL')
+        ;
+        $qb = $qb
+            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :date')
+            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :date')
+            ->setParameter('date', $date)
+        ;
+        $qb = $qb->andWhere('agentautorite.agent in (:agents)')->setParameter('agents', $agents);
+        $qb = $qb->orderBy('coalesce(autorite.nomUsuel,autorite.nomFamille), autorite.prenom', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+
+        /** @var AgentAutorite $agentAutorite */
+        $autorites = [];
+        foreach ($result as $agentAutorite) {
+            $agent = $agentAutorite->getAgent();
+            $autorites[$agent->getId()][] = $agentAutorite;
+        }
+        return $autorites;
+    }
 
     /** FACADE ********************************************************************************************************/
 
