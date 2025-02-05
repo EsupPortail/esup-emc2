@@ -136,15 +136,17 @@ class StructureController extends AbstractActionController {
         $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
 
+        $allAgents = array_merge($agents,$agentsForces);
+
         usort($agents, function (Agent $a, Agent $b) {
            $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
            $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
            return $aaa <=> $bbb;
         });
 
-        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
-        $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgents($agents);
-        $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgents($agents);
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($allAgents);
+        $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgents($allAgents);
+        $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgents($allAgents);
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();

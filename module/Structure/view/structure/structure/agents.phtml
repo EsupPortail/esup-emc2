@@ -67,7 +67,9 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
         <span class="badge"><?php echo count($agentsRetires); ?></span>
     </h2>
 
-    <?php echo $this->partial('partial/agents', ['options' => ['id' => 'agents-retires'], 'structure' => $structure, 'agents' => $agentsRetires, 'superieurs' => $superieurs, 'autorites' => $autorites, 'raison' => $raison]); ?>
+    <?php echo $this->partial('partial/agents', ['options' => ['id' => 'agents-retires'], 'structure' => $structure, 'agents' => $agentsRetires,
+        'superieurs' => $superieurs, 'autorites' => $autorites, 'affectations' => $affectations,
+        'raison' => $raison]); ?>
 </div>
 
 <h2>
@@ -84,7 +86,9 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
     </a>
 <?php endif; ?>
 
-<?php echo $this->partial('partial/agents', [ 'structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true, 'id' => 'force']]); ?>
+<?php echo $this->partial('partial/agents', [ 'structure' => $structure, 'agents' => $agentsForces,
+    'superieurs' => $superieurs, 'autorites' => $autorites, 'affectations' => $affectations,
+    'options' => ['force' => true, 'id' => 'force']]); ?>
 
 
 <script>

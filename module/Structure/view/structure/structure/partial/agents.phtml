@@ -83,7 +83,13 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php if (isset($affectations[$agent->getId()]) AND !empty($affectations[$agent->getId()])):?>
                     <?php foreach($affectations[$agent->getId()] as $affectation) :?>
                         <?php $structureA = $affectation->getStructure(); ?>
-                        <?php echo $structureA->getLibelleCourt(); ?> <br>
+                        <?php if ($affectation->isPrincipale()) : ?>
+                            <strong title="Affectation principale"> <?php echo $structureA->getLibelleCourt(); ?> </strong>
+                        <?php else : ?>
+                            <?php echo $structureA->getLibelleCourt(); ?>
+                        <?php endif ; ?>
+                        <br>
+
                     <?php endforeach; ?>
                 <?php else : ?>
                     <span class="text-danger">
