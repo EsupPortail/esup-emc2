@@ -43,7 +43,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
             <th> Structures fines</th>
             <th> Supérieur&middot;e hiérarchique direct&middot;e </th>
             <th> Autorité hiérarchique </th>
-            <th style="width:5rem; min-width: 5rem;"> Action </th>
+            <th class="action"> Action </th>
         </tr>
     </thead>
     <tbody>
@@ -113,22 +113,26 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     </span>
                 <?php endif; ?>
             </td>
-            <td>
+            <td class="action">
                 <?php if ($canVoirAgent) : ?>
                     <a
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                             href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
-                            target="_blank"
+                            target="_blank" class="action secondary"
                     >
-                        <span class="icon icon-user" data-bs-toggle="tooltip" data-bs-html="true" title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>"></span></a>
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
 
                 <?php if ($isForce AND $canRetirerAgentForce) : ?>
+                    <br>
                     <?php /** @see \Structure\Controller\StructureController::retirerManuellementAgentAction() */ ?>
-                    <a  class="ajax-modal" data-event="modification"
+                    <a  class="ajax-modal action danger" data-event="modification"
                         href="<?php echo $this->url('structure/retirer-manuellement-agent', [ 'structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
                     >
                         <span class="icon icon-utilisateur-supprimer"></span>
+                        Retirer
                     </a>
                 <?php endif; ?>
             </td>

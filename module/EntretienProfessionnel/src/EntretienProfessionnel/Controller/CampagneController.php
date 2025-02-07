@@ -15,6 +15,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -32,7 +33,9 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
@@ -47,9 +50,11 @@ class CampagneController extends AbstractActionController {
     use ParametreServiceAwareTrait;
     use RappelCampagneAvancementAutoriteServiceAwareTrait;
     use RappelCampagneAvancementSuperieurServiceAwareTrait;
+//    use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use UserServiceAwareTrait;
+    use UserContextServiceAwareTrait;
     
     use CampagneFormAwareTrait;
     use SelectionAgentFormAwareTrait;
@@ -456,6 +461,16 @@ class CampagneController extends AbstractActionController {
 
     public function autoriteAction() : ViewModel
     {
+        $user = $this->getUserService()->getConnectedUser();
+        $role = $this->getUserService()->getConnectedRole();
+
+        if ($role->getRoleId() !== Agent::ROLE_AUTORITE) {
+//            $autorite = $this->getRoleService()->getRepo()->findOneBy(['roleId' => Agent::ROLE_AUTORITE]);
+//            if ($user->hasRole($autorite)) {
+                $this->serviceUserContext->setSelectedIdentityRole(Agent::ROLE_AUTORITE);
+//            }
+        }
+
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $autorite = $this->getAgentService()->getRequestedAgent($this);
 

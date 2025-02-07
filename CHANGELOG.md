@@ -4,7 +4,7 @@ CHANGES
 Version 5.x
 -----
 
-### Version 5.0.1 - date prévue 06/02/2025
+### Version 5.0.1 - 05/02/2025
 
 [AMELIORATION]
 * Changement du code pour la remontée des agents dans l'onglet "liste des agents" 
