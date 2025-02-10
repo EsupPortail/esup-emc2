@@ -1,6 +1,9 @@
 <?php
 
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
@@ -13,8 +16,9 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Agent[] $agentsRetires
  * @var string[] $raison
  * @var Agent[] $agentsForces
- * @var Agent[] $superieurs
- * @var Agent[] $autorites
+ * @var AgentSuperieur[] $superieurs
+ * @var AgentAutorite[] $autorites
+ * @var AgentAffectation[] $affectations
  * @var Campagne[] $campagnes
  * @var string $emailAssistance
  * @var Structure[] $selecteur
@@ -46,12 +50,14 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
     <span class="badge"><?php echo count($agents); ?></span>
 </h2>
 
-<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agent'], 'structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites, 'raison' => $raison]); ?>
+<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agent'], 'structure' => $structure, 'agents' => $agents,
+    'superieurs' => $superieurs, 'autorites' => $autorites, 'affectations' => $affectations,
+    'raison' => $raison]); ?>
 
 <?php if ($canAfficherAgentsExclus) : ?>
     <span id="button_exclus" class="btn btn-secondary">
         <span id="icone_exclus" class="icon icon-voir"></span>
-        <span id="texte_exclus">Afficher les agents exclus</span>
+        <span id="texte_exclus">Afficher les agent·es exclu·es (<?php echo count($agentsRetires); ?> agent·es)</span>
     </span>
 <?php endif; ?>
 
@@ -61,7 +67,9 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
         <span class="badge"><?php echo count($agentsRetires); ?></span>
     </h2>
 
-    <?php echo $this->partial('partial/agents', ['options' => ['id' => 'agents-retires'], 'structure' => $structure, 'agents' => $agentsRetires, 'superieurs' => $superieurs, 'autorites' => $autorites, 'raison' => $raison]); ?>
+    <?php echo $this->partial('partial/agents', ['options' => ['id' => 'agents-retires'], 'structure' => $structure, 'agents' => $agentsRetires,
+        'superieurs' => $superieurs, 'autorites' => $autorites, 'affectations' => $affectations,
+        'raison' => $raison]); ?>
 </div>
 
 <h2>
@@ -71,14 +79,16 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
 
 <?php if ($canAjouterAgent) : ?>
     <?php /** @see \Structure\Controller\StructureController::ajouterManuellementAgentAction(); */ ?>
-    <a class="btn btn-primary action ajax-modal" data-event="modification"
+    <a class="btn btn-primary ajax-modal" data-event="modification"
        href="<?php echo $this->url("structure/ajouter-manuellement-agent", ["structure" => $structure->getId()], [], true); ?>"
     >
         <span class="icon icon-utilisateur-ajouter"></span> Ajouter manuellement un agent
     </a>
 <?php endif; ?>
 
-<?php echo $this->partial('partial/agents', [ 'structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true, 'id' => 'force']]); ?>
+<?php echo $this->partial('partial/agents', [ 'structure' => $structure, 'agents' => $agentsForces,
+    'superieurs' => $superieurs, 'autorites' => $autorites, 'affectations' => $affectations,
+    'options' => ['force' => true, 'id' => 'force']]); ?>
 
 
 <script>
@@ -92,11 +102,11 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
         if ($('div#agents_exclus').is(":visible")) {
             // alert('visible');
             $('span#icone_exclus').removeClass('icon-voir').addClass('icon-masquer');
-            $('span#texte_exclus').text("Masquer les agents explus");
+            $('span#texte_exclus').text("Masquer les agent·es exclu·es (<?php echo count($agentsRetires); ?> agent·es)");
         } else {
             // alert('masquer');
             $('span#icone_exclus').removeClass('icon-masquer').addClass('icon-voir');
-            $('span#texte_exclus').text("Afficher les agents exclus");
+            $('span#texte_exclus').text("Afficher les agent·es exclu·es (<?php echo count($agentsRetires); ?> agent·es)");
         }
 
     });

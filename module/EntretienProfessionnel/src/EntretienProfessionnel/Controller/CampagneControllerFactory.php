@@ -29,7 +29,7 @@ class CampagneControllerFactory extends AbstractActionController
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : CampagneController
+    public function __invoke(ContainerInterface $container): CampagneController
     {
         /**
          * @var AgentService $agentService

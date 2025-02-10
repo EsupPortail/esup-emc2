@@ -18,7 +18,7 @@ if (isset($options["mode"])) $mode = $options["mode"];
 $activites = $mission->getActivites();
 usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
-$retrait = explode(";",$missionAdditionnelle->getRetraits());
+$retrait = explode(";",$missionAdditionnelle->getRetraits()??"");
 $retraits = [];
 foreach ($retrait as $item) $retraits[$item] = true;
 

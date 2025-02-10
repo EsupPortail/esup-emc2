@@ -5,11 +5,14 @@
  * @var Agent[] $agents
  * @var array $options
  *
- * @var Agent[] $superieurs
- * @var Agent[] $autorites
+ * @var AgentSuperieur[] $superieurs
+ * @var AgentAutorite[] $autorites
+ * @var AgentAffectation[] $affectations
+ *
  * @var string[] $raison
  */
 
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
@@ -36,11 +39,11 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 <table class="datatable table table-condensed" id="<?php echo $options['id']; ?>" style="font-size: 14px;">
     <thead>
         <tr>
-            <th> Dénomination</th>
+            <th data-type="string"> Dénomination</th>
             <th> Structures fines</th>
             <th> Supérieur&middot;e hiérarchique direct&middot;e </th>
             <th> Autorité hiérarchique </th>
-            <th style="width:5rem; min-width: 5rem;"> Action </th>
+            <th class="action"> Action </th>
         </tr>
     </thead>
     <tbody>
@@ -52,9 +55,9 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 //            $affectations = array_filter($affectations, function (AgentAffectation $a) { return $a->isPrincipale(); });
         ?>
         <tr class="<?php if ($agent->isAdministratif()) echo " administratif "; ?>">
-            <td>
+            <td data-order="<?php echo $agent->getDenomination(); ?>">
                 <?php if ($canVoirAgent) : ?>
-                        <?php echo $agent->getDenomination(); ?>
+                        <?php echo $agent->getDenomination(true); ?>
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
@@ -65,68 +68,71 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
             </td>
             <td>
                 <!-- STRUCTURE --------------------------------------------------------------------------------------->
-                <?php foreach ($agent->getStructures() as $structure) : ?>
-                    <?php
-                    $niveau2   =  ($structure AND $structure->getNiv2())?$structure->getNiv2():null;
-                    ?>
-                    <?php if ($structure) : ?>
-                        <span class="icon application" title="Déterminé par EMC2"></span>
-                        <?php echo $structure->getLibelleCourt(); ?><br/>
-                    <?php else : ?>
-                        Pas de structure fines<br/>
-                    <?php endif ?>
-                <?php endforeach; ?>
-            </td>
-            <td> <!-- RESPONSABLE HIERARCHIQUE ------------------------------------------------------------------------>
-                <?php $superieurs = $agent->getSuperieurs(); ?>
-                <?php if (empty($superieurs)) : ?>
+                <?php /** @var AgentAffectation $affectation */ ?>
+                <?php if (isset($affectations[$agent->getId()]) AND !empty($affectations[$agent->getId()])):?>
+                    <?php foreach($affectations[$agent->getId()] as $affectation) :?>
+                        <?php $structureA = $affectation->getStructure(); ?>
+                        <?php if ($affectation->isPrincipale()) : ?>
+                            <strong title="Affectation principale"> <?php echo $structureA->getLibelleCourt(); ?> </strong>
+                        <?php else : ?>
+                            <?php echo $structureA->getLibelleCourt(); ?>
+                        <?php endif ; ?>
+                        <br>
+
+                    <?php endforeach; ?>
+                <?php else : ?>
                     <span class="text-danger">
                         <span class="icon icon-attention"></span>
-                        Supérieur·e hiérarchique manquante
+                        Affectation fine inconnue
                     </span>
-                    <br/>
+                <?php endif; ?>
+            </td>
+            <td> <!-- RESPONSABLE HIERARCHIQUE ------------------------------------------------------------------------>
+                <?php /** @var AgentSuperieur $superieur */ ?>
+                <?php if (isset($superieurs[$agent->getId()]) AND !empty($superieurs[$agent->getId()])):?>
+                    <?php foreach($superieurs[$agent->getId()] as $superieur) :?>
+                        <?php echo $superieur->getSuperieur()->getDenomination(true); ?><br/>
+                    <?php endforeach; ?>
                 <?php else : ?>
-                    <?php
-                        $superieurs = $agent->getSuperieurs();
-                        usort($superieurs, function (AgentSuperieur $a, AgentSuperieur $b) { return $a->getSuperieur()->getNomUsuel()." ".$a->getSuperieur()->getPrenom() <=> $b->getSuperieur()->getNomUsuel()." ".$b->getSuperieur()->getPrenom();});
-                        $asString = implode("<br>", array_map(function (AgentSuperieur $a) { return $a->getSuperieur()->getDenomination();}, $superieurs));
-                        echo $asString;
-                    ?>
+                    <span class="text-danger">
+                        <span class="icon icon-attention"></span>
+                        Supérieur·e hiérarchique manquant·e
+                    </span>
                 <?php endif; ?>
             </td>
             <td> <!-- AUTORITE HIERARCHIQUE --------------------------------------------------------------------------->
-                <?php $autorites = $agent->getAutorites(); ?>
-                <?php if (empty($autorites)) : ?>
+                <?php /** @var AgentAutorite $autorite */ ?>
+                <?php if (isset($autorites[$agent->getId()]) AND !empty($autorites[$agent->getId()])):?>
+                    <?php foreach($autorites[$agent->getId()] as $autorite) :?>
+                        <?php echo $autorite->getAutorite()->getDenomination(true); ?><br/>
+                    <?php endforeach; ?>
+                <?php else : ?>
                     <span class="text-danger">
                         <span class="icon icon-attention"></span>
                         Autorité hiérarchique manquante
                     </span>
-                    <br/>
-                <?php else : ?>
-                    <?php
-                        $autorites = $agent->getAutorites();
-                        usort($autorites, function (AgentAutorite $a, AgentAutorite $b) { return $a->getAutorite()->getNomUsuel()." ".$a->getAutorite()->getPrenom() <=> $b->getAutorite()->getNomUsuel()." ".$b->getAutorite()->getPrenom();});
-                        $asString = implode("<br>", array_map(function (AgentAutorite $a) { return $a->getAutorite()->getDenomination();}, $autorites));
-                        echo $asString;
-                    ?>
                 <?php endif; ?>
             </td>
-            <td>
+            <td class="action">
                 <?php if ($canVoirAgent) : ?>
                     <a
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                             href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
-                            target="_blank"
+                            target="_blank" class="action secondary"
                     >
-                        <span class="icon icon-user" data-bs-toggle="tooltip" data-bs-html="true" title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>"></span></a>
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
 
                 <?php if ($isForce AND $canRetirerAgentForce) : ?>
+                    <br>
                     <?php /** @see \Structure\Controller\StructureController::retirerManuellementAgentAction() */ ?>
-                    <a  class="ajax-modal" data-event="modification"
+                    <a  class="ajax-modal action danger" data-event="modification"
                         href="<?php echo $this->url('structure/retirer-manuellement-agent', [ 'structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
                     >
                         <span class="icon icon-utilisateur-supprimer"></span>
+                        Retirer
                     </a>
                 <?php endif; ?>
             </td>
@@ -150,7 +156,15 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 
     $(document).ready(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
-            'paging' : false,
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
         });
     });
 </script>
