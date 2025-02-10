@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Form\Observateur;
 
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -15,10 +16,15 @@ class ObservateurHydratorFactory {
      */
     public function __invoke(ContainerInterface $container): ObservateurHydrator
     {
-        /** @var UserService $userService */
+        /**
+         * @var EntretienProfessionnelService $entretienProfessionnelService
+         * @var UserService $userService
+         */
+        $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $userService = $container->get(UserService::class);
 
         $hydrator = new ObservateurHydrator();
+        $hydrator->setEntretienProfessionnelService($entretienProfessionnelService);
         $hydrator->setUserService($userService);
         return $hydrator;
     }

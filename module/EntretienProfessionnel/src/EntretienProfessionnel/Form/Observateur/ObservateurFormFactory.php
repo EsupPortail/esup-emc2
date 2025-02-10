@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Form\Observateur;
 
+use EntretienProfessionnel\Controller\EntretienProfessionnelController;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
 use Psr\Container\ContainerExceptionInterface;
@@ -25,14 +26,17 @@ class ObservateurFormFactory
         $pluginManager = $container->get('ViewHelperManager');
         $urlManager = $pluginManager->get('Url');
         /** @see UtilisateurController::rechercherAction() */
-        $urlRecherche =  $urlManager->__invoke('unicaen-utilisateur/rechercher-interne', [], [], true);
+        $urlRechercheUtilisateur =  $urlManager->__invoke('unicaen-utilisateur/rechercher-interne', [], [], true);
+        /** @see EntretienProfessionnelController::rechercherAction() */
+        $urlRechercherEntretien =  $urlManager->__invoke('entretien-professionnel/rechercher', [], [], true);
 
         /** @var ObservateurHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ObservateurHydrator::class);
 
         $form = new ObservateurForm();
         $form->setHydrator($hydrator);
-        $form->setUrlUser($urlRecherche);
+        $form->setUrlUser($urlRechercheUtilisateur);
+        $form->setUrlEntretienProfessionnel($urlRechercherEntretien);
         return $form;
     }
 }

@@ -82,19 +82,20 @@ class CampagneService
     }
 
     /** @return Campagne[] */
-    public function getCampagnes(string $champ = 'annee', string $ordre = 'DESC'): array
+    public function getCampagnes(bool $withHisto = false, string $champ = 'annee', string $ordre = 'DESC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.' . $champ, $ordre);
+        if (!$withHisto) $qb = $qb->andWhere('campagne.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     /** @return array (id => string) */
-    public function getCampagnesAsOptions(string $champ = 'annee', string $ordre = 'DESC'): array
+    public function getCampagnesAsOptions(bool $withHisto = false, string $champ = 'annee', string $ordre = 'DESC'): array
     {
-        $campagnes = $this->getCampagnes($champ, $ordre);
+        $campagnes = $this->getCampagnes($withHisto, $champ, $ordre);
 
         $array = [];
         foreach ($campagnes as $campagne) {
@@ -245,10 +246,9 @@ class CampagneService
 
     public function getAgentsEligibles(Campagne $campagne): array
     {
-        $structureMere = $this->getStructureService()->getStructureMere();
-
         $agents = $this->getAgentService()->getAgentsWithDates($campagne->getDateDebut(), $campagne->getDateFin());
-        [$obligatoires, $facultatifs, $raison] = $this->trierAgents($campagne, $agents);
+        $array = $this->trierAgents($campagne, $agents);
+        $obligatoires = $array[0];
 
         $sansObligations = array_map(function (AgentForceSansObligation $a) { return $a->getAgent(); }, $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagne($campagne));
         $agentsFinales = [];
@@ -316,7 +316,7 @@ class CampagneService
                 $campagne->getDateEnPoste()))
             {
                 $kept = false;
-                $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
+                $raison[$agent->getId()] .= "<li>Emploi-type invalide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
             }
             if (!$agent->isValideStatut(
                 $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT),
@@ -324,7 +324,7 @@ class CampagneService
                 [$structureMere]))
             {
                 $kept = false;
-                $raison[$agent->getId()] .= "<li>Statut invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
+                $raison[$agent->getId()] .= "<li>Statut invalide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
 
             }
             if (!$agent->isValideAffectation(

@@ -65,6 +65,7 @@ return [
                         'rechercher-agent',
                         'rechercher-responsable',
                         'rechercher-structure',
+                        'rechercher',
                     ],
                     'roles' => [
                         'user'
@@ -221,6 +222,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'rechercher-responsable',
+                            ],
+                        ],
+                    ],
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                /** @see EntretienProfessionnelController::rechercherAction() */
+                                'action'     => 'rechercher',
                             ],
                         ],
                     ],

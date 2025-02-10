@@ -483,6 +483,7 @@ class EntretienProfessionnelService
             ->addSelect('agent')->leftjoin('entretien.agent', 'agent')
             ->addSelect('responsable')->leftjoin('entretien.responsable', 'responsable')
             ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
+            ->addSelect('observateur')->leftjoin('entretien.observateurs', 'observateur')
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.histoDestruction IS NULL')
         ;
@@ -507,5 +508,42 @@ class EntretienProfessionnelService
             $dictionnaire[$etat][] = $entretien;
         }
         return $dictionnaire;
+    }
+
+    /**
+     * @param EntretienProfessionnel[] $entretiens
+     */
+    public function formatEntretienJSON(array $entretiens): array
+    {
+        $result = [];
+        foreach ($entretiens as $entretien) {
+            $result[] = array(
+                'id' => $entretien->getId(),
+                'label' => "Agent:". $entretien->getAgent()->getDenomination(true). " Responsable:". $entretien->getResponsable()->getDenomination(true),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $entretien->getCampagne()->getAnnee() . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
+    /**
+     * @param string $texte
+     * @return EntretienProfessionnel[]
+     */
+    public function findEntretienByTerm(string $texte) : array
+    {
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.responsable', 'responsable')->addSelect('responsable')
+            ->join('entretien.campagne', 'campagne')->addSelect('campagne')
+            ->andWhere("entretien.histoDestruction IS NULL")
+            ->andWhere("lower(concat(coalesce(agent.nomUsuel, agent.nomFamille), ' ', agent.prenom)) LIKE :search OR lower(concat(agent.prenom, ' ' ,coalesce(agent.nomUsuel, agent.nomFamille))) LIKE :search")
+            ->setParameter('search', '%' . strtolower($texte) . '%');
+             //OR concat(agent.prenom, ' ', coalesce(agent.nomUsuel, agent.nomFamille)) LIKE '%:texte%'))")
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

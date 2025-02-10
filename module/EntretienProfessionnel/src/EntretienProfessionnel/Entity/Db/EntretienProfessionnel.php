@@ -225,7 +225,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $actif;
     }
 
-    public function getObservateurs(bool $withHisto = false): Collection
+    /** @return Observateur[] */
+    public function getObservateurs(bool $withHisto = false): array
     {
         $observateurs =  $this->observateurs->toArray();
         if (!$withHisto) {
@@ -657,5 +658,26 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function isDepasse(): bool
     {
         return ($this->getDateEntretien() < (new DateTime()));
+    }
+
+    public function prettyPrint(): string
+    {
+        $texte = '';
+        if ($this->getAgent() !== null) {
+            $texte .= "Agent·e: " . $this->getAgent()->getDenomination(true) . " ";
+        } else {
+            $texte .= "Agent: Aucun·e agent·e de renseigné·e ";
+        }
+        if ($this->getResponsable() !== null) {
+            $texte .= "Responsable: " . $this->getResponsable()->getDenomination(true) . " ";
+        } else {
+            $texte .= "Responsable: Aucun·e responsable de renseigné·e ";
+        }
+        if ($this->getCampagne() !== null) {
+            $texte .= "Campagne: " . $this->getCampagne()->getAnnee() . " ";
+        } else {
+            $texte .= "Campagne: Aucun campagne de renseignée ";
+        }
+        return $texte;
     }
 }

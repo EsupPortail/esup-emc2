@@ -78,9 +78,11 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     /**
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnels() : array
+    public function getEntretiensProfessionnels(bool $withHisto = false) : array
     {
-        return $this->entretiens->toArray();
+        $entretiens =  $this->entretiens->toArray();
+        if (!$withHisto) $entretiens = array_filter($entretiens, function ($entretien) { return $entretien->estNonHistorise(); });
+        return $entretiens;
     }
 
     /** prédicats *****************************************************************************************************/

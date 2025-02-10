@@ -18,11 +18,11 @@ use UnicaenApp\Form\Element\SearchAndSelect;
         </span>
     </div>
     <div class="card-body">
-        <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
+        <form id="filtre" action="<?php echo $this->url('entretien-professionnel/observateur', [],[], true); ?>" method="get">
         <div class="row">
             <div class="col-md-9">
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                             <?php
                             /** @see \EntretienProfessionnel\Controller\ObservateurController::rechercherAction() */
                             $observateurF = new SearchAndSelect('observateur-filtre', ['label' => "Observateur·trice :"]);
@@ -36,7 +36,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             ?>
                             <?php echo $this->formControlGroup($observateurF); ?>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <?php
                         /** @see \Application\Controller\AgentController::rechercherLargeAction() */
                         $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent·e :"]);
@@ -50,7 +50,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                         ?>
                         <?php echo $this->formControlGroup($agentF); ?>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label for="campagne">Campagne :</label><br>
                         <select id="campagne" name="campagne" class="selecpicker" data-live-search="true">
                             <option value=""> Peu importe </option>
@@ -60,6 +60,15 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                                 >
                                     <?php echo $campagne->getAnnee(); ?> </option>
                             <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="historise">Historisé :</label><br>
+                        <select id="historise" name="historise" class="selecpicker">
+                            <option value=""> Peu importe </option>
+                            <option value="0"> Non </option>
+                            <option value="1"> Oui </option>
+
                         </select>
                     </div>
                 </div>
@@ -108,9 +117,11 @@ use UnicaenApp\Form\Element\SearchAndSelect;
         let agentLabel = $('input[name="agent-filtre[label]"]').val();
         let observateurId = $('input[name="observateur-filtre[id]"]').val();
         let observateurLabel = $('input[name="observateur-filtre[label]"]').val();
+        let historise = $('select#historise option:selected').val();
 
         let query = "";
         if (campagne !== "") query += "&campagne=" + campagne;
+        if (historise !== "") query += "&historise=" + historise;
         if (agentId !== "") {
             query += "&agent-id=" + agentId;
             query += "&agent-label=" + agentLabel;

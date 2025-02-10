@@ -141,6 +141,16 @@ class EntretienProfessionnelController extends AbstractActionController
         exit;
     }
 
+    /** Pour le moment la recherche se fait sur la dénomination de l'agent */
+    public function rechercherAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $entretiens = $this->getEntretienProfessionnelService()->findEntretienByTerm($term);
+            $result = $this->getEntretienProfessionnelService()->formatEntretienJSON($entretiens);
+            return new JsonModel($result);
+        }
+    }
+
     /** Gestion des entretiens professionnels *************************************************************************/
 
     public function creerAction(): ViewModel|Response

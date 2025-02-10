@@ -18,9 +18,26 @@ class ObservateurForm extends Form
         $this->urlUser = $urlUser;
     }
 
+    private ?string $urlEntretienProfessionnel = null;
+
+    public function setUrlEntretienProfessionnel(?string $urlEntretienProfessionnel): void
+    {
+        $this->urlEntretienProfessionnel = $urlEntretienProfessionnel;
+    }
 
     public function init(): void
     {
+        // Entretien
+        $entretien = new SearchAndSelect('entretien', ['label' => "Entretien professionnel * :"]);
+        $entretien
+            ->setAutocompleteSource($this->urlEntretienProfessionnel)
+            ->setSelectionRequired()
+            ->setAttributes([
+                'id' => 'entretien',
+                'placeholder' => "Entretien professionnel ...",
+            ]);
+        $this->add($entretien);
+
         // Utilisateur
         $utilisateur = new SearchAndSelect('user', ['label' => "Utilisateur·trice * :"]);
         $utilisateur
@@ -61,6 +78,7 @@ class ObservateurForm extends Form
 
         // Input filter
         $this->setInputFilter((new Factory())->createInputFilter([
+            'entretien' => ['required' => true,],
             'user' => ['required' => true,],
             'description' => ['required' => false,],
         ]));

@@ -176,6 +176,10 @@ class ObservateurService {
         $qb = $this->createQueryBuilder();
 
         if (isset($params['campagne'])) $qb = $qb->andWhere('campagne.id = :campagne')->setParameter('campagne', $params['campagne']);
+        if (isset($params['historise'])) {
+            if ($params['historise'] === '1') $qb = $qb->andWhere('observateur.histoDestruction IS NOT NULL');
+            if ($params['historise'] === '0') $qb = $qb->andWhere('observateur.histoDestruction IS NULL');
+        }
         if (isset($params['agent-id'])) $qb = $qb->andWhere('agent.id = :agent')->setParameter('agent', $params['agent-id']);
         if (isset($params['observateur-id'])) $qb = $qb->andWhere('user.id = :user')->setParameter('user', $params['observateur-id']);
 

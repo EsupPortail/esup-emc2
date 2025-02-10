@@ -4,6 +4,10 @@ namespace EntretienProfessionnel;
 
 use EntretienProfessionnel\Controller\ObservateurController;
 use EntretienProfessionnel\Controller\ObservateurControllerFactory;
+use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurForm;
+use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurFormFactory;
+use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurHydrator;
+use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurHydratorFactory;
 use EntretienProfessionnel\Form\Observateur\ObservateurForm;
 use EntretienProfessionnel\Form\Observateur\ObservateurFormFactory;
 use EntretienProfessionnel\Form\Observateur\ObservateurHydrator;
@@ -42,6 +46,7 @@ return [
                     'controller' => ObservateurController::class,
                     'action' => [
                         'ajouter',
+                        'importer',
                     ],
                     'privileges' => [
                         ObservateurPrivileges::OBSERVATEUR_AJOUTER,
@@ -141,10 +146,20 @@ return [
                                     ],
                                 ],
                             ],
+                            'importer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/importer[/:campagne]',
+                                    'defaults' => [
+                                        /** @see ObservateurController::importerAction() */
+                                        'action'     => 'importer',
+                                    ],
+                                ],
+                            ],
                             'ajouter' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/ajouter/:entretien-professionnel',
+                                    'route'    => '/ajouter[/:entretien-professionnel]',
                                     'defaults' => [
                                         /** @see ObservateurController::ajouterAction() */
                                         'action'     => 'ajouter',
@@ -221,11 +236,13 @@ return [
     'form_elements' => [
         'factories' => [
             ObservateurForm::class => ObservateurFormFactory::class,
+            ImporterObservateurForm::class => ImporterObservateurFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             ObservateurHydrator::class => ObservateurHydratorFactory::class,
+            ImporterObservateurHydrator::class => ImporterObservateurHydratorFactory::class,
         ],
     ]
 

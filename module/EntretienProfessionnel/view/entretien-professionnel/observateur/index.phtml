@@ -10,10 +10,13 @@
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Observateur;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Privilege\ObservateurPrivileges;
 
 //note economie de temps en testant globalement
 $canAcceder = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
 
+$canAjouter = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_AJOUTER));
+$canImporter = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_AJOUTER));
 ?>
 
 
@@ -23,6 +26,26 @@ $canAcceder = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienpr
 
 
 <?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'params' => $params]); ?>
+
+<div>
+    <?php if ($canAcceder): ?>
+        <?php /** @see \EntretienProfessionnel\Controller\ObservateurController::ajouterAction() */ ?>
+        <a href="<?php echo $this->url("entretien-professionnel/observateur/ajouter", [], [], true); ?>"
+           class="btn btn-primary ajax-modal" data-event="modification">
+            <span class="icon icon-ajouter"></span>
+            Ajouter un observateur
+        </a>
+    <?php endif; ?>
+
+    <?php if ($canImporter): ?>
+        <?php /** @see \EntretienProfessionnel\Controller\ObservateurController::importerAction() */ ?>
+        <a href="<?php echo $this->url("entretien-professionnel/observateur/importer", [], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-csv"></span>
+            Importer des observateurs depuis un CSV
+        </a>
+    <?php endif; ?>
+</div>
 
 <table class="table table-condensed datatable">
     <thead>
@@ -47,7 +70,7 @@ $canAcceder = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienpr
     <tbody>
     <?php foreach ($observateurs as $observateur) : ?>
         <?php $entretien = $observateur->getEntretienProfessionnel(); ?>
-        <tr>
+        <tr class=" <?php echo ($observateur->estHistorise())?" historise ":""; ?> ">
             <td>
                 <?php echo $observateur->getUser()->getDisplayName(); ?>
             </td>
@@ -91,6 +114,10 @@ $canAcceder = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienpr
             language: {
                 url: '/localisation/fr_FR.json'
             }
+        });
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
         });
     });
 </script>
