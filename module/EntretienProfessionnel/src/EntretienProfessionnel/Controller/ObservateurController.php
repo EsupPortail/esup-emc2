@@ -28,6 +28,9 @@ class ObservateurController extends AbstractActionController {
     public function indexAction(): ViewModel
     {
         $params = $this->params()->fromQuery();
+        if (empty($params)) {
+            $params['historise'] = '0';
+        }
 
         $observateurs = $this->getObservateurService()->getObservateursWithFiltre($params);
         $campagnes = $this->getCampagneService()->getCampagnes();

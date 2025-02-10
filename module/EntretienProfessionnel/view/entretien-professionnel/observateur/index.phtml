@@ -17,6 +17,8 @@ $canAcceder = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienpr
 
 $canAjouter = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_AJOUTER));
 $canImporter = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_AJOUTER));
+$canHistorise = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_HISTORISER));
+$canSupprimer = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_SUPPRIMER));
 ?>
 
 
@@ -47,7 +49,7 @@ $canImporter = $this->isAllowed(ObservateurPrivileges::getResourceId(Observateur
     <?php endif; ?>
 </div>
 
-<table class="table table-condensed datatable">
+<table class="table table-condensed datatable" id="observateurs">
     <thead>
         <tr>
             <th>
@@ -97,9 +99,37 @@ $canImporter = $this->isAllowed(ObservateurPrivileges::getResourceId(Observateur
             <td class="action">
                 <?php if ($canAcceder) : ?>
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
-                    <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()] ,[], true); ?>">
+                    <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()] ,[], true); ?>"
+                       class="action secondary"
+                    >
                         <span class="icon icon-voir"></span>
                         Accéder
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistorise) : ?>
+                    <br>
+                    <?php if ($observateur->estNonHistorise()) : ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/observateur/historiser', ['observateur' => $observateur->getId()], ["query" => ["retour" => $this->url()]], true); ?>"
+                           class="action warning">
+                            <span class="icon icon-historiser"></span>
+                            Historise
+                        </a>
+                    <?php else : ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/observateur/restaurer', ['observateur' => $observateur->getId()], ["query" => ["retour" => $this->url()]], true); ?>"
+                           class="action warning">
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <br>
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/observateur/supprimer', ['observateur' => $observateur->getId()] ,[], true); ?>"
+                       class="action danger ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
                     </a>
                 <?php endif; ?>
             </td>
@@ -110,9 +140,14 @@ $canImporter = $this->isAllowed(ObservateurPrivileges::getResourceId(Observateur
 
 <script>
     $(document).ready(function() {
-        $('.datatable').DataTable( {
+        $('#observateurs').DataTable({
+            autoWidth: false,
+            columnDefs: [{
+                "targets": 4,
+                "orderable": false
+            }],
             language: {
-                url: '/localisation/fr_FR.json'
+                url: '/js/datatables_fr.json'
             }
         });
         $("body").on("modification", function (event) {

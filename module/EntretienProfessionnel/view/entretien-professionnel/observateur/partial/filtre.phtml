@@ -65,9 +65,15 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                     <div class="col-md-3">
                         <label for="historise">Historisé :</label><br>
                         <select id="historise" name="historise" class="selecpicker">
-                            <option value=""> Peu importe </option>
-                            <option value="0"> Non </option>
-                            <option value="1"> Oui </option>
+                            <option value=" "
+                                <?php if (!isset($params['historise']) OR $params['historise'] === '' OR $params['historise'] === ' ')  echo " selected "; ?>
+                            > Peu importe </option>
+                            <option value="0"
+                                <?php if (isset($params['historise']) AND $params['historise'] === '0')  echo " selected "; ?>
+                            > Non </option>
+                            <option value="1"
+                                <?php if (isset($params['historise']) AND $params['historise'] === '1')  echo " selected "; ?>
+                            > Oui </option>
 
                         </select>
                     </div>
