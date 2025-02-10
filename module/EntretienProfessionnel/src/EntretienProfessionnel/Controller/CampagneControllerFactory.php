@@ -18,7 +18,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
-use UnicaenAuthentification\Service\UserContext;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 
@@ -30,7 +29,7 @@ class CampagneControllerFactory extends AbstractActionController
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : CampagneController
+    public function __invoke(ContainerInterface $container): CampagneController
     {
         /**
          * @var AgentService $agentService
@@ -45,7 +44,6 @@ class CampagneControllerFactory extends AbstractActionController
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
          * @var UserService $userService
-         * @var UserContext $userContext
          */
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
@@ -59,7 +57,6 @@ class CampagneControllerFactory extends AbstractActionController
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
         $userService = $container->get(UserService::class);
-        $userContext = $container->get(UserContext::class);
 
         /**
          * @var CampagneForm $campagneForm
@@ -81,7 +78,6 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
         $controller->setUserService($userService);
-        $controller->setServiceUserContext($userContext);
         $controller->setCampagneForm($campagneForm);
         $controller->setSelectionAgentForm($selectionAgentForm);
         return $controller;

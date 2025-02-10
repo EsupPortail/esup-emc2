@@ -2,8 +2,8 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
@@ -15,7 +15,6 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
-use EntretienProfessionnel\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -33,14 +32,12 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
-
-class CampagneController extends AbstractActionController {
+class CampagneController extends AbstractActionController
+{
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
@@ -50,16 +47,14 @@ class CampagneController extends AbstractActionController {
     use ParametreServiceAwareTrait;
     use RappelCampagneAvancementAutoriteServiceAwareTrait;
     use RappelCampagneAvancementSuperieurServiceAwareTrait;
-//    use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use UserServiceAwareTrait;
-    use UserContextServiceAwareTrait;
-    
+
     use CampagneFormAwareTrait;
     use SelectionAgentFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $campagnes = $this->getCampagneService()->getCampagnes();
 
@@ -68,7 +63,7 @@ class CampagneController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $agents = $this->getCampagneService()->getAgentsEligibles($campagne);
@@ -81,11 +76,11 @@ class CampagneController extends AbstractActionController {
         ]);
     }
 
-    public function ajouterAction() : ViewModel
+    public function ajouterAction(): ViewModel
     {
         $campagne = new Campagne();
         $campagne->setAnnee(CampagneService::getAnneeScolaire());
-        $campagne->setDateEnPoste(DateTime::createFromFormat('Y-m-d', (new DateTime('now'))->format('Y')."-01-01"));
+        $campagne->setDateEnPoste(DateTime::createFromFormat('Y-m-d', (new DateTime('now'))->format('Y') . "-01-01"));
 
         $form = $this->getCampagneForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/ajouter', [], [], true));
@@ -97,12 +92,12 @@ class CampagneController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCampagneService()->create($campagne);
-                $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [".$campagne->getAnnee()."] vient d'être créée.");
+                $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [" . $campagne->getAnnee() . "] vient d'être créée.");
 
-               $this->getRappelCampagneAvancementAutoriteService()->creer($campagne);
-               $this->getRappelCampagneAvancementSuperieurService()->creer($campagne);
-               $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
-               $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
+                $this->getRappelCampagneAvancementAutoriteService()->creer($campagne);
+                $this->getRappelCampagneAvancementSuperieurService()->creer($campagne);
+                $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
+                $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
             }
         }
 
@@ -119,7 +114,8 @@ class CampagneController extends AbstractActionController {
      * Fonction permettant de re-expédier les notifications d'ouverture de campagne.
      * Attention : il n'y a pas de bouton pour invoquer cette fonction, il faut utiliser la route directement.
      */
-    public function notifierOuvertureAction() : ViewModel {
+    public function notifierOuvertureAction(): ViewModel
+    {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
         $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
@@ -127,7 +123,7 @@ class CampagneController extends AbstractActionController {
         return new ViewModel(['title' => "Notification de l'ouverture de la campagne"]);
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
@@ -141,7 +137,7 @@ class CampagneController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCampagneService()->update($campagne);
-                $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [".$campagne->getAnnee()."] vient d'être modifiée.");
+                $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [" . $campagne->getAnnee() . "] vient d'être modifiée.");
             }
         }
 
@@ -154,21 +150,21 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getCampagneService()->historise($campagne);
         return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getCampagneService()->restore($campagne);
         return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
     }
 
-    public function detruireAction() : ViewModel
+    public function detruireAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
@@ -194,12 +190,13 @@ class CampagneController extends AbstractActionController {
 
     /** Action de la page d'affichage d'une campagne ******************************************************************/
 
-    public function demanderValidationSuperieurAction() : ViewModel
+    public function demanderValidationSuperieurAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteResponsable($campagne);
+        $enAttente = $this->getCampagneService()->getEntretiensEnAttenteResponsable($campagne);
 
-        $entretiens = []; $listes = [];
+        $entretiens = [];
+        $listes = [];
         foreach ($enAttente as $entretienListe) {
             /** @var EntretienProfessionnel $entretien */
             foreach ($entretienListe as $entretien) {
@@ -212,11 +209,11 @@ class CampagneController extends AbstractActionController {
         }
 
         $count = 0;
-        $texte  = "Liste des notifications :";
+        $texte = "Liste des notifications :";
         $texte .= "<ul>";
         foreach ($listes as $superieur) {
             $mail = $this->getNotificationService()->triggerRappelValidationSuperieur($superieur, $campagne, $entretiens[$superieur->getId()]);
-            $texte .= "<li> Notification faite vers ".$superieur->getDenomination(). " (".$superieur->getEmail().") mail#".$mail->getId(). "</li>";
+            $texte .= "<li> Notification faite vers " . $superieur->getDenomination() . " (" . $superieur->getEmail() . ") mail#" . $mail->getId() . "</li>";
             $count++;
         }
         $texte .= "</ul>";
@@ -230,12 +227,14 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function demanderValidationAutoriteAction() : ViewModel
+    public function demanderValidationAutoriteAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne);
+        $enAttente = $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne);
 
-        $entretiens = []; $problemes = []; $listes = [];
+        $entretiens = [];
+        $problemes = [];
+        $listes = [];
         foreach ($enAttente as $entretienListe) {
             /** @var EntretienProfessionnel $entretien */
             foreach ($entretienListe as $entretien) {
@@ -262,11 +261,11 @@ class CampagneController extends AbstractActionController {
         }
 
         $count = 0;
-        $texte  = "Liste des notifications :";
+        $texte = "Liste des notifications :";
         $texte .= "<ul>";
         foreach ($listes as $autorite) {
             $mail = $this->getNotificationService()->triggerRappelValidationAutorite($autorite, $campagne, $entretiens[$autorite->getId()]);
-            $texte .= "<li> Notification faite vers ".$autorite->getDenomination(). " (".$autorite->getEmail().") mail#".$mail->getId(). "</li>";
+            $texte .= "<li> Notification faite vers " . $autorite->getDenomination() . " (" . $autorite->getEmail() . ") mail#" . $mail->getId() . "</li>";
             $count++;
         }
         $texte .= "</ul>";
@@ -275,7 +274,7 @@ class CampagneController extends AbstractActionController {
         $texte .= "Liste des problèmes : ";
         $texte .= "<ul>";
         foreach ($problemes as $probleme) {
-            $texte .= "<li> Entretien de ".$probleme->getAgent()->getDenomination() . "</li>";
+            $texte .= "<li> Entretien de " . $probleme->getAgent()->getDenomination() . "</li>";
         }
         $texte .= "</ul>";
 
@@ -287,13 +286,13 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function demanderValidationAgentAction() : ViewModel
+    public function demanderValidationAgentAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteAgent($campagne);
+        $enAttente = $this->getCampagneService()->getEntretiensEnAttenteAgent($campagne);
 
         $count = 0;
-        $texte  = "Liste des notifications :";
+        $texte = "Liste des notifications :";
         $texte .= "<ul>";
         foreach ($enAttente as $entretienListe) {
             /** @var EntretienProfessionnel $entretien */
@@ -317,7 +316,7 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function extraireAction() : CsvModel
+    public function extraireAction(): CsvModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
@@ -332,10 +331,16 @@ class CampagneController extends AbstractActionController {
             $resume[$agent->getId()] = [
                 'Identifiant' => '',
                 'Prénom' => $agent->getPrenom(),
-                'Nom' => $agent->getNomUsuel()??$agent->getNomFamille(),
-                'Affectations' => implode("\n",array_map(function (AgentAffectation $a) { return $a->getStructure()->getLibelleLong(); },$agent->getAffectationsActifs($campagne->getDateDebut()))),
-                'Supérieur·es' => implode("\n",array_map(function (AgentSuperieur $a) { return $a->getSuperieur()->getDenomination(); },$agent->getSuperieurs())),
-                'Autorités' => implode("\n",array_map(function (AgentAutorite $a) { return $a->getAutorite()->getDenomination(); },$agent->getAutorites())),
+                'Nom' => $agent->getNomUsuel() ?? $agent->getNomFamille(),
+                'Affectations' => implode("\n", array_map(function (AgentAffectation $a) {
+                    return $a->getStructure()->getLibelleLong();
+                }, $agent->getAffectationsActifs($campagne->getDateDebut()))),
+                'Supérieur·es' => implode("\n", array_map(function (AgentSuperieur $a) {
+                    return $a->getSuperieur()->getDenomination();
+                }, $agent->getSuperieurs())),
+                'Autorités' => implode("\n", array_map(function (AgentAutorite $a) {
+                    return $a->getAutorite()->getDenomination();
+                }, $agent->getAutorites())),
                 'Responsable d\'entretien' => '',
                 'Validation du responsable' => '',
                 'Validation de l\'autorité' => '',
@@ -357,7 +362,7 @@ class CampagneController extends AbstractActionController {
         }
 
         $date = (new DateTime())->format('Ymd-His');
-        $filename=$date. "_export_campagne_".str_replace('/','-',$campagne->getAnnee()).".csv";
+        $filename = $date . "_export_campagne_" . str_replace('/', '-', $campagne->getAnnee()) . ".csv";
         $CSV = new CsvModel();
         $CSV->setDelimiter(';');
         $CSV->setEnclosure('"');
@@ -373,20 +378,26 @@ class CampagneController extends AbstractActionController {
      * Action affichant une campagne d'entretien professionnel pour une structure
      * Attention : les agents doivent être complétement hydratés sinon les calculs d'affectations, de grades et d'obligation seront erronés
      */
-    public function structureAction() : ViewModel
+    public function structureAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
-        if ($structure === null) { throw new RuntimeException("Aucune structure de trouvée."); }
+        if ($structure === null) {
+            throw new RuntimeException("Aucune structure de trouvée.");
+        }
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
         $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
-        $agentsForces = array_map(function(StructureAgentForce $agentForce) { return $agentForce->getAgent(); }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
+        $agentsForces = array_map(function (StructureAgentForce $agentForce) {
+            return $agentForce->getAgent();
+        }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
         foreach ($agentsForces as $agentForce) {
-            if (!in_array($agentForce, $agents)) { $agents[] = $agentForce; }
+            if (!in_array($agentForce, $agents)) {
+                $agents[] = $agentForce;
+            }
         }
 
 
@@ -403,10 +414,12 @@ class CampagneController extends AbstractActionController {
             }
         }
 
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
 
         return new ViewModel([
             'campagne' => $campagne,
@@ -426,7 +439,7 @@ class CampagneController extends AbstractActionController {
         ]);
     }
 
-    public function superieurAction() : ViewModel
+    public function superieurAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $superieur = $this->getAgentService()->getRequestedAgent($this);
@@ -438,7 +451,7 @@ class CampagneController extends AbstractActionController {
         if ($superieur === null) {
             throw new RuntimeException("EntretienController::superieurAction() > Aucun·e supérieur·e de fourni.");
         }
-        
+
         $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
 
         //$entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, false, false);
@@ -446,8 +459,12 @@ class CampagneController extends AbstractActionController {
         $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($superieur, $campagne, false, false);
 
         $entretiens = [];
-        foreach ($entretiensR as $entretien) { $entretiens[$entretien->getAgent()->getId()] = $entretien; }
-        foreach ($entretiensS as $entretien) { $entretiens[$entretien->getAgent()->getId()] = $entretien; }
+        foreach ($entretiensR as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
+        foreach ($entretiensS as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
 
         $vm = new ViewModel([
             'campagne' => $campagne,
@@ -459,17 +476,10 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function autoriteAction() : ViewModel
+    public function autoriteAction(): ViewModel
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $role = $this->getUserService()->getConnectedRole();
 
-        if ($role->getRoleId() !== Agent::ROLE_AUTORITE) {
-//            $autorite = $this->getRoleService()->getRepo()->findOneBy(['roleId' => Agent::ROLE_AUTORITE]);
-//            if ($user->hasRole($autorite)) {
-                $this->serviceUserContext->setSelectedIdentityRole(Agent::ROLE_AUTORITE);
-//            }
-        }
+        $this->getUserService()->selectRolePrefere($this);
 
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $autorite = $this->getAgentService()->getRequestedAgent($this);
@@ -499,7 +509,7 @@ class CampagneController extends AbstractActionController {
     /** TESTS ET DEBUGS ***********************************************************************************************/
 
 
-    public function notifierAvancementAutoriteAction() : ViewModel
+    public function notifierAvancementAutoriteAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $autorite = $this->getAgentService()->getRequestedAgent($this);
@@ -519,7 +529,7 @@ class CampagneController extends AbstractActionController {
 
                 $vm = new ViewModel([
                     'title' => "Notification de " . $autorite->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
-                    'reponse' => ($mail)?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
+                    'reponse' => ($mail) ? "<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>" : "Aucun mail",
 
                 ]);
             } else {
@@ -544,7 +554,7 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function notifierAvancementSuperieurAction() : ViewModel
+    public function notifierAvancementSuperieurAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $superieur = $this->getAgentService()->getRequestedAgent($this);
@@ -564,7 +574,7 @@ class CampagneController extends AbstractActionController {
 
                 $vm = new ViewModel([
                     'title' => "Notification de " . $superieur->getDenomination() . " de l'avancement de la campagne " . $campagne->getAnnee(),
-                    'reponse' => $mail?"<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>":"Aucun mail",
+                    'reponse' => $mail ? "<h1 class='page-header'>Contenu de la notification générée</h1><h2>Sujet</h2> <div>" . $mail->getSujet() . "</div>" . "<h2>Corps</h2> <div>" . $mail->getCorps() . "</div>" : "Aucun mail",
 
                 ]);
 
