@@ -271,7 +271,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function accederAction(): ViewModel
     {
-        $this->getUserService()->selectRolePrefere($this);
+//        $this->getUserService()->selectRolePrefere($this);
 
 
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);

@@ -3,6 +3,13 @@ CHANGES
 
 Version 5.x
 -----
+### Version 5.1.0 - XX/XX/XXXX
+
+[AMÉLIORATION]
+* Ajout d'élément aux filtres des observateur·trices d'entretien professionnel 
+
+[NOUVEAUTÉ]
+* Interface des gestions des observateur·trices d'entretien professionnel (saisi depuis l'index et importation depuis un csv)
 
 ### Version 5.0.1 - 05/02/2025
 
