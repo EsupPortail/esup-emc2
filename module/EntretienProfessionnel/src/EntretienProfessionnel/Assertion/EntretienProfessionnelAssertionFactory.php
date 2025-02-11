@@ -70,8 +70,8 @@ class EntretienProfessionnelAssertionFactory
         $mvcEvent = $application->getMvcEvent();
         $assertion->setMvcEvent($mvcEvent);
 
-        $assertion->setBLOCAGECOMPTERENDU($parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION));
-        $assertion->setBLOCAGEVALIDATION($parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_VALIDATION));
+        $assertion->setBLOCAGECOMPTERENDU($parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION) === true);
+        $assertion->setBLOCAGEVALIDATION($parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_VALIDATION) === true);
 
         return $assertion;
     }
