@@ -1,0 +1,55 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @var AgentAutorite $autorite
+ * @var Agent $agent
+ * @var string $current <i> onglet actif pour mise en forme
+ * @var ?AgentAutorite $autorite
+ * @var Campagne[] $campagnes
+ */
+
+?>
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <?php /** @see \Structure\Controller\StructureController::agentsAction() */ ?>
+    <button class="nav-link" id="agents-tab"
+            data-bs-toggle="tab" data-bs-target="#agents"
+            type="button" role="tab" aria-controls="agents" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('agent-autorite/agents', [], [], true); ?>'"
+    >
+        Liste des Agent·es
+    </button>
+    <?php foreach ($campagnes as $campagne) : ?>
+        <?php if ($campagne !== null) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
+            <button class="nav-link" id="campagne<?php echo $campagne->getId(); ?>-tab"
+                    data-bs-toggle="tab" data-bs-target="#mission-specifique"
+                    type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
+                    onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/autorite', ['agent' => $agent->getId(), 'campagne' => $campagne->getId()],[],true); ?>'"
+            >
+                Entretiens professionnels <?php echo $campagne->getAnnee(); ?>
+            </button>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php /** @see \Structure\Controller\StructureController::extractionsAction() */ ?>
+    <button class="nav-link disabled" id="extraction-tab"
+            data-bs-toggle="tab" data-bs-target="#extraction"
+            type="button" role="tab" aria-controls="extraction" aria-selected="true"
+            onclick="location.href='<?php //echo $this->url('structure/extractions', ['structure' => $structure->getId()], [], true); ?>'">
+        Extractions
+    </button>
+</div>
+
+<script>
+    $('a[aria-controls="<?php echo $current; ?>"]').addClass('active');
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

@@ -231,17 +231,6 @@ return [
                     ],
                 ],
             ],
-            'index-autorite' => [
-                'type' => Literal::class,
-                'may_terminate' => true,
-                'options' => [
-                    'route' => '/index-autorite',
-                    'defaults' => [
-                        'controller' => 'Application\Controller\Index', // <-- change here
-                        'action' => 'index-autorite',
-                    ],
-                ],
-            ],
             'infos' => [
                 'type' => Literal::class,
                 'may_terminate' => true,

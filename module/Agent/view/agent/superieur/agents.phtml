@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @see \Agent\Controller\SuperieurController::agentsAction()
+ * @var ?string $erreur
+ * @var Agent $agent
+ * @var Agent[] $agents
+ * @var Campagne[] $campagnes
+ * @var array $affectations
+ * @var bool $userIsAutorite
+ */
+
+use Agent\Entity\Db\AgentAffectation;
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+
+$canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+?>
+
+<h1 class="page-header">
+    Tableau de bord
+</h1>
+
+<?php if (isset($erreur)) : ?>
+    <div class="alert alert-danger">
+        <div class="row">
+            <div class="col-md-1">
+                <span class="icon icon-warning"></span>
+            </div>
+            <div class="col-md-11">
+                <span class="text-danger"><strong>Erreur : vous n'avez pas accés à cette page. </strong></span>
+                <br>
+                <?php echo $erreur; ?>
+            </div>
+        </div>
+    </div>
+
+<?php else : ?>
+
+    <?php echo $this->partial('partial/entete', ['campagnes' => $campagnes, 'agent' => $agent]); ?>
+
+    <div class="tab-content">
+        <h2>
+            Agent·es dont vous êtes l'autorité hiérarchique
+            <span class="badge"><?php echo count($agents); ?></span>
+        </h2>
+        <table class="table table-condensed datatable" id="agents">
+            <thead>
+            <tr>
+                <th data-type="string">Dénomination</th>
+                <th> Affectation</th>
+                <th class="action">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach($agents as $agent) : ?>
+                <tr>
+                    <td data-order="<?php echo $agent->getDenomination(); ?>">
+                        <?php echo $agent->getDenomination(true); ?>
+                    </td>
+                    <td>
+                        <?php if (!isset($affectations[$agent->getId()]) OR empty($affectations[$agent->getId()])) : ?>
+                            <span class="text-warning"> Aucune affectation connue </span>
+                        <?php else:?>
+                            <?php /** @var AgentAffectation $affectation */ ?>
+                            <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
+                                <?php if ($affectation->isPrincipale()) : ?>
+                                    <strong> <?php echo $affectation->getStructure()->getLibelleCourt(); ?> </strong>
+                                <?php else : ?>
+                                    <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                                <?php endif; ?>
+                                <br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td class="action">
+                        <?php
+                        /**
+                         *  Note : il faudrait faire le test suivant
+                         *                  $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)
+                         * mais si l'utilisateur·trice connecté·e est bien l'autorité alors, on peut se passer du test
+                         */
+                        ?>
+                        <?php if (($userIsAutorite AND $canAfficher) OR $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)): ?>
+                            <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url("agent/afficher", ['agent' => $agent->getId()], [], true); ?>"
+                               class="action secondary">
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>
+
+<script>
+    $(document).ready(function() {
+        $('table#agents').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [2], orderable: false }
+            ]
+        });
+    } );
+</script>
+

@@ -479,7 +479,7 @@ class CampagneController extends AbstractActionController
     public function autoriteAction(): ViewModel
     {
 
-        $this->getUserService()->selectRolePrefere($this);
+        //$this->getUserService()->selectRolePrefere($this);
 
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $autorite = $this->getAgentService()->getRequestedAgent($this);
@@ -493,16 +493,39 @@ class CampagneController extends AbstractActionController
         }
 
         $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $finalises = [];
+        $encours = [];
+        foreach ($entretiens as $entretien) {
+            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $finalises[] = $entretien;
+            } else {
+                $encours[] = $entretien;
+            }
+        }
+
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        if ($last !== null) $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
         $vm = new ViewModel([
+            'campagnes' => $campagnes,
             'campagne' => $campagne,
             'agent' => $autorite,
             'agents' => $agents,
+            'obligatoires' => $obligatoires,
+            'facultatifs' => $facultatifs,
+            'raisons' => $raisons,
+
             'entretiens' => $entretiens,
+            'finalises' => $finalises,
+            'encours' => $encours,
+
         ]);
-        $vm->setTemplate('entretien-professionnel/campagne/entretien');
+        $vm->setTemplate('agent/autorite/campagne');
         return $vm;
     }
 

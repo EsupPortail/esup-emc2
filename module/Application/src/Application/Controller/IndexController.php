@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Controller\AutoriteController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
@@ -96,8 +97,8 @@ class IndexController extends AbstractActionController
                     /** @see IndexController::indexSuperieurAction() */
                     return $this->redirect()->toRoute('index-superieur', [], [], true);
                 case Agent::ROLE_AUTORITE :
-                    /** @see IndexController::indexAutoriteAction() */
-                    return $this->redirect()->toRoute('index-autorite', [], [], true);
+                    /** @see AutoriteController::agentsAction() */
+                    return $this->redirect()->toRoute('agent-autorite/agents', [], [], true);
                 case RoleProvider::OBSERVATEUR :
                     /** @see StructureObservateurController::indexObservateurAction() */
                     return $this->redirect()->toRoute('structure/observateur/index-observateur', [], [], true);
@@ -181,66 +182,6 @@ class IndexController extends AbstractActionController
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
             'agentsByCampagne' => $agentsByCampagne,
-
-            'fichesDePoste' => $fichesDePoste,
-            'fichesDePostePdf' => $fichesDePostePdf,
-        ]);
-    }
-
-    public function indexAutoriteAction(): ViewModel
-    {
-        $user = $this->getUserService()->getConnectedUser();
-        $agent = $this->getAgentService()->getAgentByUser($user);
-        $structureMere = $this->getStructureService()->getStructureMere();
-
-        $agents = array_map(function (AgentAutorite $a) {
-            return $a->getAgent();
-        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
-
-        usort($agents, function (Agent $a, Agent $b) {
-            return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
-        });
-
-        /** Campagne d'entretien professionnel ************************************************************************/
-        $last = $this->getCampagneService()->getLastCampagne();
-        $campagnes = $this->getCampagneService()->getCampagnesActives();
-        if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) {
-            return $a->getDateDebut() <=> $b->getDateDebut();
-        });
-
-        /** Récuperation des eps **************************************************************************************/
-        $entretiens = [];
-        $agentsByCampagne = [];
-        foreach ($campagnes as $campagne) {
-            $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
-            $agentsSCampagnes = [];
-            foreach ($agents as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
-            foreach ($agentsS as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
-            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
-            [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
-            $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
-        }
-
-        /** Récupération des fiches de postes *************************************************************************/
-        $fichesDePoste = [];
-        foreach ($agents as $agent_) {
-            if ($agent_ instanceof StructureAgentForce) $agent_ = $agent_->getAgent();
-            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent_);
-            $fichesDePoste[$agent_->getId()] = $fiches;
-        }
-        $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
-
-        $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgents($agents);
-
-        return new ViewModel([
-            'agents' => $agents,
-            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
-            'campagnes' => $campagnes,
-            'entretiens' => $entretiens,
-            'agentsByCampagne' => $agentsByCampagne,
-
-            'missionsSpecifiques' => $missionsSpecifiques,
 
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
