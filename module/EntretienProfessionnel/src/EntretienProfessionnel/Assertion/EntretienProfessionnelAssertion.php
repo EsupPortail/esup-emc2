@@ -177,7 +177,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         $blocage = ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien));
                         return $etatOk && $dateOk && $scope && !$blocage;
                     case Agent::ROLE_SUPERIEURE:
-                        $etatOk = $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
+                        $etatOk = $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) || $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                         $isResponsable = ($agent === $entretien->getResponsable());
                         $blocage = ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien));
                         return $etatOk  && $isResponsable && !$blocage;
