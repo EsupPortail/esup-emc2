@@ -287,12 +287,14 @@ class CampagneService
         $facultatifs = [];
         $raison = [];
 
+        $parametres = $this->getParametreService()->getParametresByCategorieCode(EntretienProfessionnelParametres::TYPE);
+
         /** @var Agent $agent */
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
 
             if (!$agent->isValideCorps(
-                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS),
+                $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],
                 $campagne->getDateEnPoste()))
             {
                 continue;
@@ -310,14 +312,14 @@ class CampagneService
                 $raison[$agent->getId()] .= "<li>Sans 'contrat long'</li>";
             }
             if (!$agent->isValideEmploiType(
-                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE),
+                $parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE],
                 $campagne->getDateEnPoste()))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
             }
             if (!$agent->isValideStatut(
-                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT),
+                $parametres[EntretienProfessionnelParametres::TEMOIN_STATUT],
                 $campagne->getDateEnPoste()))
             {
                 $kept = false;
@@ -325,21 +327,21 @@ class CampagneService
 
             }
             if (!$agent->isValideAffectation(
-                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION),
+                $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION],
                 $campagne->getDateEnPoste()))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
             }
             if (!$agent->isValideGrade(
-                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_GRADE),
+                $parametres[EntretienProfessionnelParametres::TEMOIN_GRADE],
                 $campagne->getDateEnPoste()))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans grade valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
             }
             if (!$agent->isValideCorps(
-                $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_CORPS),
+                $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],
                 $campagne->getDateEnPoste()))
             {
                 $kept = false;
