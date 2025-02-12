@@ -479,7 +479,7 @@ class CampagneController extends AbstractActionController
     public function autoriteAction(): ViewModel
     {
 
-        $this->getUserService()->selectRolePrefere($this);
+        //$this->getUserService()->selectRolePrefere($this);
 
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $autorite = $this->getAgentService()->getRequestedAgent($this);
