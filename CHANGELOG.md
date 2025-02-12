@@ -4,6 +4,16 @@ CHANGES
 Version 5.x
 -----
 
+### Version 5.0.2 - 12/02/2025
+
+[AMELIORATION]
+* Amélioration des fonctions de tri des agents afin de réduire le nombre de requêtes
+
+[CORRECTION]
+* Retrait de l'utilisation de la déclaration de la structure mère pour le classement des agents pour une campagne d'entretien professionnel
+* Correction des pourcentages de l'avancement des campagnes d'entretien professionnel
+* Correction de l'assertion des entretiens professionnels pour permettre au responsable de commencer la saisie même si l'entretien n'est pas encore accepté 
+
 ### Version 5.0.1 - 05/02/2025
 
 [AMELIORATION]
