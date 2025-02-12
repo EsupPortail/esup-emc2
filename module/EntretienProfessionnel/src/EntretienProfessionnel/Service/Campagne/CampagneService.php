@@ -298,8 +298,6 @@ class CampagneService
                 continue;
             }
 
-            $structureMere = $this->getStructureService()->getStructureMere();
-
             $kept = true;
 
             if ($agent->isForceSansObligation($campagne)) {
@@ -320,8 +318,7 @@ class CampagneService
             }
             if (!$agent->isValideStatut(
                 $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT),
-                $campagne->getDateEnPoste(),
-                [$structureMere]))
+                $campagne->getDateEnPoste()))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Statut invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
