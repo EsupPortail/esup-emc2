@@ -91,7 +91,7 @@ foreach ($facultatifs as $facultatif) {
             Agents en attente d'entretien professionnel
             <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
         </h2>
-        <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien', 'raison' => $raisons]); ?>
+        <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien', 'raison' => $raisons, 'droits' => ['safe' => true]]); ?>
     <?php endif; ?>
 
     <?php if (!empty($sansFacultatifs)) : ?>
@@ -110,7 +110,7 @@ foreach ($facultatifs as $facultatif) {
                 </div>
             </div>
         </div>
-        <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raisons] ); ?>
+        <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raisons, 'droits' => ['safe' => true]] ); ?>
     <?php endif; ?>
 <?php endif; ?>
 

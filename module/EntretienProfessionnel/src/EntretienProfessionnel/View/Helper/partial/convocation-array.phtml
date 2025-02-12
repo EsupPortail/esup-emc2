@@ -16,8 +16,9 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));;
 $canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
 $canAction = ($canAfficher OR $canConvoquer);
-
 $raison = (isset($options['raison']))?$options['raison']:[];
+
+$safe = isset($options['droits']['safe']) && $options['droits']['safe'] === true;
 ?>
 
 <table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">
@@ -81,7 +82,7 @@ $raison = (isset($options['raison']))?$options['raison']:[];
             </td>
             <?php if ($canAction) : ?>
             <td class="action">
-                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                <?php if (($safe AND $canAfficher) OR $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
                     <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                     <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank"
@@ -94,10 +95,10 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                     $entretien = new EntretienProfessionnel(); $entretien->setAgent($agent);
                     //todo l'assertion merde
 //                    $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
-                    $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
+
                 ?>
                 <?php
-                    if ($campagne->estEnCours() AND $canConvoquer) : ?>
+                    if ($canConvoquer) : ?>
                     <br>
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
                     <a
