@@ -321,7 +321,6 @@ class CampagneService
             if (!$agent->isValideStatut(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_STATUT],
                 $campagne->getDateEnPoste()))
-            //todo enquete pourquoi cette scorie ...
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Statut invalide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";

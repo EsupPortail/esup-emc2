@@ -593,6 +593,7 @@ EOS;
         $parametres = $this->getParametreService()->getParametresByCategorieCode(StructureParametres::TYPE);
 
         $now = new DateTime();
+        $parametres = $this->getParametreService()->getParametresByCategorieCode(StructureParametres::TYPE);
 
         /** @var Agent $agent */
         foreach ($agents as $agent) {
