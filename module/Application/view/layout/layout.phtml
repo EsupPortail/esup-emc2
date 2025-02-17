@@ -123,11 +123,15 @@ echo $this->doctype();
     <!-- On récupère la liste des images associées aux personnas -->
     <?php
     $base = $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH);
-    $directory =  $base.'/public/img/Personna';
+    if ($base !== null) {
+        $directory = $base . '/public/img/Personna';
 
-    $files =  array_diff(scandir($directory), ['.', '..']);
-    $files =  array_map(function(string $name) { return explode('.', $name)[0]; }, $files);
-    $s = "['".implode("', '",$files)."']";
+        $files = array_diff(scandir($directory), ['.', '..']);
+        $files = array_map(function (string $name) {
+            return explode('.', $name)[0];
+        }, $files);
+        $s = "['" . implode("', '", $files) . "']";
+    }
     ?>
     const personaClasses = <?php echo $s; ?>;
 
