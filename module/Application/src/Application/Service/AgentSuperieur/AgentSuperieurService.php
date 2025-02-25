@@ -60,6 +60,7 @@ class AgentSuperieurService
         $qb = $this->getObjectManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('agentsuperieur')
             ->join('agentsuperieur.agent', 'agent')->addSelect('agent')
             ->join('agentsuperieur.superieur', 'superieur')->addSelect('superieur')
+            ->andWhere('agentsuperieur.deletedOn IS NULL')
         ;
         return $qb;
     }
