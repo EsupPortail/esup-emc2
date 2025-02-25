@@ -8,6 +8,7 @@ Version 5.x
 
 [CORRECTION]
 * Le système d'attribution des rôles automatiques "Supérieur·e Hiérachique Directe·e" et "Autorité Hiérarchique" ne tenait pas en compte correctement les notions de "deletedOn"  
+* Ajout de nouveaux champs dans la biliothèque de gestion des formulaires ("Plus Text" et "Plus Custom")
 
 ### Version 5.0.2 - 12/02/2025
 
