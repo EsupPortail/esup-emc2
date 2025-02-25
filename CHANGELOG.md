@@ -4,6 +4,11 @@ CHANGES
 Version 5.x
 -----
 
+### Version 5.0.3 - XX/XX/2025
+
+[CORRECTION]
+* Le système d'attribution des rôles automatiques "Supérieur·e Hiérachique Directe·e" et "Autorité Hiérarchique" ne tenait pas en compte correctement les notions de "deletedOn"  
+
 ### Version 5.0.2 - 12/02/2025
 
 [AMELIORATION]
