@@ -591,6 +591,7 @@ EOS;
         $raison = [];
 
         $now = new DateTime();
+        $parametres = $this->getParametreService()->getParametresByCategorieCode(StructureParametres::TYPE);
 
         /** @var Agent $agent */
         foreach ($agents as $agent) {
@@ -599,14 +600,14 @@ EOS;
             $kept = true;
 
             if (!$agent->isValideEmploiType(
-                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE),
+                $parametres[StructureParametres::AGENT_TEMOIN_EMPLOITYPE],
                 $now))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Emploi-type invalide</li>";
             }
             if (!$agent->isValideStatut(
-                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),
+                $parametres[StructureParametres::AGENT_TEMOIN_STATUT],
                 $now))
             {
                 $kept = false;
@@ -614,21 +615,21 @@ EOS;
 
             }
             if (!$agent->isValideAffectation(
-                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION),
+                $parametres[StructureParametres::AGENT_TEMOIN_AFFECTATION],
                 $now))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Affectation invalide</li>";
             }
             if (!$agent->isValideGrade(
-                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_GRADE),
+                $parametres[StructureParametres::AGENT_TEMOIN_GRADE],
                 $now))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Grade invalide</li>";
             }
             if (!$agent->isValideCorps(
-                $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_CORPS),
+                $parametres[StructureParametres::AGENT_TEMOIN_CORPS],
                 $now))
             {
                 $kept = false;

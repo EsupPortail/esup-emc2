@@ -74,6 +74,8 @@ return [
     'unicaen_autoform_formulaire_id_seq',
     'unicaen_autoform_formulaire_instance_id_seq',
     'unicaen_autoform_formulaire_reponse_id_seq',
+    'unicaen_contact_contact_id_seq',
+    'unicaen_contact_type_id_seq',
     'unicaen_enquete_enquete_id_seq',
     'unicaen_enquete_groupe_id_seq',
     'unicaen_enquete_instance_id_seq',

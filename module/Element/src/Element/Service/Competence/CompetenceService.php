@@ -161,12 +161,12 @@ class CompetenceService {
         return $options;
     }
 
-    private function competenceOptionify(Competence $competence, int $max_length=60) : array
+    private function competenceOptionify(Competence $competence) : array
     {
         /** @var CompetenceReferentiel $referentiel */
         $referentiel = $competence->getReferentiel();
         $type = $competence->getType();
-        $texte = (strlen($competence->getLibelle())>$max_length)?substr($competence->getLibelle(),0,$max_length)." ...":$competence->getLibelle();
+        $texte = $competence->getLibelle();
         $this_option = [
             'value' =>  $competence->getId(),
             'attributes' => [

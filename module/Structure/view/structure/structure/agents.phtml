@@ -57,7 +57,7 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
 <?php if ($canAfficherAgentsExclus) : ?>
     <span id="button_exclus" class="btn btn-secondary">
         <span id="icone_exclus" class="icon icon-voir"></span>
-        <span id="texte_exclus">Afficher les agents exclus</span>
+        <span id="texte_exclus">Afficher les agent·es exclu·es (<?php echo count($agentsRetires); ?> agent·es)</span>
     </span>
 <?php endif; ?>
 
@@ -102,11 +102,11 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
         if ($('div#agents_exclus').is(":visible")) {
             // alert('visible');
             $('span#icone_exclus').removeClass('icon-voir').addClass('icon-masquer');
-            $('span#texte_exclus').text("Masquer les agents explus");
+            $('span#texte_exclus').text("Masquer les agent·es exclu·es (<?php echo count($agentsRetires); ?> agent·es)");
         } else {
             // alert('masquer');
             $('span#icone_exclus').removeClass('icon-masquer').addClass('icon-voir');
-            $('span#texte_exclus').text("Afficher les agents exclus");
+            $('span#texte_exclus').text("Afficher les agent·es exclu·es (<?php echo count($agentsRetires); ?> agent·es)");
         }
 
     });

@@ -7,79 +7,58 @@ use Application\Entity\Db\AgentAutorite;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 
 class AgentAutoriteService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use AgentServiceAwareTrait;
 
     /** GESTION DE L'ENTITE *******************************************************************************************/
 
-    public function create(AgentAutorite $agentAutorite) : AgentAutorite
+    public function create(AgentAutorite $agentAutorite): AgentAutorite
     {
-        try {
-            $this->getEntityManager()->persist($agentAutorite);
-            $this->getEntityManager()->flush($agentAutorite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $this->getObjectManager()->persist($agentAutorite);
+        $this->getObjectManager()->flush($agentAutorite);
         return $agentAutorite;
     }
 
-    public function update(AgentAutorite $agentAutorite) : AgentAutorite
+    public function update(AgentAutorite $agentAutorite): AgentAutorite
     {
-        try {
-            $this->getEntityManager()->flush($agentAutorite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $this->getObjectManager()->flush($agentAutorite);
         return $agentAutorite;
     }
 
-    public function historise(AgentAutorite $agentAutorite) : AgentAutorite
+    public function historise(AgentAutorite $agentAutorite): AgentAutorite
     {
-        try {
-            $agentAutorite->historiser();
-            $this->getEntityManager()->flush($agentAutorite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $agentAutorite->historiser();
+        $this->getObjectManager()->flush($agentAutorite);
         return $agentAutorite;
     }
 
-    public function restore(AgentAutorite $agentAutorite) : AgentAutorite
+    public function restore(AgentAutorite $agentAutorite): AgentAutorite
     {
-        try {
-            $agentAutorite->dehistoriser();
-            $this->getEntityManager()->flush($agentAutorite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $agentAutorite->dehistoriser();
+        $this->getObjectManager()->flush($agentAutorite);
         return $agentAutorite;
     }
 
-    public function delete(AgentAutorite $agentAutorite) : AgentAutorite
+    public function delete(AgentAutorite $agentAutorite): AgentAutorite
     {
-        try {
-            $this->getEntityManager()->remove($agentAutorite);
-            $this->getEntityManager()->flush($agentAutorite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $this->getObjectManager()->remove($agentAutorite);
+        $this->getObjectManager()->flush($agentAutorite);
         return $agentAutorite;
     }
 
     /** QUERRYING *****************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(AgentAutorite::class)->createQueryBuilder('agentautorite')
+        $qb = $this->getObjectManager()->getRepository(AgentAutorite::class)->createQueryBuilder('agentautorite')
             ->join('agentautorite.agent', 'agent')->addSelect('agent')
 //            ->leftjoin ('agent.grades','agrade')->addSelect('agrade')
 //            ->leftjoin('agrade.bap', 'correspondance')->addSelect('correspondance')
@@ -89,23 +68,23 @@ class AgentAutoriteService
 //            ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
 //            ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
             ->join('agentautorite.autorite', 'autorite')->addSelect('autorite')
-        ;
+            ->andWhere('agentautorite.deletedOn IS NULL');
         return $qb;
     }
 
-    public function getAgentAutorite(?string $id) : ?AgentAutorite
+    public function getAgentAutorite(?string $id): ?AgentAutorite
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs AgentAutorite partagent le même id ['.$id.']');
+            throw new RuntimeException('Plusieurs AgentAutorite partagent le même id [' . $id . ']', 0, $e);
         }
         return $result;
     }
 
-    public function getRequestedAgentAutorite(AbstractActionController $controller, string $param='agent-autorite') : ?AgentAutorite
+    public function getRequestedAgentAutorite(AbstractActionController $controller, string $param = 'agent-autorite'): ?AgentAutorite
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getAgentAutorite($id);
@@ -113,7 +92,7 @@ class AgentAutoriteService
     }
 
     /** @return AgentAutorite[] */
-    public function getAgentsAutorites(bool $histo = false, string $champ = 'id', string $ordre = 'ASC') : array
+    public function getAgentsAutorites(bool $histo = false, string $champ = 'id', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('agentautorite.' . $champ, $ordre);
@@ -124,7 +103,7 @@ class AgentAutoriteService
     }
 
     /** @return AgentAutorite[] */
-    public function getAgentsAutoritesByAgent(Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
+    public function getAgentsAutoritesByAgent(Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.agent = :agent')->setParameter('agent', $agent)
@@ -136,7 +115,7 @@ class AgentAutoriteService
     }
 
     /** @return AgentAutorite[] */
-    public function getAgentsAutoritesByAutorite(Agent $autorite, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
+    public function getAgentsAutoritesByAutorite(Agent $autorite, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
@@ -172,32 +151,31 @@ class AgentAutoriteService
     {
         $qb = $this->createQueryBuilder();
         //autorite
-        $qb = $qb   ->andWhere('agent.deletedOn IS NULL')
+        $qb = $qb->andWhere('agent.deletedOn IS NULL')
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
-            ->andWhere('agentautorite.histoDestruction IS NULL')
-        ;
+            ->andWhere('agentautorite.histoDestruction IS NULL');
         //term
-        $qb = $qb   ->andWhere("LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search OR LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search")
-            ->setParameter('search', '%'.strtolower($term).'%')
+        $qb = $qb->andWhere("LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search OR LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search")
+            ->setParameter('search', '%' . strtolower($term) . '%')
             ->orderBy("concat(agent.nomUsuel, ' ', agent.prenom)", 'ASC');
 
         $result = $qb->getQuery()->getResult();
-        return array_map(function (AgentAutorite $agentAutorite) { return $agentAutorite->getAgent(); }, $result);
+        return array_map(function (AgentAutorite $agentAutorite) {
+            return $agentAutorite->getAgent();
+        }, $result);
     }
 
-    public function getAgentsAutoritesByAgents(array $agents, ?DateTime $date = null) : array
+    public function getAgentsAutoritesByAgents(array $agents, ?DateTime $date = null): array
     {
         if ($date === null) $date = new DateTime();
 
         $qb = $this->createQueryBuilder();
-        $qb = $qb   ->andWhere('agentautorite.deletedOn IS NULL')
-            ->andWhere('agentautorite.histoDestruction IS NULL')
-        ;
+        $qb = $qb->andWhere('agentautorite.deletedOn IS NULL')
+            ->andWhere('agentautorite.histoDestruction IS NULL');
         $qb = $qb
             ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :date')
             ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :date')
-            ->setParameter('date', $date)
-        ;
+            ->setParameter('date', $date);
         $qb = $qb->andWhere('agentautorite.agent in (:agents)')->setParameter('agents', $agents);
         $qb = $qb->orderBy('coalesce(autorite.nomUsuel,autorite.nomFamille), autorite.prenom', 'ASC');
 
@@ -214,7 +192,7 @@ class AgentAutoriteService
 
     /** FACADE ********************************************************************************************************/
 
-    public function createAgentAutorite(Agent $agent, Agent $autorite) : AgentAutorite
+    public function createAgentAutorite(Agent $agent, Agent $autorite): AgentAutorite
     {
         $agentAutorite = new AgentAutorite();
         $agentAutorite->setAgent($agent);
@@ -242,7 +220,7 @@ class AgentAutoriteService
         $this->create($autorite);
     }
 
-    public function historiseAll(?Agent $agent) : void
+    public function historiseAll(?Agent $agent): void
     {
         if ($agent !== null) {
             $autorites = $this->getAgentsAutoritesByAgent($agent);
@@ -253,13 +231,13 @@ class AgentAutoriteService
     /**
      * @return User[]
      */
-    public function getUsersInAutorites() : array
+    public function getUsersInAutorites(): array
     {
-        $qb = $this->getEntityManager()->getRepository(AgentAutorite::class)->createQueryBuilder('aautorite')
+        $qb = $this->getObjectManager()->getRepository(AgentAutorite::class)->createQueryBuilder('aautorite')
             ->join('aautorite.autorite', 'agent')
             ->join('agent.utilisateur', 'utilisateur')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-        ;
+            ->andWhere('aautorite.deletedOn IS NULL AND asuperieur.aautorite IS NULL');
         $result = $qb->getQuery()->getResult();
 
         $users = [];
@@ -271,13 +249,12 @@ class AgentAutoriteService
     }
 
 
-    public function isAutorite(Agent $agent, Agent $autorite) : bool
+    public function isAutorite(Agent $agent, Agent $autorite): bool
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agentautorite.agent = :agent')->setParameter('agent',$agent)
+            ->andWhere('agentautorite.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
-            ->andWhere('agentautorite.histoDestruction IS NULL')
-        ;
+            ->andWhere('agentautorite.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return !empty($result);
     }

@@ -55,6 +55,9 @@ class MacroService {
         [$categorie,$code] = explode(";", $params);
         try {
             $valeur = $this->getParametreService()->getValeurForParametre($categorie, $code);
+            if ($valeur === null) {
+                $valeur = "<span style='color:darkorange;'>Le paramètre [" .$categorie. "|".$code. "] n'est pas initialisé</span>";
+            }
         } catch (Exception $e) {
             return "<span style='color:darkred;'>" . $e->getMessage() . "</span>";
         }

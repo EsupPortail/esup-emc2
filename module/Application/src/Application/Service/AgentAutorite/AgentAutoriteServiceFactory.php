@@ -17,7 +17,7 @@ class AgentAutoriteServiceFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : AgentAutoriteService
+    public function __invoke(ContainerInterface $container): AgentAutoriteService
     {
         /**
          * @var EntityManager $entityManager
@@ -27,7 +27,7 @@ class AgentAutoriteServiceFactory
         $agentService = $container->get(AgentService::class);
 
         $service = new AgentAutoriteService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
         return $service;
     }

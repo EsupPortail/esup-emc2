@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Service\Notification;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Application\Service\Macro\MacroService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Url\UrlService;
@@ -32,6 +33,7 @@ class NotificationServiceFactory
          * @var AgentSuperieurService $agentSuperieurService ;
          * @var CampagneService $campagneService ;
          * @var EntretienProfessionnelService $entretienProfessionnelService ;
+         * @var MacroService $macroService ;
          * @var MailService $mailService ;
          * @var ParametreService $parametreService ;
          * @var RenduService $renduService
@@ -43,6 +45,7 @@ class NotificationServiceFactory
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
+        $macroService = $container->get(MacroService::class);
         $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
@@ -55,6 +58,7 @@ class NotificationServiceFactory
         $service->setAgentSuperieurService($agentSuperieurService);
         $service->setCampagneService($campagneService);
         $service->setEntretienProfessionnelService($entretienProfessionnelService);
+        $service->setMacroService($macroService);
         $service->setMailService($mailService);
         $service->setParametreService($parametreService);
         $service->setRenduService($renduService);

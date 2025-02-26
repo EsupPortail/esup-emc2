@@ -152,7 +152,7 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'chaine';
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'chaine';
 
 -- --------------------------------------------------------------------------------------------------------------------
 -- ROLE ---------------------------------------------------------------------------------------------------------------

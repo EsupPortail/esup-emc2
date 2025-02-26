@@ -5,9 +5,15 @@
  * @var string $texte
  */
 
+use Application\Entity\Db\Agent;
+
 ?>
 <br>
 <div>
     <?php echo $texte; ?>
 </div>
 
+<!---->
+<!--<a href="--><?php //echo $this->url('entretien-professionnel/campagne/autorite', ['campagne' => 3], ['query' => ['role-prefere' => Agent::ROLE_AUTORITE]], true); ?><!--">-->
+<!--    Accéder à l'index de la campagne en tant qu'autorité-->
+<!--</a>-->
