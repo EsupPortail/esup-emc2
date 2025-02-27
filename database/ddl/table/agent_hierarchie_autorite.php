@@ -8,7 +8,7 @@ return [
     'temporary'   => FALSE,
     'logging'     => TRUE,
     'commentaire' => NULL,
-    'sequence'    => NULL,
+    'sequence'    => 'agent_hierarchie_autorite_id_seq',
     'columns'     => [
         'agent_id'              => [
             'name'        => 'agent_id',

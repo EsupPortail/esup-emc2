@@ -88,7 +88,7 @@ return [
             'bdd-type'    => 'timestamp without time zone',
             'length'      => 0,
             'scale'       => NULL,
-            'precision'   => 6,
+            'precision'   => NULL,
             'nullable'    => TRUE,
             'default'     => NULL,
             'position'    => 27,
