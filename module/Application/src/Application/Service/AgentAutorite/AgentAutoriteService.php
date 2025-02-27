@@ -63,6 +63,12 @@ class AgentAutoriteService
             ->leftjoin ('agent.grades','agrade')->addSelect('agrade')
 //            ->leftjoin('agrade.bap', 'correspondance')->addSelect('correspondance')
 //            ->leftjoin('correspondance.type', 'ctype')->addSelect('ctype')
+//            ->leftJoin('agrade.grade', 'grade')->addSelect('grade')
+//            ->leftJoin('agrade.corps', 'corps')->addSelect('corps')
+//            ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
+//            ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
+            ->join('agentautorite.autorite', 'autorite')->addSelect('autorite')
+            ->andWhere('agentautorite.deletedOn IS NULL');
             ->leftJoin('agrade.grade', 'grade')->addSelect('grade')
             ->leftJoin('agrade.corps', 'corps')->addSelect('corps')
             ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
@@ -78,7 +84,7 @@ class AgentAutoriteService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs AgentAutorite partagent le même id [' . $id . ']');
+            throw new RuntimeException('Plusieurs AgentAutorite partagent le même id [' . $id . ']', 0, $e);
         }
         return $result;
     }
@@ -235,7 +241,8 @@ class AgentAutoriteService
         $qb = $this->getObjectManager()->getRepository(AgentAutorite::class)->createQueryBuilder('aautorite')
             ->join('aautorite.autorite', 'agent')
             ->join('agent.utilisateur', 'utilisateur')
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+            ->andWhere('aautorite.deletedOn IS NULL AND asuperieur.aautorite IS NULL');
         $result = $qb->getQuery()->getResult();
 
         $users = [];
