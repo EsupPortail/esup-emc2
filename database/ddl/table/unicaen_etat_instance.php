@@ -89,7 +89,7 @@ return [
             'length'      => 0,
             'scale'       => NULL,
             'precision'   => 6,
-            'nullable'    => FALSE,
+            'nullable'    => TRUE,
             'default'     => 'now()',
             'position'    => 5,
             'commentaire' => NULL,

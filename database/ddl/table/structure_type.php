@@ -138,7 +138,7 @@ return [
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,
-            'default'     => NULL,
+            'default'     => 'NULL',
             'position'    => 5,
             'commentaire' => NULL,
         ],

@@ -9,7 +9,7 @@ return [
     'rtable'      => 'carriere_niveau',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'SET NULL',
-    'index'       => 'niveau_definition_id_uindex',
+    'index'       => 'niveau_definition_pk',
     'columns'     => [
         'valeur_recommandee_id' => 'id',
     ],

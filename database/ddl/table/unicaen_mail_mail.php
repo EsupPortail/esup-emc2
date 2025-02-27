@@ -118,6 +118,18 @@ return [
             'position'    => 8,
             'commentaire' => NULL,
         ],
+        'reply_to'               => [
+            'name'        => 'reply_to',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 2048,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 12,
+            'commentaire' => NULL,
+        ],
         'status_envoi'           => [
             'name'        => 'status_envoi',
             'type'        => 'string',
