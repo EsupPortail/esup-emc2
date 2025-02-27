@@ -68,12 +68,12 @@ class AgentAutoriteService
 //            ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
 //            ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
             ->join('agentautorite.autorite', 'autorite')->addSelect('autorite')
-            ->andWhere('agentautorite.deletedOn IS NULL');
             ->leftJoin('agrade.grade', 'grade')->addSelect('grade')
             ->leftJoin('agrade.corps', 'corps')->addSelect('corps')
             ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
             ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
-            ->join('agentautorite.autorite', 'autorite')->addSelect('autorite');
+            ->join('agentautorite.autorite', 'autorite')->addSelect('autorite')
+            ->andWhere('agentautorite.deletedOn IS NULL');
         return $qb;
     }
 
