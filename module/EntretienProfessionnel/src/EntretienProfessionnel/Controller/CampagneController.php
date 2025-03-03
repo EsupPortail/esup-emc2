@@ -439,6 +439,62 @@ class CampagneController extends AbstractActionController
         ]);
     }
 
+    public function structureProgressionAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+
+        // récupération des agents selon les critères de la structure
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
+        $agentsForces = array_map(function (StructureAgentForce $agentForce) {
+            return $agentForce->getAgent();
+        }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
+        foreach ($agentsForces as $agentForce) {
+            if (!in_array($agentForce, $agents)) {
+                $agents[] = $agentForce;
+            }
+        }
+
+
+        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents);
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $finalises = [];
+        $encours = [];
+        foreach ($entretiens as $entretien) {
+            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $finalises[] = $entretien;
+            } else {
+                $encours[] = $entretien;
+            }
+        }
+
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
+        if ($last !== null) $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
+
+        return new ViewModel([
+            'campagne' => $campagne,
+            'campagnes' => $campagnes,
+            'structure' => $structure,
+            'structures' => $structures,
+            'agents' => $agents,
+
+            'entretiens' => $entretiens,
+            'encours' => $encours,
+            'finalises' => $finalises,
+
+            'obligatoires' => $obligatoires,
+            'facultatifs' => $facultatifs,
+            'raison' => $raison,
+        ]);
+    }
+
     public function superieurAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
@@ -617,4 +673,17 @@ class CampagneController extends AbstractActionController
         ]);
     }
 
+
+    /** VUES STRATEGIQUES *********************************************************************************************/
+
+    public function progressionParStructuresAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateDebut());
+
+        return new ViewModel([
+            'campagne' => $campagne,
+            'structures' => $structures,
+        ]);
+    }
 }

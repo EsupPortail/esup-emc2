@@ -8,6 +8,7 @@
         </id>
 
         <field name="code" column="code" length="40"/>
+        <field name="sigle" column="sigle" length="40"/>
 
         <field name="libelleCourt" column="libelle_court" length="128"/>
         <field name="libelleLong" column="libelle_long" length="1024"/>

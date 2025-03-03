@@ -645,4 +645,29 @@ EOS;
     public function isObservateurS(array $getStructures, Agent $inscrit)
     {
     }
+
+    /** @return Structure[] */
+    public function getStructuresNiv2(?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.niv2', 'niv2')->addSelect('niv2')
+            ->leftjoin('structure.niv2OverWriten', 'niv2OW')->addSelect('niv2OW')
+            ->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('structure.ouverture IS NULL OR structure.ouverture <= :date')
+            ->andWhere('structure.fermeture IS NULL OR structure.fermeture >= :date')
+            ->setParameter('date', $date);
+
+        /** @var Structure[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $structures = [];
+        foreach ($result as $structure) {
+            $niveau2 = $structure->getNiv2OW() ?? $structure->getNiv2();
+            if ($niveau2->isOuverte($date)) $structures[$niveau2->getId()] = $niveau2;
+        }
+
+        return $structures;
+    }
 }

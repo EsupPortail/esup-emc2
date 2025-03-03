@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::structureProgressionAction()
+ * @var EntretienProfessionnel[] $entretiens
+ * @var Agent[] $obligatoires
+ */
+
+use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+
+?>
+
+
+<?php echo $this->campagneAvancement($entretiens, $obligatoires, null, ['display-legende' => false]); ?>
