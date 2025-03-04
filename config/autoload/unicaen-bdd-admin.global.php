@@ -103,13 +103,13 @@ return [
         ],
         'connection'         => [
             'default' => [
-                'port'    => DB_PORT,
+                'port'    => $_ENV['DB_EMC2_PORT'],
                 'charset' => 'utf8',
-                'host'    => DB_HOSTNAME,
+                'host'    => $_ENV['DB_EMC2_HOSTNAME'],
 
-                'dbname'   => DB_NAME,
-                'user'     => DB_USERNAME,
-                'password' => DB_PASSWORD,
+                'dbname'   => $_ENV['DB_EMC2_NAME'],
+                'user'     => $_ENV['DB_EMC2_USERNAME'],
+                'password' => $_ENV['DB_EMC2_PASSWORD'],
             ],
 
         ],
