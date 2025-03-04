@@ -16,7 +16,7 @@
     "unicaen/privilege": "^6.2",
     "unicaen/renderer": "^7",
     "unicaen/pdf": "^6",
-    "unicaen/mail": "^7",
+    "unicaen/mail": "^7.2",
     "unicaen/parametre": "^6",
     "unicaen/bjy-authorize": "^6.1",
     "unicaen/ldap": "^6",
@@ -32,7 +32,8 @@
     "unicaen/validation": "^6.1",
     "unicaen/observation": "^0.0",
     "ext-iconv": "*",
-    "unicaen/bddadmin": "^1"
+    "unicaen/bddadmin": "^1",
+    "vlucas/phpdotenv": "^5.6"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"
