@@ -13,3 +13,4 @@ save_ccc/
 !public/unicaen
 public/css/local.css
 public/css/environnement.css
+.env
