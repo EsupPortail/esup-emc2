@@ -8,7 +8,7 @@
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
 
-        <field name="echelon"       type="integer"                  column="echelon"      />
+        <field name="echelon"       length="256"                    column="echelon"      />
         <field name="dateDebut"     type="datetime"                 column="d_debut"      />
         <field name="dateFin"       type="datetime"                 column="d_fin"        nullable="true"/>
 

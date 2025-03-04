@@ -4,7 +4,15 @@ CHANGES
 Version 5.x
 -----
 
-### Version 5.0.3 - XX/XX/2025
+### Version 5.0.4 - XX/XX/2025
+
+[CORRECTION]
+* Correction du bug bloquant l'affichage de la page d'administration des rôles
+
+[ÉVOLUTION]
+* L'échelon n'est plus un entier, mais une chaîne de caractère (certains échelons bib et aenes ne sont pas numérique)
+
+### Version 5.0.3 - 27/02/2025
 
 [CORRECTION]
 * Le système d'attribution des rôles automatiques "Supérieur·e Hiérachique Directe·e" et "Autorité Hiérarchique" ne tenait pas en compte correctement les notions de "deletedOn"  

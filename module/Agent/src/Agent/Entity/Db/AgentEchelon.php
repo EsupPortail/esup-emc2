@@ -15,7 +15,7 @@ class AgentEchelon implements HasPeriodeInterface, IsSynchronisableInterface
 
     private ?int $id = -1;
     private ?Agent $agent = null;
-    private ?int $echelon = null;
+    private ?string $echelon = null;
 
     /** Données : cette donnée est synchronisée >> par conséquent, il n'y a que des getters */
 
@@ -29,7 +29,7 @@ class AgentEchelon implements HasPeriodeInterface, IsSynchronisableInterface
         return $this->agent;
     }
 
-    public function getEchelon(): ?int
+    public function getEchelon(): ?string
     {
         return $this->echelon;
     }
