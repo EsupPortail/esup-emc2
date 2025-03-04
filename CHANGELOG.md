@@ -4,7 +4,7 @@ CHANGES
 Version 5.x
 -----
 
-### Version 5.0.4 - XX/XX/2025
+### Version 5.0.4 - 07/03/2025
 
 [CORRECTION]
 * Correction du bug bloquant l'affichage de la page d'administration des rôles
