@@ -33,6 +33,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
 
     private ?int $source_id = -1;
     private ?string $code = null;
+    private ?string $sigle = null;
 
     private ?StructureType $type = null;
     private ?string $libelleCourt = null;
@@ -69,6 +70,11 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     public function getCode(): string
     {
         return $this->code;
+    }
+
+    public function getSigle(): ?string
+    {
+        return $this->sigle;
     }
 
     public function getLibelleCourt(): ?string

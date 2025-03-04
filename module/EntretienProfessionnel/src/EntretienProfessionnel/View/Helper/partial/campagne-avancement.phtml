@@ -17,6 +17,9 @@ $array = false;
 if (isset($options['mode'])) $mode = $options['mode'];
 if (isset($options['array'])) $array = $options['array'];
 
+$displayLegende = (!isset($options['display-legende']) OR $options['display-legende'] !== false);
+$onlyLegende = (isset($options['only-legende']) AND $options['only-legende'] === true);
+
 if (!isset($nbAgents)) {
     if ($agents !== null) $nbAgents = count($agents);
 }
@@ -81,7 +84,7 @@ if ($nbTotal !== 0) {
 ?>
 
 
-<?php if ($mode === 'div') : ?>
+<?php if ($mode === 'div' AND !$onlyLegende) : ?>
     <?php if ($nbTotal !== 0) : ?>
         <div class="progress">
             <?php if ($ratioAgent > 0) : ?>
@@ -115,6 +118,8 @@ if ($nbTotal !== 0) {
                     <?php echo round($ratioSans); ?>%</div>
             <?php endif; ?>
         </div>
+    <?php else : ?>
+        Aucun entretien professionnel obligatoire
     <?php endif; ?>
 <?php endif; ?>
 <?php if ($mode === 'table') : ?>
@@ -150,14 +155,16 @@ if ($nbTotal !== 0) {
 <?php endif; ?>
 
 
-<div style="margin:0.25rem;">
-    <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens complétés <br/>
-    <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par l'autorité hiérarchique <br/>
-    <span class="legende entretien-observation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens avec des observations de l'agent·e<br/>
-    <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par le ou la supérieur·e hiérarchique <br/>
-    <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens planifiés <br/>
-    <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens non planifiés <br/>
-</div>
+<?php if ($displayLegende) : ?>
+    <div style="margin:0.25rem;">
+        <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens complétés <br/>
+        <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par l'autorité hiérarchique <br/>
+        <span class="legende entretien-observation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens avec des observations de l'agent·e<br/>
+        <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par le ou la supérieur·e hiérarchique <br/>
+        <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens planifiés <br/>
+        <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens non planifiés <br/>
+    </div>
+<?php endif; ?>
 
 <style>
     .sans {

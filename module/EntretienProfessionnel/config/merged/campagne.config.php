@@ -32,6 +32,8 @@ return [
                         'tester-eligibilite',
                         'notifier-avancement-autorite',
                         'notifier-avancement-superieur',
+
+                        'progression-par-structures',
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AFFICHER,
@@ -41,6 +43,7 @@ return [
                     'controller' => CampagneController::class,
                     'action' => [
                         'structure',
+                        'structure-progression',
                     ],
                     'privileges' => [
 //                        CampagnePrivileges::CAMPAGNE_AFFICHER_STRUCTURE,
@@ -186,6 +189,18 @@ return [
                                     ],
                                 ],
                             ],
+                            'structure-progression' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/structure-progression[/:campagne/:structure]',
+                                    'defaults' => [
+                                        /** @see CampagneController::structureProgressionAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'structure-progression',
+                                    ],
+                                ],
+                            ],
                             'superieur' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
@@ -325,6 +340,18 @@ return [
                                         /** @see CampagneController::notifierAvancementSuperieurAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'notifier-avancement-superieur',
+                                    ],
+                                ],
+                            ],
+                            'progression-par-structures' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/progression-par-structures/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::progressionParStructuresAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'progression-par-structures',
                                     ],
                                 ],
                             ],

@@ -47,15 +47,15 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<table class="datatable table table-condensed">
+<table class="datatable table table-condensed" id="campagnes">
     <thead>
     <tr>
-        <th>Année</th>
-        <th>Date de début</th>
-        <th>Date de fin</th>
-        <th>Précède</th>
-        <th>#Entretiens</th>
-        <th>Action</th>
+        <th class="col-md-2">Année</th>
+        <th class="col-md-2">Date de début</th>
+        <th class="col-md-2">Date de fin</th>
+        <th class="col-md-2">Précède</th>
+        <th class="col-md-2">#Entretiens</th>
+        <th class="col-md-2 action">Action</th>
     </tr>
     </thead>
     <tbody>
@@ -66,53 +66,69 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
             <td> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?> </td>
             <td> <?php echo ($campagne->getPrecede())?$campagne->getPrecede()->getAnnee():"---"; ?> </td>
             <td> <?php echo count($campagne->getEntretiensProfessionnels()); ?> </td>
-            <td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\CampagneController::afficherAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/campagne/afficher', ['campagne' => $campagne->getId()], [], true); ?>"
-                            title="Affichage des informations de la campagne <?php echo $campagne->getAnnee(); ?>"
+                            class="action secondary"
                     >
-                        <span class="icon icon-voir"></span></a>
+                        <span class="icon icon-voir"></span>
+                        Vue globale
+                    </a>
+                <br>
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::progressionParStructuresAction() */?>
+                            href="<?php echo $this->url('entretien-professionnel/campagne/progression-par-structures', ['campagne' => $campagne->getId()], [], true); ?>"
+                            class="action secondary"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Vue par structure
+                    </a>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
+                    <br>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\CampagneController::modifierAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/campagne/modifier', ['campagne' => $campagne->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
-                        data-bs-toggle="tooltip" data-bs-html="true"
-                        title="Modification de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                        class="ajax-modal action primary" data-event="modification"
                     >
-                        <span class="icon icon-editer"></span></a>
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
+                    <br>
                     <?php if ($campagne->estNonHistorise()) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\CampagneController::historiserAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/campagne/historiser', ['campagne' => $campagne->getId()], [], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true"
-                            title="Historisation de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                            class="action warning"
                         >
-                            <span class="icon icon-historiser"></span></a>
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
                     <?php else : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\CampagneController::restaurerAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/campagne/restaurer', ['campagne' => $campagne->getId()], [], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true"
-                            title="Restauration de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                            class="action warning"
                         >
-                            <span class="icon icon-restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruire) : ?>
+                    <br>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\CampagneController::detruireAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/campagne/detruire', ['campagne' => $campagne->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
-                        data-bs-toggle="tooltip" data-bs-html="true"
-                        title="Suppression de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                        class="ajax-modal action danger" data-event="modification"
                     >
-                        <span class="icon icon-unchecked"></span></a>
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -125,5 +141,19 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
     $("body").on("modification", function (event) {
         event.div.modal('hide');
         window.location.reload();
+    });
+
+    $(function() {
+        $('table#campagnes').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [5], orderable: false}
+            ]
+        });
     });
 </script>
