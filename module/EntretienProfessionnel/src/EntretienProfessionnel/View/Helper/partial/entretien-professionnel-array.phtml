@@ -79,32 +79,30 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
     <thead>
     <tr>
         <?php if ($displayAnnee) : ?>
-            <th style="min-width:9rem;"> Année </th>
+            <th class="col-md-1"> Année </th>
         <?php endif; ?>
         <?php if ($displayAgent) : ?>
-            <th> Agent </th>
+            <th class="col-md-2"> Agent </th>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
-            <th> Responsable </th>
+            <th class="col-md-2"> Responsable </th>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
-            <th> Structure </th>
+            <th class="col-md-2"> Structure </th>
         <?php endif; ?>
-        <?php if ($displayDate) : ?>
-            <th data-type="num" style="width:15rem;"> Date</th>
-        <?php endif; ?>
-        <?php if ($displayLieu) : ?>
-            <th> Lieu</th>
+        <?php if ($displayDate OR $displayLieu) : ?>
+            <th data-type="num" class="col-md-2">
+                <?php if ($displayDate): ?>Date<?php endif; ?>
+                <?php if ($displayDate AND $displayLieu): ?> et <?php endif; ?>
+                <?php if ($displayLieu): ?>Lieu<?php endif; ?>
+
+            </th>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <th data-type="num" style="min-width:6rem;"> État </th>
+            <th data-type="num" class="col-md-3"> État </th>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
-        <?php if (!$dropdowns) : ?>
-            <th class="action"> Action </th>
-        <?php else : ?>
-                <th style="min-width:6rem;"> Action </th>
-        <?php endif; ?>
+            <th class="action col-md-2"> Action </th>
         <?php endif; ?>
     </tr>
     </thead>
@@ -143,16 +141,21 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <?php endif; ?>
             </td>
         <?php endif; ?>
-        <?php if ($displayDate) : ?>
+        <?php if ($displayDate OR $displayLieu) : ?>
             <td data-order="<?php echo $entretien->getDateEntretien()->getTimestamp(); ?>">
-                <?php echo $entretien->getDateEntretien()->format('d/m/Y H:i'); ?>
+                <?php if ($displayDate) : ?>
+                    <?php echo $entretien->getDateEntretien()->format('d/m/Y H:i'); ?>
+                <?php endif; ?>
+                <?php if ($displayLieu) : ?>
+                    <?php if ($displayDate): ?> <br> <?php endif; ?>
+                    <?php echo $entretien->getLieu(); ?>
+                <?php endif; ?>
             </td>
         <?php endif; ?>
-        <?php if ($displayLieu) : ?>
-            <td> <?php echo $entretien->getLieu(); ?> </td>
-        <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <td data-order="<?php echo ($entretien->getEtatActif())?$entretien->getEtatActif()->getType()->getOrdre():9999; ?>" style="text-align: center;"> <?php echo $this->etatinstance($entretien->getEtatActif()); ?> </td>
+            <td data-order="<?php echo ($entretien->getEtatActif())?$entretien->getEtatActif()->getType()->getOrdre():9999; ?>">
+                <?php echo $this->etatinstance($entretien->getEtatActif(), ['display-categorie' => false, 'display-libelle' => true]); ?>
+            </td>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td class="action">
@@ -160,9 +163,10 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true) ?>"
+                        class='action secondary'
                 >
-                    <span class="icon icon-voir">
-                        Accéder
+                    <span class="icon icon-voir"></span>
+                    Accéder
                 </a>
             <?php endif; ?>
             <?php if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)  and !$dropdowns) : ?>
@@ -170,6 +174,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
+                    class="action secondary"
                 >
                     <span class="icon icon-pdf" title="Exporter le compte-rendu d'entretien professionnel ">
 <!--                        <span class="small-lettrine">CREP</span> -->
@@ -179,6 +184,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>"
+                        class="action secondary"
                 >
                     <span class="icon icon-pdf" title="Exporter  le compte-rendu d'entretien de formation">
 <!--                        <span class="small-lettrine">CREF</span>-->
@@ -190,10 +196,10 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::modifierAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
-                    class="ajax-modal" data-event="modification"
+                    class="ajax-modal action primary" data-event="modification"
                 >
                     <span class="icon icon-gerer" title="Modifier l'entretien professionnel (convocation)"></span>
-                    Gérer entretien
+                    Gérer
                 </a>
             <?php endif; ?>
             <?php if ($canHistoriser  and !$dropdowns) : ?>
@@ -205,7 +211,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                             ['entretien' => $entretien->getId()],
                             ['query' => ['retour' => $this->url(null,[],['force_canonical' => true], true)]],
                             true); ?>"
-                        class="ajax-modal" data-event="modification"
+                        class="ajax-modal action warning" data-event="modification"
                     >
                         <span class="icon icon-historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span>
                         Historiser
@@ -217,6 +223,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                             ['entretien' => $entretien->getId()],
                             ['query' => ['retour' => $this->url(null,[],['force_canonical' => true], true)]],
                             true); ?>"
+                        class="action warning"
                     >
                         <span class="icon icon-restaurer" title="Restaurer le compte-rendu de l'entretien professionnel"></span>
                         Restaurer
@@ -229,7 +236,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
-                    class="ajax-modal"
+                    class="ajax-modal action danger"
                     data-event="modification"
                 >
                     <span class="text-danger">
@@ -279,12 +286,16 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
 
     $(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
+            'autoWidth' : false,
             'paging' : false,
-            'searching' : false,
+            'searching' : true,
             'info' : false,
             <?php if ($displayAnnee) : ?>
                 'order': [[0, 'desc']],
             <?php endif; ?>
+            language: {
+                url: '/js/datatables_fr.json'
+            },
         });
     });
 
