@@ -101,18 +101,6 @@ return [
             //'source_id_column'   => 'source_id',
             //'source_code_column' => 'source_code',
         ],
-        'connection'         => [
-            'default' => [
-                'port'    => $_ENV['DB_EMC2_PORT'],
-                'charset' => 'utf8',
-                'host'    => $_ENV['DB_EMC2_HOSTNAME'],
-
-                'dbname'   => $_ENV['DB_EMC2_NAME'],
-                'user'     => $_ENV['DB_EMC2_USERNAME'],
-                'password' => $_ENV['DB_EMC2_PASSWORD'],
-            ],
-
-        ],
 
         /* Connexion à utiliser par défaut, nom à sélectionner parmi la liste des connexions disponibles */
         'current_connection' => 'default',

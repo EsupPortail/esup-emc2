@@ -20,7 +20,7 @@ return [
             'nullable'    => FALSE,
             'default'     => NULL,
             'position'    => 2,
-            'commentaire' => NULL,
+            'commentaire' => 'Lien vers la compétence spécifique',
         ],
         'fichemetier_id'        => [
             'name'        => 'fichemetier_id',

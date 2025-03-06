@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_enquete_groupe',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'SET NULL',
-    'index'       => 'formation_enquete_categorie_pkey',
+    'index'       => 'formation_enquete_categorie_id_uindex',
     'columns'     => [
         'groupe_id' => 'id',
     ],

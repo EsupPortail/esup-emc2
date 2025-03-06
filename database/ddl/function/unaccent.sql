@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.unaccent(regdictionary, text)
+CREATE OR REPLACE FUNCTION public.unaccent(text)
  RETURNS text
  LANGUAGE c
  STABLE PARALLEL SAFE STRICT

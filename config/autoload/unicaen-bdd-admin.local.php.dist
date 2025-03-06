@@ -1,0 +1,17 @@
+<?php
+
+return [
+    'unicaen-bddadmin' => [
+        'connection' => [
+            'default' => [
+                'port' => DB_EMC2_PORT,
+                'charset' => 'utf8',
+                'host' => DB_EMC2_HOSTNAME,
+
+                'dbname' => DB_EMC2_NAME,
+                'user' => DB_EMC2_USERNAME,
+                'password' => DB_EMC2_PASSWORD,
+            ],
+        ],
+    ]
+];
