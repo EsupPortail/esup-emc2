@@ -8,9 +8,11 @@ Version 5.x
 
 [CORRECTION]
 * Correction du bug bloquant l'affichage de la page d'administration des rôles
+* Correction du non traitement de chaine de caractère 'null' devenu déprécié en php 8.2
 
 [ÉVOLUTION]
 * L'échelon n'est plus un entier, mais une chaîne de caractère (certains échelons bib et aenes ne sont pas numérique)
+* Adaptation de l'affichage des tables des entretiens professionnels pour un meilleur tri/filtrage
 
 ### Version 5.0.3 - 27/02/2025
 
