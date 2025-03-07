@@ -1,9 +1,4 @@
 <?php
-use Dotenv\Dotenv;
-
-/**  __DIR__.'/../' doit pointer vers le répertoire contenant le .env */
-$dotenv = Dotenv::createImmutable(__DIR__.'/../');
-$dotenv->load();
 
 $modules = [
     'Laminas\Cache',
