@@ -8,7 +8,7 @@ return [
     'temporary'   => FALSE,
     'logging'     => TRUE,
     'commentaire' => NULL,
-    'sequence'    => NULL,
+    'sequence'    => 'agent_carriere_echelon_id_seq',
     'columns'     => [
         'agent_id'              => [
             'name'        => 'agent_id',
@@ -72,11 +72,11 @@ return [
         ],
         'echelon'               => [
             'name'        => 'echelon',
-            'type'        => 'string',
-            'bdd-type'    => 'character varying',
-            'length'      => 256,
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
             'scale'       => NULL,
-            'precision'   => NULL,
+            'precision'   => 4,
             'nullable'    => FALSE,
             'default'     => NULL,
             'position'    => 3,
@@ -150,7 +150,7 @@ return [
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,
-            'default'     => NULL,
+            'default'     => 'NULL',
             'position'    => 6,
             'commentaire' => NULL,
         ],

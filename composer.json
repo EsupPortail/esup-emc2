@@ -32,8 +32,7 @@
     "unicaen/validation": "^6.1",
     "unicaen/observation": "^0.0",
     "ext-iconv": "*",
-    "unicaen/bddadmin": "^1",
-    "vlucas/phpdotenv": "^5.6"
+    "unicaen/bddadmin": "^1"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"

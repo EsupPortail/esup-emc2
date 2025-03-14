@@ -9,7 +9,7 @@ return [
     'rtable'      => 'metier_metier',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'SET DEFAULT',
-    'index'       => 'metier_id_uindex',
+    'index'       => 'metier_pkey',
     'columns'     => [
         'metier_id' => 'id',
     ],

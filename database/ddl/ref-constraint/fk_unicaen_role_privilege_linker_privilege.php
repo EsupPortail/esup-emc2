@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_privilege_privilege',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'unicaen_privilege_privilege_pkey',
+    'index'       => 'privilege_pkey',
     'columns'     => [
         'privilege_id' => 'id',
     ],
