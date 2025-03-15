@@ -21,6 +21,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
+use Structure\Service\Type\TypeService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -49,6 +50,7 @@ class StructureControllerFactory {
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
+         * @var TypeService $typeService
          */
         $agentService = $container->get(AgentService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
@@ -64,6 +66,7 @@ class StructureControllerFactory {
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
+        $typeService = $container->get(TypeService::class);
 
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
@@ -90,6 +93,7 @@ class StructureControllerFactory {
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
+        $controller->setTypeService($typeService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
         $controller->setSelectionAgentForm($selectionAgentForm);

@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @var StructureType[] $types
+ */
+
+use Structure\Entity\Db\StructureType;
+
+?>
+
+
+<div class="card">
+    <div class="card-header bg-default">
+        Filtre de recherche des structures
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url(); ?>">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="type">Type de structures : </label>
+                            <select id="type" name="type" class="selectpicker" data-live-search="true">
+                                <option value="">Tous les types de structures</option>
+                                <?php foreach ($types as $type): ?>
+                                    <option value="<?php echo $type->getId(); ?>"
+                                    >
+                                        <?php echo $type->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="ferme">Structures fermées : </label>
+                            <select id="ferme" name="ferme" class="selectpicker">
+                                <option value="">Peu importe</option>
+                                <option value="0">Structures ouvertes seulement</option>
+                                <option value="1">Structures fermées seulement</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="responsable">Responsables : </label>
+                            <select id="responsable" name="responsable" class="selectpicker">
+                                <option value="">Peu importe</option>
+                                <option value="1">Avec au moins un·e responsable</option>
+                                <option value="0">Sans responsable</option>
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <br>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        R.A.Z.
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('button#clear').click(function (e) {
+        e.preventDefault();
+        window.location = '?';
+    });
+    $('button#filter').click(function () {
+        $('form#filter').submit();
+    });
+
+    $('select#type option[value=<?php echo $params['type']??null; ?>]').prop('selected', true);
+    $('select#ferme option[value=<?php echo $params['ferme']??null; ?>]').prop('selected', true);
+    $('select#responsable option[value=<?php echo $params['responsable']??null; ?>]').prop('selected', true);
+</script>

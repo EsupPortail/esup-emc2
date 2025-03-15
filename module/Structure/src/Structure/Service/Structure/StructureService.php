@@ -2,11 +2,10 @@
 
 namespace Structure\Service\Structure;
 
-use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Entity\Db\FichePoste;
 use Application\Provider\Parametre\GlobalParametres;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -72,6 +71,29 @@ class StructureService
                 ->setParameter('now', new DateTime());
         $result = $qb->getQuery()->getResult();
 
+        return $result;
+    }
+
+    /**
+     * @param array $params
+     * @return Structure[]
+     */
+    public function getStructuresWithFiltre(array $params): array
+    {
+        $qb = $this->createQueryBuilder();
+
+        if (isset($params['type']) and $params['type'] !== "") {
+            $qb = $qb->andWhere("type.id = :typeId")->setParameter('typeId', $params['type']);
+        }
+        if (isset($params['ferme'])) {
+            if ($params['ferme'] === "1") $qb->andWhere("structure.fermeture <= :fermeture")->setParameter('fermeture', new DateTime());
+            if ($params['ferme'] === "0") $qb->andWhere("structure.fermeture IS NULL OR structure.fermeture > :fermeture")->setParameter('fermeture', new DateTime());
+        }
+        if (isset($params['responsable'])) {
+            if ($params['responsable'] === "1") $qb->andWhere("responsable.agent IS NOT NULL");
+            if ($params['responsable'] === "0") $qb->andWhere("responsable.agent IS NULL");
+        }
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 
@@ -191,50 +213,6 @@ class StructureService
         return $filles;
     }
 
-
-    /**
-     * @param Structure[] $structures
-     * @return array
-     */
-    public function formatStructureJSON(array $structures): array
-    {
-        $result = [];
-        foreach ($structures as $structure) {
-            $result[] = array(
-                'id' => $structure->getId(),
-                'label' => $structure->getLibelleLong(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>" . $structure->getLibelleCourt() . "</span>",
-            );
-        }
-        usort($result, function ($a, $b) {
-            return strcmp($a['label'], $b['label']);
-        });
-        return $result;
-    }
-
-    /**
-     * @param Structure[] $structures
-     * @return FichePoste[]
-     */
-    public function getFichesPostesRecrutementsByStructures(array $structures): array
-    {
-        $fiches = [];
-        foreach ($structures as $structure) {
-            $fps = $structure->getFichesPostesRecrutements();
-            foreach ($fps as $fp) $fiches[$fp->getId()] = $fp;
-        }
-
-        $result = [];
-        foreach ($fiches as $fiche) {
-            $result[] = ['id' => $fiche->getId(),
-                'agent_id' => ($fiche->getAgent()) ? $fiche->getAgent()->getId() : null,
-                'prenom' => ($fiche->getAgent()) ? $fiche->getAgent()->getPrenom() : null,
-                'nom_usage' => ($fiche->getAgent()) ? $fiche->getAgent()->getNomUsuel() : null,
-                'fiche_principale' => ($fiche->getFicheTypeExternePrincipale()) ? $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle() : null,
-            ];
-        }
-        return $result;
-    }
 
     /**
      * @return array
@@ -601,37 +579,32 @@ EOS;
 
             if (!$agent->isValideEmploiType(
                 $parametres[StructureParametres::AGENT_TEMOIN_EMPLOITYPE],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Emploi-type invalide</li>";
             }
             if (!$agent->isValideStatut(
                 $parametres[StructureParametres::AGENT_TEMOIN_STATUT],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Statut invalide</li>";
 
             }
             if (!$agent->isValideAffectation(
                 $parametres[StructureParametres::AGENT_TEMOIN_AFFECTATION],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Affectation invalide</li>";
             }
             if (!$agent->isValideGrade(
                 $parametres[StructureParametres::AGENT_TEMOIN_GRADE],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Grade invalide</li>";
             }
             if (!$agent->isValideCorps(
                 $parametres[StructureParametres::AGENT_TEMOIN_CORPS],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Corps invalide</li>";
             }
@@ -647,7 +620,7 @@ EOS;
     }
 
     /** @return Structure[] */
-    public function getStructuresNiv2(?DateTime $date = null) : array
+    public function getStructuresNiv2(?DateTime $date = null): array
     {
         if ($date === null) $date = new DateTime();
 
@@ -669,5 +642,25 @@ EOS;
         }
 
         return $structures;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @return array
+     */
+    public function formatStructureJSON(array $structures): array
+    {
+        $result = [];
+        foreach ($structures as $structure) {
+            $result[] = array(
+                'id' => $structure->getId(),
+                'label' => $structure->getLibelleLong(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $structure->getLibelleCourt() . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
     }
 }
