@@ -85,7 +85,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             'thematique' => [
-                                'label' => 'Thématique',
+                                'label' => 'Thématiques',
                                 'route' => 'fiche-metier/thematique-type',
                                 'resource' => PrivilegeController::getResourceId(ThematiqueTypeController::class, 'index'),
                                 'order' => 1020,
