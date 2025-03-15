@@ -50,10 +50,14 @@ class StructureService
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->leftJoin('gestionnaire.agent', 'gAgent')->addSelect('gAgent')
-            ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
+            ->addSelect('responsable')
+            ->leftJoin('structure.responsables', 'responsable','WITH','responsable.dateDebut < :now AND (responsable.dateFin > :now OR responsable.dateFin IS NULL)')
+            ->setParameter('now', new DateTime())
             ->leftJoin('responsable.agent', 'rAgent')->addSelect('rAgent')
             ->addSelect('type')->leftjoin('structure.type', 'type')
             ->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('responsable.deletedOn IS NULL')
+            ->andWhere('rAgent.deletedOn IS NULL')
             ->orderBy('structure.code');
         return $qb;
     }
@@ -90,8 +94,19 @@ class StructureService
             if ($params['ferme'] === "0") $qb->andWhere("structure.fermeture IS NULL OR structure.fermeture > :fermeture")->setParameter('fermeture', new DateTime());
         }
         if (isset($params['responsable'])) {
-            if ($params['responsable'] === "1") $qb->andWhere("responsable.agent IS NOT NULL");
-            if ($params['responsable'] === "0") $qb->andWhere("responsable.agent IS NULL");
+            if ($params['responsable'] === "1") {
+                $qb = $qb->andWhere("responsable.agent IS NOT NULL")
+                    ->andWhere("responsable.dateDebut <= :maintenant")
+                    ->andWhere("responsable.dateFin IS NULL OR responsable.dateFin >= :maintenant")
+                    ->setParameter('maintenant', new DateTime());                ;
+            }
+            if ($params['responsable'] === "0") {
+                $qb= $qb->andWhere("responsable.agent IS NULL")
+                    ->andWhere("responsable.dateDebut IS NULL OR responsable.dateDebut <= :maintenant")
+                    ->andWhere("responsable.dateFin IS NULL OR responsable.dateFin >= :maintenant")
+                    ->setParameter('maintenant', new DateTime());
+            }
+
         }
         $result = $qb->getQuery()->getResult();
         return $result;

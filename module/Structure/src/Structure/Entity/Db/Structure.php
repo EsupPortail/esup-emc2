@@ -159,13 +159,14 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     /**
      * @return StructureResponsable[]
      */
-    public function getResponsables(): array
+    public function getResponsables(bool $actif=true): array
     {
         //if ($this->responsables === null) return [];
         $array = $this->responsables->toArray();
         $array = array_filter($array, function (StructureResponsable $a) {
             return !$a->isDeleted();
         });
+        if ($actif) $array = array_filter($array, function (StructureResponsable $a) { return $a->estEnCours();});
         return $array;
     }
 

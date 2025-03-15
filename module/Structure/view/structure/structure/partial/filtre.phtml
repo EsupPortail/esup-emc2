@@ -74,7 +74,10 @@ use Structure\Entity\Db\StructureType;
         $('form#filter').submit();
     });
 
-    $('select#type option[value=<?php echo $params['type']??null; ?>]').prop('selected', true);
-    $('select#ferme option[value=<?php echo $params['ferme']??null; ?>]').prop('selected', true);
-    $('select#responsable option[value=<?php echo $params['responsable']??null; ?>]').prop('selected', true);
+    let type = '<?php echo $params['type']??null; ?>';
+    let ferme = '<?php echo $params['ferme']??null; ?>';
+    let responsable = '<?php echo $params['responsable']??null; ?>';
+    if (type !== '') $('select#type option[value='+type+']').prop('selected', true);
+    if (ferme !== '') $('select#ferme option[value='+ferme+']').prop('selected', true);
+    if (responsable !== '') $('select#responsable option[value='+responsable+']').prop('selected', true);
 </script>
