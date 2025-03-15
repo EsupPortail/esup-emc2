@@ -41,7 +41,12 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
 
 <div class="row">
     <div class="col-md-6">
+
         <h2> Description </h2>
+
+        <?php if ($structure->getFermeture() && $structure->getFermeture() <= new DateTime()) : ?>
+            <span class="badge bg-danger">Structure fermée</span>
+        <?php endif; ?>
 
         <h3> Rattachement </h3>
 
@@ -104,7 +109,9 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
             <?php endif; ?>
             <?php if ($structure->getFermeture() !== null) : ?>
                 <dt class="col-md-4"> Date de fermeture </dt>
-                <dd class="col-md-8"> <?php echo $structure->getFermeture()->format('d/m/Y'); ?></dd>
+                <dd class="col-md-8">
+                    <?php echo $structure->getFermeture()->format('d/m/Y'); ?>
+                </dd>
             <?php endif; ?>
             <?php if ($structure->getAdresseFonctionnelle() !== null) : ?>
                 <dt class="col-md-4"> Adresse de contact </dt>
