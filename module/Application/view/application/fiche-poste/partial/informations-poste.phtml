@@ -43,7 +43,7 @@ $canModifier = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePr
                     Code fonction
                 </dt>
                 <dd class="col-md-9">
-                    <?php if ($fiche->getCodeFonction()) : ?>
+                    <?php if ($fiche AND $fiche->getCodeFonction()) : ?>
                         <code> <?php echo $fiche->getCodeFonction(); ?> </code>
                     <?php else : ?>
                         Non renseigné

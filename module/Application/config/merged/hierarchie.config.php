@@ -261,9 +261,9 @@ return [
                                 'may_terminate' => true,
                             ],
                             'calculer' => [
-                                'type'  => Literal::class,
+                                'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/calculer',
+                                    'route'    => '/calculer/:type',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::calculerAction() */
                                         'controller' => AgentHierarchieController::class,

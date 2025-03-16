@@ -343,7 +343,12 @@ EOS;
 //        die();
 
         $result = $qb->getQuery()->getResult();
-        return $result;
+
+        $agents = [];
+        foreach ($result as $item) {
+            $agents[$item->getId()] = $item;
+        }
+        return $agents;
 
     }
 
