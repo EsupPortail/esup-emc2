@@ -8,6 +8,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\Macro\MacroService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use EntretienProfessionnel\Service\Ics\IcsService;
 use EntretienProfessionnel\Service\Url\UrlService;
 use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerExceptionInterface;
@@ -33,6 +34,7 @@ class NotificationServiceFactory
          * @var AgentSuperieurService $agentSuperieurService ;
          * @var CampagneService $campagneService ;
          * @var EntretienProfessionnelService $entretienProfessionnelService ;
+         * @var IcsService $icsService
          * @var MacroService $macroService ;
          * @var MailService $mailService ;
          * @var ParametreService $parametreService ;
@@ -45,6 +47,7 @@ class NotificationServiceFactory
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
+        $icsService = $container->get(IcsService::class);
         $macroService = $container->get(MacroService::class);
         $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -58,6 +61,7 @@ class NotificationServiceFactory
         $service->setAgentSuperieurService($agentSuperieurService);
         $service->setCampagneService($campagneService);
         $service->setEntretienProfessionnelService($entretienProfessionnelService);
+        $service->setIcsService($icsService);
         $service->setMacroService($macroService);
         $service->setMailService($mailService);
         $service->setParametreService($parametreService);

@@ -18,6 +18,7 @@ use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Template\MailTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\Service\Ics\IcsServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
 use Exception;
@@ -36,6 +37,7 @@ class NotificationService extends \Application\Service\Notification\Notification
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use IcsServiceAwareTrait;
     use MailServiceAwareTrait;
     use MacroServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -176,7 +178,8 @@ class NotificationService extends \Application\Service\Notification\Notification
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ENVOI, $vars);
-        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
+        $ics = $this->getIcsService()->generateInvitation($entretien);
+        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel', $ics);
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -188,7 +191,20 @@ class NotificationService extends \Application\Service\Notification\Notification
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ACCEPTER, $vars);
-        $mail = $this->getMailService()->sendMail($this->getEmailResponsable($entretien), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($this->getEmailResponsable($entretien), $rendu->getSujet(), $rendu->getCorps(), 'EntretienProfessionnel');
+        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerAnnulationEntretienProfessionnel(?EntretienProfessionnel $entretien)
+    {
+        $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_ANNULATION, $vars);
+        $ics = $this->getIcsService()->generateAnnulation($entretien);
+        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel', $ics);
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -440,4 +456,6 @@ class NotificationService extends \Application\Service\Notification\Notification
         $this->getMailService()->update($mail);
         return $mail;
     }
+
+
 }

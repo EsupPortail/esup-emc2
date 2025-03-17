@@ -329,7 +329,10 @@ class EntretienProfessionnelController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelService()->historise($entretien);
+            if ($data["reponse"] === "oui") {
+                $this->getEntretienProfessionnelService()->historise($entretien);
+                $this->getNotificationService()->triggerAnnulationEntretienProfessionnel($entretien);
+            }
             exit();
         }
 
@@ -349,6 +352,7 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->restore($entretien);
+        $this->getNotificationService()->triggerConvocationDemande($entretien);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
@@ -366,6 +370,7 @@ class EntretienProfessionnelController extends AbstractActionController
             if ($data["reponse"] === "oui") {
                 foreach ($entretien->getEvenements() as $evenement) {
                     $this->getEvenementService()->supprimer($evenement);
+                    $this->getNotificationService()->triggerAnnulationEntretienProfessionnel($entretien);
                 }
                 $this->getEntretienProfessionnelService()->delete($entretien);
             }

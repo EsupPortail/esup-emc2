@@ -14,6 +14,8 @@ use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceFactory;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceFactory;
+use EntretienProfessionnel\Service\Ics\IcsService;
+use EntretienProfessionnel\Service\Ics\IcsServiceFactory;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use EntretienProfessionnel\Service\Notification\NotificationServiceFactory;
 use EntretienProfessionnel\Service\Url\UrlService;
@@ -56,6 +58,7 @@ return [
             IdentityProvider::class => IdentityProviderFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
+            IcsService::class => IcsServiceFactory::class,
 
             RappelCampagneAvancementAutoriteService::class => RappelCampagneAvancementAutoriteServiceFactory::class,
             RappelCampagneAvancementSuperieurService::class => RappelCampagneAvancementSuperieurServiceFactory::class,
