@@ -14,9 +14,9 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -222,7 +222,7 @@ class EntretienProfessionnelService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même identifiant [" . $id . "]", $e);
+            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même identifiant [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -254,7 +254,7 @@ class EntretienProfessionnelService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même token [" . $token . "]", $e);
+            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même token [" . $token . "]", 0, $e);
         }
         return $result;
     }

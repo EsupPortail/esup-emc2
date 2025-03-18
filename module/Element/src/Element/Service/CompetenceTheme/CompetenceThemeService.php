@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\CompetenceTheme;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class CompetenceThemeService
 {
@@ -117,7 +117,7 @@ class CompetenceThemeService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs CompetenceTheme partagent le même id [" . $id . "]", $e);
+            throw new RuntimeException("Plusieurs CompetenceTheme partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }

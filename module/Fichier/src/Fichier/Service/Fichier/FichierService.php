@@ -9,7 +9,7 @@ use Exception;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Entity\Db\Nature;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class FichierService
@@ -65,7 +65,7 @@ class FichierService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Fichier partagent le même identifiant [" . $id . "]", $e);
+            throw new RuntimeException("Plusieurs Fichier partagent le même identifiant [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -89,7 +89,7 @@ class FichierService
         try {
             $date = new DateTime();
         } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+            throw new RuntimeException("Problème lors de la récupération de la date", 0, $e);
         }
 
         $fichier = null;

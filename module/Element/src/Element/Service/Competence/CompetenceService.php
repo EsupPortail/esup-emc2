@@ -12,7 +12,7 @@ use Element\Entity\Db\CompetenceTheme;
 use Element\Entity\Db\CompetenceType;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class CompetenceService
 {

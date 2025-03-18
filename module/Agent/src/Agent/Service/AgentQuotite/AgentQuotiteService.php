@@ -6,7 +6,7 @@ use Agent\Entity\Db\AgentQuotite;
 use Application\Entity\Db\Agent;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class AgentQuotiteService {
     use ProvidesObjectManager;

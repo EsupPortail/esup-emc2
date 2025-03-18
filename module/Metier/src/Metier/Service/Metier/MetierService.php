@@ -16,7 +16,7 @@ use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class MetierService
 {

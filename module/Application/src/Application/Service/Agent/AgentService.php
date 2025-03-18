@@ -15,12 +15,12 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Fichier\Entity\Db\Fichier;
 use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -258,7 +258,7 @@ EOS;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Agent liés au même User [Id:" . $user->getId() . " Username:" . $user->getUsername() . "]", $e);
+            throw new RuntimeException("Plusieurs Agent liés au même User [Id:" . $user->getId() . " Username:" . $user->getUsername() . "]", 0, $e);
         }
         if ($result !== null) return $result;
 
@@ -270,7 +270,7 @@ EOS;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Agent liés au même Username [" . $user->getUsername() . "]", $e);
+            throw new RuntimeException("Plusieurs Agent liés au même Username [" . $user->getUsername() . "]", 0, $e);
         }
         return $result;
     }

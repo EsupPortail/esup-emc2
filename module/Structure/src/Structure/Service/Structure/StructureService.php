@@ -15,13 +15,13 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Provider\Role\RoleProvider;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -125,7 +125,7 @@ class StructureService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Structure partagent le même identifiant [" . $id . "]", $e);
+            throw new RuntimeException("Plusieurs Structure partagent le même identifiant [" . $id . "]", 0, $e);
         }
         return $result;
     }

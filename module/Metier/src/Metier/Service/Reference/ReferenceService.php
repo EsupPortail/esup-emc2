@@ -8,7 +8,7 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\Reference;
 use Metier\Entity\Db\Referentiel;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class ReferenceService
 {

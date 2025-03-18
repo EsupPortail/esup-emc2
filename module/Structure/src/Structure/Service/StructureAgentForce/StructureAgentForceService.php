@@ -7,9 +7,9 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
-use UnicaenApp\Exception\RuntimeException;
 
 class StructureAgentForceService
 {
@@ -104,7 +104,7 @@ class StructureAgentForceService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs StructureAgentForce partagent le même agent [" . $agent->getId() . "] et la même structure [" . $structure->getId() . "].");
+            throw new RuntimeException("Plusieurs StructureAgentForce partagent le même agent [" . $agent->getId() . "] et la même structure [" . $structure->getId() . "].",0,$e);
         }
         return $result;
     }

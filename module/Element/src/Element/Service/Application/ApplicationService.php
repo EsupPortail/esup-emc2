@@ -8,7 +8,7 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationTheme;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class ApplicationService
 {
@@ -106,7 +106,7 @@ class ApplicationService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs applications portent le même identifiant [' . $id . ']', $e);
+            throw new RuntimeException('Plusieurs applications portent le même identifiant [' . $id . ']', 0, $e);
         }
         return $result;
     }

@@ -7,7 +7,7 @@ use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Doctrine\ORM\NonUniqueResultException;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class CompetencesRetireesService
 {

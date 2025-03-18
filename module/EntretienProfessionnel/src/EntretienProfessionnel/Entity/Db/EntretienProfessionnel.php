@@ -13,11 +13,11 @@ use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservatio
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use RuntimeException;
 use UnicaenEvenement\Entity\HasEvenementsInterface;
 use UnicaenEvenement\Entity\HasEvenementsTrait;
 use UnicaenObservation\Entity\Interface\HasObservationsInterface;
 use UnicaenObservation\Entity\Trait\HasObservationsTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;

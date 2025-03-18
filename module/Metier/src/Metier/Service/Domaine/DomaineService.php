@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\Domaine;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class DomaineService
 {

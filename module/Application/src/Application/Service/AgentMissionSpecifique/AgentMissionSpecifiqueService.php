@@ -9,9 +9,9 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use MissionSpecifique\Entity\Db\MissionSpecifique;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 
 class AgentMissionSpecifiqueService
 {
@@ -73,7 +73,7 @@ class AgentMissionSpecifiqueService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (ORMException $e) {
-            throw new RuntimeException("Plusieurs AgentMissionSpecifique partagent le même identifiant [" . $id . "].", $e);
+            throw new RuntimeException("Plusieurs AgentMissionSpecifique partagent le même identifiant [" . $id . "].", 0, $e);
         }
         return $result;
     }

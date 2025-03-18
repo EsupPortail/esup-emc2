@@ -5,7 +5,7 @@ namespace Fichier\Service\Nature;
 use Doctrine\ORM\NonUniqueResultException;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Fichier\Entity\Db\Nature;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class NatureService
 {
@@ -34,7 +34,7 @@ class NatureService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Nature partagent le même identifiant [" . $id . "]", $e);
+            throw new RuntimeException("Plusieurs Nature partagent le même identifiant [" . $id . "]",0, $e);
         }
         return $result;
     }
@@ -47,7 +47,7 @@ class NatureService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Nature partagent le même code [" . $code . "]", $e);
+            throw new RuntimeException("Plusieurs Nature partagent le même code [" . $code . "]", 0,$e);
         }
         return $result;
     }

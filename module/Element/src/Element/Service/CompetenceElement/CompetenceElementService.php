@@ -8,10 +8,9 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
-use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class CompetenceElementService
 {

@@ -14,7 +14,7 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\Expertise;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;

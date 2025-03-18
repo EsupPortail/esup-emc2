@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\FamilleProfessionnelle;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class FamilleProfessionnelleService
 {
