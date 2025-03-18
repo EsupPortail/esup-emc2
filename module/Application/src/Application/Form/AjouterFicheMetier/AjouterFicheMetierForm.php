@@ -134,7 +134,6 @@ class AjouterFicheMetierForm extends Form {
             /** @var FicheMetier $fiche */
             foreach ($listing as $fiche) {
                 $references = [];
-                /** @var Reference $reference */
                 foreach ($fiche->getMetier()->getReferences() as $reference) {
                     $references[] = $reference->getTitre();
                 }
@@ -192,7 +191,6 @@ class AjouterFicheMetierForm extends Form {
             foreach ($listing as $fiche) {
                 $metier = $fiche->getMetier();
                 $references = [];
-                /** @var Reference $reference */
                 foreach ($metier->getReferences() as $reference) {
                     $references[] = $reference->getTitre();
                 }

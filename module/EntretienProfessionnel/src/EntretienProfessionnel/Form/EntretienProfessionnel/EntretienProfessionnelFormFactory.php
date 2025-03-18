@@ -38,9 +38,6 @@ class EntretienProfessionnelFormFactory {
         /** @see AgentController::rechercherAction() */
         $urlAgent       =  $urlManager->__invoke('agent/rechercher', [], [], true);
 
-        /**
-         * @var EntretienProfessionnelForm $form
-         */
         $form = new EntretienProfessionnelForm();
         $form->setCampagneService($campagneService);
         $form->setUrlAgent($urlAgent);

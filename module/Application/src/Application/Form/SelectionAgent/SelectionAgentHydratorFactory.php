@@ -4,21 +4,22 @@ namespace Application\Form\SelectionAgent;
 
 use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SelectionAgentHydratorFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return SelectionAgentHydrator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): SelectionAgentHydrator
     {
         /**
          * @var AgentService $agentService
          */
         $agentService     = $container->get(AgentService::class);
 
-        /** @var SelectionAgentHydrator $hydrator */
         $hydrator = new SelectionAgentHydrator();
         $hydrator->setAgentService($agentService);
         return $hydrator;

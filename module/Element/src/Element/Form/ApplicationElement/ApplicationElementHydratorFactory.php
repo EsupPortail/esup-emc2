@@ -25,7 +25,6 @@ class ApplicationElementHydratorFactory {
         $applicationService = $container->get(ApplicationService::class);
         $MaitriseNiveauService = $container->get(NiveauService::class);
 
-        /** @var ApplicationElementHydrator $hydrator */
         $hydrator = new ApplicationElementHydrator();
         $hydrator->setApplicationService($applicationService);
         $hydrator->setNiveauService($MaitriseNiveauService);

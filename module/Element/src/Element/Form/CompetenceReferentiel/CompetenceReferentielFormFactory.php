@@ -19,7 +19,6 @@ class CompetenceReferentielFormFactory {
         /** @var CompetenceReferentielHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(CompetenceReferentielHydrator::class);
 
-        /** @var CompetenceReferentielForm $form */
         $form = new CompetenceReferentielForm();
         $form->setHydrator($hydrator);
         return $form;

@@ -43,7 +43,6 @@ class GraphiqueController extends AbstractActionController
 
         if ($agent !== null) {
             $valuesAgent = [];
-            /** @var CompetenceElement[] $competences */
             $competences = $agent->getCompetenceListe();
             foreach ($dictionnaire as $entry) {
                 /** @var CompetenceElement $element */

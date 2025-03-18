@@ -120,9 +120,10 @@ echo $this->doctype();
 </script>
 
 <script>
-    <!-- On récupère la liste des images associées aux personnas -->
     <?php
+    /** On récupère la liste des images associées aux personnas **/
     $base = $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH);
+    $s='';
     if ($base !== null) {
         $directory = $base . '/public/img/Personna';
 

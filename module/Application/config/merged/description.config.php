@@ -7,8 +7,6 @@ use Application\Form\HasDescription\HasDescriptionFormFactory;
 use Application\Form\HasDescription\HasDescriptionHydrator;
 use Application\Form\HasDescription\HasDescriptionHydratorFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

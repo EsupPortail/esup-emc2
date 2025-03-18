@@ -87,7 +87,6 @@ class EntretienProfessionnelControllerFactory {
          */
         $entretienProfessionnelForm = $container->get('FormElementManager')->get(EntretienProfessionnelForm::class);
 
-        /** @var EntretienProfessionnelController $controller */
         $controller = new EntretienProfessionnelController();
 
         $controller->setAgentService($agentService);

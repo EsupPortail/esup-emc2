@@ -5,10 +5,16 @@ namespace Fichier\Form\Upload;
 use Fichier\Service\Nature\NatureService;
 use Interop\Container\ContainerInterface;
 use Laminas\Form\FormElementManager;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class UploadFormFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): UploadForm
     {
         /** @var UploadHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(UploadHydrator::class);
@@ -18,7 +24,6 @@ class UploadFormFactory {
          */
         $natureService = $container->get(NatureService::class);
 
-        /** @var UploadForm $form */
         $form = new UploadForm();
         $form->setNatureService($natureService);
         $form->setHydrator($hydrator);

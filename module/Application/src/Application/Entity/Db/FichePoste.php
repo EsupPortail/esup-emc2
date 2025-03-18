@@ -220,7 +220,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function getDescriptionsRetireesByFicheMetierAndActivite(FicheMetier $fichemetier, Mission $activite): array
     {
         $result = [];
-        /** @var FicheposteActiviteDescriptionRetiree $descriptionsRetiree */
         foreach ($this->getDescriptionsRetirees() as $descriptionsRetiree) {
             if ($descriptionsRetiree->getFicheMetier() === $fichemetier and $descriptionsRetiree->getMission() === $activite) {
                 $result[] = $descriptionsRetiree;
@@ -325,12 +324,10 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** @return MissionActivite[] */
     public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission, DateTime $date): array
     {
-        /** @var MissionActivite[] $activites */
         $activites = $ficheMetierMission->getMission()->getActivites($date);
         $dictionnaire = [];
         foreach ($activites as $activite) {
             $found = false;
-            /** @var FicheposteActiviteDescriptionRetiree $retiree */
             foreach ($this->getDescriptionsRetirees() as $retiree) {
                 if ($retiree->estNonHistorise() and $retiree->getActivite() === $activite) {
                     $found = true;

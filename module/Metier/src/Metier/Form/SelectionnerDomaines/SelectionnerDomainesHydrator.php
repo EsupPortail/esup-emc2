@@ -9,12 +9,9 @@ use Metier\Service\Domaine\DomaineServiceAwareTrait;
 class SelectionnerDomainesHydrator implements HydratorInterface {
     use DomaineServiceAwareTrait;
 
-    /**
-     * @param HasDomainesInterface $object
-     * @return array
-     */
     public function extract(object $object): array
     {
+        /** @var HasDomainesInterface $object */
         $domaineIds = [];
         foreach ($object->getDomaines() as $domaine) $domaineIds[] = $domaine->getId();
         $data = [
@@ -23,15 +20,11 @@ class SelectionnerDomainesHydrator implements HydratorInterface {
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param HasDomainesInterface $object
-     * @return HasDomainesInterface
-     */
     public function hydrate(array $data, object $object) : object
     {
         $domaineIds = $data['domaines'] ?? null;
 
+        /** @var HasDomainesInterface $object */
         foreach ($object->getDomaines() as $domaine) {
             if (!array_search($domaine->getId(), $domaineIds)) $object->removeDomaine($domaine);
         }

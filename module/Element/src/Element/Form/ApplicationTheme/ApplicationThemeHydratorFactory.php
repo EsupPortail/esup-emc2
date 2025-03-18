@@ -12,7 +12,6 @@ class ApplicationThemeHydratorFactory {
      */
     public function __invoke(ContainerInterface $container) : ApplicationThemeHydrator
     {
-        /** @var ApplicationThemeHydrator $hydrator */
         $hydrator = new ApplicationThemeHydrator();
         return $hydrator;
     }

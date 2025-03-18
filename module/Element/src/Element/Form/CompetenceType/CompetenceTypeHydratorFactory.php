@@ -8,7 +8,6 @@ class CompetenceTypeHydratorFactory {
 
     public function __invoke(ContainerInterface $container) : CompetenceTypeHydrator
     {
-        /** @var CompetenceTypeHydrator $hydrator */
         $hydrator = new CompetenceTypeHydrator();
         return $hydrator;
     }

@@ -240,19 +240,17 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
 
 <script>
     function generateSas2(idSas) {
-        let text = ''
+        return ''
             + '<div class="mb-2">'
             + '     <input type="text" id="competence-filtre_'+idSas+'"              name="competence-filtre_'+idSas+'[id]"     placeholder="Aucune compétence" class="sas" value="" style="display:none;">'
             + '     <input type="text" id="competence-filtre_'+idSas+'-autocomplete" name="competence-filtre_'+idSas+'[label]"  placeholder="Aucune compétence" class="sas-autocomplete form-control form-control-sm" value="">'
             + '</div>'
             + ''
             ;
-        return text;
     }
 
     function generateOperateurSelect(id) {
-        let text =
-            '<div class="col-md-3">'
+        return '<div class="col-md-3">'
             + '    <select id="operateur_'+id+'" name="operateur_'+id+'" class="selectpicker">'
             + '        <option value="">Aucun opérateur</option>'
             + '        <option value=">"> &gt; </option>'
@@ -262,7 +260,6 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
             + '        <option value="<"> &lt; </option>'
             + '    </select>'
             + '</div>';
-        return text;
     }
 
     function generateNiveauSelect(id) {

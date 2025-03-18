@@ -6,9 +6,8 @@ use Interop\Container\ContainerInterface;
 
 class AssocierTitreHydratorFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): AssocierTitreHydrator
     {
-        /** @var AssocierTitreHydrator $hydrator */
         $hydrator = new AssocierTitreHydrator();
         return $hydrator;
     }

@@ -3,12 +3,14 @@
 namespace Application\Form\HasPeriode;
 
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-class HasPeriodeFormFactory {
-
+class HasPeriodeFormFactory
+{
     /**
-     * @param ContainerInterface $container
-     * @return HasPeriodeForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : HasPeriodeForm
     {

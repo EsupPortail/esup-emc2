@@ -11,12 +11,7 @@ use Metier\Entity\Db\Reference;
 
 class ReferenceViewHelper extends AbstractHelper
 {
-    /**
-     * @param Reference $reference
-     * @param array $options
-     * @return string|Partial
-     */
-    public function __invoke(Reference $reference, array $options = []) : string
+    public function __invoke(Reference $reference, array $options = []) : string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

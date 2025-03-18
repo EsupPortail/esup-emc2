@@ -49,7 +49,6 @@ class MetierControllerFactory {
         $metierForm = $container->get('FormElementManager')->get(MetierForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
 
-        /** @var MetierController $controller */
         $controller = new MetierController();
         $controller->setAgentService($agentService);
         $controller->setDomaineService($domaineService);

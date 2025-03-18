@@ -10,9 +10,8 @@ class ConfigurationFicheMetierHydratorFactory {
      * @param ContainerInterface $container
      * @return ConfigurationFicheMetierHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): ConfigurationFicheMetierHydrator
     {
-        /** @var ConfigurationFicheMetierHydrator $hydrator */
         $hydrator = new ConfigurationFicheMetierHydrator();
         return $hydrator;
     }

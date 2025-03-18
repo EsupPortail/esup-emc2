@@ -12,7 +12,6 @@ class ConfigurationRecopieHydratorFactory {
      */
     public function __invoke(ContainerInterface $container) : ConfigurationRecopieHydrator
     {
-        /** @var ConfigurationRecopieHydrator $hydrator */
         $hydrator = new ConfigurationRecopieHydrator();
         return $hydrator;
     }

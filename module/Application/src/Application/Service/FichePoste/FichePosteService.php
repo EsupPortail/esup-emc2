@@ -592,7 +592,6 @@ EOS;
 
     /**
      * @param FichePoste $fiche
-     * @param DateTime $date
      * @return array
      */
     public function getCompetencesDictionnaires(FichePoste $fiche): array

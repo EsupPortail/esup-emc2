@@ -6,10 +6,16 @@ use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class FichierControllerFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): FichierController
     {
         /**
          * @var NatureService $natureService
@@ -23,7 +29,6 @@ class FichierControllerFactory {
          */
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
-        /** @var FichierController $controller */
         $controller = new FichierController();
         $controller->setNatureService($natureService);
         $controller->setFichierService($fichierService);

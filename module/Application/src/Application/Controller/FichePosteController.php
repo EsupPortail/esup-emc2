@@ -377,7 +377,6 @@ class FichePosteController extends AbstractActionController
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var AssocierTitreForm $form */
         $form = $this->getAssocierTitreForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true));
         $form->bind($fiche);
@@ -611,7 +610,6 @@ class FichePosteController extends AbstractActionController
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var array $applications */
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte);
 
         /** @var Request $request */
@@ -643,7 +641,6 @@ class FichePosteController extends AbstractActionController
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var array $competences */
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte);
 
         /** @var Request $request */
@@ -861,7 +858,6 @@ class FichePosteController extends AbstractActionController
             $this->getSpecificitePosteService()->create($specificite);
         }
 
-        /** @var SpecificitePosteForm $form */
         $form = $this->getSpecificitePosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/editer-specificite', ['fiche' => $fiche->getId()], [], true));
         $form->bind($specificite);
