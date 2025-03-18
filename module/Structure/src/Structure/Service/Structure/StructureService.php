@@ -178,8 +178,8 @@ class StructureService
                 ->setParameter('structures', $structures);
         }
         if ($ouverte) {
-            $qb = $qb->andWhere('structure.dateOuverture IS NULL OR structure.dateOuverture <= :date')
-                ->andWhere('structure.dateFermetrure IS NULL OR structure.dateFermeture >= :date')
+            $qb = $qb->andWhere('structure.ouverture IS NULL OR structure.ouverture <= :date')
+                ->andWhere('structure.fermeture IS NULL OR structure.fermeture >= :date')
                 ->setParameter('date', new DateTime());
         }
         $result = $qb->getQuery()->getResult();

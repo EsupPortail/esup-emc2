@@ -12,6 +12,7 @@ use UnicaenEtat\Entity\Db\EtatType;
  * @var boolean[] $displays
  * @var Structure|null $structure
  * @var EtatType[] $etats
+ * @var array $options
  */
 
 $canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
@@ -27,7 +28,7 @@ if ($retour)    $query['retour'] = $retour;
 ?>
 
 
-<table class="table table-condensed table-hover datatable">
+<table class="table table-condensed table-hover datatable" <?php if (isset($options['id'])) echo 'id="'.$options['id'].'"'; ?> >
     <thead>
     <tr>
         <?php if ($displays['id']) : ?>
@@ -91,14 +92,14 @@ if ($retour)    $query['retour'] = $retour;
             $structure = $fiche['structure'];
             $fichePrincipale = $fiche['fiche_principale'];
             $ficheLibelle = $fiche['fiche_libelle'];
-            $isEnCours = ($fiche['en_cours'] === true) ? true : false;
+            $isEnCours = $fiche['en_cours'] === true;
             $finValidite = $fiche['fin_validite'];
 
             $canAfficher   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
             $canExporter   = $canAfficher;
-            $canModifier   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));;
-            $canHistoriser = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));;
-            $canDetruire   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));;
+            $canModifier   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+            $canHistoriser = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
+            $canDetruire   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
         }
 
         ?>

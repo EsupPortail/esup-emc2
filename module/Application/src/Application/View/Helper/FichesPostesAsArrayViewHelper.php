@@ -22,10 +22,8 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
 
     /**
      * @param FichePoste[] $fiches
-     * @param array $options
-     * @return string|Partial
      */
-    public function __invoke($fiches, $structure = null, array $options = [])
+    public function __invoke(array $fiches, $structure = null, array $options = []): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
