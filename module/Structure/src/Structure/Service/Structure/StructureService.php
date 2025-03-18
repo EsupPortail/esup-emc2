@@ -165,17 +165,22 @@ class StructureService
      * @param Structure[] $structures
      * @return Structure[]
      */
-    public function getStructuresByTerm(string $term, array $structures = null, bool $histo = false): array
+    public function getStructuresByTerm(string $term, array $structures = null, bool $ouverte = true, bool $histo = false): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%' . strtolower($term) . '%')
-            ->andWhere('structure.fermeture IS NULL');
+            ;
         if (!$histo) $qb = $qb->andWhere('structure.deletedOn IS NULL');
 
         if ($structures !== null) {
             $qb = $qb->andWhere('structure IN (:structures)')
                 ->setParameter('structures', $structures);
+        }
+        if ($ouverte) {
+            $qb = $qb->andWhere('structure.dateOuverture IS NULL OR structure.dateOuverture <= :date')
+                ->andWhere('structure.dateFermetrure IS NULL OR structure.dateFermeture >= :date')
+                ->setParameter('date', new DateTime());
         }
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -667,10 +672,11 @@ EOS;
     {
         $result = [];
         foreach ($structures as $structure) {
+            $complement = (!$structure->isOuverte())?"<span class='badge bg-danger'>Structure fermée</span>":"";
             $result[] = array(
                 'id' => $structure->getId(),
                 'label' => $structure->getLibelleLong(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>" . $structure->getLibelleCourt() . "</span>",
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $structure->getLibelleCourt() . "</span>" . $complement,
             );
         }
         usort($result, function ($a, $b) {
