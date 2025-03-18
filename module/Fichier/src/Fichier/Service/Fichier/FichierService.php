@@ -57,7 +57,7 @@ class FichierService
         return $fichier;
     }
 
-    public function getFichier(?int $id): ?Fichier
+    public function getFichier(?string $id): ?Fichier
     {
         $qb = $this->getObjectManager()->getRepository(Fichier::class)->createQueryBuilder('fichier')
             ->andWhere('fichier.id = :id')
