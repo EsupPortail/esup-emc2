@@ -4,7 +4,6 @@ use Application\Controller\ElementController;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
-use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\View\Helper\CompetenceBlocViewHelper;
@@ -55,23 +54,10 @@ $displayTitre = CompetenceBlocViewHelper::isDisplayed($options, 'titre');
 $displayValidation = CompetenceBlocViewHelper::isDisplayed($options, 'validation');
 $displayRaison = CompetenceBlocViewHelper::isDisplayed($options, 'raison');
 
-//var_dump($displayTitre);
-//var_dump($displayValidation);
-
-$groupes = [];
-$sansGroupe = "zzz";
-foreach ($applications as $item) {
-    /** @var Application $application */
-    $entite = $item['entite'];
-    $application = $entite;
-    if ($entite instanceof ApplicationElement) $application = $entite->getApplication();
-    if ($application) {
-        $libelleGroupe = ($application->getGroupe()) ? $application->getGroupe()->getLibelle() : $sansGroupe;
-        if ($item['conserve'] === true) $groupes[$libelleGroupe][] = $item;
-    }
+$elements = [];
+foreach ($applications as $application) {
+    $elements[] = $application['entite'];
 }
-
-ksort($groupes);
 
 ?>
 
@@ -105,144 +91,78 @@ ksort($groupes);
 
 <div class="listing">
 
-    <?php if (!empty($groupes)) : ?>
-        <table id="application" class="datatable">
-            <thead>
+    <table id="<?php echo  $options['id']??'applications'; ?>" class="table table-condensed datatable">
+        <thead>
+        <tr>
+            <th class="col-md-5" style="width:40%;"> Libellé</th>
+            <th class="col-md-4" style="width:30%;"> Groupe</th>
+            <th class="col-md-2" data-type="num"> Niveau</th>
+            <th class="col-md-1"> Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php /** @var ApplicationElement $element */ ?>
+        <?php foreach ($elements as $element) : ?>
             <tr>
-                <th style="width:40%;"> Libellé</th>
-                <th style="width:30%;"> Groupe</th>
-                <th style="width:20%;"> Niveau</th>
-                <th></th>
-                <th></th>
-                <th style="width:10%;"> Action</th>
-            </tr>
-            </thead>
-            <?php foreach ($groupes
-
-            as $libelle => $groupe) : ?>
-            <?php if ($groupe !== null and !empty($groupe)) : ?>
-
-            <tbody>
-            <?php usort($groupe, function ($a, $b) {
-                return $a['entite']->getLibelle() <=> $b['entite']->getLibelle();
-            }); ?>
-            <?php foreach ($groupe as $element) : ?>
-                <?php
-                $entite = $element['entite'];
-                $application = $entite;
-                $isClef = false;
-                $old = null;
-                if ($application instanceof ApplicationElement) {
-                    $isClef = $application->isClef();
-                    $old = $application;
-                    $application = $entite->getApplication();
-
-                }
-                /** @var Application $application */
-                ?>
-                <tr>
-                    <td>
-                        <?php echo $application->getLibelle(); ?>
-                        <?php if ($displayRaison) : ?>
-                            <?php echo $this->raisons($element['raison']); ?>
-                        <?php endif; ?>
-                        <?php if ($old && $old->getCommentaire()) : ?>
-                            <br>
-                            <u>Précision :</u> <?php echo $old->getCommentaire(); ?>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($application->getGroupe()) : ?>
-                            <?php echo $application->getGroupe()->getLibelle(); ?>
-                        <?php else : ?>
-                            Application sans groupe
-                        <?php endif; ?>
-                    </td>
-                    <td class="niveau">
-                        <?php if ($entite instanceof ApplicationElement) : ?>
-                            <?php echo ($entite->getNiveauMaitrise()) ? $entite->getNiveauMaitrise()->getLibelle() : "Non précisé"; ?>
-                        <?php endif; ?>
-                    </td>
-                    <td class="clef">
-                        <?php if ($isClef) : ?>
-                            <span class="icon icon-star"></span>
-                        <?php endif; ?>
-                    </td>
-                    <?php if ($displayValidation) : ?>
-                        <td class="validation">
-                            <!--                        <span class="todo">Restaurer avec UnicaenValidation </span>-->
-                            <!--                        --><?php //if ($entite instanceof ApplicationElement) : ?>
-                            <!--                            --><?php //echo $this->validationBadge($entite->getValidation(),$options); ?>
-                            <!--                        --><?php //endif; ?>
-                        </td>
+                <td> <?php echo $element->getApplication()->getLibelle(); ?> </td>
+                <td> <?php echo $element->getApplication()->getGroupe()->getLibelle(); ?> </td>
+                <td data-order="<?php echo ($element->getNiveauMaitrise())?->getNiveau(); ?>">
+                    <?php echo ($element->getNiveauMaitrise())?->getLibelle(); ?>
+                    <?php if ($element->isClef()) : ?>
+                        <span class="icon icon-star" title="Est une application clef"></span>
                     <?php endif; ?>
-                    <td class="action">
-                        <?php if ($entite instanceof ApplicationElement) : ?>
-                            <?php if ($canModifier) : ?>
-                                <?php if (!$isAcquis) : ?>
-                                    <a <?php /** @see ElementController::changerNiveauAction */ ?>
-                                            href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier) ? 'afficher' : 'masquer'], [], true); ?>"
-                                            class="ajax-modal action primary" data-event="modification"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-html="true"
-                                            title="Modifier le niveau de l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
-                                        <span class="icon icon-editer"></span>
-                                        Modifier </a>
-                                <?php else : ?>
-                                    <a <?php /** @see ElementController::modifierApplicationElementAction */ ?>
-                                            href="<?php echo $this->url("element_/modifier-application-element", ['application-element' => $entite->getId()], [], true); ?>"
-                                            class="ajax-modal action primary" data-event="modification"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-html="true"
-                                    >
-                                        <span class="icon icon-editer"></span>
-                                        Modifier </a>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <?php if ($canSupprimer) : ?>
-                                <br>
-                                <a
-                                    <?php /** @see ElementController::supprimerAction */ ?>
-                                        href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId()], [], true); ?>"
-                                        class="ajax-modal action danger"
-                                        data-event="modification"
-                                >
-                                    <span class="icon icon-unchecked"
-                                          title="Supprimer définitivement une application liées à l'agent"></span>
-                                    Supprimer
-                                </a>
-                            <?php endif; ?>
-                            <?php if ($canValider) : ?>
-                                <!--                            <span class="todo">Restaurer avec UnicaenValidation </span>-->
-                                <!--                            --><?php //if ($entite->getValidation() === null) : ?>
-                                <!--                                <a-->
-                                <!--                                    --><?php ///** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                <!--                                        href="--><?php //echo $this->url('agent/valider-element', ['type' => "AGENT_APPLICATION", 'id' => $entite->getId()], [], true); ?><!--"-->
-                                <!--                                        class="ajax-modal" data-event="modification"-->
-                                <!--                                >-->
-                                <!--                                    <span class="icon icon-checked" title="Valider l'application"></span></a>-->
-                                <!--                            --><?php //else: ?>
-                                <!--                                <a-->
-                                <!--                                    --><?php ///** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
-                                <!--                                        href="--><?php //echo $this->url('agent/revoquer-element', ['validation' => $entite->getValidation()->getId()], ['query' => ['retour' => $options['retour']]], true); ?><!--"-->
-                                <!--                                >-->
-                                <!--                                    <span class="icon icon-unchecked" title="Dévalider l'application"></span></a>-->
-                                <!--                            --><?php //endif; ?>
-                            <?php endif; ?>
+                </td>
+                <td class="action">
+                    <?php if ($canModifier) : ?>
+                        <?php if (!$isAcquis) : ?>
+                            <a <?php /** @see ElementController::changerNiveauAction */ ?>
+                                    href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $element->getId(), 'clef' => ($objet instanceof FicheMetier) ? 'afficher' : 'masquer'], [], true); ?>"
+                                    class="ajax-modal action primary" data-event="modification"
+                            >
+                                <span class="icon icon-editer"></span>
+                                Modifier </a>
+                        <?php else : ?>
+                            <a <?php /** @see ElementController::modifierApplicationElementAction */ ?>
+                                    href="<?php echo $this->url("element_/modifier-application-element", ['application-element' => $element->getId()], [], true); ?>"
+                                    class="ajax-modal action primary" data-event="modification"
+                            >
+                                <span class="icon icon-editer"></span>
+                                Modifier </a>
                         <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-
-            <?php endif; ?>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canSupprimer) : ?>
+                        <br>
+                        <a
+                            <?php /** @see ElementController::supprimerAction */ ?>
+                                href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_APPLICATION, 'id' => $element->getId()], [], true); ?>"
+                                class="ajax-modal action danger" data-event="modification"
+                        >
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 
-<style>
-    div.listing table {
-        width: 100%;
-    }
-</style>
+<script>
+    $(function () {
+        $('#<?php echo  $options['id']??'applications'; ?>').DataTable({
+            autoWidth: false,
+            paging: false,
+            info: false,
+            order: [[1, 'asc'], [0, 'asc']],
+            columnDefs: [{
+                "targets": 3,
+                "orderable": false
+            }],
+            language: {
+                url: '/js/datatables_fr.json'
+            }
+        });
+    });
+</script>
+

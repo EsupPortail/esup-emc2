@@ -566,7 +566,7 @@ EOS;
         foreach ($fichesMetiers as $ficheMetier) {
             foreach ($ficheMetier->getApplicationListe() as $applicationElement) {
                 $application = $applicationElement->getApplication();
-                $dictionnaire[$application->getId()]["entite"] = $application;
+                $dictionnaire[$application->getId()]["entite"] = $applicationElement;
                 $dictionnaire[$application->getId()]["raison"][] = $ficheMetier;
                 $dictionnaire[$application->getId()]["conserve"] = true;
             }
@@ -575,7 +575,7 @@ EOS;
         foreach ($missions as $mission) {
             foreach ($mission->getApplicationListe() as $applicationElement) {
                 $application = $applicationElement->getApplication();
-                $dictionnaire[$application->getId()]["entite"] = $application;
+                $dictionnaire[$application->getId()]["entite"] = $applicationElement;
                 $dictionnaire[$application->getId()]["raison"][] = $mission;
                 $dictionnaire[$application->getId()]["conserve"] = true;
             }
@@ -622,7 +622,7 @@ EOS;
             foreach ($ficheMetier->getCompetenceListe() as $competenceElement) {
                 $competence = $competenceElement->getCompetence();
                 //$dictionnaire[$competence->getId()]["object"] = $competence;
-                $dictionnaire[$competence->getId()]["entite"] = $competence;
+                $dictionnaire[$competence->getId()]["entite"] = $competenceElement;
                 $dictionnaire[$competence->getId()]["raison"][] = $ficheMetier;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
@@ -631,7 +631,7 @@ EOS;
         foreach ($missions as $mission) {
             foreach ($mission->getCompetenceListe() as $competenceElement) {
                 $competence = $competenceElement->getCompetence();
-                $dictionnaire[$competence->getId()]["entite"] = $competence;
+                $dictionnaire[$competence->getId()]["entite"] = $competenceElement;
                 $dictionnaire[$competence->getId()]["raison"][] = $mission;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
