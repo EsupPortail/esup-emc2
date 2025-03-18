@@ -569,10 +569,10 @@ class FicheMetierController extends AbstractActionController {
 //                        $newElement->setApplication($element->getApplication());
 //                        $newElement->setCommentaire("Clonée depuis la fiche #" . $ficheClone->getId());
 //                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
-//                        $this->getFicheMetierService()->getEntityManager()->persist($newElement);
+//                        $this->getFicheMetierService()->getObjectManager()->persist($newElement);
 //                        $ficheMetier->addApplicationElement($newElement);
 //                    }
-//                    $this->getFicheMetierService()->getEntityManager()->flush();
+//                    $this->getFicheMetierService()->getObjectManager()->flush();
 //                } catch (ORMException $e) {
 //                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
 //                }
@@ -612,10 +612,10 @@ class FicheMetierController extends AbstractActionController {
 //                        $newElement->setCompetence($element->getCompetence());
 //                        $newElement->setCommentaire("Clonée depuis la fiche #" . $ficheClone->getId());
 //                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
-//                        $this->getFicheMetierService()->getEntityManager()->persist($newElement);
+//                        $this->getFicheMetierService()->getObjectManager()->persist($newElement);
 //                        $ficheMetier->addCompetenceElement($newElement);
 //                    }
-//                    $this->getFicheMetierService()->getEntityManager()->flush();
+//                    $this->getFicheMetierService()->getObjectManager()->flush();
 //                } catch (ORMException $e) {
 //                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
 //                }

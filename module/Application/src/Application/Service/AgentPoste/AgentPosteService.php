@@ -5,22 +5,23 @@ namespace Application\Service\AgentPoste;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentPoste;
 use Doctrine\ORM\QueryBuilder;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 
-class AgentPosteService {
-    use EntityManagerAwareTrait;
+class AgentPosteService
+{
+    use ProvidesObjectManager;
 
     /** QUERYING *********************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(AgentPoste::class)->createQueryBuilder('poste')
+        $qb = $this->getObjectManager()->getRepository(AgentPoste::class)->createQueryBuilder('poste')
             ->join('poste.agent', 'agent')->addSelect('agent');
         return $qb;
     }
 
     /** @return AgentPoste[] */
-    public function getPostesAsAgent(Agent $agent) : array
+    public function getPostesAsAgent(Agent $agent): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('poste.agent = :agent')->setParameter('agent', $agent)

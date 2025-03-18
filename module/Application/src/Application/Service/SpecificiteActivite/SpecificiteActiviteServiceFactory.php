@@ -4,12 +4,14 @@ namespace Application\Service\SpecificiteActivite;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SpecificiteActiviteServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return SpecificiteActiviteService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : SpecificiteActiviteService
     {
@@ -19,7 +21,7 @@ class SpecificiteActiviteServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new SpecificiteActiviteService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

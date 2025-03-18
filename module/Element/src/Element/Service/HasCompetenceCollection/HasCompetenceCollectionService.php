@@ -3,14 +3,12 @@
 namespace Element\Service\HasCompetenceCollection;
 
 use DateTime;
-use Doctrine\ORM\Exception\ORMException;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
@@ -18,14 +16,14 @@ class HasCompetenceCollectionService
 {
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use UserServiceAwareTrait;
 
     /**
      * @param HasCompetenceCollectionInterface $object
      * @return HasCompetenceCollectionInterface
      */
-    public function updateObject(HasCompetenceCollectionInterface $object)
+    public function updateObject(HasCompetenceCollectionInterface $object): HasCompetenceCollectionInterface
     {
         if ($object instanceof HistoriqueAwareInterface) {
             $user = $this->getUserService()->getConnectedUser();
@@ -35,11 +33,7 @@ class HasCompetenceCollectionService
             $object->setHistoModificateur($user);
         }
 
-        try {
-            $this->getEntityManager()->flush($object);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($object);
         return $object;
     }
 

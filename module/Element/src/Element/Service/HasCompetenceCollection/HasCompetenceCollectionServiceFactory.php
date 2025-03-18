@@ -6,13 +6,15 @@ use Doctrine\ORM\EntityManager;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class HasCompetenceCollectionServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return HasCompetenceCollectionService
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : HasCompetenceCollectionService
     {
@@ -28,7 +30,7 @@ class HasCompetenceCollectionServiceFactory {
         $userService = $container->get(UserService::class);
 
         $service = new HasCompetenceCollectionService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setCompetenceService($competenceService);
         $service->setCompetenceElementService($competenceElementService);
         $service->setUserService($userService);

@@ -11,8 +11,6 @@ class FicheMetierMissionServiceFactory
 {
 
     /**
-     * @param ContainerInterface $container
-     * @return FicheMetierMissionService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -24,7 +22,7 @@ class FicheMetierMissionServiceFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new FicheMetierMissionService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

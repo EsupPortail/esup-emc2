@@ -2,72 +2,50 @@
 
 namespace Element\Service\CompetenceReferentiel;
 
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\CompetenceReferentiel;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class CompetenceReferentielService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
 
     public function create(CompetenceReferentiel $referentiel): CompetenceReferentiel
     {
-        try {
-            $this->getEntityManager()->persist($referentiel);
-            $this->getEntityManager()->flush($referentiel);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($referentiel);
+        $this->getObjectManager()->flush($referentiel);
         return $referentiel;
     }
 
     public function update(CompetenceReferentiel $referentiel): CompetenceReferentiel
     {
-        try {
-            $this->getEntityManager()->flush($referentiel);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($referentiel);
         return $referentiel;
     }
 
     public function historise(CompetenceReferentiel $referentiel): CompetenceReferentiel
     {
-        try {
-            $referentiel->historiser();
-            $this->getEntityManager()->flush($referentiel);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $referentiel->historiser();
+        $this->getObjectManager()->flush($referentiel);
         return $referentiel;
     }
 
     public function restore(CompetenceReferentiel $referentiel): CompetenceReferentiel
     {
-        try {
-            $referentiel->dehistoriser();
-            $this->getEntityManager()->flush($referentiel);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $referentiel->dehistoriser();
+        $this->getObjectManager()->flush($referentiel);
         return $referentiel;
     }
 
     public function delete(CompetenceReferentiel $referentiel): CompetenceReferentiel
     {
-        try {
-            $this->getEntityManager()->remove($referentiel);
-            $this->getEntityManager()->flush($referentiel);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($referentiel);
+        $this->getObjectManager()->flush($referentiel);
         return $referentiel;
     }
 
@@ -75,12 +53,8 @@ class CompetenceReferentielService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(CompetenceReferentiel::class)->createQueryBuilder('referentiel')
-                ->addSelect('competence')->leftJoin('referentiel.competences', 'competence');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder [" . CompetenceReferentiel::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(CompetenceReferentiel::class)->createQueryBuilder('referentiel')
+            ->addSelect('competence')->leftJoin('referentiel.competences', 'competence');
         return $qb;
     }
 
@@ -140,13 +114,13 @@ class CompetenceReferentielService
 
     /** FACADE ************************************************************************ */
 
-    public function optionify(CompetenceReferentiel $referentiel) : array
+    public function optionify(CompetenceReferentiel $referentiel): array
     {
         $this_option = [
-            'value' =>  $referentiel->getId(),
+            'value' => $referentiel->getId(),
             'attributes' => [
                 'data-content' =>
-                    "<span class='badge' style='background:".$referentiel->getCouleur().";'>".$referentiel->getLibelleCourt()."</span> ".$referentiel->getLibelleLong(),
+                    "<span class='badge' style='background:" . $referentiel->getCouleur() . ";'>" . $referentiel->getLibelleCourt() . "</span> " . $referentiel->getLibelleLong(),
             ],
             'label' => $referentiel->getLibelleCourt(),
         ];

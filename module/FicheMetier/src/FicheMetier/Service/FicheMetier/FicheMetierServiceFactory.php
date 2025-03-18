@@ -76,9 +76,8 @@ class FicheMetierServiceFactory {
         $selectionApplicationHydrator = $container->get('HydratorManager')->get(SelectionApplicationHydrator::class);
         $selectionCompetenceHydrator = $container->get('HydratorManager')->get(SelectionCompetenceHydrator::class);
 
-        /** @var FicheMetierService $service */
         $service = new FicheMetierService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setApplicationService($applicationService);
         $service->setApplicationElementService($applicationElementService);
         $service->setCompetenceService($competenceService);

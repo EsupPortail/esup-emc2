@@ -25,7 +25,7 @@ class ApplicationThemeServiceFactory {
 
         /** @var ApplicationThemeService $service */
         $service = new ApplicationThemeService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

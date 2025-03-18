@@ -21,9 +21,8 @@ class CompetenceReferentielServiceFactory
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var CompetenceReferentielService $service */
         $service = new CompetenceReferentielService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

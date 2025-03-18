@@ -2,15 +2,13 @@
 
 namespace Element\Service\HasApplicationCollection;
 
+use DateTime;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
-use DateTime;
-use Doctrine\ORM\Exception\ORMException;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
@@ -18,14 +16,10 @@ class HasApplicationCollectionService
 {
     use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use UserServiceAwareTrait;
 
-    /**
-     * @param HasApplicationCollectionInterface $object
-     * @return HasApplicationCollectionInterface
-     */
-    public function updateObject(HasApplicationCollectionInterface $object)
+    public function updateObject(HasApplicationCollectionInterface $object): HasApplicationCollectionInterface
     {
         if ($object instanceof HistoriqueAwareInterface) {
             $user = $this->getUserService()->getConnectedUser();
@@ -35,11 +29,7 @@ class HasApplicationCollectionService
             $object->setHistoModificateur($user);
         }
 
-        try {
-            $this->getEntityManager()->flush($object);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($object);
         return $object;
     }
 

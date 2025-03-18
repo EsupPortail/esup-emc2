@@ -2,86 +2,65 @@
 
 namespace Metier\Service\FamilleProfessionnelle;
 
-use Doctrine\ORM\Exception\ORMException;
-use Metier\Entity\Db\FamilleProfessionnelle;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use UnicaenApp\Exception\RuntimeException;
 
-class FamilleProfessionnelleService {
-    use EntityManagerAwareTrait;
+class FamilleProfessionnelleService
+{
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(FamilleProfessionnelle $famille) : FamilleProfessionnelle
+    public function create(FamilleProfessionnelle $famille): FamilleProfessionnelle
     {
-        try {
-            $this->getEntityManager()->persist($famille);
-            $this->getEntityManager()->flush($famille);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($famille);
+        $this->getObjectManager()->flush($famille);
         return $famille;
     }
 
-    public function update(FamilleProfessionnelle $famille) : FamilleProfessionnelle
+    public function update(FamilleProfessionnelle $famille): FamilleProfessionnelle
     {
-        try {
-            $this->getEntityManager()->flush($famille);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($famille);
         return $famille;
     }
 
-    public function historise(FamilleProfessionnelle $famille) : FamilleProfessionnelle
+    public function historise(FamilleProfessionnelle $famille): FamilleProfessionnelle
     {
-        try {
-            $famille->historiser();
-            $this->getEntityManager()->flush($famille);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $famille->historiser();
+        $this->getObjectManager()->flush($famille);
         return $famille;
     }
 
-    public function restore(FamilleProfessionnelle $famille) : FamilleProfessionnelle
+    public function restore(FamilleProfessionnelle $famille): FamilleProfessionnelle
     {
-        try {
-            $famille->dehistoriser();
-            $this->getEntityManager()->flush($famille);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $famille->dehistoriser();
+        $this->getObjectManager()->flush($famille);
         return $famille;
     }
 
-    public function delete(FamilleProfessionnelle $famille) : FamilleProfessionnelle
+    public function delete(FamilleProfessionnelle $famille): FamilleProfessionnelle
     {
-        try {
-            $this->getEntityManager()->remove($famille);
-            $this->getEntityManager()->flush($famille);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($famille);
+        $this->getObjectManager()->flush($famille);
         return $famille;
     }
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
+        $qb = $this->getObjectManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
             ->addSelect('domaine')->leftJoin('famille.domaines', 'domaine')
-            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
-        ;
+            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier');
         return $qb;
     }
 
     /** @return FamilleProfessionnelle[] */
-    public function getFamillesProfessionnelles() : array
+    public function getFamillesProfessionnelles(): array
     {
         $qb = $this->createQueryBuilder()
             ->addOrderBy('famille.libelle');
@@ -91,33 +70,32 @@ class FamilleProfessionnelleService {
     }
 
     /** @return FamilleProfessionnelle[] */
-    public function getFamillesProfessionnellesAsOptions(bool $historiser = false) : array
+    public function getFamillesProfessionnellesAsOptions(bool $historiser = false): array
     {
         $familles = $this->getFamillesProfessionnelles();
         $options = [];
         foreach ($familles as $famille) {
-            if ($historiser OR $famille->estNonHistorise())
+            if ($historiser or $famille->estNonHistorise())
                 $options[$famille->getId()] = $famille->getLibelle();
         }
         return $options;
     }
 
-    public function getFamilleProfessionnelle(?int $id) : ?FamilleProfessionnelle
+    public function getFamilleProfessionnelle(?int $id): ?FamilleProfessionnelle
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('famille.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".FamilleProfessionnelle::class."] partagent le même identifiant [".$id."]");
+            throw new RuntimeException("Plusieurs [" . FamilleProfessionnelle::class . "] partagent le même identifiant [" . $id . "]",0,$e);
         }
         return $result;
     }
 
-    public function getRequestedFamilleProfessionnelle(AbstractActionController $controller, string $paramName = 'famille-professionnelle') : ?FamilleProfessionnelle
+    public function getRequestedFamilleProfessionnelle(AbstractActionController $controller, string $paramName = 'famille-professionnelle'): ?FamilleProfessionnelle
     {
         $id = $controller->params()->fromRoute($paramName);
         $famille = $this->getFamilleProfessionnelle($id);
@@ -129,13 +107,12 @@ class FamilleProfessionnelleService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('famille.libelle = :libelle')->setParameter('libelle', $libelle)
-            ->andWhere('famille.histoDestruction IS NULL')
-        ;
+            ->andWhere('famille.histoDestruction IS NULL');
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".FamilleProfessionnelle::class."] partagent le même libellé [".$libelle."]");
+            throw new RuntimeException("Plusieurs [" . FamilleProfessionnelle::class . "] partagent le même libellé [" . $libelle . "]",0,$e);
         }
         return $result;
     }
@@ -144,7 +121,7 @@ class FamilleProfessionnelleService {
     {
         $famille = new FamilleProfessionnelle();
         $famille->setLibelle($familleLibelle);
-        if ($persist)  $this->create($famille);
+        if ($persist) $this->create($famille);
         return $famille;
     }
 }

@@ -24,7 +24,7 @@ class DomaineServiceFactory {
 
         /** @var DomaineService $service */
         $service = new DomaineService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

@@ -2,51 +2,37 @@
 
 namespace FicheMetier\Service\MissionActivite;
 
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class MissionActiviteService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
 
     /** Gestion des entités *******************************************************************************************/
 
     public function create(MissionActivite $activite): MissionActivite
     {
-        try {
-            $this->getEntityManager()->persist($activite);
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue en base", 0, $e);
-        }
+        $this->getObjectManager()->persist($activite);
+        $this->getObjectManager()->flush($activite);
         return $activite;
     }
 
     public function update(MissionActivite $activite): MissionActivite
     {
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en BD", 0, $e);
-        }
+        $this->getObjectManager()->flush($activite);
         return $activite;
     }
 
     public function delete(MissionActivite $activite): MissionActivite
     {
-        try {
-            $this->getEntityManager()->remove($activite);
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en BD", 0, $e);
-        }
+        $this->getObjectManager()->remove($activite);
+        $this->getObjectManager()->flush($activite);
         return $activite;
     }
 
@@ -54,11 +40,7 @@ class MissionActiviteService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(MissionActivite::class)->createQueryBuilder('missionactivite');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder [" . MissionActivite::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(MissionActivite::class)->createQueryBuilder('missionactivite');
         return $qb;
     }
 

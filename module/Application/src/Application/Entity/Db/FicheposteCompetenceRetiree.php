@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Element\Entity\Db\Competence;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -53,7 +54,7 @@ class FicheposteCompetenceRetiree implements HistoriqueAwareInterface{
      * @param Competence $competence
      * @return FicheposteCompetenceRetiree
      */
-    public function setCompetence($competence)
+    public function setCompetence(Competence $competence)
     {
         $this->competence = $competence;
         return $this;

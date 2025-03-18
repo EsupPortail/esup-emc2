@@ -2,19 +2,22 @@
 
 namespace Element\Service\HasApplicationCollection;
 
+use Doctrine\ORM\EntityManager;
 use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
-use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class HasApplicationCollectionServiceFactory {
+class HasApplicationCollectionServiceFactory
+{
 
     /**
-     * @param ContainerInterface $container
-     * @return HasApplicationCollectionService
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : HasApplicationCollectionService
+    public function __invoke(ContainerInterface $container): HasApplicationCollectionService
     {
         /**
          * @var EntityManager $entityManager
@@ -28,7 +31,7 @@ class HasApplicationCollectionServiceFactory {
         $userService = $container->get(UserService::class);
 
         $service = new HasApplicationCollectionService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setApplicationService($applicationService);
         $service->setApplicationElementService($applicationElementService);
         $service->setUserService($userService);

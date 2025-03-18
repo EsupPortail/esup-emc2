@@ -2,17 +2,16 @@
 
 namespace Element\Service\CompetenceTheme;
 
-use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\CompetenceTheme;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenApp\Exception\RuntimeException;
 
-class CompetenceThemeService {
-    use EntityManagerAwareTrait;
+class CompetenceThemeService
+{
+    use ProvidesObjectManager;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
 
@@ -20,14 +19,10 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function create(CompetenceTheme $theme) : CompetenceTheme
+    public function create(CompetenceTheme $theme): CompetenceTheme
     {
-        try {
-            $this->getEntityManager()->persist($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($theme);
+        $this->getObjectManager()->flush($theme);
         return $theme;
     }
 
@@ -35,13 +30,9 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function update(CompetenceTheme $theme) : CompetenceTheme
+    public function update(CompetenceTheme $theme): CompetenceTheme
     {
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($theme);
         return $theme;
     }
 
@@ -49,14 +40,10 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function historise(CompetenceTheme $theme) : CompetenceTheme
+    public function historise(CompetenceTheme $theme): CompetenceTheme
     {
-        try {
-            $theme->historiser();
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $theme->historiser();
+        $this->getObjectManager()->flush($theme);
         return $theme;
     }
 
@@ -64,14 +51,10 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function restore(CompetenceTheme $theme) : CompetenceTheme
+    public function restore(CompetenceTheme $theme): CompetenceTheme
     {
-        try {
-            $theme->dehistoriser();
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $theme->dehistoriser();
+        $this->getObjectManager()->flush($theme);
         return $theme;
     }
 
@@ -79,27 +62,19 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function delete(CompetenceTheme $theme) : CompetenceTheme
+    public function delete(CompetenceTheme $theme): CompetenceTheme
     {
-        try {
-            $this->getEntityManager()->remove($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($theme);
+        $this->getObjectManager()->flush($theme);
         return $theme;
     }
 
     /** REQUETE *******************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
-                ->addSelect('competence')->leftJoin('theme.competences', 'competence');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la creation que QueryBuilder de [".QueryBuilder::class."]",0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
+            ->addSelect('competence')->leftJoin('theme.competences', 'competence');
         return $qb;
     }
 
@@ -108,11 +83,10 @@ class CompetenceThemeService {
      * @param string $order
      * @return CompetenceTheme[]
      */
-    public function getCompetencesThemes(string $champ = 'libelle', string $order = 'ASC') : array
+    public function getCompetencesThemes(string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('theme.'.$champ, $order)
-        ;
+            ->orderBy('theme.' . $champ, $order);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -122,7 +96,7 @@ class CompetenceThemeService {
      * @param string $order
      * @return array
      */
-    public function getCompetencesThemesAsOptions(string $champ = 'libelle', string $order = 'ASC') : array
+    public function getCompetencesThemesAsOptions(string $champ = 'libelle', string $order = 'ASC'): array
     {
         $types = $this->getCompetencesThemes($champ, $order);
         $options = [];
@@ -136,15 +110,14 @@ class CompetenceThemeService {
      * @param int|null $id
      * @return CompetenceTheme|null
      */
-    public function getCompetenceTheme(?int $id) : ?CompetenceTheme
+    public function getCompetenceTheme(?int $id): ?CompetenceTheme
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('theme.id = :id') ->setParameter('id', $id)
-        ;
+            ->andWhere('theme.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
-        } catch(NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs CompetenceTheme partagent le même id [".$id."]", $e);
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs CompetenceTheme partagent le même id [" . $id . "]", $e);
         }
         return $result;
     }
@@ -154,7 +127,7 @@ class CompetenceThemeService {
      * @param string $paramName
      * @return CompetenceTheme|null
      */
-    public function getRequestedCompetenceTheme(AbstractActionController $controller, string  $paramName = 'competence-theme') : ?CompetenceTheme
+    public function getRequestedCompetenceTheme(AbstractActionController $controller, string $paramName = 'competence-theme'): ?CompetenceTheme
     {
         $id = $controller->params()->fromRoute($paramName);
         $theme = $this->getCompetenceTheme($id);
@@ -165,23 +138,22 @@ class CompetenceThemeService {
      * @param string $libelle
      * @return CompetenceTheme|null
      */
-    public function getCompetenceThemeByLibelle(string $libelle) : ?CompetenceTheme
+    public function getCompetenceThemeByLibelle(string $libelle): ?CompetenceTheme
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('theme.libelle = :libelle') ->setParameter('libelle', $libelle)
-        ;
+            ->andWhere('theme.libelle = :libelle')->setParameter('libelle', $libelle);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs CompetenceTheme partagent le même libellé ['.$libelle.']',0,$e);
+            throw new RuntimeException('Plusieurs CompetenceTheme partagent le même libellé [' . $libelle . ']', 0, $e);
         }
         return $result;
     }
 
     /** FACADE ***********************************************************************/
 
-    public function createWith(?string $libelle) : CompetenceTheme
+    public function createWith(?string $libelle): CompetenceTheme
     {
         $theme = new CompetenceTheme();
         $theme->setLibelle($libelle);

@@ -2,18 +2,16 @@
 
 namespace Element\Service\CompetenceType;
 
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\QueryBuilder;
-use Element\Entity\Db\CompetenceType;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
+use Element\Entity\Db\CompetenceType;
 use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenApp\Exception\RuntimeException;
 
 class CompetenceTypeService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
 
@@ -21,14 +19,10 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function create(CompetenceType $type) : CompetenceType
+    public function create(CompetenceType $type): CompetenceType
     {
-        try {
-            $this->getEntityManager()->persist($type);
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($type);
+        $this->getObjectManager()->flush($type);
         return $type;
     }
 
@@ -36,13 +30,9 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function update(CompetenceType $type) : CompetenceType
+    public function update(CompetenceType $type): CompetenceType
     {
-        try {
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($type);
         return $type;
     }
 
@@ -50,14 +40,10 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function historise(CompetenceType $type) : CompetenceType
+    public function historise(CompetenceType $type): CompetenceType
     {
-        try {
-            $type->historiser();
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $type->historiser();
+        $this->getObjectManager()->flush($type);
         return $type;
     }
 
@@ -65,14 +51,10 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function restore(CompetenceType $type) : CompetenceType
+    public function restore(CompetenceType $type): CompetenceType
     {
-        try {
-            $type->dehistoriser();
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $type->dehistoriser();
+        $this->getObjectManager()->flush($type);
         return $type;
     }
 
@@ -80,28 +62,19 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function delete(CompetenceType $type) : CompetenceType
+    public function delete(CompetenceType $type): CompetenceType
     {
-        try {
-            $this->getEntityManager()->remove($type);
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($type);
+        $this->getObjectManager()->flush($type);
         return $type;
     }
 
     /** REQUETE *******************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(CompetenceType::class)->createQueryBuilder('type')
-                ->addSelect('competence')->leftJoin('type.competences', 'competence')
-            ;
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".CompetenceType::class."]",0,$e);
-        }
+        $qb = $this->getObjectManager()->getRepository(CompetenceType::class)->createQueryBuilder('type')
+            ->addSelect('competence')->leftJoin('type.competences', 'competence');
         return $qb;
     }
 
@@ -110,11 +83,10 @@ class CompetenceTypeService
      * @param string $order
      * @return CompetenceType[]
      */
-    public function getCompetencesTypes(string $champ = 'libelle', string $order = 'ASC') : array
+    public function getCompetencesTypes(string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('type.'.$champ, $order)
-        ;
+            ->orderBy('type.' . $champ, $order);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -124,7 +96,7 @@ class CompetenceTypeService
      * @param string $order
      * @return array
      */
-    public function getCompetencesTypesAsOptions(string $champ = 'libelle', string $order = 'ASC') : array
+    public function getCompetencesTypesAsOptions(string $champ = 'libelle', string $order = 'ASC'): array
     {
         $types = $this->getCompetencesTypes($champ, $order);
         $options = [];
@@ -134,30 +106,20 @@ class CompetenceTypeService
         return $options;
     }
 
-    /**
-     * @param int|null $id
-     * @return CompetenceType
-     */
-    public function getCompetenceType(?int $id) : ?CompetenceType
+    public function getCompetenceType(?int $id): ?CompetenceType
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('type.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
-        } catch(NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs CompetenceType partagent le même id [".$id."]", $e);
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs CompetenceType partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return CompetenceType
-     */
-    public function getRequestedCompetenceType(AbstractActionController $controller, string $paramName = 'competence-type') : ?CompetenceType
+    public function getRequestedCompetenceType(AbstractActionController $controller, string $paramName = 'competence-type'): ?CompetenceType
     {
         $id = $controller->params()->fromRoute($paramName);
         $type = $this->getCompetenceType($id);
@@ -168,19 +130,18 @@ class CompetenceTypeService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('type.libelle = :libelle')
-            ->setParameter('libelle', $libelle)
-        ;
+            ->setParameter('libelle', $libelle);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
-        } catch(NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs CompetenceType partagent le même id [".$libelle."]", $e);
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs CompetenceType partagent le même id [" . $libelle . "]", 0, $e);
         }
         return $result;
     }
 
     /** FACADE ***********************************************************************/
 
-    public function createWith(?string $libelle) : CompetenceType
+    public function createWith(?string $libelle): CompetenceType
     {
         $type = new CompetenceType();
         $type->setLibelle($libelle);

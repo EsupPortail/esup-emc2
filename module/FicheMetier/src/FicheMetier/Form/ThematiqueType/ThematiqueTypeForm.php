@@ -112,7 +112,6 @@ class ThematiqueTypeForm extends Form
                         ],
                         'callback' => function ($value, $context = []) {
                             if($value == $this->oldCode) return true;
-//                            return ($this->getEntityManager()->getRepository(EtatType::class)->findOneBy(['code'=>$value],[]) == null);;
                             return ($this->getThematiqueTypeService()->getThematiqueTypeByCode($value) == null);
                         },
                         //'break_chain_on_failure' => true,

@@ -10,8 +10,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class ActivitesDescriptionsRetireesServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return ActivitesDescriptionsRetireesService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -22,9 +20,8 @@ class ActivitesDescriptionsRetireesServiceFactory {
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var ActivitesDescriptionsRetireesService $service */
         $service = new ActivitesDescriptionsRetireesService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

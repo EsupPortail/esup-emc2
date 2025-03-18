@@ -23,7 +23,7 @@ class ReferentielServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new ReferentielService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
 
         return $service;
     }

@@ -23,7 +23,7 @@ class FamilleProfessionnelleServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new FamilleProfessionnelleService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

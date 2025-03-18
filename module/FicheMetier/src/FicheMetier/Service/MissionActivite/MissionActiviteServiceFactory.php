@@ -10,12 +10,10 @@ use Psr\Container\NotFoundExceptionInterface;
 class MissionActiviteServiceFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return MissionActiviteService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : MissionActiviteService
+    public function __invoke(ContainerInterface $container): MissionActiviteService
     {
         /**
          * @var EntityManager $entityManager
@@ -23,7 +21,7 @@ class MissionActiviteServiceFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new MissionActiviteService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

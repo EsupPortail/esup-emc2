@@ -4,14 +4,13 @@ namespace Application\Service\ActivitesDescriptionsRetirees;
 
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
-use Doctrine\ORM\Exception\ORMException;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
-class ActivitesDescriptionsRetireesService {
-    use EntityManagerAwareTrait;
+class ActivitesDescriptionsRetireesService
+{
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -19,14 +18,10 @@ class ActivitesDescriptionsRetireesService {
      * @param FicheposteActiviteDescriptionRetiree $description
      * @return FicheposteActiviteDescriptionRetiree
      */
-    public function create(FicheposteActiviteDescriptionRetiree $description) : FicheposteActiviteDescriptionRetiree
+    public function create(FicheposteActiviteDescriptionRetiree $description): FicheposteActiviteDescriptionRetiree
     {
-        try {
-            $this->getEntityManager()->persist($description);
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base", 0, $e);
-        }
+        $this->getObjectManager()->persist($description);
+        $this->getObjectManager()->flush($description);
         return $description;
     }
 
@@ -34,13 +29,9 @@ class ActivitesDescriptionsRetireesService {
      * @param FicheposteActiviteDescriptionRetiree $description
      * @return FicheposteActiviteDescriptionRetiree
      */
-    public function update(FicheposteActiviteDescriptionRetiree $description) : FicheposteActiviteDescriptionRetiree
+    public function update(FicheposteActiviteDescriptionRetiree $description): FicheposteActiviteDescriptionRetiree
     {
-        try {
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base", 0, $e);
-        }
+        $this->getObjectManager()->flush($description);
         return $description;
     }
 
@@ -48,14 +39,10 @@ class ActivitesDescriptionsRetireesService {
      * @param FicheposteActiviteDescriptionRetiree $description
      * @return FicheposteActiviteDescriptionRetiree
      */
-    public function delete(FicheposteActiviteDescriptionRetiree $description) : FicheposteActiviteDescriptionRetiree
+    public function delete(FicheposteActiviteDescriptionRetiree $description): FicheposteActiviteDescriptionRetiree
     {
-        try {
-            $this->getEntityManager()->remove($description);
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base", 0, $e);
-        }
+        $this->getObjectManager()->remove($description);
+        $this->getObjectManager()->flush($description);
         return $description;
     }
 
@@ -68,9 +55,9 @@ class ActivitesDescriptionsRetireesService {
      * @return FicheposteActiviteDescriptionRetiree[]
      */
 
-    public function getActivitesDescriptionsRetirees(FichePoste $ficheposte, FicheMetier $fichemetier, Mission $mission) : array
+    public function getActivitesDescriptionsRetirees(FichePoste $ficheposte, FicheMetier $fichemetier, Mission $mission): array
     {
-        $qb = $this->getEntityManager()->getRepository(FicheposteActiviteDescriptionRetiree::class)->createQueryBuilder('description')
+        $qb = $this->getObjectManager()->getRepository(FicheposteActiviteDescriptionRetiree::class)->createQueryBuilder('description')
             ->addSelect('ficheposte')->join('description.fichePoste', 'ficheposte')
             ->addSelect('fichemetier')->join('description.ficheMetier', 'fichemetier')
             ->addSelect('activite')->join('description.activite', 'activite')
