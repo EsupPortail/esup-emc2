@@ -100,14 +100,16 @@ if ($canModifier) $nbAction++;
 if ($canSupprimer) $nbAction++;
 ?>
 
-<table class="table table-condensed datatable" id="<?php echo $options['id']??'competences'; ?>">
+<table class="table table-condensed datatable" id="<?php echo $options['id'] ?? 'competences'; ?>">
     <thead>
     <tr>
         <th class="col-md-5"> Compétences</th>
         <th class="col-md-2"> Thèmes</th>
         <th class="col-md-2"> Type</th>
         <th class="col-md-2" data-type="num"> Niveau</th>
-        <th class="col-md-1"> Action</th>
+        <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
+            <th class="col-md-1"> Action</th>
+        <?php endif; ?>
     </tr>
     </thead>
     <tbody>
@@ -128,38 +130,41 @@ if ($canSupprimer) $nbAction++;
                     <span class="icon icon-star" title="Est une competence clef"></span>
                 <?php endif; ?>
             </td>
-            <td class="action">
-                <?php if ($canModifier) : ?>
-                    <?php if (!$isAcquis) : ?>
-                        <a <?php /** @see \Element\Controller\ElementController::changerNiveauAction() */ ?>
-                                href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $element->getId(), 'clef' => ($objet instanceof FicheMetier) ? 'afficher' : 'masquer'], [], true); ?>"
-                                class="ajax-modal action primary" data-event="modification" data-bs-toggle="tooltip"
-                                data-bs-html="true"
-                        >
-                            <span class="icon icon-editer"></span> Modifier</a>
-                    <?php else : ?>
-                        <a <?php /** @see \Element\Controller\ElementController::modifierCompetenceElementAction() */ ?>
-                                href="<?php echo $this->url("element_/modifier-competence-element", ['competence-element' => $element->getId()], [], true); ?>"
-                                class="ajax-modal  action primary" data-event="modification" data-bs-toggle="tooltip"
-                                data-bs-html="true"
-                        >
-                            <span class="icon icon-editer"></span> Modifier</a>
+            <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
+                <td class="action">
+                    <?php if ($canModifier) : ?>
+                        <?php if (!$isAcquis) : ?>
+                            <a <?php /** @see \Element\Controller\ElementController::changerNiveauAction() */ ?>
+                                    href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $element->getId(), 'clef' => ($objet instanceof FicheMetier) ? 'afficher' : 'masquer'], [], true); ?>"
+                                    class="ajax-modal action primary" data-event="modification" data-bs-toggle="tooltip"
+                                    data-bs-html="true"
+                            >
+                                <span class="icon icon-editer"></span> Modifier</a>
+                        <?php else : ?>
+                            <a <?php /** @see \Element\Controller\ElementController::modifierCompetenceElementAction() */ ?>
+                                    href="<?php echo $this->url("element_/modifier-competence-element", ['competence-element' => $element->getId()], [], true); ?>"
+                                    class="ajax-modal  action primary" data-event="modification"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-html="true"
+                            >
+                                <span class="icon icon-editer"></span> Modifier</a>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
-                <?php if ($canSupprimer) : ?>
-                    <br>
-                    <a
-                        <?php /** @see \Element\Controller\ElementController::supprimerAction() */ ?>
-                            href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $element->getId()], [], true); ?>"
-                            class="ajax-modal  action danger"
-                            data-event="modification"
-                    >
+                    <?php if ($canSupprimer) : ?>
+                        <br>
+                        <a
+                            <?php /** @see \Element\Controller\ElementController::supprimerAction() */ ?>
+                                href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $element->getId()], [], true); ?>"
+                                class="ajax-modal  action danger"
+                                data-event="modification"
+                        >
                         <span class="icon icon-unchecked"
                               title="Supprimer définitivement une compétence liées à l'agent"></span>
-                        Supprimer
-                    </a>
-                <?php endif; ?>
-            </td>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
+                </td>
+            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>
@@ -167,15 +172,17 @@ if ($canSupprimer) $nbAction++;
 
 <script>
     $(function () {
-        $('#<?php echo  $options['id']??'competences'; ?>').DataTable({
+        $('#<?php echo $options['id'] ?? 'competences'; ?>').DataTable({
             autoWidth: false,
             paging: false,
             info: false,
-            order: [[2, 'asc'],[1, 'asc'], [0, 'asc']],
+            order: [[2, 'asc'], [1, 'asc'], [0, 'asc']],
+            <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
             columnDefs: [{
                 "targets": 4,
                 "orderable": false
             }],
+            <?php endif; ?>
             language: {
                 url: '/js/datatables_fr.json'
             }

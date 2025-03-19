@@ -91,7 +91,7 @@ foreach ($applications as $application) {
 
 <div class="listing">
 
-    <table id="<?php echo  $options['id']??'applications'; ?>" class="table table-condensed datatable">
+    <table id="<?php echo $options['id'] ?? 'applications'; ?>" class="table table-condensed datatable">
         <thead>
         <tr>
             <th class="col-md-5" style="width:40%;"> Libellé</th>
@@ -113,33 +113,35 @@ foreach ($applications as $application) {
                     <?php endif; ?>
                 </td>
                 <td class="action">
-                    <?php if ($canModifier) : ?>
-                        <?php if (!$isAcquis) : ?>
-                            <a <?php /** @see ElementController::changerNiveauAction */ ?>
-                                    href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $element->getId(), 'clef' => ($objet instanceof FicheMetier) ? 'afficher' : 'masquer'], [], true); ?>"
-                                    class="ajax-modal action primary" data-event="modification"
-                            >
-                                <span class="icon icon-editer"></span>
-                                Modifier </a>
-                        <?php else : ?>
-                            <a <?php /** @see ElementController::modifierApplicationElementAction */ ?>
-                                    href="<?php echo $this->url("element_/modifier-application-element", ['application-element' => $element->getId()], [], true); ?>"
-                                    class="ajax-modal action primary" data-event="modification"
-                            >
-                                <span class="icon icon-editer"></span>
-                                Modifier </a>
+                    <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
+                        <?php if ($canModifier) : ?>
+                            <?php if (!$isAcquis) : ?>
+                                <a <?php /** @see ElementController::changerNiveauAction */ ?>
+                                        href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $element->getId(), 'clef' => ($objet instanceof FicheMetier) ? 'afficher' : 'masquer'], [], true); ?>"
+                                        class="ajax-modal action primary" data-event="modification"
+                                >
+                                    <span class="icon icon-editer"></span>
+                                    Modifier </a>
+                            <?php else : ?>
+                                <a <?php /** @see ElementController::modifierApplicationElementAction */ ?>
+                                        href="<?php echo $this->url("element_/modifier-application-element", ['application-element' => $element->getId()], [], true); ?>"
+                                        class="ajax-modal action primary" data-event="modification"
+                                >
+                                    <span class="icon icon-editer"></span>
+                                    Modifier </a>
+                            <?php endif; ?>
                         <?php endif; ?>
-                    <?php endif; ?>
-                    <?php if ($canSupprimer) : ?>
-                        <br>
-                        <a
-                            <?php /** @see ElementController::supprimerAction */ ?>
-                                href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_APPLICATION, 'id' => $element->getId()], [], true); ?>"
-                                class="ajax-modal action danger" data-event="modification"
-                        >
-                            <span class="icon icon-unchecked"></span>
-                            Supprimer
-                        </a>
+                        <?php if ($canSupprimer) : ?>
+                            <br>
+                            <a
+                                <?php /** @see ElementController::supprimerAction */ ?>
+                                    href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_APPLICATION, 'id' => $element->getId()], [], true); ?>"
+                                    class="ajax-modal action danger" data-event="modification"
+                            >
+                                <span class="icon icon-unchecked"></span>
+                                Supprimer
+                            </a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -150,7 +152,7 @@ foreach ($applications as $application) {
 
 <script>
     $(function () {
-        $('#<?php echo  $options['id']??'applications'; ?>').DataTable({
+        $('#<?php echo $options['id'] ?? 'applications'; ?>').DataTable({
             autoWidth: false,
             paging: false,
             info: false,
