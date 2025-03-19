@@ -97,7 +97,9 @@ foreach ($applications as $application) {
             <th class="col-md-5" style="width:40%;"> Libellé</th>
             <th class="col-md-4" style="width:30%;"> Groupe</th>
             <th class="col-md-2" data-type="num"> Niveau</th>
-            <th class="col-md-1"> Action</th>
+            <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
+                <th class="col-md-1"> Action</th>
+            <?php endif; ?>
         </tr>
         </thead>
         <tbody>
@@ -112,8 +114,8 @@ foreach ($applications as $application) {
                         <span class="icon icon-star" title="Est une application clef"></span>
                     <?php endif; ?>
                 </td>
-                <td class="action">
-                    <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
+                <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
+                    <td class="action">
                         <?php if ($canModifier) : ?>
                             <?php if (!$isAcquis) : ?>
                                 <a <?php /** @see ElementController::changerNiveauAction */ ?>
@@ -142,8 +144,8 @@ foreach ($applications as $application) {
                                 Supprimer
                             </a>
                         <?php endif; ?>
-                    <?php endif; ?>
-                </td>
+                    </td>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -157,10 +159,12 @@ foreach ($applications as $application) {
             paging: false,
             info: false,
             order: [[1, 'asc'], [0, 'asc']],
-            columnDefs: [{
-                "targets": 3,
-                "orderable": false
-            }],
+            <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
+                columnDefs: [{
+                    "targets": 3,
+                    "orderable": false
+                }],
+            <?php endif; ?>
             language: {
                 url: '/js/datatables_fr.json'
             }
