@@ -10,11 +10,11 @@
  */
 
 use Agent\Entity\Db\AgentAffectation;
-use Agent\Entity\Db\AgentGrade;
-use Agent\Entity\Db\AgentStatut;
-use Agent\Entity\Db\AgentQuotite;
-use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentEchelon;
+use Agent\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentQuotite;
+use Agent\Entity\Db\AgentStatut;
+use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
 
@@ -120,38 +120,41 @@ $canModifierChaine = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivil
                             <ul>
                                 <?php foreach ($autorites as $autorite) : ?>
                                     <li>
-                                                <span class=" <?php if ($autorite->estHistorise()) echo " historise "; ?> ">
-                                                    <span class="badge"> <?php echo $autorite->getSourceId(); ?> </span>
-                                                    <?php echo $autorite->getAutorite()->getDenomination(); ?>
-                                                </span>
-                                        <?php if ($autorite->getSourceId() === 'EMC2' and $canModifierChaine) : ?>
-                                            <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
-                                            <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
-                                               class="ajax-modal action primary" data-event="modification">
-                                                <span class="icon icon-modifier"></span>
-                                                Modifier
-                                            </a>
-                                            <?php /** @see \Application\Controller\AgentHierarchieController::supprimerAction() */ ?>
-                                            <a href="<?php echo $this->url('agent/hierarchie/supprimer', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
-                                               class="ajax-modal action danger" data-event="modification">
-                                                <span class="icon icon-unchecked"></span>
-                                                Supprimer
-                                            </a>
-                                        <?php else : ?>
-                                            <?php if ($autorite->estHistorise()) : ?>
-                                                <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
-                                                <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
-                                                   class="action warning" >
-                                                    <span class="icon icon-restaurer"></span>
-                                                    Ré-établir
+                                        <span class=" <?php if ($autorite->estHistorise()) echo " historise "; ?> ">
+                                            <span class="badge"> <?php echo $autorite->getSourceId(); ?> </span>
+                                            <?php echo $autorite->getAutorite()->getDenomination(); ?>
+                                        </span>
+
+                                        <?php if ($canModifierChaine) : ?>
+                                            <?php if ($autorite->getSourceId() === 'EMC2') : ?>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                   class="ajax-modal action primary" data-event="modification">
+                                                    <span class="icon icon-modifier"></span>
+                                                    Modifier
+                                                </a>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::supprimerAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/supprimer', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                   class="ajax-modal action danger" data-event="modification">
+                                                    <span class="icon icon-unchecked"></span>
+                                                    Supprimer
                                                 </a>
                                             <?php else : ?>
-                                                <?php /** @see \Application\Controller\AgentHierarchieController::historiserAction() */ ?>
-                                                <a href="<?php echo $this->url('agent/hierarchie/historiser', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
-                                                   class="action warning">
-                                                    <span class="icon icon-historiser"></span>
-                                                    Révoquer
-                                                </a>
+                                                <?php if ($autorite->estHistorise()) : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                       class="action warning">
+                                                        <span class="icon icon-restaurer"></span>
+                                                        Ré-établir
+                                                    </a>
+                                                <?php else : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::historiserAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/historiser', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
+                                                       class="action warning">
+                                                        <span class="icon icon-historiser"></span>
+                                                        Révoquer
+                                                    </a>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </li>
@@ -172,64 +175,67 @@ $canModifierChaine = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivil
                 <dl>
                     <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
                     <dd>
-                    <?php if ($canModifierChaine) : ?>
-                        <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "superieur"], [], true); ?>"
-                           class="ajax-modal btn btn-primary" data-event="modification"
-                        >
-                            <span class="icon icon-ajouter"></span>
-                            Ajouter un·e supérieur·e
-                        </a>
-                    <?php endif; ?>
-                    <?php $superieures = $agent->getSuperieurs($canModifierChaine);
-                    ?>
-                    <?php if (!empty($superieures)) : ?>
-                        <ul>
-                            <?php foreach ($superieures as $superieure) : ?>
-                                <li>
-                                            <span class=" <?php if ($superieure->estHistorise()) echo " historise "; ?> ">
-                                                <span class="badge"> <?php echo $superieure->getSourceId(); ?> </span>
-                                                <?php echo $superieure->getSuperieur()->getDenomination(); ?>
-                                            </span>
-                                    <?php if ($superieure->getSourceId() === 'EMC2' and $canModifierChaine) : ?>
-                                        <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
-                                        <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
-                                           class="ajax-modal action primary" data-event="modification">
-                                            <span class="icon icon-modifier"></span>
-                                            Modifier
-                                        </a>
-                                        <?php /** @see \Application\Controller\AgentHierarchieController::supprimerAction() */ ?>
-                                        <a href="<?php echo $this->url('agent/hierarchie/supprimer', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
-                                           class="ajax-modal action danger" data-event="modification">
-                                            <span class="icon icon-unchecked"></span>
-                                            Supprimer
-                                        </a>
-                                    <?php else : ?>
-                                        <?php if ($superieure->estHistorise()) : ?>
-                                            <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
-                                            <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
-                                               class="action warning" >
-                                                <span class="icon icon-restaurer"></span>
-                                                Ré-établir
-                                            </a>
-                                        <?php else : ?>
-                                            <?php /** @see \Application\Controller\AgentHierarchieController::historiserAction() */ ?>
-                                            <a href="<?php echo $this->url('agent/hierarchie/historiser', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
-                                               class="action warning">
-                                                <span class="icon icon-historiser"></span>
-                                                Révoquer
-                                            </a>
+                        <?php if ($canModifierChaine) : ?>
+                            <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "superieur"], [], true); ?>"
+                               class="ajax-modal btn btn-primary" data-event="modification"
+                            >
+                                <span class="icon icon-ajouter"></span>
+                                Ajouter un·e supérieur·e
+                            </a>
+                        <?php endif; ?>
+                        <?php $superieures = $agent->getSuperieurs($canModifierChaine);
+                        ?>
+                        <?php if (!empty($superieures)) : ?>
+                            <ul>
+                                <?php foreach ($superieures as $superieure) : ?>
+                                    <li>
+                                        <span class=" <?php if ($superieure->estHistorise()) echo " historise "; ?> ">
+                                            <span class="badge"> <?php echo $superieure->getSourceId(); ?> </span>
+                                            <?php echo $superieure->getSuperieur()->getDenomination(); ?>
+                                        </span>
+
+                                        <?php if ($canModifierChaine) : ?>
+                                            <?php if ($superieure->getSourceId() === 'EMC2') : ?>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                   class="ajax-modal action primary" data-event="modification">
+                                                    <span class="icon icon-modifier"></span>
+                                                    Modifier
+                                                </a>
+                                                <?php /** @see \Application\Controller\AgentHierarchieController::supprimerAction() */ ?>
+                                                <a href="<?php echo $this->url('agent/hierarchie/supprimer', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                   class="ajax-modal action danger" data-event="modification">
+                                                    <span class="icon icon-unchecked"></span>
+                                                    Supprimer
+                                                </a>
+                                            <?php else : ?>
+                                                <?php if ($superieure->estHistorise()) : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                       class="action warning">
+                                                        <span class="icon icon-restaurer"></span>
+                                                        Ré-établir
+                                                    </a>
+                                                <?php else : ?>
+                                                    <?php /** @see \Application\Controller\AgentHierarchieController::historiserAction() */ ?>
+                                                    <a href="<?php echo $this->url('agent/hierarchie/historiser', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
+                                                       class="action warning">
+                                                        <span class="icon icon-historiser"></span>
+                                                        Révoquer
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
                                         <?php endif; ?>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else : ?>
-                        <div class="alert alert-warning">
-                            <span class="icon icon-attention"></span>
-                            Aucun·e supérieur·e hiérarchique direct·e
-                        </div>
-                    <?php endif; ?>
-                </dd>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else : ?>
+                            <div class="alert alert-warning">
+                                <span class="icon icon-attention"></span>
+                                Aucun·e supérieur·e hiérarchique direct·e
+                            </div>
+                        <?php endif; ?>
+                    </dd>
                 </dl>
             <?php endif; ?>
         </div>

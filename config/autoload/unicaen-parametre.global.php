@@ -2,7 +2,7 @@
 
 namespace UnicaenParametre;
 
-use Carriere\Controller\CategorieController;
+use UnicaenParametre\Controller\CategorieController;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
