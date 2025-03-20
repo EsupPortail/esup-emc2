@@ -122,8 +122,8 @@ if ($canSupprimer) $nbAction++;
                     <?php echo $this->competenceReference($element->getCompetence()); ?>
                 <?php endif; ?>
             </td>
-            <td> <?php echo $element->getCompetence()->getTheme()->getLibelle(); ?> </td>
-            <td> <?php echo $element->getCompetence()->getType()->getLibelle(); ?> </td>
+            <td> <?php echo ($element->getCompetence()->getTheme())?->getLibelle(); ?> </td>
+            <td> <?php echo ($element->getCompetence()->getType())?->getLibelle(); ?> </td>
             <td class="<?php echo ($element->getNiveauMaitrise())?->getNiveau(); ?>">
                 <?php echo ($element->getNiveauMaitrise())?->getLibelle(); ?>
                 <?php if ($element->isClef()): ?>

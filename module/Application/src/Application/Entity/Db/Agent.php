@@ -850,6 +850,17 @@ class Agent implements
         return false;
     }
 
+    public function hasAffectationActive(?DateTime $dateDebut = null, ?DateTime $dateFin = null): bool
+    {
+        $affectations = $this->getAffectations();
+        foreach ($affectations as $affectation) {
+            $dateDebut = $dateDebut??$affectation->getDateDebut();
+            $dateFin = $dateFin??$affectation->getDateFin()??$affectation->getDateDebut();
+            if (max($affectation->getDateDebut(), $dateDebut <= min($affectation->getDateFin(), $dateFin))) return true;
+        }
+        return false;
+    }
+
     public function hasCorps(?Corps $corps): bool
     {
         $gradesActifs = $this->getGradesActifs();
