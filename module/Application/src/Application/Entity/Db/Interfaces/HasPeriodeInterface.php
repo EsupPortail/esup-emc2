@@ -16,4 +16,5 @@ interface HasPeriodeInterface {
     public function estCommence(?DateTime $date = null) : bool;
     public function estFini(?DateTime $date = null) : bool;
     public function estEnCours(?DateTime $date = null) : bool;
+    public function estEnCoursIntervale(?DateTime $dateDebut = null, ?DateTime $dateFin = null) : bool;
 }

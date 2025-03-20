@@ -295,8 +295,8 @@ class CampagneService
 
             if (!$agent->isValideCorps(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],
-                $campagne->getDateEnPoste()))
-            {
+                $campagne->getDateDebut(),null,true)
+            ) {
                 continue;
             }
 

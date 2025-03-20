@@ -137,7 +137,7 @@ class StructureController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $debug .= "Récupération des informations des structures : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
 
-        $agents = $this->getAgentService()->getAgentsByStructures($structures,null, true);
+        $agents = $this->getAgentService()->getAgentsByStructures($structures,null, null,true);
         $debug .= "Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
         [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents);
         $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";

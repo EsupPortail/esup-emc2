@@ -8,6 +8,7 @@ use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use DateTime;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
@@ -279,76 +280,101 @@ EOS;
      * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsByStructures(array $structures, ?DateTime $date = null, bool $withJoin = true): array
+    public function getAgentsByStructures(array $structures, ?DateTime $dateDebut = null, ?DateTime $dateFin = null, bool $withJoin = true): array
     {
-        if ($date === null) $date = new DateTime();
+        if ($dateDebut === null) $dateDebut = new DateTime();
+        $structuresId = []; foreach ($structures as $structure) { $structuresId[] = $structure->getId(); }
+        $params = ['dateDebut' => $dateDebut?->format('Y-m-d'), 'dateFin' => $dateFin?->format('Y-m-d'), 'structures' => $structuresId];
 
-        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->select("DISTINCT agent")
-            // AFFECTATION FILTER
-//            ->addSelect('affectationfilter')
-            ->join('agent.affectations', 'affectationfilter')
-            ->andWhere('affectationfilter.deletedOn IS NULL')
-            ->andWhere('affectationfilter.dateFin >= :today OR affectationfilter.dateFin IS NULL')
-            ->andWhere('affectationfilter.dateDebut <= :today')
-            ->setParameter('today', $date)
+        $sql = <<<EOS
+select DISTINCT a.c_individu as c_individu
+from agent a
+join agent_carriere_affectation aca on a.c_individu = aca.agent_id
+where
+    aca.structure_id in (:structures)
+and tsrange(aca.date_debut, date_fin) && tsrange(:dateDebut, :dateFin)
+EOS;
 
-            ->andWhere('agent.deletedOn IS NULL')
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
-
-        if ($withJoin) {
-            $qb = $qb
-            //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
-//                ->addSelect('affectation')
-                ->join('agent.affectations', 'affectation')
-//                ->addSelect('affectation_structure')
-                ->join('affectation.structure', 'affectation_structure')
-                ->andWhere('affectation.deletedOn IS NULL')
-                //STATUS
-            ->addSelect('statut')
-                ->leftjoin('agent.statuts', 'statut')
-            ->andWhere('statut.deletedOn IS NULL')
-                //GRADE
-            ->addSelect('grade')
-                ->leftjoin('agent.grades', 'grade')
-            ->addSelect('emploitype')
-                ->leftjoin('grade.emploiType', 'emploitype')
-//            ->addSelect('gstructure')
-                ->leftjoin('grade.structure', 'gstructure')
-            ->addSelect('ggrade')
-                ->leftjoin('grade.grade', 'ggrade')
-//            ->addSelect('gcorrespondance')
-                ->leftjoin('grade.correspondance', 'gcorrespondance')
-            ->addSelect('gcorps')
-                ->leftjoin('grade.corps', 'gcorps')
-            ->andWhere('grade.deletedOn IS NULL')
-                //FICHE DE POSTE
-//            ->addSelect('ficheposte')
-                ->leftJoin('agent.fiches', 'ficheposte')
-            ;
+        try {
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params, ['structures' => ArrayParameterType::INTEGER]);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
         }
+        $ids = []; foreach ($tmp as $row) { $ids[] = $row['c_individu']; }
 
-        $qb = AgentSuperieur::decorateWithAgentSuperieur($qb);
-        $qb = AgentAutorite::decorateWithAgentAutorite($qb);
-
-        if (!empty($structures)) {
-            $qb = $qb->andWhere('affectationfilter.structure IN (:structures)')
-                ->setParameter('structures', $structures);
-        }
-
-//        $structuresIds = array_map(function (Structure $structure) {return $structure->getId();}, $structures);
-//        var_dump(implode(',', $structuresIds));
-//        $sql = $qb->getQuery()->getSQL();
-//        var_dump($sql);
-//        die();
-
-        $result = $qb->getQuery()->getResult();
-
-        $agents = [];
-        foreach ($result as $item) {
-            $agents[$item->getId()] = $item;
-        }
+        $agents = $this->getAgentsByIds($ids);
         return $agents;
+
+//        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+//            ->select("DISTINCT agent")
+//            // AFFECTATION FILTER
+//            ->join('agent.affectations', 'affectationfilter')
+//            ->andWhere('affectationfilter.deletedOn IS NULL')
+////            ->andWhere('tsrange(affectationfilter.dateDebut, affectationfilter.dateFin) && tsrange(:dateDebut, :dateFin)')
+//                ->andWhere('max(affectationfilter.dateDebut, :dateDebut) <= min(affectationfilter.dateFin,:dateFin)')
+//            ->setParameter('dateDebut', $dateDebut)
+//            ->setParameter('dateFin', $dateFin)
+//            ->andWhere('agent.deletedOn IS NULL')
+//            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
+//
+//        if ($withJoin) {
+//            $qb = $qb
+//            //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
+////                ->addSelect('affectation')
+//                ->join('agent.affectations', 'affectation')
+////                ->addSelect('affectation_structure')
+//                ->join('affectation.structure', 'affectation_structure')
+//                ->andWhere('affectation.deletedOn IS NULL')
+//                //STATUS
+//            ->addSelect('statut')
+//                ->leftjoin('agent.statuts', 'statut')
+//            ->andWhere('statut.deletedOn IS NULL')
+//                //GRADE
+//            ->addSelect('grade')
+//                ->leftjoin('agent.grades', 'grade')
+//            ->addSelect('emploitype')
+//                ->leftjoin('grade.emploiType', 'emploitype')
+////            ->addSelect('gstructure')
+//                ->leftjoin('grade.structure', 'gstructure')
+//            ->addSelect('ggrade')
+//                ->leftjoin('grade.grade', 'ggrade')
+////            ->addSelect('gcorrespondance')
+//                ->leftjoin('grade.correspondance', 'gcorrespondance')
+//            ->addSelect('gcorps')
+//                ->leftjoin('grade.corps', 'gcorps')
+//            ->andWhere('grade.deletedOn IS NULL')
+//                //FICHE DE POSTE
+////            ->addSelect('ficheposte')
+//                ->leftJoin('agent.fiches', 'ficheposte')
+//            ;
+//        }
+//
+//        $qb = AgentSuperieur::decorateWithAgentSuperieur($qb);
+//        $qb = AgentAutorite::decorateWithAgentAutorite($qb);
+//
+//        if (!empty($structures)) {
+//            $qb = $qb->andWhere('affectationfilter.structure IN (:structures)')
+//                ->setParameter('structures', $structures);
+//        }
+//
+////        $structuresIds = array_map(function (Structure $structure) {return $structure->getId();}, $structures);
+////        var_dump(implode(',', $structuresIds));
+////        $sql = $qb->getQuery()->getSQL();
+////        var_dump($sql);
+////        die();
+//
+//        $result = $qb->getQuery()->getResult();
+//
+//        $agents = [];
+//        foreach ($result as $item) {
+//            $agents[$item->getId()] = $item;
+//        }
+//        return $agents;
 
     }
 

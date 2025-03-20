@@ -390,7 +390,7 @@ class CampagneController extends AbstractActionController
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));

@@ -61,6 +61,12 @@ trait HasPeriodeTrait {
         return ($estCommence AND !$estFini);
     }
 
+    public function estEnCoursIntervale(?DateTime $dateDebut = null, ?DateTime $dateFin = null) : bool
+    {
+        return max($this->dateDebut, $dateDebut) <= min($this->dateFin, $dateFin);
+    }
+
+
     /** Fonctions pour les macros *************************************************************************************/
 
     public function getDateDebutToString() : string
