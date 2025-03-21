@@ -166,7 +166,7 @@ return [
                             'ajouter' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/ajouter/:agent/:type',
+                                    'route'    => '/ajouter/:type[/:agent]',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::ajouterAction() */
                                         'controller' => AgentHierarchieController::class,

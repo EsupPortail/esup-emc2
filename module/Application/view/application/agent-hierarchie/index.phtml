@@ -69,7 +69,23 @@ Les règles exploitées sont les suivantes :
 
 <h2> Saisie manuelle pour un·e agent </h2>
 
-La saisie manuelle est réalisable depuis la fiche de l'agent.
+<p>
+La saisie manuelle est aussi réalisable depuis la fiche de l'agent.
+</p>
+
+<?php /** @see \Application\Controller\AgentHierarchieController::ajouterAction() */ ?>
+<a href="<?php echo $this->url('agent/hierarchie/ajouter', ['type' => 'superieur'], [], true); ?>"
+   class="btn btn-primary ajax-modal"
+>
+    Saisie pour un·e agent d'un·e supérieur·e
+</a>
+
+<?php /** @see \Application\Controller\AgentHierarchieController::ajouterAction() */ ?>
+<a href="<?php echo $this->url('agent/hierarchie/ajouter', ['type' => 'autorite'], [], true); ?>"
+   class="btn btn-primary ajax-modal"
+>
+    Saisie pour un·e agent d'un·e autorité
+</a>
 
 <script>
     $(function() {

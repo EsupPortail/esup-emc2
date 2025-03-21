@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use RuntimeException;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
@@ -37,7 +38,7 @@ class AgentAutorite implements HistoriqueAwareInterface, IsSynchronisableInterfa
         if ($this->getAutorite() === null) { throw new RuntimeException("AgentAutorite::generateId() : Autorite manquant");}
         if ($this->getDateDebut() === null) { throw new RuntimeException("AgentAutorite::generateId() : Date de début manquant");}
         if ($this->sourceId === null) $this->sourceId = 'EMC2';
-        $id = $this->sourceId . "-". $this->getAgent()->getId() . "-" . $this->getAutorite()->getId() . "-". $this->getDateDebut()->format('dmYHi');
+        $id = $this->sourceId . "-". $this->getAgent()->getId() . "-" . $this->getAutorite()->getId() . "-". $this->getDateDebut()->format('dmYHi') . "-". (new DateTime())->format('YmdHis');
         return $id;
     }
 

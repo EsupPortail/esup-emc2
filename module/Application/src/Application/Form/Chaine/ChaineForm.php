@@ -3,6 +3,7 @@
 namespace Application\Form\Chaine;
 
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Date;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
@@ -63,6 +64,17 @@ class ChaineForm extends  Form {
                 'id' => 'date_fin',
             ],
         ]);
+        $this->add([
+            'type' => Checkbox::class,
+            'name' => 'historisation',
+            'options' => [
+                'label' => "Historisation des chaînes existantes",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'historisation',
+            ],
+        ]);
         //bouton
         $this->add([
             'type' => Button::class,
@@ -85,6 +97,7 @@ class ChaineForm extends  Form {
             'responsable' => ['required' => true,],
             'date_debut' => ['required' => true,],
             'date_fin' => ['required' => false,],
+            'historisation' => ['required' => false,],
         ]));
     }
 }

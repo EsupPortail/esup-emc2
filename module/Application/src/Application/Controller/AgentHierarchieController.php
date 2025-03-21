@@ -186,11 +186,15 @@ class AgentHierarchieController extends AbstractActionController
                     $affectation = $agent->getAffectationPrincipale();
                     $structureAffectation = $affectation->getStructure();
                     $responsables = $structureAffectation?->getResponsables();
-                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) { return $responsable->getAgent() !== $agent; });
+                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                        return $responsable->getAgent() !== $agent;
+                    });
                     while (empty($responsables) and $structureAffectation and $structureAffectation !== $affectation->getStructure()->getNiv2()) {
                         $structureAffectation = $structureAffectation->getParent();
                         $responsables = $structureAffectation->getResponsables();
-                        $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) { return $responsable->getAgent() !== $agent; });
+                        $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                            return $responsable->getAgent() !== $agent;
+                        });
                     }
                     if (empty($responsables)) {
                         $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
@@ -202,7 +206,7 @@ class AgentHierarchieController extends AbstractActionController
                             $superieur->setDateDebut($responsable->getDateDebut());
                             $superieur->setDateFin($responsable->getDateFin());
                             $superieur->setInsertedOn(new DateTime());
-                            $superieur->setId($superieur->generateId()."-computed-".((new DateTime())->format('Ymdhis')));
+                            $superieur->setId($superieur->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
                             $superieurs[$agent->getId()][] = $superieur;
                         }
                     }
@@ -217,7 +221,9 @@ class AgentHierarchieController extends AbstractActionController
                     $affectation = $agent->getAffectationPrincipale();
                     $structureNiv2 = $affectation->getStructure()->getNiv2();
                     $responsables = ($structureNiv2) ? $structureNiv2->getResponsables() : [];
-                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) { return $responsable->getAgent() !== $agent; });
+                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                        return $responsable->getAgent() !== $agent;
+                    });
 
                     if (empty($responsables)) {
                         $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
@@ -229,7 +235,7 @@ class AgentHierarchieController extends AbstractActionController
                             $autorite->setDateDebut($responsable->getDateDebut());
                             $autorite->setDateFin($responsable->getDateFin());
                             $autorite->setInsertedOn(new DateTime());
-                            $autorite->setId($autorite->generateId()."-computed-".((new DateTime())->format('Ymdhis')));
+                            $autorite->setId($autorite->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
                             $autorites[$agent->getId()][] = $autorite;
                         }
                     }
@@ -275,7 +281,7 @@ class AgentHierarchieController extends AbstractActionController
         }
 
         return new ViewModel(['title' => "Calcul de chaînes hiérarchiques",
-            'form' => $form,'type' => $type, 'superieurs' => [], 'autorites' => [],]);
+            'form' => $form, 'type' => $type, 'superieurs' => [], 'autorites' => [],]);
     }
 
     public
@@ -336,8 +342,7 @@ class AgentHierarchieController extends AbstractActionController
         exit();
     }
 
-    public
-    function ajouterAction(): ViewModel
+    public function ajouterAction(): ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $type = $this->params()->fromRoute('type');
@@ -347,11 +352,10 @@ class AgentHierarchieController extends AbstractActionController
             'autorite' => new AgentAutorite(),
             default => throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu"),
         };
-
         $chaine->setAgent($agent);
 
         $form = $this->getChaineForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => $type], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/ajouter', ['agent' => $agent?->getId(), 'type' => $type], [], true));
         $form->bind($chaine);
 
         $request = $this->getRequest();
@@ -359,6 +363,16 @@ class AgentHierarchieController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                if ($data['historisation'] === '1') {
+                    switch ($type) {
+                        case 'superieur':
+                            $this->getAgentSuperieurService()->historiseAll($chaine->getAgent());
+                            break;
+                        case 'autorite':
+                            $this->getAgentAutoriteService()->historiseAll($chaine->getAgent());
+                            break;
+                    }
+                }
                 $id = $chaine->generateId();
                 $chaine->setId($id);
                 $chaine->setSourceId("EMC2");
