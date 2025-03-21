@@ -133,12 +133,10 @@ class IndexController extends AbstractActionController
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
-        $agents = array_map(function (AgentSuperieur $a) {
+        $agentsRaw = array_map(function (AgentSuperieur $a) {
             return $a->getAgent();
         }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
-        usort($agents, function (Agent $a, Agent $b) {
-            return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
-        });
+        $agents = []; foreach ($agentsRaw as $agent_) $agents[$agent_->getId()] = $agent_;
 
         /** Campagne d'entretien professionnel ************************************************************************/
         $last = $this->getCampagneService()->getLastCampagne();
@@ -191,15 +189,11 @@ class IndexController extends AbstractActionController
     {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
-        $structureMere = $this->getStructureService()->getStructureMere();
 
-        $agents = array_map(function (AgentAutorite $a) {
+        $agentsRaw = array_map(function (AgentAutorite $a) {
             return $a->getAgent();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
-
-        usort($agents, function (Agent $a, Agent $b) {
-            return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
-        });
+        $agents = []; foreach ($agentsRaw as $agent_) $agents[$agent_->getId()] = $agent_;
 
         /** Campagne d'entretien professionnel ************************************************************************/
         $last = $this->getCampagneService()->getLastCampagne();
