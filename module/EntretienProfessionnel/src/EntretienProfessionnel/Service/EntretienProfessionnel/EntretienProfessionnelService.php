@@ -406,7 +406,9 @@ class EntretienProfessionnelService
             $qb = $qb->andWhere('campagne.id = :campagne')->setParameter('campagne', $params['campagne']);
         }
         if (isset($params['etat']) and $params['etat'] !== "") {
-            $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $params['etat']);
+            $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $params['etat'])
+                ->andWhere('etat.histoDestruction IS NULL')
+            ;
         }
         // NOTE Changement provoqué par la gestion des structures "mères"
 //        if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "") {
