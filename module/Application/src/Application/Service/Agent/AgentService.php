@@ -291,11 +291,17 @@ select DISTINCT a.c_individu as c_individu
 from agent a
 join agent_carriere_affectation aca on a.c_individu = aca.agent_id
 where
-    aca.structure_id in (:structures)
+    aca.deleted_on IS NULL
+    and aca.structure_id in (:structures)
 EOS;
-        if ($dateDebut AND ($dateFin  === NULL OR $dateFin >= $dateDebut)) {
+        if ($dateDebut AND $dateFin) {
             $sql .= <<<EOS
-and tsrange(aca.date_debut, date_fin) && tsrange(:dateDebut, :dateFin)
+and tsrange(aca.date_debut, aca.date_fin) && tsrange(:dateDebut, :dateFin)
+EOS;
+        }
+       if ($dateDebut AND !$dateFin) {
+           $sql .= <<<EOS
+and aca.date_debut <= :dateDebut and (aca.date_fin IS NULL OR aca.date_fin >= :dateDebut)
 EOS;
         }
 
