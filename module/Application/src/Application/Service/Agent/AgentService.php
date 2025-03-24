@@ -292,8 +292,12 @@ from agent a
 join agent_carriere_affectation aca on a.c_individu = aca.agent_id
 where
     aca.structure_id in (:structures)
+EOS;
+        if ($dateDebut AND ($dateFin  === NULL OR $dateFin >= $dateDebut)) {
+            $sql .= <<<EOS
 and tsrange(aca.date_debut, date_fin) && tsrange(:dateDebut, :dateFin)
 EOS;
+        }
 
         try {
             $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params, ['structures' => ArrayParameterType::INTEGER]);
