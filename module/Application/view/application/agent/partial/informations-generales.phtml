@@ -15,8 +15,10 @@ use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentQuotite;
 use Agent\Entity\Db\AgentStatut;
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\ChainePrivileges;
 
 // TODO fix that >>>  on rentre dans la mauvaise assertion ... AgentAssertion et non AgentAffichageAssertion
 $canAfficherAutorite = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE);
@@ -27,7 +29,10 @@ $canAfficherInfoSource = $this->isAllowed($agent, AgentaffichagePrivileges::AGEN
 $canAfficherTemoinAffectation = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION);
 $canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT);
 
-$canModifierChaine = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+$chaine = new AgentSuperieur(); $chaine->setAgent($agent);
+
+//$canModifierChaine = $this->isAllowed($chaine, ChainePrivileges::CHAINE_GERER);
+$canModifierChaine = $this->isAllowed(ChainePrivileges::getResourceId(ChainePrivileges::CHAINE_GERER));
 
 ?>
     <h2> Informations générales sur l'agent </h2>
