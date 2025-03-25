@@ -7,6 +7,7 @@ use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Agent\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
+use Application\Assertion\ChaineAssertion;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\AgentParametres;
@@ -80,6 +81,7 @@ class AgentController extends AbstractActionController
 
     use AgentMobiliteServiceAwareTrait;
 
+    public ChaineAssertion $chaineAssertion;
 
     public function indexAction(): ViewModel
     {
@@ -146,6 +148,7 @@ class AgentController extends AbstractActionController
             'mobilites' => $mobilites,
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
+            'chaineAssertion' => $this->chaineAssertion,
         ]);
     }
 

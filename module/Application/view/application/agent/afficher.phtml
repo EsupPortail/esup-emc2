@@ -6,6 +6,7 @@ use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentMobilite;
 use Agent\Entity\Db\AgentQuotite;
 use Agent\Entity\Db\AgentStatut;
+use Application\Assertion\ChaineAssertion;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
@@ -34,6 +35,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  *
  * @var AgentMobilite[] $mobilites
  * @var Parametre[] $parametres
+ * @var ChaineAssertion $chaineAssertion
  *
  */
 
@@ -124,6 +126,7 @@ if ($agent !== null) {
 
                     <?php echo $this->partial('partial/informations-generales',
                         ['agent' => $agent,
+                            'chaineAssertion' => $chaineAssertion,
                             'affectations' => $affectations,
                             'superieures' => $superieures, 'autorites' => $autorites,
                             'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite]); ?>
