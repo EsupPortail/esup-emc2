@@ -18,7 +18,7 @@ use Structure\Entity\Db\StructureType;
             <div class="row">
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="type">Type de structures : </label>
                             <select id="type" name="type" class="selectpicker" data-live-search="true">
                                 <option value="">Tous les types de structures</option>
@@ -30,7 +30,7 @@ use Structure\Entity\Db\StructureType;
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="ferme">Structures fermées : </label>
                             <select id="ferme" name="ferme" class="selectpicker">
                                 <option value="">Peu importe</option>
@@ -38,13 +38,24 @@ use Structure\Entity\Db\StructureType;
                                 <option value="1">Structures fermées seulement</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="responsable">Responsables : </label>
                             <select id="responsable" name="responsable" class="selectpicker">
                                 <option value="">Peu importe</option>
                                 <option value="1">Avec au moins un·e responsable</option>
                                 <option value="0">Sans responsable</option>
 
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="niveau">Niveau maximum : </label>
+                            <select id="niveau" name="niveau" class="selectpicker">
+                                <option value="">Peu importe</option>
+                                <option value="1">Niveau 1</option>
+                                <option value="2">Niveau 2</option>
+                                <option value="3">Niveau 3</option>
+                                <option value="4">Niveau 4</option>
+                                <option value="5">Niveau 5</option>
                             </select>
                         </div>
                     </div>
@@ -77,7 +88,9 @@ use Structure\Entity\Db\StructureType;
     let type = '<?php echo $params['type']??null; ?>';
     let ferme = '<?php echo $params['ferme']??null; ?>';
     let responsable = '<?php echo $params['responsable']??null; ?>';
+    let niveau = '<?php echo $params['niveau']??null; ?>';
     if (type !== '') $('select#type option[value='+type+']').prop('selected', true);
     if (ferme !== '') $('select#ferme option[value='+ferme+']').prop('selected', true);
     if (responsable !== '') $('select#responsable option[value='+responsable+']').prop('selected', true);
+    if (niveau !== '') $('select#niveau option[value='+niveau+']').prop('selected', true);
 </script>

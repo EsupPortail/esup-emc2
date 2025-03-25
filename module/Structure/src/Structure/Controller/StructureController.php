@@ -75,6 +75,9 @@ class StructureController extends AbstractActionController {
     public function indexAction() : ViewModel
     {
         $params = $this->params()->fromQuery();
+        if (empty($params)) {
+            $params['ferme'] = '0';
+        }
 
         $structures = $this->getStructureService()->getStructuresWithFiltre($params);
         $types = $this->getTypeService()->getTypes();

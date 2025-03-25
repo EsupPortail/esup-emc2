@@ -106,7 +106,10 @@ class StructureService
                     ->andWhere("responsable.dateFin IS NULL OR responsable.dateFin >= :maintenant")
                     ->setParameter('maintenant', new DateTime());
             }
-
+        }
+        if (isset($params['niveau'])) {
+            $qb = $qb->andWhere("structure.niveau IS NULL OR structure.niveau <= :niveau")
+                ->setParameter('niveau', $params['niveau']);
         }
         $result = $qb->getQuery()->getResult();
         return $result;

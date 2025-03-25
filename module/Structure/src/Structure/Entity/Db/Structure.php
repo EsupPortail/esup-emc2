@@ -50,6 +50,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     private ?Structure $niv2;
     private ?Structure $niv2OverWriten;
     private Collection $enfants;            // [Structure]
+    private ?int $niveau = null;
 
     private Collection $gestionnaires;      //[StructureGestionnaire]
     private Collection $responsables;       //[StructureResponsable]
@@ -203,6 +204,16 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         return $enfants;
     }
 
+    public function getNiveau(): ?int
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau(?int $niveau): void
+    {
+        $this->niveau = $niveau;
+    }
+
     public function getRepriseResumeMere(): bool
     {
         return $this->repriseResumeMere;
@@ -220,6 +231,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         if ($this->getParent() && $this->getParent() !== $this) return $this->getParent()->isCompatible($structure);
         return false;
     }
+
+
 
     /** AGENTS FORCES *************************************************************************************************/
 
@@ -337,5 +350,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         $texte .= "</ul>";
         return $texte;
     }
+
+
 
 }

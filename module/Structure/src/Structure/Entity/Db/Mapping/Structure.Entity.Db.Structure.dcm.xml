@@ -58,6 +58,8 @@
             <join-column name="niv2_id_ow"/>
         </many-to-one>
 
+        <field name="niveau" column="niveau" type="integer" nullable="true"/>
+
         <!-- DB IMPORT #############################  -->
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>

@@ -32,9 +32,11 @@ $now = new DateTime();
 <table id="structures" class="datatable table table-condensed table-hover">
     <thead>
     <tr>
+        <th> Structure de rattachement</th>
         <th> Libellé</th>
         <th> Code</th>
         <th> Type</th>
+        <th> Niveau</th>
         <th> Resp.</th>
         <th> Action</th>
     </tr>
@@ -43,6 +45,18 @@ $now = new DateTime();
     <?php foreach ($structures as $structure) : ?>
         <tr>
             <td>
+                <?php $rattachement = $structure->getNiv2() ?? $structure; ?>
+                <?php if ($rattachement->getSigle()) : ?>
+                    [<?php echo $rattachement->getSigle(); ?>]
+                <?php endif; ?>
+                <?php echo $rattachement->getLibelleCourt(); ?>
+                <br>
+                <?php echo $rattachement->getLibelleLong(); ?>
+            </td>
+            <td>
+                <?php if ($structure->getSigle()) : ?>
+                    [<?php echo $structure->getSigle(); ?>]
+                <?php endif; ?>
                 <?php echo $structure->getLibelleCourt(); ?>
                 <?php if ($structure->getFermeture() && $structure->getFermeture() <= $now) : ?>
                     &nbsp;<span class="badge bg-danger"
@@ -52,7 +66,6 @@ $now = new DateTime();
                 <?php endif; ?>
                 <br/>
                 <?php echo $structure->getLibelleLong(); ?>
-
             </td>
             <td> <?php echo $structure->getCode(); ?> </td>
             <td>
@@ -63,6 +76,13 @@ $now = new DateTime();
                                 <span class="icon icon-attention"></span>
                                 Type de structure manquant
                             </span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($structure->getNiveau()) : ?>
+                    <?php echo $structure->getNiveau(); ?>
+                <?php else : ?>
+                     -
                 <?php endif; ?>
             </td>
             <td>
@@ -110,7 +130,7 @@ $now = new DateTime();
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                {targets: [4], orderable: false}
+                {targets: [6], orderable: false}
             ]
         });
     });
