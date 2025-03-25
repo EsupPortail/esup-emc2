@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
@@ -34,6 +35,7 @@ class IndexControllerFactory
     {
         /**
          * @var AgentService $agentService
+         * @var AgentAffectationService $agentAffectationService
          * @var AgentAutoriteService $agentAutoriteService
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var AgentSuperieurService $agentSuperieurService
@@ -53,6 +55,7 @@ class IndexControllerFactory
          *
          */
         $agentService = $container->get(AgentService::class);
+        $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
@@ -71,6 +74,7 @@ class IndexControllerFactory
 
         $controller = new IndexController();
         $controller->setAgentService($agentService);
+        $controller->setAgentAffectationService($agentAffectationService);
         $controller->setAgentAutoriteService($agentAutoriteService);
         $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
         $controller->setAgentSuperieurService($agentSuperieurService);

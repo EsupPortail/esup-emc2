@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
@@ -39,6 +40,7 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class IndexController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use AgentAffectationServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
@@ -152,8 +154,12 @@ class IndexController extends AbstractActionController
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
-            foreach ($agents as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
-            foreach ($agentsS as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
+            foreach ($agents as $agent) {
+                if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;
+            }
+            foreach ($agentsS as $agent) {
+                if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;
+            }
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
             [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
@@ -209,8 +215,12 @@ class IndexController extends AbstractActionController
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
-            foreach ($agents as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
-            foreach ($agentsS as $agent) $agentsSCampagnes[$agent->getId()] = $agent;
+            foreach ($agents as $agent) {
+                if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;
+            }
+            foreach ($agentsS as $agent) {
+                if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;
+            }
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
             [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
