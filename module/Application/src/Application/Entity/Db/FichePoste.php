@@ -315,16 +315,16 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** Fonctions pour simplifier  */
 
     /* @return MissionActivite[] */
-    public function getDescriptions(FicheMetierMission $mission, DateTime $date): array
+    public function getDescriptions(FicheMetierMission $mission): array
     {
-        $dictionnaire = $mission->getMission()->getActivites($date);
+        $dictionnaire = $mission->getMission()->getActivites();
         return $dictionnaire;
     }
 
     /** @return MissionActivite[] */
-    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission, DateTime $date): array
+    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission): array
     {
-        $activites = $ficheMetierMission->getMission()->getActivites($date);
+        $activites = $ficheMetierMission->getMission()->getActivites();
         $dictionnaire = [];
         foreach ($activites as $activite) {
             $found = false;

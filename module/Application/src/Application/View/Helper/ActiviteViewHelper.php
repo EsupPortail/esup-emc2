@@ -2,7 +2,6 @@
 
 namespace Application\View\Helper;
 
-use Application\View\Renderer\PhpRenderer;
 use FicheMetier\Entity\Db\Mission;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
@@ -18,7 +17,6 @@ class ActiviteViewHelper extends AbstractHelper
      */
     public function __invoke($mission, string $mode = 'affichage', array $options = [])
     {
-        /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 

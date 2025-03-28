@@ -143,7 +143,7 @@ class ImporterController extends AbstractActionController
                     $listing[$item] = ((int) $item);
                 }
             }
-            $resultCompetences = $this->getImporterService()->createCompetencesReferens($listing, ($mode === 'import'));
+            $resultCompetences = $this->getImporterService()->createCompetencesReferens($listing);
 
 
             /** Parcours des métiers **********************************************************************************/

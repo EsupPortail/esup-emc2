@@ -26,8 +26,8 @@ class IdentityProvider extends AbstractIdentityProvider
             case RoleProvider::OBSERVATEUR :
                 $user = $this->getObservateurService()->getUsersInObservateurs();
                 return $user;
+            default : return null;
         }
-        return null;
     }
 
     /**

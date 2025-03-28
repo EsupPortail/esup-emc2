@@ -11,19 +11,19 @@
         </many-to-one>
 
         <many-to-one target-entity="MissionSpecifique\Entity\Db\MissionSpecifique"  field="mission">
-            <join-column name="mission_id" referenced-column-name="id"/>
+            <join-column name="mission_id" />
         </many-to-one>
 
         <many-to-one target-entity="Structure\Entity\Db\Structure"  field="structure">
-            <join-column name="structure_id" referenced-column-name="id"/>
+            <join-column name="structure_id" />
         </many-to-one>
 
-        <field name="dateDebut"         type="datetime"                 column="date_debut"     nullable="false"/>
-        <field name="dateFin"           type="datetime"                 column="date_fin"       nullable="false"/>
-        <field name="decharge"          type="float"                    column="decharge"       nullable="false"/>
+        <field name="dateDebut"         type="datetime"                 column="date_debut"     />
+        <field name="dateFin"           type="datetime"                 column="date_fin"       />
+        <field name="decharge"          type="float"                    column="decharge"       />
 
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
+        <field name="histoModification" type="datetime"                 column="histo_modification" />
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
 
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">

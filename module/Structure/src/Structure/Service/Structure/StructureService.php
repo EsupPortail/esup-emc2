@@ -98,7 +98,7 @@ class StructureService
                 $qb = $qb->andWhere("responsable.agent IS NOT NULL")
                     ->andWhere("responsable.dateDebut <= :maintenant")
                     ->andWhere("responsable.dateFin IS NULL OR responsable.dateFin >= :maintenant")
-                    ->setParameter('maintenant', new DateTime());                ;
+                    ->setParameter('maintenant', new DateTime());
             }
             if ($params['responsable'] === "0") {
                 $qb= $qb->andWhere("responsable.agent IS NULL")

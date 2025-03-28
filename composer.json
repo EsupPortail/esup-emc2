@@ -32,6 +32,7 @@
     "unicaen/validation": "^6.1",
     "unicaen/observation": "^0.0",
     "ext-iconv": "*",
+    "ext-curl": "*",
     "unicaen/bddadmin": "^1"
   },
   "require-dev": {

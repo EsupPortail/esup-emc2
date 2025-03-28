@@ -65,7 +65,7 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
         // SUPERIEURS
         $message .= "<strong>Expédition vers les supérieurs hiérarchiques</strong><br>";
         try {
-            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieurs(false, 'id', 'ASC');
+            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieurs();
             $dictionnaire  = [];
             foreach ($superieurs as $superieur) $dictionnaire[$superieur->getSuperieur()->getId()] = $superieur;
             foreach ($dictionnaire as $superieur) {
@@ -84,7 +84,7 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
                         $message .= "Notification faites vers " . $superieur->getSuperieur()->getDenomination() . "<br/>\n";
                     } catch (Exception $e ) {
                         $message .= "<span class='text-danger'>Notification impossible vers ".$superieur->getSuperieur()->getDenomination()."</span><br/>\n";
-                    };
+                    }
                 }
             }
         } catch(Exception $e) {

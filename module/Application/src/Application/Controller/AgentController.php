@@ -42,6 +42,8 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Entity\HasValidationsInterface;
+use UnicaenValidation\Entity\HasValidationsTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
@@ -214,7 +216,7 @@ class AgentController extends AbstractActionController
             }
 
             if ($validation !== null and $entity !== null) {
-                $entity->setValidation($validation);
+                $entity->addValidation($validation);
                 switch ($type) {
                     case 'AGENT_APPLICATION' :
                         $this->getApplicationElementService()->update($entity);
@@ -247,6 +249,7 @@ class AgentController extends AbstractActionController
 
         $type = $this->params()->fromRoute('type');
         $entityId = $this->params()->fromRoute('id');
+        /** @var HasValidationsInterface $entity */
         switch ($type) {
             case 'AGENT_APPLICATION' :
                 $entity = $this->getApplicationElementService()->getApplicationElement($entityId);
@@ -256,7 +259,8 @@ class AgentController extends AbstractActionController
                 break;
         }
 
-        $entity->setValidation(null);
+        //todo remettre
+        //$entity->setValidation(null);
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);
         } catch (ORMException $e) {

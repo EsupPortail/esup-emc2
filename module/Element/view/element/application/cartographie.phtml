@@ -143,7 +143,6 @@ $nbApplications = count($applications);
 
     $('span.export#cartographie').on('click', function() {
         let tableau = <?php echo json_encode($link); ?>;
-        console.log(tableau);
         downloadCSVFromJson('cartographie_'+ Date.now().toString() +'.csv', tableau);
     });
 </script>

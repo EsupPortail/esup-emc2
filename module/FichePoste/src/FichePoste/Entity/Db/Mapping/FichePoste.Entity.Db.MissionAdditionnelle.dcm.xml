@@ -7,18 +7,18 @@
         </id>
 
         <many-to-one field="ficheposte" target-entity="Application\Entity\Db\FichePoste">
-            <join-column name="ficheposte_id" referenced-column-name="id" />
+            <join-column name="ficheposte_id"  />
         </many-to-one>
         <many-to-one field="mission" target-entity="FicheMetier\Entity\Db\Mission">
-            <join-column name="mission_id" referenced-column-name="id" />
+            <join-column name="mission_id"  />
         </many-to-one>
 
-        <field name="retraits"          column="retrait"            type="string" length="1024" nullable="true"/>
-        <field name="description"       column="description"        type="string" length="9999" nullable="true"/>
+        <field name="retraits"          column="retrait"            length="1024" nullable="true"/>
+        <field name="description"       column="description"        length="9999" nullable="true"/>
 
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
+        <field name="histoModification" type="datetime"                 column="histo_modification" />
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="ID"/>

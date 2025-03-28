@@ -260,9 +260,9 @@ EOS;
             $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_INT_ARRAY]);
             $tmp = $res->fetchAllAssociative();
         } catch (DBA_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+            throw new RuntimeException("[DBA] Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
         } catch (DRV_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+            throw new RuntimeException("[DBV] Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
         }
         return $tmp;
     }
@@ -527,7 +527,6 @@ EOS;
         /** Recuperation des fiches metiers */
         foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
-            $fichesMetiers[] = $ficheMetier;
             $activitesId = explode(';', $ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();

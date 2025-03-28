@@ -147,10 +147,10 @@ use Metier\Entity\Db\Metier;
 //            }
 //        ?>
         <?php foreach ($competences as $type => $array) : ?>
-            <?php if (! empty($competences[$type])) : ?>
+            <?php if (! empty($array)) : ?>
                 <h3> <?php echo $type; ?> </h3>
                 <ul>
-                    <?php foreach ($competences[$type] as $competence) : ?>
+                    <?php foreach ($array as $competence) : ?>
                         <li> <?php echo $competence->getLibelle(); ?> </li>
                     <?php endforeach; ?>
                 </ul>

@@ -109,7 +109,7 @@ class CompetenceElementService
             ->join('agent.competences', 'competenceelement')->addSelect('fcompetenceelement')
             ->join('agent.competences', 'fcompetenceelement')->addSelect('fcompetenceelement')
             ->join('fcompetenceelement.competence', 'competence')->addSelect('competence')
-            ->join('fcompetenceelement.niveau', 'niveau')->addSelect('niveau');
+            ->join('fcompetenceelement.niveau', 'niveau')->addSelect('niveau')
     ;
 
         foreach ($criteria as $criterion) {

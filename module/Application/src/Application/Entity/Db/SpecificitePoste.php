@@ -2,180 +2,102 @@
 
 namespace Application\Entity\Db;
 
-use Doctrine\Common\Collections\ArrayCollection;
+class SpecificitePoste
+{
 
-class SpecificitePoste {
+    private ?int $id = null;
+    private ?FichePoste $fiche = null;
+    private ?string $specificite = null;
+    private ?string $encadrement = null;
+    private ?string $relationsInternes = null;
+    private ?string $relationsExternes = null;
+    private ?string $contraintes = null;
+    private ?string $moyens = null;
+    private ?string $formations = null;
 
-    /** @var integer */
-    private $id;
-    /** @var FichePoste */
-    private $fiche;
-
-    /** @var string */
-    private $specificite;
-    /** @var string */
-    private $encadrement;
-    /** @var string */
-    private $relationsInternes;
-    /** @var string */
-    private $relationsExternes;
-    /** @var string */
-    private $contraintes;
-    /** @var string */
-    private $moyens;
-    /** @var string */
-    private $formations;
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return FichePoste
-     */
-    public function getFiche()
+    public function getFiche(): ?FichePoste
     {
         return $this->fiche;
     }
 
-    /**
-     * @param FichePoste $fiche
-     * @return SpecificitePoste
-     */
-    public function setFiche($fiche)
+    public function setFiche(?FichePoste $fiche): void
     {
         $this->fiche = $fiche;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSpecificite()
+    public function getSpecificite(): ?string
     {
         return $this->specificite;
     }
 
-    /**
-     * @param string $specificite
-     * @return SpecificitePoste
-     */
-    public function setSpecificite($specificite)
+    public function setSpecificite(?string $specificite): void
     {
         $this->specificite = $specificite;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEncadrement()
+    public function getEncadrement(): ?string
     {
         return $this->encadrement;
     }
 
-    /**
-     * @param string $encadrement
-     * @return SpecificitePoste
-     */
-    public function setEncadrement($encadrement)
+    public function setEncadrement(?string $encadrement): void
     {
         $this->encadrement = $encadrement;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRelationsInternes()
+    public function getRelationsInternes(): ?string
     {
         return $this->relationsInternes;
     }
 
-    /**
-     * @param string $relationsInternes
-     * @return SpecificitePoste
-     */
-    public function setRelationsInternes($relationsInternes)
+    public function setRelationsInternes(?string $relationsInternes): void
     {
         $this->relationsInternes = $relationsInternes;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRelationsExternes()
+    public function getRelationsExternes(): ?string
     {
         return $this->relationsExternes;
     }
 
-    /**
-     * @param string $relationsExternes
-     * @return SpecificitePoste
-     */
-    public function setRelationsExternes($relationsExternes)
+    public function setRelationsExternes(?string $relationsExternes): void
     {
         $this->relationsExternes = $relationsExternes;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getContraintes()
+    public function getContraintes(): ?string
     {
         return $this->contraintes;
     }
 
-    /**
-     * @param string $contraintes
-     * @return SpecificitePoste
-     */
-    public function setContraintes($contraintes)
+    public function setContraintes(?string $contraintes): void
     {
         $this->contraintes = $contraintes;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoyens()
+    public function getMoyens(): ?string
     {
         return $this->moyens;
     }
 
-    /**
-     * @param string $moyens
-     * @return SpecificitePoste
-     */
-    public function setMoyens($moyens)
+    public function setMoyens(?string $moyens): void
     {
         $this->moyens = $moyens;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFormations()
+    public function getFormations(): ?string
     {
         return $this->formations;
     }
 
-    /**
-     * @param string|null $formations
-     * @return SpecificitePoste
-     */
-    public function setFormations(?string $formations) : SpecificitePoste
+    public function setFormations(?string $formations)
     {
         $this->formations = $formations;
-        return $this;
     }
 
     /**
@@ -192,7 +114,7 @@ class SpecificitePoste {
     }
 
     /** @return SpecificitePoste */
-    public function clone_it() : SpecificitePoste
+    public function clone_it(): SpecificitePoste
     {
         $result = new SpecificitePoste();
         $result->setSpecificite($this->getSpecificite());

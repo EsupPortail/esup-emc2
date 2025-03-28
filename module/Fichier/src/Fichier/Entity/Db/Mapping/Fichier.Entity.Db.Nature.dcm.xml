@@ -6,9 +6,9 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="code"              type="string" length="64"       column="code"                   nullable="false"/>
-        <field name="libelle"           type="string" length="256"      column="libelle"                nullable="false"/>
-        <field name="description"       type="string" length="2048"     column="description"            nullable="true"/>
+        <field name="code"              length="64"       column="code"                   />
+        <field name="libelle"           length="256"      column="libelle"                />
+        <field name="description"       length="2048"     column="description"            nullable="true"/>
 
     </entity>
 </doctrine-mapping>

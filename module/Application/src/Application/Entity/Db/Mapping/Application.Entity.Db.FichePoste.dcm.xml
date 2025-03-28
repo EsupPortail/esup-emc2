@@ -6,7 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"           type="string" length="256"      column="libelle"            nullable="false"/>
+        <field name="libelle"            length="256"      column="libelle"            />
 
         <many-to-one field="agent" target-entity="Application\Entity\Db\Agent">
             <join-column name="agent" referenced-column-name="c_individu" />
@@ -26,10 +26,10 @@
         <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
             <join-table name="ficheposte_etat">
                 <join-columns>
-                    <join-column name="ficheposte_id" referenced-column-name="id" />
+                    <join-column name="ficheposte_id"  />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="etat_id" referenced-column-name="id" />
+                    <join-column name="etat_id"  />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
@@ -41,18 +41,18 @@
         <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
             <join-table name="ficheposte_validation">
                 <join-columns>
-                    <join-column name="ficheposte_id" referenced-column-name="id" />
+                    <join-column name="ficheposte_id"  />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="validation_id" referenced-column-name="id" />
+                    <join-column name="validation_id"  />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
 
-        <field name="finValidite"     type="datetime"                 column="fin_validite"     nullable="false"/>
+        <field name="finValidite"     type="datetime"                 column="fin_validite"     />
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
+        <field name="histoModification" type="datetime"                 column="histo_modification" />
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="ID"/>

@@ -62,7 +62,7 @@ class AgentMissionSpecifiqueForm extends Form {
         $agent = new SearchAndSelect('agent-sas', ['label' => "Agent * :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'agent-sas',
                 'placeholder' => "Agent effectuant la mission ...",
@@ -73,7 +73,7 @@ class AgentMissionSpecifiqueForm extends Form {
         $structure = new SearchAndSelect('structure', ['label' => "Service/composante/direction d'affectation * :"]);
         $structure
             ->setAutocompleteSource($this->urlStructure)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'structure',
                 'placeholder' => "Nom de la structure ...",

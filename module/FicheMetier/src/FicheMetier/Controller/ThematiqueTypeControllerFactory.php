@@ -2,7 +2,6 @@
 
 namespace FicheMetier\Controller;
 
-use FicheMetier\Form\ThematiqueType\ThematiqueElementForm;
 use FicheMetier\Form\ThematiqueType\ThematiqueTypeForm;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Psr\Container\ContainerExceptionInterface;

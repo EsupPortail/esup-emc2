@@ -76,6 +76,7 @@ class AgentHierarchieController extends AbstractActionController
             $array = [];
             $warning = [];
             $chaines = [];
+            $agents = [];
 
             if ($fichier_path === null or $fichier_path === '') {
                 $error[] = "Aucun fichier !";

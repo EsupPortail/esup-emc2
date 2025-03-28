@@ -64,7 +64,7 @@ class RappelCampagneAvancementAutoriteService extends EvenementService {
         // AUTORITES
         $message .= "<strong>Expédition vers les autorités hiérarchiques</strong><br>";
         try {
-            $autorites = $this->getAgentAutoriteService()->getAgentsAutorites(false, 'id','ASC');
+            $autorites = $this->getAgentAutoriteService()->getAgentsAutorites();
             $dictionnaire  = [];
             foreach ($autorites as $autorite) $dictionnaire[$autorite->getAutorite()->getId()] = $autorite;
             foreach ($dictionnaire as $autorite) {
@@ -83,7 +83,7 @@ class RappelCampagneAvancementAutoriteService extends EvenementService {
                         $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
                     } catch (Exception $e ) {
                         $message .= "<span class='text-danger'>Notification impossible vers ".$autorite->getSuperieur()->getDenomination()."</span><br/>\n";
-                    };
+                    }
                 }
             }
         } catch(Exception $e) {

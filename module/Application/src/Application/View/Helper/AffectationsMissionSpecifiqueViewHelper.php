@@ -5,7 +5,6 @@ namespace Application\View\Helper;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
-use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
 class AffectationsMissionSpecifiqueViewHelper extends AbstractHelper
@@ -21,7 +20,6 @@ class AffectationsMissionSpecifiqueViewHelper extends AbstractHelper
      */
     public function __invoke(array $affectations, array $options = []): Partial|string
     {
-        /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 

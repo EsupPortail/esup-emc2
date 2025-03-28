@@ -241,7 +241,7 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
-        $descriptionsRetirees = array_map(function ($a) { return $a->getDescription()->getId(); }, $ficheposte->getDescriptionsRetirees()->toArray());
+        $descriptionsRetirees = array_map(function ($a) { return $a->getDescription()->getId(); }, $ficheposte->getDescriptionsRetirees());
 
         $texte = "";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {

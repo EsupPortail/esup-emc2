@@ -25,7 +25,7 @@ class AgentAffectationViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($affectation, $options = [])
+    public function __invoke(AgentAffectation $affectation, array $options = []): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

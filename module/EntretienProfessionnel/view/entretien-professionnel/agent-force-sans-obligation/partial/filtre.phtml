@@ -59,7 +59,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                     $agentF = new SearchAndSelect('agent');
                     $agentF
                         ->setAutocompleteSource($this->url('agent/rechercher'))
-                        ->setSelectionRequired(true)
+                        ->setSelectionRequired()
                         ->setAttributes([
                             'id' => 'agent',
                             'placeholder' => "Sélectionner un·e agent·e",

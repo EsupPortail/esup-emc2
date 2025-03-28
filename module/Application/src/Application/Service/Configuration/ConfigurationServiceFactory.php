@@ -9,7 +9,7 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-;
+
 
 class ConfigurationServiceFactory {
 

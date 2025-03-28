@@ -319,73 +319,6 @@ EOS;
 
         $agents = $this->getAgentsByIds($ids);
         return $agents;
-
-//        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-//            ->select("DISTINCT agent")
-//            // AFFECTATION FILTER
-//            ->join('agent.affectations', 'affectationfilter')
-//            ->andWhere('affectationfilter.deletedOn IS NULL')
-////            ->andWhere('tsrange(affectationfilter.dateDebut, affectationfilter.dateFin) && tsrange(:dateDebut, :dateFin)')
-//                ->andWhere('max(affectationfilter.dateDebut, :dateDebut) <= min(affectationfilter.dateFin,:dateFin)')
-//            ->setParameter('dateDebut', $dateDebut)
-//            ->setParameter('dateFin', $dateFin)
-//            ->andWhere('agent.deletedOn IS NULL')
-//            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
-//
-//        if ($withJoin) {
-//            $qb = $qb
-//            //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
-////                ->addSelect('affectation')
-//                ->join('agent.affectations', 'affectation')
-////                ->addSelect('affectation_structure')
-//                ->join('affectation.structure', 'affectation_structure')
-//                ->andWhere('affectation.deletedOn IS NULL')
-//                //STATUS
-//            ->addSelect('statut')
-//                ->leftjoin('agent.statuts', 'statut')
-//            ->andWhere('statut.deletedOn IS NULL')
-//                //GRADE
-//            ->addSelect('grade')
-//                ->leftjoin('agent.grades', 'grade')
-//            ->addSelect('emploitype')
-//                ->leftjoin('grade.emploiType', 'emploitype')
-////            ->addSelect('gstructure')
-//                ->leftjoin('grade.structure', 'gstructure')
-//            ->addSelect('ggrade')
-//                ->leftjoin('grade.grade', 'ggrade')
-////            ->addSelect('gcorrespondance')
-//                ->leftjoin('grade.correspondance', 'gcorrespondance')
-//            ->addSelect('gcorps')
-//                ->leftjoin('grade.corps', 'gcorps')
-//            ->andWhere('grade.deletedOn IS NULL')
-//                //FICHE DE POSTE
-////            ->addSelect('ficheposte')
-//                ->leftJoin('agent.fiches', 'ficheposte')
-//            ;
-//        }
-//
-//        $qb = AgentSuperieur::decorateWithAgentSuperieur($qb);
-//        $qb = AgentAutorite::decorateWithAgentAutorite($qb);
-//
-//        if (!empty($structures)) {
-//            $qb = $qb->andWhere('affectationfilter.structure IN (:structures)')
-//                ->setParameter('structures', $structures);
-//        }
-//
-////        $structuresIds = array_map(function (Structure $structure) {return $structure->getId();}, $structures);
-////        var_dump(implode(',', $structuresIds));
-////        $sql = $qb->getQuery()->getSQL();
-////        var_dump($sql);
-////        die();
-//
-//        $result = $qb->getQuery()->getResult();
-//
-//        $agents = [];
-//        foreach ($result as $item) {
-//            $agents[$item->getId()] = $item;
-//        }
-//        return $agents;
-
     }
 
     /**
@@ -516,7 +449,7 @@ EOS;
             $extra = ($structure) ? $structure->getLibelleCourt() : "Affectation inconnue";
             $result[] = array(
                 'id' => $agent->getId(),
-                'label' => $agent->getDenomination(false, true, false),
+                'label' => $agent->getDenomination(),
                 'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
             );
         }

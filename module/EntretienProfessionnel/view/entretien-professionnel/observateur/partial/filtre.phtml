@@ -28,7 +28,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             $observateurF = new SearchAndSelect('observateur-filtre', ['label' => "Observateur·trice :"]);
                             $observateurF
                                 ->setAutocompleteSource($this->url('entretien-professionnel/observateur/rechercher'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'observateur-filtre',
                                     'placeholder' => "Dénomination de l'observateur·trice ...",
@@ -42,7 +42,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                         $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent·e :"]);
                         $agentF
                             ->setAutocompleteSource($this->url('agent/rechercher-large'))
-                            ->setSelectionRequired(true)
+                            ->setSelectionRequired()
                             ->setAttributes([
                                 'id' => 'agent-filtre',
                                 'placeholder' => "Dénomination de l'agent·e ...",

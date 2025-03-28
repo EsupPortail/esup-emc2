@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" table="entretienprofessionnel">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+        <many-to-one target-entity="Application\Entity\Db\Agent" field="agent">
             <join-column name="agent" referenced-column-name="c_individu"/>
         </many-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\Agent"  field="responsable">
+        <many-to-one target-entity="Application\Entity\Db\Agent" field="responsable">
             <join-column name="responsable_id" referenced-column-name="c_individu"/>
         </many-to-one>
 
-        <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne"  field="campagne">
-            <join-column name="campagne_id" referenced-column-name="id"/>
+        <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne" field="campagne">
+            <join-column name="campagne_id"/>
         </many-to-one>
 
-        <many-to-one target-entity="UnicaenAutoform\Entity\Db\FormulaireInstance"  field="formulaireInstance">
-            <join-column name="formulaire_instance" referenced-column-name="id"/>
+        <many-to-one target-entity="UnicaenAutoform\Entity\Db\FormulaireInstance" field="formulaireInstance">
+            <join-column name="formulaire_instance"/>
         </many-to-one>
-        <many-to-one target-entity="UnicaenAutoform\Entity\Db\FormulaireInstance"  field="formationInstance">
-            <join-column name="formation_instance" referenced-column-name="id"/>
+        <many-to-one target-entity="UnicaenAutoform\Entity\Db\FormulaireInstance" field="formationInstance">
+            <join-column name="formation_instance"/>
         </many-to-one>
 
-        <field name="dateEntretien"     type="datetime"                 column="date_entretien"     nullable="false"/>
-        <field name="lieu"              type="string" length="4096"     column="lieu"               nullable="false"/>
-        <field name="token"             type="string" length="255"      column="token"              nullable="true"/>
-        <field name="acceptation"       type="datetime"                 column="acceptation"        nullable="true"/>
+        <field name="dateEntretien" type="datetime" column="date_entretien"/>
+        <field name="lieu" length="4096" column="lieu"/>
+        <field name="token" length="255" column="token" nullable="true"/>
+        <field name="acceptation" type="datetime" column="acceptation" nullable="true"/>
 
         <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
             <join-table name="entretienprofessionnel_etat">
                 <join-columns>
-                    <join-column name="entretien_id" referenced-column-name="id" />
+                    <join-column name="entretien_id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="etat_id" referenced-column-name="id" />
+                    <join-column name="etat_id"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
@@ -44,10 +46,10 @@
         <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
             <join-table name="entretienprofessionnel_validation">
                 <join-columns>
-                    <join-column name="entretien_id" referenced-column-name="id" />
+                    <join-column name="entretien_id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="validation_id" referenced-column-name="id" />
+                    <join-column name="validation_id"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
@@ -55,39 +57,40 @@
         <many-to-many field="observations" target-entity="UnicaenObservation\Entity\Db\ObservationInstance">
             <join-table name="entretienprofessionnel_observation">
                 <join-columns>
-                    <join-column name="entretien_id" referenced-column-name="id" />
+                    <join-column name="entretien_id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="observation_id" referenced-column-name="id" />
+                    <join-column name="observation_id"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
 
         <one-to-many field="recours" target-entity="EntretienProfessionnel\Entity\Db\Recours" mapped-by="entretien"/>
-        <one-to-many field="observateurs" target-entity="EntretienProfessionnel\Entity\Db\Observateur" mapped-by="entretien"/>
+        <one-to-many field="observateurs" target-entity="EntretienProfessionnel\Entity\Db\Observateur"
+                     mapped-by="entretien"/>
 
         <many-to-many field="evenements" target-entity="UnicaenEvenement\Entity\Db\Evenement">
             <join-table name="entretienprofessionnel_evenement">
                 <join-columns>
-                    <join-column name="entretien_id" referenced-column-name="id" />
+                    <join-column name="entretien_id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="evenement_id" referenced-column-name="ID" />
+                    <join-column name="evenement_id" referenced-column-name="ID"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
-        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
+        <field name="histoCreation" type="datetime" column="histo_creation"/>
+        <field name="histoModification" type="datetime" column="histo_modification"/>
+        <field name="histoDestruction" type="datetime" column="histo_destruction" nullable="true"/>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="ID"/>
         </many-to-one>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="histoModificateur">
             <join-column name="histo_modificateur_id" referenced-column-name="ID"/>
         </many-to-one>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
         </many-to-one>
 

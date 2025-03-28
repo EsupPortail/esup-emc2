@@ -62,7 +62,7 @@ class EntretienProfessionnelForm extends Form {
         $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
                 'id' => 'agent',

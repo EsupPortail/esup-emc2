@@ -61,7 +61,7 @@ trait AgentMacroTrait
         $texte  = "<ul>";
         foreach ($affecations as $affectation) {
             $texte .= "<li>";
-            $texte .= $affectation->getStructure()->toStringDenomination();
+            $texte .= $affectation->getStructure()->getLibelleLong();
             $texte .= " (";
             if($affectation->getDateFin()) {
                 $texte .= "du " . $affectation->getDateDebut()->format('d/m/Y') . " au " . $affectation->getDateFin()->format('d/m/Y');

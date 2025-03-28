@@ -59,7 +59,7 @@ class FichierController extends AbstractActionController {
 
     #[NoReturn] public function downloadAction(): void
     {
-        $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+        $fichier = $this->getFichierService()->getRequestedFichier($this);
 
         $contentType = $fichier->getTypeMime() ?: 'application/octet-stream';
         $contenuFichier = $this->getFichierService()->fetchContenuFichier($fichier);
@@ -78,7 +78,7 @@ class FichierController extends AbstractActionController {
     }
 
     public function deleteAction() {
-        $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+        $fichier = $this->getFichierService()->getRequestedFichier($this);
         $retour  = $this->params()->fromQuery('retour');
 
         if ($fichier) $this->getFichierService()->removeFichier($fichier);
@@ -90,7 +90,7 @@ class FichierController extends AbstractActionController {
     }
 
     public function historiserAction() {
-        $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+        $fichier = $this->getFichierService()->getRequestedFichier($this);
         $this->getFichierService()->historise($fichier);
 
         $retour = $this->params()->fromQuery('retour');
@@ -99,7 +99,7 @@ class FichierController extends AbstractActionController {
     }
 
     public function restaurerAction() {
-        $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+        $fichier = $this->getFichierService()->getRequestedFichier($this);
         $this->getFichierService()->restore($fichier);
 
         $retour = $this->params()->fromQuery('retour');

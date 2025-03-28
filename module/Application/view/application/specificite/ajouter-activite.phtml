@@ -19,7 +19,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
     $structureF = new SearchAndSelect('activite');
     $structureF
         ->setAutocompleteSource($this->url('mission-principale/rechercher'))
-        ->setSelectionRequired(true)
+        ->setSelectionRequired()
         ->setAttributes([
             'id' => 'activite',
             'placeholder' => "Sélectionner une mission additionnelle",
