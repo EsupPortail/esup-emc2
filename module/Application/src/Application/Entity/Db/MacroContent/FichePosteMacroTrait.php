@@ -241,7 +241,6 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
-        $descriptionsRetirees = array_map(function ($a) { return $a->getDescription()->getId(); }, $ficheposte->getDescriptionsRetirees());
 
         $texte = "";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
@@ -295,7 +294,7 @@ trait FichePosteMacroTrait {
 
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $tmp = $ficheTypeExterne->getFicheType()->getMetier();
-            if ($metier === null OR $metier->getNiveau() < $tmp->getNiveau()) $metier = $tmp;
+            if ($metier === null OR $metier->getNiveaux()->getBorneInferieure()->getNiveau() < $tmp->getNiveaux()->getBorneInferieure()->getNiveau()) $metier = $tmp;
         }
 
         $texte = "";
@@ -487,7 +486,7 @@ trait FichePosteMacroTrait {
         /** @var FichePoste $fiche */
         $fiche = $this;
 
-        $activites = ($fiche->getSpecificite())?$fiche->getSpecificite()->getActivites():null;
+        $activites = [];
         if ($activites === null or $activites === []) return "";
 
 

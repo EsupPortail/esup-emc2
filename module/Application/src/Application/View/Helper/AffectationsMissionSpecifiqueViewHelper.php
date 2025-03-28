@@ -15,8 +15,8 @@ class AffectationsMissionSpecifiqueViewHelper extends AbstractHelper
      * @return string|Partial
      *
      * OPTION
-     * retour => l'url de retour post action (default: null))
-     * 'display-agent' => affiche la colonne agent (default: true)
+     * retour => l'url de retour post action (default : null)
+     * 'display-agent' => affiche la colonne agent (default : true)
      */
     public function __invoke(array $affectations, array $options = []): Partial|string
     {

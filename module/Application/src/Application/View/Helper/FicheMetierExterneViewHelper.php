@@ -3,19 +3,14 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\FicheTypeExterne;
-use Application\View\Renderer\PhpRenderer;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
+use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
 class FicheMetierExterneViewHelper extends AbstractHelper
 {
-    /**
-     * @param FicheTypeExterne $fiche
-     * @param array $options
-     * @return string|Partial
-     */
-    public function __invoke($fiche, $options = ['mode' => 'affichage'])
+    public function __invoke(FicheTypeExterne $fiche, array $options = ['mode' => 'affichage']): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

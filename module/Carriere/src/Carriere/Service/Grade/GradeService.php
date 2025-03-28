@@ -14,7 +14,7 @@ class GradeService
     use ProvidesObjectManager;
 
     /** GESTION DES ENITIES *******************************************************************************************/
-    // les grades sont importés et ne sont pas gérés dans l'application
+    // les grades sont importés et ne sont pas gérés dans l'application.
 
     /** REQUETAGE *****************************************************************************************************/
 

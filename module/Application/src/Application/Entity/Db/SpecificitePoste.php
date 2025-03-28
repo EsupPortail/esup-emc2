@@ -100,19 +100,6 @@ class SpecificitePoste
         $this->formations = $formations;
     }
 
-    /**
-     * @return SpecificiteActivite[]
-     */
-    public function getActivites(): array
-    {
-        $result = [];
-//        $activites = ($this->activites === null) ? [] : $this->activites->toArray();
-//        foreach ($activites as $activite) {
-//            $result[$activite->getId()] = $activite;
-//        }
-        return $result;
-    }
-
     /** @return SpecificitePoste */
     public function clone_it(): SpecificitePoste
     {

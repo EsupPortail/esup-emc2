@@ -10,8 +10,8 @@ use Laminas\View\Resolver\TemplatePathStack;
 /**
  * La classe ActionIconViewHelper permet d'afficher une icone cliquable (comme les icones de la colonne 'Action' des
  * tableaux listant des entités).
- * Pour invoquer l'aide de vue il faut faire "echo $this->actionIcon($options)" avec $options un tableau contenant les
- * clefs correspondants options de l'ActionIcon (par exemple url, titre, ...
+ * Pour invoquer l'aide de vue, il faut faire "echo $this->actionIcon($options)" avec $options un tableau contenant les
+ * clefs correspondants options de l'ActionIcon (par exemple url, titre, ...)
  *
  * N.B.: l'alias de l'aide de vue est dans Application/config/modudule.config.php:97
  */

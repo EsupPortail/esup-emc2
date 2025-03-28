@@ -20,7 +20,7 @@ use Metier\Entity\Db\Reference;
 <div class="row">
     <div class="col-md-9">
         <h1 class="page-header">
-            Importation de fiches référentiels REFERENS3
+            Importation de fiches "référentiel" REFERENS3
         </h1>
     </div>
     <div class="col-md-3">
@@ -51,7 +51,7 @@ use Metier\Entity\Db\Reference;
 
     <?php if ($resultCompetences AND !empty($resultCompetences['manquantes'])) : ?>
         <div class="alert alert-info">
-            <?php echo count($resultCompetences['manquantes']); ?> nouvelles compétences non pas été trouvées (veuillez mettre à jour le dictionnaire de compétence REFERENS :
+            <?php echo count($resultCompetences['manquantes']); ?> nouvelles compétences n'ont pas été trouvées (veuillez mettre à jour le dictionnaire de compétence REFERENS) :
             <ul>
                 <?php foreach ($resultCompetences['manquantes'] as $competence) : ?>
                     <li>

@@ -52,58 +52,38 @@ class AgentAssertion extends AbstractAssertion
         switch ($privilege) {
             case AgentPrivileges::AGENT_AFFICHER :
             case AgentPrivileges::AGENT_ACQUIS_AFFICHER:
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                    case AppRoleProvider::OBSERVATEUR:
-                        return true;
-                    case StructureRoleProvider::RESPONSABLE:
-                        return $isResponsable;
-                    case Agent::ROLE_SUPERIEURE:
-                        return $isSuperieur;
-                    case Agent::ROLE_AUTORITE:
-                        return $isAutorite;
-                    case StructureRoleProvider::OBSERVATEUR:
-                        return $isObservateur;
-                    case AppRoleProvider::AGENT :
-                        return $entity === $agent;
-                }
-                return false;
+                return match ($role->getRoleId()) {
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR => true,
+                    StructureRoleProvider::RESPONSABLE => $isResponsable,
+                    Agent::ROLE_SUPERIEURE => $isSuperieur,
+                    Agent::ROLE_AUTORITE => $isAutorite,
+                    StructureRoleProvider::OBSERVATEUR => $isObservateur,
+                    AppRoleProvider::AGENT => $entity === $agent,
+                    default => false,
+                };
             case AgentPrivileges::AGENT_ACQUIS_MODIFIER:
             case AgentPrivileges::AGENT_ELEMENT_AJOUTER:
             case AgentPrivileges::AGENT_ELEMENT_MODIFIER:
             case AgentPrivileges::AGENT_ELEMENT_HISTORISER:
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                        return true;
-//                    case RoleConstant::PERSONNEL:
-//                        return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
-                    case StructureRoleProvider::RESPONSABLE:
-                        return $isResponsable;
-                    case Agent::ROLE_SUPERIEURE;
-                        return $isSuperieur;
-                    case Agent::ROLE_AUTORITE;
-                        return $isAutorite;
-                }
-                return false;
+                return match ($role->getRoleId()) {
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
+                    StructureRoleProvider::RESPONSABLE => $isResponsable,
+                    Agent::ROLE_SUPERIEURE => $isSuperieur,
+                    Agent::ROLE_AUTORITE => $isAutorite,
+                    default => false,
+                };
             case AgentPrivileges::AGENT_ELEMENT_DETRUIRE:
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                        return true;
-                }
-                return false;
+                return match ($role->getRoleId()) {
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
+                    default => false,
+                };
             case AgentPrivileges::AGENT_ELEMENT_VALIDER:
             case AgentPrivileges::AGENT_ELEMENT_AJOUTER_EPRO:
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                        return true;
-                    case StructureRoleProvider::RESPONSABLE:
-                        return $isResponsable;
-                }
-                return false;
+                return match ($role->getRoleId()) {
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
+                    StructureRoleProvider::RESPONSABLE => $isResponsable,
+                    default => false,
+                };
         }
 
         return true;

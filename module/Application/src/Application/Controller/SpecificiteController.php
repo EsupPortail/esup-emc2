@@ -36,9 +36,6 @@ class SpecificiteController extends AbstractActionController
         }
 
         $alreadyIn = [];
-        foreach ($specificite->getActivites() as $activite) {
-            $alreadyIn[$activite->getActivite()->getId()] = $activite;
-        }
         $activites = $this->getMissionPrincipaleService()->getMissionsPrincipales();
 
         $request = $this->getRequest();

@@ -16,8 +16,6 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Application\Provider\Role\RoleProvider;
-use Application\Service\Evenement\SynchroOctopusService;
-use Application\Service\Evenement\SynchroOctopusServiceFactory;
 use Application\Service\Macro\MacroService;
 use Application\Service\Macro\MacroServiceFactory;
 use Application\Service\Notification\NotificationService;
@@ -310,7 +308,6 @@ return [
             PerimetreService::class => PerimetreServiceFactory::class,
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,
-            SynchroOctopusService::class => SynchroOctopusServiceFactory::class,
 
             IdentityProvider::class => IdentityProviderFactory::class,
         ],

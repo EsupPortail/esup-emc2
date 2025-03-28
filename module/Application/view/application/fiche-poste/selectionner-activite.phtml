@@ -1,9 +1,12 @@
 <?php
 
 /**
- * @var \Application\Entity\Db\FichePoste $fichePoste
- * @var \Application\Entity\Db\FicheTypeExterne $ficheTypeExterne
+ * @var FichePoste $fichePoste
+ * @var FicheTypeExterne $ficheTypeExterne
  */
+
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheTypeExterne;
 
 $idActivites = explode(";",$ficheTypeExterne->getActivites());
 ?>

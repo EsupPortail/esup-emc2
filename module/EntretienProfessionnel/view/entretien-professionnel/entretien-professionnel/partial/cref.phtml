@@ -37,11 +37,6 @@ $agent  = $entretien->getAgent();
 <h2 class="page-header-tab"> Compte-rendu d'entretien de formation </h2>
 
 <h3> Formations suivies durant la période de la campagne (<?php echo $entretien->getCampagne()?$entretien->getCampagne()->getAnnee():"Sans campagne"; ?>)</h3>
-<!---->
-<?php //if ($entretien->getCampagne()) : ?>
-<!--    --><?php //echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
-<?php //endif; ?>
-
 
 <?php
     $data = $cref->buildResponseDictionnary();

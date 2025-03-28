@@ -24,6 +24,7 @@ use Structure\Provider\Parametre\StructureParametres;
 use Structure\Provider\Role\RoleProvider;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class StructureService
@@ -315,7 +316,7 @@ EOS;
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByGestionnaire(User $user, bool $ouverte = true): array
+    public function getStructuresByGestionnaire(UserInterface $user, bool $ouverte = true): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.gestionnaires', 'gestionnaireSelection')
@@ -335,7 +336,7 @@ EOS;
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByResponsable(User $user, bool $ouverte = true): array
+    public function getStructuresByResponsable(UserInterface $user, bool $ouverte = true): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.responsables', 'responsableSelection')

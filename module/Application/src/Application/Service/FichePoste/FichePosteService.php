@@ -667,7 +667,7 @@ EOS;
                 $found->setQuotite(0);
                 $this->getObjectManager()->persist($found);
             }
-            $value = isset($data[$domaineId]) ? $data[$domaineId] : 0;
+            $value = $data[$domaineId]??0;
             $found->setQuotite($value);
             $this->getObjectManager()->flush($found);
         }

@@ -2,14 +2,16 @@
 
 namespace Application\Service\Url;
 
-use Interop\Container\ContainerInterface;
 use Laminas\View\Renderer\PhpRenderer;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class UrlServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return UrlService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : UrlService
     {
