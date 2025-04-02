@@ -9,4 +9,5 @@ class GlobalParametres {
     const EMAIL_ASSISTANCE = "EMAIL_ASSISTANCE";
     const CODE_UNIV = 'CODE_UNIV';
     const FAVICON = 'FAVICON';
+    const LOGO_ETABLISSEMENT = 'LOGO_ETABLISSEMENT';
 }
