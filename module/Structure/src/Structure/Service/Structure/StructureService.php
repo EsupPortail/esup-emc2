@@ -108,7 +108,7 @@ class StructureService
                     ->setParameter('maintenant', new DateTime());
             }
         }
-        if (isset($params['niveau'])) {
+        if (isset($params['niveau']) AND $params['niveau'] !== '') {
             $qb = $qb->andWhere("structure.niveau IS NULL OR structure.niveau <= :niveau")
                 ->setParameter('niveau', $params['niveau']);
         }
