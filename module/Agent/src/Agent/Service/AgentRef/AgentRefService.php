@@ -90,6 +90,11 @@ EOS;
         } catch (DBA_Exception $e) {
             throw new RuntimeException("[DBA] Un problème est survenue lors de la récupération des sources", 0, $e);
         }
-        return $tmp;
+
+        $result = [];
+        foreach ($tmp as $item) {
+            $result[] = $item['source'];
+        }
+        return $result;
     }
 }

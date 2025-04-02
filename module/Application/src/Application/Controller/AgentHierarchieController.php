@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Service\AgentRef\AgentRefServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
@@ -24,6 +25,7 @@ class AgentHierarchieController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
+    use AgentRefServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use StructureServiceAwareTrait;
     use AgentHierarchieCalculFormAwareTrait;
@@ -71,6 +73,7 @@ class AgentHierarchieController extends AbstractActionController
 
             $fichier_path = $file['fichier']['tmp_name'];
             $mode = $data['mode'];
+            $source = $data['source'];
 
             //reading
             $array = [];
@@ -90,10 +93,12 @@ class AgentHierarchieController extends AbstractActionController
 
                 foreach ($array as $line) {
                     $agent_id = $line[0] ?? null;
-                    $agent = $this->getAgentService()->getAgent($agent_id);
+                    if ($source === 'EMC2') $agent = $this->getAgentService()->getAgent($agent_id);
+                    else $agent = $this->getAgentRefService()->getAgentByRef($source, $agent_id);
                     if ($agent === null) $warning[] = "Aucun·e agent·e de trouvé·e avec l'identifiant [" . $agent_id . "]";
                     $responsable_id = $line[1] ?? null;
-                    $responsable = $this->getAgentService()->getAgent($responsable_id);
+                    if ($source === 'EMC2') $responsable = $this->getAgentService()->getAgent($responsable_id);
+                    else $responsable = $this->getAgentRefService()->getAgentByRef($source, $responsable_id);
                     if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
                     $date_debut_st = $line[2] ?? null;
                     $dateDebut = DateTime::createFromFormat('d/m/Y', $date_debut_st);
@@ -103,7 +108,7 @@ class AgentHierarchieController extends AbstractActionController
                     if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculé la date de fin à partir de [" . $date_fin_st . "]";
 
                     $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
-                    $agents[$agent->getId()] = $agent;
+                    if ($agent) $agents[$agent->getId()] = $agent;
                 }
             }
 
