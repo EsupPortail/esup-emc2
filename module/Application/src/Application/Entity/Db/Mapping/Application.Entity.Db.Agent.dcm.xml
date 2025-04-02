@@ -14,6 +14,7 @@
         <field name="email"                    column="email"                length="1024" />
         <field name="tContratLong"             column="T_CONTRAT_LONG"       length="1" nullable="true"/>
 
+        <one-to-many target-entity="Agent\Entity\Db\AgentRef" mapped-by="agent" field="refs"/>
         <one-to-many target-entity="Agent\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
         <one-to-many target-entity="Agent\Entity\Db\AgentEchelon" mapped-by="agent" field="echelons"/>
         <one-to-many target-entity="Agent\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>

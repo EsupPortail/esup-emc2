@@ -89,19 +89,27 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                     <dt> Identifiant source</dt>
                     <dd>
                         <?php echo $agent->getId(); ?> <br/>
+                    <dd>
+                        <?php echo $agent->getId(); ?> <br/>
                     <dt> Compte associé</dt>
                     <dd>
-                        Agent : <?php echo $agent->getLogin(); ?> <br/> &Rightarrow; <?php echo $agent->getEmail(); ?>
+                        Agent : <?php echo $agent->getLogin(); ?> (<?php echo $agent->getEmail(); ?>)
                         <br/>
                         <?php if ($agent->getUtilisateur()) : ?>
                             Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?>
-                            <br/> &Rightarrow;<?php echo $agent->getUtilisateur()->getEmail(); ?>
+                            (<?php echo $agent->getUtilisateur()->getEmail(); ?>)
                         <?php else: ?>
                             <span class="probleme">
                                 <span class="icon icon-attention"></span>
                                 Aucun compte lié à l'agent
                             </span>
                         <?php endif; ?>
+                    </dd>
+                    <dt> Références</dt>
+                    <dd>
+                        <?php foreach ($agent->getRefs() as $ref) : ?>
+                            <span class="badge"> <?php echo $ref->getSource(); ?>&nbsp;<?php echo $ref->getIdSource(); ?> </span>
+                        <?php endforeach; ?>
                     </dd>
                 </dl>
             <?php endif; ?>
