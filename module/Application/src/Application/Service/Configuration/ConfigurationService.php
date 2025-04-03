@@ -5,7 +5,7 @@ namespace Application\Service\Configuration;
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
@@ -14,70 +14,46 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use RuntimeException;
 
-class ConfigurationService {
-    use EntityManagerAwareTrait;
+class ConfigurationService
+{
+    use ProvidesObjectManager;
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration
-     * @return ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
-     */
-    public function create($configuration)
+    public function create(ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration): ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
     {
-        try {
-            $this->getEntityManager()->persist($configuration);
-            $this->getEntityManager()->flush($configuration);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($configuration);
+        $this->getObjectManager()->flush($configuration);
         return $configuration;
     }
 
-    /**
-     * @param ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration
-     * @return ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
-     */
-    public function update($configuration)
+    public function update(ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration): ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
     {
-        try {
-            $this->getEntityManager()->flush($configuration);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($configuration);
         return $configuration;
     }
 
-    /**
-     * @param ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration
-     * @return ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
-     */
-    public function delete($configuration)
+    public function delete(ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration): ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
     {
-        try {
-            $this->getEntityManager()->remove($configuration);
-            $this->getEntityManager()->flush($configuration);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($configuration);
+        $this->getObjectManager()->flush($configuration);
         return $configuration;
     }
 
     /** CONFIGU *******************************************************************************************************/
 
     /**
-     * @param string $entityType (parmi Application::class, Formation::class et Competence::class)
+     * @param ?string $entityType (parmi Application::class, Formation::class et Competence::class)
      * @return ConfigurationFicheMetier[]
      */
-    public function getConfigurationsFicheMetier($entityType = null) {
+    public function getConfigurationsFicheMetier(?string $entityType = null): array
+    {
 
-        $qb = $this->getEntityManager()->getRepository(ConfigurationFicheMetier::class)->createQueryBuilder('configuration')
-        ;
+        $qb = $this->getObjectManager()->getRepository(ConfigurationFicheMetier::class)->createQueryBuilder('configuration');
 
         if ($entityType !== null) {
             $qb = $qb->andWhere('configuration.entityType = :type')
@@ -87,44 +63,34 @@ class ConfigurationService {
 
         /** @var ConfigurationFicheMetier $item */
         foreach ($result as $item) {
-            $qbe = $this->getEntityManager()->getRepository($item->getEntityType())->createQueryBuilder('item')
+            $qbe = $this->getObjectManager()->getRepository($item->getEntityType())->createQueryBuilder('item')
                 ->andWhere('item.id = :id')
                 ->setParameter('id', $item->getEntityId());
             try {
                 $ree = $qbe->getQuery()->getOneOrNullResult();
             } catch (NonUniqueResultException $e) {
-                throw new RuntimeException("Plusieurs ".$item->getEntityType()." partagent le même identifiant [".$item->getEntityId()."]" , 0, $e);
+                throw new RuntimeException("Plusieurs " . $item->getEntityType() . " partagent le même identifiant [" . $item->getEntityId() . "]", 0, $e);
             }
             $item->setEntity($ree);
         }
         return $result;
     }
 
-    /**
-     * @param integer $id
-     * @return ConfigurationFicheMetier
-     */
-    public function getConfigurationFicheMetier($id)
+    public function getConfigurationFicheMetier(?int $id): ?ConfigurationFicheMetier
     {
-        $qb = $this->getEntityManager()->getRepository(ConfigurationFicheMetier::class)->createQueryBuilder('configuration')
+        $qb = $this->getObjectManager()->getRepository(ConfigurationFicheMetier::class)->createQueryBuilder('configuration')
             ->andWhere('configuration.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ConfigurationFicheMetier partagent le même [".$id."]", 0, $e);
+            throw new RuntimeException("Plusieurs ConfigurationFicheMetier partagent le même [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return ConfigurationFicheMetier
-     */
-    public function getRequestedConfigurationFicheMetier($controller, $paramName = 'configuration')
+    public function getRequestedConfigurationFicheMetier(AbstractActionController $controller, string $paramName = 'configuration'): ?ConfigurationFicheMetier
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getConfigurationFicheMetier($id);
@@ -132,23 +98,18 @@ class ConfigurationService {
     }
 
 
-
-    /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
-     */
-    public function addDefaultToFicheMetier(FicheMetier $fiche) : FicheMetier
+    public function addDefaultToFicheMetier(FicheMetier $fiche): FicheMetier
     {
         $ajouts = $this->getConfigurationsFicheMetier();
 
         foreach ($ajouts as $ajout) {
-            if ($ajout->getEntityType() === Application::class AND !$fiche->hasApplication($ajout->getEntity())) {
+            if ($ajout->getEntityType() === Application::class and !$fiche->hasApplication($ajout->getEntity())) {
                 $applicationElement = new ApplicationElement();
                 $applicationElement->setApplication($ajout->getEntity());
                 $this->getApplicationElementService()->create($applicationElement);
                 $fiche->addApplicationElement($applicationElement);
             }
-            if ($ajout->getEntityType() === Competence::class  AND !$fiche->hasCompetence($ajout->getEntity())) {
+            if ($ajout->getEntityType() === Competence::class and !$fiche->hasCompetence($ajout->getEntity())) {
                 $competenceElement = new CompetenceElement();
                 $competenceElement->setCompetence($ajout->getEntity());
                 $this->getCompetenceElementService()->create($competenceElement);
@@ -160,34 +121,25 @@ class ConfigurationService {
 
     /** CONFIGURATION ENTRETIEN PRO ***********************************************************************************/
 
-    /**
-     * @return ConfigurationEntretienProfessionnel[]
-     */
-    public function getConfigurationsEntretienProfessionnel()
+    public function getConfigurationsEntretienProfessionnel(): array
     {
-        $qb = $this->getEntityManager()->getRepository(ConfigurationEntretienProfessionnel::class)->createQueryBuilder('configuration')
-            ->andWhere('configuration.histoDestruction IS NULL')
-        ;
+        $qb = $this->getObjectManager()->getRepository(ConfigurationEntretienProfessionnel::class)->createQueryBuilder('configuration')
+            ->andWhere('configuration.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    /**
-     * @param integer $id
-     * @return ConfigurationEntretienProfessionnel
-     */
-    public function getConfigurationEntretienProfessionnel($id)
+    public function getConfigurationEntretienProfessionnel(?int $id): ?ConfigurationEntretienProfessionnel
     {
-        $qb = $this->getEntityManager()->getRepository(ConfigurationEntretienProfessionnel::class)->createQueryBuilder('configuration')
+        $qb = $this->getObjectManager()->getRepository(ConfigurationEntretienProfessionnel::class)->createQueryBuilder('configuration')
             ->andWhere('configuration.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ConfigurationEntretienProfessionnel partagent le même id [". $id."]",0, $e);
+            throw new RuntimeException("Plusieurs ConfigurationEntretienProfessionnel partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }

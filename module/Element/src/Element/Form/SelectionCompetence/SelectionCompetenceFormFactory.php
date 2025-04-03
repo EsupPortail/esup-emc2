@@ -27,7 +27,6 @@ class SelectionCompetenceFormFactory {
          */
         $hydrator = $container->get('HydratorManager')->get(SelectionCompetenceHydrator::class);
 
-        /** @var SelectionCompetenceForm $form */
         $form = new SelectionCompetenceForm();
         $form->setHydrator($hydrator);
         $form->setCompetenceService($competenceService);

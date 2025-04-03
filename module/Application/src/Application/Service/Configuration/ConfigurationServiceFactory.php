@@ -9,13 +9,11 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-;
+
 
 class ConfigurationServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return ConfigurationService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -30,9 +28,8 @@ class ConfigurationServiceFactory {
         $applicationElementService = $container->get(ApplicationElementService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
 
-        /** @var ConfigurationService $service */
         $service = new ConfigurationService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setApplicationElementService($applicationElementService);
         $service->setCompetenceElementService($competenceElementService);
         return $service;

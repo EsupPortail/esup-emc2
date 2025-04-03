@@ -18,11 +18,12 @@ class CampagneAvancementViewHelper extends AbstractHelper
 
     /**
      * @param EntretienProfessionnel[] $entretiens
-     * @param Agent[] $agents
+     * @param Agent[]|null $agents
+     * @param int|null $nbAgents
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $entretiens, ?array $agents = null, ?int $nbAgents = null, array $options = [])
+    public function __invoke(array $entretiens, ?array $agents = null, ?int $nbAgents = null, array $options = []): string|Partial
     {
         $this->entretiens = $entretiens;
         $this->agents = $agents;

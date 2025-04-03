@@ -23,7 +23,7 @@ class ApplicationServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new ApplicationService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
 
         return $service;
     }

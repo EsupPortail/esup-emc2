@@ -4,90 +4,50 @@ namespace Structure\Service\StructureAgentForce;
 
 use Application\Entity\Db\Agent;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
+use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
-class StructureAgentForceService {
-    use EntityManagerAwareTrait;
+class StructureAgentForceService
+{
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param StructureAgentForce $structureAgentForce
-     * @return StructureAgentForce
-     */
-    public function create(StructureAgentForce $structureAgentForce) : StructureAgentForce
+    public function create(StructureAgentForce $structureAgentForce): StructureAgentForce
     {
-        try {
-            $this->getEntityManager()->persist($structureAgentForce);
-            $this->getEntityManager()->flush($structureAgentForce);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($structureAgentForce);
+        $this->getObjectManager()->flush($structureAgentForce);
         return $structureAgentForce;
     }
 
-    /**
-     * @param StructureAgentForce $structureAgentForce
-     * @return StructureAgentForce
-     */
-    public function upgrade(StructureAgentForce $structureAgentForce) : StructureAgentForce
+    public function upgrade(StructureAgentForce $structureAgentForce): StructureAgentForce
     {
-        try {
-            $this->getEntityManager()->flush($structureAgentForce);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($structureAgentForce);
         return $structureAgentForce;
     }
 
-    /**
-     * @param StructureAgentForce $structureAgentForce
-     * @return StructureAgentForce
-     */
-    public function historise(StructureAgentForce $structureAgentForce) : StructureAgentForce
+    public function historise(StructureAgentForce $structureAgentForce): StructureAgentForce
     {
-        try {
-            $structureAgentForce->historiser();
-            $this->getEntityManager()->flush($structureAgentForce);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $structureAgentForce->historiser();
+        $this->getObjectManager()->flush($structureAgentForce);
         return $structureAgentForce;
     }
 
-    /**
-     * @param StructureAgentForce $structureAgentForce
-     * @return StructureAgentForce
-     */
-    public function restore(StructureAgentForce $structureAgentForce) : StructureAgentForce
+    public function restore(StructureAgentForce $structureAgentForce): StructureAgentForce
     {
-        try {
-            $structureAgentForce->dehistoriser();
-            $this->getEntityManager()->flush($structureAgentForce);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $structureAgentForce->dehistoriser();
+        $this->getObjectManager()->flush($structureAgentForce);
         return $structureAgentForce;
     }
 
-    /**
-     * @param StructureAgentForce $structureAgentForce
-     * @return StructureAgentForce
-     */
-    public function delete(StructureAgentForce $structureAgentForce) : StructureAgentForce
+    public function delete(StructureAgentForce $structureAgentForce): StructureAgentForce
     {
-        try {
-            $this->getEntityManager()->remove($structureAgentForce);
-            $this->getEntityManager()->flush($structureAgentForce);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($structureAgentForce);
+        $this->getObjectManager()->flush($structureAgentForce);
         return $structureAgentForce;
     }
 
@@ -96,12 +56,11 @@ class StructureAgentForceService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(StructureAgentForce::class)->createQueryBuilder('force')
+        $qb = $this->getObjectManager()->getRepository(StructureAgentForce::class)->createQueryBuilder('force')
             ->addSelect('agent')->join('force.agent', 'agent')
-            ->addSelect('structure')->join('force.structure', 'structure')
-        ;
+            ->addSelect('structure')->join('force.structure', 'structure');
         return $qb;
     }
 
@@ -109,16 +68,15 @@ class StructureAgentForceService {
      * @param int $id
      * @return StructureAgentForce|null
      */
-    public function getStructureAgentForce(int $id) : ?StructureAgentForce
+    public function getStructureAgentForce(int $id): ?StructureAgentForce
     {
-       $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder()
             ->andWhere('force.id = :id')
-            ->setParameter('id', $id)
-       ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs StructureAgentForce partagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs StructureAgentForce partagent le même id [" . $id . "]",0,$e);
         }
         return $result;
     }
@@ -128,31 +86,25 @@ class StructureAgentForceService {
      * @param string $param
      * @return StructureAgentForce|null
      */
-    public function getRequestedStructureAgentForce(AbstractActionController $controller, string $param="structure-agent-force") : ?StructureAgentForce
+    public function getRequestedStructureAgentForce(AbstractActionController $controller, string $param = "structure-agent-force"): ?StructureAgentForce
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getStructureAgentForce($id);
         return $result;
     }
 
-    /**
-     * @param Structure|null $structure
-     * @param Agent|null $agent
-     * @return StructureAgentForce
-     */
-    public function getStructureAgentForceByStructureAndAgent(?Structure $structure, ?Agent $agent) : ?StructureAgentForce
+    public function getStructureAgentForceByStructureAndAgent(?Structure $structure, ?Agent $agent): ?StructureAgentForce
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('force.agent = :agent')
             ->andWhere('force.structure = :structure')
             ->andWhere('force.histoDestruction IS NULL')
             ->setParameter('agent', $agent)
-            ->setParameter('structure', $structure)
-        ;
+            ->setParameter('structure', $structure);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs StructureAgentForce partagent le même agent [".$agent->getId()."] et la même structure [".$structure->getId()."].");
+            throw new RuntimeException("Plusieurs StructureAgentForce partagent le même agent [" . $agent->getId() . "] et la même structure [" . $structure->getId() . "].",0,$e);
         }
         return $result;
     }
@@ -165,8 +117,7 @@ class StructureAgentForceService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('force.structure in (:structures)')->setParameter('structures', $structures)
-            ->andWhere('force.histoDestruction IS NULL')
-        ;
+            ->andWhere('force.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;

@@ -12,7 +12,6 @@ class CompetenceThemeHydratorFactory {
      */
     public function __invoke(ContainerInterface $container) : CompetenceThemeHydrator
     {
-        /** @var CompetenceThemeHydrator $hydrator */
         $hydrator = new CompetenceThemeHydrator();
         return $hydrator;
     }

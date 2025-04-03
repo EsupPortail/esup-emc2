@@ -3,18 +3,18 @@
 namespace Fichier\Service\Nature;
 
 use Doctrine\ORM\NonUniqueResultException;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Fichier\Entity\Db\Nature;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use RuntimeException;
 
-class NatureService {
-    use EntityManagerAwareTrait;
+class NatureService
+{
+    use ProvidesObjectManager;
 
-    public function getNaturesAsOptions()
+    public function getNaturesAsOptions(): array
     {
-        $qb = $this->getEntityManager()->getRepository(Nature::class)->createQueryBuilder('nature')
+        $qb = $this->getObjectManager()->getRepository(Nature::class)->createQueryBuilder('nature')
             ->orderBy('nature.id');
-            ;
         $result = $qb->getQuery()->getResult();
 
         $options = [];
@@ -26,38 +26,28 @@ class NatureService {
         return $options;
     }
 
-    /**
-     * @param integer $id
-     * @return Nature
-     */
-    public function getNature($id)
+    public function getNature(?int $id): ?Nature
     {
-        $qb = $this->getEntityManager()->getRepository(Nature::class)->createQueryBuilder('nature')
+        $qb = $this->getObjectManager()->getRepository(Nature::class)->createQueryBuilder('nature')
             ->andWhere('nature.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Nature partagent le même identifiant [".$id."]", $e);
+            throw new RuntimeException("Plusieurs Nature partagent le même identifiant [" . $id . "]",0, $e);
         }
         return $result;
     }
 
-    /**
-     * @param string $code
-     * @return Nature
-     */
-    public function getNatureByCode($code)
+    public function getNatureByCode(string $code): ?Nature
     {
-        $qb = $this->getEntityManager()->getRepository(Nature::class)->createQueryBuilder('nature')
+        $qb = $this->getObjectManager()->getRepository(Nature::class)->createQueryBuilder('nature')
             ->andWhere('nature.code = :code')
-            ->setParameter('code', $code)
-        ;
+            ->setParameter('code', $code);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Nature partagent le même code [".$code."]", $e);
+            throw new RuntimeException("Plusieurs Nature partagent le même code [" . $code . "]", 0,$e);
         }
         return $result;
     }

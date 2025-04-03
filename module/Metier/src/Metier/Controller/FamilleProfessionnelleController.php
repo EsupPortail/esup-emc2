@@ -49,7 +49,6 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = new FamilleProfessionnelle();
 
-        /** @var ModifierLibelleForm $form */
         $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('famille-professionnelle/ajouter', [], [], true));
         $form->bind($famille);
@@ -77,7 +76,6 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
-        /** @var ModifierLibelleForm $form */
         $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('famille-professionnelle/modifier', ['famille-professionnelle' => $famille->getId()], [], true));
         $form->bind($famille);

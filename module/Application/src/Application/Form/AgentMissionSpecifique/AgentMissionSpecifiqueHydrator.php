@@ -15,31 +15,24 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
     use MissionSpecifiqueServiceAwareTrait;
     use StructureServiceAwareTrait;
 
-    /**
-     * @param AgentMissionSpecifique $object
-     * @return array
-     */
+
     public function extract(object $object) : array
     {
+        /** @var AgentMissionSpecifique $object */
         $data = [
-            'mission'   => ($object->getMission()?$object->getMission()->getId():null),
+            'mission'   => ($object->getMission()?->getId()),
             'agent-sas'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
             'structure' => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
             'HasPeriode'        => [
                 'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
                 'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
             ],
-            'decharge'  => ($object->getDecharge()?$object->getDecharge():null)
+            'decharge'  => $object->getDecharge()
         ];
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param AgentMissionSpecifique $object
-     * @return AgentMissionSpecifique
-     */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         $mission = (isset($data['mission']) AND $data['mission'] !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($data['mission']):null;
         $agent = $this->getAgentService()->getAgent($data['agent-sas']['id']);
@@ -48,6 +41,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
         $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;
         $decharge   = (isset($data['decharge']) AND trim($data['decharge']) !== '')?$data['decharge']:null;
 
+        /** @var AgentMissionSpecifique $object */
         $object->setAgent($agent);
         $object->setMission($mission);
         $object->setStructure($structure);

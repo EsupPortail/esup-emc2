@@ -4,14 +4,16 @@ namespace Structure\Service\StructureAgentForce;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class StructureAgentForceServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return StructureAgentForceService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): StructureAgentForceService
     {
         /**
          * @var EntityManager $entityManager
@@ -19,7 +21,7 @@ class StructureAgentForceServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new StructureAgentForceService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

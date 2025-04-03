@@ -7,6 +7,7 @@ use Agent\Service\AgentGrade\AgentGradeService;
 use Agent\Service\AgentMobilite\AgentMobiliteService;
 use Agent\Service\AgentQuotite\AgentQuotiteService;
 use Agent\Service\AgentStatut\AgentStatutService;
+use Application\Assertion\ChaineAssertion;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
@@ -145,6 +146,9 @@ class AgentControllerFactory
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);
         $controller->setUploadForm($uploadForm);
+
+        $assertion = $container->get(ChaineAssertion::class);
+        $controller->chaineAssertion = $assertion;
 
         return $controller;
     }

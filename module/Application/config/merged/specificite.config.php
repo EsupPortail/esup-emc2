@@ -5,8 +5,6 @@ namespace Application;
 use Application\Controller\SpecificiteController;
 use Application\Controller\SpecificiteControllerFactory;
 use Application\Provider\Privilege\FichePostePrivileges;
-use Application\Service\SpecificiteActivite\SpecificiteActiviteService;
-use Application\Service\SpecificiteActivite\SpecificiteActiviteServiceFactory;
 use Application\View\Helper\SpecificiteActiviteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
@@ -48,7 +46,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter-activite/:fiche-poste[/:specificite-poste]',
                             'defaults' => [
-                                'controller' => SpecificiteController::class,
+                                /** @see SpecificiteController::ajouterActiviteAction() */
                                 'action'     => 'ajouter-activite',
                             ],
                         ],
@@ -80,7 +78,6 @@ return [
 
     'service_manager' => [
         'factories' => [
-            SpecificiteActiviteService::class => SpecificiteActiviteServiceFactory::class,
         ],
     ],
     'controllers'     => [

@@ -3,7 +3,6 @@
 use Application\Event\RgpdRenderer\RgpdRendererEvenement;
 use Application\Provider\EvenementProvider;
 use Application\Provider\EvenementProvider as ApplicationEvenementProvider;
-use Application\Service\Evenement\SynchroOctopusService;
 use EntretienProfessionnel\Provider\Event\EvenementProvider as EntretienProfessionnelEvenementProvider;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
@@ -18,7 +17,6 @@ return [
             // Évènements de base
             Type::COLLECTION => EvenementCollectionService::class,
 
-            ApplicationEvenementProvider::SYNCHRO_OCTOPUS => SynchroOctopusService::class,
             EvenementProvider::RGPD_UNICAEN_RENDERER => RgpdRendererEvenement::class,
 
 

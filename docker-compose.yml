@@ -15,8 +15,8 @@ services:
         PHP_VERSION: 8.2
       context: .
     ports:
-      - "8111:80"
-      - "443:443"
+      - "8080:80"
+      - "8443:443"
     volumes:
       - .:/var/www/html
       - /tmp:/tmp

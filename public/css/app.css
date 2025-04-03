@@ -218,6 +218,10 @@ span.badge {
 
 /** STYLE PARTICULIER **/
 
+div.multicheckbox label {
+    margin-right: 1rem;
+}
+
 h1.page-header {
     border-left: 2rem solid  var(--unistrap-color-main);
     padding-left: 1rem;

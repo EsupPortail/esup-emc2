@@ -1,11 +1,9 @@
 <?php
 
-use Application\Entity\Db\Validation;
-use Application\Entity\Db\ValidationValeur;
-use UnicaenApp\Exception\RuntimeException;
+use UnicaenValidation\Entity\Db\ValidationInstance;
 
 /**
- * @var Validation $validation
+ * @var ValidationInstance $validation
  * @var array $options
  */
 
@@ -34,13 +32,12 @@ use UnicaenApp\Exception\RuntimeException;
     $vclass = "";
     $etiquette = "";
     $texte = "Date: ".$validation->getHistoModification()->format('d/m/Y à H:i:s')."\nValidateur: ".$validation->getHistoModificateur()->getDisplayName();
-    $valeur = ($validation->getValeur())?$validation->getValeur()->getCode():null;
-    switch($valeur) {
-        case ValidationValeur::VALIDER :
+    switch($validation->isRefus()) {
+        case false:
             $vclass='validation-badge-valider';
             $etiquette = 'Validée';
             break;
-        case ValidationValeur::REJETER :
+        case true :
             $vclass='validation-badge-rejeter';
             $etiquette = 'Rejetée';
             break;

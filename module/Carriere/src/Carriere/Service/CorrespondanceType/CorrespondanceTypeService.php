@@ -7,18 +7,16 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use RuntimeException;
 
 class CorrespondanceTypeService
 {
 
     use ProvidesObjectManager;
-    use EntityManagerAwareTrait;
 
     /** GESTION DES ENITIES *******************************************************************************************/
 
-    // les grades sont importés et ne sont pas gérés dans l'application
+    // les grades sont importés et ne sont pas gérés dans l'application.
 
     /** REQUETAGE *****************************************************************************************************/
 

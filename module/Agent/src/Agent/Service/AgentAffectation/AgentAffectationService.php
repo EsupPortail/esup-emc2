@@ -5,8 +5,12 @@ namespace Agent\Service\AgentAffectation;
 use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
 use DateTime;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 
 class AgentAffectationService {
@@ -122,5 +126,35 @@ class AgentAffectationService {
             $affectations[$agent->getId()][] = $agentAffectation;
         }
         return $affectations;
+    }
+
+    public function hasAffectation(Agent $agent, DateTime $dateDebut, DateTime $dateFin) : bool
+    {
+        $params = ['agentId' => $agent->getId(), 'dateDebut' => $dateDebut->format('Y-m-d'), 'dateFin' => $dateFin->format('Y-m-d')];
+        $sql = <<<EOS
+select DISTINCT a.c_individu as c_individu
+from agent a
+join agent_carriere_affectation aca on a.c_individu = aca.agent_id
+where
+        a.c_individu = :agentId
+    and aca.deleted_on IS NULL
+    and tsrange(aca.date_debut, aca.date_fin) && tsrange(:dateDebut, :dateFin)
+EOS;
+
+        try {
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params, ['structures' => ArrayParameterType::INTEGER]);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("[DRV] Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            $complement = '';
+            if ($e->getPrevious() AND str_contains($e->getPrevious()->getMessage(), "range lower bound must be less than or equal to range upper bound")) {
+                $complement = "Une affectation est mal saisie dans les données sources (date de fin avant date de début).";
+            }
+            throw new RuntimeException("[DBA] Un problème est survenue lors du calcul pour l'agent [".$agent->getId()."] " . $agent->getDenomination(true) . ".<br>" . $complement, 0, $e);
+        }
+        return !empty($tmp);
     }
 }

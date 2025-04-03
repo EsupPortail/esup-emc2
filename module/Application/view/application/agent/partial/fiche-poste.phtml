@@ -34,13 +34,13 @@ $structure = ($affectation)?$affectation->getStructure():null;
         <br/>
         <?php if ($canAjouterFichePoste) : ?>
             <?php /** @see \Application\Controller\FichePosteController::ajouterAction() */ ?>
-            <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+            <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>" class="btn btn-primary">
                 <span class="icon icon-ajouter"></span>
                 Ajouter une fiche de poste
             </a>
             <?php if ($structure ) : ?>
             <?php /** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
-            <a href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+            <a href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary">
                 <span class="icon icon-cloner"></span>
                 Cloner une fiche de poste
             </a>
@@ -54,7 +54,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
         <span class="icon icon-attention"></span> Seules les fiches de postes validées sont visualisables par les agents.
     </div>
 
-    <?php echo $this->fichesPostesAsArray($fichespostes, null, ['retour' => $retour]); ?>
+    <?php echo $this->fichesPostesAsArray($fichespostes, null, ['retour' => $retour, 'id' => "fichespostes"]); ?>
 </div>
 
 <div>
@@ -69,7 +69,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
     <?php endif; ?>
 
     <?php if (! empty($fichesPDF)) : ?>
-        <table class="table table-hover table-condensed">
+        <table class="table table-hover table-condensed" id="fichespostes-pdf">
         <thead>
             <tr>
                 <th> Fichier </th>
@@ -84,20 +84,27 @@ $structure = ($affectation)?$affectation->getStructure():null;
                 <td> <?php echo $fiche->getNomOriginal(); ?> </td>
                 <td> <?php echo $fiche->getHistoCreation()->format('d/m/Y à H:i'); ?> </td>
                 <td> <?php echo $fiche->getNature()->getLibelle(); ?> </td>
-                <td>
+                <td class="action">
                     <?php if ($canVoirFichier) : ?>
                         <a
                             <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
-                                href="<?php echo $this->url('download-fichier', ['fichier' => $fiche->getId()], [], true); ?>">
+                                href="<?php echo $this->url('download-fichier', ['fichier' => $fiche->getId()], [], true); ?>"
+                                class="action secondary"
+                            >
                             <span class="icon icon-voir" title="voir le fichier"></span>
+                            Visualiser
                         </a>
                     <?php endif; ?>
                     <?php if ($canDetruireFichier) : ?>
+                        <br>
                         <a
                             <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
                                 href="<?php echo $this->url('delete-fichier', ['fichier' => $fiche->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
+                                class="action danger"
                         >
-                            <span class="icon icon-unchecked" title="supprimer le fichier"></span></a>
+                            <span class="icon icon-unchecked" title="supprimer le fichier"></span>
+                            Supprimer
+                        </a>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -117,3 +124,19 @@ $structure = ($affectation)?$affectation->getStructure():null;
         </a>
     <?php endif; ?>
 </div>
+
+<script>
+    $(function () {
+        $('#fichespostes').DataTable({
+            autoWidth: false,
+            paging: false,
+            columnDefs: [{
+                "targets": 3,
+                "orderable": false
+            }],
+            language: {
+                url: '/js/datatables_fr.json'
+            }
+        });
+    });
+</script>

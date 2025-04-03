@@ -62,7 +62,7 @@ use Metier\Entity\Db\Metier;
                     <span class="icon icon-attention"></span>
                     Impossible d'importer la fiche, car le métier n'a pas été trouvé
                 </strong></p>
-                Possibles résultions du problème :
+                Possibles résolutions du problème :
                 <ul>
                     <li> le métier n'a pas été créé, ajoutez le dans l'application ;</li>
                     <li> le métier n'a pas la bonne référence, ajouter celle-ci au métier.</li>
@@ -147,10 +147,10 @@ use Metier\Entity\Db\Metier;
 //            }
 //        ?>
         <?php foreach ($competences as $type => $array) : ?>
-            <?php if (! empty($competences[$type])) : ?>
+            <?php if (! empty($array)) : ?>
                 <h3> <?php echo $type; ?> </h3>
                 <ul>
-                    <?php foreach ($competences[$type] as $competence) : ?>
+                    <?php foreach ($array as $competence) : ?>
                         <li> <?php echo $competence->getLibelle(); ?> </li>
                     <?php endforeach; ?>
                 </ul>

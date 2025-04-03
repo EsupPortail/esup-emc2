@@ -71,8 +71,10 @@ $displayAgent = (!isset($options['display-agent']) OR $options['display-agent'] 
                 <?php if ($affectation->getStructure()) : ?>
                     <?php echo  $affectation->getStructure()->getLibelleLong(); ?>
                     <?php if ($affectation->getStructure() !== $affectation->getStructure()->getNiv2()) : ?>
-                        <br/>
-                        <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
+                        <?php if ($affectation->getStructure()->getNiv2()) : ?>
+                            <br/>
+                            <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 <?php else : ?>
                     <span class="text-warning">
@@ -159,7 +161,7 @@ $displayAgent = (!isset($options['display-agent']) OR $options['display-agent'] 
 
 <script>
     $(function () {
-        $('.datatable').DataTable({
+        $('#affectation').DataTable({
             autoWidth: false,
             paging: false,
             columnDefs: [{

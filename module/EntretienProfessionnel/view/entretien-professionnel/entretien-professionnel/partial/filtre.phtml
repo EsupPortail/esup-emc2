@@ -96,7 +96,7 @@ use UnicaenEtat\Entity\Db\EtatType;
                                 <?php foreach ($etats as $etat) : ?>
                                     <option
                                             value="<?php echo $etat->getId(); ?>"
-                                            data-content='<?php echo $this->etattype($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
+                                            data-content='<?php echo $this->etattype($etat); ?> <?php echo htmlentities($etat->getLibelle()); ?>'
                                     >
                                         <?php echo $etat->getLibelle(); ?>
                                     </option>

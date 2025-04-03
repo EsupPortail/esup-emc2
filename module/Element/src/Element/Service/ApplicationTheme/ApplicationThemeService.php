@@ -3,84 +3,63 @@
 namespace Element\Service\ApplicationTheme;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\ApplicationTheme;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
 
-class ApplicationThemeService {
-    use EntityManagerAwareTrait;
+class ApplicationThemeService
+{
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(ApplicationTheme $groupe) : ApplicationTheme
+    public function create(ApplicationTheme $groupe): ApplicationTheme
     {
-        try {
-            $this->getEntityManager()->persist($groupe);
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($groupe);
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
-    public function update(ApplicationTheme $groupe) : ApplicationTheme
+    public function update(ApplicationTheme $groupe): ApplicationTheme
     {
-        try {
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
-    public function historise(ApplicationTheme $groupe) : ApplicationTheme
+    public function historise(ApplicationTheme $groupe): ApplicationTheme
     {
-        try {
-            $groupe->historiser();
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $groupe->historiser();
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
-    public function restore(ApplicationTheme $groupe) : ApplicationTheme
+    public function restore(ApplicationTheme $groupe): ApplicationTheme
     {
-        try {
-            $groupe->dehistoriser();
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $groupe->dehistoriser();
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
-    public function delete(ApplicationTheme $groupe) : ApplicationTheme
+    public function delete(ApplicationTheme $groupe): ApplicationTheme
     {
-        try {
-            $this->getEntityManager()->remove($groupe);
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($groupe);
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(ApplicationTheme::class)->createQueryBuilder('groupe')
-             ->addSelect('application')->leftJoin('groupe.applications', 'application')
-            ;
+        $qb = $this->getObjectManager()->getRepository(ApplicationTheme::class)->createQueryBuilder('groupe')
+            ->addSelect('application')->leftJoin('groupe.applications', 'application');
         return $qb;
     }
 
     /** @return ApplicationTheme[] */
-    public function getApplicationsGroupes(string $champ = 'ordre', string $ordre='ASC') : array
+    public function getApplicationsGroupes(string $champ = 'ordre', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.' . $champ, $ordre);
@@ -89,16 +68,16 @@ class ApplicationThemeService {
         return $result;
     }
 
-    public function optionify(ApplicationTheme $groupe) : array
+    public function optionify(ApplicationTheme $groupe): array
     {
         $this_option = [
-            'value' =>  $groupe->getId(),
+            'value' => $groupe->getId(),
             'label' => $groupe->getLibelle(),
         ];
         return $this_option;
     }
 
-    public function getApplicationsGroupesAsOption() : array
+    public function getApplicationsGroupesAsOption(): array
     {
         $groupes = $this->getApplicationsGroupes();
         $array = [];
@@ -109,21 +88,20 @@ class ApplicationThemeService {
         return $array;
     }
 
-    public function getApplicationTheme(?int $id) : ?ApplicationTheme
+    public function getApplicationTheme(?int $id): ?ApplicationTheme
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('groupe.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ApplicationTheme paratagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs ApplicationTheme paratagent le même id [" . $id . "]",0,$e);
         }
         return $result;
     }
 
-    public function getRequestedApplicationTheme(AbstractActionController $controller, string $param = 'application-groupe') : ?ApplicationTheme
+    public function getRequestedApplicationTheme(AbstractActionController $controller, string $param = 'application-groupe'): ?ApplicationTheme
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getApplicationTheme($id);

@@ -61,7 +61,6 @@ class DomaineController extends AbstractActionController {
 
     public function ajouterAction() : ViewModel
     {
-        /** @var Domaine $domaine */
         $domaine = new Domaine();
 
         $form = $this->getDomaineForm();

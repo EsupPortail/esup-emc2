@@ -15,8 +15,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class MetierServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return MetierService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -36,7 +34,7 @@ class MetierServiceFactory {
         $referentielService = $container->get(ReferentielService::class);
 
         $service = new MetierService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setDomaineService($domaineService);
         $service->setFamilleProfessionnelleService($familleService);
         $service->setReferenceService($referenceService);

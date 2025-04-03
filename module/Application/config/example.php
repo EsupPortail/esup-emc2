@@ -3,8 +3,6 @@
 namespace Application;
 
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

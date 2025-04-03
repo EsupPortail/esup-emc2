@@ -4,9 +4,15 @@ namespace Element\Service\CompetenceTheme;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CompetenceThemeServiceFactory {
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container) : CompetenceThemeService
     {
         /**
@@ -15,7 +21,7 @@ class CompetenceThemeServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new CompetenceThemeService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

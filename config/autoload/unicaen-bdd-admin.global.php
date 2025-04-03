@@ -101,18 +101,6 @@ return [
             //'source_id_column'   => 'source_id',
             //'source_code_column' => 'source_code',
         ],
-        'connection'         => [
-            'default' => [
-                'port'    => DB_PORT,
-                'charset' => 'utf8',
-                'host'    => DB_HOSTNAME,
-
-                'dbname'   => DB_NAME,
-                'user'     => DB_USERNAME,
-                'password' => DB_PASSWORD,
-            ],
-
-        ],
 
         /* Connexion à utiliser par défaut, nom à sélectionner parmi la liste des connexions disponibles */
         'current_connection' => 'default',

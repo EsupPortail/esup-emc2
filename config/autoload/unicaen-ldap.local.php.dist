@@ -10,6 +10,7 @@ return [
         'password' => "XXXX",
         'baseDn' => "ou=people,dc=XXXXX,dc=fr",
         'bindRequiresDn' => true,
+        'useStartTls'         => false,
         //dé-commenter la ligne correspondant à votre situation
 //        'accountFilterFormat' => "(&(objectClass=posixAccount)(supannAliasLogin=%s))",
 //        'accountFilterFormat' => "(&(objectClass=posixAccount)(uid=%s))",
@@ -29,6 +30,7 @@ return [
                         'baseDn' => "ou=people,dc=XXX,dc=fr",
                         'bindRequiresDn' => true,
                         'accountFilterFormat' => "(&(objectClass=posixAccount)(supannAliasLogin=%s))",
+                        'useStartTls'         => false,
                     ]
                 ]
             ],

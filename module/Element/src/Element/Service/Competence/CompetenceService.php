@@ -2,104 +2,79 @@
 
 namespace Element\Service\Competence;
 
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceReferentiel;
 use Element\Entity\Db\CompetenceTheme;
 use Element\Entity\Db\CompetenceType;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
 
-class CompetenceService {
-    use EntityManagerAwareTrait;
+class CompetenceService
+{
+    use ProvidesObjectManager;
     use CompetenceThemeServiceAwareTrait;
 
     /** COMPETENCES : ENTITY ******************************************************************************************/
 
-    public function create(Competence $competence) : Competence
+    public function create(Competence $competence): Competence
     {
-        try {
-            $this->getEntityManager()->persist($competence);
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($competence);
+        $this->getObjectManager()->flush($competence);
         return $competence;
     }
 
-    public function update(Competence $competence) : Competence
+    public function update(Competence $competence): Competence
     {
-        try {
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($competence);
         return $competence;
     }
 
-    public function historise(Competence $competence) : Competence
+    public function historise(Competence $competence): Competence
     {
-        try {
-            $competence->historiser();
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $competence->historiser();
+        $this->getObjectManager()->flush($competence);
         return $competence;
     }
 
-    public function restore(Competence $competence) : Competence
+    public function restore(Competence $competence): Competence
     {
-        try {
-            $competence->dehistoriser();
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $competence->dehistoriser();
+        $this->getObjectManager()->flush($competence);
         return $competence;
     }
 
-    public function delete(Competence $competence) : Competence
+    public function delete(Competence $competence): Competence
     {
-        try {
-            $this->getEntityManager()->remove($competence);
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($competence);
+        $this->getObjectManager()->flush($competence);
         return $competence;
     }
 
     /** COMPETENCES : REQUETAGE ***************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
-                ->addSelect('type')->leftJoin('competence.type', 'type')
-                ->addSelect('theme')->leftJoin('competence.theme', 'theme');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors dela création du QueryBuilder de [".Competence::class."]",0,$e);
-        }
+        $qb = $this->getObjectManager()->getRepository(Competence::class)->createQueryBuilder('competence')
+            ->addSelect('type')->leftJoin('competence.type', 'type')
+            ->addSelect('theme')->leftJoin('competence.theme', 'theme');
         return $qb;
     }
 
     /** Competence[] */
-    public function getCompetences(string $champ = 'libelle', string $order = 'ASC') : array
+    public function getCompetences(string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('competence.'.$champ, $order)
-        ;
+            ->orderBy('competence.' . $champ, $order);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getCompetencesByTypes() : array
+    public function getCompetencesByTypes(): array
     {
         $competences = $this->getCompetences();
 
@@ -111,28 +86,27 @@ class CompetenceService {
         return $array;
     }
 
-    public function getCompetence(?int $id) : ?Competence
+    public function getCompetence(?int $id): ?Competence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
-        } catch(ORMException $e) {
-            throw new RuntimeException("Plusieurs Competence partagent le même id [".$id."]", 0, $e);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Plusieurs Competence partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    public function getRequestedCompetence(AbstractActionController $controller, string $paramName = 'competence') : ?Competence
+    public function getRequestedCompetence(AbstractActionController $controller, string $paramName = 'competence'): ?Competence
     {
         $id = $controller->params()->fromRoute($paramName);
         $competence = $this->getCompetence($id);
         return $competence;
     }
 
-    public function getCompetencesAsGroupOptions() : array
+    public function getCompetencesAsGroupOptions(): array
     {
         $competences = $this->getCompetences();
         $dictionnaire = [];
@@ -146,7 +120,7 @@ class CompetenceService {
         foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
             usort($listing, function (Competence $a, Competence $b) {
-                return $a->getLibelle()  <=>  $b->getLibelle();
+                return $a->getLibelle() <=> $b->getLibelle();
             });
 
             foreach ($listing as $competence) {
@@ -161,21 +135,21 @@ class CompetenceService {
         return $options;
     }
 
-    private function competenceOptionify(Competence $competence) : array
+    private function competenceOptionify(Competence $competence): array
     {
         /** @var CompetenceReferentiel $referentiel */
         $referentiel = $competence->getReferentiel();
         $type = $competence->getType();
         $texte = $competence->getLibelle();
         $this_option = [
-            'value' =>  $competence->getId(),
+            'value' => $competence->getId(),
             'attributes' => [
                 'data-content' => $texte
                     . "&nbsp;" . "<span class='badge'>"
-                    . (($type !== null)?$type->getLibelle():"Sans type")
+                    . (($type !== null) ? $type->getLibelle() : "Sans type")
                     . "</span>"
-                    . "&nbsp;" . "<span class='badge' style='background: ".(($referentiel !== null)?$referentiel->getCouleur():"gray")."'>"
-                    . (($referentiel !== null)?$referentiel->getLibelleCourt():"Sans référentiel") . " - " . $competence->getIdSource()
+                    . "&nbsp;" . "<span class='badge' style='background: " . (($referentiel !== null) ? $referentiel->getCouleur() : "gray") . "'>"
+                    . (($referentiel !== null) ? $referentiel->getLibelleCourt() : "Sans référentiel") . " - " . $competence->getIdSource()
                     . "</span>",
             ],
             'label' => $texte,
@@ -183,18 +157,17 @@ class CompetenceService {
         return $this_option;
     }
 
-    public function getCompetenceByIdSource(string $source, string $id) : ?Competence
+    public function getCompetenceByIdSource(string $source, string $id): ?Competence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.source = :source')
             ->setParameter('source', $source)
             ->andWhere('competence.idSource = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs compétences partagent le même id source [".$source."-".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs compétences partagent le même id source [" . $source . "-" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -204,8 +177,7 @@ class CompetenceService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.referentiel = :referentiel')
-            ->setParameter('referentiel', $referentiel)
-        ;
+            ->setParameter('referentiel', $referentiel);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -216,12 +188,11 @@ class CompetenceService {
             ->andWhere('competence.referentiel = :referentiel')
             ->setParameter('referentiel', $referentiel)
             ->andWhere('competence.idSource = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs compétences partagent le même id referentiel [".$referentiel->getId()."-".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs compétences partagent le même id referentiel [" . $referentiel->getId() . "-" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -241,9 +212,10 @@ class CompetenceService {
         }
         return $competences;
     }
+
     /** FACADE ****************************************************************************************************/
 
-    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id, bool $persist = true) : Competence
+    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id, bool $persist = true): Competence
     {
         if ($id === -1) {
             $id = $this->getCompetenceMaxIdByRefentiel($referentiel) + 1;
@@ -260,7 +232,7 @@ class CompetenceService {
         return $competence;
     }
 
-    public function updateWith(Competence $competence, string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme) : Competence
+    public function updateWith(Competence $competence, string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme): Competence
     {
         $wasModified = false;
         if ($competence->getLibelle() !== $libelle) {
@@ -291,12 +263,11 @@ class CompetenceService {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
             ->andWhere('competence.libelle = :libelle')->setParameter('libelle', $libelle)
-            ->andWhere('competence.histoDestruction IS NULL')
-        ;
+            ->andWhere('competence.histoDestruction IS NULL');
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".Competence::class."] partagent le même référentiel [".$referentiel->getLibelleCourt()."] et le même libellé [".$libelle."]",0,$e);
+            throw new RuntimeException("Plusieurs [" . Competence::class . "] partagent le même référentiel [" . $referentiel->getLibelleCourt() . "] et le même libellé [" . $libelle . "]", 0, $e);
         }
         return $result;
     }
@@ -324,7 +295,7 @@ class CompetenceService {
             $result[] = array(
                 'id' => $competence->getId(),
                 'label' => $competence->getLibelle(),
-                'extra' => ($referentiel === null)?"<span class='badge' style='background-color: slategray;'>Aucun référentiel</span>":"<span class='badge' style='background-color: ".$referentiel->getCouleur().";'>".$referentiel->getLibelleCourt()." #".$competence->getIdSource()."</span>",
+                'extra' => ($referentiel === null) ? "<span class='badge' style='background-color: slategray;'>Aucun référentiel</span>" : "<span class='badge' style='background-color: " . $referentiel->getCouleur() . ";'>" . $referentiel->getLibelleCourt() . " #" . $competence->getIdSource() . "</span>",
             );
         }
         usort($result, function ($a, $b) {

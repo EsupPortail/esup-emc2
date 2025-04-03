@@ -3,10 +3,16 @@
 namespace FicheReferentiel\Service\FicheReferentiel;
 
 use Doctrine\ORM\EntityManager;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class FicheReferentielServiceFactory {
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): FicheReferentielService
     {
         /**

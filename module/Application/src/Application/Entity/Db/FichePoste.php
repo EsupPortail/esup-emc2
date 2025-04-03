@@ -14,7 +14,7 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\Expertise;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -220,7 +220,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function getDescriptionsRetireesByFicheMetierAndActivite(FicheMetier $fichemetier, Mission $activite): array
     {
         $result = [];
-        /** @var FicheposteActiviteDescriptionRetiree $descriptionsRetiree */
         foreach ($this->getDescriptionsRetirees() as $descriptionsRetiree) {
             if ($descriptionsRetiree->getFicheMetier() === $fichemetier and $descriptionsRetiree->getMission() === $activite) {
                 $result[] = $descriptionsRetiree;
@@ -316,21 +315,19 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** Fonctions pour simplifier  */
 
     /* @return MissionActivite[] */
-    public function getDescriptions(FicheMetierMission $mission, DateTime $date): array
+    public function getDescriptions(FicheMetierMission $mission): array
     {
-        $dictionnaire = $mission->getMission()->getActivites($date);
+        $dictionnaire = $mission->getMission()->getActivites();
         return $dictionnaire;
     }
 
     /** @return MissionActivite[] */
-    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission, DateTime $date): array
+    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission): array
     {
-        /** @var MissionActivite[] $activites */
-        $activites = $ficheMetierMission->getMission()->getActivites($date);
+        $activites = $ficheMetierMission->getMission()->getActivites();
         $dictionnaire = [];
         foreach ($activites as $activite) {
             $found = false;
-            /** @var FicheposteActiviteDescriptionRetiree $retiree */
             foreach ($this->getDescriptionsRetirees() as $retiree) {
                 if ($retiree->estNonHistorise() and $retiree->getActivite() === $activite) {
                     $found = true;

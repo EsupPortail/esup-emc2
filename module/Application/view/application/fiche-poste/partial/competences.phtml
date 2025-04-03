@@ -8,7 +8,6 @@ use Application\Entity\Db\FichePoste;
  * @var string $mode
  */
 
-/** @var  array $cCompetences */
 $cCompetences = [];
 foreach ($competences as $item) {
     if ($item["conserve"] === true) $cCompetences[] = $item;
@@ -42,6 +41,6 @@ foreach ($competences as $item) {
 <div class="row" style="margin: 1rem;">
     <div class="col-md-11">
         <br/>
-        <?php echo $this->competenceBloc($cCompetences, $fiche->getAgent(), ['display' => ['titre' => false]]); ?>
+        <?php echo $this->competenceBloc($cCompetences, $fiche->getAgent(), ['display' => ['titre' => false], 'mode' => $mode]); ?>
     </div>
 </div>

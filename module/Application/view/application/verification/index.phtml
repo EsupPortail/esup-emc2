@@ -99,9 +99,9 @@ $this->headTitle("Vérification de l'installation");
                         foreach ($roles as $role) {
                             $bool = ($roleService->findByRoleId($role) !== null);
                             if ($bool === true) {
-                                echo "<span class='icon icon-checked text-success'></span> le role [".$role."] est bien déclarée";
+                                echo "<span class='icon icon-checked text-success'></span> le role [".$role."] est bien déclaré";
                             } else {
-                                echo "<span class='icon icon-unchecked text-danger'></span> le role [".$role."] n'est pas déclarée";
+                                echo "<span class='icon icon-unchecked text-danger'></span> le role [".$role."] n'est pas déclaré";
                             }
                             echo "<br/>";
                         }
@@ -149,19 +149,19 @@ $this->headTitle("Vérification de l'installation");
                                     $type = $categorieService->getCategoriebyCode($typeName);
                                 }
                                 if ($type !== null) {
-                                    echo "<span class='icon icon-checked text-success'></span> Type de parametre [".$typeName."] bien déclarée <br>";
+                                    echo "<span class='icon icon-checked text-success'></span> Type de parametre [".$typeName."] bien déclaré <br>";
                                     foreach ($constants as $name => $value) {
                                         if ($name !== 'TYPE') {
                                             $etat = $parametreService->getParametreByCode($type->getCode(), $value);
                                             if ($etat !== null) {
                                                 echo "<span class='icon icon-checked text-success'></span> Le paramètre [" . $value . "] bien déclarée <br>";
                                             } else {
-                                                echo "<span class='icon icon-unchecked text-danger'></span> Le paramètre [" . $value . "] n'est pas déclarée <br>";
+                                                echo "<span class='icon icon-unchecked text-danger'></span> Le paramètre [" . $value . "] n'est pas déclaré <br>";
                                             }
                                         }
                                     }
                                 } else {
-                                    echo "<span class='icon icon-unchecked text-danger'></span> Type de parametre [" . $typeName . "] n'est pas déclarée <br>";
+                                    echo "<span class='icon icon-unchecked text-danger'></span> Type de parametre [" . $typeName . "] n'est pas déclaré <br>";
                                 }
                             }
                         }
@@ -198,9 +198,9 @@ $this->headTitle("Vérification de l'installation");
                     foreach ($templates as $template) {
                         $bool = ($templateService->getTemplateByCode($template) !== null);
                         if ($bool === true) {
-                            echo "<span class='icon icon-checked text-success'></span> le template [".$template."] est bien déclarée";
+                            echo "<span class='icon icon-checked text-success'></span> le template [".$template."] est bien déclaré";
                         } else {
-                            echo "<span class='icon icon-unchecked text-danger'></span> le template [".$template."] n'est pas déclarée";
+                            echo "<span class='icon icon-unchecked text-danger'></span> le template [".$template."] n'est pas déclaré";
                         }
                         echo "<br/>";
                     }
@@ -245,18 +245,18 @@ $this->headTitle("Vérification de l'installation");
                             $type = $etatCategorieService->getEtatCategorieByCode($typeName);
                         }
                         if ($type !== null) {
-                            echo "<span class='icon icon-checked text-success'></span> Type d'état [".$typeName."] bien déclarée <br>";
+                            echo "<span class='icon icon-checked text-success'></span> Type d'état [".$typeName."] bien déclaré <br>";
                         } else {
-                            echo "<span class='icon icon-unchecked text-danger'></span> Type d'état [".$typeName."] n'est pas déclarée <br>";
+                            echo "<span class='icon icon-unchecked text-danger'></span> Type d'état [".$typeName."] n'est pas déclaré <br>";
                         }
 
                         foreach ($constants as $name => $value) {
                             if ($name !== 'TYPE' AND !is_array($value)) {
                                 $etat = $etatTypeService->getEtatTypeByCode($value);
                                 if ($etat !== null) {
-                                    echo "<span class='icon icon-checked text-success'></span> L'état [".$value."] bien déclarée <br>";
+                                    echo "<span class='icon icon-checked text-success'></span> L'état [".$value."] bien déclaré <br>";
                                 } else {
-                                    echo "<span class='icon icon-unchecked text-danger'></span> L'état [".$value."] n'est pas déclarée <br>";
+                                    echo "<span class='icon icon-unchecked text-danger'></span> L'état [".$value."] n'est pas déclaré <br>";
                                 }
                             }
                         }
@@ -298,9 +298,9 @@ $this->headTitle("Vérification de l'installation");
                             foreach ($constants as $value) {
                                 $etat = $validationTypeService->getValidationTypeByCode($value);
                                 if ($etat !== null) {
-                                    echo "<span class='icon icon-checked text-success'></span> Le type de validation [".$value."] bien déclarée <br>";
+                                    echo "<span class='icon icon-checked text-success'></span> Le type de validation [".$value."] bien déclaré <br>";
                                 } else {
-                                    echo "<span class='icon icon-unchecked text-danger'></span> Le type de validation [".$value."] n'est pas déclarée <br>";
+                                    echo "<span class='icon icon-unchecked text-danger'></span> Le type de validation [".$value."] n'est pas déclaré <br>";
                                 }
                             }
                         }
@@ -337,9 +337,9 @@ $this->headTitle("Vérification de l'installation");
                     foreach ($constants as $event) {
                         $bool = ($evenementTypeService->findByCode($event) !== null);
                         if ($bool === true) {
-                            echo "<span class='icon icon-checked text-success'></span> l'événement  [" . $event . "] est bien déclarée";
+                            echo "<span class='icon icon-checked text-success'></span> l'événement  [" . $event . "] est bien déclaré";
                         } else {
-                            echo "<span class='icon icon-unchecked text-danger'></span> l'événement [" . $event . "] n'est pas déclarée";
+                            echo "<span class='icon icon-unchecked text-danger'></span> l'événement [" . $event . "] n'est pas déclaré";
                         }
                         echo "<br/>";
                     }
@@ -378,9 +378,9 @@ $this->headTitle("Vérification de l'installation");
                  foreach ($privileges as $privilege) {
                      $bool = ($privilegeService->findByFullCode($privilege) !== null);
                      if ($bool === true) {
-                         echo "<span class='icon icon-checked text-success'></span> le privilège  [" . $privilege . "] est bien déclarée";
+                         echo "<span class='icon icon-checked text-success'></span> le privilège  [" . $privilege . "] est bien déclaré";
                      } else {
-                         echo "<span class='icon icon-unchecked text-danger'></span> le privilège [" . $privilege . "] n'est pas déclarée";
+                         echo "<span class='icon icon-unchecked text-danger'></span> le privilège [" . $privilege . "] n'est pas déclaré";
                      }
                      echo "<br/>";
                  }
@@ -427,9 +427,9 @@ $this->headTitle("Vérification de l'installation");
                     foreach ($privileges as $privilege) {
                         $bool = ($privilegeService->findByFullCode($privilege) !== null);
                         if ($bool === true) {
-                            echo "<span class='icon icon-checked text-success'></span> le privilège  [" . $privilege . "] est bien déclarée";
+                            echo "<span class='icon icon-checked text-success'></span> le privilège  [" . $privilege . "] est bien déclaré";
                         } else {
-                            echo "<span class='icon icon-unchecked text-danger'></span> le privilège [" . $privilege . "] n'est pas déclarée";
+                            echo "<span class='icon icon-unchecked text-danger'></span> le privilège [" . $privilege . "] n'est pas déclaré";
                         }
                         echo "<br/>";
                     }

@@ -7,6 +7,7 @@ use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Agent\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
+use Application\Assertion\ChaineAssertion;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\AgentParametres;
@@ -36,11 +37,13 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Entity\HasValidationsInterface;
+use UnicaenValidation\Entity\HasValidationsTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
@@ -80,6 +83,7 @@ class AgentController extends AbstractActionController
 
     use AgentMobiliteServiceAwareTrait;
 
+    public ChaineAssertion $chaineAssertion;
 
     public function indexAction(): ViewModel
     {
@@ -146,6 +150,7 @@ class AgentController extends AbstractActionController
             'mobilites' => $mobilites,
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
+            'chaineAssertion' => $this->chaineAssertion,
         ]);
     }
 
@@ -211,7 +216,7 @@ class AgentController extends AbstractActionController
             }
 
             if ($validation !== null and $entity !== null) {
-                $entity->setValidation($validation);
+                $entity->addValidation($validation);
                 switch ($type) {
                     case 'AGENT_APPLICATION' :
                         $this->getApplicationElementService()->update($entity);
@@ -244,6 +249,7 @@ class AgentController extends AbstractActionController
 
         $type = $this->params()->fromRoute('type');
         $entityId = $this->params()->fromRoute('id');
+        /** @var HasValidationsInterface $entity */
         switch ($type) {
             case 'AGENT_APPLICATION' :
                 $entity = $this->getApplicationElementService()->getApplicationElement($entityId);
@@ -253,7 +259,8 @@ class AgentController extends AbstractActionController
                 break;
         }
 
-        $entity->setValidation(null);
+        //todo remettre
+        //$entity->setValidation(null);
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);
         } catch (ORMException $e) {

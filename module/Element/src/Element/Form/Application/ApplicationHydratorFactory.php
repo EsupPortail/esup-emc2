@@ -22,7 +22,6 @@ class ApplicationHydratorFactory {
          */
         $applicationGroupeService = $container->get(ApplicationThemeService::class);
 
-        /** @var ApplicationHydrator $hydrator */
         $hydrator = new ApplicationHydrator();
         $hydrator->setApplicationThemeService($applicationGroupeService);
         return $hydrator;

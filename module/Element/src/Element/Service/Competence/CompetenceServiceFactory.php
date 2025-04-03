@@ -26,7 +26,7 @@ class CompetenceServiceFactory {
         $competenceThemeService = $container->get(CompetenceThemeService::class);
 
         $service = new CompetenceService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setCompetenceThemeService($competenceThemeService);
         return $service;
     }

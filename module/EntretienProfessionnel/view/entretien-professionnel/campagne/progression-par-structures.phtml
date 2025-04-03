@@ -1,0 +1,104 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructurePrivileges;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::progressionParStructuresAction()
+ * @var Campagne $campagne
+ * @var Structure[] $structures
+ */
+
+$this->headTitle("Progression par structures de niveau 2");
+
+$canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AFFICHER));
+
+?>
+
+<h1 class="page-header">
+    Progression par structures de niveau 2
+</h1>
+
+
+<table class="table table-condensed datatable" id="progression">
+    <thead>
+    <tr>
+        <th class="col-md-3"> Structure</th>
+        <th class="col-md-3"> Type</th>
+        <th class="col-md-6"> Progression</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($structures as $structure) : ?>
+        <tr>
+            <td class="libelle" id="libelle_<?php echo $structure->getId(); ?>">
+                <?php if ($canVoirStructure) : ?>
+                    <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/campagne/structure', ['campagne' => $campagne->getId(), 'structure' => $structure->getId()], [], true); ?>"
+                       title="Accéder aux suivi de cette structure"
+                    >
+                        <?php echo $structure->getLibelleCourt(); ?>
+                    </a>
+                <?php else : ?>
+                    <?php echo $structure->getLibelleCourt(); ?>
+                <?php endif; ?>
+                <?php if ($structure->getSigle()) : ?>
+                    &nbsp; (<?php echo $structure->getSigle(); ?>)
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($structure->getType()) : ?>
+                    <?php echo $structure->getType()->getLibelle(); ?>
+                <?php endif; ?>
+            </td>
+            <td class="progression"
+                id="progression_<?php echo $campagne->getId(); ?>_<?php echo $structure->getId(); ?>"> TO BE LOADED ...
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<h2> Légende </h2>
+
+<?php echo $this->campagneAvancement([], [], null, ['only-legende' => true]); ?>
+
+<script>
+    $(function () {
+
+        let base_url = "<?php echo $this->url('entretien-professionnel/campagne/structure-progression'); ?>";
+        $('td.progression').each(function (index, cell) {
+            let id = cell.id;
+            let campagne_id = id.split('_')[1];
+            let structure_id = id.split('_')[2];
+
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "/" + campagne_id + "/" + structure_id,
+                beforeSend:
+                    function () {
+                        $("td#" + id).html("Chargement en cours ...");
+                    },
+                success:
+                    function (retour) {
+                        $("td#" + id).html(retour);
+                    }
+            });
+        });
+
+        $('table#progression').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [2], orderable: false}
+            ]
+        });
+    });
+</script>
+

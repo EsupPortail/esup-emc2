@@ -5,10 +5,16 @@ namespace EntretienProfessionnel\Form\EntretienProfessionnel;
 use Application\Service\Agent\AgentService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class EntretienProfessionnelHydratorFactory {
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function __invoke(ContainerInterface $container)  :EntretienProfessionnelHydrator
     {
         /**
@@ -20,9 +26,6 @@ class EntretienProfessionnelHydratorFactory {
         $campagneService = $container->get(CampagneService::class);
         $userService = $container->get(UserService::class);
 
-        /**
-         * @var EntretienProfessionnelHydrator $hydrator
-         */
         $hydrator = new EntretienProfessionnelHydrator();
         $hydrator->setAgentService($agentService);
         $hydrator->setCampagneService($campagneService);

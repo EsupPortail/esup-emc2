@@ -8,11 +8,8 @@ use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
-use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
-use FichePoste\Form\Expertise\ExpertiseFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
-use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -20,7 +17,6 @@ use Application\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
-use FichePoste\Service\Expertise\ExpertiseServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
@@ -29,10 +25,12 @@ use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FichePoste\Entity\Db\Expertise;
+use FichePoste\Form\Expertise\ExpertiseFormAwareTrait;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use FichePoste\Provider\Parametre\FichePosteParametres;
 use FichePoste\Provider\Template\PdfTemplate;
 use FichePoste\Provider\Validation\FichePosteValidations;
+use FichePoste\Service\Expertise\ExpertiseServiceAwareTrait;
 use FichePoste\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -40,8 +38,8 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Mpdf\MpdfException;
+use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -377,7 +375,6 @@ class FichePosteController extends AbstractActionController
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var AssocierTitreForm $form */
         $form = $this->getAssocierTitreForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true));
         $form->bind($fiche);
@@ -611,7 +608,6 @@ class FichePosteController extends AbstractActionController
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var array $applications */
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte);
 
         /** @var Request $request */
@@ -643,7 +639,6 @@ class FichePosteController extends AbstractActionController
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var array $competences */
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte);
 
         /** @var Request $request */
@@ -861,7 +856,6 @@ class FichePosteController extends AbstractActionController
             $this->getSpecificitePosteService()->create($specificite);
         }
 
-        /** @var SpecificitePosteForm $form */
         $form = $this->getSpecificitePosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/editer-specificite', ['fiche' => $fiche->getId()], [], true));
         $form->bind($specificite);

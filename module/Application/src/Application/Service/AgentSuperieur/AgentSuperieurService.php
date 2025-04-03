@@ -121,13 +121,15 @@ class AgentSuperieurService
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
             ->andWhere('agentsuperieur.histoCreation IS NULL OR agentsuperieur.histoCreation < :fin')->setParameter('fin', $dateFin)
             ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction > :debut')->setParameter('debut', $dateDebut);
-
         $result = $qb->getQuery()->getResult();
 
         $agents = [];
+        /** @var AgentSuperieur $item */
         foreach ($result as $item) {
             $agent = $item->getAgent();
-            $agents[$agent->getId()] = $agent;
+            if ($agent->hasAffectationActive($dateDebut, $dateFin)) {
+                $agents[$agent->getId()] = $agent;
+            }
         }
         return $agents;
     }

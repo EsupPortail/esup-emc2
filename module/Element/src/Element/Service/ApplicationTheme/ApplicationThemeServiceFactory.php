@@ -23,9 +23,8 @@ class ApplicationThemeServiceFactory {
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var ApplicationThemeService $service */
         $service = new ApplicationThemeService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

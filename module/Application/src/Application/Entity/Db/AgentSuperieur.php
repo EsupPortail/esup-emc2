@@ -3,14 +3,16 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterface
+class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterface, ResourceInterface
 {
     use HistoriqueAwareTrait;
     use IsSynchronisableTrait;
@@ -19,6 +21,11 @@ class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterf
     private ?string $id = null;
     private ?Agent $agent = null;
     private ?Agent $superieur = null;
+
+    public function getResourceId(): string
+    {
+        return "Chaine";
+    }
 
     public function getId(): ?string
     {
@@ -36,7 +43,7 @@ class AgentSuperieur implements HistoriqueAwareInterface, IsSynchronisableInterf
         if ($this->getSuperieur() === null) { throw new RuntimeException("AgentSuperieur::generateId() : Superieur manquant");}
         if ($this->getDateDebut() === null) { throw new RuntimeException("AgentSuperieur::generateId() : Date de début manquant");}
         if ($this->sourceId === null) $this->sourceId = 'EMC2';
-        $id = $this->sourceId . "-". $this->getAgent()->getId() . "-" . $this->getSuperieur()->getId() . "-". $this->getDateDebut()->format('dmYHi');
+        $id = $this->sourceId . "-". $this->getAgent()->getId() . "-" . $this->getSuperieur()->getId() . "-". $this->getDateDebut()->format('dmYHi') . "-". (new DateTime())->format('YmdHis');
         return $id;
     }
 

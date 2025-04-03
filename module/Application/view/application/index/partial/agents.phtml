@@ -14,10 +14,10 @@ Vous êtes responsable de <?php echo count($agents); ?> agent·es.
 <table class="table table-condensed datatable" id="agents">
     <thead>
     <tr>
-        <th data-type="string"> Dénomination </th>
-        <th> Affectations </th>
-        <th> Grades </th>
-        <th class="action"> Action </th>
+        <th class='col-md-3' data-type="string"> Dénomination </th>
+        <th class='col-md-4'> Affectations </th>
+        <th class='col-md-4'> Grades </th>
+        <th class="col-md-1 action"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -56,7 +56,9 @@ Vous êtes responsable de <?php echo count($agents); ?> agent·es.
             </td>
             <td class="action">
                 <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
-                <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>">
+                <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                   class="action secondary"
+                >
                     <span class="icon icon-user"></span>
                     Afficher
                 </a>
@@ -69,10 +71,16 @@ Vous êtes responsable de <?php echo count($agents); ?> agent·es.
 
 <script>
     $(document).ready(function() {
-        $("table#agents").DataTable( {
-            'paging' : false,
-            'searching' : true,
-            'info' : false,
+        $("table#agents").dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [3], orderable: false }
+            ]
         });
     });
 </script>

@@ -54,6 +54,6 @@ $canDetruireMission     = $this->isAllowed(MissionspecifiqueaffectationPrivilege
 
     $affectations = $agent->getMissionsSpecifiques();
 
-    echo $this->affectationsMissionSpecifique($affectations, ['display-agent' => false]);
+    echo $this->affectationsMissionSpecifique($affectations, ['display-agent' => false, 'retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'fiches'])]);
 ?>
 

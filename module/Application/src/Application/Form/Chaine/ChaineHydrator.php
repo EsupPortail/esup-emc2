@@ -42,7 +42,6 @@ class ChaineHydrator implements HydratorInterface
         $dateDebut = (isset($data['date_debut']) AND $data['date_debut'] !== '') ? DateTime::createFromFormat('Y-m-d H:i:s', $data['date_debut']. " 08:00:00") :null;
         $dateFin = (isset($data['date_fin']) AND $data['date_fin'] !== '') ? DateTime::createFromFormat('Y-m-d H:i:s', $data['date_fin']. " 18:00:00") :null;
 
-
         $object->setAgent($agent);
         $object->setDateDebut($dateDebut);
         $object->setDateFin($dateFin);

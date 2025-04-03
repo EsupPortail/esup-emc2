@@ -63,7 +63,7 @@ if ($mode === 'edition-fiche-metier') {
     </div>
     <div class="card-body">
         <?php echo $this->competenceBloc($competences, $fichemetier,
-            ['display' => ['titre' => false, 'validation' => false, 'raison' => false],
+            ['display' => ['titre' => false, 'validation' => false, 'raison' => false], 'id' => 'competences-specifiques', 'mode' => $mode,
                 'actions' => $actions]); ?>
     </div>
 </div>

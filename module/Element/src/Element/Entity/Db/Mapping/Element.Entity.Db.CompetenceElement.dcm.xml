@@ -7,22 +7,22 @@
         </id>
 
         <many-to-one target-entity="Element\Entity\Db\Competence"  field="competence">
-            <join-column name="competence_id" referenced-column-name="id"/>
+            <join-column name="competence_id" />
         </many-to-one>
-        <field name="commentaire"     type="string" length="4096"       column="commentaire"     nullable="true"/>
+        <field name="commentaire"     length="4096"       column="commentaire"     nullable="true"/>
 <!--        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validations">-->
-<!--            <join-column name="validation_id" referenced-column-name="id" />-->
+<!--            <join-column name="validation_id"  />-->
 <!--        </one-to-one>-->
 
         <many-to-one target-entity="Element\Entity\Db\Niveau"  field="niveau">
-            <join-column name="niveau_id" referenced-column-name="id"/>
+            <join-column name="niveau_id" />
         </many-to-one>
         <field name="clef" column="clef" type="boolean" nullable="true"/>
 
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
+        <field name="histoModification" type="datetime"                 column="histo_modification" />
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="ID"/>

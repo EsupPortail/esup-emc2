@@ -23,7 +23,7 @@ class ReferenceServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new ReferenceService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
 
         return $service;
     }

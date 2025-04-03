@@ -20,7 +20,6 @@ class CompetenceThemeFormFactory
         /** @var CompetenceThemeHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(CompetenceThemeHydrator::class);
 
-        /** @var CompetenceThemeForm $form */
         $form = new CompetenceThemeForm();
         $form->setHydrator($hydrator);
         return $form;

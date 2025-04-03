@@ -4,12 +4,18 @@ namespace Fichier\Service\Fichier;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenUtilisateur\Service\User\UserService;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-class FichierServiceFactory {
+class FichierServiceFactory
+{
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): FichierService
     {
         $path = $container->get('Config')['unicaen-fichier']['upload-path'];
 
@@ -20,9 +26,8 @@ class FichierServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $userService = $container->get(UserService::class);
 
-        /** @var FichierService $service */
         $service = new FichierService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setUserService($userService);
         $service->setPath($path);
         return $service;

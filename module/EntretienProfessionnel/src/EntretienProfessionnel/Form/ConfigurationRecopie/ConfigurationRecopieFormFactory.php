@@ -2,14 +2,16 @@
 
 namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireService;
 use Interop\Container\ContainerInterface;
 
 class ConfigurationRecopieFormFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return ConfigurationRecopieForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : ConfigurationRecopieForm
     {
@@ -21,7 +23,6 @@ class ConfigurationRecopieFormFactory {
         /** @var ConfigurationRecopieHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ConfigurationRecopieHydrator::class);
 
-        /** @var ConfigurationRecopieForm $form */
         $form = new ConfigurationRecopieForm();
         $form->setFormulaireService($formulaireService);
         $form->setHydrator($hydrator);

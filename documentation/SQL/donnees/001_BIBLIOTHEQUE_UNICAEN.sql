@@ -471,7 +471,8 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'CODE_UNIV', 'Code de l''établissement porteur principal', '<p>Sert notamment pour l''affichage des status</p>', 'String',  1000 UNION
     SELECT 'INSTALL_PATH', 'Chemin d''installation (utiliser pour vérification)', null, 'String', 1000 UNION
     SELECT 'EMAIL_ASSISTANCE', 'Adresse électronique de l''assistance', null, 'String', 100 UNION
-    SELECT 'FAVICON','Chemin vers le favicon', null,'String',1000 UNION
+    SELECT 'FAVICON','Chemin vers le favicon', null,'String',1010 UNION
+    SELECT 'LOGO_ETABLISSEMENT','Logo de l''établissement', null,'String',1000 UNION
     SELECT 'VERSION', 'Version de l''application', null, 'String',  11  UNION
     SELECT 'APP_NAME', 'Nom de l''application', null, 'String', 10 UNION
     SELECT 'RELEASE_DATE', 'Date de la publication de la version', null, 'String', 12

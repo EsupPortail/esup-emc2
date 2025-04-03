@@ -26,7 +26,7 @@ INSERT INTO carriere_categorie (code, libelle, histo_creation, histo_createur_id
 
 INSERT INTO carriere_mobilite (code, libelle, description)
     VALUES ('RECHERCHE_PASSIVE', 'J''étudirai des propositions qui me seraient faites', null),
-           ('PAS_DE_DEMANDE', 'Je ne cherche ni étudie des mobilité', null),
+           ('PAS_DE_DEMANDE', 'Je ne cherche ni étudie de mobilité', null),
            ('RECHERCHE_ACTIVE', 'En recherche active', '<p>Je d&eacute;sire changer de structure</p>');
 
 --------------------------------------------------------------------------------------------------------------

@@ -24,14 +24,9 @@ class FichierViewHelper extends AbstractHelper
     }
 
 
-    /**
-     * @param Fichier $fichier
-     * @return string
-     */
-    public function render($fichier, $retour = null)
+    public function render(Fichier $fichier, $retour = null): string
     {
-        $text = "";
-        $text .= "<div class='fichier-view-helper'>";
+        $text  = "<div class='fichier-view-helper'>";
         $text .= "<div class='row'>";
         $text .= "<div class='col-md-6'>";
         $text .= "<dl class='dl-horizontal'>";

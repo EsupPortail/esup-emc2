@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Service\AgentRef\AgentRefServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
@@ -17,12 +18,14 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 
 class AgentHierarchieController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
+    use AgentRefServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use StructureServiceAwareTrait;
     use AgentHierarchieCalculFormAwareTrait;
@@ -70,11 +73,13 @@ class AgentHierarchieController extends AbstractActionController
 
             $fichier_path = $file['fichier']['tmp_name'];
             $mode = $data['mode'];
+            $source = $data['source'];
 
             //reading
             $array = [];
             $warning = [];
             $chaines = [];
+            $agents = [];
 
             if ($fichier_path === null or $fichier_path === '') {
                 $error[] = "Aucun fichier !";
@@ -86,29 +91,30 @@ class AgentHierarchieController extends AbstractActionController
                 }
 
 
-
                 foreach ($array as $line) {
-                    $agent_id = $line[0]??null;
-                    $agent = $this->getAgentService()->getAgent($agent_id);
+                    $agent_id = $line[0] ?? null;
+                    if ($source === 'EMC2') $agent = $this->getAgentService()->getAgent($agent_id);
+                    else $agent = $this->getAgentRefService()->getAgentByRef($source, $agent_id);
                     if ($agent === null) $warning[] = "Aucun·e agent·e de trouvé·e avec l'identifiant [" . $agent_id . "]";
-                    $responsable_id = $line[1]??null;
-                    $responsable = $this->getAgentService()->getAgent($responsable_id);
+                    $responsable_id = $line[1] ?? null;
+                    if ($source === 'EMC2') $responsable = $this->getAgentService()->getAgent($responsable_id);
+                    else $responsable = $this->getAgentRefService()->getAgentByRef($source, $responsable_id);
                     if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
-                    $date_debut_st = $line[2]??null;
+                    $date_debut_st = $line[2] ?? null;
                     $dateDebut = DateTime::createFromFormat('d/m/Y', $date_debut_st);
-                    if ($dateDebut === false) $warning[] = "Impossibilité de calculé la date de début à partir de [".$date_debut_st."]";
-                    $date_fin_st = $line[3]??null;
+                    if ($dateDebut === false) $warning[] = "Impossibilité de calculé la date de début à partir de [" . $date_debut_st . "]";
+                    $date_fin_st = $line[3] ?? null;
                     $dateFin = DateTime::createFromFormat('d/m/Y', $date_fin_st);
-                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculé la date de fin à partir de [".$date_fin_st."]";
+                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculé la date de fin à partir de [" . $date_fin_st . "]";
 
                     $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
-                    $agents[$agent->getId()] = $agent;
+                    if ($agent) $agents[$agent->getId()] = $agent;
                 }
             }
 
             if ($mode === 'import' and empty($error)) {
                 foreach ($agents as $agent) {
-                    switch($type) {
+                    switch ($type) {
                         case Agent::ROLE_SUPERIEURE :
                             $this->getAgentSuperieurService()->historiseAll($agent);
                             break;
@@ -116,11 +122,11 @@ class AgentHierarchieController extends AbstractActionController
                             $this->getAgentAutoriteService()->historiseAll($agent);
                             break;
                         default:
-                            throw new RuntimeException("Type de responsabilité [".$type."] inconnu");
+                            throw new RuntimeException("Type de responsabilité [" . $type . "] inconnu");
                     }
                 }
                 foreach ($chaines as $chaine) {
-                    switch($type) {
+                    switch ($type) {
                         case Agent::ROLE_SUPERIEURE :
                             $this->getAgentSuperieurService()->createAgentSuperieurWithArray($chaine);
                             break;
@@ -128,7 +134,7 @@ class AgentHierarchieController extends AbstractActionController
                             $this->getAgentAutoriteService()->createAgentAutoriteWithArray($chaine);
                             break;
                         default:
-                            throw new RuntimeException("Type de responsabilité [".$type."] inconnu");
+                            throw new RuntimeException("Type de responsabilité [" . $type . "] inconnu");
                     }
                 }
             }
@@ -160,12 +166,16 @@ class AgentHierarchieController extends AbstractActionController
 
     public function calculerAction(): ViewModel
     {
+        $type = $this->params()->fromRoute('type');
+
+
         $form = $this->getAgentHierarchieCalculForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/calculer', ['mode' => 'preview', 'structure' => null], [], true));
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $error = [];
+            $warning = [];
             $data = $request->getPost();
 
             $mode = $data['mode'];
@@ -176,60 +186,79 @@ class AgentHierarchieController extends AbstractActionController
             $agents = $this->getAgentService()->getAgentsByStructures($structures);
 
             $superieurs = [];
-//            $autorites = [];
-            foreach ($agents as $agent) {
-                $superieurs[$agent->getId()] = $this->getAgentService()->computeSuperieures($agent);
-                $autorites[$agent->getId()] = $this->getAgentService()->computeAutorites($agent, $superieurs[$agent->getId()]);
-            }
-
-            $warning = [];
-            if ($mode === 'compute' and empty($error)) {
+            if ($type === Agent::ROLE_SUPERIEURE) {
                 foreach ($agents as $agent) {
-                    $this->getAgentAutoriteService()->historiseAll($agent);
-                    if (empty($autorites[$agent->getId()])) {
-                        $warning[] = "Aucune autorité n'a pu être déterminée pour " . $agent->getDenomination();
+                    $superieurs[$agent->getId()] = [];
+                    $affectation = $agent->getAffectationPrincipale();
+                    $structureAffectation = $affectation->getStructure();
+                    $responsables = $structureAffectation?->getResponsables();
+                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                        return $responsable->getAgent() !== $agent;
+                    });
+                    while (empty($responsables) and $structureAffectation and $structureAffectation !== $affectation->getStructure()->getNiv2()) {
+                        $structureAffectation = $structureAffectation->getParent();
+                        $responsables = $structureAffectation->getResponsables();
+                        $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                            return $responsable->getAgent() !== $agent;
+                        });
+                    }
+                    if (empty($responsables)) {
+                        $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
                     } else {
-                        foreach ($autorites[$agent->getId()] as $autorite) {
-                            $agentAutorite = new AgentAutorite();
-                            $agentAutorite->setAgent($agent);
-                            $agentAutorite->setAutorite($autorite->getAgent());
-                            $agentAutorite->setDateDebut($autorite->getDateDebut());
-                            $agentAutorite->setDateFin($autorite->getDateFin());
-                            $agentAutorite->setSourceId('EMC2');
-
-                            $id = $agentAutorite->generateId();
-                            $old = $this->getAgentAutoriteService()->getAgentAutorite($id);
-                            if ($old !== null) {
-                                $this->getAgentAutoriteService()->restore($old);
-                            } else {
-                                $agentAutorite->setId($id);
-                                $agentAutorite->setInsertedOn(new DateTime());
-                                $this->getAgentAutoriteService()->create($agentAutorite);
-                            }
+                        foreach ($responsables as $responsable) {
+                            $superieur = new AgentSuperieur();
+                            $superieur->setSuperieur($responsable->getAgent());
+                            $superieur->setAgent($agent);
+                            $superieur->setDateDebut($responsable->getDateDebut());
+                            $superieur->setDateFin($responsable->getDateFin());
+                            $superieur->setInsertedOn(new DateTime());
+                            $superieur->setId($superieur->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
+                            $superieurs[$agent->getId()][] = $superieur;
                         }
                     }
-                    $this->getAgentSuperieurService()->historiseAll($agent);
-                    if (empty($superieurs[$agent->getId()])) {
-                        $warning[] = "Aucun supérieur n'a pu être déterminée pour " . $agent->getDenomination();
-                    } else {
-                        foreach ($superieurs[$agent->getId()] as $superieur) {
-                            $agentSuperieur = new AgentSuperieur();
-                            $agentSuperieur->setAgent($agent);
-                            $agentSuperieur->setSuperieur($superieur->getAgent());
-                            $agentSuperieur->setDateDebut($superieur->getDateDebut());
-                            $agentSuperieur->setDateFin($superieur->getDateFin());
-                            $agentSuperieur->setSourceId('EMC2');
+                }
+            }
 
-                            $id = $agentSuperieur->generateId();
-                            $old = $this->getAgentSuperieurService()->getAgentSuperieur($id);
-                            if ($old !== null) {
-                                $this->getAgentSuperieurService()->restore($old);
-                            } else {
-                                $agentSuperieur->setId($id);
-                                $agentSuperieur->setInsertedOn(new DateTime());
-                                $this->getAgentSuperieurService()->create($agentSuperieur);
-                            }
+            $autorites = [];
+            if ($type === Agent::ROLE_AUTORITE) {
+
+                foreach ($agents as $agent) {
+                    $autorites[$agent->getId()] = [];
+                    $affectation = $agent->getAffectationPrincipale();
+                    $structureNiv2 = $affectation->getStructure()->getNiv2();
+                    $responsables = ($structureNiv2) ? $structureNiv2->getResponsables() : [];
+                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                        return $responsable->getAgent() !== $agent;
+                    });
+
+                    if (empty($responsables)) {
+                        $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
+                    } else {
+                        foreach ($responsables as $responsable) {
+                            $autorite = new AgentAutorite();
+                            $autorite->setAutorite($responsable->getAgent());
+                            $autorite->setAgent($agent);
+                            $autorite->setDateDebut($responsable->getDateDebut());
+                            $autorite->setDateFin($responsable->getDateFin());
+                            $autorite->setInsertedOn(new DateTime());
+                            $autorite->setId($autorite->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
+                            $autorites[$agent->getId()][] = $autorite;
                         }
+                    }
+                }
+            }
+
+            if ($mode === 'compute') {
+                foreach ($superieurs as $agentId => $superieursListe) {
+                    $this->getAgentSuperieurService()->historiseAll($agents[$agentId]);
+                    foreach ($superieursListe as $superieur) {
+                        $this->getAgentSuperieurService()->create($superieur);
+                    }
+                }
+                foreach ($autorites as $agentId => $autoritesListe) {
+                    $this->getAgentAutoriteService()->historiseAll($agents[$agentId]);
+                    foreach ($autoritesListe as $autorite) {
+                        $this->getAgentAutoriteService()->create($autorite);
                     }
                 }
             }
@@ -241,8 +270,12 @@ class AgentHierarchieController extends AbstractActionController
             if ($mode === 'compute') {
                 $title = "Calcul de chaînes hiérarchiques (Importation)";
             }
+
+            $form->get('structure')->setValue($structure->getId());
+            $form->get('mode')->setValue($mode);
             return new ViewModel([
                 'title' => $title,
+                'type' => $type,
                 'form' => $form,
                 'structure' => $structure,
                 'agents' => $agents,
@@ -253,13 +286,12 @@ class AgentHierarchieController extends AbstractActionController
             ]);
         }
 
-        return new ViewModel([
-            'title' => "Calcul de chaînes hiérarchiques",
-            'form' => $form,
-        ]);
+        return new ViewModel(['title' => "Calcul de chaînes hiérarchiques",
+            'form' => $form, 'type' => $type, 'superieurs' => [], 'autorites' => [],]);
     }
 
-    public function chaineHierarchiqueJsonAction(): JsonModel
+    public
+    function chaineHierarchiqueJsonAction(): JsonModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
@@ -290,7 +322,8 @@ class AgentHierarchieController extends AbstractActionController
 
     /** Fonction de recherche *****************************************************************************************/
 
-    public function rechercherAgentWithAutoriteAction(): JsonModel
+    public
+    function rechercherAgentWithAutoriteAction(): JsonModel
     {
         $superieur = $this->getAgentService()->getAgentByConnectedUser();
 
@@ -302,7 +335,8 @@ class AgentHierarchieController extends AbstractActionController
         exit();
     }
 
-    public function rechercherAgentWithSuperieurAction(): JsonModel
+    public
+    function rechercherAgentWithSuperieurAction(): JsonModel
     {
         $superieur = $this->getAgentService()->getAgentByConnectedUser();
 
@@ -324,11 +358,10 @@ class AgentHierarchieController extends AbstractActionController
             'autorite' => new AgentAutorite(),
             default => throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu"),
         };
-
         $chaine->setAgent($agent);
 
         $form = $this->getChaineForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => $type], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/ajouter', ['agent' => $agent?->getId(), 'type' => $type], [], true));
         $form->bind($chaine);
 
         $request = $this->getRequest();
@@ -336,6 +369,16 @@ class AgentHierarchieController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                if ($data['historisation'] === '1') {
+                    switch ($type) {
+                        case 'superieur':
+                            $this->getAgentSuperieurService()->historiseAll($chaine->getAgent());
+                            break;
+                        case 'autorite':
+                            $this->getAgentAutoriteService()->historiseAll($chaine->getAgent());
+                            break;
+                    }
+                }
                 $id = $chaine->generateId();
                 $chaine->setId($id);
                 $chaine->setSourceId("EMC2");
@@ -363,13 +406,14 @@ class AgentHierarchieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => $titre,
             'form' => $form,
-            'js' => ($agent)?"$('#agent-autocomplete').parent().hide();":"",
+            'js' => ($agent) ? "$('#agent-autocomplete').parent().hide();" : "",
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function modifierAction(): ViewModel
+    public
+    function modifierAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $chaineId = $this->params()->fromRoute('chaine');
@@ -415,13 +459,14 @@ class AgentHierarchieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => $titre,
             'form' => $form,
-            'js' => ($chaine->getAgent())?"$('#agent-autocomplete').parent().hide();":"",
+            'js' => ($chaine->getAgent()) ? "$('#agent-autocomplete').parent().hide();" : "",
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function historiserAction(): Response
+    public
+    function historiserAction(): Response
     {
         $type = $this->params()->fromRoute('type');
         $chaineId = $this->params()->fromRoute('chaine');
@@ -444,7 +489,8 @@ class AgentHierarchieController extends AbstractActionController
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $chaine->getAgent()->getId()], ['fragment' => 'informations'], true);
     }
 
-    public function restaurerAction(): Response
+    public
+    function restaurerAction(): Response
     {
         $type = $this->params()->fromRoute('type');
         $chaineId = $this->params()->fromRoute('chaine');
@@ -467,7 +513,8 @@ class AgentHierarchieController extends AbstractActionController
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $chaine->getAgent()->getId()], ['fragment' => 'informations'], true);
     }
 
-    public function supprimerAction(): ViewModel
+    public
+    function supprimerAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $chaineId = $this->params()->fromRoute('chaine');

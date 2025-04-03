@@ -33,9 +33,9 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use RuntimeException;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -329,7 +329,10 @@ class EntretienProfessionnelController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelService()->historise($entretien);
+            if ($data["reponse"] === "oui") {
+                $this->getEntretienProfessionnelService()->historise($entretien);
+                $this->getNotificationService()->triggerAnnulationEntretienProfessionnel($entretien);
+            }
             exit();
         }
 
@@ -349,6 +352,7 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->restore($entretien);
+        $this->getNotificationService()->triggerConvocationDemande($entretien);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
@@ -366,6 +370,7 @@ class EntretienProfessionnelController extends AbstractActionController
             if ($data["reponse"] === "oui") {
                 foreach ($entretien->getEvenements() as $evenement) {
                     $this->getEvenementService()->supprimer($evenement);
+                    $this->getNotificationService()->triggerAnnulationEntretienProfessionnel($entretien);
                 }
                 $this->getEntretienProfessionnelService()->delete($entretien);
             }

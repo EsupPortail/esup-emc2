@@ -38,7 +38,7 @@ class RgpdRendererEvenement extends EvenementService {
         try {
             //todo as param 'P3M'
             $date = (new DateTime())->sub( new DateInterval('P3M'));
-            $rendus = $this->getRenduService()->getRenduOlderThan($date);
+            $rendus = $this->getRenduService()->getRendusOlderThan($date);
             $nb = 0;
             foreach ($rendus as $rendu) {
                 $this->getRenduService()->delete($rendu);

@@ -19,7 +19,6 @@ class CompetenceTypeFormFactory {
         /** @var CompetenceTypeHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(CompetenceTypeHydrator::class);
 
-        /** @var CompetenceTypeForm $form */
         $form = new CompetenceTypeForm();
         $form->setHydrator($hydrator);
         return $form;

@@ -5,10 +5,16 @@ namespace Application\Form\AjouterFicheMetier;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AjouterFicheMetierFormFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): AjouterFicheMetierForm
     {
         /** @var AjouterFicheMetierHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(AjouterFicheMetierHydrator::class);
@@ -20,7 +26,6 @@ class AjouterFicheMetierFormFactory {
         $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
 
-        /** @var AjouterFicheMetierForm $form */
         $form = new AjouterFicheMetierForm();
         $form->setDomaineService($domaineService);
         $form->setFicheMetierService($ficheMetierService);

@@ -10,8 +10,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class MissionPrincipaleServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return MissionPrincipaleService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -21,7 +19,7 @@ class MissionPrincipaleServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new MissionPrincipaleService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

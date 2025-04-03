@@ -9,8 +9,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class AgentPosteServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return AgentPosteService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -19,7 +17,7 @@ class AgentPosteServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new AgentPosteService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

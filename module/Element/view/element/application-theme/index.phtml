@@ -32,7 +32,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
         <?php if ($canAjouter) : ?>
             <a  <?php /** @see \Element\Controller\ApplicationThemeController::ajouterAction() */?>
                     href="<?php echo $this->url('element/application-theme/ajouter', [], [], true);?>"
-                    class="btn btn-primary action ajax-modal"
+                    class="btn btn-primary ajax-modal"
                     data-event="modification"
             >
                 <span class="icon icon-ajouter"></span>
@@ -45,7 +45,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
             <a href="<?php echo $this->url('element/application'); ?>"
                class="btn btn-secondary"
             >
-                <span class="icon acceder"></span>
+                <span class="icon icon-listing"></span>
                 Accéder aux applications
             </a>
         <?php endif; ?>
@@ -73,7 +73,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Element\Controller\ApplicationThemeController::afficherAction() */?>
                     <a href="<?php echo $this->url('element/application-theme/afficher', ['application-groupe' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal">
+                       class="ajax-modal action secondary">
                         <span class="icon icon-voir"></span>
                         Afficher
                     </a>
@@ -82,7 +82,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                     <br/>
                     <?php /** @see \Element\Controller\ApplicationThemeController::modifierAction() */?>
                     <a href="<?php echo $this->url('element/application-theme/editer', ['application-groupe' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
+                       class="ajax-modal action primary" data-event="modification">
                         <span class="icon icon-editer"></span>
                         Modifier
                     </a>
@@ -91,13 +91,17 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                     <br>
                     <?php if ($theme->estNonHistorise()) : ?>
                         <?php /** @see \Element\Controller\ApplicationThemeController::historiserAction() */?>
-                        <a href="<?php echo $this->url('element/application-theme/historiser', ['application-groupe' => $theme->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/application-theme/historiser', ['application-groupe' => $theme->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-historiser"></span>
                             Historiser
                         </a>
                     <?php else : ?>
                         <?php /** @see \Element\Controller\ApplicationThemeController::restaurerAction() */?>
-                        <a href="<?php echo $this->url('element/application-theme/restaurer', ['application-groupe' => $theme->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/application-theme/restaurer', ['application-groupe' => $theme->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
                         </a>
@@ -107,7 +111,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                     <br>
                     <?php /** @see \Element\Controller\ApplicationThemeController::detruireAction() */?>
                     <a href="<?php echo $this->url('element/application-theme/detruire', ['application-groupe' => $theme->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification">
+                            class="ajax-modal action danger" data-event="modification">
                         <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Supprimer

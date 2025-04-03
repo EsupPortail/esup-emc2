@@ -8,6 +8,7 @@
         </id>
 
         <field name="code" column="code" length="40"/>
+        <field name="sigle" column="sigle" length="40"/>
 
         <field name="libelleCourt" column="libelle_court" length="128"/>
         <field name="libelleLong" column="libelle_long" length="1024"/>
@@ -56,6 +57,8 @@
         <many-to-one target-entity="Structure\Entity\Db\Structure" field="niv2OverWriten">
             <join-column name="niv2_id_ow"/>
         </many-to-one>
+
+        <field name="niveau" column="niveau" type="integer" nullable="true"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="createdOn" column="created_on" type="datetime"/>

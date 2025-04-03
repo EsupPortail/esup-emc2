@@ -30,7 +30,7 @@ class ChaineAssertion extends AbstractAssertion
 
     public function computeAssertion($entity, string $privilege) : bool
     {
-        if (!$entity instanceof AgentSuperieur && !$entity instanceof AgentAutorite) {
+        if ($entity && !$entity instanceof AgentSuperieur && !$entity instanceof AgentAutorite) {
             return false;
         }
 
@@ -39,8 +39,8 @@ class ChaineAssertion extends AbstractAssertion
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
-        $agentEntity = $entity->getAgent();
-        $structures = $agentEntity->getStructures();
+        $agentEntity = ($entity)?->getAgent();
+        $structures = ($agentEntity)?->getStructures();
 
         $isResponsable = false;
         $isSuperieur = false;

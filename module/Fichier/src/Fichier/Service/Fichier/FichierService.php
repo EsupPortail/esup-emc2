@@ -4,151 +4,73 @@ namespace Fichier\Service\Fichier;
 
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Exception;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Entity\Db\Nature;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
-class FichierService {
-    use EntityManagerAwareTrait;
+class FichierService
+{
+    use ProvidesObjectManager;
     use UserServiceAwareTrait;
 
-    private $path;
+    private ?string $path = null;
 
-    /**
-     * @param string $path
-     * @return FichierService
-     */
-    public function setPath($path)
+    public function setPath(?string $path): FichierService
     {
         $this->path = $path;
         return $this;
     }
 
-    /**
-     * @param Fichier $fichier
-     * @return Fichier
-     */
-    public function create($fichier)
+    public function create(Fichier $fichier): Fichier
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $fichier->setHistoCreateur($user);
-        $fichier->setHistoCreation($date);
-        $fichier->setHistoModificateur($user);
-        $fichier->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->persist($fichier);
-            $this->getEntityManager()->flush($fichier);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la création d'un Fichier.", $e);
-        }
+        $this->getObjectManager()->persist($fichier);
+        $this->getObjectManager()->flush($fichier);
         return $fichier;
     }
 
-    /**
-     * @param Fichier $fichier
-     * @return Fichier
-     */
-    public function update($fichier)
+    public function update(Fichier $fichier): Fichier
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $fichier->setHistoModificateur($user);
-        $fichier->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($fichier);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Fichier.", $e);
-        }
+        $this->getObjectManager()->flush($fichier);
         return $fichier;
     }
 
-    /**
-     * @param Fichier $fichier
-     * @return Fichier
-     */
-    public function historise($fichier)
+    public function historise(Fichier $fichier): Fichier
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $fichier->setHistoDestructeur($user);
-        $fichier->setHistoDestruction($date);
-
-        try {
-            $this->getEntityManager()->flush($fichier);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Fichier.", $e);
-        }
+        $this->getObjectManager()->flush($fichier);
         return $fichier;
     }
 
-    /**
-     * @param Fichier $fichier
-     * @return Fichier
-     */
-    public function restore($fichier)
+    public function restore(Fichier $fichier): Fichier
     {
-        $fichier->setHistoDestructeur(null);
-        $fichier->setHistoDestruction(null);
-
-        try {
-            $this->getEntityManager()->flush($fichier);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Fichier.", $e);
-        }
+        $this->getObjectManager()->flush($fichier);
         return $fichier;
     }
 
-    /**
-     * @param Fichier $fichier
-     * @return Fichier
-     */
-    public function delete($fichier)
+    public function delete(Fichier $fichier): Fichier
     {
-
-        try {
-            $this->getEntityManager()->remove($fichier);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Fichier.", $e);
-        }
+        $this->getObjectManager()->remove($fichier);
+        $this->getObjectManager()->flush();
         return $fichier;
     }
 
-    /**
-     * @param integer $id
-     * @return Fichier
-     */
-    public function getFichier($id)
+    public function getFichier(?string $id): ?Fichier
     {
-        $qb = $this->getEntityManager()->getRepository(Fichier::class)->createQueryBuilder('fichier')
+        $qb = $this->getObjectManager()->getRepository(Fichier::class)->createQueryBuilder('fichier')
             ->andWhere('fichier.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Fichier partagent le même identifiant [".$id."]", $e);
+            throw new RuntimeException("Plusieurs Fichier partagent le même identifiant [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return Fichier
-     */
-    public function getRequestedFichier($controller, $paramName)
+    public function getRequestedFichier(AbstractActionController $controller, string $paramName = 'fichier'): ?Fichier
     {
         $id = $controller->params()->fromRoute($paramName);
         $fichier = $this->getFichier($id);
@@ -157,17 +79,17 @@ class FichierService {
 
     /**
      * Crée un fichier à partir des données d'upload fournies.
-     * @param array           $file Données résultant de l'upload de fichier
-     * @param Nature          $nature       Version de fichier
+     * @param array $file Données résultant de l'upload de fichier
+     * @param Nature $nature Version de fichier
      * @return Fichier fichier
      */
-    public function createFichierFromUpload($file, $nature)
+    public function createFichierFromUpload(array $file, Nature $nature): Fichier
     {
         /** @var DateTime $date */
         try {
             $date = new DateTime();
         } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+            throw new RuntimeException("Problème lors de la récupération de la date", 0, $e);
         }
 
         $fichier = null;
@@ -179,7 +101,7 @@ class FichierService {
             $typeFichier = $file['type'];
             $tailleFichier = $file['size'];
 
-            if (! is_uploaded_file($path)) {
+            if (!is_uploaded_file($path)) {
                 throw new RuntimeException("Possible file upload attack: " . $path);
             }
 
@@ -191,9 +113,8 @@ class FichierService {
                 ->setNature($nature)
                 ->setTypeMime($typeFichier)
                 ->setNomOriginal($nomFichier)
-                ->setTaille($tailleFichier)
-            ;
-            $fichier->setNomStockage($date->format('Ymd-His')."-".$uid."-".$nature->getCode()."-".$nomFichier);
+                ->setTaille($tailleFichier);
+            $fichier->setNomStockage($date->format('Ymd-His') . "-" . $uid . "-" . $nature->getCode() . "-" . $nomFichier);
 
             $newPath = $this->path . $fichier->getNomStockage();
             $res = move_uploaded_file($path, $newPath);
@@ -207,17 +128,11 @@ class FichierService {
         return $fichier;
     }
 
-    /**
-     * Retourne le contenu d'un Fichier sous la forme d'une chaîne de caractères.
-     *
-     * @param Fichier $fichier
-     * @return string
-     */
-    public function fetchContenuFichier(Fichier $fichier)
+    public function fetchContenuFichier(Fichier $fichier): string
     {
         $filePath = $this->path . $fichier->getNomStockage();
 
-        if (! is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new RuntimeException(
                 "Le fichier suivant n'existe pas ou n'est pas accessible sur le serveur : " . $filePath);
         }
@@ -227,7 +142,7 @@ class FichierService {
         return $contenuFichier;
     }
 
-    public function removeFichier(Fichier $fichier)
+    public function removeFichier(Fichier $fichier): void
     {
         $path = $this->path . $fichier->getNomStockage();
         $res = unlink($path);
@@ -243,12 +158,11 @@ class FichierService {
 
         $handle = fopen($fichier_path, "r");
         $array = [];
-        $all = "";
         while ($content = fgetcsv($handle, 0, ";")) {
-            $all = implode("|",$content);
+            $all = implode("|", $content);
             $encoding = mb_detect_encoding($all, 'UTF-8, ISO-8859-1');
             $content = array_map(function (string $st) use ($encoding) {
-                $st = str_replace(chr(63),'\'', $st);
+                $st = str_replace(chr(63), '\'', $st);
                 $st = mb_convert_encoding($st, 'UTF-8', $encoding);
                 return $st;
             }, $content);
@@ -256,15 +170,15 @@ class FichierService {
         }
 
         $header = $array[0];
-        $data = array_splice($array,1);
+        $data = array_splice($array, 1);
 
         $jsonData = [];
         foreach ($data as $item) {
             $jsonItem = [];
             foreach ($header as $key => $value) {
                 if ($explodeMultiline) {
-                    if (strstr($item[$key],PHP_EOL)) {
-                        $jsonItem[$value] = explode(PHP_EOL,$item[$key]);
+                    if (strstr($item[$key], PHP_EOL)) {
+                        $jsonItem[$value] = explode(PHP_EOL, $item[$key]);
                     } else {
                         $jsonItem[$value] = $item[$key];
                     }
@@ -275,7 +189,6 @@ class FichierService {
             $jsonData[] = $jsonItem;
         }
 
-        $json = json_encode($jsonData);
         return $jsonData;
     }
 }

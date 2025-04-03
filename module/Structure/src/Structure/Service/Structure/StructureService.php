@@ -2,11 +2,10 @@
 
 namespace Structure\Service\Structure;
 
-use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Entity\Db\FichePoste;
 use Application\Provider\Parametre\GlobalParametres;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -16,15 +15,16 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Provider\Role\RoleProvider;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class StructureService
@@ -51,10 +51,14 @@ class StructureService
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->leftJoin('gestionnaire.agent', 'gAgent')->addSelect('gAgent')
-            ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
+            ->addSelect('responsable')
+            ->leftJoin('structure.responsables', 'responsable','WITH','responsable.dateDebut < :now AND (responsable.dateFin > :now OR responsable.dateFin IS NULL)')
+            ->setParameter('now', new DateTime())
             ->leftJoin('responsable.agent', 'rAgent')->addSelect('rAgent')
             ->addSelect('type')->leftjoin('structure.type', 'type')
             ->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('responsable.deletedOn IS NULL')
+            ->andWhere('rAgent.deletedOn IS NULL')
             ->orderBy('structure.code');
         return $qb;
     }
@@ -76,6 +80,43 @@ class StructureService
     }
 
     /**
+     * @param array $params
+     * @return Structure[]
+     */
+    public function getStructuresWithFiltre(array $params): array
+    {
+        $qb = $this->createQueryBuilder();
+
+        if (isset($params['type']) and $params['type'] !== "") {
+            $qb = $qb->andWhere("type.id = :typeId")->setParameter('typeId', $params['type']);
+        }
+        if (isset($params['ferme'])) {
+            if ($params['ferme'] === "1") $qb->andWhere("structure.fermeture <= :fermeture")->setParameter('fermeture', new DateTime());
+            if ($params['ferme'] === "0") $qb->andWhere("structure.fermeture IS NULL OR structure.fermeture > :fermeture")->setParameter('fermeture', new DateTime());
+        }
+        if (isset($params['responsable'])) {
+            if ($params['responsable'] === "1") {
+                $qb = $qb->andWhere("responsable.agent IS NOT NULL")
+                    ->andWhere("responsable.dateDebut <= :maintenant")
+                    ->andWhere("responsable.dateFin IS NULL OR responsable.dateFin >= :maintenant")
+                    ->setParameter('maintenant', new DateTime());
+            }
+            if ($params['responsable'] === "0") {
+                $qb= $qb->andWhere("responsable.agent IS NULL")
+                    ->andWhere("responsable.dateDebut IS NULL OR responsable.dateDebut <= :maintenant")
+                    ->andWhere("responsable.dateFin IS NULL OR responsable.dateFin >= :maintenant")
+                    ->setParameter('maintenant', new DateTime());
+            }
+        }
+        if (isset($params['niveau']) AND $params['niveau'] !== '') {
+            $qb = $qb->andWhere("structure.niveau IS NULL OR structure.niveau <= :niveau")
+                ->setParameter('niveau', $params['niveau']);
+        }
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param string|null $id
      * @return Structure|null
      */
@@ -88,7 +129,7 @@ class StructureService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Structure partagent le même identifiant [" . $id . "]", $e);
+            throw new RuntimeException("Plusieurs Structure partagent le même identifiant [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -128,17 +169,22 @@ class StructureService
      * @param Structure[] $structures
      * @return Structure[]
      */
-    public function getStructuresByTerm(string $term, array $structures = null, bool $histo = false): array
+    public function getStructuresByTerm(string $term, array $structures = null, bool $ouverte = true, bool $histo = false): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%' . strtolower($term) . '%')
-            ->andWhere('structure.fermeture IS NULL');
+            ;
         if (!$histo) $qb = $qb->andWhere('structure.deletedOn IS NULL');
 
         if ($structures !== null) {
             $qb = $qb->andWhere('structure IN (:structures)')
                 ->setParameter('structures', $structures);
+        }
+        if ($ouverte) {
+            $qb = $qb->andWhere('structure.ouverture IS NULL OR structure.ouverture <= :date')
+                ->andWhere('structure.fermeture IS NULL OR structure.fermeture >= :date')
+                ->setParameter('date', new DateTime());
         }
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -191,50 +237,6 @@ class StructureService
         return $filles;
     }
 
-
-    /**
-     * @param Structure[] $structures
-     * @return array
-     */
-    public function formatStructureJSON(array $structures): array
-    {
-        $result = [];
-        foreach ($structures as $structure) {
-            $result[] = array(
-                'id' => $structure->getId(),
-                'label' => $structure->getLibelleLong(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>" . $structure->getLibelleCourt() . "</span>",
-            );
-        }
-        usort($result, function ($a, $b) {
-            return strcmp($a['label'], $b['label']);
-        });
-        return $result;
-    }
-
-    /**
-     * @param Structure[] $structures
-     * @return FichePoste[]
-     */
-    public function getFichesPostesRecrutementsByStructures(array $structures): array
-    {
-        $fiches = [];
-        foreach ($structures as $structure) {
-            $fps = $structure->getFichesPostesRecrutements();
-            foreach ($fps as $fp) $fiches[$fp->getId()] = $fp;
-        }
-
-        $result = [];
-        foreach ($fiches as $fiche) {
-            $result[] = ['id' => $fiche->getId(),
-                'agent_id' => ($fiche->getAgent()) ? $fiche->getAgent()->getId() : null,
-                'prenom' => ($fiche->getAgent()) ? $fiche->getAgent()->getPrenom() : null,
-                'nom_usage' => ($fiche->getAgent()) ? $fiche->getAgent()->getNomUsuel() : null,
-                'fiche_principale' => ($fiche->getFicheTypeExternePrincipale()) ? $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle() : null,
-            ];
-        }
-        return $result;
-    }
 
     /**
      * @return array
@@ -314,7 +316,7 @@ EOS;
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByGestionnaire(User $user, bool $ouverte = true): array
+    public function getStructuresByGestionnaire(UserInterface $user, bool $ouverte = true): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.gestionnaires', 'gestionnaireSelection')
@@ -334,7 +336,7 @@ EOS;
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByResponsable(User $user, bool $ouverte = true): array
+    public function getStructuresByResponsable(UserInterface $user, bool $ouverte = true): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.responsables', 'responsableSelection')
@@ -601,37 +603,32 @@ EOS;
 
             if (!$agent->isValideEmploiType(
                 $parametres[StructureParametres::AGENT_TEMOIN_EMPLOITYPE],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Emploi-type invalide</li>";
             }
             if (!$agent->isValideStatut(
                 $parametres[StructureParametres::AGENT_TEMOIN_STATUT],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Statut invalide</li>";
 
             }
             if (!$agent->isValideAffectation(
                 $parametres[StructureParametres::AGENT_TEMOIN_AFFECTATION],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Affectation invalide</li>";
             }
             if (!$agent->isValideGrade(
                 $parametres[StructureParametres::AGENT_TEMOIN_GRADE],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Grade invalide</li>";
             }
             if (!$agent->isValideCorps(
                 $parametres[StructureParametres::AGENT_TEMOIN_CORPS],
-                $now))
-            {
+                $now)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Corps invalide</li>";
             }
@@ -644,5 +641,51 @@ EOS;
 
     public function isObservateurS(array $getStructures, Agent $inscrit)
     {
+    }
+
+    /** @return Structure[] */
+    public function getStructuresNiv2(?DateTime $date = null): array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.niv2', 'niv2')->addSelect('niv2')
+            ->leftjoin('structure.niv2OverWriten', 'niv2OW')->addSelect('niv2OW')
+            ->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('structure.ouverture IS NULL OR structure.ouverture <= :date')
+            ->andWhere('structure.fermeture IS NULL OR structure.fermeture >= :date')
+            ->setParameter('date', $date);
+
+        /** @var Structure[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $structures = [];
+        foreach ($result as $structure) {
+            $niveau2 = $structure->getNiv2OW() ?? $structure->getNiv2();
+            if ($niveau2->isOuverte($date)) $structures[$niveau2->getId()] = $niveau2;
+        }
+
+        return $structures;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @return array
+     */
+    public function formatStructureJSON(array $structures): array
+    {
+        $result = [];
+        foreach ($structures as $structure) {
+            $complement = (!$structure->isOuverte())?"<span class='badge bg-danger'>Structure fermée</span>":"";
+            $result[] = array(
+                'id' => $structure->getId(),
+                'label' => $structure->getLibelleLong(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $structure->getLibelleCourt() . "</span>" . $complement,
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
     }
 }

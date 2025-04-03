@@ -3,12 +3,14 @@
 namespace Application\Form\HasDescription;
 
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class HasDescriptionFormFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return HasDescriptionForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : HasDescriptionForm
     {

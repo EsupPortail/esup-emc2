@@ -27,7 +27,6 @@ class SelectionAgentFormFactory {
         /** @see AgentController::rechercherAction() */
         $urlAgent =  $urlManager->__invoke('agent/rechercher', [], [], true);
 
-        /** @var SelectionAgentForm $form */
         $form = new SelectionAgentForm();
         $form->setHydrator($hydrator);
         $form->setUrlAgent($urlAgent);

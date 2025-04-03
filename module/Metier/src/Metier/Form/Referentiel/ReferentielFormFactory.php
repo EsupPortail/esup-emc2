@@ -19,7 +19,6 @@ class ReferentielFormFactory {
         /** @var ReferentielHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ReferentielHydrator::class);
 
-        /** @var ReferentielForm $form */
         $form = new ReferentielForm();
         $form->setHydrator($hydrator);
         return $form;

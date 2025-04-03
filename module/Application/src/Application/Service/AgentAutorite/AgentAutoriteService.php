@@ -237,7 +237,7 @@ class AgentAutoriteService
             ->join('aautorite.autorite', 'agent')
             ->join('agent.utilisateur', 'utilisateur')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-            ->andWhere('aautorite.deletedOn IS NULL AND asuperieur.aautorite IS NULL');
+            ->andWhere('aautorite.deletedOn IS NULL AND aautorite.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
 
         $users = [];

@@ -19,8 +19,6 @@ use Laminas\Mvc\Application;
 class AgentAffichageAssertionFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return AgentAssertion
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

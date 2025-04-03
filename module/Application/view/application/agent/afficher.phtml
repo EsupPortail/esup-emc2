@@ -6,6 +6,7 @@ use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentMobilite;
 use Agent\Entity\Db\AgentQuotite;
 use Agent\Entity\Db\AgentStatut;
+use Application\Assertion\ChaineAssertion;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
@@ -34,6 +35,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  *
  * @var AgentMobilite[] $mobilites
  * @var Parametre[] $parametres
+ * @var ChaineAssertion $chaineAssertion
  *
  */
 
@@ -124,6 +126,7 @@ if ($agent !== null) {
 
                     <?php echo $this->partial('partial/informations-generales',
                         ['agent' => $agent,
+                            'chaineAssertion' => $chaineAssertion,
                             'affectations' => $affectations,
                             'superieures' => $superieures, 'autorites' => $autorites,
                             'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite]); ?>
@@ -143,12 +146,12 @@ if ($agent !== null) {
             <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>
 
                 <div id="acquis" class="tab-pane " role="tabpanel">
-                    <h2> Applications, compétences et formations</h2>
+                    <h2> Applications et compétences</h2>
 
                     <div class="alert alert-info">
-                        <strong><span class="icon icon-attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong>
+                        <strong><span class="icon icon-attention"> Affichage des applications et compétences directement liées à l'agent.</strong>
                         <br/>
-                        Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un
+                        Dans ces listes, les applications et compétences associées aux fiches de postes d'un
                         agent ne sont pas mentionnées.
                     </div>
 

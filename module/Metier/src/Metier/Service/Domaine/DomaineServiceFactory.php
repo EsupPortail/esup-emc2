@@ -22,9 +22,8 @@ class DomaineServiceFactory {
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var DomaineService $service */
         $service = new DomaineService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

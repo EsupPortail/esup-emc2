@@ -22,10 +22,10 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Privilege\StructurePrivileges;
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canAjouterAgentForce       = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AGENT_FORCE);
-$canRetirerAgentForce       = $canAjouterAgentForce;
+$canAjouterAgentForce = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AGENT_FORCE);
+$canRetirerAgentForce = $canAjouterAgentForce;
 
-$isForce = (isset($options['force']) AND $options['force'] === true);
+$isForce = (isset($options['force']) and $options['force'] === true);
 
 ?>
 
@@ -38,18 +38,18 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 
 <table class="datatable table table-condensed" id="<?php echo $options['id']; ?>" style="font-size: 14px;">
     <thead>
-        <tr>
-            <th data-type="string"> Dénomination</th>
-            <th> Structures fines</th>
-            <th> Supérieur&middot;e hiérarchique direct&middot;e </th>
-            <th> Autorité hiérarchique </th>
-            <th class="action"> Action </th>
-        </tr>
+    <tr>
+        <th data-type="string"> Dénomination</th>
+        <th> Structures fines</th>
+        <th data-type="string"> Supérieur&middot;e hiérarchique direct&middot;e</th>
+        <th data-type="string"> Autorité hiérarchique</th>
+        <th class="action"> Action</th>
+    </tr>
     </thead>
     <tbody>
-    <?php foreach ($agents as $agent) :?>
+    <?php foreach ($agents as $agent) : ?>
         <?php
-            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
+        if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
 //            /** @var AgentAffectation[] $affectations */
 //            $affectations = $agent->getAffectationsActifs();
 //            $affectations = array_filter($affectations, function (AgentAffectation $a) { return $a->isPrincipale(); });
@@ -57,26 +57,26 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
         <tr class="<?php if ($agent->isAdministratif()) echo " administratif "; ?>">
             <td data-order="<?php echo $agent->getDenomination(); ?>">
                 <?php if ($canVoirAgent) : ?>
-                        <?php echo $agent->getDenomination(true); ?>
+                    <?php echo $agent->getDenomination(true); ?>
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
-                <?php if (isset($raison[$agent->getId()]) AND $raison[$agent->getId()] !== "<ul></ul>") : ?>
+                <?php if (isset($raison[$agent->getId()]) and $raison[$agent->getId()] !== "<ul></ul>") : ?>
                     <span class="icon icon-information" title="<?php echo $raison[$agent->getId()]; ?>"
-                        data-bs-toggle="tooltip" data-bs-html="true"></span>
+                          data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php endif; ?>
             </td>
             <td>
                 <!-- STRUCTURE --------------------------------------------------------------------------------------->
                 <?php /** @var AgentAffectation $affectation */ ?>
-                <?php if (isset($affectations[$agent->getId()]) AND !empty($affectations[$agent->getId()])):?>
-                    <?php foreach($affectations[$agent->getId()] as $affectation) :?>
+                <?php if (isset($affectations[$agent->getId()]) and !empty($affectations[$agent->getId()])): ?>
+                    <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
                         <?php $structureA = $affectation->getStructure(); ?>
                         <?php if ($affectation->isPrincipale()) : ?>
                             <strong title="Affectation principale"> <?php echo $structureA->getLibelleCourt(); ?> </strong>
                         <?php else : ?>
                             <?php echo $structureA->getLibelleCourt(); ?>
-                        <?php endif ; ?>
+                        <?php endif; ?>
                         <br>
 
                     <?php endforeach; ?>
@@ -87,10 +87,20 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     </span>
                 <?php endif; ?>
             </td>
-            <td> <!-- RESPONSABLE HIERARCHIQUE ------------------------------------------------------------------------>
-                <?php /** @var AgentSuperieur $superieur */ ?>
-                <?php if (isset($superieurs[$agent->getId()]) AND !empty($superieurs[$agent->getId()])):?>
-                    <?php foreach($superieurs[$agent->getId()] as $superieur) :?>
+            <!-- SUPERIEUR·E HIERARCHIQUE ----------------------------------------------------------------------------->
+            <?php
+            $listing = [];
+            if (isset($superieurs[$agent->getId()]) and !empty($superieurs[$agent->getId()])) {
+                $listing = $superieurs[$agent->getId()];
+                usort($listing, function (AgentSuperieur $a, AgentSuperieur $b) {
+                    return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination();
+                });
+            }
+            ?>
+            <td data-order="<?php if (!empty($listing)) echo $listing[0]->getSuperieur()->getDenomination(); ?>">
+                <?php if (!empty($listing)): ?>
+                    <?php /** @var AgentSuperieur $superieur */ ?>
+                    <?php foreach ($listing as $superieur) : ?>
                         <?php echo $superieur->getSuperieur()->getDenomination(true); ?><br/>
                     <?php endforeach; ?>
                 <?php else : ?>
@@ -100,10 +110,20 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     </span>
                 <?php endif; ?>
             </td>
-            <td> <!-- AUTORITE HIERARCHIQUE --------------------------------------------------------------------------->
-                <?php /** @var AgentAutorite $autorite */ ?>
-                <?php if (isset($autorites[$agent->getId()]) AND !empty($autorites[$agent->getId()])):?>
-                    <?php foreach($autorites[$agent->getId()] as $autorite) :?>
+            <!-- AUTORITE HIERARCHIQUE -------------------------------------------------------------------------------->
+            <?php
+            $listing = [];
+            if (isset($autorites[$agent->getId()]) and !empty($autorites[$agent->getId()])) {
+                $listing = $autorites[$agent->getId()];
+                usort($listing, function (AgentAutorite $a, AgentAutorite $b) {
+                    return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination();
+                });
+            }
+            ?>
+            <td data-order="<?php if (!empty($listing)) echo $listing[0]->getAutorite()->getDenomination(); ?>">
+                <?php if (!empty($listing)): ?>
+                    <?php /** @var AgentAutorite $autorite */ ?>
+                    <?php foreach ($listing as $autorite) : ?>
                         <?php echo $autorite->getAutorite()->getDenomination(true); ?><br/>
                     <?php endforeach; ?>
                 <?php else : ?>
@@ -113,10 +133,11 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     </span>
                 <?php endif; ?>
             </td>
+            <!-- ACTION ----------------------------------------------------------------------------------------------->
             <td class="action">
                 <?php if ($canVoirAgent) : ?>
                     <a
-                        <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
+                        <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
                             href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                             target="_blank" class="action secondary"
                     >
@@ -125,11 +146,11 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     </a>
                 <?php endif; ?>
 
-                <?php if ($isForce AND $canRetirerAgentForce) : ?>
+                <?php if ($isForce and $canRetirerAgentForce) : ?>
                     <br>
                     <?php /** @see \Structure\Controller\StructureController::retirerManuellementAgentAction() */ ?>
-                    <a  class="ajax-modal action danger" data-event="modification"
-                        href="<?php echo $this->url('structure/retirer-manuellement-agent', [ 'structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
+                    <a class="ajax-modal action danger" data-event="modification"
+                       href="<?php echo $this->url('structure/retirer-manuellement-agent', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
                     >
                         <span class="icon icon-utilisateur-supprimer"></span>
                         Retirer
@@ -143,19 +164,19 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 </table>
 
 <script>
-    $('span#administatif_masquer').on('click', function() {
+    $('span#administatif_masquer').on('click', function () {
         $("tbody tr:not(.administratif)").hide();
         $("span#administatif_masquer").hide();
         $("span#administatif_afficher").show();
     });
-    $('span#administatif_afficher').on('click', function() {
+    $('span#administatif_afficher').on('click', function () {
         $("tbody tr:not(.administratif)").show();
         $("span#administatif_masquer").show();
         $("span#administatif_afficher").hide();
     });
 
-    $(document).ready(function() {
-        $("table#<?php echo $options['id']; ?>").DataTable( {
+    $(document).ready(function () {
+        $("table#<?php echo $options['id']; ?>").DataTable({
             paging: false,
             info: false,
             autoWidth: false,
@@ -163,7 +184,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                { targets: [4], orderable: false }
+                {targets: [4], orderable: false}
             ]
         });
     });

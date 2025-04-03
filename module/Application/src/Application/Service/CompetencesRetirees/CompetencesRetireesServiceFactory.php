@@ -4,12 +4,14 @@ namespace Application\Service\CompetencesRetirees;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CompetencesRetireesServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return CompetencesRetireesService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : CompetencesRetireesService
     {
@@ -19,7 +21,7 @@ class CompetencesRetireesServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new CompetencesRetireesService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

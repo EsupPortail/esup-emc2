@@ -168,7 +168,6 @@ class Metier implements HistoriqueAwareInterface {
     {
         $texte = "Réference" . ((count($this->getReferences()) > 1)?"s":"") . " : ";
         $texte .= "<ul id='reference'>";
-        /** @var Reference $reference */
         foreach ($this->getReferences() as $reference) {
             $texte .= "<li>";
             $texte .= "<a href='". $reference->getUrl()."'>";

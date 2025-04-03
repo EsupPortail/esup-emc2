@@ -166,7 +166,7 @@ return [
                             'ajouter' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/ajouter/:agent/:type',
+                                    'route'    => '/ajouter/:type[/:agent]',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::ajouterAction() */
                                         'controller' => AgentHierarchieController::class,
@@ -261,9 +261,9 @@ return [
                                 'may_terminate' => true,
                             ],
                             'calculer' => [
-                                'type'  => Literal::class,
+                                'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/calculer',
+                                    'route'    => '/calculer/:type',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::calculerAction() */
                                         'controller' => AgentHierarchieController::class,

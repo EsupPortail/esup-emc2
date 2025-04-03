@@ -74,21 +74,14 @@ class AgentAffichageAssertion extends AbstractAssertion
             case AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME :
             case AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION :
             case AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT :
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                    case AppRoleProvider::OBSERVATEUR:
-                        return true;
-                    case StructureRoleProvider::RESPONSABLE:
-                        return $isResponsable;
-                    case Agent::ROLE_SUPERIEURE:
-                        return $isSuperieur;
-                    case Agent::ROLE_AUTORITE:
-                        return $isAutorite;
-                    case AppRoleProvider::AGENT :
-                        return $entity === $agent;
-                }
-                return false;
+                return match ($role->getRoleId()) {
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR => true,
+                    StructureRoleProvider::RESPONSABLE => $isResponsable,
+                    Agent::ROLE_SUPERIEURE => $isSuperieur,
+                    Agent::ROLE_AUTORITE => $isAutorite,
+                    AppRoleProvider::AGENT => $entity === $agent,
+                    default => false,
+                };
         }
         return true;
     }

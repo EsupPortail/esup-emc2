@@ -8,7 +8,6 @@ use Application\Entity\Db\FichePoste;
  * @var string $mode
  */
 
-/** @var  array $cApplications */
 $cApplications = [];
 foreach ($applications as $item) {
     if ($item["conserve"] === true) $cApplications[] = $item;
@@ -42,6 +41,6 @@ foreach ($applications as $item) {
 <div class="row" style="margin: 1rem;">
     <div class="col-md-11">
         <br/>
-        <?php echo $this->applicationBloc($cApplications, $fiche->getAgent(), ['display' => ['titre' => false]]); ?>
+        <?php echo $this->applicationBloc($cApplications, $fiche->getAgent(), ['display' => ['titre' => false], 'mode' => $mode]); ?>
     </div>
 </div>

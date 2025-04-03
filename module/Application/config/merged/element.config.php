@@ -7,7 +7,6 @@ use Application\Controller\ElementControllerFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Element\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
-use Application\View\Helper\FormationBlocViewHelper;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
@@ -166,7 +165,6 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'formationBloc' => FormationBlocViewHelper::class,
         ],
     ]
 

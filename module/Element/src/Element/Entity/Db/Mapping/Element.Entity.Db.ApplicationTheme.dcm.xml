@@ -6,13 +6,13 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"       column="libelle"        type="string"       length="256"   />
+        <field name="libelle"       column="libelle"               length="256"   />
         <field name="ordre"         column="ordre"          type="integer"   />
        <one-to-many target-entity="Element\Entity\Db\Application" mapped-by="groupe" field="applications"/>
 
         <!-- Historisation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
+        <field name="histoModification" type="datetime"                 column="histo_modification" />
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="ID"/>

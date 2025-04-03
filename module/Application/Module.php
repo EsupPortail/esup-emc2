@@ -15,10 +15,16 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\Glob;
 use Laminas\Config\Factory as ConfigFactory;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Module
 {
-    public function onBootstrap(MvcEvent $e)
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function onBootstrap(MvcEvent $e): void
     {
         $e->getApplication()->getServiceManager()->get('translator');
         $eventManager        = $e->getApplication()->getEventManager();

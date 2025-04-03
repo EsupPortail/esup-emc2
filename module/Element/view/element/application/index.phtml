@@ -37,7 +37,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
         <?php if ($canAjouter) : ?>
             <a  <?php /** @see \Element\Controller\ApplicationController::creerAction() */?>
                     href="<?php echo $this->url('element/application/creer', [], [], true);?>"
-                    class="btn btn-primary action ajax-modal"
+                    class="btn btn-primary ajax-modal"
                     data-event="modification"
             >
                 <span class="icon icon-ajouter"></span>
@@ -48,10 +48,11 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
     </div>
     <div class="col-md-6">
         <?php if ($canApplicationThemeIndex) : ?>
-            <a href="<?php echo $this->url('element/application-theme'); ?>"
+            <a  <?php /** @see \Element\Controller\ApplicationThemeController::indexAction() */?>
+                href="<?php echo $this->url('element/application-theme'); ?>"
                class="btn btn-secondary"
             >
-                <span class="icon acceder"></span>
+                <span class="icon icon-listing"></span>
                 Accéder aux thèmes
             </a>
         <?php endif; ?>
@@ -115,7 +116,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Element\Controller\ApplicationController::afficherAction() */?>
                     <a href="<?php echo $this->url('element/application/afficher', ['id' => $application->getId()], [], true); ?>"
-                       class="ajax-modal">
+                       class="ajax-modal action secondary">
                         <span class="icon icon-voir"></span>
                         Afficher
                     </a>
@@ -124,7 +125,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                     <br/>
                     <?php /** @see \Element\Controller\ApplicationController::editerAction() */?>
                     <a href="<?php echo $this->url('element/application/editer', ['id' => $application->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
+                       class="ajax-modal action primary" data-event="modification">
                         <span class="icon icon-editer"></span>
                         Modifier
                     </a>
@@ -133,13 +134,17 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                     <br>
                     <?php if ($application->estNonHistorise()) : ?>
                         <?php /** @see \Element\Controller\ApplicationController::historiserAction() */?>
-                        <a href="<?php echo $this->url('element/application/historiser', ['id' => $application->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/application/historiser', ['id' => $application->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-historiser"></span>
                             Historiser
                         </a>
                     <?php else : ?>
                         <?php /** @see \Element\Controller\ApplicationController::restaurerAction() */?>
-                        <a href="<?php echo $this->url('element/application/restaurer', ['id' => $application->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/application/restaurer', ['id' => $application->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
                         </a>
@@ -149,7 +154,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                     <br>
                     <?php /** @see \Element\Controller\ApplicationController::effacerAction() */?>
                     <a href="<?php echo $this->url('element/application/effacer', ['id' => $application->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification">
+                            class="ajax-modal action danger" data-event="modification">
                         <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Supprimer

@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FichePoste\Entity\Db\Expertise;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 
 class ExpertiseService
 {
@@ -84,10 +84,6 @@ class ExpertiseService
         return $qb;
     }
 
-    /**
-     * @param $id
-     * @return Expertise
-     */
     public function getExpertise($id): ?Expertise
     {
         $qb = $this->createQueryBuilder()
@@ -102,12 +98,7 @@ class ExpertiseService
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Expertise
-     */
-    public function getRequestedExpertise($controller, $param = 'expertise'): ?Expertise
+    public function getRequestedExpertise(AbstractActionController $controller, string $param = 'expertise'): ?Expertise
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getExpertise($id);

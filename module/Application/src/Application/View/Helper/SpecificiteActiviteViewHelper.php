@@ -2,20 +2,15 @@
 
 namespace Application\View\Helper;
 
-use Application\View\Renderer\PhpRenderer;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
+use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
 class SpecificiteActiviteViewHelper extends AbstractHelper
 {
-    /**
-     * @param MissionAdditionnelle $specificiteActivite
-     * @param array $options
-     * @return string|Partial
-     */
-    public function __invoke(MissionAdditionnelle $specificiteActivite, array $options = [])
+    public function __invoke(MissionAdditionnelle $specificiteActivite, array $options = []): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

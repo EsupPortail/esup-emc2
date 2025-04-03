@@ -6,6 +6,7 @@ use Agent\Entity\Db\AgentAffectation;
 use Agent\Entity\Db\AgentEchelon;
 use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentQuotite;
+use Agent\Entity\Db\AgentRef;
 use Agent\Entity\Db\AgentStatut;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -97,10 +98,8 @@ class Agent implements
     /** StructureAgentForce  */
 
     private Collection $autorites;
-    /** AgentAutorite[] */
     private Collection $superieurs;
-
-    /** AgentSuperieur[] */
+    private Collection $refs;
 
     public function __construct()
     {
@@ -117,6 +116,7 @@ class Agent implements
         $this->autorites = new ArrayCollection();
         $this->superieurs = new ArrayCollection();
         $this->validations = new ArrayCollection();
+        $this->refs = new ArrayCollection();
     }
 
     /**
@@ -183,6 +183,12 @@ class Agent implements
     public function isContratLong(): bool
     {
         return $this->tContratLong === 'O';
+    }
+
+    /** @return AgentRef[] */
+    public function getRefs(): array
+    {
+        return $this->refs->toArray();
     }
 
     /** Collections importées *****************************************************************************************/
@@ -847,6 +853,17 @@ class Agent implements
         $affectationPrincipale = $this->getAffectationPrincipale();
         //todo checkbien l'inclusion
         if ($affectationPrincipale and $affectationPrincipale->getStructure() === $structure) return true;
+        return false;
+    }
+
+    public function hasAffectationActive(?DateTime $dateDebut = null, ?DateTime $dateFin = null): bool
+    {
+        $affectations = $this->getAffectations();
+        foreach ($affectations as $affectation) {
+            $dateDebut = $dateDebut??$affectation->getDateDebut();
+            $dateFin = $dateFin??$affectation->getDateFin()??$affectation->getDateDebut();
+            if (max($affectation->getDateDebut(), $dateDebut <= min($affectation->getDateFin(), $dateFin))) return true;
+        }
         return false;
     }
 

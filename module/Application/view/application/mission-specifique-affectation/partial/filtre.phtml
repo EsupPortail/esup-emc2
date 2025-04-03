@@ -100,7 +100,7 @@ foreach ($missions as $mission) {
                             $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
                             $agentF
                                 ->setAutocompleteSource($this->url('agent/rechercher'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'agent-filtre',
                                     'placeholder' => "Nom de l'agent ...",

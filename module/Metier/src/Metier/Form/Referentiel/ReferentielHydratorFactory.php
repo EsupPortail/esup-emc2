@@ -12,7 +12,6 @@ class ReferentielHydratorFactory {
      */
     public function __invoke(ContainerInterface $container) : ReferentielHydrator
     {
-        /** @var ReferentielHydrator $hydrator */
         $hydrator = new ReferentielHydrator();
         return $hydrator;
     }

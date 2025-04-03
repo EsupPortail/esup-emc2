@@ -37,7 +37,7 @@ class ObservateurController extends AbstractActionController {
     public function indexObservateurAction(): ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
-        $observateurs = $this->getObservateurService()->getObservateursByUser($user, false);
+        $observateurs = $this->getObservateurService()->getObservateursByUser($user);
 
         $campagnes = [];
         $entretiens = [];

@@ -25,7 +25,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
         $structureF->setAutocompleteSource($this->url('agent/rechercher'));
     }
     $structureF
-        ->setSelectionRequired(true)
+        ->setSelectionRequired()
         ->setAttributes([
             'id' => 'agent',
             'placeholder' => "Sélectionner un agent",

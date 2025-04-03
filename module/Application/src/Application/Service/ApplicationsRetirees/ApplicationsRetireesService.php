@@ -2,76 +2,44 @@
 
 namespace Application\Service\ApplicationsRetirees;
 
-use Element\Entity\Db\Application;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use DoctrineModule\Persistence\ProvidesObjectManager;
+use Element\Entity\Db\Application;
+use RuntimeException;
 
-class ApplicationsRetireesService {
-    use EntityManagerAwareTrait;
+class ApplicationsRetireesService
+{
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param FicheposteApplicationRetiree $applicationConservee
-     * @return FicheposteApplicationRetiree
-     */
-    public function create(FicheposteApplicationRetiree $applicationConservee) : FicheposteApplicationRetiree
+    public function create(FicheposteApplicationRetiree $applicationConservee): FicheposteApplicationRetiree
     {
-        try {
-            $this->getEntityManager()->persist($applicationConservee);
-            $this->getEntityManager()->flush($applicationConservee);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0 , $e);
-        }
-
+        $this->getObjectManager()->persist($applicationConservee);
+        $this->getObjectManager()->flush($applicationConservee);
         return $applicationConservee;
     }
 
-    /**
-     * @param FicheposteApplicationRetiree $applicationConservee
-     * @return FicheposteApplicationRetiree
-     */
-    public function update(FicheposteApplicationRetiree $applicationConservee) : FicheposteApplicationRetiree
+    public function update(FicheposteApplicationRetiree $applicationConservee): FicheposteApplicationRetiree
     {
-        try {
-            $this->getEntityManager()->flush($applicationConservee);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0 , $e);
-        }
-
+        $this->getObjectManager()->flush($applicationConservee);
         return $applicationConservee;
     }
 
-    /**
-     * @param FicheposteApplicationRetiree $applicationConservee
-     * @return FicheposteApplicationRetiree
-     */
-    public function delete(FicheposteApplicationRetiree $applicationConservee) : FicheposteApplicationRetiree
+    public function delete(FicheposteApplicationRetiree $applicationConservee): FicheposteApplicationRetiree
     {
-        try {
-            $this->getEntityManager()->remove($applicationConservee);
-            $this->getEntityManager()->flush($applicationConservee);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0 , $e);
-        }
-
+        $this->getObjectManager()->remove($applicationConservee);
+        $this->getObjectManager()->flush($applicationConservee);
         return $applicationConservee;
     }
 
     /** ACCESSEUR *****************************************************************************************************/
 
-    /**
-     * @param FichePoste $ficheposte
-     * @param Application $application
-     * @return FicheposteApplicationRetiree
-     */
-    public function getApplicationRetiree(FichePoste $ficheposte, Application $application) : ?FicheposteApplicationRetiree
+    public function getApplicationRetiree(FichePoste $ficheposte, Application $application): ?FicheposteApplicationRetiree
     {
-        $qb = $this->getEntityManager()->getRepository(FicheposteApplicationRetiree::class)->createQueryBuilder('retiree')
+        $qb = $this->getObjectManager()->getRepository(FicheposteApplicationRetiree::class)->createQueryBuilder('retiree')
             ->andWhere('retiree.fichePoste = :ficheposte')
             ->andWhere('retiree.application = :application')
             ->setParameter('ficheposte', $ficheposte)
@@ -80,7 +48,7 @@ class ApplicationsRetireesService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ApplicationRetirees ...",0,$e);
+            throw new RuntimeException("Plusieurs ApplicationRetirees ...", 0, $e);
         }
         return $result;
 
@@ -91,7 +59,7 @@ class ApplicationsRetireesService {
      * @param Application $application
      * @return FicheposteApplicationRetiree
      */
-    public function add(FichePoste $ficheposte, Application $application) : FicheposteApplicationRetiree
+    public function add(FichePoste $ficheposte, Application $application): FicheposteApplicationRetiree
     {
         $result = $this->getApplicationRetiree($ficheposte, $application);
 
@@ -109,7 +77,7 @@ class ApplicationsRetireesService {
      * @param Application $application
      * @return FicheposteApplicationRetiree
      */
-    public function remove(FichePoste $ficheposte, Application $application) : FicheposteApplicationRetiree
+    public function remove(FichePoste $ficheposte, Application $application): FicheposteApplicationRetiree
     {
         $result = $this->getApplicationRetiree($ficheposte, $application);
 

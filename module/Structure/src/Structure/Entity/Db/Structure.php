@@ -33,6 +33,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
 
     private ?int $source_id = -1;
     private ?string $code = null;
+    private ?string $sigle = null;
 
     private ?StructureType $type = null;
     private ?string $libelleCourt = null;
@@ -49,6 +50,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     private ?Structure $niv2;
     private ?Structure $niv2OverWriten;
     private Collection $enfants;            // [Structure]
+    private ?int $niveau = null;
 
     private Collection $gestionnaires;      //[StructureGestionnaire]
     private Collection $responsables;       //[StructureResponsable]
@@ -69,6 +71,11 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     public function getCode(): string
     {
         return $this->code;
+    }
+
+    public function getSigle(): ?string
+    {
+        return $this->sigle;
     }
 
     public function getLibelleCourt(): ?string
@@ -153,13 +160,14 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     /**
      * @return StructureResponsable[]
      */
-    public function getResponsables(): array
+    public function getResponsables(bool $actif=true): array
     {
         //if ($this->responsables === null) return [];
         $array = $this->responsables->toArray();
         $array = array_filter($array, function (StructureResponsable $a) {
             return !$a->isDeleted();
         });
+        if ($actif) $array = array_filter($array, function (StructureResponsable $a) { return $a->estEnCours();});
         return $array;
     }
 
@@ -196,6 +204,16 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         return $enfants;
     }
 
+    public function getNiveau(): ?int
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau(?int $niveau): void
+    {
+        $this->niveau = $niveau;
+    }
+
     public function getRepriseResumeMere(): bool
     {
         return $this->repriseResumeMere;
@@ -213,6 +231,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         if ($this->getParent() && $this->getParent() !== $this) return $this->getParent()->isCompatible($structure);
         return false;
     }
+
+
 
     /** AGENTS FORCES *************************************************************************************************/
 
@@ -330,5 +350,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         $texte .= "</ul>";
         return $texte;
     }
+
+
 
 }

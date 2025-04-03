@@ -61,7 +61,7 @@ if ($mode === 'edition-fiche-metier') {
     </div>
     <div class="card-body">
         <?php echo $this->applicationBloc($applications, $fichemetier,
-            ['display' => ['titre' => false, 'validation' => false, 'raison' => false],
+            ['display' => ['titre' => false, 'validation' => false, 'raison' => false], 'mode' => $mode,
                 'actions' => $actions]); ?>
     </div>
 </div>

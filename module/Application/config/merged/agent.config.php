@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Agent\Service\AgentQuotite\AgentQuotiteService;
+use Agent\Service\AgentQuotite\AgentQuotiteServiceFactory;
 use Agent\Service\AgentStatut\AgentStatutService;
 use Agent\Service\AgentStatut\AgentStatutServiceFactory;
 use Application\Assertion\AgentAffichageAssertion;

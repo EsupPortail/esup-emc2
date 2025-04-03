@@ -66,10 +66,8 @@ class ApplicationController  extends AbstractActionController {
 
     public function creerAction() : ViewModel
     {
-        /** @var Application $application */
         $application = new Application();
 
-        /** @var ApplicationForm $form */
         $form = $this->getApplicationForm();
         $form->setAttribute('action', $this->url()->fromRoute('element/application/creer', [], [], true));
         $form->bind($application);
@@ -100,7 +98,6 @@ class ApplicationController  extends AbstractActionController {
         $applicationId = $this->params()->fromRoute('id');
         $application = $this->getApplicationService()->getApplication($applicationId);
 
-        /** @var ApplicationForm $form */
         $form = $this->getApplicationForm();
         $form->setAttribute('action', $this->url()->fromRoute('element/application/editer', ['id' => $application->getId()], [], true));
         $form->bind($application);

@@ -27,7 +27,6 @@ class SelectionApplicationFormFactory {
          */
         $hydrator = $container->get('HydratorManager')->get(SelectionApplicationHydrator::class);
 
-        /** @var SelectionApplicationForm $form */
         $form = new SelectionApplicationForm();
         $form->setHydrator($hydrator);
         $form->setApplicationService($applicationService);

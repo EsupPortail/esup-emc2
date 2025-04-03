@@ -13,7 +13,7 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
  * @var array $options[]
  */
 
-$canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));;
+$canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 $canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
 $canAction = ($canAfficher OR $canConvoquer);
 

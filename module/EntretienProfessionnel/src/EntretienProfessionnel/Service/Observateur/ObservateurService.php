@@ -140,7 +140,7 @@ class ObservateurService {
         return !empty($result);
     }
 
-    /** @return Observateur */
+    /** @return Observateur[] */
     public function getObservateursByTerm(mixed $term): array
     {
         $qb = $this->createQueryBuilder();

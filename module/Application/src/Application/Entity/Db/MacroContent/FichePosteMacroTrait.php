@@ -4,6 +4,7 @@ namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
+use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceType;
 use Metier\Entity\Db\Reference;
 
@@ -77,8 +78,9 @@ trait FichePosteMacroTrait {
 
         $result = [];
         foreach ($applications as $application) {
+            /** @var ApplicationElement $entite */
             $entite = $application["entite"];
-            $result [$entite->getGroupe()?$entite->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
+            $result [$entite->getApplication()->getGroupe()?$entite->getApplication()->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
         }
 
         $texte = "<h3> Applications </h3>";
@@ -109,14 +111,14 @@ trait FichePosteMacroTrait {
 
         $dictionnaire = $ficheposte->getDictionnaire('competences');
         if (!$all) $dictionnaire = array_filter($dictionnaire, function ($a) { return $a["conserve"] === true;});
-        $dictionnaire = array_filter($dictionnaire, function ($a) use ($typeId) { return $a["entite"]->getType()->getId() === $typeId;});
-        usort($dictionnaire, function ($a, $b) { return $a["entite"]->getLibelle() <=> $b["entite"]->getLibelle();});
+        $dictionnaire = array_filter($dictionnaire, function ($a) use ($typeId) { return $a["entite"]->getCompetence()->getType()->getId() === $typeId;});
+        usort($dictionnaire, function ($a, $b) { return $a["entite"]->getCompetence()->getLibelle() <=> $b["entite"]->getCompetence()->getLibelle();});
 
         if (empty($dictionnaire)) return "";
 
         $competence = $dictionnaire[0]["entite"];
         $competenceType = "";
-        switch($competence->getType()->getId()) {
+        switch($competence->getCompetence()->getType()->getId()) {
             case 1 : $competenceType = "Compétences comportementales"; break;
             case 2 : $competenceType = "Compétences opérationnelles"; break;
             case 3 : $competenceType = "Connaissances"; break;
@@ -239,7 +241,6 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
-        $descriptionsRetirees = array_map(function ($a) { return $a->getDescription()->getId(); }, $ficheposte->getDescriptionsRetirees()->toArray());
 
         $texte = "";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
@@ -293,7 +294,7 @@ trait FichePosteMacroTrait {
 
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $tmp = $ficheTypeExterne->getFicheType()->getMetier();
-            if ($metier === null OR $metier->getNiveau() < $tmp->getNiveau()) $metier = $tmp;
+            if ($metier === null OR $metier->getNiveaux()->getBorneInferieure()->getNiveau() < $tmp->getNiveaux()->getBorneInferieure()->getNiveau()) $metier = $tmp;
         }
 
         $texte = "";
@@ -485,7 +486,7 @@ trait FichePosteMacroTrait {
         /** @var FichePoste $fiche */
         $fiche = $this;
 
-        $activites = ($fiche->getSpecificite())?$fiche->getSpecificite()->getActivites():null;
+        $activites = [];
         if ($activites === null or $activites === []) return "";
 
 

@@ -6,14 +6,14 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="type"            type="string" length="256"        column="type"            nullable="false"/>
-        <field name="libelle"         type="string" length="256"        column="libelle"         nullable="false"/>
-        <field name="niveau"          type="integer"                    column="niveau"          nullable="false"/>
-        <field name="description"     type="string" length="4096"       column="description"     nullable="true"/>
+        <field name="type"             length="256"        column="type"            />
+        <field name="libelle"          length="256"        column="libelle"         />
+        <field name="niveau"          type="integer"                    column="niveau"          />
+        <field name="description"      length="4096"       column="description"     nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
+        <field name="histoModification" type="datetime"                 column="histo_modification" />
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="ID"/>

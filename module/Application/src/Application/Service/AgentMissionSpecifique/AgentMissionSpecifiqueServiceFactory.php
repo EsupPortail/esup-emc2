@@ -11,8 +11,6 @@ use Structure\Service\Structure\StructureService;
 class AgentMissionSpecifiqueServiceFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return AgentMissionSpecifiqueService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -26,7 +24,7 @@ class AgentMissionSpecifiqueServiceFactory {
         $structureService = $container->get(StructureService::class);
 
         $service = new AgentMissionSpecifiqueService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setStructureService($structureService);
         return $service;
     }

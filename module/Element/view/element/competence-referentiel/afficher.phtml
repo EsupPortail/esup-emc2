@@ -16,7 +16,7 @@ $date = ($referentiel->getHistoModification() ?: $referentiel->getHistoCreation(
     <dt> Libellé</dt>
     <dd>
         <?php echo $referentiel->getLibelleLong(); ?> <br>
-        <span class="badge" style="background:<?php echo $referentiel->getCouleur(); ?>"; ?>
+        <span class="badge" style="background:<?php echo $referentiel->getCouleur(); ?>" >
             <?php echo $referentiel->getLibelleCourt(); ?> <br>
         </span>
     </dd>

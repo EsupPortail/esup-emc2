@@ -2,19 +2,18 @@
 
 namespace Structure\Controller;
 
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Controller\AgentController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
@@ -22,6 +21,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Exception;
+use FichePoste\Provider\Etat\FichePosteEtats;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -35,6 +35,7 @@ use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
+use Structure\Service\Type\TypeServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -53,6 +54,7 @@ class StructureController extends AbstractActionController {
     use StructureAgentForceServiceAwareTrait;
     use ObservateurServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
+    use TypeServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
@@ -72,10 +74,18 @@ class StructureController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $structures = $this->getStructureService()->getStructures();
+        $params = $this->params()->fromQuery();
+        if (empty($params)) {
+            $params['ferme'] = '0';
+        }
+
+        $structures = $this->getStructureService()->getStructuresWithFiltre($params);
+        $types = $this->getTypeService()->getTypes();
 
         return new ViewModel([
             'structures' => $structures,
+            'types' => $types,
+            'params' => $params,
         ]);
     }
 
@@ -130,7 +140,7 @@ class StructureController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $debug .= "Récupération des informations des structures : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
 
-        $agents = $this->getAgentService()->getAgentsByStructures($structures,null, true);
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $debug .= "Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
         [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents);
         $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";

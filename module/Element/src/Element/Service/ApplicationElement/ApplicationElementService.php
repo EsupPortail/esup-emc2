@@ -7,11 +7,10 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use FicheMetier\Entity\Db\FicheMetier;
-use UnicaenApp\Exception\RuntimeException;
 use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
 
 class ApplicationElementService {
     use ProvidesObjectManager;

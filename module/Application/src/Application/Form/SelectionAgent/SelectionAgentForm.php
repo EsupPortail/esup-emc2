@@ -28,7 +28,7 @@ class SelectionAgentForm extends Form {
         $agent = new SearchAndSelect('agent-sas', ['label' => "Agent·e * :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'agent-sas',
                 'placeholder' => "Dénomination de l'agent·e ...",

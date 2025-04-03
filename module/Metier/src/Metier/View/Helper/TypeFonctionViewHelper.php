@@ -10,12 +10,7 @@ use Laminas\View\Resolver\TemplatePathStack;
 
 class TypeFonctionViewHelper extends AbstractHelper
 {
-    /**
-     * @param Domaine $domaine
-     * @param array $options
-     * @return string|Partial
-     */
-    public function __invoke(Domaine $domaine, array $options = []) : string
+    public function __invoke(Domaine $domaine, array $options = []) : string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

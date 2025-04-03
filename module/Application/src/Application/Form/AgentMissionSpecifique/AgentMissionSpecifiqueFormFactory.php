@@ -37,7 +37,6 @@ class AgentMissionSpecifiqueFormFactory
         /** @see StructureController::rechercherAction() */
         $urlStructure = $urlManager->__invoke('structure/rechercher', [], [], true);
 
-        /** @var AgentMissionSpecifiqueForm $form */
         $form = new AgentMissionSpecifiqueForm();
         $form->setHydrator($hydrator);
         $form->setMissionSpecifiqueService($missionSpecifiqueService);

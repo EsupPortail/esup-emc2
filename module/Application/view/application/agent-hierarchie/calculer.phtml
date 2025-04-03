@@ -3,6 +3,7 @@
 /** @see \Application\Controller\AgentHierarchieController::calculerAction()
  * @var AgentHierarchieCalculForm $form
  * @var Structure $structure
+ * @var string $type
  * @var Agent[] $agents
  * @var array $superieurs
  * @var array $autorites
@@ -14,11 +15,10 @@ use Structure\Entity\Db\Structure;
 
 $this->headTitle("Chaînes hiérarchiques calculées");
 
+$listing = [];
+if ($type === Agent::ROLE_SUPERIEURE) $listing = $superieurs;
+if ($type === Agent::ROLE_AUTORITE) $listing = $autorites;
 ?>
-
-<h1 class="page-header">
-    Chaînes hiérarchiques calculées
-</h1>
 
 <?php echo $this->form($form); ?>
 
@@ -47,55 +47,38 @@ $this->headTitle("Chaînes hiérarchiques calculées");
         <?php endif; ?>
         <?php echo $structure->getLibelleLong(); ?></h2>
     <table class="table table-condensed">
-    <thead>
-    <tr>
-        <th>Agent</th>
-        <th>Superieurs</th>
-        <th>Autorités</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($agents as $agent): ?>
-    <tr>
-        <td> <?php echo $agent->getDenomination(); ?> </td>
-        <td>
-            <?php if (empty($superieurs[$agent->getId()] )) : ?>
-                <span class="text-warning">
-                    <span class="icon icon-attention"></span>
-                    Aucun supérieur calculable
-                </span>
-            <?php else : ?>
-                <?php foreach ($superieurs[$agent->getId()] as $superieur) : ?>
-                    <?php echo $superieur->getAgent()->getDenomination(); ?>
-
-                    <?php echo ($superieur->getDateDebut())?$superieur->getDateDebut()->format('d/m/Y'):"---"; ?>
-                    &rightarrow;
-                    <?php echo ($superieur->getDateFin())?$superieur->getDateFin()->format('d/m/Y'):"---"; ?>
-                    <br>
+        <thead>
+        <tr>
+            <th>Agent</th>
+            <th><?php echo $type; ?></th>
+            <th>Période</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($agents as $agent): ?>
+            <?php if (!empty($listing[$agent->getId()])) : ?>
+                <?php foreach ($listing[$agent->getId()] as $responsable) : ?>
+                    <tr>
+                        <td> <?php echo $agent->getDenomination(); ?> </td>
+                        <td>
+                            <?php if ($type === Agent::ROLE_SUPERIEURE) : ?>
+                                <?php echo $responsable->getSuperieur()->getDenomination(); ?>
+                            <?php endif; ?>
+                            <?php if ($type === Agent::ROLE_AUTORITE) : ?>
+                                <?php echo $responsable->getAutorite()->getDenomination(); ?>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php echo ($responsable->getDateDebut()) ? $responsable->getDateDebut()->format('d/m/Y') : "---"; ?>
+                            &rightarrow;
+                            <?php echo ($responsable->getDateFin()) ? $responsable->getDateFin()->format('d/m/Y') : "---"; ?>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
-        </td>
-        <td>
-            <?php if (empty($autorites[$agent->getId()] )) : ?>
-                <span class="text-warning">
-                    <span class="icon icon-attention"></span>
-                    Aucune autorité calculable
-                </span>
-            <?php else : ?>
-                <?php foreach ($autorites[$agent->getId()] as $autorite) : ?>
-                    <?php echo $autorite->getAgent()->getDenomination(); ?>
-
-                    <?php echo ($autorite->getDateDebut())?$autorite->getDateDebut()->format('d/m/Y'):"---"; ?>
-                    &rightarrow;
-                    <?php echo ($autorite->getDateFin())?$autorite->getDateFin()->format('d/m/Y'):"---"; ?>
-                    <br>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </td>
-    </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 <?php endif; ?>
 
 <script>
