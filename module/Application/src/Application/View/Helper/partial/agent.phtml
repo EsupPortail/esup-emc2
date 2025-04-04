@@ -71,7 +71,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                 <a
                     <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
                     href="<?php echo $this->url('mission-specifique-affectation/ajouter', [], ['query' => ['agent' => $agent->getId()]], true); ?>"
-                    class="ajax-modal btn btn-primary action pull-right"
+                    class="ajax-modal btn btn-primary pull-right"
                     data-event="modification"
                 >
                     <span class="icon icon-ajouter"></span>Ajouter une mission spécifique</a>

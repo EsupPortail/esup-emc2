@@ -234,6 +234,9 @@ h1.page-header {
 .card-info {
     background: #badaff;
 }
+.card-header a {
+    font-variant: normal;
+}
 
 span.label {
     border-radius: 0.25rem;
