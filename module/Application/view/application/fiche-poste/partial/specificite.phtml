@@ -36,7 +36,7 @@ $date = new DateTime();
                     <?php if($canEditerSpecificte AND  $mode === 'edition') : ?>
                         <?php /** @see \Application\Controller\SpecificiteController::ajouterActiviteAction() */ ?>
                         <a href="<?php echo $this->url('specificite/ajouter-activite', ['fiche-poste' => $fiche->getId(), 'specificite-poste' => ($fiche->getSpecificite())?$fiche->getSpecificite()->getId():null], [], true); ?>"
-                           class="btn btn-primary action ajax-modal" data-event="modification">
+                           class="btn btn-primary ajax-modal" data-event="modification">
                             <span class="icon icon-ajouter"></span>
                             Ajouter une mission additionnelle
                         </a>

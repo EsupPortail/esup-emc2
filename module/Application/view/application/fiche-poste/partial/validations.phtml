@@ -49,14 +49,14 @@ $canFichePosteValiderAgent = $this->isAllowed($fiche, FichePostePrivileges::FICH
                 <?php if ($validationResponsable === null) : ?>
                     <?php /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePosteValidations::VALIDATION_RESPONSABLE], [], true); ?>"
-                       class="btn btn-success action ajax-modal" data-event="modification">
+                       class="btn btn-success  ajax-modal" data-event="modification">
                         <span class="icon icon-checked"></span>
                         Valider la fiche de poste (responsable)
                     </a>
                 <?php else : ?>
                     <?php /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
-                       class="btn btn-danger action">
+                       class="btn btn-danger ">
                         <span class="icon icon-unchecked"></span>
                         Révoquer la validation (responsable)
                     </a>
@@ -66,7 +66,7 @@ $canFichePosteValiderAgent = $this->isAllowed($fiche, FichePostePrivileges::FICH
                 <?php if ($validationAgent === null) : ?>
                     <?php /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePosteValidations::VALIDATION_AGENT], [], true); ?>"
-                       class="btn btn-success action ajax-modal" data-event="modification">
+                       class="btn btn-success ajax-modal" data-event="modification">
                         <span class="icon icon-checked"></span>
                         Valider la fiche de poste (agent)
                     </a>
@@ -101,7 +101,7 @@ $canFichePosteValiderAgent = $this->isAllowed($fiche, FichePostePrivileges::FICH
                 <a
                     <?php /** @see \Application\Controller\FichePosteController::changerEtatAction() */ ?>
                         href="<?php echo $this->url('fiche-poste/changer-etat', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                        class="btn btn-primary action ajax-modal"
+                        class="btn btn-primary ajax-modal"
                         data-event="modification"
                 >
                     <span class="icon icon-editer"></span>
