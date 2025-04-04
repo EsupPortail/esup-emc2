@@ -20,7 +20,6 @@ return [
         't_contrat_long',
         'date_naissance',
         'nom_famille',
-        'id',
         'histo_createur_id',
         'histo_modificateur_id',
         'histo_destructeur_id',
@@ -1079,6 +1078,7 @@ return [
         'histo_createur_id',
         'histo_modificateur_id',
         'histo_destructeur_id',
+        'niveau',
     ],
     'structure_agent_force'                             => [
         'id',
@@ -1401,6 +1401,7 @@ return [
         'nb_elements',
         'categorie_id',
         'perimetre',
+        'roles_autorises',
     ],
     'unicaen_indicateur_tableau_indicateur'             => [
         'tableau_id',
@@ -2299,6 +2300,17 @@ return [
         'validation',
         'reponse',
         'value',
+    ],
+    'agent_ref'                                         => [
+        'id',
+        'agent_id',
+        'source',
+        'id_source',
+        'created_on',
+        'updated_on',
+        'deleted_on',
+        'source_id',
+        'id_orig',
     ],
 ];
 

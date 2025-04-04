@@ -214,6 +214,18 @@ return [
             'position'    => 15,
             'commentaire' => NULL,
         ],
+        'niveau'                => [
+            'name'        => 'niveau',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 24,
+            'commentaire' => NULL,
+        ],
         'parent_id'             => [
             'name'        => 'parent_id',
             'type'        => 'int',
