@@ -19,7 +19,7 @@ class UrlService extends \Application\Service\Url\UrlService
     }
 
     /** @noinspection PhpUnused */
-    public function getUrlEntretienRenseigner(string $params) : string
+    public function getUrlEntretienRenseigner(?string $params) : string
     {
         /** @var EntretienProfessionnel $entretien */
         $entretien = $this->getVariable('entretien');

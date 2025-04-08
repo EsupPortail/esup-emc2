@@ -40,6 +40,7 @@ $modules = [
     'Unicaen\BddAdmin',
     'UnicaenSynchro',
     'UnicaenObservation',
+    'UnicaenIcs',
 
 
     'Agent',

@@ -26,6 +26,7 @@
     "ext-gettext": "*",
     "unicaen/indicateur": "^6.2",
     "unicaen/synchro": "^6.1",
+    "unicaen/ics": "^0",
 
     "unicaen/utilisateur-ldap-adapter" : "^2.0",
     "unicaen/etat": "^6.0",
