@@ -199,7 +199,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     {
         $enfants = $this->enfants->toArray();
         $enfants = array_filter($enfants, function (Structure $a) {
-            return $a->isOuverte();
+            return $a->isOuverte() AND !$a->isDeleted();
         });
         return $enfants;
     }

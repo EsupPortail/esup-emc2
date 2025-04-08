@@ -527,9 +527,11 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $agents[$structure->getId()] = $this->getAgentService()->getAgentsByStructures([$structure]);
 
-        foreach ($structure->getEnfants() as $enfant) {
+        $enfants = $structure->getEnfants();
+        foreach ($enfants as $enfant) {
             $agents[$enfant->getId()] = $this->getAgentService()->getAgentsByStructures([$enfant]);
-            foreach ($enfant->getEnfants() as $petitenfant) {
+            $petitenfants = $enfant->getEnfants();
+            foreach ($petitenfants as $petitenfant) {
                 $sub = $this->getStructureService()->getSousStructures($petitenfant);
                 $sub[] = $petitenfant;
                 $agents[$petitenfant->getId()] = $this->getAgentService()->getAgentsByStructures([$sub]);

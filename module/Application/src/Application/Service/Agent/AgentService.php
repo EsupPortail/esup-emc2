@@ -283,7 +283,13 @@ EOS;
     public function getAgentsByStructures(array $structures, ?DateTime $dateDebut = null, ?DateTime $dateFin = null, bool $withJoin = true): array
     {
         if ($dateDebut === null) $dateDebut = new DateTime();
-        $structuresId = []; foreach ($structures as $structure) { $structuresId[] = $structure->getId(); }
+        $structuresId = [];
+        foreach ($structures as $structure) {
+            if (is_array($structure)) {
+                $structure = $structure[0];
+            }
+            $structuresId[] = $structure?->getId();
+        }
         $params = ['dateDebut' => $dateDebut?->format('Y-m-d'), 'dateFin' => $dateFin?->format('Y-m-d'), 'structures' => $structuresId];
 
         $sql = <<<EOS
