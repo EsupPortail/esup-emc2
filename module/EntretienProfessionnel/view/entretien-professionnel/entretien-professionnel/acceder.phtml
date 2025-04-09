@@ -261,27 +261,28 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 </style>
 
 <script>
-    $(function () {
-        let hash = $(location).attr('hash');
-        let name = hash.substring(1);
-        if (name === undefined || name === "") name = "formulaire";
+    let hash = $(location).attr('hash');
+    let name = hash.substring(1);
+    if (name === undefined || name === "") name = "formulaire";
 
-        $('button').removeClass('active');
-        $('button#' + name + '-tab').addClass('active');
+    console.log("Active tab : " + name);
+
+
+    $('button').removeClass('active');
+    $('button#' + name + '-tab').addClass('active');
+    $('div.tab-pane').hide().removeClass('active');
+    $('div#' + name).show().addClass('active');
+
+    //$('#' + name + '-tab').tab("show");
+    $('button.nav-link').on('click', function (e) {
+        let anchor = $(this).attr('aria-controls');
         $('div.tab-pane').hide().removeClass('active');
-        $('div#' + name).show().addClass('active');
-
-        //$('#' + name + '-tab').tab("show");
-        $('button.nav-link').on('click', function (e) {
-            let anchor = $(this).attr('aria-controls');
-            $('div.tab-pane').hide().removeClass('active');
-            $('div#' + anchor).show().addClass('active');
-            $('button').removeClass('active');
-            $('button#' + anchor + '-tab').addClass('active');
-            // console.log(anchor);
-            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#" + anchor);
-        });
+        $('div#' + anchor).show().addClass('active');
+        $('button').removeClass('active');
+        $('button#' + anchor + '-tab').addClass('active');
+        // console.log(anchor);
+        e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+        history.replaceState(null, null, "#" + anchor);
     });
 
     $(function () {

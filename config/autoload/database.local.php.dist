@@ -6,12 +6,12 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 
 $env = getenv('APPLICATION_ENV') ?: 'production';
 
-const DB_DRIVER = Driver::class;
-const DB_HOSTNAME = 'serveur_basededeonnees.mon-etablissement.fr';
-const DB_PORT = '5432';
-const DB_NAME = 'database_name';
-const DB_USERNAME = 'database_username';
-const DB_PASSWORD = 'mot de passe';
+const DB_EMC2_DRIVER = Driver::class;
+const DB_EMC2_HOSTNAME = 'serveur_basededeonnees.mon-etablissement.fr';
+const DB_EMC2_PORT = '5432';
+const DB_EMC2_NAME = 'database_name';
+const DB_EMC2_USERNAME = 'database_username';
+const DB_EMC2_PASSWORD = 'mot de passe';
 
 const VUESIRH_DRIVER = Driver::class;
 const VUESIRH_HOSTNAME = 'serveur_vuesirh.mon-etablissement.fr';
@@ -48,17 +48,17 @@ return [
         'connection' => [
             // base de l'application
             'orm_default' => [
-                'driverClass' => DB_DRIVER,
+                'driverClass' => DB_EMC2_DRIVER,
                 'params' => [
                     'driver' => 'Postgresql',
-                    'host' => DB_HOSTNAME,
-                    'port' => DB_PORT,
+                    'host' => DB_EMC2_HOSTNAME,
+                    'port' => DB_EMC2_PORT,
                     'charset' => 'utf8',
                     'driverOptions' => [1002 => 'SET NAMES utf8'],
-                    'user' => DB_USERNAME,
-                    'username' => DB_USERNAME,
-                    'password' => DB_PASSWORD,
-                    'dbname' => DB_NAME,
+                    'user' => DB_EMC2_USERNAME,
+                    'username' => DB_EMC2_USERNAME,
+                    'password' => DB_EMC2_PASSWORD,
+                    'dbname' => DB_EMC2_NAME,
                 ],
             ],
             'orm_octopus' => [
