@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\ImportController::importAction()
+ * @var ImportationForm $form
+ *
+ * @var array $info
+ * @var array $warning
+ * @var array $error
+ */
+
+use FicheReferentiel\Form\Importation\ImportationForm;
+
+$this->headTitle("Importation des fiches métiers");
+
+?>
+
+    <h1 class="page-header">
+        Importation des fiches métiers
+    </h1>
+
+<?php echo $this->form($form); ?>
+
+<?php if (!empty($error)) : ?>
+    <div class="alert alert-danger">
+        <?php foreach ($error as $line): ?>
+            <?php echo $line ?>
+            <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($info)) : ?>
+    <div class="alert alert-info">
+        <?php foreach ($info as $line): ?>
+            <?php echo $line ?>
+            <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($warning)) : ?>
+    <div class="alert alert-warning">
+        <?php foreach ($warning as $line): ?>
+            <?php echo $line ?>
+            <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

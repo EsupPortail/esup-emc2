@@ -4,6 +4,7 @@ namespace Metier\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Carriere\Entity\Db\Categorie;
+use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,6 +24,7 @@ class Metier implements HistoriqueAwareInterface {
     private ?Categorie $categorie = null;
     private ?NiveauEnveloppe $niveaux = null;
 
+    private Collection $correspondances;
     private Collection $domaines;
     private Collection $famillesProfessionnelles;
     private Collection $references;
@@ -32,6 +34,7 @@ class Metier implements HistoriqueAwareInterface {
     {
         $this->references = new ArrayCollection();
         $this->fichesMetiers = new ArrayCollection();
+        $this->correspondances = new ArrayCollection();
         $this->domaines = new ArrayCollection();
         $this->famillesProfessionnelles = new ArrayCollection();
     }
@@ -113,6 +116,29 @@ class Metier implements HistoriqueAwareInterface {
     public function getReferences() : array
     {
         return $this->references->toArray();
+    }
+
+    /** @return Correspondance[] */
+    public function getCorrespondances() : array
+    {
+        $correspondances =  $this->correspondances->toArray();
+        usort($correspondances, function (Correspondance $a, Correspondance $b) { return $a->getLibelleLong() <=> $b->getLibelleLong();});
+        return $correspondances;
+    }
+
+    public function clearCorrespondances() : void
+    {
+        $this->correspondances->clear();
+    }
+
+    public function addCorrespondance(Correspondance $correspondance): void
+    {
+        $this->correspondances->add($correspondance);
+    }
+
+    public function hasCorrespondance(Correspondance $correspondance) : bool
+    {
+        return $this->correspondances->contains($correspondance);
     }
 
     /** @return Domaine[] */

@@ -102,7 +102,7 @@ class FamilleProfessionnelleService
         return $famille;
     }
 
-    public function getFamilleProfessionnelleByLibelle(string $libelle): ?FamilleProfessionnelle
+    public function getFamilleProfessionnelleByLibelle(?string $libelle): ?FamilleProfessionnelle
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('famille.libelle = :libelle')->setParameter('libelle', $libelle)

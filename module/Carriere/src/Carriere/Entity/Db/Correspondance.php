@@ -30,6 +30,11 @@ class Correspondance implements HasPeriodeInterface, IsSynchronisableInterface
         $this->agentGrades = new ArrayCollection();
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +58,16 @@ class Correspondance implements HasPeriodeInterface, IsSynchronisableInterface
     public function getLibelleLong(): ?string
     {
         return $this->libelleLong;
+    }
+
+    public function setLibelleCourt(?string $libelleCourt): void
+    {
+        $this->libelleCourt = $libelleCourt;
+    }
+
+    public function setLibelleLong(?string $libelleLong): void
+    {
+        $this->libelleLong = $libelleLong;
     }
 
     public function getType(): ?CorrespondanceType

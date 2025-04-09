@@ -90,10 +90,49 @@ class CategorieService
         return $result;
     }
 
+    public function getCategorieByCode(?string $code): ?Categorie
+    {
+        $qb = $this->createQueryBuider()
+            ->andWhere('categorie.code = :code')
+            ->setParameter('code', $code);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Categorie::class."] partagent le même code [" . $code . "]", 0, $e);
+        }
+        return $result;
+    }
+
+    public function getCategorieByLibelle(?string $libelle): ?Categorie
+    {
+        $qb = $this->createQueryBuider()
+            ->andWhere('categorie.libelle = :libelle')
+            ->setParameter('libelle', $libelle);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Categorie::class."] partagent le même libellé [" . $libelle . "]", 0, $e);
+        }
+        return $result;
+    }
+
     public function getRequestedCategorie(AbstractActionController $controller, string $param = 'categorie'): ?Categorie
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCategorie($id);
         return $result;
     }
+
+    /** FACADE ********************************************************************************************************/
+
+    public function createWith(string $categorieLibelle, bool $persist = true): ?Categorie
+    {
+        $categorie = new Categorie();
+        $categorie->setLibelle($categorieLibelle);
+        if ($persist) $this->create($categorie);
+        return $categorie;
+    }
+
 }
