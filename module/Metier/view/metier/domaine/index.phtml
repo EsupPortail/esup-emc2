@@ -3,11 +3,7 @@
 /**
  * @see \Metier\Controller\DomaineController::indexAction()
  * @var Domaine[] $domaines
- *
- * @var FamilleProfessionnelle[] $familles
  * @var string[] $types
- *
- * @var string $famille
  * @var string $type
  * @var string $historise
  */
@@ -31,7 +27,7 @@ $this->headTitle('Liste des domaines')
     Liste des domaines
 </h1>
 
-<?php echo $this->partial('partial/filtre', ['familles' => $familles, 'types' => $types, 'famille' => $famille, 'type' => $type, 'historise' => $historise]); ?>
+<?php echo $this->partial('partial/filtre', ['types' => $types, 'type' => $type, 'historise' => $historise]); ?>
 
 <?php if ($canAjouter) : ?>
     <a
@@ -50,7 +46,6 @@ $this->headTitle('Liste des domaines')
     <tr>
         <th  class="col-md-3"> Libelle </th>
         <th  class="col-md-2"> Type </th>
-        <th  class="col-md-3"> Famille professionnelle </th>
         <th  class="col-md-2"> #metier </th>
         <?php if ($canAction) : ?>
             <th class="col-md-"> Action </th>
@@ -63,15 +58,6 @@ $this->headTitle('Liste des domaines')
             <td> <?php echo $domaine->getLibelle(); ?> </td>
             <td>
                 <?php echo $this->typefonction($domaine); ?>
-            </td>
-            <td>
-                <ul>
-                <?php foreach ($domaine->getFamilles() as $famille_) :  ?>
-                    <li>
-                        <?php echo $famille_->getLibelle(); ?>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
             </td>
             <td>
                 <?php echo count($domaine->getMetiers()); ?>

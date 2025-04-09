@@ -54,8 +54,7 @@ class FamilleProfessionnelleService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
-            ->addSelect('domaine')->leftJoin('famille.domaines', 'domaine')
-            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier');
+            ->addSelect('metier')->leftJoin('famille.metiers', 'metier');
         return $qb;
     }
 

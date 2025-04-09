@@ -7,29 +7,15 @@ use Metier\Entity\Db\Metier;
 /**
  * @see \Metier\Controller\FamilleProfessionnelleController::afficherAction()
  * @var FamilleProfessionnelle $famille
- * @var Domaine[] $domaines
  * @var Metier[] $metiers
  */
 
-usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle();});
 usort($metiers, function (Metier $a, Metier $b) { return $a->getLibelle() <=> $b->getLibelle();});
 ?>
 
 <dl class="row">
     <dt class="col-md-4"> Famille professionnelle</dt>
     <dd class="col-md-8"> <?php echo $famille->getLibelle(); ?> </dd>
-    <dt class="col-md-4"> Domaine·s</dt>
-    <dd class="col-md-8">
-        <?php if (empty($domaines)) : ?>
-            <em> Aucun domaine d'associé à cette famille professionnelle </em>
-        <?php else : ?>
-            <ul>
-            <?php foreach ($domaines as $domaine) : ?>
-                <li> <?php echo $domaine->getLibelle(); ?> </li>
-            <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
     <dt class="col-md-4"> Métier·s</dt>
     <dd class="col-md-8">
         <?php if (empty($metiers)) : ?>

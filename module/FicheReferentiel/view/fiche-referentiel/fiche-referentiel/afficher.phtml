@@ -44,13 +44,9 @@ $this->headTitle("FicheReferentiel #".$ficheReferentiel->getId());
     <dt class="col-md-3">Famille professionnelle</dt>
     <dd class="col-md-9">
         <?php
-            $domaines = $ficheReferentiel->getMetier()->getDomaines();
-            $familles = [];
-            foreach ($domaines as $domaine) {
-                $familles_ = $domaine->getFamilles();
-                foreach ($familles_ as $famille) {
-                    $familles[$famille->getId()] = $famille;
-                }
+            $familles = $ficheReferentiel->getMetier()->getFamillesProfessionnelles();
+            foreach ($familles as $famille) {
+                $familles[$famille->getId()] = $famille;
             }
         ?>
         <?php if (empty($familles)): ?>

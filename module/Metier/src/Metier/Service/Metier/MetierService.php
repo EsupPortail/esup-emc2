@@ -68,7 +68,7 @@ class MetierService
     {
         $qb = $this->getObjectManager()->getRepository(Metier::class)->createQueryBuilder('metier')
             ->addSelect('domaine')->leftJoin('metier.domaines', 'domaine')
-            ->addSelect('famille')->leftJoin('domaine.familles', 'famille')
+            ->addSelect('famille')->leftJoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie');
@@ -159,6 +159,7 @@ class MetierService
 
     /** FACADE ********************************************************************************************************/
 
+    //TODO à repenser avec la nouvelle modélisation ...
     public function generateCartographyArray(): array
     {
         $metiers = $this->getMetiers();
@@ -175,7 +176,7 @@ class MetierService
 
             foreach ($domaines as $domaine) {
                 $fonction = ($domaine) ? $domaine->getTypeFonction() : null;
-                $familles = ($domaine) ? $domaine->getFamilles() : [];
+                $familles = [];
                 $fTexte = implode(', ', array_map(function (FamilleProfessionnelle $a) {
                     return $a->getLibelle();
                 }, $familles));
@@ -339,8 +340,9 @@ EOS;
 
         // domaine et autre
         $metier->addDomaine($domaine);
-        $domaine->addFamille($famille);
+        $metier->addFamillesProfessionnelles($famille);
         if ($persist) $this->getDomaineService()->update($domaine);
+        if ($persist) $this->getFamilleProfessionnelleService()->update($famille);
         if ($persist) $this->update($metier);
 
         return $metier;

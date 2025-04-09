@@ -9,26 +9,45 @@ use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
 class MetierForm extends Form {
     use CategorieServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
     use DomaineServiceAwareTrait;
 
     public function init(): void
     {
+        //Famille
+        $this->add([
+            'type' => Select::class,
+            'name' => 'familles',
+            'options' => [
+                'label' => "Familles professionnelles <span class='icon icon-info text-info' title='Sélection multiple possible'></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'empty_option' => "Sélectionner des familles professionnelles ...",
+                'value_options' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'familles',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                //'data-live-search'  => 'true',
+                'multiple'          => 'multiple',
+            ],
+        ]);
         //domaines
         $this->add([
             'type' => Select::class,
             'name' => 'domaines',
             'options' => [
-                'label' => "Domaine professionnel <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Domaines professionnels <span class='icon icon-info  text-info' title='Sélection multiple possible'></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner des domaines ...",
                 'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'domaines',
-                'class'             => 'select2',
+                'class'             => 'bootstrap-selectpicker show-tick',
                 //'data-live-search'  => 'true',
                 'multiple'          => 'multiple',
             ],
@@ -100,7 +119,8 @@ class MetierForm extends Form {
 
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'domaines'          => [ 'required' => true,  ],
+            'domaines'          => [ 'required' => false,  ],
+            'familles'          => [ 'required' => false,  ],
             'libelle'           => [ 'required' => true,  ],
             'libelle_feminin'   => [ 'required' => false, ],
             'libelle_masculin'  => [ 'required' => false, ],

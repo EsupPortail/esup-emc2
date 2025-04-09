@@ -24,6 +24,7 @@ class Metier implements HistoriqueAwareInterface {
     private ?NiveauEnveloppe $niveaux = null;
 
     private Collection $domaines;
+    private Collection $famillesProfessionnelles;
     private Collection $references;
     private Collection $fichesMetiers;
 
@@ -32,6 +33,7 @@ class Metier implements HistoriqueAwareInterface {
         $this->references = new ArrayCollection();
         $this->fichesMetiers = new ArrayCollection();
         $this->domaines = new ArrayCollection();
+        $this->famillesProfessionnelles = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -113,9 +115,7 @@ class Metier implements HistoriqueAwareInterface {
         return $this->references->toArray();
     }
 
-    /**
-     * @return Domaine[]
-     */
+    /** @return Domaine[] */
     public function getDomaines() : array
     {
         $domaines =  $this->domaines->toArray();
@@ -128,9 +128,27 @@ class Metier implements HistoriqueAwareInterface {
         $this->domaines->clear();
     }
 
-    public function addDomaine(Domaine $domaine)
+    public function addDomaine(Domaine $domaine): void
     {
         $this->domaines->add($domaine);
+    }
+
+    /** @return FamilleProfessionnelle[] */
+    public function getFamillesProfessionnelles() : array
+    {
+        $familles =  $this->famillesProfessionnelles->toArray();
+        usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() <=> $b->getLibelle();});
+        return $familles;
+    }
+
+    public function clearFamillesProfessionnelles() : void
+    {
+        $this->famillesProfessionnelles->clear();
+    }
+
+    public function addFamillesProfessionnelles(FamilleProfessionnelle $famille): void
+    {
+        $this->famillesProfessionnelles->add($famille);
     }
 
     /** Fonctions pour affichage **************************************************************************************/
@@ -190,28 +208,6 @@ class Metier implements HistoriqueAwareInterface {
         $texte = "Domaine" . ((count($domaines) > 1)?"s":"") . " : ";
         $texte .= "<ul id='domaine'>";
         foreach ($domaines as $domaine) $texte .= "<li>".$domaine->getLibelle()."</li>";
-        $texte .= "</ul>";
-        return $texte;
-    }
-
-    /** @noinspection PhpUnused */
-    public function getDomaineAndFamille() : string
-    {
-        $texte = "";
-        /** @var Domaine $domaine */
-        $texte .= "<ul>";
-        foreach ($this->domaines as $domaine) {
-            $texte .= "<li>";
-            $texte .= $domaine->getLibelle();
-            $texte .= "<ul>";
-            foreach ($domaine->getFamilles() as $famille) {
-                $texte .= "<li>";
-                $texte .= $famille->getLibelle();
-                $texte .= "</li>";
-            }
-            $texte .= "</ul>";
-            $texte .= "</li>";
-        }
         $texte .= "</ul>";
         return $texte;
     }

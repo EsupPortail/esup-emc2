@@ -48,9 +48,10 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
     <thead>
     <tr>
         <th> Libelle </th>
+        <th> Catégorie </th>
+        <th> Familles professionnelles </th>
         <th> Domaines </th>
         <th> Références </th>
-        <th> Catégorie </th>
         <th> Niveaux </th>
         <?php if ($canAction) :?>
             <th style="min-width: 10rem;"> Action </th>
@@ -66,6 +67,21 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                 >
                     <?php echo $metier->getLibelle(); ?>
                 </span>
+            </td>
+            <td id="categorie">
+                <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
+            </td>
+            <td>
+                <?php $familles = $metier->getFamillesProfessionnelles(); ?>
+                <?php if ($familles === null OR empty($familles)) : ?>
+                    <em>Aucune famille professionnelle de renseignée</em>
+                <?php else : ?>
+                    <ul>
+                        <?php foreach ($metier->getFamillesProfessionnelles() as $famille) : ?>
+                            <li> <?php echo $famille->getLibelle(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </td>
             <td>
                 <ul>
@@ -120,9 +136,6 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                             Ajouter
                         </a>
                     <?php endif; ?>
-            </td>
-            <td id="categorie">
-                <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
             </td>
             <td class="action" id="niveaux">
                 <?php echo $this->niveauEnveloppe($metier->getNiveaux()) ?>

@@ -32,21 +32,14 @@ class ImportController extends AbstractActionController
             foreach ($header as $key => $value) {
 //            var_dump($key); var_dump($value);
                 if ($value === "Famille d’activité professionnelle") $famillePosition = $key;
-                if ($value === "Domaine de formation souhaité/exigé") $domainePosition = $key;
             }
             if ($famillePosition === -1) $warning[] = "Échec de la détection de la colonne [Famille d’activité professionnelle]";
-            if ($domainePosition === -1) $warning[] = "Échec de la détection de la colonne [Domaine de formation souhaité/exigé]";
 
             while (($row = fgetcsv($csvFile, null, ';')) !== false) {
                 if ($famillePosition !== -1) {
                     $famille_ = $row[$famillePosition];
                     $familles = explode("|", $famille_);
                     foreach ($familles as $famille) $familleDictionnary[$famille] = $famille;
-                }
-                if ($domainePosition !== -1) {
-                    $domaine_ = $row[$domainePosition];
-                    $domaines = explode("|", $domaine_);
-                    foreach ($domaines as $domaine) $domaineDictionnary[$domaine] = $domaine;
                 }
             }
             fclose($csvFile); // Fermer le fichier
@@ -55,9 +48,6 @@ class ImportController extends AbstractActionController
                 print("Famille");
                 sort($familleDictionnary);
                 var_dump($familleDictionnary);
-                print("Domaine");
-                sort($domaineDictionnary);
-                var_dump($domaineDictionnary);
             }
 
             foreach ($familleDictionnary as $famille) {

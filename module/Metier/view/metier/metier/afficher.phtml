@@ -36,7 +36,24 @@ use Metier\Entity\Db\Metier;
         <?php endif; ?>
     </dd>
     <dt class="col-md-4">
-        Domaine
+        Famille professionnelle
+    </dt>
+    <dd class="col-md-8">
+        <?php $familles = $metier->getFamillesProfessionnelles(); ?>
+        <?php if (empty($familles)) : ?>
+            <em> Aucune famille professionnelle d'associée au métier </em>
+        <?php else : ?>
+            <ul>
+                <?php foreach ($familles as $famille) : ?>
+                    <li>
+                        <?php echo $famille->getLibelle(); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4">
+        Domaine d'activité
     </dt>
     <dd class="col-md-8">
         <?php $domaines = $metier->getDomaines(); ?>
@@ -85,7 +102,11 @@ use Metier\Entity\Db\Metier;
         <?php else : ?>
             <ul>
             <?php foreach ($fiches as $fiche) : ?>
-                <li> #<?php echo $fiche->getId(); ?> - <?php echo $metier->getLibelle(); ?> <?php echo $this->etattype($fiche->getEtatActif()); ?></li>
+                <li> #<?php echo $fiche->getId(); ?> - <?php echo $metier->getLibelle(); ?>
+                    <?php if ($fiche->getEtatActif()) : ?>
+                        <?php echo $this->etatinstance($fiche->getEtatActif()); ?>
+                    <?php endif; ?>
+                </li>
             <?php endforeach; ?>
             </ul>
         <?php endif; ?>
