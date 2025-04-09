@@ -133,6 +133,11 @@ class Metier implements HistoriqueAwareInterface {
         $this->domaines->add($domaine);
     }
 
+    public function hasDomaine(Domaine $domaine) : bool
+    {
+        return $this->domaines->contains($domaine);
+    }
+
     /** @return FamilleProfessionnelle[] */
     public function getFamillesProfessionnelles() : array
     {
@@ -149,6 +154,15 @@ class Metier implements HistoriqueAwareInterface {
     public function addFamillesProfessionnelles(FamilleProfessionnelle $famille): void
     {
         $this->famillesProfessionnelles->add($famille);
+    }
+
+    public function hasFamilleProfessionnelle(FamilleProfessionnelle $famille) : bool
+    {
+        foreach ($this->famillesProfessionnelles as $famillesProfessionnelle) {
+            $res = $famille === $famillesProfessionnelle;
+            $a=1;
+        }
+        return $this->famillesProfessionnelles->contains($famille);
     }
 
     /** Fonctions pour affichage **************************************************************************************/
@@ -240,17 +254,7 @@ class Metier implements HistoriqueAwareInterface {
         return $this->getLibelle();
     }
 
-    /**
-     * @param Domaine $domaine
-     * @return bool
-     */
-    public function hasDomaine(Domaine $domaine) : bool
-    {
-        foreach ($this->domaines as $domaine_) {
-            if ($domaine_ === $domaine) return true;
-        }
-        return false;
-    }
+
 
     public function __toString()
     {

@@ -56,7 +56,7 @@ class MetierHydrator implements HydratorInterface {
             }
         }
         $object->clearFamillesProfessionnelles();
-        if (isset($data['famille'])) {
+        if (isset($data['familles'])) {
             foreach ($data['familles'] as $id) {
                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($id);
                 if ($famille) $object->addFamillesProfessionnelles($famille);
