@@ -134,7 +134,6 @@ class ImportController extends AbstractActionController
                     if ($categoriesObjects[$categorie] === null) {
                         $info[] = "Création de la catégorie [" . $categorie . "]";
                         $categoriesObjects[$categorie] = $this->getCategorieService()->createWith($categorie, ($mode === 'import'));
-
                     }
                 }
 
@@ -144,7 +143,6 @@ class ImportController extends AbstractActionController
                     if ($correspondanceObjects[$correspondance["code"]] === null) {
                         $info[] = "Création de la correspondance [" . $correspondance["code"] ."|" . $correspondance["intitulé"] . "]";
                         $correspondance[$correspondance["code"]] = $this->getCorrespondanceService()->createWith("BAP", $correspondance["code"], $correspondance["intitulé"], $mode === 'import');
-
                     }
                 }
 
