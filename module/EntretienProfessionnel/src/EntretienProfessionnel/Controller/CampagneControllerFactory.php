@@ -6,12 +6,15 @@ use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Application\Service\Macro\MacroService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
+use EntretienProfessionnel\Service\Url\UrlService;
+use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -19,6 +22,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class CampagneControllerFactory extends AbstractActionController
@@ -37,12 +41,15 @@ class CampagneControllerFactory extends AbstractActionController
          * @var AgentSuperieurService $agentSuperieurService
          * @var CampagneService $campagneService
          * @var EntretienProfessionnelService $entretienProfessionnelService
+         * @var MacroService $macroService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          * @var RappelCampagneAvancementAutoriteService $rappelCampagneAvancementAutoriteService
          * @var RappelCampagneAvancementSuperieurService $rappelCampagneAvancementSuperieurService
+         * @var RenduService $renduService ;
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
+         * @var UrlServiceAwareTrait $urlService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
@@ -50,12 +57,15 @@ class CampagneControllerFactory extends AbstractActionController
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
+        $macroService = $container->get(MacroService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
         $rappelCampagneAvancementAutoriteService = $container->get(RappelCampagneAvancementAutoriteService::class);
         $rappelCampagneAvancementSuperieurService = $container->get(RappelCampagneAvancementSuperieurService::class);
+        $renduService = $container->get(RenduService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
+        $urlService = $container->get(UrlService::class);
         $userService = $container->get(UserService::class);
 
         /**
@@ -71,12 +81,15 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setCampagneService($campagneService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
+        $controller->setMacroService($macroService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
         $controller->setRappelCampagneAvancementAutoriteService($rappelCampagneAvancementAutoriteService);
         $controller->setRappelCampagneAvancementSuperieurService($rappelCampagneAvancementSuperieurService);
+        $controller->setRenduService($renduService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
+        $controller->setUrlService($urlService);
         $controller->setUserService($userService);
         $controller->setCampagneForm($campagneForm);
         $controller->setSelectionAgentForm($selectionAgentForm);

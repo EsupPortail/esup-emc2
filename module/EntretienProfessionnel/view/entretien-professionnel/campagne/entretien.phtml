@@ -27,7 +27,8 @@ foreach ($entretiens as $entretien) {
     }
 }
 
-$sansObligatoires = []; $sansFacultatifs = [];
+$sansObligatoires = [];
+$sansFacultatifs = [];
 foreach ($obligatoires as $obligatoire) {
     if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
 }
@@ -35,7 +36,7 @@ foreach ($facultatifs as $facultatif) {
     if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
 }
 
-$this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
+$this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
 ?>
 
 <h1 class="page-header">
@@ -88,11 +89,14 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
 
     <div class="alert alert-info">
         <div class="row">
-            <div class="col-md-1"><span class="icon icon-info"></span></div>
             <div class="col-md-10">
-                Les agents n'étant pas en poste à la date du <?php echo $campagne->getDateEnPoste()->format('d/m/Y'); ?> n'ont pas d'obligation d'entretien professionnel.
+                Les agents n'étant pas en poste à la date du <?php echo $campagne->getDateEnPoste()->format('d/m/Y'); ?>
+                n'ont pas d'obligation d'entretien professionnel.
                 <br/>
                 Vous pouvez cependant planifier un entretien professionnel si vous le souhaitez.
+            </div>
+            <div class="col-md-2">
+                Action si possible ...
             </div>
         </div>
     </div>
