@@ -10,11 +10,13 @@ use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Application\Service\Macro\MacroServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -22,6 +24,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
+use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -33,6 +36,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
@@ -43,12 +47,15 @@ class CampagneController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use MacroServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RappelCampagneAvancementAutoriteServiceAwareTrait;
     use RappelCampagneAvancementSuperieurServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
+    use UrlServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use CampagneFormAwareTrait;
@@ -421,6 +428,11 @@ class CampagneController extends AbstractActionController
             return $a->getDateDebut() <=> $b->getDateDebut();
         });
 
+        /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
+        $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne, 'structure' => $structure];
+        $templates = [];
+        $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION] = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION, $vars, false);
+
         return new ViewModel([
             'campagne' => $campagne,
             'campagnes' => $campagnes,
@@ -436,6 +448,8 @@ class CampagneController extends AbstractActionController
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
             'raison' => $raison,
+
+            'templates' => $templates,
         ]);
     }
 

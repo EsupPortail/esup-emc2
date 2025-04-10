@@ -10,7 +10,7 @@ use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations
  * @var array $options
  */
 
-$isEnCours = (!empty($entretiens) && current($entretiens)->getCampagne()->estEnCours());
+$isEnCours = (!empty($entretiens) && current($entretiens)->getCampagne() && current($entretiens)->getCampagne()->estEnCours());
 
 $dropdowns = false;
 

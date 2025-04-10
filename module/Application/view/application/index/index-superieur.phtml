@@ -10,6 +10,7 @@
  * @var Agent[][] $agentsByCampagne
  * @var array $fichesDePoste
  * @var array $fichesDePostePdf
+ * @var array $templates
  */
 
 use Application\Entity\Db\Agent;
@@ -69,7 +70,7 @@ $canOngletMission = $this->isAllowed(MissionspecifiqueaffectationPrivileges::get
     <?php endif; ?>
     <?php foreach ($campagnes as $campagne) : ?>
         <div id="entretien_<?php echo $campagne->getId(); ?>" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/entretien', ['campagne' => $campagne, 'connectedAgent' => $connectedAgent,  'agents' => $agentsByCampagne[$campagne->getId()], 'entretiens' => $entretiens[$campagne->getId()]], [], true); ?>
+            <?php echo $this->partial('partial/entretien', ['campagne' => $campagne, 'connectedAgent' => $connectedAgent,  'agents' => $agentsByCampagne[$campagne->getId()], 'entretiens' => $entretiens[$campagne->getId()], 'templates' => $templates[$campagne->getId()]], [], true); ?>
         </div>
     <?php endforeach; ?>
 </div>

@@ -125,4 +125,10 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     {
         return ($this->dateCirculaire)?$this->dateCirculaire->format('d/m/Y'):"N.C.";
     }
+
+    /** @noinspection  PhpUnused */
+    public function getDatePrisePosteToString() : string
+    {
+        return ($this->dateEnPoste)?$this->dateEnPoste->format('d/m/Y'):"N.C.";
+    }
 }

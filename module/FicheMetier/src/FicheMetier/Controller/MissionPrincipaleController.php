@@ -210,7 +210,7 @@ class MissionPrincipaleController extends AbstractActionController
             'title' => "Modifier le niveau associé à la mission",
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 

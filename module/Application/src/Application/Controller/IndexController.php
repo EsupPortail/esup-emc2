@@ -18,6 +18,7 @@ use Application\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\Controller\ObservateurController;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienProfessionnelRoleProvider;
+use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Http\Response;
@@ -151,6 +152,9 @@ class IndexController extends AbstractActionController
         /** Récuperation des eps **************************************************************************************/
         $entretiens = [];
         $agentsByCampagne = [];
+
+        $templates = [];
+
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
@@ -163,6 +167,9 @@ class IndexController extends AbstractActionController
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
             [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
+
+            $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
+            $templates[$campagne->getId()][TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION] = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION, $vars, false);
         }
 
         /** Récupération des fiches de postes *************************************************************************/
@@ -188,6 +195,8 @@ class IndexController extends AbstractActionController
 
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
+
+            'templates' => $templates,
         ]);
     }
 
@@ -212,6 +221,9 @@ class IndexController extends AbstractActionController
         /** Récuperation des eps **************************************************************************************/
         $entretiens = [];
         $agentsByCampagne = [];
+
+        $templates = [];
+
         foreach ($campagnes as $campagne) {
             $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
@@ -224,6 +236,9 @@ class IndexController extends AbstractActionController
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
             [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
             $agentsByCampagne[$campagne->getId()] = [$obligatoires, $facultatifs, $raison];
+
+            $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
+            $templates[$campagne->getId()][TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION] = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION, $vars, false);
         }
 
         /** Récupération des fiches de postes *************************************************************************/
@@ -248,6 +263,8 @@ class IndexController extends AbstractActionController
 
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
+
+            'templates' => $templates,
         ]);
     }
 
