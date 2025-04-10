@@ -48,8 +48,8 @@ use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
         <tbody>
             <?php foreach ($chaines as [$agent, $responsable, $dateDebut, $dateFin]) : ?>
                 <tr>
-                    <td> <?php echo $agent->getDenomination(); ?> </td>
-                    <td> <?php echo $responsable->getDenomination(); ?> </td>
+                    <td> <?php echo ($agent)?$agent->getDenomination():"---"; ?> </td>
+                    <td> <?php echo ($responsable)?$responsable->getDenomination():"---"; ?> </td>
                     <td> <?php echo ($dateDebut)?$dateDebut->format('d/m/Y'):"---"; ?> </td>
                     <td> <?php echo ($dateFin)?$dateFin->format('d/m/Y'):"---"; ?> </td>
                 </tr>
