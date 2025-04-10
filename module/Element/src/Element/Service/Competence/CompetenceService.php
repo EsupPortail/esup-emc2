@@ -272,6 +272,22 @@ class CompetenceService
         return $result;
     }
 
+    public function getCompetenceByRefentielAndId(?CompetenceReferentiel $referentiel, ?string $id): ?Competence
+    {
+        if ($referentiel === null) return null;
+        if ($id === null) return null;
+        $qb = $this->createQueryBuilder()
+            ->andWhere('competence.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
+            ->andWhere('competence.idSource = :id')->setParameter('id', $id)
+            ->andWhere('competence.histoDestruction IS NULL');
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [" . Competence::class . "] partagent le même référentiel [" . $referentiel->getLibelleCourt() . "] et le même id [" . $id . "]", 0, $e);
+        }
+        return $result;
+    }
+
     private function getCompetenceMaxIdByRefentiel(CompetenceReferentiel $referentiel)
     {
         $competences = $this->getCompetencesByRefentiel($referentiel);
@@ -303,4 +319,6 @@ class CompetenceService
         });
         return $result;
     }
+
+
 }

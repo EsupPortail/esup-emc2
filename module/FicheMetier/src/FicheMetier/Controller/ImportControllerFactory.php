@@ -4,6 +4,9 @@ namespace FicheMetier\Controller;
 
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Correspondance\CorrespondanceService;
+use Element\Service\Competence\CompetenceService;
+use Element\Service\CompetenceElement\CompetenceElementService;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use FicheReferentiel\Form\Importation\ImportationForm;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
@@ -26,6 +29,10 @@ class ImportControllerFactory
     {
         /**
          * @var CategorieService $categorieService
+         * @var CompetenceService $competenceService
+         * @var CompetenceElementService $competenceElementService
+         * @var CompetenceReferentielService $competenceReferentielService
+         * @var CategorieService $categorieService
          * @var CorrespondanceService $correspondanceService
          * @var DomaineService $domaineService
          * @var FamilleProfessionnelleService $familleProfessionnelService
@@ -34,6 +41,9 @@ class ImportControllerFactory
          * @var ReferentielService $referentielService
          */
         $categorieService = $container->get(CategorieService::class);
+        $competenceService = $container->get(CompetenceService::class);
+        $competenceElementService = $container->get(CompetenceElementService::class);
+        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $domaineService = $container->get(DomaineService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
@@ -48,6 +58,9 @@ class ImportControllerFactory
 
         $controller = new ImportController();
         $controller->setCategorieService($categorieService);
+        $controller->setCompetenceService($competenceService);
+        $controller->setCompetenceElementService($competenceElementService);
+        $controller->setCompetenceReferentielService($competenceReferentielService);
         $controller->setCorrespondanceService($correspondanceService);
         $controller->setDomaineService($domaineService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);

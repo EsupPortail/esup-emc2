@@ -2,11 +2,22 @@
 
 namespace FicheMetier\Controller;
 
+use Carriere\Entity\Db\Categorie;
+use Carriere\Entity\Db\Correspondance;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Entity\Db\Metier;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
@@ -16,9 +27,13 @@ use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 class ImportController extends AbstractActionController
 {
     use CategorieServiceAwareTrait;
+    use CompetenceServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
+    use CompetenceReferentielServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
@@ -30,13 +45,14 @@ class ImportController extends AbstractActionController
         $form = $this->getImportationForm();
         $form->setAttribute("action", $this->url()->fromRoute("fiche-metier/import"));
 
-
+        $fiches = [];
         $info = [];
         $warning = [];
         $error = [];
 
         $request = $this->getRequest();
         if ($request->isPost()) {
+
             $data = $request->getPost();
             $file = $request->getFiles();
 
@@ -49,131 +65,150 @@ class ImportController extends AbstractActionController
                 $error[] = "Le référentiel [REFERENS3] n'est pas présent dans l'application";
             }
 
-            $csvFile = fopen($fichier_path, "r"); // Ouvrir le fichier en mode lecture
-
-
+            $header = [];
+            $data = [];
+            // Lecture du fichier de REFERENS3
+            $csvFile = fopen($fichier_path, "r");
             if ($csvFile !== false) {
                 $header = fgetcsv($csvFile, null, ";");
+                $nbElements = count($header);
 
-                $colonneToMatch = [
-                    "Code de la branche d’activité professionnelle",
-                    "Branche d’activité professionnelle",
-                    "Famille d’activité professionnelle",
-                    "Intitulé de l’emploi type",
-                    "Code emploi type",
-                    "REFERENS_CATEGORIE_EMPLOI",
-                    "Choucroute !!!",
-                ];
-                $positions = [];
-                $familleDictionnary = [];
-                $categorieDictionnary = [];
-                $correspondanceDictionnary = [];
-                $metiers = [];
-                foreach ($header as $key => $value) {
-                    if (in_array($value, $colonneToMatch)) {
-                        $positions[$value] = $key;
-                    }
-                }
-                foreach ($colonneToMatch as $colonne) {
-                    if (!isset($positions[$colonne])) $warning[] = "Échec de la détection de la colonne [" . $colonne . "]";
-                }
-
-                $metier_familles = [];
-                $metier_categories = [];
                 while (($row = fgetcsv($csvFile, null, ';')) !== false) {
-                    $familles = null;
-                    if (isset($positions["Famille d’activité professionnelle"])) {
-                        $famille_ = $row[$positions["Famille d’activité professionnelle"]];
-                        $familles = explode("|", $famille_);
-                        foreach ($familles as $famille) $familleDictionnary[$famille] = $famille;
+                    $item = [];
+                    for ($position = 0; $position < $nbElements; ++$position) {
+                        $item[$header[$position]] = $row[$position];
                     }
-                    $categorie = null;
-                    if (isset($positions["REFERENS_CATEGORIE_EMPLOI"])) {
-                        $categorie = $row[$positions["REFERENS_CATEGORIE_EMPLOI"]];
+                    $data[] = $item;
+                }
+                fclose($csvFile);
+            }
+
+            //todo fonction !!!
+            /** @var FamilleProfessionnelle[] $famillesProfessionnelles */
+            $famillesProfessionnelles = [];
+            if (in_array("Famille d’activité professionnelle", $header)) {
+                $familleDictionnary = [];
+                foreach ($data as $item) {
+                    $rawFamilleProfessionnelle = $item["Famille d’activité professionnelle"];
+                    $familles = explode("|", $rawFamilleProfessionnelle);
+                    foreach ($familles as $famille) {
+                        $familleDictionnary[$famille] = $famille;
+                    }
+                }
+                foreach ($familleDictionnary as $famille) {
+                    $famillesProfessionnelles[$famille] = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille);
+                    if ($famillesProfessionnelles[$famille] === null) {
+                        $info[] = "Création de la famille professionnelle [" . $famille . "]";
+                        $famillesProfessionnelles[$famille] = $this->getFamilleProfessionnelleService()->createWith($famille, ($mode === 'import'));
+                    }
+                }
+            }
+
+            //todo fonction !!!
+            /** @var Categorie[] $categories * */
+            $categories = [];
+            if (in_array("REFERENS_CATEGORIE_EMPLOI", $header)) {
+                $categorieDictionnary = [];
+                foreach ($data as $item) {
+                    $rawCategorie = $item["REFERENS_CATEGORIE_EMPLOI"];
+                    $categories = explode("|", $rawCategorie);
+                    foreach ($categories as $categorie) {
                         $categorieDictionnary[$categorie] = $categorie;
                     }
-                    $correspondance = null;
-                    if (isset($positions["Code de la branche d’activité professionnelle"])) {
-                        $correspondance["code"] = $row[$positions["Code de la branche d’activité professionnelle"]];
-                        if (isset($positions["Branche d’activité professionnelle"])) $correspondance["intitulé"] = $row[$positions["Branche d’activité professionnelle"]];
-                        $correspondanceDictionnary[$correspondance["code"]] = $correspondance;
-                    }
-                    $intitule = null;
-                    if (isset($positions["Intitulé de l’emploi type"])) {
-                        $intitule = $row[$positions["Intitulé de l’emploi type"]];
-                        $code = null;
-                        if (isset($positions["Code emploi type"])) {
-                            $code = $row[$positions["Code emploi type"]];
-                        }
-                        $metiers[] = ["intitulé" => $intitule, "code" => $code];
-                    }
-                    if ($intitule and $familles) {
-                        $metier_familles[$intitule] = $familles;
-                    }
-                    if ($intitule and $categorie) {
-                        $metier_categories[$intitule] = $categorie;
-                    }
-                    if ($intitule and $correspondance) {
-                        $metier_correspondance[$intitule] = $correspondance;
-                    }
                 }
-                fclose($csvFile); // Fermer le fichier
-
-                $famillesObjects = [];
-                foreach ($familleDictionnary as $famille) {
-                    $famillesObjects[$famille] = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille);
-
-                    if ($famillesObjects[$famille] === null) {
-                        $info[] = "Création de la famille professionnelle [" . $famille . "]";
-                        $famillesObjects[$famille] = $this->getFamilleProfessionnelleService()->createWith($famille, ($mode === 'import'));
-                    }
-                }
-                $categoriesObjects = [];
                 foreach ($categorieDictionnary as $categorie) {
-                    $categoriesObjects[$categorie] = $this->getCategorieService()->getCategorieByLibelle($categorie);;
-                    if ($categoriesObjects[$categorie] === null) {
+                    $categories[$categorie] = $this->getCategorieService()->getCategorieByLibelle($categorie);
+                    if ($categories[$categorie] === null) {
                         $info[] = "Création de la catégorie [" . $categorie . "]";
-                        $categoriesObjects[$categorie] = $this->getCategorieService()->createWith($categorie, ($mode === 'import'));
+                        $categories[$categorie] = $this->getCategorieService()->createWith($categorie, ($mode === 'import'));
                     }
                 }
-
-                $correspondanceObjects = [];
-                foreach ($correspondanceDictionnary as $correspondance) {
-                    $correspondanceObjects[$correspondance["code"]] = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode("BAP", $correspondance["code"]);
-                    if ($correspondanceObjects[$correspondance["code"]] === null) {
-                        $info[] = "Création de la correspondance [" . $correspondance["code"] ."|" . $correspondance["intitulé"] . "]";
-                        $correspondance[$correspondance["code"]] = $this->getCorrespondanceService()->createWith("BAP", $correspondance["code"], $correspondance["intitulé"], $mode === 'import');
-                    }
-                }
-
-                foreach ($metiers as $metier) {
-                    $metierObject = $this->getMetierService()->getMetierByReference("REFERENS3", $metier["code"]);
-
-                    if ($metierObject === null) $metierObject = $this->getMetierService()->getMetierByLibelle($metier["intitulé"]);
-                    if ($metierObject === null) {
-                        $info[] = "Création du metier [" .$metier["code"] . "|" . $metier["intitulé"] . "]";
-                        $metier_ = $this->getMetierService()->createWith($metier["intitulé"], "REFERENS3", $metier["code"], null, null, ($mode === 'import'));
-                        foreach ($metier_familles[$metier["intitulé"]] as $famille) {
-                            $info[] = "Ajout de la famille [" . $famille . "] au métier [" . $metier["intitulé"] . "]";
-                            $metier_->addFamillesProfessionnelles($famillesObjects[$famille]);
-                            if ($mode === 'import') $this->getMetierService()->update($metier_);
-                        }
-                        if (isset($metier_categories[$metier["intitulé"]])) {
-                            $info[] = "Ajout de la categorie [" . $metier_categories[$metier["intitulé"]] . "] au métier [" . $metier["intitulé"] . "]";
-                            $metier_->setCategorie($categoriesObjects[$metier_categories[$metier["intitulé"]]]);
-                            if ($mode === 'import') $this->getMetierService()->update($metier_);
-                        }
-                        if (isset($metier_correspondance[$metier["intitulé"]])) {
-                            $info[] = "Ajout de la correspondance [" . $metier_correspondance[$metier["intitulé"]]['intitulé'] . "] au métier [" . $metier["intitulé"] . "]";
-                            $metier_->addCorrespondance($correspondanceObjects[$metier_correspondance[$metier["intitulé"]]['code']]);
-                            if ($mode === 'import') $this->getMetierService()->update($metier_);
-                        }
-                    }
-                }
-
-            } else {
-                echo "Erreur lors de l'ouverture du fichier.";
             }
+
+            //todo fonction !!!
+            /** @var Correspondance[] $correspondances * */
+            $correspondances = [];
+            if (in_array("Code de la branche d’activité professionnelle", $header)) {
+                $correspondanceDictionnary = [];
+                foreach ($data as $item) {
+                    $correspondance = [];
+                    $correspondance["code"] = $item["Code de la branche d’activité professionnelle"] ?? null;
+                    $correspondance["intitulé"] = $item["Branche d’activité professionnelle"] ?? null;
+                    if ($correspondance["code"]) $correspondanceDictionnary[$correspondance["code"]] = $correspondance;
+                }
+                foreach ($correspondanceDictionnary as $correspondance) {
+                    $correspondances[$correspondance["code"]] = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode("BAP", $correspondance["code"]);
+                    if ($correspondances[$correspondance["code"]] === null) {
+                        $info[] = "Création de la correspondance [" . $correspondance["code"] . "|" . $correspondance["intitulé"] . "]";
+                        $correspondances[$correspondance["code"]] = $this->getCorrespondanceService()->createWith("BAP", $correspondance["code"], $correspondance["intitulé"], $mode === 'import');
+                    }
+                }
+            }
+
+            //todo fonction !!!
+            /** @var Competence[] $competences */
+            $competences = [];
+            $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode("REFERENS");
+            if ($referentiel === null) $error[] = "Le référentiel [REFERENS] n'existe pas.";
+            if (in_array("COMPETENCES_ID", $header)) {
+                foreach ($data as $item) {
+                    $ids = explode("|", $item["COMPETENCES_ID"]);
+                    foreach ($ids as $id) {
+                        $competence = $this->getCompetenceService()->getCompetenceByRefentielAndId($referentiel, $id);
+                        if ($competence === null) $warning[] = "La compétence identifié [" . $id . "] n'est pas présente dans le référentiel [REFERENS]";
+                        else $competences[$id] = $competence;
+                    }
+                }
+            }
+
+
+            //todo fonction !!!
+            /** @var Metier[] $metiers */
+            $metiers = [];
+            if (in_array("Code emploi type", $header)) {
+                foreach ($data as $item) {
+                    $code = $item["Code emploi type"] ?? null;
+                    $intitule = $item["Intitulé de l’emploi type"] ?? null;
+                    if (!isset($metiers[$code])) {// and !$this->getMetierService()->getMetierByLibelle($intitule)) {
+                        $metier = $this->getMetierService()->createWith($intitule, "REFERENS3", $code, null, null, $mode === 'import');
+                        if ($item["Famille d’activité professionnelle"]) {
+                            $elements = explode("|", $item["Famille d’activité professionnelle"]);
+                            foreach ($elements as $element) {
+                                $metier->addFamillesProfessionnelles($famillesProfessionnelles[$element]);
+                            }
+                        }
+                        if ($item["Code de la branche d’activité professionnelle"] and $correspondances[$item["Code de la branche d’activité professionnelle"]]) $metier->addCorrespondance($correspondances[$item["Code de la branche d’activité professionnelle"]]);
+                        if ($item["REFERENS_CATEGORIE_EMPLOI"] and $categories[$item["REFERENS_CATEGORIE_EMPLOI"]]) $metier->setCategorie($categories[$item["REFERENS_CATEGORIE_EMPLOI"]]);
+                        if ($mode === 'import') $this->getMetierService()->update($metier);
+                        $metiers[$code] = $metier;
+                    }
+                }
+            }
+
+            /** @var FicheMetier[] $fiches */
+            // TODO avoid duplicate !!!
+            foreach ($data as $item) {
+                $fiche = new FicheMetier();
+                $fiche->setMetier($metiers[$item["Code emploi type"]]);
+                if ($item["COMPETENCES_ID"]) {
+                    $ids = explode('|', $item["COMPETENCES_ID"]);
+                    foreach ($ids as $id) {
+                        if ($competences[$id]) {
+                            $element = new CompetenceElement();
+                            $element->setCompetence($competences[$id]);
+                            $fiche->addCompetenceElement($element);
+                            if ($mode === 'import') {
+                                $this->getCompetenceElementService()->create($element);
+                                $this->getFicheMetierService()->update($fiche);
+                            }
+                        }
+                    }
+                }
+                $fiche->setRaw(json_encode($item));
+                $fiches[] = $fiche;
+            }
+
+//            echo $fiches[0]->getRaw();
 
         }
 
@@ -182,6 +217,7 @@ class ImportController extends AbstractActionController
             'info' => $info,
             'warning' => $warning,
             'error' => $error,
+            'fiches' => $fiches,
         ]);
     }
 
