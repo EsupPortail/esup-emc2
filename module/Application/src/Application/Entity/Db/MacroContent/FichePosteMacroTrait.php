@@ -328,11 +328,11 @@ trait FichePosteMacroTrait {
                 $texte .= trim($specificite->getEncadrement());
             }
             if ($specificite->getRelationsInternes() !== null and trim($specificite->getRelationsInternes()) !== '') {
-                $texte .= "<h3> Relations internes à l'unicaen </h3>";
+                $texte .= "<h3> Relations internes à l'établissement </h3>";
                 $texte .= trim($specificite->getRelationsInternes());
             }
             if ($specificite->getRelationsExternes() !== null and trim($specificite->getRelationsExternes()) !== '') {
-                $texte .= "<h3> Relations externes à l'unicaen </h3>";
+                $texte .= "<h3> Relations externes à l'établissement </h3>";
                 $texte .= trim($specificite->getRelationsExternes());
             }
             if ($specificite->getContraintes() !== null and trim($specificite->getContraintes()) !== '') {
