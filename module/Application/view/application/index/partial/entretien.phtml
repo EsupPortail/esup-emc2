@@ -5,7 +5,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
-use UnicaenRenderer\Entity\Db\Template;
+use UnicaenRenderer\Entity\Db\Rendu;
 use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
 
 /**
@@ -13,7 +13,7 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var EntretienProfessionnel[] $entretiens
  * @var Agent $connectedAgent
  * @var Agent[] $agents
- * @var Template[] $templates
+ * @var Rendu[] $templates
  */
 
 $obligatoires = $agents[0];
@@ -34,7 +34,8 @@ foreach ($entretiens as $entretien) {
     }
 }
 
-$sansObligatoires = []; $sansFacultatifs = [];
+$sansObligatoires = [];
+$sansFacultatifs = [];
 foreach ($obligatoires as $obligatoire) {
     if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
 }
@@ -45,7 +46,7 @@ foreach ($facultatifs as $facultatif) {
 $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));
 
 
-$this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
+$this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
 ?>
 
 <h1 class="page-header">
@@ -84,7 +85,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
 
 <?php if (!empty($obligatoires)) : ?>
     <h2>
-        Agents en attente d'entretien professionnel
+        Agent·es en attente d'entretien professionnel
         <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>
     <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien_' . $campagne->getId(), 'raison' => $raisons]); ?>
@@ -92,7 +93,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
 
 <?php if (!empty($facultatifs)) : ?>
     <h2>
-        Agents sans obligation d'entretien professionnel
+        Agent·es sans obligation d'entretien professionnel
         <span class="badge"> <?php echo count($sansFacultatifs); ?> </span>
     </h2>
 
@@ -104,7 +105,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
             <div class="col-md-2">
                 <?php if ($canTemplateModifier) : ?>
                     <?php /** @see \UnicaenRenderer\Controller\TemplateController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('contenu/template/modifier', ['template' => $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION]->getTemplate()->getId()], [], true); ?>" class="action primary">
+                    <a href="<?php echo $this->url('contenu/template/modifier', ['template' => $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION]->getTemplate()->getId()], [], true); ?>"
+                       class="action primary">
                         <span class="icon icon-editer"></span> Modifier
                     </a>
                 <?php endif; ?>
