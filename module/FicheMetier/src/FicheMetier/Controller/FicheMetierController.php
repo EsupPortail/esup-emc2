@@ -505,9 +505,13 @@ class FicheMetierController extends AbstractActionController {
             }
         }
 
+
+
         $vm = new ViewModel([
             'title' => "Gestion des compétences associées à la fiche métier",
             'form' => $form,
+            'js' => null,
+            'css' => ".dropdown-item:hover span.text span.competence span.description { display: block !important; font-style: italic; }"
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;

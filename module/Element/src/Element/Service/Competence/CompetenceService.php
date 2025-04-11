@@ -144,13 +144,15 @@ class CompetenceService
         $this_option = [
             'value' => $competence->getId(),
             'attributes' => [
-                'data-content' => $texte
+                'data-content' => "<span class='competence' title='".($competence->getDescription()??"Aucune description")."' class='badge btn-danger'>" . $texte
                     . "&nbsp;" . "<span class='badge'>"
                     . (($type !== null) ? $type->getLibelle() : "Sans type")
                     . "</span>"
                     . "&nbsp;" . "<span class='badge' style='background: " . (($referentiel !== null) ? $referentiel->getCouleur() : "gray") . "'>"
                     . (($referentiel !== null) ? $referentiel->getLibelleCourt() : "Sans référentiel") . " - " . $competence->getIdSource()
-                    . "</span>",
+                    . "</span>"
+                    . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>".($competence->getDescription()??"Aucune description")."</span>"
+                    ."</span>",
             ],
             'label' => $texte,
         ];
