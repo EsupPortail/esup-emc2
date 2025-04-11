@@ -8,6 +8,7 @@ use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Agent\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Assertion\ChaineAssertion;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\AgentParametres;
