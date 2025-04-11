@@ -7,6 +7,7 @@ use Carriere\Service\Correspondance\CorrespondanceService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
+use FicheMetier\Service\Import\ImportService;
 use FicheReferentiel\Form\Importation\ImportationForm;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
@@ -28,7 +29,6 @@ class ImportControllerFactory
     public function __invoke(ContainerInterface $container): ImportController
     {
         /**
-         * @var CategorieService $categorieService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
          * @var CompetenceReferentielService $competenceReferentielService
@@ -36,17 +36,18 @@ class ImportControllerFactory
          * @var CorrespondanceService $correspondanceService
          * @var DomaineService $domaineService
          * @var FamilleProfessionnelleService $familleProfessionnelService
+         * @var ImportService $importService
          * @var MetierService $metierService
          * @var ReferenceServiceAwareTrait $referenceService
          * @var ReferentielService $referentielService
          */
-        $categorieService = $container->get(CategorieService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $domaineService = $container->get(DomaineService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
+        $importService = $container->get(ImportService::class);
         $metierService = $container->get(MetierService::class);
         $referenceService = $container->get(ReferenceService::class);
         $referentielService = $container->get(ReferentielService::class);
@@ -57,13 +58,13 @@ class ImportControllerFactory
         $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
 
         $controller = new ImportController();
-        $controller->setCategorieService($categorieService);
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setCompetenceReferentielService($competenceReferentielService);
         $controller->setCorrespondanceService($correspondanceService);
         $controller->setDomaineService($domaineService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);
+        $controller->setImportService($importService);
         $controller->setMetierService($metierService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);

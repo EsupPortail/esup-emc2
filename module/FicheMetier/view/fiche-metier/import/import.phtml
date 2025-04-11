@@ -7,8 +7,11 @@
  * @var array $info
  * @var array $warning
  * @var array $error
+ *
+ * @var FicheMetier[] $fiches
  */
 
+use FicheMetier\Entity\Db\FicheMetier;
 use FicheReferentiel\Form\Importation\ImportationForm;
 
 $this->headTitle("Importation des fiches métiers");
@@ -47,3 +50,31 @@ $this->headTitle("Importation des fiches métiers");
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
+
+<?php foreach ($fiches as $fiche) : ?>
+    <hr>
+    <?php echo $fiche->getMetier()->getLibelle(); ?>
+    <br>
+    Catégorie :
+    <ul>
+        <li><?php echo $fiche->getMetier()->getCategorie()->getLibelle(); ?></li>
+    </ul>
+    Correspondances :
+    <ul>
+    <?php foreach ($fiche->getMetier()->getCorrespondances() as $correspondance) : ?>
+        <li> <?php echo $correspondance->getCategorie(); ?> - <?php echo $correspondance->getLibelleLong(); ?> </li>
+    <?php endforeach; ?>
+    </ul>
+    Familles professionnelles :
+    <ul>
+        <?php foreach ($fiche->getMetier()->getFamillesProfessionnelles() as $famille) : ?>
+            <li> <?php echo $famille->getLibelle(); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+    Compétences :
+    <ul>
+        <?php foreach ($fiche->getCompetenceListe() as $element) : ?>
+            <li> <?php echo $element->getCompetence()->getLibelle(); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endforeach; ?>

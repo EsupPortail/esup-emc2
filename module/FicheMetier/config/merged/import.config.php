@@ -4,6 +4,8 @@ namespace FicheMetier;
 
 use FicheMetier\Controller\ImportController;
 use FicheMetier\Controller\ImportControllerFactory;
+use FicheMetier\Service\Import\ImportService;
+use FicheMetier\Service\Import\ImportServiceFactory;
 use Laminas\Router\Http\Literal;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -53,6 +55,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            ImportService::class => ImportServiceFactory::class,
         ],
     ],
     'controllers' => [

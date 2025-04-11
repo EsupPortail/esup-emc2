@@ -2,9 +2,7 @@
 
 namespace FicheMetier\Controller;
 
-use Carriere\Entity\Db\Categorie;
 use Carriere\Entity\Db\Correspondance;
-use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
@@ -13,6 +11,7 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\Import\ImportServiceAwareTrait;
 use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -26,7 +25,8 @@ use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class ImportController extends AbstractActionController
 {
-    use CategorieServiceAwareTrait;
+    use ImportServiceAwareTrait;
+
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
@@ -83,84 +83,12 @@ class ImportController extends AbstractActionController
                 fclose($csvFile);
             }
 
-            //todo fonction !!!
-            /** @var FamilleProfessionnelle[] $famillesProfessionnelles */
-            $famillesProfessionnelles = [];
-            if (in_array("Famille d’activité professionnelle", $header)) {
-                $familleDictionnary = [];
-                foreach ($data as $item) {
-                    $rawFamilleProfessionnelle = $item["Famille d’activité professionnelle"];
-                    $familles = explode("|", $rawFamilleProfessionnelle);
-                    foreach ($familles as $famille) {
-                        $familleDictionnary[$famille] = $famille;
-                    }
-                }
-                foreach ($familleDictionnary as $famille) {
-                    $famillesProfessionnelles[$famille] = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille);
-                    if ($famillesProfessionnelles[$famille] === null) {
-                        $info[] = "Création de la famille professionnelle [" . $famille . "]";
-                        $famillesProfessionnelles[$famille] = $this->getFamilleProfessionnelleService()->createWith($famille, ($mode === 'import'));
-                    }
-                }
-            }
 
-            //todo fonction !!!
-            /** @var Categorie[] $categories * */
-            $categories = [];
-            if (in_array("REFERENS_CATEGORIE_EMPLOI", $header)) {
-                $categorieDictionnary = [];
-                foreach ($data as $item) {
-                    $rawCategorie = $item["REFERENS_CATEGORIE_EMPLOI"];
-                    $categories = explode("|", $rawCategorie);
-                    foreach ($categories as $categorie) {
-                        $categorieDictionnary[$categorie] = $categorie;
-                    }
-                }
-                foreach ($categorieDictionnary as $categorie) {
-                    $categories[$categorie] = $this->getCategorieService()->getCategorieByLibelle($categorie);
-                    if ($categories[$categorie] === null) {
-                        $info[] = "Création de la catégorie [" . $categorie . "]";
-                        $categories[$categorie] = $this->getCategorieService()->createWith($categorie, ($mode === 'import'));
-                    }
-                }
-            }
 
-            //todo fonction !!!
-            /** @var Correspondance[] $correspondances * */
-            $correspondances = [];
-            if (in_array("Code de la branche d’activité professionnelle", $header)) {
-                $correspondanceDictionnary = [];
-                foreach ($data as $item) {
-                    $correspondance = [];
-                    $correspondance["code"] = $item["Code de la branche d’activité professionnelle"] ?? null;
-                    $correspondance["intitulé"] = $item["Branche d’activité professionnelle"] ?? null;
-                    if ($correspondance["code"]) $correspondanceDictionnary[$correspondance["code"]] = $correspondance;
-                }
-                foreach ($correspondanceDictionnary as $correspondance) {
-                    $correspondances[$correspondance["code"]] = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode("BAP", $correspondance["code"]);
-                    if ($correspondances[$correspondance["code"]] === null) {
-                        $info[] = "Création de la correspondance [" . $correspondance["code"] . "|" . $correspondance["intitulé"] . "]";
-                        $correspondances[$correspondance["code"]] = $this->getCorrespondanceService()->createWith("BAP", $correspondance["code"], $correspondance["intitulé"], $mode === 'import');
-                    }
-                }
-            }
-
-            //todo fonction !!!
-            /** @var Competence[] $competences */
-            $competences = [];
-            $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode("REFERENS");
-            if ($referentiel === null) $error[] = "Le référentiel [REFERENS] n'existe pas.";
-            if (in_array("COMPETENCES_ID", $header)) {
-                foreach ($data as $item) {
-                    $ids = explode("|", $item["COMPETENCES_ID"]);
-                    foreach ($ids as $id) {
-                        $competence = $this->getCompetenceService()->getCompetenceByRefentielAndId($referentiel, $id);
-                        if ($competence === null) $warning[] = "La compétence identifié [" . $id . "] n'est pas présente dans le référentiel [REFERENS]";
-                        else $competences[$id] = $competence;
-                    }
-                }
-            }
-
+            $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning,$error);
+            $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning,$error);
+            $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning,$error);
+            $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning,$error);
 
             //todo fonction !!!
             /** @var Metier[] $metiers */
