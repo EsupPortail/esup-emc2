@@ -24,7 +24,7 @@ Vous êtes responsable de <?php echo count($agents); ?> agent·es.
     <?php foreach ($agents as $agent) : ?>
         <tr>
             <td data-order="<?php echo $agent->getDenomination(); ?>">
-                <?php echo $agent->getDenomination(true); ?>
+                <?php echo $agent->getDenomination(); ?>
             </td>
             <td>
                 <?php $affectations = $agent->getAffectationsActifs(); ?>

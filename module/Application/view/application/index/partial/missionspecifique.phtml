@@ -42,7 +42,7 @@ $canSupprimer = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getReso
     <?php foreach ($missionsSpecifiques as $missionsSpecifique) : ?>
         <tr class=" <?php if ($missionsSpecifique->estHistorise()) echo " historise "; ?>">
             <td data-order="<?php echo $missionsSpecifique->getAgent()->getDenomination(); ?>">
-                <?php echo $missionsSpecifique->getAgent()->getDenomination(true); ?>
+                <?php echo $missionsSpecifique->getAgent()->getDenomination(); ?>
             </td>
             <td> <?php echo $missionsSpecifique->getMission()->getLibelle(); ?> </td>
             <td> <?php echo $missionsSpecifique->getPeriode(); ?> </td>
