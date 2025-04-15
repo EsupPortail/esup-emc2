@@ -280,6 +280,7 @@ EOS;
     {
         $qb = $this->getObjectManager()->getRepository(StructureResponsable::class)->createQueryBuilder("sr")
             ->join('sr.agent', 'agent')->addSelect('agent')
+            ->andWhere('sr.dateFin IS NULL OR sr.dateFin >= :now')->setParameter('now', new DateTime())
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 
@@ -299,6 +300,7 @@ EOS;
     {
         $qb = $this->getObjectManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder("sg")
             ->join('sg.agent', 'agent')->addSelect('agent')
+            ->andWhere('sg.dateFin IS NULL OR sg.dateFin >= :now')->setParameter('now', new DateTime())
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 
