@@ -57,7 +57,7 @@ $isForce = (isset($options['force']) and $options['force'] === true);
         <tr class="<?php if ($agent->isAdministratif()) echo " administratif "; ?>">
             <td data-order="<?php echo $agent->getDenomination(); ?>">
                 <?php if ($canVoirAgent) : ?>
-                    <?php echo $agent->getDenomination(true); ?>
+                    <?php echo $agent->getDenomination(); ?>
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
@@ -101,7 +101,7 @@ $isForce = (isset($options['force']) and $options['force'] === true);
                 <?php if (!empty($listing)): ?>
                     <?php /** @var AgentSuperieur $superieur */ ?>
                     <?php foreach ($listing as $superieur) : ?>
-                        <?php echo $superieur->getSuperieur()->getDenomination(true); ?><br/>
+                        <?php echo $superieur->getSuperieur()->getDenomination(); ?><br/>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <span class="text-danger">
@@ -124,7 +124,7 @@ $isForce = (isset($options['force']) and $options['force'] === true);
                 <?php if (!empty($listing)): ?>
                     <?php /** @var AgentAutorite $autorite */ ?>
                     <?php foreach ($listing as $autorite) : ?>
-                        <?php echo $autorite->getAutorite()->getDenomination(true); ?><br/>
+                        <?php echo $autorite->getAutorite()->getDenomination(); ?><br/>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <span class="text-danger">

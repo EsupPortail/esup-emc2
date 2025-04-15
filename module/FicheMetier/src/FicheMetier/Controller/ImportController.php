@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Element\Entity\Db\Competence;
@@ -10,8 +11,11 @@ use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -22,6 +26,7 @@ use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrai
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 
 class ImportController extends AbstractActionController
 {
@@ -32,9 +37,12 @@ class ImportController extends AbstractActionController
     use CompetenceReferentielServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use DomaineServiceAwareTrait;
+    use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FicheMetierMissionServiceAwareTrait;
     use MetierServiceAwareTrait;
+    use MissionPrincipaleServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
 
@@ -113,11 +121,14 @@ class ImportController extends AbstractActionController
                 }
             }
 
+
+
             /** @var FicheMetier[] $fiches */
             // TODO avoid duplicate !!!
             foreach ($data as $item) {
                 $fiche = new FicheMetier();
                 $fiche->setMetier($metiers[$item["Code emploi type"]]);
+                if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
                 if ($item["COMPETENCES_ID"]) {
                     $ids = explode('|', $item["COMPETENCES_ID"]);
                     foreach ($ids as $id) {
@@ -132,8 +143,35 @@ class ImportController extends AbstractActionController
                         }
                     }
                 }
+                //Mission et activité
+                if (isset($item["Mission"])) {
+                    $intitule = $item["Mission"];
+                    $activites = [];
+                    if (isset($item["Activités principales"])) {
+                        $activites = explode("|", $item["Activités principales"]);
+                    }
+                    $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
+
+
+                    $ficheMetierMission = new FicheMetierMission();
+                    $ficheMetierMission->setMission($mission);
+                    $ficheMetierMission->setFicheMetier($fiche);
+                    $ficheMetierMission->setOrdre(1);
+
+                    if ($mode === 'import') {
+                        $this->getFicheMetierMissionService()->create($ficheMetierMission);
+                        $this->getFicheMetierService()->update($fiche);
+                        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, null, true);
+                    } else {
+                        $fiche->addMission($ficheMetierMission);
+                    }
+
+
+                }
                 $fiche->setRaw(json_encode($item));
                 $fiches[] = $fiche;
+
+
             }
 
 //            echo $fiches[0]->getRaw();

@@ -108,6 +108,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return $missions;
     }
 
+    public function addMission(FicheMetierMission $ficheMetierMission): void
+    {
+        $this->missions->add($ficheMetierMission);
+    }
+
     /** Compétences ***************************************************************************************************/
 
     /** Les compétences "standards" sont gérées dans le trait HasCompetenceCollection */
@@ -321,5 +326,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $texte .= "</table>";
         return $texte;
     }
+
+
 
 }

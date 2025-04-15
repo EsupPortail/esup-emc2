@@ -36,7 +36,7 @@ class ImportService
                 }
             }
             foreach ($categorieDictionnary as $categorie) {
-                $categories[$categorie] = $this->getCategorieService()->getCategorieByLibelle($categorie);
+                $categories[$categorie] = $this->getCategorieService()->getCategorieByCode($categorie);
                 if ($categories[$categorie] === null) {
                     $info[] = "Création de la catégorie [" . $categorie . "]";
                     $categories[$categorie] = $this->getCategorieService()->createWith($categorie, ($mode === 'import'));

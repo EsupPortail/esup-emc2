@@ -167,5 +167,32 @@ class MissionPrincipaleService
         return $mission;
     }
 
+    /** FACADE ********************************************************************************************************/
+
+    public function createWith(string $intitule, array $activites, bool $perist = true): ?Mission
+    {
+        $mission = new Mission();
+        $mission->setLibelle($intitule);
+        if ($perist) $this->create($mission);
+
+        $position = 1;
+        foreach ($activites as $activite_) {
+            $activite = new MissionActivite();
+            $activite->setMission($mission);
+            $activite->setLibelle($activite_);
+            $activite->setOrdre($position);
+            $position++;
+            if ($perist) {
+                $this->getObjectManager()->persist($activite);
+                $this->getObjectManager()->flush();
+            } else {
+                $mission->addMissionActivite($activite);
+            }
+        }
+
+
+        return $mission;
+    }
+
 
 }

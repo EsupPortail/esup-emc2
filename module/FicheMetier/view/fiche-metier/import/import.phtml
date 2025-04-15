@@ -71,6 +71,19 @@ $this->headTitle("Importation des fiches métiers");
             <li> <?php echo $famille->getLibelle(); ?> </li>
         <?php endforeach; ?>
     </ul>
+    <br>
+    Missions : <br>
+    <?php foreach ($fiche->getMissions() as $mission) : ?>
+        <strong><?php echo $mission->getMission()->getLibelle(); ?></strong>
+        <ul>
+            <?php foreach ($mission->getMission()->getActivites() as $activite) : ?>
+                <li>
+                    <?php echo $activite->getLibelle(); ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
+    <br>
     Compétences :
     <ul>
         <?php foreach ($fiche->getCompetenceListe() as $element) : ?>

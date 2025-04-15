@@ -130,6 +130,7 @@ class CategorieService
     public function createWith(string $categorieLibelle, bool $persist = true): ?Categorie
     {
         $categorie = new Categorie();
+        $categorie->setCode($categorieLibelle);
         $categorie->setLibelle($categorieLibelle);
         if ($persist) $this->create($categorie);
         return $categorie;
