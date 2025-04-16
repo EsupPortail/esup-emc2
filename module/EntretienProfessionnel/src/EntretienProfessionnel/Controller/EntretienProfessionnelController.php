@@ -192,7 +192,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));                $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
+                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
                 if ($entretien->getDateEntretien() < $jplus15) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
@@ -239,7 +239,7 @@ class EntretienProfessionnelController extends AbstractActionController
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
                 $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));
-                $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
+                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
                 if ($entretien->getDateEntretien() < $jplus15) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }

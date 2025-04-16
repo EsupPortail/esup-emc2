@@ -381,7 +381,7 @@ class NotificationService extends \Application\Service\Notification\Notification
         return $mail;
     }
 
-    /** Notifications associées à la demande de validation (en retard) d'entretiens profesionnels *****/
+    /** Notifications associées à la demande de validation (en retard) d'entretiens professionnels *****/
 
     public function triggerRappelValidationSuperieur(Agent $superieur, Campagne $campagne, array $entretiens): Mail
     {
