@@ -62,7 +62,7 @@ class IndexController extends AbstractActionController
 
     public function indexAction(): ViewModel|Response
     {
-        $vars = ['UrlService' => $this->getUrlService()];
+        $vars = ['UrlService' => $this->getUrlService(), 'MacroService' => $this->getMacroService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, $vars, false);
         $texte = $rendu->getCorps();
 
