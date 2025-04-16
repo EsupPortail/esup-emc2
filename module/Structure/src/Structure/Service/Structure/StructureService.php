@@ -285,6 +285,7 @@ EOS;
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 
+
         /** @var StructureResponsable[] $result */
         $users = [];
         foreach ($result as $responsable) {
