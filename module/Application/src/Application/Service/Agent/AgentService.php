@@ -2,11 +2,9 @@
 
 namespace Application\Service\Agent;
 
-use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
-use Application\Entity\Db\AgentAutorite;
-use Application\Entity\Db\AgentSuperieur;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Entity\Db\Agent;
 use DateTime;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -58,8 +56,7 @@ class AgentService
             //quotite de l'agent
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
-            ->andWhere('agent.deletedOn IS NULL')
-        ;
+            ->andWhere('agent.deletedOn IS NULL');
 
         if (!$enAffectation) $qb = $qb->andWhere('affectation.deletedOn IS NULL');
 
@@ -144,7 +141,7 @@ class AgentService
      * @param bool $enAffectation
      * @return Agent|null
      */
-    public function getAgent(?string $id, bool $enlarge = false, bool $enAffectation=true): ?Agent
+    public function getAgent(?string $id, bool $enlarge = false, bool $enAffectation = true): ?Agent
     {
         if ($id === null) return null;
 
@@ -300,13 +297,13 @@ where
     aca.deleted_on IS NULL
     and aca.structure_id in (:structures)
 EOS;
-        if ($dateDebut AND $dateFin) {
+        if ($dateDebut and $dateFin) {
             $sql .= <<<EOS
 and tsrange(aca.date_debut, aca.date_fin) && tsrange(:dateDebut, :dateFin)
 EOS;
         }
-       if ($dateDebut AND !$dateFin) {
-           $sql .= <<<EOS
+        if ($dateDebut and !$dateFin) {
+            $sql .= <<<EOS
 and aca.date_debut <= :dateDebut and (aca.date_fin IS NULL OR aca.date_fin >= :dateDebut)
 EOS;
         }
@@ -321,7 +318,10 @@ EOS;
         } catch (DBA_Exception $e) {
             throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
         }
-        $ids = []; foreach ($tmp as $row) { $ids[] = $row['c_individu']; }
+        $ids = [];
+        foreach ($tmp as $row) {
+            $ids[] = $row['c_individu'];
+        }
 
         $agents = $this->getAgentsByIds($ids);
         return $agents;
@@ -393,7 +393,7 @@ EOS;
                     }
                     if (!empty($responsables)) return $responsables;
                 }
-                $structure = ($structure AND $structure->getParent() !== $structure) ? $structure->getParent() : null;
+                $structure = ($structure and $structure->getParent() !== $structure) ? $structure->getParent() : null;
             } while ($structure !== null);
         }
 
@@ -422,7 +422,9 @@ EOS;
             }
         }
 
-        $banAgent = array_map(function(StructureResponsable $sr) { return $sr->getAgent();}, $superieurs);
+        $banAgent = array_map(function (StructureResponsable $sr) {
+            return $sr->getAgent();
+        }, $superieurs);
         do {
             $responsablesAll = $this->getStructureService()->getResponsables($structure, $date);
             if (!in_array($agent, $responsablesAll)) {
@@ -435,7 +437,7 @@ EOS;
                 }
                 if (!empty($responsables)) return $responsables;
             }
-            $structure = ($structure AND $structure->getParent() !== $structure) ? $structure->getParent() : null;
+            $structure = ($structure and $structure->getParent() !== $structure) ? $structure->getParent() : null;
         } while ($structure !== null);
 
         return [];
@@ -475,9 +477,13 @@ EOS;
         if ($agent === null) return null;
 
         $qb = $this->getObjectManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
-            ->andWhere('sr.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->andWhere('sr.deletedOn IS NULL');
+            ->join('sr.agent', 'agent')
+            ->join('sr.structure', 'structure')
+            ->andWhere('sr.agent = :agent')->setParameter('agent', $agent)
+            ->andWhere('sr.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('sr.dateDebut IS NULL OR sr.dateDebut <= :now')
+            ->andWhere('sr.dateFin IS NULL OR sr.dateFin >= :now')
+            ->setParameter('now', new DateTime());
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -492,9 +498,13 @@ EOS;
         if ($agent === null) return null;
 
         $qb = $this->getObjectManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('sg')
-            ->andWhere('sg.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->andWhere('sg.deletedOn IS NULL');
+            ->join('sg.agent', 'agent')
+            ->join('sg.structure', 'structure')
+            ->andWhere('sg.agent = :agent')->setParameter('agent', $agent)
+            ->andWhere('sg.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('sg.dateDebut IS NULL OR sg.dateDebut <= :now')
+            ->andWhere('sg.dateFin IS NULL OR sg.dateFin >= :now')
+            ->setParameter('now', new DateTime());
         $result = $qb->getQuery()->getResult();
         return $result;
     }

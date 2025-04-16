@@ -119,7 +119,10 @@ class AgentAutoriteService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
-            ->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentautorite.deletedOn IS NULL')->andWhere('autorite.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
+            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
+            ->setParameter('now', new DateTime())
             ->orderBy('agentautorite.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentautorite.histoDestruction IS NULL');
 
@@ -234,10 +237,16 @@ class AgentAutoriteService
     public function getUsersInAutorites(): array
     {
         $qb = $this->getObjectManager()->getRepository(AgentAutorite::class)->createQueryBuilder('aautorite')
-            ->join('aautorite.autorite', 'agent')
-            ->join('agent.utilisateur', 'utilisateur')
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-            ->andWhere('aautorite.deletedOn IS NULL AND aautorite.histoDestruction IS NULL');
+            ->join('aautorite.autorite', 'autorite')
+            ->join('aautorite.agent', 'agent')
+            ->join('autorite.utilisateur', 'utilisateur')
+            ->orderBy('autorite.nomUsuel, autorite.prenom', 'ASC')
+            ->andWhere('aautorite.deletedOn IS NULL AND aautorite.histoDestruction IS NULL')
+            ->andWhere('autorite.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('aautorite.dateFin IS NULL OR aautorite.dateFin >= :now')
+            ->andWhere('aautorite.dateDebut IS NULL OR aautorite.dateDebut <= :now')
+            ->setParameter('now', new DateTime())
+        ;
         $result = $qb->getQuery()->getResult();
 
         $users = [];
@@ -248,13 +257,17 @@ class AgentAutoriteService
         return $users;
     }
 
-
     public function isAutorite(Agent $agent, Agent $autorite): bool
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
-            ->andWhere('agentautorite.histoDestruction IS NULL');
+            ->andWhere('agentautorite.deletedOn IS NULL AND agentautorite.histoDestruction IS NULL')
+            ->andWhere('autorite.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
+            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
+            ->setParameter('now', new DateTime())
+        ;
         $result = $qb->getQuery()->getResult();
         return !empty($result);
     }
