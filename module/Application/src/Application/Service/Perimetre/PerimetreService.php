@@ -10,6 +10,7 @@ use UnicaenIndicateur\Service\Perimetre\PerimetreServiceInterface;
 use UnicaenIndicateur\Service\Perimetre\PerimetreServiceTrait;
 use UnicaenUtilisateur\Entity\Db\AbstractRole;
 use UnicaenUtilisateur\Entity\Db\AbstractUser;
+use UnicaenUtilisateur\Entity\Db\Role;
 
 class PerimetreService implements PerimetreServiceInterface
 {
@@ -52,7 +53,12 @@ class PerimetreService implements PerimetreServiceInterface
         $perimetres = array_merge($perimetres, $structures);
 
         //ROLE
+        $roles = [$role];
+        $roles = array_map(function (Role $s) { return 'ROLE_'.$s->getId();}, $roles);
+        $perimetres = array_merge($perimetres, $roles);
+
         //CAMPAGNE
+
 
         return $perimetres;
     }

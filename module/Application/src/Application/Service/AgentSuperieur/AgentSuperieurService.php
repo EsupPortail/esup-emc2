@@ -242,10 +242,10 @@ class AgentSuperieurService
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent',$agent)
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
-            ->andWhere('asuperieur.deletedOn IS NULL AND asuperieur.histoDestruction IS NULL')
+            ->andWhere('agentsuperieur.deletedOn IS NULL AND agentsuperieur.histoDestruction IS NULL')
             ->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
-            ->andWhere('asuperieur.dateFin IS NULL OR asuperieur.dateFin >= :now')
-            ->andWhere('asuperieur.dateDebut IS NULL OR asuperieur.dateDebut <= :now')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
             ->setParameter('now', new DateTime())
         ;
         $result = $qb->getQuery()->getResult();
