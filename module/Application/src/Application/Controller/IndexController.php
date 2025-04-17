@@ -55,14 +55,14 @@ class IndexController extends AbstractActionController
     use UserContextServiceAwareTrait;
     use UrlServiceAwareTrait;
 
-
     use FichePosteServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
 
 
     public function indexAction(): ViewModel|Response
     {
-        $vars = ['UrlService' => $this->getUrlService(), 'MacroService' => $this->getMacroService()];
+        $campagne = $this->getCampagneService()->getLastCampagne();
+        $vars = ['UrlService' => $this->getUrlService(), 'MacroService' => $this->getMacroService(), 'campagne' => $campagne];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, $vars, false);
         $texte = $rendu->getCorps();
 
