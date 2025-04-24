@@ -93,7 +93,10 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent', $agent)
-            ->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.deletedOn IS NULL')->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            ->setParameter('now', new DateTime())
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
 

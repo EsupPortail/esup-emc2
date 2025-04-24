@@ -142,7 +142,7 @@ class StructureController extends AbstractActionController {
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $debug .= "Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
-        [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents);
+        [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents, $structures);
         $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
 
@@ -218,7 +218,7 @@ class StructureController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents);
+        [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents, $structures);
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $this->getStructureService()->getAgentsForces($structure));
 
         $allAgents = array_merge($conserver, $agentsForces);

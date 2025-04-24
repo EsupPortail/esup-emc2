@@ -595,7 +595,7 @@ EOS;
 
     /** FACADE ********************************************************************************************************/
 
-    public function trierAgents(array $agents): array
+    public function trierAgents(array $agents, ?array $structures = null): array
     {
         $conserver = [];
         $retirer = [];
@@ -625,7 +625,7 @@ EOS;
             }
             if (!$agent->isValideAffectation(
                 $parametres[StructureParametres::AGENT_TEMOIN_AFFECTATION],
-                $now)) {
+                $now, $structures)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Affectation invalide</li>";
             }
@@ -646,10 +646,6 @@ EOS;
             $raison[$agent->getId()] .= "</ul>";
         }
         return [$conserver, $retirer, $raison];
-    }
-
-    public function isObservateurS(array $getStructures, Agent $inscrit)
-    {
     }
 
     /** @return Structure[] */
