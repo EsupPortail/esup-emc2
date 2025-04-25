@@ -35,11 +35,18 @@ $nbAgent = count($agents);
 
 <div class="main">
 
-    <?php echo $this->partial('partial/filtre', ['params' => $params], [], true); ?>
+    <div class="card">
+        <div class="card-header">
+            Filtre de recherche des agents
+        </div>
+        <div class="card-body">
+<!--            <h4> Recherche directe </h4>-->
+            <?php echo $this->partial('partial/filtre-nominatif', ['params' => $params], [], true); ?>
+            <hr>
+<!--            <h3> Filtrage </h3>-->
+            <?php echo $this->partial('partial/filtre', ['params' => $params], [], true); ?>
+        </div>
 
-    <div class="alert alert-warning">
-        <span class="icon icon-attention"></span>
-        La recherche non accentuée n'est pas pleine fonctionnelle ici.
     </div>
 
     <?php if ($params === null or $params === []) : ?>
@@ -93,8 +100,13 @@ $nbAgent = count($agents);
                             <a
                                 <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                                 href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                                class="action secondary"
+                                title="Accéder à la fiche de <span class='highlight agent'><?php echo $agent->getDenomination(true); ?></span>"
+                                data-bs-html="true" data-bs-toggle="tooltip"
                             >
-                                <span class="icon icon-voir"  title="Afficher l'agent"></span></a>
+                                <span class="icon icon-voir"></span>
+                                Accéder
+                            </a>
                         <?php endif; ?>
                     </td>
                 </tr>

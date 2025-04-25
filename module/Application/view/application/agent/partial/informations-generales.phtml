@@ -18,6 +18,7 @@ use Agent\Entity\Db\AgentQuotite;
 use Agent\Entity\Db\AgentStatut;
 use Application\Assertion\ChaineAssertion;
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Privilege\ChainePrivileges;
@@ -88,9 +89,8 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                 <dl>
                     <dt> Identifiant source</dt>
                     <dd>
-                        <?php echo $agent->getId(); ?> <br/>
-                    <dd>
-                        <?php echo $agent->getId(); ?> <br/>
+                        <?php echo $agent->getId(); ?>
+                    </dd>
                     <dt> Compte associé</dt>
                     <dd>
                         Agent : <?php echo $agent->getLogin(); ?> (<?php echo $agent->getEmail(); ?>)
@@ -131,6 +131,7 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                             </a>
                         <?php endif; ?>
                         <?php $autorites = $agent->getAutorites($canModifierChaine); ?>
+                        <?php usort($autorites, function (AgentAutorite $a, AgentAutorite $b) { return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination(); }); ?>
                         <?php if (!empty($autorites)) : ?>
                             <ul>
                                 <?php foreach ($autorites as $autorite) : ?>
@@ -198,8 +199,8 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                                 Ajouter un·e supérieur·e
                             </a>
                         <?php endif; ?>
-                        <?php $superieures = $agent->getSuperieurs($canModifierChaine);
-                        ?>
+                        <?php $superieures = $agent->getSuperieurs($canModifierChaine); ?>
+                        <?php usort($superieures, function (AgentSuperieur $a, AgentSuperieur $b) { return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination(); }); ?>
                         <?php if (!empty($superieures)) : ?>
                             <ul>
                                 <?php foreach ($superieures as $superieure) : ?>

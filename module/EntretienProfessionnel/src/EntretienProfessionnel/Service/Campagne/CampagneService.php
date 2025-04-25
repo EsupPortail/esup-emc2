@@ -281,7 +281,7 @@ class CampagneService
         return $scolaire;
     }
 
-    public function trierAgents(Campagne $campagne, array $agents): array
+    public function trierAgents(Campagne $campagne, array $agents, ?array $structures = null): array
     {
         $obligatoires = [];
         $facultatifs = [];
@@ -296,6 +296,12 @@ class CampagneService
             if (!$agent->isValideCorps(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],
                 $campagne->getDateDebut(),null,true)
+            ) {
+                continue;
+            }
+            if (!$agent->isValideAffectation(
+                $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS],
+                $campagne->getDateDebut(),$structures,true)
             ) {
                 continue;
             }
@@ -328,7 +334,7 @@ class CampagneService
             }
             if (!$agent->isValideAffectation(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION],
-                $campagne->getDateEnPoste()))
+                $campagne->getDateEnPoste(), $structures))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";

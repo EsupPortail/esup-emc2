@@ -152,7 +152,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         //if ($this->gestionnaires === null) return [];
         $array = $this->gestionnaires->toArray();
         $array = array_filter($array, function (StructureGestionnaire $a) {
-            return !$a->isDeleted();
+            return !$a->isDeleted() AND $a->estEnCours();
         });
         return $array;
     }
@@ -165,7 +165,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
         //if ($this->responsables === null) return [];
         $array = $this->responsables->toArray();
         $array = array_filter($array, function (StructureResponsable $a) {
-            return !$a->isDeleted();
+            return !$a->isDeleted() AND $a->estEnCours();
         });
         if ($actif) $array = array_filter($array, function (StructureResponsable $a) { return $a->estEnCours();});
         return $array;

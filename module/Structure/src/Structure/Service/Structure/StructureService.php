@@ -280,9 +280,13 @@ EOS;
     {
         $qb = $this->getObjectManager()->getRepository(StructureResponsable::class)->createQueryBuilder("sr")
             ->join('sr.agent', 'agent')->addSelect('agent')
-            ->andWhere('sr.dateFin IS NULL OR sr.dateFin >= :now')->setParameter('now', new DateTime())
+            ->andWhere('sr.dateDebut IS NULL OR sr.dateDebut <= :now')
+            ->andWhere('sr.dateFin IS NULL OR sr.dateFin >= :now')
+            ->andWhere('sr.deletedOn IS NULL')
+            ->setParameter('now', new DateTime())
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
+
 
         /** @var StructureResponsable[] $result */
         $users = [];
@@ -300,7 +304,10 @@ EOS;
     {
         $qb = $this->getObjectManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder("sg")
             ->join('sg.agent', 'agent')->addSelect('agent')
-            ->andWhere('sg.dateFin IS NULL OR sg.dateFin >= :now')->setParameter('now', new DateTime())
+            ->andWhere('sg.dateDebut IS NULL OR sg.dateDebut <= :now')
+            ->andWhere('sg.dateFin IS NULL OR sg.dateFin >= :now')
+            ->setParameter('now', new DateTime())
+            ->andWhere('sg.deletedOn IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 
@@ -588,7 +595,7 @@ EOS;
 
     /** FACADE ********************************************************************************************************/
 
-    public function trierAgents(array $agents): array
+    public function trierAgents(array $agents, ?array $structures = null): array
     {
         $conserver = [];
         $retirer = [];
@@ -618,7 +625,7 @@ EOS;
             }
             if (!$agent->isValideAffectation(
                 $parametres[StructureParametres::AGENT_TEMOIN_AFFECTATION],
-                $now)) {
+                $now, $structures)) {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Affectation invalide</li>";
             }
@@ -639,10 +646,6 @@ EOS;
             $raison[$agent->getId()] .= "</ul>";
         }
         return [$conserver, $retirer, $raison];
-    }
-
-    public function isObservateurS(array $getStructures, Agent $inscrit)
-    {
     }
 
     /** @return Structure[] */

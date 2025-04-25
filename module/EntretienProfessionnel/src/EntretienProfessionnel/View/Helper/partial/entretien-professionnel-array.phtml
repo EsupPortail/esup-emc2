@@ -162,7 +162,8 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <?php if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)  and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true) ?>"
+                        href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()],
+                            ['query' => ['from-structure' => $options['from-structure']??null]], true) ?>"
                         class='action secondary'
                 >
                     <span class="icon icon-voir"></span>

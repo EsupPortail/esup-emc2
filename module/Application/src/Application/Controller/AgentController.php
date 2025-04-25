@@ -8,6 +8,7 @@ use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Agent\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Assertion\ChaineAssertion;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\AgentParametres;
@@ -84,12 +85,18 @@ class AgentController extends AbstractActionController
 
     public ChaineAssertion $chaineAssertion;
 
-    public function indexAction(): ViewModel
+    public function indexAction(): ViewModel|Response
     {
         $params = $this->params()->fromQuery();
         $agents = [];
-        if ($params !== null and !empty($params)) {
-            $agents = $this->getAgentService()->getAgentsWithFiltre($params);
+        if ($params !== null) {
+            if (isset($params['type']) and $params['type'] === 'acceder') {
+                $agentId = $params['agent-sas']['id'] ?? null;
+                if ($agentId) return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentId], [], true);
+            }
+            if (isset($params['type']) and $params['type'] === 'filtrer') {
+                $agents = $this->getAgentService()->getAgentsWithFiltre($params);
+            }
         }
 
         return new ViewModel([

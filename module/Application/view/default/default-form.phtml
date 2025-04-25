@@ -55,6 +55,8 @@ use Laminas\Form\Form;
     $(function () {
         $('select:not(.select2)').selectpicker();
         $('.select2').select2();
+
+
     });
 
 
@@ -81,6 +83,20 @@ use Laminas\Form\Form;
         z-index: 1050 !important;
     }
 
+    span.competence:hover {
+        background: :pink;
+    }
+
+
+    <?php if (isset($css)): ?>
+    <?php echo $css; ?>
+    <?php endif; ?>
+
+
+
+    /*.dropdown-item:hover {*/
+    /*    color: hotpink;*/
+    /*}*/
     /*div.ui-datepicker {*/
     /*    position: absolute;*/
     /*     z-index:1050;*/

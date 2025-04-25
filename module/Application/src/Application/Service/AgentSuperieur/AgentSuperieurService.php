@@ -93,7 +93,10 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent', $agent)
-            ->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.deletedOn IS NULL')->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            ->setParameter('now', new DateTime())
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
 
@@ -106,6 +109,10 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
+            ->andWhere('agentsuperieur.deletedOn IS NULL')->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            ->setParameter('now', new DateTime())
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
 
@@ -213,10 +220,15 @@ class AgentSuperieurService
     public function getUsersInSuperieurs() : array
     {
         $qb = $this->getObjectManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('asuperieur')
-            ->join('asuperieur.superieur', 'agent')
-            ->join('agent.utilisateur', 'utilisateur')
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+            ->join('asuperieur.superieur', 'superieur')
+            ->join('asuperieur.agent', 'agent')
+            ->join('superieur.utilisateur', 'utilisateur')
+            ->orderBy('superieur.nomUsuel, superieur.prenom', 'ASC')
             ->andWhere('asuperieur.deletedOn IS NULL AND asuperieur.histoDestruction IS NULL')
+            ->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('asuperieur.dateFin IS NULL OR asuperieur.dateFin >= :now')
+            ->andWhere('asuperieur.dateDebut IS NULL OR asuperieur.dateDebut <= :now')
+            ->setParameter('now', new DateTime())
         ;
         $result = $qb->getQuery()->getResult();
 
@@ -233,7 +245,11 @@ class AgentSuperieurService
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent',$agent)
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
-            ->andWhere('agentsuperieur.histoDestruction IS NULL')
+            ->andWhere('agentsuperieur.deletedOn IS NULL AND agentsuperieur.histoDestruction IS NULL')
+            ->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+            ->setParameter('now', new DateTime())
         ;
         $result = $qb->getQuery()->getResult();
         return !empty($result);

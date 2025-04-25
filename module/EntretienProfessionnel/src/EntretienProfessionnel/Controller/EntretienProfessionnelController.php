@@ -192,7 +192,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));                $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
+                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
                 if ($entretien->getDateEntretien() < $jplus15) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
@@ -239,7 +239,7 @@ class EntretienProfessionnelController extends AbstractActionController
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
                 $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));
-                $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
+                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
                 if ($entretien->getDateEntretien() < $jplus15) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
@@ -263,6 +263,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function accederAction(): ViewModel
     {
+        $fromStructure = $this->params()->fromQuery('from-structure');
+
         //$this->getUserService()->selectRolePrefere($this);
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
         $agent = $entretien->getAgent();
@@ -318,6 +320,8 @@ class EntretienProfessionnelController extends AbstractActionController
             'BLOCAGE_COMPTERENDU' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION),
             'BLOCAGE_VALIDATION' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_VALIDATION),
             'OBSERVATION_FINALE' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::OBSERVATION_AGENT_FINAL),
+
+            'fromStructure' => $fromStructure,
         ]);
     }
 
@@ -602,6 +606,9 @@ class EntretienProfessionnelController extends AbstractActionController
         $role = $this->getUserService()->getConnectedRole();
         $user = $this->getUserService()->getConnectedUser();
 
+        $structureId = $this->params()->fromQuery('from-structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         switch($role->getRoleId()) {
             case AppRoleProvider::ADMIN_TECH :
             case AppRoleProvider::ADMIN_FONC :
@@ -610,13 +617,14 @@ class EntretienProfessionnelController extends AbstractActionController
                 /** @see EntretienProfessionnelController::indexAction() */
                 return $this->redirect()->toRoute('entretien-professionnel', [], ['query' => ['campagne' => $campagne->getId()]], true);
             case StructureRoleProvider::RESPONSABLE:
-                $structure = current($this->getStructureService()->getStructuresByResponsable($user));
-                /** @see CampagneController::structureAction() */
-                return $this->redirect()->toRoute('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], true);
             case StructureRoleProvider::GESTIONNAIRE:
-                $structure = current($this->getStructureService()->getStructuresByGestionnaire($user));
-                /** @see CampagneController::structureAction() */
-                return $this->redirect()->toRoute('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], true);
+            case StructureRoleProvider::OBSERVATEUR:
+                if ($structure) {
+                    /** @see CampagneController::structureAction() */
+                    return $this->redirect()->toRoute('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], true);
+                }
+                /** @see IndexController::indexAction() */
+                return $this->redirect()->toRoute('home', [], [], true);
             case  Agent::ROLE_SUPERIEURE :
                 /** @see IndexController::indexSuperieurAction() */
                 return $this->redirect()->toRoute('index-superieur', [], ["fragment" => "entretien_". $campagne->getId()], true);

@@ -109,6 +109,14 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     }
 
     /** @noinspection  PhpUnused */
+    public function toStringStatut() : string
+    {
+        if ($this->estEnCours()) return "ouverte";
+        if ($this->estFini()) return "terminée";
+        return "pas encore ouverte";
+    }
+
+    /** @noinspection  PhpUnused */
     public function getDateDebutToString() : string
     {
         return ($this->dateDebut)?$this->dateDebut->format('d/m/Y'):"N.C.";

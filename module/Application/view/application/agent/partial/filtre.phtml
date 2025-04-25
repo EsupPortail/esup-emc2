@@ -9,16 +9,12 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 $denomination = (isset($params['denomination']) AND trim($params['denomination']) !== '')?trim($params['denomination']):null;
 ?>
 
-<div class="card card-default">
-    <div class="card-header">
-        Filtre de sélection des agents
-    </div>
-    <div class="card-body">
         <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
             <div class="row">
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">
+                            <input type="hidden" value="filtrer" id="type" name="type"/>
                             <label for="denomination">Dénomination : </label>
                             <input type="text" id="denomination" name="denomination"/>
                         </div>
@@ -48,20 +44,19 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                 <!-- BOUTON -->
                 <div class="col-md-3">
                     <div class="pull-right">
-                        <button class="btn btn-primary action" id="clear">
-                            <span class="icon icon-gommer"></span> Remise à zéro
-                        </button>
-
                         <button class="btn btn-primary action" id="filter">
                             <span class="icon icon-filtrer"></span>
                             Filtrer
                         </button>
+                        <button class="btn btn-primary action" id="clear">
+                            <span class="icon icon-gommer"></span> Remise à zéro
+                        </button>
+
+
                     </div>
                 </div>
             </div>
         </form>
-    </div>
-</div>
 
 <script>
     $('button#clear').click(function() {

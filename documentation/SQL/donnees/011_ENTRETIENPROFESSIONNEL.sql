@@ -54,7 +54,7 @@ VALUES ('ENTRETIEN_PROFESSIONNEL', 'Paramètres liés aux entretiens professionn
 INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE)
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'MAIL_LISTE_DAC', 'Adresse électronique de la liste de liste de diffusion pour les DAC', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien professionnel</p>', 'String', 10 UNION
-    SELECT 'MAIL_LISTE_BIATS', 'Adresse électronique de la liste de diffusion pour le personnel', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien profesionnel</p>', 'String', 11 UNION
+    SELECT 'MAIL_LISTE_BIATS', 'Adresse électronique de la liste de diffusion pour le personnel', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien professionnel</p>', 'String', 11 UNION
     SElECT 'TEMOIN_STATUT', 'Filtrage selon les statuts', null, 'String',  2000 UNION
     SElECT 'TEMOIN_AFFECTATION', 'Filtrage selon les affectations', null, 'String', 2000 UNION
     SELECT 'DELAI_CONVOCATION_AGENT', 'Délai minimal recommandé pour convoquer un·e agent·e (en jours)', null, 'Number', 100 UNION

@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @var array $params
+ */
+
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+$denomination = (isset($params['denomination']) AND trim($params['denomination']) !== '')?trim($params['denomination']):null;
+?>
+
+        <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
+            <div class="row">
+                <div class="col-md-9">
+                    <input type="hidden" value="acceder" id="type" name="type"/>
+                    <label for="denomination">Dénomination : </label>
+                    <?php
+                    $agentFiltreSas = new SearchAndSelect('agent-sas');
+                    /** @see \Application\Controller\AgentController::rechercherLargeAction() */
+                    $agentFiltreSas->setAutocompleteSource($this->url('agent/rechercher-large'));
+                    $agentFiltreSas
+                        ->setSelectionRequired()
+                        ->setAttributes([
+                            'id' => 'agent-sas',
+                            'placeholder' => "Sélectionner un agent",
+                        ]);
+                    ?>
+                    <?php echo $this->formControlGroup($agentFiltreSas); ?>
+                </div>
+                <!-- BOUTON -->
+                <div class="col-md-3">
+                    <div class="pull-right">
+                        <button class="btn btn-primary action" id="acceder">
+                            <span class="icon icon-voir"></span>
+                            Accéder
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+<script>
+
+</script>

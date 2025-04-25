@@ -44,7 +44,7 @@ class EntretienProfessionnelControllerFactory {
          * @var CampagneService $campagneService
          * @var RenduService $renduService
          * @var UserService $userService
-         * @var EntretienProfessionnelService $entretienProfesionnelService
+         * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var EvenementService $evenementService
@@ -69,7 +69,7 @@ class EntretienProfessionnelControllerFactory {
         $evenementService = $container->get(EvenementService::class);
         $fichePosteService = $container->get(FichePosteService::class);
 
-        $entretienProfesionnelService = $container->get(EntretienProfessionnelService::class);
+        $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
 
         $mailService = $container->get(MailService::class);
@@ -94,7 +94,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setRenduService($renduService);
         $controller->setUserService($userService);
-        $controller->setEntretienProfessionnelService($entretienProfesionnelService);
+        $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setEvenementService($evenementService);

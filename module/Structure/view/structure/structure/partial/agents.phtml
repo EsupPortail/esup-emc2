@@ -36,6 +36,11 @@ $isForce = (isset($options['force']) and $options['force'] === true);
     Afficher non administratif
 </span>
 
+<button class="btn btn-secondary" onclick="extract<?php echo $options['id']; ?>()">
+    <span class="icon icon-csv"></span>
+    Extraire la liste des agent·es
+</button>
+
 <table class="datatable table table-condensed" id="<?php echo $options['id']; ?>" style="font-size: 14px;">
     <thead>
     <tr>
@@ -188,4 +193,24 @@ $isForce = (isset($options['force']) and $options['force'] === true);
             ]
         });
     });
+
+    function extract<?php echo $options['id']; ?>() {
+        let agents = ["Agent·e, Structure"];
+        <?php usort($agents, function (Agent $a,Agent $b) { return $a->getDenomination() <=> $b->getDenomination();}); foreach ($agents as $agent) : ?>
+            agents.push("\"<?php echo strip_tags($agent->getDenomination()); ?>\",\"<?php echo $agent->getAffectationPrincipale()?->getStructure()->getLibelleLong(); ?>\"");
+        <?php endforeach; ?>
+        agents = agents.join('\n');
+
+        const blob = new Blob([agents], { type: "text/csv; charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "extraction_agents_" + ((new Date()).toISOString())  + ".csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+    }
 </script>
