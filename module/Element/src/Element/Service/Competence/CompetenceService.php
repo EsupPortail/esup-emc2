@@ -181,7 +181,13 @@ class CompetenceService
             ->andWhere('competence.referentiel = :referentiel')
             ->setParameter('referentiel', $referentiel);
         $result = $qb->getQuery()->getResult();
-        return $result;
+
+        /** @var Competence[] $result */
+        $competences = [];
+        foreach ($result as $item) {
+            $competences[$item->getIdSource()] = $item;
+        }
+        return $competences;
     }
 
     public function getCompetenceByRefentiel(CompetenceReferentiel $referentiel, string $id)

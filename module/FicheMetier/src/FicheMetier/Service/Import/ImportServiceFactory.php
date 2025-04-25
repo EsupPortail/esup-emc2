@@ -7,6 +7,7 @@ use Carriere\Service\Correspondance\CorrespondanceService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -26,12 +27,14 @@ class ImportServiceFactory
          * @var CompetenceReferentielService $competenceReferentielService
          * @var CorrespondanceService $correspondanceService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
+         * @var MetierService $metierService
          */
         $categorieService = $container->get(CategorieService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
+        $metierService = $container->get(MetierService::class);
 
         $service = new ImportService();
         $service->setCategorieService($categorieService);
@@ -39,6 +42,7 @@ class ImportServiceFactory
         $service->setCompetenceReferentielService($competenceReferentielService);
         $service->setCorrespondanceService($correspondanceService);
         $service->setFamilleProfessionnelleService($familleProfessionnelleService);
+        $service->setMetierService($metierService);
         return $service;
     }
     

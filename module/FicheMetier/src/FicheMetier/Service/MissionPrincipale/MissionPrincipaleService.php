@@ -184,7 +184,6 @@ class MissionPrincipaleService
             $position++;
             if ($perist) {
                 $this->getObjectManager()->persist($activite);
-                $this->getObjectManager()->flush();
             } else {
                 $mission->addMissionActivite($activite);
             }

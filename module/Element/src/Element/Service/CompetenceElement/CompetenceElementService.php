@@ -22,7 +22,6 @@ class CompetenceElementService
     public function create(CompetenceElement $element): CompetenceElement
     {
         $this->getObjectManager()->persist($element);
-        $this->getObjectManager()->flush($element);
         return $element;
     }
 

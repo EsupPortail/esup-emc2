@@ -3,9 +3,7 @@
 namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
-use Carriere\Entity\Db\Correspondance;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
-use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
@@ -19,8 +17,6 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Entity\Db\Metier;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
@@ -92,90 +88,71 @@ class ImportController extends AbstractActionController
             }
 
 
-
-            $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning,$error);
-            $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning,$error);
-            $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning,$error);
-            $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning,$error);
-
-            //todo fonction !!!
-            /** @var Metier[] $metiers */
-            $metiers = [];
-            if (in_array("Code emploi type", $header)) {
-                foreach ($data as $item) {
-                    $code = $item["Code emploi type"] ?? null;
-                    $intitule = $item["Intitulé de l’emploi type"] ?? null;
-                    if (!isset($metiers[$code])) {// and !$this->getMetierService()->getMetierByLibelle($intitule)) {
-                        $metier = $this->getMetierService()->createWith($intitule, "REFERENS3", $code, null, null, $mode === 'import');
-                        if ($item["Famille d’activité professionnelle"]) {
-                            $elements = explode("|", $item["Famille d’activité professionnelle"]);
-                            foreach ($elements as $element) {
-                                $metier->addFamillesProfessionnelles($famillesProfessionnelles[$element]);
-                            }
-                        }
-                        if ($item["Code de la branche d’activité professionnelle"] and $correspondances[$item["Code de la branche d’activité professionnelle"]]) $metier->addCorrespondance($correspondances[$item["Code de la branche d’activité professionnelle"]]);
-                        if ($item["REFERENS_CATEGORIE_EMPLOI"] and $categories[$item["REFERENS_CATEGORIE_EMPLOI"]]) $metier->setCategorie($categories[$item["REFERENS_CATEGORIE_EMPLOI"]]);
-                        if ($mode === 'import') $this->getMetierService()->update($metier);
-                        $metiers[$code] = $metier;
-                    }
-                }
-            }
-
+            $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning, $error);
+            $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning, $error);
+            $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning, $error);
+            $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning, $error);
+            $metiers = $this->getImportService()->readMetier($header, $data, $mode, $famillesProfessionnelles, $correspondances, $categories, $info, $warning, $error);
 
 
             /** @var FicheMetier[] $fiches */
-            // TODO avoid duplicate !!!
             foreach ($data as $item) {
-                $fiche = new FicheMetier();
-                $fiche->setMetier($metiers[$item["Code emploi type"]]);
-                if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
-                if ($item["COMPETENCES_ID"]) {
-                    $ids = explode('|', $item["COMPETENCES_ID"]);
-                    foreach ($ids as $id) {
-                        if ($competences[$id]) {
-                            $element = new CompetenceElement();
-                            $element->setCompetence($competences[$id]);
-                            $fiche->addCompetenceElement($element);
-                            if ($mode === 'import') {
-                                $this->getCompetenceElementService()->create($element);
-                                $this->getFicheMetierService()->update($fiche);
+                $raw = json_encode($item);
+                $existingFiches = $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw);
+                if (!empty($existingFiches)) {
+                    $warning[] = "Une fiche de métier pour métier [".$item["Code emploi type"]."|".$item["Intitulé de l’emploi type"]."] existe déjà avec les mêmes données sources.";
+                } else {
+                    $fiche = new FicheMetier();
+                    $fiche->setRaw($raw);
+                    $fiche->setMetier($metiers[$item["Code emploi type"]]);
+                    if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
+                    if ($item["COMPETENCES_ID"]) {
+                        $ids = explode('|', $item["COMPETENCES_ID"]);
+                        foreach ($ids as $id) {
+                            if ($competences[$id]) {
+                                $element = new CompetenceElement();
+                                $element->setCompetence($competences[$id]);
+                                $fiche->addCompetenceElement($element);
+                                if ($mode === 'import') {
+                                    $this->getCompetenceElementService()->create($element);
+                                }
                             }
                         }
                     }
-                }
-                //Mission et activité
-                if (isset($item["Mission"])) {
-                    $intitule = $item["Mission"];
-                    $activites = [];
-                    if (isset($item["Activités principales"])) {
-                        $activites = explode("|", $item["Activités principales"]);
+                    //Mission et activité
+                    if (isset($item["Mission"])) {
+                        $intitule = $item["Mission"];
+                        $activites = [];
+                        if (isset($item["Activités principales"])) {
+                            $activites = explode("|", $item["Activités principales"]);
+                        }
+                        $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
+
+
+                        $ficheMetierMission = new FicheMetierMission();
+                        $ficheMetierMission->setMission($mission);
+                        $ficheMetierMission->setFicheMetier($fiche);
+                        $ficheMetierMission->setOrdre(1);
+
+                        if ($mode === 'import') {
+                            $this->getFicheMetierMissionService()->create($ficheMetierMission);
+                            $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
+                        } else {
+                            $fiche->addMission($ficheMetierMission);
+                        }
+
+
                     }
-                    $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
 
+                    if ($mode === 'import') { $this->getFicheMetierService()->update($fiche); }
 
-                    $ficheMetierMission = new FicheMetierMission();
-                    $ficheMetierMission->setMission($mission);
-                    $ficheMetierMission->setFicheMetier($fiche);
-                    $ficheMetierMission->setOrdre(1);
-
-                    if ($mode === 'import') {
-                        $this->getFicheMetierMissionService()->create($ficheMetierMission);
-                        $this->getFicheMetierService()->update($fiche);
-                        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, null, true);
-                    } else {
-                        $fiche->addMission($ficheMetierMission);
-                    }
-
-
+                    //if ($mode === 'import') {
+                        //print((++$position) . "/" . count($data) . $fiche->getMetier()->getLibelle() . "<br>");
+                        //flush();
+                    //}
+                    $fiches[] = $fiche;
                 }
-                $fiche->setRaw(json_encode($item));
-                $fiches[] = $fiche;
-
-
             }
-
-//            echo $fiches[0]->getRaw();
-
         }
 
         return new ViewModel([

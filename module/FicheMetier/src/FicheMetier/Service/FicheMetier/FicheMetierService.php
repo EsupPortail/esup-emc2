@@ -31,6 +31,7 @@ use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\Metier;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
@@ -609,6 +610,17 @@ class FicheMetierService
         });
 
         return $csvInfos;
+    }
+
+    /** @return FicheMetier[] */
+    public function getFichesMetiersByMetier(Metier $metier, ?string $raw = null): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ficheMetier.metier = :metier')->setParameter('metier', $metier)
+        ;
+        if ($raw !== null) $qb->andWhere('ficheMetier.raw = :raw')->setParameter('raw', $raw);
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }
