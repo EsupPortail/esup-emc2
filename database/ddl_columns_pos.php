@@ -714,6 +714,7 @@ return [
         'histo_destructeur_id',
         'raison',
         'code_fonction',
+        'raw',
     ],
     'fichemetier_application'                           => [
         'fichemetier_id',
@@ -2311,6 +2312,14 @@ return [
         'deleted_on',
         'source_id',
         'id_orig',
+    ],
+    'metier_metier_correspondance'                      => [
+        'metier_id',
+        'correspondance_id',
+    ],
+    'metier_metier_famille'                             => [
+        'metier_id',
+        'famille_id',
     ],
 ];
 

@@ -100,7 +100,7 @@ class ImporterService
         foreach ($tlisting as $metierData) {
             $metier = $this->getMetierService()->getMetierByReference($referentielCode, $metierData["code"]);
             if ($metier === null) {
-                $metier = $this->getMetierService()->createWith($metierData["libelle"], "DGAFP", $metierData["code"], $metierData["domaine"], $metierData["famille"], $persist);
+                $metier = $this->getMetierService()->createWith($metierData["libelle"], "DGAFP", $metierData["code"], $metierData["domaine"], $persist);
                 $nouveaux[$metierData["code"]] = $metier;
             }
             $dictionnaires[$metierData["code"]] = $metier;

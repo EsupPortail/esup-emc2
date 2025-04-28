@@ -55,7 +55,6 @@ return [
                     'action' => [
                         'ajouter',
                         'dupliquer',
-                        'importer',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AJOUTER,
@@ -189,16 +188,6 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::ajouterAction() */
                                 'action'     => 'ajouter',
-                            ],
-                        ],
-                    ],
-                    'importer' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/importer',
-                            'defaults' => [
-                                /** @see FicheMetierController::importerAction() */
-                                'action'     => 'importer',
                             ],
                         ],
                     ],

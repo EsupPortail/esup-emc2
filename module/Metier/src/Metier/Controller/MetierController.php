@@ -33,23 +33,33 @@ class MetierController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
+        // todo methode withFiltre !!!
         $domaine = $this->params()->fromQuery('domaine');
         $domaine_ = null;
         if ($domaine AND $domaine !== ' ') $domaine_ = $this->getDomaineService()->getDomaine($domaine);
+        $famille = $this->params()->fromQuery('famille');
+        $famille_ = null;
+        if ($famille AND $famille !== ' ') $famille_ = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($famille);
 
         $historise = $this->params()->fromQuery('historise');
 
         $metiers = $this->getMetierService()->getMetiers();
         $domaines = $this->getDomaineService()->getDomaines();
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
 
         if ($domaine_ !== null) $metiers = array_filter($metiers, function (Metier $m) use ($domaine_) { return $m->hasDomaine($domaine_); });
+        if ($famille_ !== null) {
+            $metiers = array_filter($metiers, function (Metier $m) use ($famille_) { return $m->hasFamilleProfessionnelle($famille_); });
+        }
         if ($historise !== null) $metiers = array_filter($metiers, function (Metier $m) use ($historise) { if ($historise === '1') return $m->estHistorise(); else return $m->estNonHistorise(); });
 
         return new ViewModel([
             'metiers' => $metiers,
             'domaines' => $domaines,
+            'familles' => $familles,
 
             'domaine' => $domaine,
+            'famille' => $famille,
             'historise' => $historise,
         ]);
     }

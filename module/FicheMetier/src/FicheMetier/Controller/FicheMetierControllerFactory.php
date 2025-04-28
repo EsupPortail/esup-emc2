@@ -7,7 +7,6 @@ use Application\Service\FichePoste\FichePosteService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
@@ -57,7 +56,6 @@ class FicheMetierControllerFactory
 
         /**
          * @var CodeFonctionForm $codeFonctionForm ;
-         * @var FicheMetierImportationForm $importationForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var RaisonForm $raisonForm
          * @var SelectionApplicationForm $selectionnerApplicationForm
@@ -66,7 +64,6 @@ class FicheMetierControllerFactory
          * @var SelectionnerMetierForm $selectionnerMetierForm
          */
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
-        $importationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -85,7 +82,6 @@ class FicheMetierControllerFactory
         $controller->setParametreService($parametreService);
         $controller->setThematiqueElementService($thematiqueElementService);
         $controller->setThematiqueTypeService($thematiqueTypeService);
-        $controller->setFicheMetierImportationForm($importationForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setRaisonForm($raisonForm);
         $controller->setSelectionApplicationForm($selectionnerApplicationForm);

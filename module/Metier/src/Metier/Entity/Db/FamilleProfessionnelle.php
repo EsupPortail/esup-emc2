@@ -12,11 +12,12 @@ class FamilleProfessionnelle implements HistoriqueAwareInterface {
 
     private ?int $id = null;
     private ?string $libelle = null;
-    private Collection $domaines;
+
+    private Collection $metiers;
 
     public function __construct()
     {
-        $this->domaines = new ArrayCollection();
+        $this->metiers = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -34,14 +35,10 @@ class FamilleProfessionnelle implements HistoriqueAwareInterface {
         $this->libelle = $libelle;
     }
 
-    /**
-     * @return Domaine[]
-     */
-    public function getDomaines() : array
+    /** @return Metier[] */
+    public function getMetiers() : array
     {
-        $domaines = $this->domaines->toArray();
-        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle();});
-        return $domaines;
+        return $this->metiers->toArray();
     }
 
     public function __toString() : string

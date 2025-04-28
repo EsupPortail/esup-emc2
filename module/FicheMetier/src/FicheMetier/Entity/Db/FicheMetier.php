@@ -39,6 +39,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private Collection $missions;
     private Collection $thematiques;
 
+    private ?string $raw = null;
+
     public function __construct()
     {
         $this->activites = new ArrayCollection();
@@ -54,6 +56,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getRaw(): ?string
+    {
+        return $this->raw;
+    }
+
+    public function setRaw(?string $raw): void
+    {
+        $this->raw = $raw;
     }
 
     public function hasExpertise(): bool
@@ -94,6 +106,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
             return $a->getOrdre() <=> $b->getOrdre();
         });
         return $missions;
+    }
+
+    public function addMission(FicheMetierMission $ficheMetierMission): void
+    {
+        $this->missions->add($ficheMetierMission);
     }
 
     /** Compétences ***************************************************************************************************/
@@ -309,5 +326,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $texte .= "</table>";
         return $texte;
     }
+
+
 
 }

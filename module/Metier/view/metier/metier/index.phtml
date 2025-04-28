@@ -3,15 +3,19 @@
 /**
  * @see \Metier\Controller\MetierController::indexAction()
  * @var Domaine[] $domaines
+ * @var FamilleProfessionnelle[] $familles
  * @var Metier[] $metiers
  *
  * @var string $domaine
+ * @var string $famille
  * @var string $historise
  */
 
 use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
 use Metier\Provider\Privilege\MetierPrivileges;
+use Metier\Provider\Privilege\ReferentielmetierPrivileges;
 
 $this->headTitle('Liste des métiers');
 
@@ -22,15 +26,31 @@ $canHistoriser  = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
 $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_SUPPRIMER));
 $canLister      = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_LISTER_AGENTS));
 
+$canReferentiel = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_INDEX));
+
 $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $canEffacer OR $canLister);
 
 ?>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Liste des métiers
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canReferentiel) : ?>
+            <?php /** @see \Metier\Controller\ReferentielController::indexAction() */ ?>
+            <a href="<?php echo $this->url('metier/referentiel', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-listing"></span>
+                Accéder aux référentiels des métiers
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
-<h1 class="page-header">
-    Liste des métiers
-</h1>
 
-<?php echo $this->partial('partial/filtre', ['domaines' => $domaines, 'domaine' => $domaine, 'historise' => $historise]); ?>
+<?php echo $this->partial('partial/filtre', ['domaines' => $domaines, 'familles' => $familles, 'domaine' => $domaine, 'famille' => $famille,'historise' => $historise]); ?>
 
 <?php if ($canAjouter) : ?>
     <a  <?php /** @see \Metier\Controller\MetierController::ajouterAction() */ ?>
@@ -48,9 +68,10 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
     <thead>
     <tr>
         <th> Libelle </th>
+        <th> Catégorie </th>
+        <th> Familles professionnelles </th>
         <th> Domaines </th>
         <th> Références </th>
-        <th> Catégorie </th>
         <th> Niveaux </th>
         <?php if ($canAction) :?>
             <th style="min-width: 10rem;"> Action </th>
@@ -66,6 +87,21 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                 >
                     <?php echo $metier->getLibelle(); ?>
                 </span>
+            </td>
+            <td id="categorie">
+                <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
+            </td>
+            <td>
+                <?php $familles = $metier->getFamillesProfessionnelles(); ?>
+                <?php if ($familles === null OR empty($familles)) : ?>
+                    <em>Aucune famille professionnelle de renseignée</em>
+                <?php else : ?>
+                    <ul>
+                        <?php foreach ($metier->getFamillesProfessionnelles() as $famille) : ?>
+                            <li> <?php echo $famille->getLibelle(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </td>
             <td>
                 <ul>
@@ -120,9 +156,6 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                             Ajouter
                         </a>
                     <?php endif; ?>
-            </td>
-            <td id="categorie">
-                <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
             </td>
             <td class="action" id="niveaux">
                 <?php echo $this->niveauEnveloppe($metier->getNiveaux()) ?>

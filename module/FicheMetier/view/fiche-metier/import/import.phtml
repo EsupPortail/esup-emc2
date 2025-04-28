@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\ImportController::importAction()
+ * @var ImportationForm $form
+ *
+ * @var array $info
+ * @var array $warning
+ * @var array $error
+ *
+ * @var FicheMetier[] $fiches
+ */
+
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheReferentiel\Form\Importation\ImportationForm;
+
+$canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
+
+$this->headTitle("Importation des fiches métiers");
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Importation des fiches métiers
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canFicheMetier) : ?>
+            <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-listing"></span>
+                Accéder aux fiches métiers
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<?php echo $this->form($form); ?>
+
+<?php if (!empty($error)) : ?>
+    <div class="alert alert-danger">
+        <?php foreach ($error as $line): ?>
+            <?php echo $line ?>
+            <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($info)) : ?>
+    <div class="alert alert-info">
+        <?php foreach ($info as $line): ?>
+            <?php echo $line ?>
+            <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($warning)) : ?>
+    <div class="alert alert-warning">
+        <?php foreach ($warning as $line): ?>
+            <?php echo $line ?>
+            <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php foreach ($fiches as $fiche) : ?>
+    <hr>
+    <?php echo $fiche->getMetier()->getLibelle(); ?>
+    <br>
+    Catégorie :
+    <ul>
+        <li><?php echo $fiche->getMetier()->getCategorie()->getLibelle(); ?></li>
+    </ul>
+    Correspondances :
+    <ul>
+    <?php foreach ($fiche->getMetier()->getCorrespondances() as $correspondance) : ?>
+        <li> <?php echo $correspondance->getCategorie(); ?> - <?php echo $correspondance->getLibelleLong(); ?> </li>
+    <?php endforeach; ?>
+    </ul>
+    Familles professionnelles :
+    <ul>
+        <?php foreach ($fiche->getMetier()->getFamillesProfessionnelles() as $famille) : ?>
+            <li> <?php echo $famille->getLibelle(); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+    <br>
+    Missions : <br>
+    <?php foreach ($fiche->getMissions() as $mission) : ?>
+        <strong><?php echo $mission->getMission()->getLibelle(); ?></strong>
+        <ul>
+            <?php foreach ($mission->getMission()->getActivites() as $activite) : ?>
+                <li>
+                    <?php echo $activite->getLibelle(); ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
+    <br>
+    Compétences :
+    <ul>
+        <?php foreach ($fiche->getCompetenceListe() as $element) : ?>
+            <li> <?php echo $element->getCompetence()->getLibelle(); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endforeach; ?>

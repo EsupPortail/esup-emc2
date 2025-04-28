@@ -7,16 +7,16 @@
         </id>
 
         <many-to-one target-entity="Metier\Entity\Db\Metier" field="metier">
-            <join-column name="metier_id" referenced-column-name="id" />
+            <join-column name="metier_id" referenced-column-name="id"/>
         </many-to-one>
 
         <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
             <join-table name="fichemetier_etat">
                 <join-columns>
-                    <join-column name="fichemetier_id" referenced-column-name="id" />
+                    <join-column name="fichemetier_id" referenced-column-name="id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="etat_id" referenced-column-name="id" />
+                    <join-column name="etat_id" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
@@ -24,10 +24,10 @@
         <many-to-many field="applications" target-entity="Element\Entity\Db\ApplicationElement">
             <join-table name="fichemetier_application">
                 <join-columns>
-                    <join-column name="fichemetier_id" referenced-column-name="id" />
+                    <join-column name="fichemetier_id" referenced-column-name="id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="application_element_id" referenced-column-name="id" />
+                    <join-column name="application_element_id" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
@@ -55,22 +55,26 @@
         </many-to-many>
 
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="ficheMetier" field="missions"/>
-        <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier" field="thematiques"/>
+        <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier"
+                     field="thematiques"/>
 
-        <field name="hasExpertise"      type="boolean"                  column="expertise"          nullable="true"  />
-        <field name="raison"            type="string" length="9999"     column="raison"             nullable="true"  />
-        <field name="codeFonction"      type="string" length="256"      column="code_fonction"      nullable="true"  />
+        <field name="hasExpertise" type="boolean" column="expertise" nullable="true"/>
+        <field name="raison" type="string" length="9999" column="raison" nullable="true"/>
+        <field name="codeFonction" type="string" length="256" column="code_fonction" nullable="true"/>
 
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
-        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
+        <field name="raw" type="text" column="raw" nullable="true"/>
+
+        <!-- Historisation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="histoCreation" type="datetime" column="histo_creation" nullable="false"/>
+        <field name="histoModification" type="datetime" column="histo_modification" nullable="false"/>
+        <field name="histoDestruction" type="datetime" column="histo_destruction" nullable="true"/>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="ID"/>
         </many-to-one>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="histoModificateur">
             <join-column name="histo_modificateur_id" referenced-column-name="ID"/>
         </many-to-one>
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
         </many-to-one>
     </entity>
