@@ -53,9 +53,9 @@ class ImportService
     public function readCompetence(array $header, array $data, string $mode, array &$info, array &$warning, array &$error): array
     {
         $competences = [];
-        $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode("REFERENS");
+        $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode("REFERENS3");
         $allCompetences = $this->getCompetenceService()->getCompetencesByRefentiel($referentiel);
-        if ($referentiel === null) $error[] = "Le référentiel [REFERENS] n'existe pas.";
+        if ($referentiel === null) $error[] = "Le référentiel [REFERENS3] n'existe pas.";
         if (in_array("COMPETENCES_ID", $header)) {
             foreach ($data as $item) {
                 $ids = explode("|", $item["COMPETENCES_ID"]);

@@ -98,7 +98,7 @@ class ImportController extends AbstractActionController
             /** @var FicheMetier[] $fiches */
             foreach ($data as $item) {
                 $raw = json_encode($item);
-                $existingFiches = $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw);
+                $existingFiches = ($mode === 'import') ? $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw) : [];
                 if (!empty($existingFiches)) {
                     $warning[] = "Une fiche de métier pour métier [".$item["Code emploi type"]."|".$item["Intitulé de l’emploi type"]."] existe déjà avec les mêmes données sources.";
                 } else {
@@ -109,7 +109,7 @@ class ImportController extends AbstractActionController
                     if ($item["COMPETENCES_ID"]) {
                         $ids = explode('|', $item["COMPETENCES_ID"]);
                         foreach ($ids as $id) {
-                            if ($competences[$id]) {
+                            if (isset($competences[$id])) {
                                 $element = new CompetenceElement();
                                 $element->setCompetence($competences[$id]);
                                 $fiche->addCompetenceElement($element);

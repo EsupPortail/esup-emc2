@@ -10,7 +10,6 @@ use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -29,8 +28,8 @@ use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
-
-class FicheMetierController extends AbstractActionController {
+class FicheMetierController extends AbstractActionController
+{
     use DomaineServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
@@ -42,7 +41,6 @@ class FicheMetierController extends AbstractActionController {
     use ThematiqueTypeServiceAwareTrait;
 
     use CodeFonctionFormAwareTrait;
-    use FicheMetierImportationFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -50,7 +48,7 @@ class FicheMetierController extends AbstractActionController {
     use SelectionEtatFormAwareTrait;
     use SelectionnerMetierFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $fromQueries = $this->params()->fromQuery();
         $etatId = $fromQueries['etat'] ?? null;
@@ -73,12 +71,12 @@ class FicheMetierController extends AbstractActionController {
 
     /** CRUD **********************************************************************************************************/
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $missions = $fichemetier->getMissions() ;
+        $missions = $fichemetier->getMissions();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
-        $competences =  $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
         $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
@@ -134,7 +132,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $missions = $fichemetier->getMissions();
@@ -161,7 +159,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $this->getFicheMetierService()->historise($fichemetier);
@@ -171,7 +169,7 @@ class FicheMetierController extends AbstractActionController {
         return $this->redirect()->toRoute('fiche-metier', [], [], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $this->getFicheMetierService()->restore($fichemetier);
@@ -181,7 +179,7 @@ class FicheMetierController extends AbstractActionController {
         return $this->redirect()->toRoute('fiche-metier', [], [], true);
     }
 
-    public function supprimerAction() : ViewModel
+    public function supprimerAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $fiches = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
@@ -200,7 +198,7 @@ class FicheMetierController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la fiche métier " . (($fichemetier and $fichemetier->getMetier()) ? $fichemetier->getMetier()->getLibelle() : "[Aucun métier]"),
-                'warning' => !empty($fiches)?"Attention : ".count($fiches). " fiche·s de poste dépende·nt de cette fiche métier":null,
+                'warning' => !empty($fiches) ? "Attention : " . count($fiches) . " fiche·s de poste dépende·nt de cette fiche métier" : null,
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/supprimer', ["fiche-metier" => $fichemetier->getId()], [], true),
             ]);
@@ -228,54 +226,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function importerAction(): ViewModel|Response
-    {
-        $form = $this->getFicheMetierImportationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/importer', ['mode' => 'preview', 'path' => null], [], true));
-
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $file = $request->getFiles();
-
-            $fichier_path = $file['fichier']['tmp_name'];
-            $mode = $data['mode'];
-
-            $csvInfos = $this->getFicheMetierService()->genererInfosFromCSV($fichier_path);
-
-            if ($mode !== null) {
-                if ($mode === 'import') {
-                    if ($csvInfos['metier'] !== null and empty($csvInfos['competences']['Manquantes'])) {
-                        $fiche = $this->getFicheMetierService()->importFromCsvArray($csvInfos);
-
-                        /** @see FicheMetierController::afficherAction() */
-                        return $this->redirect()->toRoute('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true);
-                    }
-                }
-                return new ViewModel([
-                    'fichier_path' => $fichier_path,
-                    'form' => $form,
-                    'mode' => $mode,
-                    'code' => $csvInfos['code'],
-                    'metier' => $csvInfos['metier'],
-                    'mission' => $csvInfos['mission'],
-                    'activites' => $csvInfos['activites'],
-                    'applications' => $csvInfos['applications'],
-                    'competences' => $csvInfos['competences'],
-                ]);
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Importation d'une fiche métier",
-            'form' => $form,
-        ]);
-        return $vm;
-
-    }
-
-    public function exporterAction() : string
+    public function exporterAction(): string
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         return $this->getFicheMetierService()->exporter($fichemetier);
@@ -284,7 +235,7 @@ class FicheMetierController extends AbstractActionController {
 
     /** COMPOSITION FICHE *********************************************************************************************/
 
-    public function modifierEtatAction() : ViewModel
+    public function modifierEtatAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -350,7 +301,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierMetierAction() : ViewModel
+    public function modifierMetierAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -378,7 +329,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierRaisonAction() : ViewModel
+    public function modifierRaisonAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -397,7 +348,7 @@ class FicheMetierController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => "Modification de la raison d'être du métier",
             'form' => $form,
             'info' => "Laisser vide si aucune raison n'est nécessaire",
@@ -463,7 +414,7 @@ class FicheMetierController extends AbstractActionController {
 
     /** GESTION DES APPLICATIONS ET DES COMPETENTES *******************************************************************/
 
-    public function gererApplicationsAction() : ViewModel
+    public function gererApplicationsAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $form = $this->getSelectionApplicationForm();
@@ -488,7 +439,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function gererCompetencesAction() : ViewModel
+    public function gererCompetencesAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $form = $this->getSelectionCompetenceForm();
@@ -506,7 +457,6 @@ class FicheMetierController extends AbstractActionController {
         }
 
 
-
         $vm = new ViewModel([
             'title' => "Gestion des compétences associées à la fiche métier",
             'form' => $form,
@@ -518,7 +468,7 @@ class FicheMetierController extends AbstractActionController {
     }
 
 
-    public function gererCompetencesSpecifiquesAction() : ViewModel
+    public function gererCompetencesSpecifiquesAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $form = $this->getSelectionCompetenceForm();

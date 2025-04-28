@@ -527,41 +527,6 @@ class FicheMetierService
         ];
     }
 
-    public function importFromCsvArray(array $csvInfos): FicheMetier
-    {
-        //init
-        $fiche = new FicheMetier();
-        $fiche->setMetier($csvInfos['metier']);
-        $this->create($fiche);
-        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_REDACTION);
-
-        // MISSIONS PRINCIPALES
-        $mission = new Mission();
-        $mission->setLibelle($csvInfos['mission']);
-        $this->getMissionPrincipaleService()->create($mission);
-        $this->addMission($fiche, $mission);
-        $this->compressMission($fiche);
-
-        $ordre = 1;
-        foreach ($csvInfos['activites'] as $libelle) {
-            $activite = new MissionActivite();
-            $activite->setMission($mission);
-            $activite->setLibelle($libelle);
-            $activite->setOrdre($ordre);
-            $ordre++;
-            $this->getMissionActiviteService()->create($activite);
-        }
-
-        //APPLICATION (invoker l'hydrator plutôt)
-        $this->getHasApplicationCollectionService()->updateApplications($fiche, ['applications' => $csvInfos['applications']]);
-//        $this->getSelectionApplicationHydrator()->hydrate(['applications' => $csvInfos['applications']], $fiche);
-
-        //COMPETENCE (invoker l'hydrator plutôt)
-        $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
-//        $this->getSelectionCompetenceHydrator()->hydrate(['competences' => $csvInfos['competencesListe']], $fiche);
-        return $fiche;
-    }
-
     public function exporter(?FicheMetier $fichemetier): string
     {
         $vars = [
@@ -580,36 +545,6 @@ class FicheMetierService
         } catch (MpdfException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'export en PDF", 0, $e);
         }
-    }
-
-    public function genererInfosFromCSV(string $fichier_path): array
-    {
-        $csvInfos = $this->readFromCSV($fichier_path);
-
-        $ajouts = $this->getConfigurationService()->getConfigurationsFicheMetier();
-        foreach ($ajouts as $ajout) {
-            if ($ajout->getEntityType() === Application::class) {
-                $application = $ajout->getEntity();
-                $csvInfos['applications'][$application->getId()] = $application;
-            }
-            if ($ajout->getEntityType() === Competence::class) {
-                $competence = $ajout->getEntity();
-                $csvInfos['competencesListe'][$competence->getId()] = $competence;
-                $csvInfos['competences'][$competence->getType()->getLibelle()][$competence->getId()] = $competence;
-            }
-        }
-
-        // tri
-//        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
-//            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {
-//                return $a->getLibelle() <=> $b->getLibelle();
-//            });
-//        }
-        usort($csvInfos['applications'], function (Application $a, Application $b) {
-            return $a->getLibelle() <=> $b->getLibelle();
-        });
-
-        return $csvInfos;
     }
 
     /** @return FicheMetier[] */

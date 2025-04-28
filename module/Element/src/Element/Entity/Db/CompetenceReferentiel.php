@@ -10,6 +10,9 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class CompetenceReferentiel implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+    const EMC2 = 'EMC2';
+    const REFERENS3 = 'REFERENS3';
+
     private ?int $id = null;
     private ?string $libelleCourt = null;
     private ?string $libelleLong = null;

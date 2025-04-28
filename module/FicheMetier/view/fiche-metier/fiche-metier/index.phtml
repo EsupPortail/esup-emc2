@@ -3,6 +3,7 @@
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Entity\Db\Domaine;
+use Metier\Provider\Privilege\ReferentielmetierPrivileges;
 use UnicaenEtat\Entity\Db\EtatType;
 
 /**
@@ -19,6 +20,7 @@ $canHistoriser = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMeti
 $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 $canDetruire = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_DETRUIRE));
 
+$canReferentiel = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_INDEX));
 $this->headTitle('Index des fiches métiers');
 
 ?>
@@ -30,18 +32,27 @@ $this->headTitle('Index des fiches métiers');
         </h1>
     </div>
     <div class="col-md-5">
+        <?php if ($canReferentiel) : ?>
+            <?php /** @see \Metier\Controller\ReferentielController::indexAction() */ ?>
+            <a href="<?php echo $this->url('metier/referentiel', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-listing"></span>
+                Accéder aux référentiels des métiers
+            </a>
+        <?php endif; ?>
         <?php if ($canAjouter) : ?>
+            <br>
             <?php /** @see FicheMetierController::ajouterAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier/ajouter', [], [], true); ?>"
                class="btn btn-primary ajax-modal" data-event="creation">
                 <span class="icon icon-ajouter"></span>
                 Ajouter une fiche métier
             </a>
-            <?php /** @see FicheMetierController::importerAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/importer', [], [], true); ?>"
+            <?php /** @see FicheMetierController::importAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/import', [], [], true); ?>"
                class="btn btn-primary">
                 <span class="icon icon-ajouter"></span>
-                Importer depuis CSV
+                Importer depuis un CSV
             </a>
         <?php endif; ?>
     </div>
