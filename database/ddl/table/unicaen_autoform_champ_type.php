@@ -38,7 +38,7 @@ return [
             'name'        => 'example_libelle',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
-            'length'      => 2048,
+            'length'      => 1024,
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,

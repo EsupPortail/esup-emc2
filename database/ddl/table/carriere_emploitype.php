@@ -73,10 +73,10 @@ return [
         'id'            => [
             'name'        => 'id',
             'type'        => 'int',
-            'bdd-type'    => 'bigint',
+            'bdd-type'    => 'integer',
             'length'      => 0,
             'scale'       => NULL,
-            'precision'   => 8,
+            'precision'   => 4,
             'nullable'    => FALSE,
             'default'     => NULL,
             'position'    => 1,
