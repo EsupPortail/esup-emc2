@@ -133,6 +133,15 @@ class CampagneService
         return $result;
     }
 
+    /** @return Campagne[] */
+    public function getCampagnesFutures(?DateTime $date = null): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = Campagne::decorateWithNonCommence($qb, 'campagne', $date);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
 
     public function getLastCampagne(?DateTime $date = null): ?Campagne
     {

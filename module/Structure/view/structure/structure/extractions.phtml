@@ -8,11 +8,12 @@ use Structure\Entity\Db\Structure;
  * @var Structure $structure
  * @var Structure[] $selecteur
  * @var Campagne[] $campagnes
+ * @var Campagne[] $campagnesFutures
  */
 
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'extractions', 'selecteur' => $selecteur]); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'extractions', 'selecteur' => $selecteur]); ?>
 
 <h2>Listing des fiches de postes</h2>
 

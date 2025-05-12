@@ -6,6 +6,7 @@
  * @var Structure $structure
  * @var Structure[] $selecteur
  * @var Campagne[] $campagnes
+ * @var Campagne[] $campagnesFutures
  * @var array $fichesDePoste
  * @var array $fichesDePostePdf
  * @var EtatType[] $etats
@@ -33,7 +34,7 @@ $date = new DateTime();
 ?>
 
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'fiches-de-poste', 'selecteur' => $selecteur]); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'fiches-de-poste', 'selecteur' => $selecteur]); ?>
 
 <table class="table table-condensed datatable">
     <thead>

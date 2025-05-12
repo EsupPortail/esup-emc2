@@ -20,6 +20,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Structure[] $filles
  *
  * @var Campagne[] $campagnes
+ * @var Campagne[] $campagnesFutures
  *
  * PARAMETRES
  * @var bool $blocGestionnaire
@@ -37,7 +38,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
 
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'description', 'selecteur' => $selecteur]); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'description', 'selecteur' => $selecteur]); ?>
 
 <div class="row">
     <div class="col-md-6">

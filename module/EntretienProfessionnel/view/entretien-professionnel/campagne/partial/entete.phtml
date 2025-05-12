@@ -2,16 +2,18 @@
 
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use Structure\Entity\Db\Structure;
 
 /**
  * @var Structure $structure
  * @var string $current /i\ onglet actif pour mise en forme
  * @var Campagne[] $campagnes
+ * @var Campagne[] $campagnesFutures
  */
 
 $canMissionSpecifiqueOnglet = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_ONGLET));
-
+$canCampagneAfficher = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AFFICHER));
 ?>
 
 <div class="row">
@@ -90,6 +92,20 @@ $canMissionSpecifiqueOnglet = $this->isAllowed(MissionspecifiqueaffectationPrivi
                 </button>
             <?php endif; ?>
         <?php endforeach; ?>
+    <?php if ($canCampagneAfficher) : ?>
+    <?php foreach ($campagnesFutures as $campagne) : ?>
+        <?php if ($campagne !== null) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
+            <button class="nav-link" id="campagne<?php echo $campagne->getId(); ?>-tab"
+                    data-bs-toggle="tab" data-bs-target="#mission-specifique"
+                    type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
+                    onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()],[],true); ?>'"
+            >
+                Entretiens professionnels <?php echo $campagne->getAnnee(); ?>
+            </button>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php endif; ?>
         <?php /** @see \Structure\Controller\StructureController::extractionsAction() */ ?>
         <button class="nav-link" id="extraction-tab"
             data-bs-toggle="tab" data-bs-target="#extraction"
