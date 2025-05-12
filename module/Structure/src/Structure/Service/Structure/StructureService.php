@@ -57,8 +57,9 @@ class StructureService
             ->leftJoin('responsable.agent', 'rAgent')->addSelect('rAgent')
             ->addSelect('type')->leftjoin('structure.type', 'type')
             ->andWhere('structure.deletedOn IS NULL')
-            ->andWhere('responsable.deletedOn IS NULL')
-            ->andWhere('rAgent.deletedOn IS NULL')
+// Masque les structures sans responsable ...
+//            ->andWhere('responsable.deletedOn IS NULL')
+//            ->andWhere('rAgent.deletedOn IS NULL')
             ->orderBy('structure.code');
         return $qb;
     }
