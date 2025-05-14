@@ -61,7 +61,10 @@ class IndexController extends AbstractActionController
 
     public function indexAction(): ViewModel|Response
     {
-        $campagne = $this->getCampagneService()->getLastCampagne();
+
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
+        if (count($campagnes) === 1) $campagne = current($campagnes); else $campagne = $this->getCampagneService()->getLastCampagne();
+
         $vars = ['UrlService' => $this->getUrlService(), 'MacroService' => $this->getMacroService(), 'campagne' => $campagne];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, $vars, false);
         $texte = $rendu->getCorps();
