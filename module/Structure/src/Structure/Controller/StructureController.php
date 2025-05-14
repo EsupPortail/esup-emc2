@@ -101,12 +101,14 @@ class StructureController extends AbstractActionController {
         $blocGestionnaire = $this->getParametreService()->getValeurForParametre(StructureParametres::TYPE, StructureParametres::BLOC_GESTIONNAIRE);
         $blocObservateur = $this->getParametreService()->getValeurForParametre(StructureParametres::TYPE, StructureParametres::BLOC_OBSERVATEUR);
 
-        $niveau2 = $structure->getNiv2();
-        $parent = $structure->getParent();
-        $filles = $structure->getEnfants();
+        $niveau2 = $structure?->getNiv2();
+        $parent = $structure?->getParent();
+        $filles = $structure?->getEnfants();
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
+
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
@@ -122,6 +124,7 @@ class StructureController extends AbstractActionController {
             'filles' => $filles,
 
             'campagnes' => $campagnes,
+            'campagnesFutures' => $campagnesFutures,
 
             'blocGestionnaire' => $blocGestionnaire,
             'blocObservateur' => $blocObservateur,
@@ -160,6 +163,7 @@ class StructureController extends AbstractActionController {
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
@@ -183,6 +187,7 @@ class StructureController extends AbstractActionController {
             'autorites' => $autorites,
 
             'campagnes' => $campagnes,
+            'campagnesFutures' => $campagnesFutures,
             'emailAssistance' => $emailAssistance,
             'debug' => null,
         ]);
@@ -199,6 +204,7 @@ class StructureController extends AbstractActionController {
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
@@ -207,6 +213,7 @@ class StructureController extends AbstractActionController {
             'selecteur' => $selecteur,
             'missionsSpecifiques' => $missionsSpecifiques,
             'campagnes' => $campagnes,
+            'campagnesFutures' => $campagnesFutures,
         ]);
     }
 
@@ -239,6 +246,7 @@ class StructureController extends AbstractActionController {
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
@@ -246,6 +254,7 @@ class StructureController extends AbstractActionController {
             'structure' => $structure,
             'selecteur' => $selecteur,
             'campagnes' => $campagnes,
+            'campagnesFutures' => $campagnesFutures,
 
             'agents' => $allAgents,
             'fichesDePoste' => $fichesDePoste,
@@ -261,6 +270,8 @@ class StructureController extends AbstractActionController {
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
+
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
@@ -268,6 +279,7 @@ class StructureController extends AbstractActionController {
             'structure' => $structure,
             'selecteur' => $selecteur,
             'campagnes' => $campagnes,
+            'campagnesFutures' => $campagnesFutures,
         ]);
     }
 

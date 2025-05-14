@@ -12,6 +12,7 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @see \EntretienProfessionnel\Controller\CampagneController::structureAction()
  * @var Campagne $campagne
  * @var Campagne[] $campagnes
+ * @var Campagne[] $campagnesFutures
  *
  * @var Structure $structure
  * @var Structure[] $structures
@@ -42,7 +43,7 @@ $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceI
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() . " - " . $structure->getLibelleLong())
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'campagne_'.$campagne->getId(), 'selecteur' => $selecteur]); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'campagne_'.$campagne->getId(), 'selecteur' => $selecteur]); ?>
 
 <h1 class="page-header">
     Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>

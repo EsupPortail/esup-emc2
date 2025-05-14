@@ -98,4 +98,38 @@ trait HasPeriodeTrait {
         ;
         return $qb;
     }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $entityName
+     * @param DateTime|null $date
+     * @return QueryBuilder
+     */
+    static public function decorateWithNonClos(QueryBuilder $qb, string $entityName,  ?DateTime $date = null) : QueryBuilder
+    {
+        if ($date === null) $date = new DateTime();
+        $qb = $qb
+            ->andWhere("(" .$entityName . '.dateFin IS NULL OR ' . $entityName . '.dateFin >= :date'. ")")
+            ->andWhere($entityName . '.id IS NOT NULL')
+            ->setParameter('date', $date)
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $entityName
+     * @param DateTime|null $date
+     * @return QueryBuilder
+     */
+    static public function decorateWithNonCommence(QueryBuilder $qb, string $entityName,  ?DateTime $date = null) : QueryBuilder
+    {
+        if ($date === null) $date = new DateTime();
+        $qb = $qb
+            ->andWhere("(" .$entityName . '.dateDebut IS NULL OR ' . $entityName . '.dateDebut >= :date'. ")")
+            ->andWhere($entityName . '.id IS NOT NULL')
+            ->setParameter('date', $date)
+        ;
+        return $qb;
+    }
 }

@@ -16,6 +16,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
@@ -35,6 +36,7 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenParametre\Exception\ParametreNotFoundException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -103,8 +105,16 @@ class CampagneController extends AbstractActionController
 
                 $this->getRappelCampagneAvancementAutoriteService()->creer($campagne);
                 $this->getRappelCampagneAvancementSuperieurService()->creer($campagne);
-                $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
-                $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
+
+                try {
+                    $notificationsActivees = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_NOTIFIER_OUVERTURE);
+                } catch (ParametreNotFoundException) {
+                    $notificationsActivees = true;
+                }
+                if ($notificationsActivees) {
+                    $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
+                    $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
+                }
             }
         }
 
@@ -423,6 +433,7 @@ class CampagneController extends AbstractActionController
 
         $last = $this->getCampagneService()->getLastCampagne();
         $campagnes = $this->getCampagneService()->getCampagnesActives();
+        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) {
             return $a->getDateDebut() <=> $b->getDateDebut();
@@ -436,6 +447,7 @@ class CampagneController extends AbstractActionController
         return new ViewModel([
             'campagne' => $campagne,
             'campagnes' => $campagnes,
+            'campagnesFutures' => $campagnesFutures,
             'structure' => $structure,
             'selecteur' => $selecteur,
             'structures' => $structures,

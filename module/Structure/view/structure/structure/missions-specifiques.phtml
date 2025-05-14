@@ -13,6 +13,7 @@ use Structure\Entity\Db\Structure;
  * @var AgentMissionSpecifique[] $missionsSpecifiques
  *
  * @var Campagne[] $campagnes
+ * @var Campagne[] $campagnesFutures
  */
 
 $this->headTitle($structure->getLibelleLong() . " - Description");
@@ -25,7 +26,7 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiqueaffectationPrivi
 
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'missions-specifiques', 'selecteur' => $selecteur]); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'missions-specifiques', 'selecteur' => $selecteur]); ?>
 
 <?php if ($canAjouterAffectation) : ?>
     <a

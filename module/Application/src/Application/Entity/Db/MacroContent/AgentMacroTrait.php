@@ -373,16 +373,22 @@ trait AgentMacroTrait
 
     public function toStringEmploiType() : string
     {
-        /** @var Agent $agent */
         $agent = $this;
-        $fiche = $agent->getFichePosteBest();
+        $emploiTypesActifs=$agent->getEmploiTypesActifs();
 
-        //todo /!\ overlap avec les champs manuels du CREP
-        if ($fiche === null) return "Aucune fiche de poste EMC2";
-        if ($fiche->getFicheTypeExternePrincipale() === null) return "";
-        $metier  = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getReferencesAffichage();
+        if (empty($emploiTypesActifs)) return "Aucun Emploi Type connu";
 
-        return $metier;
+        $texte = "";
+        foreach ($emploiTypesActifs as $emploiTypeActif) {
+            $emploiType = $emploiTypeActif->getEmploiType();
+            if ($texte !== "") $texte .= "<br/>";
+            if ($emploiType) {
+                $texte=$texte.$emploiType->getLibelleCourt(). " - ". $emploiType->getLibelleLong();
+            } else {
+                $texte=$texte."Emploi Type inconnu";
+            }
+        }
+        return $texte;
     }
 
     public function toStringQuotite() : string

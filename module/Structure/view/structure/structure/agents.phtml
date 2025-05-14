@@ -20,6 +20,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var AgentAutorite[] $autorites
  * @var AgentAffectation[] $affectations
  * @var Campagne[] $campagnes
+ * @var Campagne[] $campagnesFutures
  * @var string $emailAssistance
  * @var Structure[] $selecteur
  * @var ?string $debug
@@ -31,7 +32,7 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
 $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AGENT_MASQUE))
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'agents', 'selecteur' => $selecteur]); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'agents', 'selecteur' => $selecteur]); ?>
 
 <?php if ($debug) : ?>
     <div class="alert alert-warning">
