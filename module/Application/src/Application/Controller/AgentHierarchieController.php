@@ -379,6 +379,14 @@ class AgentHierarchieController extends AbstractActionController
                             break;
                     }
                 }
+                if ($data['cloture'] === '1')  switch ($type) {
+                    case 'superieur':
+                        $this->getAgentSuperieurService()->clotureAll($chaine->getAgent());
+                        break;
+                    case 'autorite':
+                        $this->getAgentAutoriteService()->clotureAll($chaine->getAgent());
+                        break;
+                }
                 $id = $chaine->generateId();
                 $chaine->setId($id);
                 $chaine->setSourceId("EMC2");
@@ -459,7 +467,7 @@ class AgentHierarchieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => $titre,
             'form' => $form,
-            'js' => ($chaine->getAgent()) ? "$('#agent-autocomplete').parent().hide();" : "",
+            'js' => "$('#cloture').parent().hide(); $('#historisation').parent().hide();". (($chaine->getAgent()) ? "$('#agent-autocomplete').parent().hide();" : ""),
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;

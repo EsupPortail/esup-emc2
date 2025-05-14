@@ -5,6 +5,7 @@ namespace Application\Service\AgentAutorite;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -232,6 +233,19 @@ class AgentAutoriteService
         if ($agent !== null) {
             $autorites = $this->getAgentsAutoritesByAgent($agent);
             foreach ($autorites as $autorite) $this->historise($autorite);
+        }
+    }
+
+    public function clotureAll(?Agent $agent, ?DateTime $date = null) : void
+    {
+        if ($date === null) $date = new DateTime();
+        $dateCloture = DateTime::createFromFormat('Y-m-d H:i:s' , $date->sub(new DateInterval('P1D'))->format('Y-m-d 18:00:00'));
+        if ($agent !== null) {
+            $autorites = $this->getAgentsAutoritesByAgent($agent);
+            foreach ($autorites as $autorite) {
+                $autorite->setDateFin($dateCloture);
+                $this->update($autorite);
+            }
         }
     }
 

@@ -5,6 +5,7 @@ namespace Application\Service\AgentSuperieur;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -213,6 +214,19 @@ class AgentSuperieurService
         if ($agent !== null) {
             $superieurs = $this->getAgentsSuperieursByAgent($agent);
             foreach ($superieurs as $superieur) $this->historise($superieur);
+        }
+    }
+
+    public function clotureAll(?Agent $agent, ?DateTime $date = null) : void
+    {
+        if ($date === null) $date = new DateTime();
+        $dateCloture = DateTime::createFromFormat('Y-m-d H:i:s' , $date->sub(new DateInterval('P1D'))->format('Y-m-d 18:00:00'));
+        if ($agent !== null) {
+            $superieurs = $this->getAgentsSuperieursByAgent($agent);
+            foreach ($superieurs as $superieur) {
+                $superieur->setDateFin($dateCloture);
+                $this->update($superieur);
+            }
         }
     }
 

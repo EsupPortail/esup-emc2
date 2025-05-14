@@ -732,16 +732,15 @@ class Agent implements
             return !$a->isDeleted();
         });
         $result = array_filter($result, function (AgentSuperieur $a) {
-            return $a->estEnCours();
-        });
-        $result = array_filter($result, function (AgentSuperieur $a) {
             return (
                 ($a->getSourceId() === 'EMC2' and $a->estNonHistorise())
                 or
                 ($a->getSourceId() !== "EMC2")
             );
-        }
-        );
+        });
+        $result = array_filter($result, function (AgentSuperieur $a) {
+            return $a->estEnCours();
+        });
         if ($histo === false) {
             $result = array_filter($result, function (AgentSuperieur $a) {
                 return $a->estNonHistorise();
