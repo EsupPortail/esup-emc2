@@ -310,7 +310,8 @@ class CampagneService
             }
             if (!$agent->isValideAffectation(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS],
-                $campagne->getDateDebut(),$structures,true)
+//                $campagne->getDateDebut(),$structures,true)
+                $campagne->getDateDebut(),null,true)
             ) {
                 continue;
             }
@@ -343,7 +344,8 @@ class CampagneService
             }
             if (!$agent->isValideAffectation(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION],
-                $campagne->getDateEnPoste(), $structures))
+//                $campagne->getDateEnPoste(), $structures))
+                $campagne->getDateEnPoste(), null))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
