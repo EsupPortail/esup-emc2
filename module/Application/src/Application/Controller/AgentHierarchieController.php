@@ -377,6 +377,8 @@ class AgentHierarchieController extends AbstractActionController
                         case 'autorite':
                             $this->getAgentAutoriteService()->historiseAll($chaine->getAgent());
                             break;
+                        default :
+                            throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu");
                     }
                 }
                 $id = $chaine->generateId();
@@ -537,6 +539,8 @@ class AgentHierarchieController extends AbstractActionController
                     case 'autorite' :
                         $this->getAgentAutoriteService()->delete($chaine);
                         break;
+                    default :
+                        throw new RuntimeException("AgentHierarchieController::supprimerAction() : Le type [" . $type . "] est inconnu");
                 }
             }
             exit();

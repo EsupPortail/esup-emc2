@@ -140,6 +140,7 @@ class AgentAutoriteService
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
             ->andWhere('agent.deletedOn IS NULL')
+
             ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut < :fin')->setParameter('fin', $dateFin)
             ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin > :debut')->setParameter('debut', $dateDebut);
 
