@@ -120,7 +120,17 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
         <div class="col-md-6">
             <?php if ($canAfficherAutorite) : ?>
                 <dl>
-                    <dt> Autorité hiérarchique</dt>
+                    <dt>
+                        Autorité hiérarchique
+                        <?php if ($canModifierChaine) : ?>
+                            <?php /** @see \Application\Controller\AgentHierarchieController::visualiserAction() */ ?>
+                            <a href="<?php echo $this->url('agent/hierarchie/visualiser', ['agent' => $agent->getId(), 'type' => 'autorite'], [], true); ?>"
+                               class="action secondary ajax-modal" style="font-weight: normal">
+                            <span class="icon icon-voir"></span>
+                            Afficher l'historique
+                            </a>
+                        <?php endif; ?>
+                    </dt>
                     <dd>
                         <?php if ($canModifierChaine) : ?>
                             <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "autorite"], [], true); ?>"
@@ -189,7 +199,16 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
         <div class="col-md-6">
             <?php if ($canAfficherSuperieure) : ?>
                 <dl>
-                    <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
+                    <dt> Supérieur&middot;e hiérarchique direct&middot;e
+                        <?php if ($canModifierChaine) : ?>
+                            <?php /** @see \Application\Controller\AgentHierarchieController::visualiserAction() */ ?>
+                            <a href="<?php echo $this->url('agent/hierarchie/visualiser', ['agent' => $agent->getId(), 'type' => 'superieur'], [], true); ?>"
+                               class="action secondary ajax-modal" style="font-weight: normal">
+                                <span class="icon icon-voir"></span>
+                                Afficher l'historique
+                            </a>
+                        <?php endif; ?>
+                    </dt>
                     <dd>
                         <?php if ($canModifierChaine) : ?>
                             <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "superieur"], [], true); ?>"

@@ -165,7 +165,10 @@ class IndexController extends AbstractActionController
                 if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;
             }
             foreach ($agentsS as $agent) {
-                if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;
+                if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin()))
+                {
+                    $agentsSCampagnes[$agent->getId()] = $agent;
+                }
             }
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsSCampagnes, false, false);
             [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agentsSCampagnes);
