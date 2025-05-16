@@ -92,9 +92,8 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                 <?php endif; ?>
                 <?php
                     $entretien = new EntretienProfessionnel(); $entretien->setAgent($agent);
-                    //todo l'assertion merde
-//                    $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
-                    $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
+                    $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
+//                    $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
                 ?>
                 <?php
                     if ($campagne->estEnCours() AND $canConvoquer) : ?>
