@@ -310,7 +310,8 @@ class CampagneService
             }
             if (!$agent->isValideAffectation(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS],
-                $campagne->getDateDebut(),$structures,true)
+//                $campagne->getDateDebut(),$structures,true)
+                $campagne->getDateDebut(),null,true)
             ) {
                 continue;
             }
@@ -326,13 +327,6 @@ class CampagneService
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans 'contrat long'</li>";
             }
-            if (!$agent->isValideEmploiType(
-                $parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE],
-                $campagne->getDateEnPoste()))
-            {
-                $kept = false;
-                $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels</li>";
-            }
             if (!$agent->isValideStatut(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_STATUT],
                 $campagne->getDateEnPoste()))
@@ -343,24 +337,31 @@ class CampagneService
             }
             if (!$agent->isValideAffectation(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION],
-                $campagne->getDateEnPoste(), $structures))
+//                $campagne->getDateEnPoste(), $structures))
+                $campagne->getDateEnPoste(), null))
             {
                 $kept = false;
                 $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
             }
-            if (!$agent->isValideGrade(
-                $parametres[EntretienProfessionnelParametres::TEMOIN_GRADE],
-                $campagne->getDateEnPoste()))
-            {
-                $kept = false;
-                $raison[$agent->getId()] .= "<li>Sans grade valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
-            }
-            if (!$agent->isValideCorps(
-                $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],
-                $campagne->getDateEnPoste()))
-            {
-                $kept = false;
-                $raison[$agent->getId()] .= "<li>Sans corps valide (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") </li>";
+            if ($parametres[EntretienProfessionnelParametres::FILTRAGE_AGENTGRADE]->getValeur() !== "false") {
+                if (!$agent->isValideGrade(
+                    $parametres[EntretienProfessionnelParametres::TEMOIN_GRADE],
+                    $campagne->getDateEnPoste(), null)) {
+                    $kept = false;
+                    $raison[$agent->getId()] .= "<li>Sans grade valide (à la date du " . $campagne->getDateEnPoste()->format('d/m/y') . ") </li>";
+                }
+                if (!$agent->isValideCorps(
+                    $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],
+                    $campagne->getDateEnPoste())) {
+                    $kept = false;
+                    $raison[$agent->getId()] .= "<li>Sans corps valide (à la date du " . $campagne->getDateEnPoste()->format('d/m/y') . ") </li>";
+                }
+                if (!$agent->isValideEmploiType(
+                    $parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE],
+                    $campagne->getDateEnPoste())) {
+                    $kept = false;
+                    $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du " . $campagne->getDateEnPoste()->format('d/m/y') . ") dans le cadre des entretiens professionnels</li>";
+                }
             }
             if ($agent->isForceAvecObligation($campagne)) {
                 $raison[$agent->getId()] .= "<li>Forcé·e avec obligation</li>";

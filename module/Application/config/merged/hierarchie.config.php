@@ -79,6 +79,7 @@ return [
                         'ajouter',
                         'modifier',
                         'supprimer',
+                        'visualiser',
                     ],
                     'privileges' => [
                         ChainePrivileges::CHAINE_GERER
@@ -244,6 +245,18 @@ return [
                                         /** @see AgentHierarchieController::chaineHierarchiqueJsonAction() */
                                         'controller' => AgentHierarchieController::class,
                                         'action'     => 'chaine-hierarchique-json',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'visualiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/importer/:agent/:type',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::visualiserAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'visualiser',
                                     ],
                                 ],
                                 'may_terminate' => true,

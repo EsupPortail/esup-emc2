@@ -101,10 +101,10 @@ class AgentHierarchieController extends AbstractActionController
                     else $responsable = $this->getAgentRefService()->getAgentByRef($source, $responsable_id);
                     if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
                     $date_debut_st = $line[2] ?? null;
-                    $dateDebut = ($date_debut_st)?DateTime::createFromFormat('d/m/Y', $date_debut_st):null;
+                    $dateDebut = ($date_debut_st) ? DateTime::createFromFormat('d/m/Y', $date_debut_st) : null;
                     if ($dateDebut === false) $warning[] = "Impossibilité de calculé la date de début à partir de [" . $date_debut_st . "]";
                     $date_fin_st = $line[3] ?? null;
-                    $dateFin = ($date_fin_st)?DateTime::createFromFormat('d/m/Y', $date_fin_st):null;
+                    $dateFin = ($date_fin_st) ? DateTime::createFromFormat('d/m/Y', $date_fin_st) : null;
                     if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculé la date de fin à partir de [" . $date_fin_st . "]";
 
                     $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
@@ -377,6 +377,8 @@ class AgentHierarchieController extends AbstractActionController
                         case 'autorite':
                             $this->getAgentAutoriteService()->historiseAll($chaine->getAgent());
                             break;
+                        default :
+                            throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu");
                     }
                 }
                 if ($data['cloture'] === '1')  switch ($type) {
@@ -545,6 +547,8 @@ class AgentHierarchieController extends AbstractActionController
                     case 'autorite' :
                         $this->getAgentAutoriteService()->delete($chaine);
                         break;
+                    default :
+                        throw new RuntimeException("AgentHierarchieController::supprimerAction() : Le type [" . $type . "] est inconnu");
                 }
             }
             exit();
@@ -561,4 +565,29 @@ class AgentHierarchieController extends AbstractActionController
         }
         return $vm;
     }
+
+    public function visualiserAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $type = $this->params()->fromRoute('type');
+
+        $chaines = null;
+        switch ($type) {
+            case 'superieur' :
+                $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent, true);
+                break;
+            case 'autorite' :
+                $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent, true);
+                break;
+        }
+
+        $vm = new ViewModel([
+            'title' => "Historisque des chaines hiérarchiques [" . $type . "]",
+            'agent' => $agent,
+            'type' => $type,
+            'chaines' => $chaines,
+        ]);
+        return $vm;
+    }
+
 }

@@ -1,0 +1,42 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
+
+/** @see \Application\Controller\AgentHierarchieController::visualiserAction()
+ * @var Agent $agent
+ * @var string $type
+ * @var AgentSuperieur[]|AgentAutorite[] $chaines
+ **/
+
+?>
+
+<dl class="row">
+    <dt>Agent</dt>
+    <dd><?php echo $agent->getDenomination(); ?></dd>
+    <dt>Type</dt>
+    <dd><?php echo $type; ?></dd>
+</dl>
+
+<ul>
+<?php foreach ($chaines as $chaine) : ?>
+    <?php $agent = $chaine->getAgent(); ?>
+    <?php $hierarchie = ($type === 'superieur')?$chaine->getSuperieur():$chaine->getAutorite(); ?>
+
+    <li>
+        <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+        <?php echo $hierarchie->getDenomination(true); ?>
+        <?php echo ($chaine->getDateDebut())?$chaine->getDateDebut()->format('d/m/Y'):"---"; ?>
+        &RightArrow;
+        <?php echo ($chaine->getDateFin())?$chaine->getDateFin()->format('d/m/Y'):"---"; ?>
+        <br>
+        <?php if ($chaine->isDeleted()) : ?>
+            <span class="badge bg-danger">Effacée</span>
+        <?php endif; ?>
+        <?php if ($chaine->estNonHistorise()) : ?>
+            <span class="badge" style="background: var(--warning-background)">Historisée</span>
+        <?php endif; ?>
+    </li>
+<?php endforeach; ?>
+</ul>
