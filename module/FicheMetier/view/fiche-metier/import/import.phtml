@@ -70,12 +70,22 @@ $this->headTitle("Importation des fiches métiers");
 <?php endif; ?>
 
 <?php foreach ($fiches as $fiche) : ?>
+    <?php $metier = $fiche->getMetier(); ?>
     <hr>
-    <?php echo $fiche->getMetier()->getLibelle(); ?>
+    <?php echo $metier->getLibelle(); ?>
     <br>
     Catégorie :
     <ul>
-        <li><?php echo $fiche->getMetier()->getCategorie()->getLibelle(); ?></li>
+        <li>
+            <?php if ($metier->getCategorie()) :?>
+                <?php echo ($fiche->getMetier()->getCategorie())?->getLibelle(); ?>
+            <?php else : ?>
+                <span class="text-warning">
+                    <span class="icon icon-warning"></span>
+                    Aucune catégorie de connue pour le métier
+                </span>
+            <?php endif; ?>
+         </li>
     </ul>
     Correspondances :
     <ul>
