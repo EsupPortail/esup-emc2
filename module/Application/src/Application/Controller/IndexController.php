@@ -137,11 +137,11 @@ class IndexController extends AbstractActionController
     public function indexSuperieurAction(): ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
-        $agent = $this->getAgentService()->getAgentByUser($user);
+        $superieur = $this->getAgentService()->getAgentByUser($user);
 
         $agentsRaw = array_map(function (AgentSuperieur $a) {
             return $a->getAgent();
-        }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur));
         $agents = []; foreach ($agentsRaw as $agent_) $agents[$agent_->getId()] = $agent_;
 
         /** Campagne d'entretien professionnel ************************************************************************/
@@ -159,7 +159,7 @@ class IndexController extends AbstractActionController
         $templates = [];
 
         foreach ($campagnes as $campagne) {
-            $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($agent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
             foreach ($agents as $agent) {
                 if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;
@@ -209,11 +209,11 @@ class IndexController extends AbstractActionController
     public function indexAutoriteAction(): ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
-        $agent = $this->getAgentService()->getAgentByUser($user);
+        $autorite = $this->getAgentService()->getAgentByUser($user);
 
         $agentsRaw = array_map(function (AgentAutorite $a) {
             return $a->getAgent();
-        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite));
         $agents = []; foreach ($agentsRaw as $agent_) $agents[$agent_->getId()] = $agent_;
 
         /** Campagne d'entretien professionnel ************************************************************************/
@@ -231,7 +231,7 @@ class IndexController extends AbstractActionController
         $templates = [];
 
         foreach ($campagnes as $campagne) {
-            $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
             $agentsSCampagnes = [];
             foreach ($agents as $agent) {
                 if ($this->getAgentAffectationService()->hasAffectation($agent, $campagne->getDateDebut(), $campagne->getDateFin())) $agentsSCampagnes[$agent->getId()] = $agent;

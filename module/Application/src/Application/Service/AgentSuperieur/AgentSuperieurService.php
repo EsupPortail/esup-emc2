@@ -124,6 +124,7 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agent.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction >= :fin')
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
             ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut < :fin')->setParameter('fin', $dateFin)
             ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin > :debut')->setParameter('debut', $dateDebut)
