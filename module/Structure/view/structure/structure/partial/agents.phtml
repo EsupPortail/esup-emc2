@@ -196,7 +196,7 @@ $isForce = (isset($options['force']) and $options['force'] === true);
 
     function extract<?php echo $options['id']; ?>() {
         let agents = ["Agent·e, Structure"];
-        <?php usort($agents, function (Agent $a,Agent $b) { return $a->getDenomination() <=> $b->getDenomination();}); ?>
+        <?php usort($agents, function ( $a, $b) { return $a->getDenomination() <=> $b->getDenomination();}); ?>
         <?php foreach ($agents as $agent) : ?>
             <?php //RUSTINE
                 $agent = ($agent instanceof StructureAgentForce)?$agent->getAgent():$agent; ?>
