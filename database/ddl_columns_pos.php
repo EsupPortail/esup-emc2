@@ -714,6 +714,7 @@ return [
         'histo_destructeur_id',
         'raison',
         'code_fonction',
+        'raw',
     ],
     'fichemetier_application'                           => [
         'fichemetier_id',
