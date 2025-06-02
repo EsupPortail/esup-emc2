@@ -355,7 +355,7 @@ class NotificationService extends \Application\Service\Notification\Notification
 
         $notificationNeeded = false;
         foreach ($obligatoires as $obligatoire) {
-            if (!isset($entretiens[$obligatoire->getId()])  && !$entretiens[$obligatoire->getId()]->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+            if (!isset($entretiens[$obligatoire->getId()]) || !$entretiens[$obligatoire->getId()]->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
                 $notificationNeeded = true;
                 break;
             }
