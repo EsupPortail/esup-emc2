@@ -329,10 +329,13 @@ EOS;
     public function getStructuresByGestionnaire(UserInterface $user, bool $ouverte = true): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->join('structure.gestionnaires', 'gestionnaireSelection')
             ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
             ->addSelect('agent')->join('gestionnaire.agent', 'agent')
             ->andWhere('agent.utilisateur = :user')
+            ->andWhere('gestionnaire.deletedOn IS NULL')
+            ->andWhere('gestionnaire.dateDebut IS NULL or gestionnaire.dateDebut <= :now')
+            ->andWhere('gestionnaire.dateFin IS NULL or gestionnaire.dateFin >= :now')
+            ->setParameter('now', new DateTime())
             ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt');
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
@@ -349,10 +352,13 @@ EOS;
     public function getStructuresByResponsable(UserInterface $user, bool $ouverte = true): array
     {
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->join('structure.responsables', 'responsableSelection')
             ->addSelect('responsable')->join('structure.responsables', 'responsable')
             ->addSelect('agent')->join('responsable.agent', 'agent')
             ->andWhere('agent.utilisateur = :user')
+            ->andWhere('responsable.deletedOn IS NULL')
+            ->andWhere('responsable.dateDebut IS NULL or responsable.dateDebut <= :now')
+            ->andWhere('responsable.dateFin IS NULL or responsable.dateFin >= :now')
+            ->setParameter('now', new DateTime())
             ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt');
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
