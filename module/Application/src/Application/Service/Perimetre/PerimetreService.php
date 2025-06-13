@@ -11,6 +11,8 @@ use UnicaenIndicateur\Service\Perimetre\PerimetreServiceTrait;
 use UnicaenUtilisateur\Entity\Db\AbstractRole;
 use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\RoleInterface;
+use ZfcUser\Entity\UserInterface;
 
 class PerimetreService implements PerimetreServiceInterface
 {
@@ -21,7 +23,7 @@ class PerimetreService implements PerimetreServiceInterface
      * @param AbstractRole $role
      * @return array
      */
-    public function getPerimetres(AbstractUser $user, AbstractRole $role) : array
+    public function getPerimetres(UserInterface $user, RoleInterface $role) : array
     {
         $perimetres = [];
 

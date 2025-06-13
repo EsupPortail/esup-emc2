@@ -68,7 +68,7 @@ $data = $crep->buildResponseDictionnary();
     ?>
 <?php else : ?>
     <?php if ($canAfficher) : ?>
-        <?php echo $this->instanceAsText()->render($crep); ?>
+        <?php echo $this->instanceAsText()->render($crep, $entretien->getDateEntretien()); ?>
 
         <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
             <div class="alert alert-info">

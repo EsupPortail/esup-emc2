@@ -24,7 +24,7 @@ class IcsService
         $responsableEmail = $e->getResponsable()->getEmail();
 
         $uid = "EMC2-campagne-" . $e->getCampagne()->getId() . "-entretien-id" . $e->getId();
-        $titre = "Entretien professionnelle de " . $agentDenomination . " pour la campagne " . $e->getCampagne()->getAnnee();
+        $titre = "Entretien professionnel de " . $agentDenomination . " pour la campagne " . $e->getCampagne()->getAnnee();
         $description = $titre . " - Responsable d'entretien professionnel :" . $responsableDenomination;
         $createdAt = $now->format('Ymd') . "T" . $now->format('His') . "Z";
         $startAt = $debut->format('Ymd') . "T" . $debut->format('His');
@@ -83,7 +83,7 @@ EOS;
 
 
         $uid = "EMC2-campagne-" . $e->getCampagne()->getId() . "-entretien-id" . $e->getId();
-        $titre = "Entretien professionnelle de " . $agentDenomination . " pour la campagne " . $e->getCampagne()->getAnnee();
+        $titre = "Entretien professionnel de " . $agentDenomination . " pour la campagne " . $e->getCampagne()->getAnnee();
         $description = $titre . " - Responsable d'entretien professionnel :" . $responsableDenomination;
         $createdAt = $now->format('Ymd') . "T" . $now->format('His') . "Z";
         $startAt = $debut->format('Ymd') . "T" . $debut->format('His');

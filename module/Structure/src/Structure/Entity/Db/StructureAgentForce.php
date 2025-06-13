@@ -39,4 +39,9 @@ class StructureAgentForce implements HistoriqueAwareInterface, HasAgentInterface
         $this->agent = $agent;
     }
 
+    public function getDenomination() : string
+    {
+        return $this->getAgent()->getDenomination();
+    }
+
 }
