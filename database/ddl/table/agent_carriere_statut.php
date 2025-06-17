@@ -346,6 +346,18 @@ return [
             'position'    => 32,
             'commentaire' => NULL,
         ],
+        't_postdoc'             => [
+            'name'        => 't_postdoc',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 1,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => '\'N\'',
+            'position'    => 33,
+            'commentaire' => NULL,
+        ],
         't_retraite'            => [
             'name'        => 't_retraite',
             'type'        => 'string',

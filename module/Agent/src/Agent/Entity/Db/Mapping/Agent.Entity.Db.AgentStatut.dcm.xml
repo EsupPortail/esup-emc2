@@ -30,6 +30,7 @@
         <field name="retraite"      length="1"            column="t_retraite"                nullable="true"/>
         <field name="longueMaladie" length="1"            column="t_longue_maladie"          nullable="true"/>
         <field name="congeParental" length="1"            column="t_conge_parental"          nullable="true"/>
+        <field name="postdoc"       length="1"            column="t_postdoc"                 nullable="true"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="createdOn"               column="created_on"       type="datetime"/>
