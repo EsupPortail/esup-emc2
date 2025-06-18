@@ -59,7 +59,7 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     const TEMOINS = [
         'cdi', 'cdd', 'titulaire', 'vacataire',
         'enseignant', 'administratif', 'chercheur', 'doctorant',
-        'detacheIn', 'detacheOut','dispo', 'longue_maladie', 'conge_parental'
+        'detacheIn', 'detacheOut','dispo', 'longue_maladie', 'conge_parental', 'postdoc'
     ];
 
     public function getTemoin(string $temoin) : bool
