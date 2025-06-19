@@ -140,6 +140,7 @@ return [
         'histo_destructeur_id',
         't_conge_parental',
         't_longue_maladie',
+        't_postdoc',
     ],
     'agent_ccc_accompagnement'                          => [
         'id',

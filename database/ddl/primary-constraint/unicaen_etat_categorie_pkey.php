@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'unicaen_etat_categorie_pk',
+    'name'    => 'unicaen_etat_categorie_pkey',
     'table'   => 'unicaen_etat_categorie',
-    'index'   => 'unicaen_etat_categorie_pk',
+    'index'   => 'unicaen_etat_categorie_pkey',
     'columns' => [
         'id',
     ],
