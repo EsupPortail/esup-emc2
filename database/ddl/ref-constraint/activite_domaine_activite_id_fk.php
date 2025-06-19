@@ -9,7 +9,7 @@ return [
     'rtable'      => 'activite',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'activite_id_uindex',
+    'index'       => 'activite_pkey',
     'columns'     => [
         'activite_id' => 'id',
     ],

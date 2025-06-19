@@ -6,7 +6,7 @@ return [
     'schema'      => 'public',
     'name'        => 'fichereferentiel_competence',
     'temporary'   => FALSE,
-    'logging'     => TRUE,
+    'logging'     => FALSE,
     'commentaire' => NULL,
     'sequence'    => NULL,
     'columns'     => [
