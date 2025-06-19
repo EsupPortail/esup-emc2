@@ -2314,6 +2314,14 @@ return [
         'source_id',
         'id_orig',
     ],
+    'metier_metier_correspondance'                      => [
+        'metier_id',
+        'correspondance_id',
+    ],
+    'metier_metier_famille'                             => [
+        'metier_id',
+        'famille_id',
+    ],
 ];
 
 //@formatter:on
