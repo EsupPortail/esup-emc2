@@ -103,6 +103,22 @@ class AgentAutoriteService
         return $result;
     }
 
+
+    /** @return AgentAutorite[] */
+    public function getAgentsAutoritesCourants(): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentautorite.histoDestruction IS NULL')
+            ->andWhere('agentautorite.deletedOn IS NULL')
+            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
+            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
+            ->setParameter('now', new DateTime())
+            ->orderBy('coalesce(agent.nomUsuel, agent.nomFamille), agent.prenom');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /** @return AgentAutorite[] */
     public function getAgentsAutoritesByAgent(Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
     {

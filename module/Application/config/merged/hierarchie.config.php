@@ -80,6 +80,7 @@ return [
                         'modifier',
                         'supprimer',
                         'visualiser',
+                        'exporter-chaines',
                     ],
                     'privileges' => [
                         ChainePrivileges::CHAINE_GERER
@@ -252,11 +253,23 @@ return [
                             'visualiser' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/importer/:agent/:type',
+                                    'route'    => '/visualiser/:agent/:type',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::visualiserAction() */
                                         'controller' => AgentHierarchieController::class,
                                         'action'     => 'visualiser',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'exporter-chaines' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/exporter-chaines/:type',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::exporterChainesAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'exporter-chaines',
                                     ],
                                 ],
                                 'may_terminate' => true,

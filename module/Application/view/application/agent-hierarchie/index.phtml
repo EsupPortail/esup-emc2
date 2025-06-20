@@ -11,11 +11,35 @@ $this->headTitle("Gestion des chaînes hiérarchiques");
     Gestion des chaînes hiérarchiques
 </h1>
 
-<p class="lead">
-    Deux moyens sont mises à disposition pour la gestion des chaînes hiérarchiques : un import depuis un csv ou un calcul exploitant les responsabilité de structure.
-</p>
+<h2> Extraction des chaînes hiérarchiques </h2>
+
+Extraction des chaînes hiérarchiques courrantes au format .csv avec :
+<ul>
+    <li>pour les supérieurs : <code>'agent', 'superieur', 'debut', 'fin'</code></li>
+    <li>pour les autoritéss : <code>'agent', 'autorite', 'debut', 'fin'</code></li>
+</ul>
+
+
+<?php /** @see \Application\Controller\AgentHierarchieController::exporterChainesAction() */ ?>
+<a href="<?php echo $this->url('agent/hierarchie/exporter-chaines', ['type' => 'superieur'], [], true); ?>"
+   class="btn btn-primary"
+>
+    <span class="icon icon-csv"></span>
+    Exporter les supérieur·es
+</a>
+
+<?php /** @see \Application\Controller\AgentHierarchieController::exporterChainesAction() */ ?>
+<a href="<?php echo $this->url('agent/hierarchie/exporter-chaines', ['type' => 'autorite'], [], true); ?>"
+   class="btn btn-primary"
+>
+    <span class="icon icon-csv"></span>
+    Exporter les autorités
+</a>
 
 <h2> Importation des chaînes </h2>
+
+<h3> Importation depuis un csv</h3>
+
 
 Le format du CSV exploité est le suivant :
 <code>agent_id ; reponsable_id ; date_debut; date_fin</code>. <br/>
@@ -26,27 +50,28 @@ Un·e agent·e peut avoir plusieurs lignes dans ce fichier si plusieurs responsa
 </div>
 
 <?php /** @see \Application\Controller\AgentHierarchieController::importerAction() */ ?>
-<a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => Agent::ROLE_SUPERIEURE ], [], true); ?>"
+<a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => Agent::ROLE_SUPERIEURE], [], true); ?>"
    class="btn btn-primary ajax-modal"
 >
     Importer les supérieur·es depuis csv
 </a>
 
 <?php /** @see \Application\Controller\AgentHierarchieController::importerAction() */ ?>
-<a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => Agent::ROLE_AUTORITE ], [], true); ?>"
+<a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => Agent::ROLE_AUTORITE], [], true); ?>"
    class="btn btn-primary ajax-modal"
 >
     Importer les autorités depuis csv
 </a>
 
-<h2> Calcul des chaînes </h2>
+<h3> Calcul des chaînes </h3>
 
 Le calcul se fait à partir d'une structure et détermine pour chaque agent·e affecté·e ses supérieur·es et autorités hiérarchiques.
 Les règles exploitées sont les suivantes :
 <ul>
     <li>Les supérieur·es sont les responsables de la structure la plus proche de l'agent·e.</li>
     <li> Les autorités sont les responsables de la structure de niveau 2 de l'agent
-        (ou de niveau 1 si les supérieur·es sont les responsables de la structure de niveau 2). </li>
+        (ou de niveau 1 si les supérieur·es sont les responsables de la structure de niveau 2).
+    </li>
 </ul>
 <div class="alert alert-warning">
     Tous les agent·es de la structure verront leur chaîne hiérarchique historisée.
@@ -67,10 +92,10 @@ Les règles exploitées sont les suivantes :
 </a>
 
 
-<h2> Saisie manuelle pour un·e agent </h2>
+<h4> Saisie manuelle pour un·e agent </h4>
 
 <p>
-La saisie manuelle est aussi réalisable depuis la fiche de l'agent.
+    La saisie manuelle est aussi réalisable depuis la fiche de l'agent.
 </p>
 
 <?php /** @see \Application\Controller\AgentHierarchieController::ajouterAction() */ ?>
@@ -88,7 +113,7 @@ La saisie manuelle est aussi réalisable depuis la fiche de l'agent.
 </a>
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

@@ -89,6 +89,21 @@ class AgentSuperieurService
     }
 
     /** @return AgentSuperieur[] */
+    public function getAgentsSuperieursCourants(): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentsuperieur.histoDestruction IS NULL')
+            ->andWhere('agentsuperieur.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            ->setParameter('now', new DateTime())
+            ->orderBy('coalesce(agent.nomUsuel, agent.nomFamille), agent.prenom');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return AgentSuperieur[] */
     public function getAgentsSuperieursByAgent(?Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()

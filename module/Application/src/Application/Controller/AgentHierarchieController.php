@@ -20,6 +20,8 @@ use Laminas\View\Model\ViewModel;
 use RuntimeException;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnhandledMatchError;
+use UnicaenApp\View\Model\CsvModel;
 
 class AgentHierarchieController extends AbstractActionController
 {
@@ -589,5 +591,46 @@ class AgentHierarchieController extends AbstractActionController
         ]);
         return $vm;
     }
+
+    public function exporterChainesAction(): CsvModel
+    {
+        $type = $this->params()->fromRoute('type');
+        $chaines =
+            match ($type) {
+                'superieur' => $this->getAgentSuperieurService()->getAgentsSuperieursCourants(),
+                'autorite' => $this->getAgentAutoriteService()->getAgentsAutoritesCourants(),
+                default => null
+            };
+        if ($chaines === null) throw new RuntimeException("Le type [" . $type . "] est inconnu.");
+
+        $header=["agent", $type, "debut", "fin"];
+        $data = [];
+        foreach ($chaines as $chaine) {
+            $data[] =
+                [
+                    $chaine->getAgent()->getDenomination(),
+                    match($type) {
+                         'superieur' => $chaine->getSuperieur()->getDenomination(),
+                         'autorite' => $chaine->getAutorite()->getDenomination(),
+                         default => null,
+                    },
+                    ($chaine->getDateDebut())?->format('d/m/Y'),
+                    ($chaine->getDateFin())?->format('d/m/Y'),
+                ];
+        }
+
+        $date = (new DateTime())->format('Ymd-His');
+        $filename="chaine_".$type."_".$date.".csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($header);
+        $CSV->setData($data);
+        $CSV->setFilename($filename);
+        return $CSV;
+
+    }
+
+
 
 }
