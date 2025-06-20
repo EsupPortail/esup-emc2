@@ -315,7 +315,12 @@ class CampagneService
             ) {
                 continue;
             }
-
+            if (!$agent->isValideStatut(
+                $parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS],
+                $campagne->getDateDebut(),null,true)
+            ) {
+                continue;
+            }
             $kept = true;
 
             if ($agent->isForceSansObligation($campagne)) {

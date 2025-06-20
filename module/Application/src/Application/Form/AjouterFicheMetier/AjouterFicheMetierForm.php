@@ -182,6 +182,7 @@ class AjouterFicheMetierForm extends Form {
             foreach ($domaines as $domaine) {
                 $dictionnaire[($domaine) ? $domaine->getLibelle() : "Sans domaine"][] = $ficheMetier;
             }
+            if (empty($domaines)) $dictionnaire["Sans domaine"][] = $ficheMetier;
         }
 
         ksort($dictionnaire);

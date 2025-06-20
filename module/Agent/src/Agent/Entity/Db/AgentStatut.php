@@ -36,6 +36,7 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     private ?string $retraite = 'N';
     private ?string $congeParental = 'N';
     private ?string $longueMaladie = 'N';
+    private ?string $postdoc = 'N';
 
 
     /** Données : cette donnée est synchronisée >> par conséquent, il n'y a que des getters */
@@ -58,7 +59,7 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     const TEMOINS = [
         'cdi', 'cdd', 'titulaire', 'vacataire',
         'enseignant', 'administratif', 'chercheur', 'doctorant',
-        'detacheIn', 'detacheOut','dispo', 'longue_maladie', 'conge_parental'
+        'detacheIn', 'detacheOut','dispo', 'longue_maladie', 'conge_parental', 'postdoc'
     ];
 
     public function getTemoin(string $temoin) : bool
@@ -77,6 +78,7 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
             'dispo' => $this->isDispo(),
             'longue_maladie' => $this->isLongueMaladie(),
             'conge_parental' => $this->isCongeParental(),
+            'postdoc' => $this->isPostdoc(),
             default => throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0),
         };
     }
@@ -164,6 +166,11 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     public function isCongeParental(): bool
     {
         return $this->congeParental === 'O';
+    }
+
+    public function isPostdoc(): bool
+    {
+        return $this->postdoc === 'O';
     }
 
     public function isLongueMaladie(): bool

@@ -62,6 +62,8 @@ if ($array === false) {
     $encours =  array_merge($entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER] ?? [], $entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION] ?? []);
 }
 
+//si le tableau agents est vide le calcul de sans est vide par conséquent 0 donc pas de barre rouge
+
 $nbValiderAgent = count($validerAgent);
 $nbValiderAutorite = count($validerAutorite);
 $nbValiderObservation = count($validerObservation);
@@ -69,17 +71,25 @@ $nbValiderSuperieur = count($validerSuperieur);
 $nbEncours = count($encours);
 $nbSans = count($sans);
 
-$nbTotal =  $nbValiderAgent +  $nbValiderObservation + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
+//cette bizarrerie permet de gérer le cas où on fournit pas de liste d'agents (comme sur l'ecran d'avancement global)
+if (!empty($agents)) {
+    $nbTotal = $nbValiderAgent + $nbValiderObservation + $nbValiderAutorite + $nbValiderSuperieur + $nbEncours + $nbSans;
+} else {
+    $nbTotal = $nbAgents;
+    $nbSans = $nbTotal -  ($nbValiderAgent + $nbValiderObservation + $nbValiderAutorite + $nbValiderSuperieur + $nbEncours);
+}
 
 $ratioAgent = "NC"; $ratioObservation = "NC"; $ratioAutorite = "NC"; $ratioSuperieur = "NC"; $ratioPlanifie = "NC"; $ratioSans = "NC";
 if ($nbTotal !== 0) {
-    $ratioAgent = $nbValiderAgent / $nbTotal * 100;
-    $ratioAutorite = $nbValiderAutorite / $nbTotal * 100;
-    $ratioSuperieur = $nbValiderSuperieur / $nbTotal * 100;
-    $ratioObservation = $nbValiderObservation / $nbTotal * 100;
-    $ratioPlanifie = count($encours) / $nbTotal * 100;
-    $ratioSans = 100 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie + $ratioObservation);
+    $ratioAgent = $nbValiderAgent / $nbTotal * 100.0;
+    $ratioAutorite = $nbValiderAutorite / $nbTotal * 100.0;
+    $ratioSuperieur = $nbValiderSuperieur / $nbTotal * 100.0;
+    $ratioObservation = $nbValiderObservation / $nbTotal * 100.0;
+    $ratioPlanifie = count($encours) / $nbTotal * 100.0;
+    $ratioSans = 100.0 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie + $ratioObservation);
 }
+
+
 
 ?>
 
