@@ -58,6 +58,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?Campagne $campagne = null;
     private ?DateTime $dateEntretien = null;
     private ?string $lieu = null;
+    private ?float $dureeEstimee = null;
 
     private ?FormulaireInstance $formulaireInstance = null;
     private ?FormulaireInstance $formationInstance = null;
@@ -134,6 +135,18 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         $this->lieu = $lieu;
     }
+
+    public function getDureeEstimee(): ?float
+    {
+        return $this->dureeEstimee;
+    }
+
+    public function setDureeEstimee(?float $dureeEstimee): void
+    {
+        $this->dureeEstimee = $dureeEstimee;
+    }
+
+    /** FONCTIONS ***********************/
 
     public function isComplete() : bool
     {

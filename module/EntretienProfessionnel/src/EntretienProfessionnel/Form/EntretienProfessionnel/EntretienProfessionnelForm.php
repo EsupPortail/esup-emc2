@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Form\EntretienProfessionnel;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use Laminas\Form\Element\Number;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Date;
@@ -129,7 +130,20 @@ class EntretienProfessionnelForm extends Form {
                 'id' => 'lieu_entretien',
             ],
         ]);
-
+        //Lieu
+        $this->add([
+            'type' => Number::class,
+            'name' => 'duree',
+            'options' => [
+                'label' => "Durée estimée de l'entretien (en heure) <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> <span class='icon icon-information' title='Donnée utilisée pour le rendez-vous'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'duree',
+                'min' => 1,
+                'step' => '0.25',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -221,6 +235,7 @@ class EntretienProfessionnelForm extends Form {
             ],
             'heure_entretien'          => [ 'required' => true,  ],
             'lieu_entretien'           => [ 'required' => true,  ],
+            'duree'                    => [ 'required' => true,  ],
         ]));
     }
 }
