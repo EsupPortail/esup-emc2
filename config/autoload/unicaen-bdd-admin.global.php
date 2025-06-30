@@ -38,6 +38,22 @@ return [
 
         'data'      => [
             'config'  => [
+                //UNICAEN ETAT
+                'unicaen_etat_categorie' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                'unicaen_etat_type' => [
+                    'actions' => ['install'],
+                    'key' => ['categorie_id','code'],
+                    'options' => [
+                        'columns' => [
+                            'categorie_id' => ['transformer' => 'select id from unicaen_etat_categorie where code = %s'],
+                        ],
+                    ],
+                ],
+                // UNICAEN PARAMETRE
                 'unicaen_parametre_categorie' => [
                     'actions' => ['install'],
                     'key' => 'code',
@@ -54,6 +70,8 @@ return [
                 ],
             ],
             'sources' => [
+                'database/sources/unicaen_etat_categorie.php',
+                'database/sources/unicaen_etat_type.php',
                 'database/sources/unicaen_parametre_categorie.php',
                 'database/sources/unicaen_parametre_parametre.php',
             ],

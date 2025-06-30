@@ -1,0 +1,4 @@
+'code';'libelle';'icone';'couleur';'ordre'
+"FICHE_METIER","États liés aux fiches métiers","far fa-check-square","#ad7fa8","200"
+"FICHE_POSTE","États associés aux fiches de poste","fas fa-book-reader","#8ae234","200"
+"ENTRETIEN_PROFESSIONNEL","États associés aux entretiens professionnels","fas fa-briefcase","#75507b","200"
