@@ -184,6 +184,7 @@ return [
                 'database/sources/unicaen_privilege_privilege_role_linker.php',
                 'database/sources/unicaen_autoform_formulaire.php',
                 'database/sources/unicaen_autoform_categorie.php',
+                'database/sources/unicaen_autoform_champ_type.php',
                 'database/sources/unicaen_autoform_champ.php',
                 'database/sources/unicaen_etat_categorie.php',
                 'database/sources/unicaen_etat_type.php',
