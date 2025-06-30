@@ -21,14 +21,6 @@
     --unistrap-color-light: rgb(155, 204, 255);
 }
 
-.unistrap.unistrap-th-formations {
-    --unistrap-color-main: rgb(121, 78, 171);
-    --unistrap-color-dark: rgb(71,58,121);
-    --unistrap-color-light: rgb(236, 219, 245);
-}
-
-
-
 footer div#etablissement {
     position: relative;
     top: 40px;
