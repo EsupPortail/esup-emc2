@@ -125,6 +125,31 @@ return [
                         ],
                     ],
                 ],
+                // UNICAEN AUTOFORM
+                'unicaen_autoform_formulaire' => [
+                    'actions' => ['install'],
+                    'key' => 'code',
+                    'options' => [],
+                ],
+                'unicaen_autoform_categorie' => [
+                    'actions' => ['install'],
+                    'key' => ['formulaire' ,'code'],
+                    'options' => [
+                        'columns' => [
+                            'formulaire' => ['transformer' => 'select id from unicaen_autoform_formulaire where code = %s'],
+                        ],
+                    ],
+                ],
+                'unicaen_autoform_champ' => [
+                    'actions' => ['install'],
+                    'key' => ['formulaire', 'categorie', 'code'],
+                    'options' => [
+                        'columns' => [
+                            'formulaire' => ['transformer' => 'select id from unicaen_autoform_formulaire where code = %s'],
+                            'categorie' => ['transformer' => 'select id from unicaen_autoform_categorie where code = %s'],
+                        ],
+                    ],
+                ],
                 //UNICAEN RENDERER
                 'unicaen_renderer_macro' => [
                     'actions' => ['install'],
@@ -150,6 +175,9 @@ return [
                 'database/sources/unicaen_privilege_categorie.php',
                 'database/sources/unicaen_privilege_privilege.php',
                 'database/sources/unicaen_privilege_privilege_role_linker.php',
+                'database/sources/unicaen_autoform_formulaire.php',
+                'database/sources/unicaen_autoform_categorie.php',
+                'database/sources/unicaen_autoform_champ.php',
                 'database/sources/unicaen_etat_categorie.php',
                 'database/sources/unicaen_etat_type.php',
                 'database/sources/unicaen_evenement_etat.php',
