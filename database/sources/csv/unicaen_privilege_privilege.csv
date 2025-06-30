@@ -320,6 +320,7 @@
 "parametrecategorie","parametrecategorie_modifier","Modifier une catégorie de paramètre","40"
 "parametrecategorie","parametrecategorie_supprimer","Supprimer une catégorie de paramètre","60"
 "parametre","parametre_afficher","Afficher un paramètre","10"
+"parametre","parametre_afficher_masquer","Afficher tous les paramètres","15"
 "parametre","parametre_ajouter","Ajouter un paramètre","20"
 "parametre","parametre_modifier","Modifier un paramètre","30"
 "parametre","parametre_supprimer","Supprimer un paramètre","50"
