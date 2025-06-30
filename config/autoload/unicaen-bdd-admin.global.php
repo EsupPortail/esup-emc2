@@ -37,8 +37,26 @@ return [
         ],
 
         'data'      => [
-            'config'  => [],
-            'sources' => [],
+            'config'  => [
+                'unicaen_parametre_categorie' => [
+                    'actions' => ['install'],
+                    'key' => 'code',
+                    'options' => [],
+                ],
+                'unicaen_parametre_parametre' => [
+                    'actions' => ['install'],
+                    'key' => ['categorie_id' ,'code'],
+                    'options' => [
+                        'columns' => [
+                            'categorie_id' => ['transformer' => 'select id from unicaen_parametre_categorie where code = %s'],
+                        ],
+                    ],
+                ],
+            ],
+            'sources' => [
+                'database/sources/unicaen_parametre_categorie.php',
+                'database/sources/unicaen_parametre_parametre.php',
+            ],
         ],
         'migration' => [],
 
