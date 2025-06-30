@@ -26,9 +26,8 @@ use Laminas\Form\Form;
 
 <script>
     $(document).ready(function () {
-        //$('select').select2();
 
-        tinymce.remove();
+        // tinymce.remove();
         tinymce.init({
             selector: '.tinymce',
             toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
@@ -41,23 +40,19 @@ use Laminas\Form\Form;
             menu: {},
             menubar: false,
             height: 200,
-            body_id: 'description',
+            // body_id: 'description',
             setup: function (editor) {
                 editor.on("focusout", function () {
-                    console.log(tinymce.get('description').getContent());
+                    // console.log(tinymce.get('description').getContent());
                     $('textarea').val(tinymce.get('description').getContent());
                 });
             }
         });
-    });
 
-
-    $(function () {
         $('select:not(.select2)').selectpicker();
         $('.select2').select2();
-
-
     });
+
 
 
     $('input#agent[id]').hide()

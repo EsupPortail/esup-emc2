@@ -302,6 +302,9 @@ class CampagneService
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
 
+            if ($agent->isForceExclus($campagne)) {
+                continue;
+            }
             if (!$agent->isValideCorps(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],
                 $campagne->getDateDebut(),null,true)
@@ -317,6 +320,12 @@ class CampagneService
             }
             if (!$agent->isValideStatut(
                 $parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS],
+                $campagne->getDateDebut(),null,true)
+            ) {
+                continue;
+            }
+            if (!$agent->isValideEmploiType(
+                $parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS],
                 $campagne->getDateDebut(),null,true)
             ) {
                 continue;
