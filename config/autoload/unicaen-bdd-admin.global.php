@@ -153,6 +153,7 @@ return [
                     'options' => [
                         'columns' => [
                             'categorie' => ['transformer' => 'select id from unicaen_autoform_categorie where code = %s'],
+                            'element' => ['transformer' => 'select code from demo.public.unicaen_autoform_champ_type where code = %s'],
                             //todo element
                         ],
                     ],
