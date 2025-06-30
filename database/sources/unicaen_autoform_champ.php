@@ -15,15 +15,14 @@ while (($item = fgetcsv($csvFile)) !== FALSE) {
     if ($first) $first = false;
     else {
         $instance = [
-            'formulaire' => $item[0],
-            'categorie' => $item[1],
-            'code' => $item[2],
-            'libelle' => $item[3],
-            'texte' => $item[4],
-            'ordre' => $item[5],
-            'element' => $item[6],
-            'options' => $item[7],
-            'mots_clefs' => $item[8],
+            'categorie' => $item[0],
+            'code' => $item[1],
+            'libelle' => $item[2],
+            'texte' => $item[3],
+            'ordre' => $item[4],
+            'element' => $item[5],
+            'options' => $item[6],
+            'mots_clefs' => $item[7],
         ];
         $array["unicaen_autoform_champ"][] = $instance;
     }
