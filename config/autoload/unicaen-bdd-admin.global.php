@@ -38,6 +38,27 @@ return [
 
         'data'      => [
             'config'  => [
+                //UNICAEN UTILISATEUR
+                'unicaen_utilisateur_user' => [
+                    'actions' => ['install'],
+                    'key' => 'username',
+                    'options' => [],
+                ],
+                'unicaen_utilisateur_role' => [
+                    'actions' => ['install'],
+                    'key' => 'role_id',
+                    'options' => [],
+                ],
+                'unicaen_utilisateur_role_linker' => [
+                    'actions' => ['install'],
+                    'key' => ['user_id', 'role_id'],
+                    'options' => [
+                        'columns' => [
+                            'role_id' => ['transformer' => 'select id from unicaen_utilisateur_role where role_id = %s'],
+                            'user_id' => ['transformer' => 'select id from unicaen_utilisateur_user where username = %s'],
+                        ],
+                    ],
+                ],
                 //UNICAEN ETAT
                 'unicaen_etat_categorie' => [
                     'actions' => ['install'],
@@ -87,6 +108,9 @@ return [
                 ],
             ],
             'sources' => [
+                'database/sources/unicaen_utilisateur_user.php',
+                'database/sources/unicaen_utilisateur_role.php',
+                'database/sources/unicaen_utilisateur_role_linker.php',
                 'database/sources/unicaen_etat_categorie.php',
                 'database/sources/unicaen_etat_type.php',
                 'database/sources/unicaen_evenement_etat.php',
