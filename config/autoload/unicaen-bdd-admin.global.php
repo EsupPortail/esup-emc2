@@ -53,6 +53,17 @@ return [
                         ],
                     ],
                 ],
+                //UNICAEN EVENEMENT
+                'unicaen_evenement_etat' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                'unicaen_evenement_type' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
                 // UNICAEN PARAMETRE
                 'unicaen_parametre_categorie' => [
                     'actions' => ['install'],
@@ -68,12 +79,21 @@ return [
                         ],
                     ],
                 ],
+                //UNICAEN VALIDATION
+                'unicaen_validation_type' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
             ],
             'sources' => [
                 'database/sources/unicaen_etat_categorie.php',
                 'database/sources/unicaen_etat_type.php',
+                'database/sources/unicaen_evenement_etat.php',
+                'database/sources/unicaen_evenement_type.php',
                 'database/sources/unicaen_parametre_categorie.php',
                 'database/sources/unicaen_parametre_parametre.php',
+                'database/sources/unicaen_validation_type.php',
             ],
         ],
         'migration' => [],
