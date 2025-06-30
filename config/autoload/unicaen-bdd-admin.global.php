@@ -125,6 +125,17 @@ return [
                         ],
                     ],
                 ],
+                //UNICAEN RENDERER
+                'unicaen_renderer_macro' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                'unicaen_renderer_template' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
                 //UNICAEN VALIDATION
                 'unicaen_validation_type' => [
                     'actions' => ['install'],
@@ -145,6 +156,8 @@ return [
                 'database/sources/unicaen_evenement_type.php',
                 'database/sources/unicaen_parametre_categorie.php',
                 'database/sources/unicaen_parametre_parametre.php',
+                'database/sources/unicaen_renderer_macro.php',
+                'database/sources/unicaen_renderer_template.php',
                 'database/sources/unicaen_validation_type.php',
             ],
         ],
