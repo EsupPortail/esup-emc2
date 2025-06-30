@@ -140,6 +140,13 @@ return [
                         ],
                     ],
                 ],
+                'unicaen_autoform_champ_type' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [
+                        'columns' => [],
+                    ],
+                ],
                 'unicaen_autoform_champ' => [
                     'actions' => ['install'],
                     'key' => ['formulaire', 'categorie', 'code'],
