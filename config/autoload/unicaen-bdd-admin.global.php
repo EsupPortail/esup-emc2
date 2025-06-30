@@ -152,7 +152,6 @@ return [
                     'key' => ['formulaire', 'categorie', 'code'],
                     'options' => [
                         'columns' => [
-                            'formulaire' => ['transformer' => 'select id from unicaen_autoform_formulaire where code = %s'],
                             'categorie' => ['transformer' => 'select id from unicaen_autoform_categorie where code = %s'],
                         ],
                     ],
