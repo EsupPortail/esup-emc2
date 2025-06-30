@@ -149,10 +149,11 @@ return [
                 ],
                 'unicaen_autoform_champ' => [
                     'actions' => ['install'],
-                    'key' => ['formulaire', 'categorie', 'code'],
+                    'key' => ['categorie', 'code'],
                     'options' => [
                         'columns' => [
                             'categorie' => ['transformer' => 'select id from unicaen_autoform_categorie where code = %s'],
+                            //todo element
                         ],
                     ],
                 ],
