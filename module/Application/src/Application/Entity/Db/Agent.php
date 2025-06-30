@@ -515,7 +515,6 @@ class Agent implements
         return false;
     }
 
-
     public function isForceSansObligation(Campagne $campagne): bool
     {
         /** @var AgentForceSansObligation $forcage */
