@@ -110,12 +110,13 @@ class FicheMetierService
     {
         $qb = $this->getObjectManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaines', 'domaine')
-            ->addSelect('famille')->join('domaine.familles', 'famille')
+            ->addSelect('domaine')->leftjoin('metier.domaines', 'domaine')
+            ->addSelect('famille')->leftjoin('domaine.familles', 'famille')
             ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
+            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
+        ;
         $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
@@ -222,7 +223,8 @@ class FicheMetierService
 
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
-            ->setParameter('id', $id);
+            ->setParameter('id', $id)
+        ;
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
