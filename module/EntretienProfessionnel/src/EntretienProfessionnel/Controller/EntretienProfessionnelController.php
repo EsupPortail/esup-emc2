@@ -192,13 +192,19 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
-                if ($entretien->getDateEntretien() < $jplus15) {
-                    $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                if ($delai) {
+                    try {
+                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
+                    } catch (Exception $e) {
+                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
+                    }
+                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
+
                 $this->getEntretienProfessionnelService()->initialiser($entretien);
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->update($entretien);
+                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
                 $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
@@ -238,16 +244,20 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));
-                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
-                if ($entretien->getDateEntretien() < $jplus15) {
-                    $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                if ($delai) {
+                    try {
+                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
+                    } catch (Exception $e) {
+                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
+                    }
+                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
+
 
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
-
+                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien re-planifié.");
                 $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
