@@ -174,6 +174,18 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
             event.div.modal('hide');
             window.location.reload();
         });
+
+        $('table#applications').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
+        });
     });
 </script>
 

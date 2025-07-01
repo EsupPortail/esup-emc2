@@ -104,6 +104,7 @@ if ($canSupprimer) $nbAction++;
     <thead>
     <tr>
         <th class="col-md-5"> Compétences</th>
+        <th class="col-md-5"> Référentiel</th>
         <th class="col-md-2"> Thèmes</th>
         <th class="col-md-2"> Type</th>
         <th class="col-md-2" data-type="num"> Niveau</th>
@@ -118,8 +119,12 @@ if ($canSupprimer) $nbAction++;
         <tr>
             <td>
                 <?php echo $element->getCompetence()->getLibelle(); ?>
+            </td>
+            <td>
                 <?php if ($element->getCompetence()->getReferentiel()) : ?>
                     <?php echo $this->competenceReference($element->getCompetence()); ?>
+                <?php else: ?>
+                    <em>Sans référence</em>
                 <?php endif; ?>
             </td>
             <td> <?php echo ($element->getCompetence()->getTheme())?->getLibelle(); ?> </td>
@@ -176,10 +181,10 @@ if ($canSupprimer) $nbAction++;
             autoWidth: false,
             paging: false,
             info: false,
-            order: [[2, 'asc'], [1, 'asc'], [0, 'asc']],
+            order: [[3, 'asc'], [2, 'asc'], [0, 'asc']],
             <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
             columnDefs: [{
-                "targets": 4,
+                "targets": 5,
                 "orderable": false
             }],
             <?php endif; ?>
