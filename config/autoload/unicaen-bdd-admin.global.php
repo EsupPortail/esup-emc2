@@ -174,6 +174,12 @@ return [
                     'key' => ['code'],
                     'options' => [],
                 ],
+                //ELEMENT NIVEAU
+                'element_niveau' => [
+                    'actions' => ['install'],
+                    'key' => ['type','libelle'],
+                    'options' => [],
+                ],
             ],
             'sources' => [
                 'database/sources/unicaen_utilisateur_user.php',
