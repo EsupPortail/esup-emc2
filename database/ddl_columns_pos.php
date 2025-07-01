@@ -569,6 +569,7 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'duree_estimee',
     ],
     'entretienprofessionnel_agent_force'                => [
         'id',

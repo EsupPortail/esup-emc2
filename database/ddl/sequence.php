@@ -15,6 +15,8 @@ return [
     'agent_ccc_ppp_id_seq',
     'agent_ccc_stageobs_id_seq',
     'agent_ccc_tutorat_id_seq',
+    'agent_hierarchie_autorite_id_seq',
+    'agent_hierarchie_superieur_id_seq',
     'agent_missionspecifique_id_seq',
     'agent_poste_nid_seq',
     'agent_ppp_id_seq',

@@ -201,6 +201,7 @@ return [
                 'database/sources/unicaen_renderer_macro.php',
                 'database/sources/unicaen_renderer_template.php',
                 'database/sources/unicaen_validation_type.php',
+                'database/sources/element_niveau.php',
             ],
         ],
         'migration' => [],
