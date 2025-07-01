@@ -28,7 +28,7 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
             'heure_entretien' => ($object->getDateEntretien())?$object->getDateEntretien()->format('H:i'):null,
             'campagne' => ($object->getCampagne())?$object->getCampagne()->getId():null,
             'lieu_entretien' => $object->getLieu(),
-            'duree' => $object->getLieu(),
+            'duree' => $object->getDureeEstimee(),
         ];
         return $data;
     }
