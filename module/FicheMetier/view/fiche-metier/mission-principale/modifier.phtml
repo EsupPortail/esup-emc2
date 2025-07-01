@@ -2,7 +2,8 @@
 
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
+use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 
 /**
@@ -12,179 +13,195 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
  * @var FicheMetierMission[] $fichesmetiers
  * @var MissionAdditionnelle[] $fichespostes
  * @var bool $modification
+ * @var ?string $retour
  */
 
-$canModifier = ($modification AND $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_MODIFIER)));
+$canModifier = ($modification and $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_MODIFIER)));
+
 ?>
 
-<dl>
-    <dt> Libellé de la mission </dt>
-    <dd>
-        <?php echo $mission->getLibelle(); ?>
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierLibelleAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/modifier-libelle', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-editer"></span>
-                Modifier le libellé
-            </a>
-        <?php endif; ?>
-
-    </dd>
-    <dt> Activité·s associée·s
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::ajouterActiviteAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/ajouter-activite', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-ajouter"></span>
-                Ajouter une activité
-            </a>
-        <?php endif; ?>
-    </dt>
-    <dd>
-        <?php
-            $activites = $mission->getActivites();
-            usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
-        ?>
-        <?php foreach ($activites as $activite) : ?>
-            <li>
-                <?php echo $activite->getLibelle(); ?>
+<div class="row">
+    <div class="col-md-8">
+        <dl>
+            <dt> Libellé de la mission</dt>
+            <dd>
+                <?php echo $mission->getLibelle(); ?>
                 <?php if ($canModifier) : ?>
-                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierActiviteAction() */ ?>
-                    <a href="<?php echo $this->url('mission-principale/modifier-activite', ['activite' => $activite->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification" title="Modifier le libellé de l'activité"
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierLibelleAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/modifier-libelle', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="btn btn-primary btn-sm ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-editer"></span></a>
+                        <span class="icon icon-editer"></span>
+                        Modifier le libellé
+                    </a>
                 <?php endif; ?>
+
+            </dd>
+            <dt> Activité·s associée·s
                 <?php if ($canModifier) : ?>
-                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::supprimerAction() */ ?>
-                    <a href="<?php echo $this->url('mission-principale/supprimer-activite', ['activite' => $activite->getId()], [], true); ?>"
-                       title="Supprimer l'activité"
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::ajouterActiviteAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/ajouter-activite', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="btn btn-primary btn-sm ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-unchecked text-danger"></span></a>
+                        <span class="icon icon-ajouter"></span>
+                        Ajouter une activité
+                    </a>
                 <?php endif; ?>
-            </li>
-        <?php endforeach; ?>
-    </dd>
-    <dt>
-        Domaine·s
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererDomainesAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/gerer-domaines', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-editer"></span>
-                Gérer les domaines associés
-            </a>
-        <?php endif; ?>
-    </dt>
-    <dd>
-        <?php foreach ($mission->getDomaines() as $domaine) : ?>
-            <li> <?php echo $domaine->getLibelle(); ?> </li>
-        <?php endforeach; ?>
-    </dd>
-    <dt> Niveau
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererNiveauAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/gerer-niveau', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-editer"></span>
-                Gérer le niveau associé
-            </a>
-        <?php endif; ?>
-    </dt>
-    <dd> <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?> </dd>
-    <dt> Compétences
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererCompetencesAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/gerer-competences', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-editer"></span>
-                Gérer les compétences associées
-            </a>
-        <?php endif; ?>
-    </dt>
-    <dd>
-        <?php $competences = $mission->getCompetenceListe(); ?>
-        <?php if (empty($competences)) : ?>
-            <em> Aucune compétence </em>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($competences as $competence) : ?>
-                    <li> <?php echo $competence->getLibelle(); ?></li>
+            </dt>
+            <dd>
+                <?php
+                $activites = $mission->getActivites();
+                usort($activites, function (MissionActivite $a, MissionActivite $b) {
+                    return $a->getOrdre() <=> $b->getOrdre();
+                });
+                ?>
+                <?php foreach ($activites as $activite) : ?>
+                    <li>
+                        <?php echo $activite->getLibelle(); ?>
+                        <?php if ($canModifier) : ?>
+                            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierActiviteAction() */ ?>
+                            <a href="<?php echo $this->url('mission-principale/modifier-activite', ['activite' => $activite->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification" title="Modifier le libellé de l'activité"
+                            >
+                                <span class="icon icon-editer"></span></a>
+                        <?php endif; ?>
+                        <?php if ($canModifier) : ?>
+                            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::supprimerAction() */ ?>
+                            <a href="<?php echo $this->url('mission-principale/supprimer-activite', ['activite' => $activite->getId()], [], true); ?>"
+                               title="Supprimer l'activité"
+                            >
+                                <span class="icon icon-unchecked text-danger"></span></a>
+                        <?php endif; ?>
+                    </li>
                 <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
-    <dt> Applications
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererApplicationsAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/gerer-applications', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-editer"></span>
-                Gérer les applications associées
+            </dd>
+            <dt>
+                Domaine·s
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererDomainesAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/gerer-domaines', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="btn btn-primary btn-sm ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer"></span>
+                        Gérer les domaines associés
+                    </a>
+                <?php endif; ?>
+            </dt>
+            <dd>
+                <?php foreach ($mission->getDomaines() as $domaine) : ?>
+                    <li> <?php echo $domaine->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </dd>
+            <dt> Niveau
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererNiveauAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/gerer-niveau', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="btn btn-primary btn-sm ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer"></span>
+                        Gérer le niveau associé
+                    </a>
+                <?php endif; ?>
+            </dt>
+            <dd> <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?> </dd>
+            <dt> Compétences
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererCompetencesAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/gerer-competences', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="btn btn-primary btn-sm ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer"></span>
+                        Gérer les compétences associées
+                    </a>
+                <?php endif; ?>
+            </dt>
+            <dd>
+                <?php $competences = $mission->getCompetenceListe(); ?>
+                <?php if (empty($competences)) : ?>
+                    <em> Aucune compétence </em>
+                <?php else : ?>
+                    <ul>
+                        <?php foreach ($competences as $competence) : ?>
+                            <li> <?php echo $competence->getLibelle(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt> Applications
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererApplicationsAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/gerer-applications', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="btn btn-primary btn-sm ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer"></span>
+                        Gérer les applications associées
+                    </a>
+                <?php endif; ?>
+            </dt>
+            <dd>
+                <?php $applications = $mission->getApplicationListe(); ?>
+                <?php if (empty($applications)) : ?>
+                    <em> Aucune application </em>
+                <?php else : ?>
+                    <ul>
+                        <?php foreach ($applications as $application) : ?>
+                            <li> <?php echo $application->getLibelle(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+        </dl>
+
+        Cette mission est attachée aux <?php echo count($fichesmetiers); ?> fiche·s métier·s
+        <ul>
+            <?php foreach ($fichesmetiers as $fichemetier) : ?>
+                <li>
+                    <?php
+                    $ficheId = $fichemetier->getFicheMetier()->getId();
+                    $metier = $fichemetier->getFicheMetier()->getMetier();
+                    ?>
+                    <?php if ($metier !== null) : ?>
+                        <?php echo $fichemetier->getFicheMetier()->getMetier()->getLibelle(); ?> (Fiche métier #<?php echo $ficheId; ?>)
+                    <?php else : ?>
+                        <span class="text-danger"> Aucun métier d'associé à la fiche métier #<?php echo $ficheId; ?></span>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        Cette mission est attachée aux <?php echo count($fichespostes); ?> fiche·s de poste·s
+        <ul>
+            <?php foreach ($fichespostes as $ficheposte) : ?>
+                <li>
+                    <?php
+                    $ficheId = ($ficheposte->getFicheposte()) ? $ficheposte->getFicheposte()->getId() : null;
+                    $agent = ($ficheposte->getFicheposte() and $ficheposte->getFicheposte()->getAgent()) ? $ficheposte->getFicheposte()->getAgent() : null;
+                    ?>
+                    <?php if ($agent) : ?>
+                        <?php echo $agent->getDenomination(); ?>
+                    <?php else : ?>
+                        <span class="text-danger"> Aucun agent d'associé·e</span>
+                    <?php endif; ?>
+                    <?php if ($ficheId) : ?>
+                        (Fiche de poste #<?php echo $ficheId; ?>)
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <?php if ($retour) : ?>
+            <a href="<?php echo $retour; ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-retour"></span>
+                Retourner à la fiche métier
             </a>
         <?php endif; ?>
-    </dt>
-    <dd>
-        <?php $applications = $mission->getApplicationListe(); ?>
-        <?php if (empty($applications)) : ?>
-            <em> Aucune application </em>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($applications as $application) : ?>
-                    <li> <?php echo $application->getLibelle(); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
-</dl>
-
-Cette mission est attachée aux <?php echo count($fichesmetiers); ?> fiche·s métier·s
-<ul>
-    <?php foreach ($fichesmetiers as $fichemetier) : ?>
-        <li>
-            <?php
-                $ficheId = $fichemetier->getFicheMetier()->getId();
-                $metier = $fichemetier->getFicheMetier()->getMetier();
-            ?>
-            <?php if ($metier !== null) : ?>
-                <?php echo $fichemetier->getFicheMetier()->getMetier()->getLibelle(); ?> (Fiche métier #<?php echo $ficheId; ?>)
-            <?php else : ?>
-                <span class="text-danger"> Aucun métier d'associé à la fiche métier #<?php echo $ficheId; ?></span>
-            <?php endif; ?>
-        </li>
-    <?php endforeach; ?>
-</ul>
-
-Cette mission est attachée aux <?php echo count($fichespostes); ?> fiche·s de poste·s
-<ul>
-    <?php foreach ($fichespostes as $ficheposte) : ?>
-        <li>
-            <?php
-                $ficheId = ($ficheposte->getFicheposte())?$ficheposte->getFicheposte()->getId():null;
-                $agent = ($ficheposte->getFicheposte() AND $ficheposte->getFicheposte()->getAgent())?$ficheposte->getFicheposte()->getAgent():null;
-            ?>
-            <?php if ($agent) : ?>
-                <?php echo $agent->getDenomination(); ?>
-            <?php else : ?>
-                <span class="text-danger"> Aucun agent d'associé·e</span>
-            <?php endif; ?>
-            <?php if ($ficheId) : ?>
-                (Fiche de poste #<?php echo $ficheId; ?>)
-            <?php endif; ?>
-        </li>
-    <?php endforeach; ?>
-</ul>
-
+    </div>
+</div>
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

@@ -77,8 +77,8 @@ $nbObject      = $nbCompetence +  $nbApplication;
     <?php if ($mode == 'edition-fiche-metier') : ?>
         <div class="pull-right">
             <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary" target="_blank"
+            <a href="<?php echo $this->url('mission-principale/modifier', ['mission-principale' => $mission->getId()], ['query' => ['retour' => $this->url(null, [], [], true)]], true); ?>"
+               class="btn btn-primary"
             >
                 <span class="icon icon-editer"></span>
                 Modifier
