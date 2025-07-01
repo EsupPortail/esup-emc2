@@ -6,7 +6,6 @@
  * @var Competence[]            $competences
  * @var Niveau[]                $niveaux
  * @var array                   $competencesByType
-
  */
 
 use Element\Entity\Db\Competence;
@@ -93,7 +92,7 @@ $this->headTitle("Liste des compétences");
 <?php foreach ($competencesByType as $type => $competences) : ?>
     <h2> Compétence : <?php echo  $type; ?> </h2>
 
-    <table class="table table-condensed table-hover">
+    <table class="table table-condensed table-hover datatable" id="competences">
         <thead>
         <tr>
             <th> Libellé </th>
@@ -184,6 +183,17 @@ $this->headTitle("Liste des compétences");
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+        $('table#competences').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [3], orderable: false }
+            ]
         });
     });
 </script>

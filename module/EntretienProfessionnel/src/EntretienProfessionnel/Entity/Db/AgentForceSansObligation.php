@@ -9,11 +9,13 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class AgentForceSansObligation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+    const FORCE_EXCLUS = 'FORCE_SANS_EXCLUS';
     const FORCE_SANS_OBLIGATION = 'FORCE_SANS_OBLIGATION';
     const FORCE_AVEC_OBLIGATION = 'FORCE_AVEC_OBLIGATION';
     const FORCAGE_ARRAY = [
-        self::FORCE_SANS_OBLIGATION => "Forcé sans obligation d'entretien professionnel",
-        self::FORCE_AVEC_OBLIGATION => "Forcé l'obligation d'entretien professionnel",
+        self::FORCE_SANS_OBLIGATION => "Forcer sans obligation d'entretien professionnel",
+        self::FORCE_AVEC_OBLIGATION => "Forcer l'obligation d'entretien professionnel",
+        self::FORCE_EXCLUS          => "Forcer l'exclusion de la campagne",
     ];
 
     private ?int $id = null;

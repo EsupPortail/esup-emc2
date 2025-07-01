@@ -125,9 +125,9 @@ return [
                         'afficher-statuts-grades',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AGENT_ELEMENT_VOIR,
+                        AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
                     ],
-                    'assertion' => AgentAssertion::class,
+                    'assertion' => AgentAffichageAssertion::class,
                 ],
                 [
                     'controller' => AgentController::class,

@@ -37,8 +37,171 @@ return [
         ],
 
         'data'      => [
-            'config'  => [],
-            'sources' => [],
+            'config'  => [
+                //UNICAEN UTILISATEUR
+                'unicaen_utilisateur_user' => [
+                    'actions' => ['install'],
+                    'key' => 'username',
+                    'options' => [],
+                ],
+                'unicaen_utilisateur_role' => [
+                    'actions' => ['install'],
+                    'key' => 'role_id',
+                    'options' => [],
+                ],
+                'unicaen_utilisateur_role_linker' => [
+                    'actions' => ['install'],
+                    'key' => ['user_id', 'role_id'],
+                    'options' => [
+                        'columns' => [
+                            'role_id' => ['transformer' => 'select id from unicaen_utilisateur_role where role_id = %s'],
+                            'user_id' => ['transformer' => 'select id from unicaen_utilisateur_user where username = %s'],
+                        ],
+                    ],
+                ],
+                //UNICAEN PRIVILEGE
+                'unicaen_privilege_categorie' => [
+                    'actions' => ['install'],
+                    'key' => 'code',
+                    'options' => [],
+                ],
+                'unicaen_privilege_privilege' => [
+                    'actions' => ['install'],
+                    'key' => ['categorie_id' ,'code'],
+                    'options' => [
+                        'columns' => [
+                            'categorie_id' => ['transformer' => 'select id from unicaen_privilege_categorie where code = %s'],
+                        ],
+                    ],
+                ],
+                'unicaen_privilege_privilege_role_linker' => [
+                    'actions' => ['install'],
+                    'key' => ['role_id', 'privilege_id'],
+                    'options' => [
+                        'columns' => [
+                            'role_id' => ['transformer' => 'select id from unicaen_utilisateur_role where role_id = %s'],
+                            'privilege_id' => ['transformer' => 'select id from unicaen_privilege_privilege where code = %s'],
+                        ],
+                    ],
+                ],
+                //UNICAEN ETAT
+                'unicaen_etat_categorie' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                'unicaen_etat_type' => [
+                    'actions' => ['install'],
+                    'key' => ['categorie_id','code'],
+                    'options' => [
+                        'columns' => [
+                            'categorie_id' => ['transformer' => 'select id from unicaen_etat_categorie where code = %s'],
+                        ],
+                    ],
+                ],
+                //UNICAEN EVENEMENT
+                'unicaen_evenement_etat' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                'unicaen_evenement_type' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                // UNICAEN PARAMETRE
+                'unicaen_parametre_categorie' => [
+                    'actions' => ['install'],
+                    'key' => 'code',
+                    'options' => [],
+                ],
+                'unicaen_parametre_parametre' => [
+                    'actions' => ['install'],
+                    'key' => ['categorie_id' ,'code'],
+                    'options' => [
+                        'columns' => [
+                            'categorie_id' => ['transformer' => 'select id from unicaen_parametre_categorie where code = %s'],
+                        ],
+                    ],
+                ],
+                // UNICAEN AUTOFORM
+                'unicaen_autoform_formulaire' => [
+                    'actions' => ['install'],
+                    'key' => 'code',
+                    'options' => [],
+                ],
+                'unicaen_autoform_categorie' => [
+                    'actions' => ['install'],
+                    'key' => ['formulaire' ,'code'],
+                    'options' => [
+                        'columns' => [
+                            'formulaire' => ['transformer' => 'select id from unicaen_autoform_formulaire where code = %s'],
+                        ],
+                    ],
+                ],
+                'unicaen_autoform_champ_type' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [
+                        'columns' => [],
+                    ],
+                ],
+                'unicaen_autoform_champ' => [
+                    'actions' => ['install'],
+                    'key' => ['categorie', 'code'],
+                    'options' => [
+                        'columns' => [
+                            'categorie' => ['transformer' => 'select id from unicaen_autoform_categorie where code = %s'],
+                            'element' => ['transformer' => 'select code from unicaen_autoform_champ_type where code = %s'],
+                        ],
+                    ],
+                ],
+                //UNICAEN RENDERER
+                'unicaen_renderer_macro' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                'unicaen_renderer_template' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                //UNICAEN VALIDATION
+                'unicaen_validation_type' => [
+                    'actions' => ['install'],
+                    'key' => ['code'],
+                    'options' => [],
+                ],
+                //ELEMENT NIVEAU
+                'element_niveau' => [
+                    'actions' => ['install'],
+                    'key' => ['type','libelle'],
+                    'options' => [],
+                ],
+            ],
+            'sources' => [
+                'database/sources/unicaen_utilisateur_user.php',
+                'database/sources/unicaen_utilisateur_role.php',
+                'database/sources/unicaen_utilisateur_role_linker.php',
+                'database/sources/unicaen_privilege_categorie.php',
+                'database/sources/unicaen_privilege_privilege.php',
+                'database/sources/unicaen_privilege_privilege_role_linker.php',
+                'database/sources/unicaen_autoform_formulaire.php',
+                'database/sources/unicaen_autoform_categorie.php',
+                'database/sources/unicaen_autoform_champ_type.php',
+                'database/sources/unicaen_autoform_champ.php',
+                'database/sources/unicaen_etat_categorie.php',
+                'database/sources/unicaen_etat_type.php',
+                'database/sources/unicaen_evenement_etat.php',
+                'database/sources/unicaen_evenement_type.php',
+                'database/sources/unicaen_parametre_categorie.php',
+                'database/sources/unicaen_parametre_parametre.php',
+                'database/sources/unicaen_renderer_macro.php',
+                'database/sources/unicaen_renderer_template.php',
+                'database/sources/unicaen_validation_type.php',
+            ],
         ],
         'migration' => [],
 

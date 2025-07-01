@@ -392,6 +392,7 @@ class Agent implements
 
     public function isValideEmploiType(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
     {
+        if ($parametre->getValeur() === null) return $emptyResult;
         $temoins = $parametre->getTemoins();
 
         $count = [];
@@ -401,7 +402,8 @@ class Agent implements
             if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
         }
 
-        return Agent::isTermoinsOk($temoins, $count);
+        $res = Agent::isTermoinsOk($temoins, $count);
+        return $res;
     }
 
     public function isValideGrade(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
@@ -503,6 +505,15 @@ class Agent implements
     }
 
     /** SANS OBLIGATION ***********************************************************************************************/
+
+    public function isForceExclus(Campagne $campagne): bool
+    {
+        /** @var AgentForceSansObligation $forcage */
+        foreach ($this->forcesSansObligation as $forcage) {
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_EXCLUS) return true;
+        }
+        return false;
+    }
 
     public function isForceSansObligation(Campagne $campagne): bool
     {

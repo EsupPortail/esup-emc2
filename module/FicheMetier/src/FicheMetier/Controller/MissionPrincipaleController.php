@@ -67,12 +67,14 @@ class MissionPrincipaleController extends AbstractActionController
     public function modifierAction() : ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+        $retour = $this->params()->fromQuery('retour')??null;
 
         return new ViewModel([
             'mission' => $mission,
             'modification' => true,
             'fichesmetiers' => $mission->getListeFicheMetier(),
             'fichespostes' =>  $mission->getListeFichePoste(),
+            'retour' => $retour,
         ]);
     }
 

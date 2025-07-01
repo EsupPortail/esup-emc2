@@ -107,7 +107,12 @@ $displayCorrespondance = (isset($options['correspondance']) and $options['corres
                 <dt class="col-md-3"> Échelon</dt>
                 <dd class="col-md-9">
                     <?php foreach ($echelons as $echelon) : ?>
-                        <?php echo $echelon->getEchelon(); ?> (date de passage : <?php echo $echelon->getDateDebut()->format('d/m/Y'); ?>)
+                        <?php echo $echelon->getEchelon(); ?>
+                            <br> date de passage : <?php echo $echelon->getDateDebut()->format('d/m/Y'); ?>
+                            <?php if ($echelon->getDateFin()): ?>
+                                <br> date prévisionnelle du prochain échelon : <?php echo $echelon->getDateFin()->format('d/m/Y'); ?>
+                            <?php endif; ?>
+
                     <?php endforeach; ?>
                 </dd>
             <?php endif; ?>

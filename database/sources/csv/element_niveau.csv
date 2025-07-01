@@ -1,0 +1,15 @@
+'type';'libelle';'niveau';'description'
+"Competence","Débutant","1",null
+"Competence","Apprenti","2",null
+"Competence","Intermédiaire","3",null
+"Competence","Confirmé","4",null
+"Competence","Expert","5",null
+"Application","Débutant","1",null
+"Application","Apprenti","2",null
+"Application","Intermédiaire","3",null
+"Application","Confirmé","4",null
+"Application","Expert","5",null
+"Thematique","Aucun·e","0",null
+"Thematique","Faible","1",null
+"Thematique","Modéré·e","2",null
+"Thematique","Fort·e","3",null
