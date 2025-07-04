@@ -79,6 +79,8 @@ return [
     'fichemetier_activite_id_seq',
     'fichemetier_id_seq',
     'fichemetier_mission_id_seq',
+    'fichemetier_tendance_element_id_seq',
+    'fichemetier_tendance_type_id_seq',
     'fichemetier_thematique_element_id_seq',
     'fichemetier_thematique_type_id_seq',
     'ficheposte_activite_specfique_id_seq',
