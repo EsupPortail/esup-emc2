@@ -14,6 +14,8 @@ use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
+use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementServiceAwareTrait;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Http\Response;
@@ -37,6 +39,8 @@ class FicheMetierController extends AbstractActionController
     use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use TendanceElementServiceAwareTrait;
+    use TendanceTypeServiceAwareTrait;
     use ThematiqueElementServiceAwareTrait;
     use ThematiqueTypeServiceAwareTrait;
 
@@ -79,6 +83,9 @@ class FicheMetierController extends AbstractActionController
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
         $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
+
+        $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes();
+        $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
 
@@ -89,6 +96,8 @@ class FicheMetierController extends AbstractActionController
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
+            'tendancesTypes' => $tendancesTypes,
+            'tendancesElements' => $tendancesElements,
             'thematiquestypes' => $thematiquestypes,
             'thematiqueselements' => $thematiqueselements,
 
@@ -140,6 +149,8 @@ class FicheMetierController extends AbstractActionController
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
         $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
+        $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes();
+        $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
 
@@ -149,6 +160,8 @@ class FicheMetierController extends AbstractActionController
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
+            'tendancesTypes' => $tendancesTypes,
+            'tendancesElements' => $tendancesElements,
             'thematiquestypes' => $thematiquestypes,
             'thematiqueselements' => $thematiqueselements,
 

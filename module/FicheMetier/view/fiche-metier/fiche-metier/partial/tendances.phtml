@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var TendanceType[] $tendancesTypes
+ * @var TendanceElement[] $tendancesElements
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\TendanceElement;
+use FicheMetier\Entity\Db\TendanceType;
+
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
+
+$editable =  $mode === 'edition-fiche-metier';
+
+$elements = [];
+foreach ($tendancesElements as $tendancesElement) {
+    $elements[$tendancesElement->getType()->getCode()] = $tendancesElement;
+}
+
+?>
+
+<div class="card info">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    Tendances d'évolution
+                </h2>
+            </div>
+            <div class="col-md-9">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table id='tendance'>
+            <thead>
+            <tr>
+                <th class="col-md-4"> Libellé </th>
+                <th class="col-md-<?php echo ($editable)?7:8; ?>">
+                <?php if ($editable) : ?>
+                    <th class="col-md-1"> Action </th>
+                <?php endif; ?>
+            </tr>
+            </thead>
+            <tbody>
+            <?php usort($tendancesTypes, function (TendanceType $a, TendanceType $b) { return $a->getOrdre() <=> $b->getOrdre();}); ?>
+            <?php foreach ($tendancesTypes as $tendanceType): ?>
+                <?php if ($editable || $tendanceType->isObligatoire() ||  isset($elements[$tendanceType->getCode()])) : ?>
+                <tr>
+                    <td>
+                        <span>
+                            <?php echo $tendanceType->getLibelle(); ?>
+                            <?php if ($tendanceType->isObligatoire()): ?>
+                                <span class="icon icon-obligatoire" title="Obligatoire"></span>
+                            <?php endif; ?>
+                        </span>
+                        <?php if ($tendanceType->getDescription() !== null) : ?>
+                            <span class="icon icon-information text-info" title="<?php echo $tendanceType->getDescription(); ?>"></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (isset($elements[$tendanceType->getCode()])) : ?>
+                            <?php if ($elements[$tendanceType->getCode()]->getTexte() !== null) : ?>
+                                <?php echo $elements[$tendanceType->getCode()]->getTexte(); ?>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <em> Non précisé </em>
+                        <?php endif; ?>
+                    </td>
+                    <?php if ($editable) : ?>
+                        <td class="action">
+                            <?php /** @see \FicheMetier\Controller\TendanceElementController::modifierAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/tendance-element/modifier', ['fiche-metier'=>$fichemetier->getId(), 'tendance-type' => $tendanceType->getId()],[], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                            <?php if (isset($elements[$tendanceType->getCode()])) : ?>
+                                <span class="icon icon-modifier"></span>
+                                Modifier
+                            <?php else : ?>
+                                <span class="icon icon-ajouter"></span>
+                                Ajouter
+                            <?php endif; ?>
+                            </a>
+                            <?php if (isset($elements[$tendanceType->getCode()])) : ?>
+                                <br>
+                                <?php /** @see \FicheMetier\Controller\TendanceElementController::historiserAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-metier/tendance-element/historiser', ['tendance-element' => $elements[$tendanceType->getCode()]->getId()],['query' => ['retour'=>$this->url(null,[],[], true)]], true); ?>"
+                                >
+                                    <span class="icon icon-historiser"></span>
+                                    Historiser
+                                </a>
+                            <?php endif; ?>
+                        </td>
+                    <?php endif; ?>
+
+                </tr>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<style>
+    table#tendance {
+        width:100%;
+    }
+</style>

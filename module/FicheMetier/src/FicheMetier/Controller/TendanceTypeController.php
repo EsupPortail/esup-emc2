@@ -15,37 +15,37 @@ class TendanceTypeController extends AbstractActionController {
 
     public function indexAction(): ViewModel
     {
-        $thematiquesTypes = $this->getTendanceTypeService()->getTendancesTypes('ordre','ASC', true);
+        $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes('ordre','ASC', true);
 
         return new ViewModel([
-            'thematiquesTypes' => $thematiquesTypes,
+            'tendancesTypes' => $tendancesTypes,
         ]);
     }
 
     public function afficherAction(): ViewModel
     {
-        $thematiqueType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
+        $tendanceType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
 
         return new ViewModel([
             'title' => "Affichage du type de thématique",
-            'thematiqueType' => $thematiqueType,
+            'tendanceType' => $tendanceType,
         ]);
     }
 
     public function ajouterAction(): ViewModel
     {
-        $thematiqueType = new TendanceType();
+        $tendanceType = new TendanceType();
 
         $form = $this->getTendanceTypeForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/thematique-type/ajouter', [], [], true));
-        $form->bind($thematiqueType);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/tendance-type/ajouter', [], [], true));
+        $form->bind($tendanceType);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getTendanceTypeService()->create($thematiqueType);
+                $this->getTendanceTypeService()->create($tendanceType);
                 exit();
             }
         }
@@ -61,19 +61,19 @@ class TendanceTypeController extends AbstractActionController {
 
     public function modifierAction(): ViewModel
     {
-        $thematiqueType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
+        $tendanceType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
 
         $form = $this->getTendanceTypeForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/thematique-type/modifier', ['thematique-type' => $thematiqueType->getId()], [], true));
-        $form->setOldCode($thematiqueType->getCode());
-        $form->bind($thematiqueType);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/tendance-type/modifier', ['tendance-type' => $tendanceType->getId()], [], true));
+        $form->setOldCode($tendanceType->getCode());
+        $form->bind($tendanceType);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getTendanceTypeService()->update($thematiqueType);
+                $this->getTendanceTypeService()->update($tendanceType);
                 exit();
             }
         }
@@ -88,44 +88,44 @@ class TendanceTypeController extends AbstractActionController {
 
     public function historiserAction(): Response
     {
-        $thematiqueType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
-        $this->getTendanceTypeService()->historise($thematiqueType);
+        $tendanceType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
+        $this->getTendanceTypeService()->historise($tendanceType);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('fiche-metier/thematique-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier/tendance-type', [], [], true);
     }
 
     public function restaurerAction(): Response
     {
-        $thematiqueType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
-        $this->getTendanceTypeService()->restore($thematiqueType);
+        $tendanceType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
+        $this->getTendanceTypeService()->restore($tendanceType);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('fiche-metier/thematique-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier/tendance-type', [], [], true);
     }
 
     public function supprimerAction(): ViewModel
     {
-        $thematiqueType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
+        $tendanceType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") {
-                $this->getTendanceTypeService()->delete($thematiqueType);
+                $this->getTendanceTypeService()->delete($tendanceType);
             }
             exit();
         }
 
         $vm = new ViewModel();
-        if ($thematiqueType !== null) {
+        if ($tendanceType !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du type [".$thematiqueType->getLibelle()."]",
+                'title' => "Suppression du type [".$tendanceType->getLibelle()."]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('fiche-metier/thematique-type/supprimer', ["thematique-type" => $thematiqueType->getId()], [], true),
+                'action' => $this->url()->fromRoute('fiche-metier/tendance-type/supprimer', ["tendance-type" => $tendanceType->getId()], [], true),
             ]);
         }
         return $vm;

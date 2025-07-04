@@ -10,6 +10,8 @@ use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheMetier\Service\TendanceElement\TendanceElementService;
+use FicheMetier\Service\TendanceType\TendanceTypeService;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementService;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
@@ -41,6 +43,8 @@ class FicheMetierControllerFactory
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var ParametreService $parametreService
+         * @var TendanceElementService $tendanceElementService
+         * @var TendanceTypeService $tendanceTypeService
          * @var ThematiqueElementService $thematiqueElementService
          * @var ThematiqueTypeService $thematiqueTypeService
          */
@@ -51,6 +55,8 @@ class FicheMetierControllerFactory
         $metierService = $container->get(metierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $parametreService = $container->get(ParametreService::class);
+        $tendanceElementService = $container->get(TendanceElementService::class);
+        $tendanceTypeService = $container->get(TendanceTypeService::class);
         $thematiqueElementService = $container->get(ThematiqueElementService::class);
         $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
@@ -80,6 +86,8 @@ class FicheMetierControllerFactory
         $controller->setMetierService($metierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setParametreService($parametreService);
+        $controller->setTendanceElementService($tendanceElementService);
+        $controller->setTendanceTypeService($tendanceTypeService);
         $controller->setThematiqueElementService($thematiqueElementService);
         $controller->setThematiqueTypeService($thematiqueTypeService);
         $controller->setModifierLibelleForm($modifierLibelleForm);

@@ -42,10 +42,10 @@ foreach ($thematiquesElements as $thematiqueElement) {
         <table id='thematique'>
             <thead>
             <tr>
-                <th> Libellé </th>
-                <th> Niveau</th>
+                <th class="col-md-4"> Libellé </th>
+                <th class="col-md-<?php echo ($editable)?7:8; ?>"> Niveau</th>
                 <?php if ($editable) : ?>
-                    <th class="action"> Action </th>
+                    <th class="col-md-1"> Action </th>
                 <?php endif; ?>
             </tr>
             </thead>
@@ -62,7 +62,7 @@ foreach ($thematiquesElements as $thematiqueElement) {
                             <?php endif; ?>
                         </span>
                         <?php if ($thematiqueType->getDescription() !== null) : ?>
-                            <span class="icon icon-information text-info" title="<?php echo $thematiqueType->getDescription(); ?>"></span>
+                            <span data-bs-toggle="tooltip" data-bs-html="true" class="icon icon-information text-info" title="<?php echo $thematiqueType->getDescription(); ?>"></span>
                         <?php endif; ?>
                     </td>
                     <td>
