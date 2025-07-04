@@ -55,8 +55,8 @@
         </many-to-many>
 
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="ficheMetier" field="missions"/>
-        <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier"
-                     field="thematiques"/>
+        <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier" field="thematiques"/>
+        <one-to-many target-entity="FicheMetier\Entity\Db\TendanceElement" mapped-by="ficheMetier" field="tendances"/>
 
         <field name="hasExpertise" type="boolean" column="expertise" nullable="true"/>
         <field name="raison" type="string" length="9999" column="raison" nullable="true"/>
