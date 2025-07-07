@@ -21,6 +21,7 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     private ?string $titulaire = 'N';
     private ?string $cdi = 'N';
     private ?string $cdd = 'N';
+
     private ?string $vacataire = 'N';
     private ?string $enseignant = 'N';
     private ?string $administratif = 'N';
@@ -28,15 +29,17 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     private ?string $etudiant = 'N';
     private ?string $auditeurLibre = 'N';
     private ?string $doctorant = 'N';
+
     private ?string $detacheIn = 'N';
     private ?string $detacheOut = 'N';
     private ?string $dispo = 'N';
     private ?string $heberge = 'N';
-    private ?string $emerite = 'N';
-    private ?string $retraite = 'N';
     private ?string $congeParental = 'N';
     private ?string $longueMaladie = 'N';
     private ?string $postdoc = 'N';
+
+    private ?string $emerite = 'N';
+    private ?string $retraite = 'N';
 
 
     /** Données : cette donnée est synchronisée >> par conséquent, il n'y a que des getters */
@@ -57,9 +60,10 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
     }
 
     const TEMOINS = [
-        'cdi', 'cdd', 'titulaire', 'vacataire',
-        'enseignant', 'administratif', 'chercheur', 'doctorant',
-        'detacheIn', 'detacheOut','dispo', 'longue_maladie', 'conge_parental', 'postdoc'
+        'cdi', 'cdd', 'titulaire',
+        'vacataire', 'enseignant', 'administratif', 'chercheur', 'doctorant', 'etudiant', 'auditeur_libre', 'postdoc',
+        'heberge','detacheIn', 'detacheOut','dispo', 'longue_maladie', 'conge_parental',
+        'emerite','retraite'
     ];
 
     public function getTemoin(string $temoin) : bool
@@ -68,17 +72,26 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
             'cdi' => $this->isCdi(),
             'cdd' => $this->isCdd(),
             'titulaire' => $this->isTitulaire(),
+
             'vacataire' => $this->isVacataire(),
             'enseignant' => $this->isEnseignant(),
             'administratif' => $this->isAdministratif(),
             'chercheur' => $this->isChercheur(),
             'doctorant' => $this->isDoctorant(),
+            'etudiant' => $this->isEtudiant(),
+            'auditeur_libre' => $this->isAuditeurLibre(),
+            'postdoc' => $this->isPostdoc(),
+
+            'heberge' => $this->isHeberge(),
             'detacheIn' => $this->isDetacheIn(),
             'detacheOut' => $this->isDetacheOut(),
             'dispo' => $this->isDispo(),
             'longue_maladie' => $this->isLongueMaladie(),
             'conge_parental' => $this->isCongeParental(),
-            'postdoc' => $this->isPostdoc(),
+
+            'emerite' => $this->isEmerite(),
+            'retraite' => $this->isRetraite(),
+
             default => throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0),
         };
     }
