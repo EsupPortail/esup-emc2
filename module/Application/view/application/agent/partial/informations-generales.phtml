@@ -35,8 +35,11 @@ $canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AG
 $chaine = new AgentSuperieur();
 $chaine->setAgent($agent);
 
-$canModifierChaine = $this->isAllowed(ChainePrivileges::getResourceId(ChainePrivileges::CHAINE_GERER));
-$canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($chaine, ChainePrivileges::CHAINE_GERER);
+$canModifierChaineGerer = $this->isAllowed(ChainePrivileges::getResourceId(ChainePrivileges::CHAINE_GERER));
+$canModifierChaineGerer = $canModifierChaineGerer && $chaineAssertion->computeAssertion($chaine, ChainePrivileges::CHAINE_GERER);
+
+$canModifierChaineSynchroniser = $this->isAllowed(ChainePrivileges::getResourceId(ChainePrivileges::CHAINE_SYNCHRONISER));
+$canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssertion->computeAssertion($chaine, ChainePrivileges::CHAINE_SYNCHRONISER);
 ?>
     <h2> Informations générales sur l'agent </h2>
 
@@ -122,17 +125,18 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                 <dl>
                     <dt>
                         Autorité hiérarchique
-                        <?php if ($canModifierChaine) : ?>
+                        <?php if ($canModifierChaineGerer || $canModifierChaineSynchroniser) : ?>
                             <?php /** @see \Application\Controller\AgentHierarchieController::visualiserAction() */ ?>
                             <a href="<?php echo $this->url('agent/hierarchie/visualiser', ['agent' => $agent->getId(), 'type' => 'autorite'], [], true); ?>"
                                class="action secondary ajax-modal" style="font-weight: normal">
-                            <span class="icon icon-voir"></span>
-                            Afficher l'historique
+                                <span class="icon icon-voir"></span>
+                                Afficher l'historique
                             </a>
                         <?php endif; ?>
                     </dt>
                     <dd>
-                        <?php if ($canModifierChaine) : ?>
+                        <?php if ($canModifierChaineGerer) : ?>
+                            <?php /** @see \Application\Controller\AgentHierarchieController::ajouterAction() */ ?>
                             <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "autorite"], [], true); ?>"
                                class="ajax-modal btn btn-primary" data-event="modification"
                             >
@@ -140,8 +144,10 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                                 Ajouter une autorité
                             </a>
                         <?php endif; ?>
-                        <?php $autorites = $agent->getAutorites($canModifierChaine); ?>
-                        <?php usort($autorites, function (AgentAutorite $a, AgentAutorite $b) { return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination(); }); ?>
+                        <?php $autorites = $agent->getAutorites($canModifierChaineGerer || $canModifierChaineSynchroniser); ?>
+                        <?php usort($autorites, function (AgentAutorite $a, AgentAutorite $b) {
+                            return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination();
+                        }); ?>
                         <?php if (!empty($autorites)) : ?>
                             <ul>
                                 <?php foreach ($autorites as $autorite) : ?>
@@ -151,8 +157,8 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                                             <?php echo $autorite->getAutorite()->getDenomination(); ?>
                                         </span>
 
-                                        <?php if ($canModifierChaine) : ?>
-                                            <?php if ($autorite->getSourceId() === 'EMC2') : ?>
+                                        <?php if ($autorite->getSourceId() === 'EMC2') : ?>
+                                            <?php if ($canModifierChaineGerer) : ?>
                                                 <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
                                                 <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
                                                    class="ajax-modal action primary" data-event="modification">
@@ -165,7 +171,9 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                                                     <span class="icon icon-unchecked"></span>
                                                     Supprimer
                                                 </a>
-                                            <?php else : ?>
+                                            <?php endif; ?>
+                                        <?php else : ?>
+                                            <?php if ($canModifierChaineSynchroniser) : ?>
                                                 <?php if ($autorite->estHistorise()) : ?>
                                                     <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
                                                     <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $autorite->getId(), 'type' => 'autorite'], [], true); ?>"
@@ -200,7 +208,7 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
             <?php if ($canAfficherSuperieure) : ?>
                 <dl>
                     <dt> Supérieur&middot;e hiérarchique direct&middot;e
-                        <?php if ($canModifierChaine) : ?>
+                        <?php if ($canModifierChaineGerer || $canModifierChaineSynchroniser) : ?>
                             <?php /** @see \Application\Controller\AgentHierarchieController::visualiserAction() */ ?>
                             <a href="<?php echo $this->url('agent/hierarchie/visualiser', ['agent' => $agent->getId(), 'type' => 'superieur'], [], true); ?>"
                                class="action secondary ajax-modal" style="font-weight: normal">
@@ -210,7 +218,7 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                         <?php endif; ?>
                     </dt>
                     <dd>
-                        <?php if ($canModifierChaine) : ?>
+                        <?php if ($canModifierChaineGerer) : ?>
                             <a href="<?php echo $this->url('agent/hierarchie/ajouter', ['agent' => $agent->getId(), 'type' => "superieur"], [], true); ?>"
                                class="ajax-modal btn btn-primary" data-event="modification"
                             >
@@ -218,8 +226,10 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                                 Ajouter un·e supérieur·e
                             </a>
                         <?php endif; ?>
-                        <?php $superieures = $agent->getSuperieurs($canModifierChaine); ?>
-                        <?php usort($superieures, function (AgentSuperieur $a, AgentSuperieur $b) { return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination(); }); ?>
+                        <?php $superieures = $agent->getSuperieurs($canModifierChaineGerer || $canModifierChaineSynchroniser); ?>
+                        <?php usort($superieures, function (AgentSuperieur $a, AgentSuperieur $b) {
+                            return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination();
+                        }); ?>
                         <?php if (!empty($superieures)) : ?>
                             <ul>
                                 <?php foreach ($superieures as $superieure) : ?>
@@ -228,9 +238,8 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                                             <span class="badge"> <?php echo $superieure->getSourceId(); ?> </span>
                                             <?php echo $superieure->getSuperieur()->getDenomination(); ?>
                                         </span>
-
-                                        <?php if ($canModifierChaine) : ?>
-                                            <?php if ($superieure->getSourceId() === 'EMC2') : ?>
+                                        <?php if ($superieure->getSourceId() === 'EMC2') : ?>
+                                            <?php if ($canModifierChaineGerer) : ?>
                                                 <?php /** @see \Application\Controller\AgentHierarchieController::modifierAction() */ ?>
                                                 <a href="<?php echo $this->url('agent/hierarchie/modifier', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"
                                                    class="ajax-modal action primary" data-event="modification">
@@ -243,7 +252,9 @@ $canModifierChaine = $canModifierChaine && $chaineAssertion->computeAssertion($c
                                                     <span class="icon icon-unchecked"></span>
                                                     Supprimer
                                                 </a>
-                                            <?php else : ?>
+                                            <?php endif; ?>
+                                        <?php else : ?>
+                                            <?php if ($canModifierChaineSynchroniser) : ?>
                                                 <?php if ($superieure->estHistorise()) : ?>
                                                     <?php /** @see \Application\Controller\AgentHierarchieController::restaurerAction() */ ?>
                                                     <a href="<?php echo $this->url('agent/hierarchie/restaurer', ['chaine' => $superieure->getId(), 'type' => 'superieur'], [], true); ?>"

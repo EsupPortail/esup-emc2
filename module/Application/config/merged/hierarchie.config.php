@@ -79,11 +79,21 @@ return [
                         'ajouter',
                         'modifier',
                         'supprimer',
-                        'visualiser',
                         'exporter-chaines',
                     ],
                     'privileges' => [
                         ChainePrivileges::CHAINE_GERER
+                    ],
+                    'assertion'  => ChaineAssertion::class,
+                ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
+                        'visualiser',
+                    ],
+                    'privileges' => [
+                        ChainePrivileges::CHAINE_GERER,
+                        ChainePrivileges::CHAINE_SYNCHRONISER,
                     ],
                     'assertion'  => ChaineAssertion::class,
                 ],
