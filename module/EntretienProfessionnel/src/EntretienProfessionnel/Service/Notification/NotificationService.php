@@ -269,6 +269,7 @@ class NotificationService extends \Application\Service\Notification\Notification
         return $mail;
     }
 
+
     public function triggerValidationResponsableHierarchique(EntretienProfessionnel $entretien): Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);

@@ -95,7 +95,19 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         </div>
     <?php endif; ?>
 
-    <?php if ($validationResponsable !== null) : ?>
+    <?php if ($now < $entretien->getDateEntretien()) : ?>
+        <div class="alert alert-warning">
+            <strong>
+                <span class="icon icon-attention"></span>
+                La date de l'entretien professionnel n'est pas encore dépassé.
+            </strong>
+
+            <p>
+                La validation par le responsable de l'entretien professionnel ne sera possible qu'après l'entretien professionnel.
+            </p>
+        </div>
+    <?php else : ?>
+        <?php if ($validationResponsable !== null) : ?>
         <?php echo $this->validationAfficher($validationResponsable); ?>
 
         <?php if ($canValiderResponsable and $validationObservation === null and $validationHierarchie === null) : ?>
@@ -126,6 +138,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                 Validation du responsable
             </a>
         <?php endif; ?>
+    <?php endif; ?>
     <?php endif; ?>
 </div>
 
