@@ -94,11 +94,11 @@ foreach ($applications as $application) {
     <table id="<?php echo $options['id'] ?? 'applications'; ?>" class="table table-condensed datatable">
         <thead>
         <tr>
-            <th class="col-md-5" style="width:40%;"> Libellé</th>
+            <th class="col-md-<?php echo (!isset($options['mode']) or $options['mode'] !== 'affichage')?"4":"5"; ?>" style="width:40%;"> Libellé</th>
             <th class="col-md-4" style="width:30%;"> Groupe</th>
             <th class="col-md-2" data-type="num"> Niveau</th>
             <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
-                <th class="col-md-1"> Action</th>
+                <th class="col-md-2"> Action</th>
             <?php endif; ?>
         </tr>
         </thead>
