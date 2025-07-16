@@ -63,7 +63,7 @@ foreach ($tendancesElements as $tendancesElement) {
                             <?php endif; ?>
                         </span>
                         <?php if ($tendanceType->getDescription() !== null) : ?>
-                            <span class="icon icon-information text-info" title="<?php echo $tendanceType->getDescription(); ?>"></span>
+                            <span data-bs-toggle="tooltip" data-bs-html="true" class="icon icon-information" title="<?php echo $tendanceType->getDescription(); ?>"></span>
                         <?php endif; ?>
                     </td>
                     <td>

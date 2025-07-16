@@ -62,14 +62,14 @@ foreach ($thematiquesElements as $thematiqueElement) {
                             <?php endif; ?>
                         </span>
                         <?php if ($thematiqueType->getDescription() !== null) : ?>
-                            <span data-bs-toggle="tooltip" data-bs-html="true" class="icon icon-information text-info" title="<?php echo $thematiqueType->getDescription(); ?>"></span>
+                            <span data-bs-toggle="tooltip" data-bs-html="true" class="icon icon-information" title="<?php echo $thematiqueType->getDescription(); ?>"></span>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if (isset($elements[$thematiqueType->getCode()])) : ?>
                             <?php echo $elements[$thematiqueType->getCode()]->getNiveauMaitrise()->getLibelle(); ?>
                             <?php if ($elements[$thematiqueType->getCode()]->getComplement() !== null) : ?>
-                                <span class="icon icon-information text-info" title="<?php echo $elements[$thematiqueType->getCode()]->getComplement(); ?>"></span>
+                                <span data-bs-toggle="tooltip" data-bs-html="true" class="icon icon-information" title="<?php echo $elements[$thematiqueType->getCode()]->getComplement(); ?>"></span>
                             <?php endif; ?>
                         <?php else : ?>
                             <em> Non précisé </em>

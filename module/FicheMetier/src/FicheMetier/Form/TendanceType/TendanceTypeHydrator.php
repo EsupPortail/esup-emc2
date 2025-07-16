@@ -24,8 +24,8 @@ class TendanceTypeHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         $code = (isset($data['code']) && trim($data['code']) !== null)?trim($data['code']):null;
-        $libelle = (isset($data['libelle']) && trim($data['libelle']) !== null)?trim($data['libelle']):null;
-        $description = (isset($data['description']) && trim($data['description']) !== null)?trim($data['description']):null;
+        $libelle = (isset($data['libelle']) && trim($data['libelle']) !== "")?trim($data['libelle']):null;
+        $description = (isset($data['description']) && trim($data['description']) !== "")?trim($data['description']):null;
         $obligatoire = (isset($data['obligatoire']) && $data['obligatoire'] === "1");
         $ordre = (isset($data['ordre']))?((int) $data['ordre']):null;
 
