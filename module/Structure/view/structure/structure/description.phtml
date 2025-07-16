@@ -5,6 +5,9 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use Structure\Entity\Db\Observateur;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
+use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Entity\Db\Type;
+use UnicaenContact\Provider\Privilege\ContactPrivileges;
 
 /**
  * @see \Structure\Controller\StructureController::descriptionAction()
@@ -14,6 +17,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Agent[] $responsables
  * @var Agent[] $gestionnaires
  * @var Observateur[] $observateurs
+ * @var Contact[] $contacts
  *
  * @var Structure $niveau2
  * @var Structure $parent
@@ -25,6 +29,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * PARAMETRES
  * @var bool $blocGestionnaire
  * @var bool $blocObservateur
+ * @var bool $blocContact
  */
 
 $this->headTitle($structure->getLibelleLong() . " - Description");
@@ -32,9 +37,22 @@ $this->headTitle($structure->getLibelleLong() . " - Description");
 $canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
 $canGererGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_GESTIONNAIRE));
 
+$canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
+$canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
+$canHistoriserContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
+$canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
 
 $date = new DateTime();
 $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $s->isDeleted() ; });
+
+$sortedContacts = []; $sortedTypes = [];
+foreach ($contacts as $contact) {
+    $type = $contact->getType();
+    $sortedTypes[$type->getId()] = $type;
+    $sortedContacts[$type->getId()][] = $contact;
+}
+usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b->getLibelle(); });
+
 
 ?>
 
@@ -164,6 +182,85 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <?php if ($blocObservateur) : ?>
             <?php echo $this->partial('partial/observateurs', ['structure' => $structure, 'observateurs' => $observateurs]); ?>
         <?php endif; ?>
+
+        <?php if ($blocContact) : ?>
+                <h2>
+                    Contact·s
+                    <?php if ($canAjouterContact): ?>
+                        <?php /**  @see \Structure\Controller\ContactController::ajouterAction() **/ ?>
+                        <a href="<?php echo $this->url('structure/contact/ajouter', ['structure' => $structure->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification" title="Ajouter un contact pour la structure">
+                            <span class="icon icon-ajouter"></span>
+                        </a>
+                    <?php endif; ?>
+                </h2>
+
+                <?php if (empty($contacts)) : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun·e responsable de désigné·e pour cette structure.
+                    </span>
+                <?php else : ?>
+                    <?php foreach ($sortedTypes as $type) : ?>
+                        <h3> <?php echo $type->getLibelle(); ?> </h3>
+
+                        <?php
+                            $contacts_ = $sortedContacts[$type->getId()];
+                            $res = usort($contacts_, function ($a, $b) { return Contact::sort($a,$b);});
+                        ?>
+                        <?php foreach ($contacts_ as $contact) : ?>
+                            <?php if ($contact->estNonHistorise() OR $canHistoriserContact OR $canSupprimerContact) : ?>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <?php echo $this->contact($contact); ?>
+                                </div>
+                                <div class="col-md-4 action">
+                                    <?php if ($canEditerDescription && $canModifierContact) : ?>
+                                        <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
+                                        <a      href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()],[], true);?>"
+                                                class="action primary ajax-modal" data-event="modification"
+                                        >
+                                            <span class="icon icon-editer"></span>
+                                            Modifier
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if ($canEditerDescription && $canHistoriserContact) : ?>
+                                        <br>
+                                        <?php if ($contact->estNonHistorise()) : ?>
+                                            <?php /** @see \UnicaenContact\Controller\ContactController::historiserAction() */ ?>
+                                            <a      href="<?php echo $this->url("unicaen-contact/contact/historiser", ['contact' => $contact->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true);?>"
+                                                    class="action warning"
+                                            >
+                                                <span class="icon icon-historiser"></span>
+                                                Historiser
+                                            </a>
+                                        <?php else : ?>
+                                            <?php /** @see \UnicaenContact\Controller\ContactController::restaurerAction() */ ?>
+                                            <a      href="<?php echo $this->url("unicaen-contact/contact/restaurer", ['contact' => $contact->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true);?>"
+                                                    class="action warning"
+                                            >
+                                                <span class="icon icon-restaurer"></span>
+                                                Restaurer
+                                            </a>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                    <?php if ($canEditerDescription && $canSupprimerContact) : ?>
+                                        <br>
+                                        <?php /** @see \UnicaenContact\Controller\ContactController::supprimerAction() */ ?>
+                                        <a      href="<?php echo $this->url("unicaen-contact/contact/supprimer", ['contact' => $contact->getId()], [], true);?>"
+                                                class="action danger ajax-modal" data-event="modification"
+                                        >
+                                            <span class="icon icon-unchecked"></span>
+                                            Supprimer
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            <?php endif; ?>
 
         <h2> Positionnement de la structure </h2>
 

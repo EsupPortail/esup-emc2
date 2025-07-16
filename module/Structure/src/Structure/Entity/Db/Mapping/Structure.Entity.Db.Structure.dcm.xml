@@ -60,6 +60,17 @@
 
         <field name="niveau" column="niveau" type="integer" nullable="true"/>
 
+        <many-to-many field="contacts" inversed-by="structures" target-entity="UnicaenContact\Entity\Db\Contact">
+            <join-table name="structure_contact">
+                <join-columns>
+                    <join-column name="structure_id"  />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="contact_id"  />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <!-- DB IMPORT #############################  -->
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>
