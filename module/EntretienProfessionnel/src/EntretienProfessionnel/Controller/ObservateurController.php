@@ -66,8 +66,9 @@ class ObservateurController extends AbstractActionController {
         $observateur = new Observateur();
         $observateur->setEntretienProfessionnel($entretien);
         $form = $this->getObservateurForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observateur/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observateur/ajouter', ['entretien-professionnel' => $entretien?->getId()], [], true));
         $form->bind($observateur);
+
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -80,8 +81,12 @@ class ObservateurController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout d'un·e observateur·trice pour l'entretien professionnel de ". $entretien->getAgent()->getDenomination(true),
+            'title' => ($entretien)?
+                 "Ajout d'un·e observateur·trice pour l'entretien professionnel de ". $entretien->getAgent()->getDenomination(true)
+                :"Ajout d'un·e observateur·trice pour un entretien professionnel"
+            ,
             'form' => $form,
+            'js' => ($entretien)?"$('#entretien').parent().hide()":null,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
@@ -108,6 +113,7 @@ class ObservateurController extends AbstractActionController {
         $vm = new ViewModel([
             'title' => "Modification de l'observateur·trice pour l'entretien professionnel de ". $observateur->getEntretienProfessionnel()->getAgent()->getDenomination(true),
             'form' => $form,
+            'js' => " $('#entretien').parent().hide()",
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;

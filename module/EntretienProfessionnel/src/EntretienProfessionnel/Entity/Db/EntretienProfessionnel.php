@@ -671,4 +671,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         return ($this->getDateEntretien() < (new DateTime()));
     }
+
+    public function prettyPrint(): string
+    {
+        return $this->getAgent()->getDenomination() . " - entretien planifié le ". $this->getDateEntretien()->format('d/m/Y');
+    }
 }

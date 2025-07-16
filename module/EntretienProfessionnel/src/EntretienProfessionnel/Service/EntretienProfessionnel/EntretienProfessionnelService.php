@@ -158,6 +158,21 @@ class EntretienProfessionnelService
 
     /**
      * @param string $texte
+     * @return EntretienProfessionnel[]
+     */
+    public function findByAgentTerm(string $texte): array
+    {
+        $qb = $this->createQueryBuilder(false)
+            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
+            ->setParameter('search', '%' . strtolower($texte) . '%');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+
+    /**
+     * @param string $texte
      * @return Agent[]
      */
     public function findResponsableByTerm(string $texte): array
@@ -510,4 +525,25 @@ class EntretienProfessionnelService
         }
         return $dictionnaire;
     }
+
+    /**
+     * @param EntretienProfessionnel[] $entretiens
+     * @return array
+     */
+    public function formatEntretienJSON(array $entretiens): array
+    {
+        $result = [];
+        foreach ($entretiens as $entretien) {
+            $result[] = array(
+                'id' => $entretien->getId(),
+                'label' => $entretien->prettyPrint(),
+                'extra' => "",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
 }

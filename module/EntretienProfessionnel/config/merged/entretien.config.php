@@ -73,6 +73,15 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
+                        'rechercher-entretien',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'index',
                     ],
                     'privileges' => [
@@ -210,6 +219,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'accepter-entretien',
+                            ],
+                        ],
+                    ],
+                    'rechercher-entretien' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-entretien',
+                            'defaults' => [
+                                /** @see EntretienProfessionnelController::rechercherEntretienAction() */
+                                'action'     => 'rechercher-entretien',
                             ],
                         ],
                     ],
