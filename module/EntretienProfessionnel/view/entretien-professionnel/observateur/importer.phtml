@@ -1,5 +1,6 @@
 <?php
 
+use Application\Provider\Parametre\GlobalParametres;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\Observateur;
@@ -21,6 +22,8 @@ use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurForm;
 
 $this->headTitle($title);
 
+$appName = $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::APP_NAME);
+$appName = $appName!==""?$appName:"interne"
 ?>
 
 
@@ -28,6 +31,21 @@ $this->headTitle($title);
     <?php echo $title; ?>
 </h1>
 
+<div class="alert alert-info">
+    <p>
+        <span class="icon icon-information"></span>Pour pouvoir désigner une personne comme observatrice d'un entretien professionnel (ou d'un·e agent), il faut que l'entretien professionnel soit créé.
+    </p>
+
+    Le format attendu est le suivant : <code>agent_id</code>;<code>observateur_id</code>. Avec :
+    <ul>
+        <li> <code>agent_id</code> l'identifiant <?php echo $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::APP_NAME); ?> de l'agent·e </li>
+        <li> <code>observateur_id</code> l'identifiant <?php echo $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::APP_NAME); ?> de l'agent·e qui est désigné·e comme observateur·trice</li>
+    </ul>
+
+    <p>
+        <span class="icon icon-attention"></span>Il est nécessaire que l'observateur·trice se soient déjà connecté·e à l'application
+    </p>
+</div>
 
 <?php echo $this->form($form); ?>
 
