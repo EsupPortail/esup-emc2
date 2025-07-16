@@ -35,7 +35,7 @@
     "ext-iconv": "*",
     "ext-curl": "*",
     "unicaen/bddadmin": "^1",
-    "unicaen/contact": "^0.0.0"
+    "unicaen/contact": "^0"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"
