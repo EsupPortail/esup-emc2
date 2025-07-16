@@ -23,8 +23,8 @@ $this->headTitle("Liste des entretiens dont vous observateur·trice");
     <h2> Campagne <?php echo $campagne->getAnnee(); ?> (<?php echo $campagne->getDateDebut()->format('d/m/Y'); ?> &Rightarrow; <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>)</h2>
 
     <?php
-        $entretiens_ = $entretiens[$campagne->getId()];
-        usort($entretiens_, function (EntretienProfessionnel $a, EntretienProfessionnel $b) { return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
+    $entretiens_ = $entretiens[$campagne->getId()];
+    usort($entretiens_, function (EntretienProfessionnel $a, EntretienProfessionnel $b) { return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
     ?>
 
     <?php echo $this->entretienProfessionnelArray($entretiens_, ['affichages' => ['annee' => false], 'id' => 'campagne_'.$campagne->getId()]); ?>

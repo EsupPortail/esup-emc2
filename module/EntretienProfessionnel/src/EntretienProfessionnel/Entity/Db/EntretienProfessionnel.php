@@ -238,7 +238,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $actif;
     }
 
-    public function getObservateurs(bool $withHisto = false): Collection
+    public function getObservateurs(bool $withHisto = false): array
     {
         $observateurs =  $this->observateurs->toArray();
         if (!$withHisto) {

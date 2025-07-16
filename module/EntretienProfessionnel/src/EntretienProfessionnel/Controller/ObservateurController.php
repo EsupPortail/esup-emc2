@@ -2,7 +2,10 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use EntretienProfessionnel\Entity\Db\Observateur;
+use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurFormAwareTrait;
 use EntretienProfessionnel\Form\Observateur\ObservateurFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -14,11 +17,13 @@ use Laminas\View\Model\ViewModel;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ObservateurController extends AbstractActionController {
+    use AgentServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use ObservateurServiceAwareTrait;
     use UserServiceAwareTrait;
     use ObservateurFormAwareTrait;
+    use ImporterObservateurFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -150,6 +155,133 @@ class ObservateurController extends AbstractActionController {
         }
         return $vm;
     }
+
+    /** IMPORTATION ***************************************************************************************************/
+
+    public function importerAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $entretiens = ($campagne)?$this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne):[];
+
+        $form = $this->getImporterObservateurForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observateur/importer', ['campagne' => $campagne?->getId()], [], true));
+
+        if ($campagne) $form->get('campagne')->setAttribute('readonly', true); // OR DISABLED ?
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $error = [];
+            $data = $request->getPost();
+            $file = $request->getFiles();
+
+            $fichier_path = $file['fichier']['tmp_name'];
+            $mode = $data['mode'];
+
+            if ($campagne === null AND isset($data['campagne'])) {
+                $campagne = $this->getCampagneService()->getCampagne($data['campagne']);
+                $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne);
+
+                foreach ($entretiens as $entretien) {
+                    $agent = $entretien->getAgent();
+                    $dictionnaireEntretien[$agent->getId()][] = $entretien;
+                    if (!empty($entretien->getObservateurs())) {
+                        foreach ($entretien->getObservateurs() as $observateur) {
+                            $dictionnaireObservateur[$agent->getId()][] = $observateur;
+                        }
+                    }
+                }
+            }
+
+            //reading
+            $array = [];
+            $warning = [];
+
+            if ($fichier_path === null or $fichier_path === '') {
+                $error[] = "Aucun fichier !";
+            } else {
+                $handle = fopen($fichier_path, "r");
+
+                while ($content = fgetcsv($handle, 0, ";")) {
+                    $array[] = $content;
+                }
+
+                $newObservateurs = [];
+
+                foreach ($array as $line) {
+                    [$agentId, $observateurId] = $line;
+
+                    $agent = $this->getAgentService()->getAgent($agentId);
+                    $observateur = $this->getAgentService()->getAgent($observateurId);
+
+                    if ($agent === null) $error[] = "Aucun·e Agent·e de trouvé·e pour l'identifiant ".$agentId;
+                    if ($observateur === null) $error[] = "Aucun·e observateur·trice de trouvé·e pour l'identifiant ".$observateurId;
+                    if ($observateur !== null AND $observateur->getUtilisateur() === null) $warning[] = "Aucun·e utilisateur·trice pour l'observateur·trice ".$observateur->getDenomination(true);
+
+
+                    if ($agent !== null AND $observateur !== null) {
+                        $entretiens_ = $dictionnaireEntretien[$agent->getId()]??[];
+
+                        if (empty($entretiens_)) {
+                            $warning[] = "L'agent·e ".$agent->getDenomination(true)." n'a pas d'entretien professionnel pour la campagne ".$campagne->getAnnee();
+                        } else {
+                            $observateurs_ = $dictionnaireObservateur[$agent->getId()]??[];
+                            if (!empty($observateurs_)) {
+                                foreach ($observateurs_ as $observateur_) {
+                                    if ($mode === 'preview') $warning[] = "L'observateur·trice ".$observateur_->getUser()->getDisplayName()." sera historisé·e";
+                                    if ($mode === 'import') $warning[] = "L'observateur·trice ".$observateur_->getUser()->getDisplayName()." ont été historisé·e";
+                                }
+                            }
+
+                            foreach ($entretiens_ as $entretien_) {
+                                if ($mode === 'import') {
+                                    foreach ($entretien_->getObservateurs() as $observateur_) $this->getObservateurService()->historise($observateur_);
+                                }
+                                if ($observateur->getUtilisateur()) {
+                                    $nobservateur = new Observateur();
+                                    $nobservateur->setEntretienProfessionnel($entretien_);
+                                    $nobservateur->setUser($observateur->getUtilisateur());
+                                    $nobservateur->setDescription("Observateur·trice ajouté·e par importation csv le " . (new DateTime())->format('d/m/Y à H:i:s'));
+
+                                    $newObservateurs[] = $nobservateur;
+                                    if ($mode === 'import') $this->getObservateurService()->create($nobservateur);
+
+                                }
+                            }
+//                            $todoEntretien[$agent->getId()][] = $observateur;
+//                            foreach ($entretiens_ as $entretien) {
+//                                /** @var Observateur $observateur */
+
+//                            }
+                        }
+                    }
+                }
+            }
+
+            $vm = new ViewModel([
+                'title' => "Importer des observateurs",
+                'form' => $form,
+                'warning' => $warning,
+                'error' => $error,
+                'campagne' => $campagne,
+                'entretiens' => $entretiens,
+                'data' => $data,
+                'newObservateurs' => $newObservateurs,
+            ]);
+            return $vm;
+        }
+
+
+        $vm = new ViewModel([
+            'title' => "Importer des observateurs",
+            'form' => $form,
+            'campagne' => $campagne,
+            'entretiens' => $entretiens,
+            'data' => null,
+        ]);
+        return $vm;
+    }
+
+
 
     /** FONCTION DE RECHERCHE *****************************************************************************************/
 
