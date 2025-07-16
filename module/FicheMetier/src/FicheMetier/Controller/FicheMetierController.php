@@ -75,9 +75,13 @@ class FicheMetierController extends AbstractActionController
 
     /** CRUD **********************************************************************************************************/
 
-    public function afficherAction(): ViewModel
+    public function afficherAction(): ViewModel|Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        if ($fichemetier === null) {
+            $this->flashMessenger()->addErrorMessage("<strong>La fiche métier #".$this->params()->fromRoute('fiche-metier'). " n'existe pas.</strong><br>Basculement sur l'index des fiches métiers.");
+            return $this->redirect()->toRoute('fiche-metier', [], [], true);
+        }
         $missions = $fichemetier->getMissions();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
@@ -141,9 +145,13 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierAction(): ViewModel
+    public function modifierAction(): ViewModel|Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        if ($fichemetier === null) {
+            $this->flashMessenger()->addErrorMessage("<strong>La fiche métier #".$this->params()->fromRoute('fiche-metier'). " n'existe pas.</strong><br>Basculement en création de fiche métier.");
+            return $this->redirect()->toRoute('fiche-metier/ajouter', [], [], true);
+        }
         $missions = $fichemetier->getMissions();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
