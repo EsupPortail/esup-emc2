@@ -8,6 +8,7 @@ use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\EmploiType;
 use Carriere\Entity\Db\Grade;
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Structure\Entity\Db\Structure;
@@ -50,6 +51,32 @@ class AgentGradeService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function getAgentGradesByAgents(array $agents, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->createQueryBuilder();
+        $qb = $qb   ->andWhere('agentgrade.deletedOn IS NULL')
+        ;
+        $qb = $qb
+            ->andWhere('agentgrade.dateDebut IS NULL OR agentgrade.dateDebut <= :date')
+            ->andWhere('agentgrade.dateFin IS NULL OR agentgrade.dateFin >= :date')
+            ->setParameter('date', $date)
+        ;
+        $qb = $qb->andWhere('agentgrade.agent in (:agents)')->setParameter('agents', $agents);
+        $qb = $qb->orderBy('grade.libelleLong', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+
+        /** @var AgentGrade $agentGrade */
+        $grades = [];
+        foreach ($result as $agentGrade) {
+            $agent = $agentGrade->getAgent();
+            $grades[$agent->getId()][] = $agentGrade;
+        }
+        return $grades;
     }
 
     /**

@@ -39,6 +39,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -412,4 +413,73 @@ class AgentController extends AbstractActionController
         exit;
     }
 
+    public function mesAgentsAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
+        $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents);
+
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+
+            'grades' => $grades,
+            'affectations' => $affectations,
+        ]);
+        return $vm;
+    }
+
+    public function mesMissionsSpecifiquesAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+
+        $missions = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgents($agents);
+
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+
+            'missions' => $missions,
+        ]);
+        return $vm;
+    }
+
+    public function mesFichesPostesAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+
+        $fichesDePoste = [];
+        foreach ($agents as $agent_) {
+            if ($agent_ instanceof StructureAgentForce) $agent_ = $agent_->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent_);
+            $fichesDePoste[$agent_->getId()] = $fiches;
+        }
+        $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+            'fichesDePoste' => $fichesDePoste,
+            'fichesDePostePdf' => $fichesDePostePdf
+        ]);
+        return $vm;
+    }
+
+    /** @return Agent[] */
+    public function listerAgents(): array
+    {
+        $role = $this->getUserService()->getConnectedRole();
+        $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
+
+        $agents = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($connectedAgent);
+            $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); }, $chaines);
+        }
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($connectedAgent);
+            $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); }, $chaines);
+        }
+
+        return $agents;
+    }
 }
