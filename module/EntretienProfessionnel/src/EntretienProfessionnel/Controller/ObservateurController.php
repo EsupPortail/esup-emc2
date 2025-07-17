@@ -74,6 +74,7 @@ class ObservateurController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
+
             if ($form->isValid()) {
                 $this->getObservateurService()->create($observateur);
                 exit();

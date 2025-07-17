@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Form\Observateur;
 
+use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Controller\EntretienProfessionnelController;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
@@ -33,7 +34,11 @@ class ObservateurFormFactory
         /** @var ObservateurHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ObservateurHydrator::class);
 
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+
         $form = new ObservateurForm();
+        $form->setObjectManager($entityManager);
         $form->setHydrator($hydrator);
         $form->setUrlUser($urlRecherche);
         $form->setUrlEntretien($urlEntretien);
