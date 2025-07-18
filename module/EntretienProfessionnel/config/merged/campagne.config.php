@@ -171,7 +171,7 @@ return [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/structure/:campagne/:structure',
+                                    'route'    => '/structure/:structure[/:campagne]',
                                     'defaults' => [
                                         /** @see CampagneController::structureAction() */
                                         'controller' => CampagneController::class,

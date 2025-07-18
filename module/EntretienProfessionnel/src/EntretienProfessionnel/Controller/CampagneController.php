@@ -398,6 +398,7 @@ class CampagneController extends AbstractActionController
     public function structureAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
@@ -431,13 +432,15 @@ class CampagneController extends AbstractActionController
             }
         }
 
-        $last = $this->getCampagneService()->getLastCampagne();
-        $campagnes = $this->getCampagneService()->getCampagnesActives();
-        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
-        if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) {
-            return $a->getDateDebut() <=> $b->getDateDebut();
-        });
+//        $last = $this->getCampagneService()->getLastCampagne();
+//        $campagnes = $this->getCampagneService()->getCampagnesActives();
+//        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
+//        if ($last !== null) $campagnes[] = $last;
+//        usort($campagnes, function (Campagne $a, Campagne $b) {
+//            return $a->getDateDebut() <=> $b->getDateDebut();
+//        });
+
+            $campagnes = $this->getCampagneService()->getCampagnes();
 
         /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
         $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne, 'structure' => $structure];
@@ -447,7 +450,7 @@ class CampagneController extends AbstractActionController
         return new ViewModel([
             'campagne' => $campagne,
             'campagnes' => $campagnes,
-            'campagnesFutures' => $campagnesFutures,
+//            'campagnesFutures' => $campagnesFutures,
             'structure' => $structure,
             'selecteur' => $selecteur,
             'structures' => $structures,

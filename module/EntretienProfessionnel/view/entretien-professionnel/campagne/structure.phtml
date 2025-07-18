@@ -30,7 +30,8 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var Rendu[] $templates
  */
 
-$sansObligatoires = []; $sansFacultatifs = [];
+$sansObligatoires = [];
+$sansFacultatifs = [];
 foreach ($obligatoires as $obligatoire) {
     if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
 }
@@ -43,14 +44,25 @@ $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceI
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() . " - " . $structure->getLibelleLong())
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'campagne_'.$campagne->getId(), 'selecteur' => $selecteur]); ?>
+<?php echo $this->partial('structure/structure/partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => [], 'current' => 'campagne_' . $campagne->getId(), 'selecteur' => $selecteur]); ?>
 
-<h1 class="page-header">
-    Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
-    <br>
-    <?php echo $structure->getLibelleLong(); ?>
-</h1>
-
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+            <br>
+            <?php echo $structure->getLibelleLong(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <label for="campagne">Sélectionner une campagne</label>
+        <select id="campagne" name="campagne">
+            <?php foreach ($campagnes as $campagne_) : ?>
+                <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_ === $campagne) echo " selected "; ?>><?php echo $campagne_->getAnnee(); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 <div class="row">
@@ -105,7 +117,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
             <div class="col-md-2">
                 <?php if ($canTemplateModifier) : ?>
                     <?php /** @see \UnicaenRenderer\Controller\TemplateController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('contenu/template/modifier', ['template' => $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION]->getTemplate()->getId()], [], true); ?>" class="action primary">
+                    <a href="<?php echo $this->url('contenu/template/modifier', ['template' => $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION]->getTemplate()->getId()], [], true); ?>"
+                       class="action primary">
                         <span class="icon icon-editer"></span> Modifier
                     </a>
                 <?php endif; ?>
@@ -119,4 +132,15 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
 
 <script>
     $('button#campagne<?php echo $campagne->getId(); ?>-tab').addClass('active');
+
+
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
+    let baseUrl = <?php echo "'" . $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId()], [], true) . "'"; ?>;
+
+    $(document).ready(function () {
+        $('#campagne').on('change', function () {
+            window.location.href = baseUrl + '/' + $(this).val();
+        });
+    });
+
 </script>
