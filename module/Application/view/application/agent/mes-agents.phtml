@@ -4,10 +4,12 @@ use Agent\Entity\Db\AgentAffectation;
 use Agent\Entity\Db\AgentGrade;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
 
 /**
  * @see \Application\Controller\AgentController::mesAgentsAction()
  * @var Agent[] $agents
+ * @var Campagne $campagne
  *
  * @var AgentAffectation[] $affectations
  * @var AgentGrade[] $grades
@@ -15,9 +17,9 @@ use Application\Provider\Privilege\AgentPrivileges;
 
 ?>
 
-<?php echo $this->partial('partial/onglets', ['current' => 'agents', 'campagne' => null]); ?>
+<?php echo $this->partial('partial/onglets', ['current' => 'agents', 'campagne' => $campagne]); ?>
 
-<h2> Liste des agent·es dont je suis responsable </h2>
+<h1 class="page-header"> Liste des agent·es dont je suis responsable </h1>
 <div>
     <table class="table table-condensed" id="agents">
         <thead>

@@ -1,20 +1,22 @@
 <?php
 
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use MissionSpecifique\Entity\Db\MissionSpecifique;
 
 /**
  * @see \Application\Controller\AgentController::mesMissionsSpecifiquesAction()
  * @var MissionSpecifique[] $missions
+ * @var Campagne $campagne
  */
 
 $canAjouter  =  $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
 
 ?>
 
-<?php echo $this->partial('partial/onglets', ['current' => 'mission-specifique', 'campagne' => null]); ?>
+<?php echo $this->partial('partial/onglets', ['current' => 'mission-specifique', 'campagne' => $campagne]); ?>
 
-<h2> Liste des missions spécifiques des Agent·es dont je suis responsable </h2>
+<h1 class="page-header">  Liste des missions spécifiques des Agent·es dont je suis responsable </h1>
 
 
 <?php if ($canAjouter) : ?>

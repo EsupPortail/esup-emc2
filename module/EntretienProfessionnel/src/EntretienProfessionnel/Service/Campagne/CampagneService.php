@@ -274,6 +274,20 @@ class CampagneService
         return $agentsFinales;
     }
 
+    /**
+     * Retourne la campagne la plus à propos :
+     * > Si il y a une campagne en cours la campagne en cours sinon la campagne la plus récente
+     * > ultimement null si pas de campagne
+     * */
+    public function getBestCampagne(): ?Campagne {
+        $campagnes = $this->getCampagnes();
+        if (empty($campagnes)) return null;
+        foreach ($campagnes as $campagne) {
+            if ($campagne->estEnCours()) return $campagne;
+        }
+        return current($campagnes);
+    }
+
     /** FACADE ********************************************************************************************************/
 
     public static function getAnneeScolaire(): string

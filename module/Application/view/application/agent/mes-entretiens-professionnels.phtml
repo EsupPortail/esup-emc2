@@ -6,7 +6,12 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 
 /**
- * @var Campagne $campagne
+ * /**
+ * @see \Application\Controller\AgentController::mesEntretiensProfessionnelsAction()
+ * @var Agent[] $agents
+ * @var Campagne[] $campagnes
+ * @var Campagne|null $campagne
+ * @var Campagne[] $campagnes
  * @var EntretienProfessionnel[] $entretiens
  * @var Agent[] $agents
  */
@@ -39,9 +44,23 @@ foreach ($facultatifs as $facultatif) {
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
 ?>
 
-<h1 class="page-header">
-    Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
-</h1>
+<?php echo $this->partial('partial/onglets', ['current' => 'campagne', 'campagne' => $campagne]); ?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <label for="campagne">Sélectionner une campagne :</label>
+        <select id="campagne" name="campagne">
+            <?php foreach($campagnes as $campagne_) : ?>
+                <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_===$campagne) echo " selected "; ?>><?php echo $campagne_->getAnnee(); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-6">
@@ -104,3 +123,12 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
 <?php endif; ?>
 
 
+<script>
+    let baseUrl = <?php echo "'" . $this->url('mes-entretiens-professionnels') . "'" ; ?>;
+
+    $(document).ready(function() {
+        $('#campagne').on('change', function() {
+            window.location.href = baseUrl + '/' + $(this).val();
+        });
+    });
+</script>

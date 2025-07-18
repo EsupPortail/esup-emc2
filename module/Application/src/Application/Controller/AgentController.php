@@ -28,6 +28,7 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
@@ -69,6 +70,7 @@ class AgentController extends AbstractActionController
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
 
+    use CampagneServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
@@ -419,12 +421,15 @@ class AgentController extends AbstractActionController
         $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
         $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents);
 
+        $campagne = $this->getCampagneService()->getBestCampagne();
 
         $vm = new ViewModel([
             'agents' => $agents,
+            'campagne' => $campagne,
 
             'grades' => $grades,
             'affectations' => $affectations,
+
         ]);
         return $vm;
     }
@@ -434,10 +439,11 @@ class AgentController extends AbstractActionController
         $agents = $this->listerAgents();
 
         $missions = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgents($agents);
-
+        $campagne = $this->getCampagneService()->getBestCampagne();
 
         $vm = new ViewModel([
             'agents' => $agents,
+            'campagne' => $campagne,
 
             'missions' => $missions,
         ]);
@@ -447,6 +453,7 @@ class AgentController extends AbstractActionController
     public function mesFichesPostesAction(): ViewModel
     {
         $agents = $this->listerAgents();
+        $campagne = $this->getCampagneService()->getBestCampagne();
 
         $fichesDePoste = [];
         foreach ($agents as $agent_) {
@@ -458,8 +465,50 @@ class AgentController extends AbstractActionController
 
         $vm = new ViewModel([
             'agents' => $agents,
+            'campagne' => $campagne,
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf
+        ]);
+        return $vm;
+    }
+
+    public function mesEntretiensProfessionnelsAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $role = $this->getUserService()->getConnectedRole();
+        $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
+
+        $agents = []; $entretiensS = []; $entretiensR = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+            $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($connectedAgent, $campagne, false, false);
+        }
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+            $entretiensR = [];
+        }
+
+        $entretiens = [];
+        foreach ($entretiensR as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
+        foreach ($entretiensS as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
+
+        //Extraction de la liste des campagnes
+        $campagnes = $this->getCampagneService()->getCampagnes();
+
+        $vm = new ViewModel([
+            'campagnes' => $campagnes,
+            'campagne' => $campagne,
+            'agent' => $connectedAgent,
+            'agents' => $agents,
+            'entretiens' => $entretiens,
         ]);
         return $vm;
     }

@@ -87,16 +87,6 @@ return [
                 [
                     'controller' => IndexController::class,
                     'action' => [
-                        'index-superieur',
-                        'index-autorite',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
-                    ],
-                ],
-                [
-                    'controller' => IndexController::class,
-                    'action' => [
                         'infos',
                     ],
                     'roles' => [
@@ -215,28 +205,6 @@ return [
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
                         'action' => 'index-validateur',
-                    ],
-                ],
-            ],
-            'index-superieur' => [
-                'type' => Literal::class,
-                'may_terminate' => true,
-                'options' => [
-                    'route' => '/index-superieur',
-                    'defaults' => [
-                        'controller' => 'Application\Controller\Index', // <-- change here
-                        'action' => 'index-superieur',
-                    ],
-                ],
-            ],
-            'index-autorite' => [
-                'type' => Literal::class,
-                'may_terminate' => true,
-                'options' => [
-                    'route' => '/index-autorite',
-                    'defaults' => [
-                        'controller' => 'Application\Controller\Index', // <-- change here
-                        'action' => 'index-autorite',
                     ],
                 ],
             ],

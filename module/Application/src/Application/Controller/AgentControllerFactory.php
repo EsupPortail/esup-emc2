@@ -21,6 +21,7 @@ use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
+use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
@@ -74,6 +75,7 @@ class AgentControllerFactory
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var FichePosteService $fichePosteService
          * @var UserService $userService
+         * @var CampagneService $campagneService
          */
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
@@ -89,6 +91,7 @@ class AgentControllerFactory
         $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
 
+        $campagneService = $container->get(CampagneService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -123,6 +126,7 @@ class AgentControllerFactory
         $controller->setAgentMobiliteService($agentMobiliteService);
         $controller->setAgentQuotiteService($agentQuotiteService);
         $controller->setAgentStatutService($agentStatutService);
+        $controller->setCampagneService($campagneService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setParametreService($parametreService);

@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Controller\AgentController;
 use Application\Controller\IndexController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
@@ -645,12 +646,10 @@ class EntretienProfessionnelController extends AbstractActionController
                 }
                 /** @see IndexController::indexAction() */
                 return $this->redirect()->toRoute('home', [], [], true);
-            case  Agent::ROLE_SUPERIEURE :
-                /** @see IndexController::indexSuperieurAction() */
-                return $this->redirect()->toRoute('index-superieur', [], ["fragment" => "entretien_". $campagne->getId()], true);
             case  Agent::ROLE_AUTORITE :
-                /** @see IndexController::indexAutoriteAction() */
-                return $this->redirect()->toRoute('index-autorite', [], ["fragment" => "entretien_". $campagne->getId()], true);
+            case  Agent::ROLE_SUPERIEURE :
+                /** @see AgentController::mesEntretiensProfessionnelsAction() */
+                return $this->redirect()->toRoute('mes-entretiens-professionnels', ['campagne' => $entretien->getCampagne()->getId()],[], true);
             case  Agent::ROLE_AGENT :
                 /** @see EntretienProfessionnelController::indexAgentAction() */
                 return $this->redirect()->toRoute('entretien-professionnel/index-agent', [], [], true);

@@ -53,16 +53,6 @@ return [
                 [
                     'controller' => CampagneController::class,
                     'action' => [
-                        'superieur',
-                        'autorite',
-                    ],
-                    'privileges' => [
-                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER
-                    ],
-                ],
-                [
-                    'controller' => CampagneController::class,
-                    'action' => [
                         'ajouter',
                         'notifier-ouverture',
                     ],
@@ -198,28 +188,6 @@ return [
                                         /** @see CampagneController::structureProgressionAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'structure-progression',
-                                    ],
-                                ],
-                            ],
-                            'superieur' => [
-                                'type'  => Segment::class,
-                                'may_terminate' => true,
-                                'options' => [
-                                    'route'    => '/superieur/:campagne[/:agent]',
-                                    'defaults' => [
-                                        /** @see CampagneController::superieurAction() */
-                                        'action'     => 'superieur',
-                                    ],
-                                ],
-                            ],
-                            'autorite' => [
-                                'type'  => Segment::class,
-                                'may_terminate' => true,
-                                'options' => [
-                                    'route'    => '/autorite/:campagne[/:agent]',
-                                    'defaults' => [
-                                        /** @see CampagneController::autoriteAction() */
-                                        'action'     => 'autorite',
                                     ],
                                 ],
                             ],

@@ -184,6 +184,7 @@ return [
                         'mes-agents',
                         'mes-missions-specifiques',
                         'mes-fiches-postes',
+                        'mes-entretiens-professionnels',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
@@ -225,6 +226,17 @@ return [
                         /** @see AgentController::mesFichesPostesAction() */
                         'controller' => AgentController::class,
                         'action' => 'mes-fiches-postes',
+                    ],
+                ],
+            ],
+            'mes-entretiens-professionnels' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/mes-entretiens-professionnels[/:campagne]',
+                    'defaults' => [
+                        /** @see AgentController::mesEntretiensProfessionnelsAction() */
+                        'controller' => AgentController::class,
+                        'action' => 'mes-entretiens-professionnels',
                     ],
                 ],
             ],

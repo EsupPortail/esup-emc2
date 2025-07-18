@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
@@ -11,6 +12,7 @@ use Fichier\Entity\Db\Fichier;
 /**
  * @see \Application\Controller\AgentController::mesFichesPostesAction()
  * @var Agent[] $agents
+ * @var Campagne|null $campagne
  * @var FichePoste[] $fichesDePoste
  * @var Fichier[] $fichesDePostePdf
  */
@@ -26,9 +28,9 @@ $date = new DateTime();
 
 ?>
 
-<?php echo $this->partial('partial/onglets', ['current' => 'fiches-de-poste', 'campagne' => null]); ?>
+<?php echo $this->partial('partial/onglets', ['current' => 'fiches-de-poste', 'campagne' => $campagne]); ?>
 
-<h2>Liste des fiches de poste des Agent·es dont je suis responsable</h2>
+<h1 class="page-header"> Liste des fiches de poste des Agent·es dont je suis responsable</h1>
 
 <table class="table table-condensed table-hover datatable" id="fiches">
     <thead>

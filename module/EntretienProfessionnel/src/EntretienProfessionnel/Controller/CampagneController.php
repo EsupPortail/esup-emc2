@@ -521,75 +521,7 @@ class CampagneController extends AbstractActionController
         ]);
     }
 
-    public function superieurAction(): ViewModel
-    {
-        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $superieur = $this->getAgentService()->getRequestedAgent($this);
-
-        if ($superieur === null) {
-            $user = $this->getUserService()->getConnectedUser();
-            $superieur = $this->getAgentService()->getAgentByUser($user);
-        }
-        if ($superieur === null) {
-            throw new RuntimeException("EntretienController::superieurAction() > Aucun·e supérieur·e de fourni.");
-        }
-
-        $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
-
-        //$entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, false, false);
-        $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
-        $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($superieur, $campagne, false, false);
-
-        $entretiens = [];
-        foreach ($entretiensR as $entretien) {
-            $entretiens[$entretien->getAgent()->getId()] = $entretien;
-        }
-        foreach ($entretiensS as $entretien) {
-            $entretiens[$entretien->getAgent()->getId()] = $entretien;
-        }
-
-        $vm = new ViewModel([
-            'campagne' => $campagne,
-            'agent' => $superieur,
-            'agents' => $agents,
-            'entretiens' => $entretiens,
-        ]);
-        $vm->setTemplate('entretien-professionnel/campagne/entretien');
-        return $vm;
-    }
-
-    public function autoriteAction(): ViewModel
-    {
-
-        //$this->getUserService()->selectRolePrefere($this);
-
-        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $autorite = $this->getAgentService()->getRequestedAgent($this);
-
-        if ($autorite === null) {
-            $user = $this->getUserService()->getConnectedUser();
-            $autorite = $this->getAgentService()->getAgentByUser($user);
-        }
-        if ($autorite === null) {
-            throw new RuntimeException("EntretienController::superieurAction() > Aucun·e autorité de fourni.");
-        }
-
-        $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
-
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
-
-        $vm = new ViewModel([
-            'campagne' => $campagne,
-            'agent' => $autorite,
-            'agents' => $agents,
-            'entretiens' => $entretiens,
-        ]);
-        $vm->setTemplate('entretien-professionnel/campagne/entretien');
-        return $vm;
-    }
-
     /** TESTS ET DEBUGS ***********************************************************************************************/
-
 
     public function notifierAvancementAutoriteAction(): ViewModel
     {

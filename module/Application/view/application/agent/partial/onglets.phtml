@@ -35,22 +35,14 @@ use EntretienProfessionnel\Entity\Db\Campagne;
     >
         Missions spécifiques
     </button>
-    <?php /** @see \EntretienProfessionnel\Controller\CampagneController::superieurAction()Action() */ ?>
-    <button class="nav-link" id="campagnes-precedentes-tab"
-            data-bs-toggle="tab" data-bs-target="#campagnes-precedentes"
-            type="button" role="tab" aria-controls="campagnes-precedentes" aria-selected="true"
-            onclick="location.href='<?php //echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()],[],true); ?>'"
-    >
-        Campagnes précédentes
-    </button>
     <?php if ($campagne !== null) : ?>
-        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
-        <button class="nav-link" id="campagne<?php echo $campagne->getId(); ?>-tab"
-                data-bs-toggle="tab" data-bs-target="#campagne-active"
-                type="button" role="tab" aria-controls="campagne-active" aria-selected="true"
-                onclick="location.href='<?php //echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()],[],true); ?>'"
+        <?php /** @see \Application\Controller\AgentController::mesEntretiensProfessionnelsAction() */ ?>
+        <button class="nav-link" id="campagne-tab"
+                data-bs-toggle="tab" data-bs-target="#campagne"
+                type="button" role="tab" aria-controls="campagne" aria-selected="true"
+                onclick="location.href='<?php echo $this->url('mes-entretiens-professionnels', ['campagne' => $campagne->getId()],[],true); ?>'"
         >
-            Campagne active
+            Entretiens professionnels
         </button>
     <?php endif; ?>
 </div>
