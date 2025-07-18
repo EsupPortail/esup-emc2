@@ -135,7 +135,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
 
 
     <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
-    let baseUrl = <?php echo "'" . $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId()], [], true) . "'"; ?>;
+    let baseUrl = <?php echo "'" . $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId()], [], false) . "'"; ?>;
 
     $(document).ready(function () {
         $('#campagne').on('change', function () {
