@@ -630,6 +630,8 @@ class EntretienProfessionnelController extends AbstractActionController
         $structureId = $this->params()->fromQuery('from-structure');
         $structure = $this->getStructureService()->getStructure($structureId);
 
+        if ($role === null) return $this->redirect()->toRoute('home', [], [], true);
+
         switch($role->getRoleId()) {
             case AppRoleProvider::ADMIN_TECH :
             case AppRoleProvider::ADMIN_FONC :
