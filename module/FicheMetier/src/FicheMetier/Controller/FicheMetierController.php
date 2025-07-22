@@ -452,9 +452,25 @@ class FicheMetierController extends AbstractActionController
             }
         }
 
+        $css=<<<EOS
+.dropdown-item:hover span.text span.competence span.description { 
+    display: block !important; font-style: italic; 
+}    
+
+span.application {    
+    display: inline-block;
+}
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+EOS;
+
         $vm = new ViewModel([
             'title' => "Gestion des applications associées à la fiche métier",
             'form' => $form,
+            'css' => $css,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
@@ -477,12 +493,26 @@ class FicheMetierController extends AbstractActionController
             }
         }
 
+        $css=<<<EOS
+.dropdown-item:hover span.text span.competence span.description { 
+    display: block !important; font-style: italic; 
+}    
+
+span.competence {    
+    display: inline-block;
+}
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+EOS;
 
         $vm = new ViewModel([
             'title' => "Gestion des compétences associées à la fiche métier",
             'form' => $form,
             'js' => null,
-            'css' => ".dropdown-item:hover span.text span.competence span.description { display: block !important; font-style: italic; }"
+            'css' => $css,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
@@ -509,9 +539,25 @@ class FicheMetierController extends AbstractActionController
             }
         }
 
+        $css=<<<EOS
+.dropdown-item:hover span.text span.competence span.description { 
+    display: block !important; font-style: italic; 
+}    
+
+span.competence {    
+    display: inline-block;
+}
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+EOS;
+
         $vm = new ViewModel([
             'title' => "Gestion des compétences spécifiques associées à la fiche métier",
             'form' => $form,
+            'css' => $css,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
