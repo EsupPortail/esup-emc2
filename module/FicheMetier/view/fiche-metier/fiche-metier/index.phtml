@@ -3,6 +3,8 @@
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Entity\Db\Domaine;
+use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
+use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Provider\Privilege\ReferentielmetierPrivileges;
 use UnicaenEtat\Entity\Db\EtatType;
 
@@ -12,6 +14,7 @@ use UnicaenEtat\Entity\Db\EtatType;
  * @var FicheMetier[] $fiches
  * @var EtatType[] $etatTypes
  * @var array $params
+ *
  */
 
 $canAjouter = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AJOUTER));
@@ -19,6 +22,9 @@ $canVoir = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPriv
 $canHistoriser = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_HISTORISER));
 $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 $canDetruire = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_DETRUIRE));
+
+$canAfficherFamille = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AFFICHER));
+$canAfficherMetier = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AFFICHER));
 
 $canReferentiel = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_INDEX));
 $this->headTitle('Index des fiches métiers');
@@ -69,7 +75,7 @@ $this->headTitle('Index des fiches métiers');
         <thead>
         <tr>
             <th> Libellé</th>
-            <th> Domaine</th>
+            <th> Famille professionnelle d'activité</th>
             <th style="width:8rem;"> État</th>
             <th class="action"> Action</th>
         </tr>
@@ -81,7 +87,16 @@ $this->headTitle('Index des fiches métiers');
                 <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
                       data-bs-toggle='tooltip' data-bs-html='true'
                 >
-                    <?php echo $fiche->getMetier()->getLibelle(); ?>
+                    <?php if ($canAfficherMetier): ?>
+                        <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('metier/afficher', ['metier' => $fiche->getMetier()->getId()], [], true); ?>"
+                               class="ajax-modal"
+                                    >
+                            <?php echo $fiche->getMetier()->getLibelle(); ?>
+                        </a>
+                    <?php else : ?>
+                        <?php echo $fiche->getMetier()->getLibelle(); ?>
+                    <?php endif; ?>
                 </span>
                     <?php if ($fiche->hasExpertise() === true) : ?>
                         <span class="badge" style="background: lightskyblue;">Expertise</span>
@@ -89,10 +104,18 @@ $this->headTitle('Index des fiches métiers');
                 </td>
                 <td>
                     <ul>
-                        <?php foreach ($fiche->getMetier()->getDomaines() as $domaine) : ?>
+                        <?php foreach ($fiche->getMetier()->getFamillesProfessionnelles() as $fap) : ?>
                             <li>
-                                <?php echo $domaine; ?>
-                                <?php echo $this->typefonction($domaine); ?>
+                                <?php if ($canAfficherFamille) : ?>
+                                    <?php /** @see \Metier\Controller\FamilleProfessionnelleController::afficherAction() */ ?>
+                                    <a href="<?php echo $this->url('famille-professionnelle/afficher', ['famille-professionnelle' => $fap->getId()], [], true); ?>"
+                                       class="ajax-modal"
+                                   >
+                                        <?php echo $fap->getLibelle(); ?>
+                                    </a>
+                                <?php else : ?>
+                                    <?php echo $fap->getLibelle(); ?>
+                                <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -116,7 +139,9 @@ $this->headTitle('Index des fiches métiers');
                     <?php if ($canVoir) : ?>
                         <a
                             <?php /** @see FicheMetierController::afficherAction() */ ?>
-                                href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                                class="action secondary"
+                        >
                             <span class="icon icon-voir"></span>
                             Afficher
                         </a>
@@ -127,6 +152,7 @@ $this->headTitle('Index des fiches métiers');
                             <?php /** @see FicheMetierController::exporterAction() */ ?>
                                 href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                 title="Exporter en PDF la fiche métier"
+                                class="action secondary"
                         >
                             <span class="icon icon-pdf"></span>
                             Exporter
@@ -135,7 +161,8 @@ $this->headTitle('Index des fiches métiers');
                     <?php if ($canEditer) : ?>
                         <br/>
                         <?php /** @see FicheMetierController::modifierAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                           class="action primary">
                             <span class="icon icon-editer"></span>
                             Modifier
                         </a>
@@ -143,7 +170,8 @@ $this->headTitle('Index des fiches métiers');
                     <?php if ($canEditer) : ?>
                         <br/>
                         <?php /** @see FicheMetierController::dupliquerAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-metier/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('fiche-metier/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                           class="action primary">
                             <span class="icon icon-cloner"></span>
                             Dupliquer
                         </a>
@@ -153,14 +181,18 @@ $this->headTitle('Index des fiches métiers');
                         <?php if ($fiche->estNonHistorise()) : ?>
                             <?php /** @see FicheMetierController::historiserAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/historiser', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                               title="Historiser la fiche metier">
+                               title="Historiser la fiche metier"
+                               class="action warning"
+                            >
                                 <span class="icon icon-historiser"></span>
                                 Historiser
                             </a>
                         <?php else: ?>
                             <?php /** @see FicheMetierController::restaurerAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/restaurer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                               title="Restaurer la fiche metier">
+                               title="Restaurer la fiche metier"
+                               class="action warning"
+                            >
                                 <span class="icon icon-restaurer"></span>
                                 Restaurer
                             </a>
@@ -172,12 +204,10 @@ $this->headTitle('Index des fiches métiers');
                             <?php /** @see FicheMetierController::supprimerAction() */ ?>
                                 href="<?php echo $this->url('fiche-metier/supprimer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                 title="Détruire la fiche metier"
-                                class="ajax-modal" data-event="modification"
+                                class="action danger ajax-modal" data-event="modification"
                         >
-                        <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
                         </a>
                     <?php endif; ?>
                 </td>
