@@ -201,15 +201,15 @@ class Metier implements HistoriqueAwareInterface {
         $html .= htmlentities($this->getLibelle(), ENT_QUOTES);
         $html .= '</span><br/>';
 
-        /** Lignes sur les domaines du metier **/
-        $html .= '<strong>Domaines</strong> :';
-        $html .= '<ul>';
-        foreach ($this->getDomaines() as $domaine) {
-            $html .= '<li>';
-            $html .= htmlentities($domaine->getLibelle(), ENT_QUOTES);
-            $html .= '</li>';
-        }
-        $html .= '</ul>';
+//        /** Lignes sur les domaines du metier **/
+//        $html .= '<strong>Famille </strong> :';
+//        $html .= '<ul>';
+//        foreach ($this->getDomaines() as $domaine) {
+//            $html .= '<li>';
+//            $html .= htmlentities($domaine->getLibelle(), ENT_QUOTES);
+//            $html .= '</li>';
+//        }
+//        $html .= '</ul>';
         /** Ligne sur les refs */
         $html .= '<strong>Références</strong> :';
         foreach ($this->getReferences() as $reference) {
