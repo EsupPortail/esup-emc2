@@ -2,33 +2,35 @@
 
 namespace Application\Assertion;
 
-use Application\Service\Agent\AgentService;
 use Agent\Service\AgentAffectation\AgentAffectationService;
+use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Interop\Container\ContainerInterface;
+use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
-use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserService;
-use Laminas\Mvc\Application;
 
-class AgentAffichageAssertionFactory {
+class AgentAffichageAssertionFactory
+{
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function  __invoke(ContainerInterface $container): AgentAffichageAssertion
+    public function __invoke(ContainerInterface $container): AgentAffichageAssertion
     {
         /**
          * @var AgentService $agentService
          * @var AgentAutoriteService $agentAutoriteService
          * @var AgentSuperieurService $agentSuperieurService
          * @var AgentAffectationService $agentAffectationService
+         * @var ObservateurService $observateurService
          * @var StructureService $structureService
          * @var UserService $userService
          *
@@ -39,6 +41,7 @@ class AgentAffichageAssertionFactory {
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
+        $observateurService = $container->get(ObservateurService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
@@ -50,6 +53,7 @@ class AgentAffichageAssertionFactory {
         $assertion->setAgentAutoriteService($agentAutoriteService);
         $assertion->setAgentSuperieurService($agentSuperieurService);
         $assertion->setAgentAffectationService($agentAffectationService);
+        $assertion->setObservateurService($observateurService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 
@@ -58,7 +62,7 @@ class AgentAffichageAssertionFactory {
 
         /* @var $application Application */
         $application = $container->get('Application');
-        $mvcEvent    = $application->getMvcEvent();
+        $mvcEvent = $application->getMvcEvent();
         $assertion->setMvcEvent($mvcEvent);
         return $assertion;
     }
