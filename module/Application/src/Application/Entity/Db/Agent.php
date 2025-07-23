@@ -350,6 +350,32 @@ class Agent implements
     }
 
     /** Prédicats avec temoins ****************************************************************************************/
+
+    // pour le moment, on va gérer que les ET car plus simple
+    public function isCompatible(array $count, string $temoins): bool
+    {
+        $splittedTemoins = explode('&', $temoins);
+
+        $sat = true;
+        foreach ($splittedTemoins as $temoin)
+        {
+            $temoin = substr($temoin, 1);
+            $value = (isset($count[$temoin]) AND $count[$temoin]);
+            if ($temoin[0] === '!') $sat = ($sat && !$value);
+            else $sat &= ($sat && !$value);
+        }
+
+//        $situation = '';
+//        foreach ($count as $k => $v) {
+//            if ($v) {
+//                if ($situation !== '') $situation .= '&';
+//            }
+//            $situation .= $k;
+//        }
+//        var_dump($this->getDenomination() . " [TEMOIN:".$temoins."|SITUATION:".$situation."] ".($sat?"true":"false"));
+        return $sat;
+    }
+
     // TODO factoriser le comptage ...
 
     public function isValideAffectation(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
@@ -372,8 +398,14 @@ class Agent implements
 
     public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
     {
+        $start = true;
         if ($parametre === null) return true;
-        $temoins = $parametre->getTemoins();
+        $valeurs = $parametre->getValeur();
+        if ($valeurs === null) return false;
+        $valeurs = trim($valeurs);
+        if ($valeurs === '') return false;
+
+        $valeurs = explode(";", $valeurs);
 
         $count = [];
         $statuts = $this->getStatutsActifs($date);
@@ -385,9 +417,33 @@ class Agent implements
                     $count[$temoin] = true;
                 }
             }
-        }
 
-        return Agent::isTermoinsOk($temoins, $count);
+            foreach ($valeurs as $valeur) {
+                if (!$this->isCompatible($count, $valeur)) {
+                    //TODO retourner un tableau avec la règle ayant provoquée l'echec [false, '!postdoc&!cdd']
+                    //QUID de poursuivre pour lister toutes les règles ?
+                    return false;
+                }
+            }
+        }
+        return true;
+
+//        if ($parametre === null) return true;
+//        $temoins = $parametre->getTemoins();
+//
+//        $count = [];
+//        $statuts = $this->getStatutsActifs($date);
+//        if (empty($statuts)) return $emptyResult;
+//
+//        foreach ($statuts as $statut) {
+//            foreach (AgentStatut::TEMOINS as $temoin) {
+//                if ($statut->getTemoin($temoin)) {
+//                    $count[$temoin] = true;
+//                }
+//            }
+//        }
+//
+//       return Agent::isTermoinsOk($temoins, $count);
     }
 
     public function isValideEmploiType(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool

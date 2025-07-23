@@ -503,6 +503,9 @@ class AgentController extends AbstractActionController
         //Extraction de la liste des campagnes
         $campagnes = $this->getCampagneService()->getCampagnes();
 
+        //manque le tri des agents !!!!
+        $result = $this->getCampagneService()->trierAgents($campagne, $agents);
+
         $vm = new ViewModel([
             'campagnes' => $campagnes,
             'campagne' => $campagne,
