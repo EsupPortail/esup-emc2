@@ -23,6 +23,7 @@ use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use EntretienProfessionnel\Service\Url\UrlService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
@@ -31,6 +32,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -59,6 +61,7 @@ class AgentControllerFactory
          * @var FichierService $fichierService
          * @var ApplicationService $applicationService
          * @var StructureService $structureService
+         * @var UrlService $urlService
          * @var UserService $userService
          */
 
@@ -74,6 +77,7 @@ class AgentControllerFactory
          * @var AgentStatutService $agentStatutService
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var FichePosteService $fichePosteService
+         * @var RenduService $renduService
          * @var UserService $userService
          * @var CampagneService $campagneService
          */
@@ -89,6 +93,8 @@ class AgentControllerFactory
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $parametreService = $container->get(ParametreService::class);
+        $renduService = $container->get(RenduService::class);
+        $urlService = $container->get(UrlService::class);
         $userService = $container->get(UserService::class);
 
         $campagneService = $container->get(CampagneService::class);
@@ -130,6 +136,8 @@ class AgentControllerFactory
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setParametreService($parametreService);
+        $controller->setRenduService($renduService);
+        $controller->setUrlService($urlService);
         $controller->setUserService($userService);
 
         $controller->setApplicationElementService($applicationElementService);

@@ -28,8 +28,10 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
@@ -43,6 +45,7 @@ use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\HasValidationsInterface;
@@ -63,7 +66,9 @@ class AgentController extends AbstractActionController
     use EntretienProfessionnelServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use UserServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -504,14 +509,24 @@ class AgentController extends AbstractActionController
         $campagnes = $this->getCampagneService()->getCampagnes();
 
         //manque le tri des agents !!!!
-        $result = $this->getCampagneService()->trierAgents($campagne, $agents);
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
+
+        /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
+        $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne];
+        $templates = [];
+        $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION] = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION, $vars, false);
 
         $vm = new ViewModel([
             'campagnes' => $campagnes,
             'campagne' => $campagne,
             'agent' => $connectedAgent,
             'agents' => $agents,
+            'obligatoires' => $obligatoires,
+            'facultatifs' => $facultatifs,
+            'raisons' => $raisons,
+
             'entretiens' => $entretiens,
+            'templates' => $templates,
         ]);
         return $vm;
     }
