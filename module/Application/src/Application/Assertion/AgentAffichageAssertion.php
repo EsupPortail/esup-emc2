@@ -10,6 +10,7 @@ use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
+use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieServiceAwareTrait;
@@ -25,6 +26,7 @@ class AgentAffichageAssertion extends AbstractAssertion
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -65,6 +67,7 @@ class AgentAffichageAssertion extends AbstractAssertion
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
+        if ($role->getRoleId() === StructureRoleProvider::OBSERVATEUR) $isObservateur = $this->getObservateurService()->isObservateur($structures,$user);
 
         switch ($privilege) {
             case AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE :
@@ -77,6 +80,7 @@ class AgentAffichageAssertion extends AbstractAssertion
                 return match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
+                    StructureRoleProvider::OBSERVATEUR => $isObservateur,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
                     Agent::ROLE_AUTORITE => $isAutorite,
                     AppRoleProvider::AGENT => $entity === $agent,
