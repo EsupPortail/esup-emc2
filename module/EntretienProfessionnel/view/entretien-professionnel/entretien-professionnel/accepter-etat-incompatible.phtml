@@ -1,0 +1,22 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+
+/**
+ * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accepterEntretienAction()
+ * @var EntretienProfessionnel $entretien
+ */
+
+?>
+
+<div class="alert alert-warning">
+    <p>
+        <strong>
+            L'acceptation de l'entretien n'est plus possible, car celui est à l'état <?php echo $entretien->getEtatActif()->getType()->getLibelle(); ?>.
+        </strong>
+    </p>
+
+    <p>
+        Cela peut se produire si l'entretien a déjà eu lieu et que votre reponsable a validé ses comptes-rendu.
+    </p>
+</div>

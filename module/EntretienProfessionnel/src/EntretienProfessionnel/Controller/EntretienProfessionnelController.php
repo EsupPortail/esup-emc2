@@ -238,12 +238,13 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));
-                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
-                if ($entretien->getDateEntretien() < $jplus15) {
-                    $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                if ($delai !== null) {
+                    $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
+                    $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
+                    if ($entretien->getDateEntretien() < $jplus15) {
+                        $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de " . $delai . " jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                    }
                 }
-
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
@@ -552,6 +553,12 @@ class EntretienProfessionnelController extends AbstractActionController
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
         $token = $this->params()->fromRoute('token');
         if ($entretien === null) throw new RuntimeException("Aucun entretien professionnel de remonté pour l'id #" . $this->params()->fromRoute('entretien-professionnel'));
+
+        if (!$entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) {
+            $vm = new ViewModel(['entretien' => $entretien]);
+            $vm->setTemplate('entretien-professionnel/accepter-etat-incompatible');
+            return $vm;
+        }
 
         try {
             $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_ACCEPTATION_AGENT);
