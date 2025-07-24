@@ -617,37 +617,33 @@ EOS;
 
             $kept = true;
 
-            if (!$agent->isValideEmploiType(
-                $parametres[StructureParametres::AGENT_TEMOIN_EMPLOITYPE],
-                $now)) {
+            $result = $agent->isValideEmploiType($parametres[StructureParametres::AGENT_TEMOIN_EMPLOITYPE],$now, null,false);
+            if ($result[0] === true) {
                 $kept = false;
-                $raison[$agent->getId()] .= "<li>Emploi-type invalide</li>";
+                $explications = implode(", ", $result[1]);
+                $raison[$agent->getId()] .= "<li>Emploi-type invalide (".$explications.")</li>";
             }
-            if (!$agent->isValideStatut(
-                $parametres[StructureParametres::AGENT_TEMOIN_STATUT],
-                $now)) {
+
+            $result = $agent->isValideStatut($parametres[StructureParametres::AGENT_TEMOIN_STATUT],$now, null,false);
+            if ($result[0] === true) {
                 $kept = false;
-                $raison[$agent->getId()] .= "<li>Statut invalide</li>";
+                $explications = implode(", ", $result[1]);
+                $raison[$agent->getId()] .= "<li>Statut invalide (".$explications.")</li>";
+            }
+
+            $result = $agent->isValideAffectation($parametres[StructureParametres::AGENT_TEMOIN_AFFECTATION],$now, $structures,false);
+            if ($result[0] === true) {
+                $kept = false;
+                $explications = implode(", ", $result[1]);
+                $raison[$agent->getId()] .= "<li>Affectation invalide (".$explications.")</li>";
 
             }
-            if (!$agent->isValideAffectation(
-                $parametres[StructureParametres::AGENT_TEMOIN_AFFECTATION],
-                $now, $structures)) {
-                $kept = false;
-                $raison[$agent->getId()] .= "<li>Affectation invalide</li>";
-            }
-            if (!$agent->isValideGrade(
-                $parametres[StructureParametres::AGENT_TEMOIN_GRADE],
-                $now)) {
-                $kept = false;
-                $raison[$agent->getId()] .= "<li>Grade invalide</li>";
-            }
-            if (!$agent->isValideCorps(
-                $parametres[StructureParametres::AGENT_TEMOIN_CORPS],
-                $now)) {
-                $kept = false;
-                $raison[$agent->getId()] .= "<li>Corps invalide</li>";
-            }
+//            if (!$agent->isValideCorps(
+//                $parametres[StructureParametres::AGENT_TEMOIN_CORPS],
+//                $now)) {
+//                $kept = false;
+//                $raison[$agent->getId()] .= "<li>Corps invalide</li>";
+//            }
 
             if ($kept) $conserver[$agent->getId()] = $agent; else $retirer[$agent->getId()] = $agent;
             $raison[$agent->getId()] .= "</ul>";

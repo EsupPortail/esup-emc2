@@ -50,7 +50,12 @@ if ($affectation !== null) {
                 Aucune structure
             <?php else : ?>
                 <?php
-                    $texte = ""; if ($niveau2) $texte = $niveau2->getLibelleCourt() . " > "; $texte .= $structure->getLibelleCourt();
+                    $texte = "";
+                    if ($niveau2) {
+                        $texte = $niveau2->getSigle()??$niveau2->getLibelleCourt();
+                        $texte .= " > ";
+                    }
+                    $texte .= $structure->getLibelleCourt();
                     $tooltip = "<strong>".$structure->getLibelleLong()."</strong>"; if ($niveau2) $tooltip .= "<br/> rattachée à <br/><strong>" . $niveau2->getLibelleLong() ."</strong>";
                 ?>
                 <span class="badge structure" title="<?php echo $tooltip; ?>" data-bs-toggle="tooltip" data-bs-html="true">
