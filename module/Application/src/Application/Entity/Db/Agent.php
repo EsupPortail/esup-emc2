@@ -468,50 +468,33 @@ class Agent implements
         return [false, []];
     }
 
-    public function isValideGrade(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
+    /** retourne un tableau [ ?bool, [explications]] */
+    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
-        $temoins = $parametre->getTemoins();
+        if ($parametre === null) return [null, ["Aucun paramètres"]];
+        $valeurs = $parametre->getValeur();
+        if ($valeurs === null) return [null, ["Valeur du paramètre null"]];
+        $valeurs = trim($valeurs);
+        if ($valeurs === '') return [null, ["Valeur du paramètre vide"]];
+
+        $valeurs = explode(";", $valeurs);
 
         $count = [];
         $grades = $this->getGradesActifs($date);
-        if (empty($grades)) return $emptyResult;
-        foreach ($grades as $grade) {
-            if ($grade->getGrade()) $count[$grade->getGrade()->getLibelleCourt()] = true;
-        }
+        if (empty($grades)) return [$emptyResult, ["Aucun corps"]];
 
-        return Agent::isTermoinsOk($temoins, $count);
-    }
-
-    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
-    {
-        $temoins = $parametre->getTemoins();
-
-        $count = [];
-        $grades = $this->getGradesActifs($date);
-        if (empty($grades)) return $emptyResult;
+        $match = [];
         foreach ($grades as $grade) {
             if ($grade->getCorps()) $count[$grade->getCorps()->getLibelleCourt()] = true;
-        }
 
-        return Agent::isTermoinsOk($temoins, $count);
-    }
-
-    public static function isTermoinsOk(array $temoins, array $count): bool
-    {
-        $keep = true;
-        foreach ($temoins['on'] as $temoin) {
-            if (!isset($count[$temoin])) {
-                $keep = false;
-                break;
+            foreach ($valeurs as $valeur) {
+                if ($this->isCompatible($count, $valeur)) {
+                    $match[] = $valeur;
+                }
             }
         }
-        foreach ($temoins['off'] as $temoin) {
-            if (isset($count[$temoin])) {
-                $keep = false;
-                break;
-            }
-        }
-        return $keep;
+        if (!empty($match)) return [true, $match];
+        return [false, []];
     }
 
     /** Autres accesseurs *********************************************************************************************/

@@ -321,19 +321,11 @@ class CampagneService
             if ($agent->isForceExclus($campagne)) {
                 continue;
             }
-//            if ($agent->isValideCorps(
-//                $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],
-//                $campagne->getDateDebut(),null,true)
-//            ) {
-//                continue;
-//            }
-//            if ($agent->isValideAffectation(
-//                $parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS],
-////                $campagne->getDateDebut(),$structures,true)
-//                $campagne->getDateDebut(),null,true)
-//            ) {
-//                continue;
-//            }
+
+            // Exclusion CORPS //
+            $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],$campagne->getDateEnPoste());
+            if ($result[0] === true) continue;
+
             // Exclusion AFFECTATIONS //
             $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS],$campagne->getDateEnPoste(), $structures);
             if ($result[0] === true) continue;
@@ -342,12 +334,10 @@ class CampagneService
             $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS],$campagne->getDateEnPoste());
             if ($result[0] === true) continue;
 
-//            if ($agent->isValideEmploiType(
-//                $parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS],
-//                $campagne->getDateDebut(),null,true)
-//            ) {
-//                continue;
-//            }
+            // Exclusion EMPLOI-TYPE //
+            $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS],$campagne->getDateEnPoste());
+            if ($result[0] === true) continue;
+
             $kept = true;
 
             // FILTRAGE ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -357,10 +347,10 @@ class CampagneService
                 $kept = false;
             }
 
-//            if (!$agent->isContratLong()) {
-//                $kept = false;
-//                $raison[$agent->getId()] .= "<li>Sans 'contrat long'</li>";
-//            }
+            if (!$agent->isContratLong()) {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans 'contrat long'</li>";
+            }
 
             // Filtrage AFFECTATIONS //
             $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION],$campagne->getDateEnPoste(), $structures);
@@ -380,28 +370,24 @@ class CampagneService
                 $raison[$agent->getId()] .= "<li>Statut invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
             }
 
+            // Filtrage EMPLOI-TYPE //
+            $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE],$campagne->getDateEnPoste());
+            if ($result[0] === true)
+            {
+                $kept = false;
+                $explication = implode(", ",$result[1]);
+                $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
+            }
 
+            // Filtrage EMPLOI-TYPE //
+            $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],$campagne->getDateEnPoste());
+            if ($result[0] === true)
+            {
+                $kept = false;
+                $explication = implode(", ",$result[1]);
+                $raison[$agent->getId()] .= "<li>Corps invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
+            }
 
-//            if ($parametres[EntretienProfessionnelParametres::FILTRAGE_AGENTGRADE]->getValeur() !== "false") {
-//                if (!$agent->isValideGrade(
-//                    $parametres[EntretienProfessionnelParametres::TEMOIN_GRADE],
-//                    $campagne->getDateEnPoste(), null)) {
-//                    $kept = false;
-//                    $raison[$agent->getId()] .= "<li>Sans grade valide (à la date du " . $campagne->getDateEnPoste()->format('d/m/y') . ") </li>";
-//                }
-//                if (!$agent->isValideCorps(
-//                    $parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],
-//                    $campagne->getDateEnPoste())) {
-//                    $kept = false;
-//                    $raison[$agent->getId()] .= "<li>Sans corps valide (à la date du " . $campagne->getDateEnPoste()->format('d/m/y') . ") </li>";
-//                }
-//                if (!$agent->isValideEmploiType(
-//                    $parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE],
-//                    $campagne->getDateEnPoste())) {
-//                    $kept = false;
-//                    $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du " . $campagne->getDateEnPoste()->format('d/m/y') . ") dans le cadre des entretiens professionnels</li>";
-//                }
-//            }
             if ($agent->isForceAvecObligation($campagne)) {
                 $raison[$agent->getId()] .= "<li>Forcé·e avec obligation</li>";
                 $kept = true;

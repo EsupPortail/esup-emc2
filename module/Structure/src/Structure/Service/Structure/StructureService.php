@@ -638,12 +638,14 @@ EOS;
                 $raison[$agent->getId()] .= "<li>Affectation invalide (".$explications.")</li>";
 
             }
-//            if (!$agent->isValideCorps(
-//                $parametres[StructureParametres::AGENT_TEMOIN_CORPS],
-//                $now)) {
-//                $kept = false;
-//                $raison[$agent->getId()] .= "<li>Corps invalide</li>";
-//            }
+
+            $result = $agent->isValideCorps($parametres[StructureParametres::AGENT_TEMOIN_CORPS],$now, null,false);
+            if ($result[0] === true) {
+                $kept = false;
+                $explications = implode(", ", $result[1]);
+                $raison[$agent->getId()] .= "<li>Corps invalide (".$explications.")</li>";
+
+            }
 
             if ($kept) $conserver[$agent->getId()] = $agent; else $retirer[$agent->getId()] = $agent;
             $raison[$agent->getId()] .= "</ul>";
