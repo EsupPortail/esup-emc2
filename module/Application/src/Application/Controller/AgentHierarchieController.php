@@ -20,7 +20,6 @@ use Laminas\View\Model\ViewModel;
 use RuntimeException;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnhandledMatchError;
 use UnicaenApp\View\Model\CsvModel;
 
 class AgentHierarchieController extends AbstractActionController
@@ -192,30 +191,34 @@ class AgentHierarchieController extends AbstractActionController
                 foreach ($agents as $agent) {
                     $superieurs[$agent->getId()] = [];
                     $affectation = $agent->getAffectationPrincipale();
-                    $structureAffectation = $affectation->getStructure();
-                    $responsables = $structureAffectation?->getResponsables();
-                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
-                        return $responsable->getAgent() !== $agent;
-                    });
-                    while (empty($responsables) and $structureAffectation and $structureAffectation !== $affectation->getStructure()->getNiv2()) {
-                        $structureAffectation = $structureAffectation->getParent();
-                        $responsables = $structureAffectation->getResponsables();
+                    if ($affectation === null) {
+                        $warning[] = "L'agent·e [" . $agent->getDenomination() . "] n'a pas d'affectation principale.";
+                    } else {
+                        $structureAffectation = $affectation->getStructure();
+                        $responsables = $structureAffectation?->getResponsables();
                         $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
                             return $responsable->getAgent() !== $agent;
                         });
-                    }
-                    if (empty($responsables)) {
-                        $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
-                    } else {
-                        foreach ($responsables as $responsable) {
-                            $superieur = new AgentSuperieur();
-                            $superieur->setSuperieur($responsable->getAgent());
-                            $superieur->setAgent($agent);
-                            $superieur->setDateDebut($responsable->getDateDebut());
-                            $superieur->setDateFin($responsable->getDateFin());
-                            $superieur->setInsertedOn(new DateTime());
-                            $superieur->setId($superieur->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
-                            $superieurs[$agent->getId()][] = $superieur;
+                        while (empty($responsables) and $structureAffectation and $structureAffectation !== $affectation->getStructure()->getNiv2()) {
+                            $structureAffectation = $structureAffectation->getParent();
+                            $responsables = $structureAffectation->getResponsables();
+                            $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                                return $responsable->getAgent() !== $agent;
+                            });
+                        }
+                        if (empty($responsables)) {
+                            $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
+                        } else {
+                            foreach ($responsables as $responsable) {
+                                $superieur = new AgentSuperieur();
+                                $superieur->setSuperieur($responsable->getAgent());
+                                $superieur->setAgent($agent);
+                                $superieur->setDateDebut($responsable->getDateDebut());
+                                $superieur->setDateFin($responsable->getDateFin());
+                                $superieur->setInsertedOn(new DateTime());
+                                $superieur->setId($superieur->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
+                                $superieurs[$agent->getId()][] = $superieur;
+                            }
                         }
                     }
                 }
@@ -227,24 +230,29 @@ class AgentHierarchieController extends AbstractActionController
                 foreach ($agents as $agent) {
                     $autorites[$agent->getId()] = [];
                     $affectation = $agent->getAffectationPrincipale();
-                    $structureNiv2 = $affectation->getStructure()->getNiv2();
-                    $responsables = ($structureNiv2) ? $structureNiv2->getResponsables() : [];
-                    $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
-                        return $responsable->getAgent() !== $agent;
-                    });
 
-                    if (empty($responsables)) {
-                        $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
+                    if ($affectation === null) {
+                        $warning[] = "L'agent·e [" . $agent->getDenomination() . "] n'a pas d'affectation principale.";
                     } else {
-                        foreach ($responsables as $responsable) {
-                            $autorite = new AgentAutorite();
-                            $autorite->setAutorite($responsable->getAgent());
-                            $autorite->setAgent($agent);
-                            $autorite->setDateDebut($responsable->getDateDebut());
-                            $autorite->setDateFin($responsable->getDateFin());
-                            $autorite->setInsertedOn(new DateTime());
-                            $autorite->setId($autorite->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
-                            $autorites[$agent->getId()][] = $autorite;
+                        $structureNiv2 = $affectation->getStructure()->getNiv2();
+                        $responsables = ($structureNiv2) ? $structureNiv2->getResponsables() : [];
+                        $responsables = array_filter($responsables, function (StructureResponsable $responsable) use ($agent) {
+                            return $responsable->getAgent() !== $agent;
+                        });
+
+                        if (empty($responsables)) {
+                            $warning[] = "Calcul impossible pour l'agent·e [" . $agent->getDenomination() . "]";
+                        } else {
+                            foreach ($responsables as $responsable) {
+                                $autorite = new AgentAutorite();
+                                $autorite->setAutorite($responsable->getAgent());
+                                $autorite->setAgent($agent);
+                                $autorite->setDateDebut($responsable->getDateDebut());
+                                $autorite->setDateFin($responsable->getDateFin());
+                                $autorite->setInsertedOn(new DateTime());
+                                $autorite->setId($autorite->generateId() . "-computed-" . ((new DateTime())->format('Ymdhis')));
+                                $autorites[$agent->getId()][] = $autorite;
+                            }
                         }
                     }
                 }
@@ -383,7 +391,7 @@ class AgentHierarchieController extends AbstractActionController
                             throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu");
                     }
                 }
-                if ($data['cloture'] === '1')  switch ($type) {
+                if ($data['cloture'] === '1') switch ($type) {
                     case 'superieur':
                         $this->getAgentSuperieurService()->clotureAll($chaine->getAgent());
                         break;
@@ -471,7 +479,7 @@ class AgentHierarchieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => $titre,
             'form' => $form,
-            'js' => "$('#cloture').parent().hide(); $('#historisation').parent().hide();". (($chaine->getAgent()) ? "$('#agent-autocomplete').parent().hide();" : ""),
+            'js' => "$('#cloture').parent().hide(); $('#historisation').parent().hide();" . (($chaine->getAgent()) ? "$('#agent-autocomplete').parent().hide();" : ""),
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
@@ -603,16 +611,16 @@ class AgentHierarchieController extends AbstractActionController
             };
         if ($chaines === null) throw new RuntimeException("Le type [" . $type . "] est inconnu.");
 
-        $header=["agent", $type, "debut", "fin"];
+        $header = ["agent", $type, "debut", "fin"];
         $data = [];
         foreach ($chaines as $chaine) {
             $data[] =
                 [
                     $chaine->getAgent()->getDenomination(),
-                    match($type) {
-                         'superieur' => $chaine->getSuperieur()->getDenomination(),
-                         'autorite' => $chaine->getAutorite()->getDenomination(),
-                         default => null,
+                    match ($type) {
+                        'superieur' => $chaine->getSuperieur()->getDenomination(),
+                        'autorite' => $chaine->getAutorite()->getDenomination(),
+                        default => null,
                     },
                     ($chaine->getDateDebut())?->format('d/m/Y'),
                     ($chaine->getDateFin())?->format('d/m/Y'),
@@ -620,7 +628,7 @@ class AgentHierarchieController extends AbstractActionController
         }
 
         $date = (new DateTime())->format('Ymd-His');
-        $filename="chaine_".$type."_".$date.".csv";
+        $filename = "chaine_" . $type . "_" . $date . ".csv";
         $CSV = new CsvModel();
         $CSV->setDelimiter(';');
         $CSV->setEnclosure('"');
@@ -630,7 +638,6 @@ class AgentHierarchieController extends AbstractActionController
         return $CSV;
 
     }
-
 
 
 }
