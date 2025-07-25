@@ -28,6 +28,7 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -511,6 +512,17 @@ class AgentController extends AbstractActionController
         //manque le tri des agents !!!!
         [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $finalises = [];
+        $encours = [];
+        foreach ($entretiens as $entretien) {
+            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $finalises[] = $entretien;
+            } else {
+                $encours[] = $entretien;
+            }
+        }
+
         /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
         $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne];
         $templates = [];
@@ -526,6 +538,9 @@ class AgentController extends AbstractActionController
             'raisons' => $raisons,
 
             'entretiens' => $entretiens,
+            'encours' => $encours,
+            'finalises' => $finalises,
+
             'templates' => $templates,
         ]);
         return $vm;
