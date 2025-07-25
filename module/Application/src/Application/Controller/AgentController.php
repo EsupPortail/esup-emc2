@@ -102,8 +102,12 @@ class AgentController extends AbstractActionController
             if (isset($params['type']) and $params['type'] === 'acceder') {
                 $agentId = $params['agent-sas']['id'] ?? null;
                 if ($agentId) return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentId], [], true);
+                $agentLabel = $params['agent-sas']['label'] ?? null;
+                $agents = $this->getAgentService()->getAgentsLargeByTerm($agentLabel);
+                if (count($agents) === 1) return $this->redirect()->toRoute('agent/afficher', ['agent' => current($agents)->getId()], [], true);
+
             }
-            if (isset($params['type']) and $params['type'] === 'filtrer') {
+            if (empty($agents) and isset($params['type']) and $params['type'] === 'filtrer') {
                 $agents = $this->getAgentService()->getAgentsWithFiltre($params);
             }
         }
