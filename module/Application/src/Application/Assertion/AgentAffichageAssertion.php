@@ -9,6 +9,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Application\Service\Perimetre\PerimetreServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -30,6 +31,7 @@ class AgentAffichageAssertion extends AbstractAssertion
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
+    use PerimetreServiceAwareTrait;
     use PrivilegeCategorieServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
 
@@ -61,9 +63,12 @@ class AgentAffichageAssertion extends AbstractAssertion
             $structures[] = $structureAgentForce->getStructure();
         }
 
+        $perimetres = $this->getPerimetreService()->getPerimetres($user, $role);
+
         $isResponsable = false;
         $isSuperieur = false;
         $isAutorite = false;
+        $isObservateur = false;
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
