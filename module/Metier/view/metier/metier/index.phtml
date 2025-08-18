@@ -50,8 +50,6 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
 </div>
 
 
-<?php echo $this->partial('partial/filtre', ['domaines' => $domaines, 'familles' => $familles, 'domaine' => $domaine, 'famille' => $famille,'historise' => $historise]); ?>
-
 <?php if ($canAjouter) : ?>
     <a  <?php /** @see \Metier\Controller\MetierController::ajouterAction() */ ?>
             href="<?php echo $this->url('metier/ajouter', [], [], true);?>"
@@ -62,6 +60,9 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
         Ajouter un métier
     </a>
 <?php endif;?>
+
+<?php echo $this->partial('partial/filtre', ['domaines' => $domaines, 'familles' => $familles, 'domaine' => $domaine, 'famille' => $famille,'historise' => $historise]); ?>
+
 
 
 <table id="metiers" class="datatable table table-condensed table-hover">

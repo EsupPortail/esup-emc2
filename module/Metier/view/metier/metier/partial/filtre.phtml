@@ -13,17 +13,17 @@ use Metier\Entity\Db\FamilleProfessionnelle;
 
 ?>
 
-<div class="card">
+<div class="card" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
     <div class="card-header bg-default">
         <span class="icon icon-filtrer"></span>
-        Filtrage de la liste des métiers
+        Filtre de recherche des métiers
     </div>
     <div class="card-body">
         <form id="filter" method="get" action="<?php echo $this->url(); ?>">
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="domaine">Domaine d'activité associé : </label>
                             <select id="domaine" name="domaine" class="selectpicker" data-live-search="true">
                                 <option value="">Peu importe</option>
@@ -32,7 +32,15 @@ use Metier\Entity\Db\FamilleProfessionnelle;
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
+                            <label for="historise">Métiers historisés : </label>
+                            <select id="historise" name="historise" class="selectpicker">
+                                <option value="">Peu importe</option>
+                                <option value="1">Oui</option>
+                                <option value="0">Non</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
                             <label for="famille">Famille professionnelle associée : </label>
                             <select id="famille" name="famille" class="selectpicker" data-live-search="true">
                                 <option value="">Peu importe</option>
@@ -41,23 +49,15 @@ use Metier\Entity\Db\FamilleProfessionnelle;
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label for="historise">Métiers historisés : </label>
-                            <select id="historise" name="historise" class="selectpicker">
-                                <option value="">Peu importe</option>
-                                <option value="1">Oui</option>
-                                <option value="0">Non</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <button type="button" id="filter" class="btn btn-primary filter-action">
                         <span class="icon icon-filtrer" aria-hidden="true"></span> Filtrer
                     </button>
                     <br/>
                     <button type="button" id="reset" class="btn btn-primary filter-action">
-                        <span class="icon icon-gommer" aria-hidden="true"></span> R.A.Z.
+                        <span class="icon icon-gommer" aria-hidden="true"></span> Remise à zéro
                     </button>
                 </div>
             </div>
