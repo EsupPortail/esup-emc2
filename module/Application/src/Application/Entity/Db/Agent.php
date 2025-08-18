@@ -519,7 +519,7 @@ class Agent implements
         if ($nomCap) $nom = strtoupper($nom);
         if ($nomBold) $nom = "<strong>" . $nom . "</strong>";
         if ($prenomFirst) return ucwords(strtolower($prenom), "- ") . ' ' . $nom;
-        return $nom . ' ' . ucwords(strtolower($prenom), "- ");
+        return trim($nom . ' ' . ucwords(strtolower($prenom), "- "));
 
     }
 

@@ -330,6 +330,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'ficheposte' => $ficheposte,
             'ficheposteFichier' => $ficheposteFichier,
             'dateMaxObservation' => $this->getEntretienProfessionnelService()->computeMaxSaisiObservation($entretien),
+            'delaiObservation' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT),
 
             'fichesmetiers' => $fichesmetiers,
             'mails' => $mails,
@@ -475,10 +476,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $text = "Validation de l'entretien";
         switch ($type) {
             case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
+                $parametre = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT)??"<span class='text-danger'>Délai non renseigné</span>";
                 $title = "Validation par le responsable de l'entretien professionnel";
                 $text = "<p>";
                 $text .= "Cette validation figera les comptes-rendus d'entretien et de formation de " . $entretien->getAgent()->getDenomination(true) . ".<br>";
-                $text .= "La validation ouvre la période de huit jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
+                $text .= "La validation ouvre la période de ".$parametre." jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
                 $text .= "</p>";
                 $text .= "Êtes-vous sur·e de vouloir valider ?";
                 break;

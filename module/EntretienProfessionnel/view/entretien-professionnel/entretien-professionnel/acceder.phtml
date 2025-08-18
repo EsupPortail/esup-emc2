@@ -24,19 +24,20 @@
  * @var bool $BLOCAGE_VALIDATION
  * @var bool $OBSERVATION_FINALE
  * @var ?DateTime $dateMaxObservation
+ * @var ?int $delaiObservation
  *
  * @var ?int $fromStructure
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
 use Application\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
-use EntretienProfessionnel\Entity\Db\Observateur;
-use FicheMetier\Entity\Db\FicheMetier;
-use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\Observateur;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use FicheMetier\Entity\Db\FicheMetier;
 use Fichier\Entity\Db\Fichier;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEvenement\Provider\Privilege\EvenementinstancePrivileges;
@@ -54,17 +55,16 @@ $canModifierEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENP
 $canEvenement = $this->isAllowed(EvenementinstancePrivileges::getResourceId(EvenementinstancePrivileges::INSTANCE_CONSULTATION));
 
 $now = new DateTime();
-$depasseObs = ($dateMaxObservation !== null AND $dateMaxObservation < $now);
+$depasseObs = ($dateMaxObservation !== null and $dateMaxObservation < $now);
 
 $step = 0;
 
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)) $step = 1;
-if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) OR $depasseObs) $step = 2;
-if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE))  $step = 3;
-if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT))       $step = 4;
+if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) or $depasseObs) $step = 2;
+if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)) $step = 3;
+if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) $step = 4;
 
 ?>
-
 
 
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
@@ -83,41 +83,49 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
         </h1>
     </div>
     <div class="col-md-4">
-    <?php $isAgent                = $entretien->getAgent()->getUtilisateur() === $user; ?>
-    <?php if ($isAgent AND (
-        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
-        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) )) : ?>
-    <?php else : ?>
-        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::retourListeAction() */ ?>
-        <a href="<?php echo $this->url('entretien-professionnel/retour-liste', ['entretien-professionnel' => $entretien->getId()], ['query' => ['from-structure' => $fromStructure]], true); ?>"
-            class="btn btn-secondary">
-            <span class="icon icon-retour"></span>
-            Retour à la liste des entretiens
-        </a>
-        <?php if ($canExporterEP) : ?>
-            <div class="pull-right">
-                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
-                <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
-                   class="btn btn-primary action">
-                    <span class="icon icon-pdf"></span>
-                    Exporter le CREP
-                </a>
-                <br/>
-                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */?>
-                <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
-                   class="btn btn-primary action">
-                    <span class="icon icon-pdf"></span>
-                    Exporter le CREF
-                </a>
-            </div>
+        <?php $isAgent = $entretien->getAgent()->getUtilisateur() === $user; ?>
+        <?php if ($isAgent and (
+                $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
+                $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION))) : ?>
+        <?php else : ?>
+            <?php if ($canExporterEP) : ?>
+                <div class="pull-right">
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
+                       target="_blank"
+                       class="btn btn-primary">
+                        <span class="icon icon-pdf"></span>
+                        Exporter le CREP
+                    </a>
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>"
+                       target="_blank"
+                       class="btn btn-primary">
+                        <span class="icon icon-pdf"></span>
+                        Exporter le CREF
+                    </a>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
-    <?php endif; ?>
     </div>
 </div>
 
+<?php if ($isAgent and (
+        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
+        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION))) : ?>
+<?php else : ?>
+    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::retourListeAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/retour-liste', ['entretien-professionnel' => $entretien->getId()], ['query' => ['from-structure' => $fromStructure]], true); ?>"
+       class="btn btn-secondary">
+        <span class="icon icon-retour"></span>
+        Retour à la liste des entretiens
+    </a>
+    <br>
+<?php endif; ?>
+
 
 <?php
-    echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'ficheposteFichier' => $ficheposteFichier, 'fichesmetiers' => $fichesmetiers, "documents" => $documents, 'observateurs' => $observateurs], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'ficheposteFichier' => $ficheposteFichier, 'fichesmetiers' => $fichesmetiers, "documents" => $documents, 'observateurs' => $observateurs], [], true);
 ?>
 
 
@@ -128,10 +136,14 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
         <br>
         En tant qu'Agent ou Agente, vous pouvez modifier le compte-rendu d'entretien professionnel :
         <ul>
-            <li> après avoir accepté celui-ci <?php echo ($entretien->isAccepte())?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?> </li>
-            <li> tant que la date d'entretien n'est pas dépassée <?php echo (!$entretien->isDepasse())?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?> </li>
-            <li> tant que le ou la Responsable de l'entretien n'a pas validé celui-ci <?php echo (!$entretien->isValideResponsable())?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?> </li>
-<!--            <li> avoir le droit de renseigner les comptes-rendus --><?php //echo ($canModifierEP)?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?><!-- </li>-->
+            <li> après avoir accepté
+                celui-ci <?php echo ($entretien->isAccepte()) ? "<span class='icon icon-checked'></span>" : "<span class='icon icon-unchecked'></span>"; ?> </li>
+            <li> tant que la date d'entretien n'est pas
+                dépassée <?php echo (!$entretien->isDepasse()) ? "<span class='icon icon-checked'></span>" : "<span class='icon icon-unchecked'></span>"; ?> </li>
+            <li> tant que le ou la Responsable de l'entretien n'a pas validé
+                celui-ci <?php echo (!$entretien->isValideResponsable()) ? "<span class='icon icon-checked'></span>" : "<span class='icon icon-unchecked'></span>"; ?> </li>
+            <!--            <li> avoir le droit de renseigner les comptes-rendus -->
+            <?php //echo ($canModifierEP)?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?><!-- </li>-->
         </ul>
     </div>
 <?php endif; ?>
@@ -168,21 +180,23 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     <button class="nav-link" id="mails-tab"
             data-bs-toggle="tab" data-bs-target="#mails"
             type="button" role="tab" aria-controls="mails" aria-selected="true">
-        Courriers <br/> &nbsp;électroniques <span class="badge" style="margin-left:1rem;"><?php echo count($mails); ?></span>
+        Courriers <br/> &nbsp;électroniques <span class="badge"
+                                                  style="margin-left:1rem;"><?php echo count($mails); ?></span>
     </button>
     <?php if ($canEvenement) : ?>
         <button class="nav-link" id="evenements-tab"
                 data-bs-toggle="tab" data-bs-target="#evenements"
                 type="button" role="tab" aria-controls="evenements" aria-selected="true">
-            Événements <br/> &nbsp; <span class="badge" style="margin-left:1rem;"><?php echo count($entretien->getEvenements()->toArray()); ?></span>
+            Événements <br/> &nbsp; <span class="badge"
+                                          style="margin-left:1rem;"><?php echo count($entretien->getEvenements()->toArray()); ?></span>
         </button>
     <?php endif; ?>
 </div>
 
 
-    <div class="tab-content">
+<div class="tab-content">
 
-    <div id="formulaire" class="tab-pane" >
+    <div id="formulaire" class="tab-pane">
         <?php if ($BLOCAGE_COMPTERENDU && !EntretienProfessionnelAssertion::isPeriodeCompatible($entretien)) : ?>
             <div class="alert alert-info">
                 <strong>
@@ -210,14 +224,14 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null,  'connectedUser' => $user, 'role' => $role, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null, 'connectedUser' => $user, 'role' => $role, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
     </div>
 
-<!--            --><?php //if ($displayAcquis === true) : ?>
-<!--            <div id="acquis" class="tab-pane">-->
-<!--                --><?php //echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
-<!--            </div>-->
-<!--            --><?php //endif; ?>
+    <!--            --><?php //if ($displayAcquis === true) : ?>
+    <!--            <div id="acquis" class="tab-pane">-->
+    <!--                --><?php //echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+    <!--            </div>-->
+    <!--            --><?php //endif; ?>
 
     <div id="validation" class="tab-pane">
 
@@ -232,7 +246,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction','superieures' => $superieures, 'autorites' => $autorites,'step' => $step, 'OBSERVATION_FINALE' => $OBSERVATION_FINALE, 'dateMaxObservation' => $dateMaxObservation]); ?>
+        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction', 'superieures' => $superieures, 'autorites' => $autorites, 'step' => $step, 'OBSERVATION_FINALE' => $OBSERVATION_FINALE, 'dateMaxObservation' => $dateMaxObservation, 'delaiObservation' => $delaiObservation]); ?>
     </div>
 
     <div id="mails" class="tab-pane">
@@ -293,13 +307,13 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             window.location.reload();
         });
 
-        $('.datatable').DataTable( {
+        $('.datatable').DataTable({
             // sorting: false,
             // paging: false,
             language: {
                 url: '/localisation/fr_FR.json'
             }
-        } );
+        });
 
         const scrollPosition = localStorage.getItem('scrollPosition');
         if (scrollPosition) {
@@ -309,7 +323,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
         }
     });
 
-    $('form').on("submit", function() {
+    $('form').on("submit", function () {
         // Sauvegarder la position de défilement actuelle
         localStorage.setItem('scrollPosition', window.scrollY);
     });

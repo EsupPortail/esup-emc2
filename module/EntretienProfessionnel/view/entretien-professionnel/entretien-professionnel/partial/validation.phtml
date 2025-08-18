@@ -9,6 +9,7 @@
  * @var Agent[] $superieures
  * @var Agent[] $autorites
  * @var ?DateTime $dateMaxObservation
+ * @var ?int $delaiObservation
  */
 
 use Application\Entity\Db\Agent;
@@ -131,7 +132,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_RESPONSABLE], [], true); ?>"
-                    class="btn btn-success action ajax-modal"
+                    class="btn btn-success ajax-modal"
                     data-event="modification"
             >
                 <span class="icon icon-checked"></span>
@@ -167,7 +168,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             </ul>
             Ces observations sont facultatives et l'agent peut exprimer le fait de ne pas vouloir faire d'observation.
             <br/><br/>
-            <strong><span class="icon icon-information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
+            <strong><span class="icon icon-information"></span> L'expression d'observations et leur validation n'est possible que durant les <?php echo $delaiObservation??"<span class='text-danger'>Délai non renseigné</span>"; ?> jours suivants la validation de l'entretien professionnel par son responsable
                 (c'est-à-dire le <?php echo ($dateMaxObservation)?$dateMaxObservation->format("d/m/Y à H:i"):"Inconnue"; ?>).
             </strong>
         </div>
@@ -238,7 +239,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                         href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_OBSERVATION], [], true); ?>"
-                        class="btn btn-success action ajax-modal"
+                        class="btn btn-success ajax-modal"
                         data-event="modification"
                 >
                     <span class="icon icon-checked"></span>
@@ -248,7 +249,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                         href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_OBSERVATION], [], true); ?>"
-                        class="btn btn-success action ajax-modal"
+                        class="btn btn-success ajax-modal"
                         data-event="modification"
                 >
                     <span class="icon icon-checked"></span>
@@ -336,7 +337,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationHierarchie->getId()], [], true); ?>"
-                    class="btn btn-danger action"
+                    class="btn btn-danger"
             >
                 <span class="icon icon-unchecked"></span>
                 Révoquer la validation
@@ -349,7 +350,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_DRH], [], true); ?>"
-                    class="btn btn-success action ajax-modal"
+                    class="btn btn-success ajax-modal"
                     data-event="modification"
             >
                 <span class="icon icon-checked"></span>
@@ -425,7 +426,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
-                    class="btn btn-danger action"
+                    class="btn btn-danger"
             >
                 <span class="icon icon-unchecked"></span>
                 Révoquer la validation
@@ -436,7 +437,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_AGENT], [], true); ?>"
-                    class="btn btn-success action ajax-modal"
+                    class="btn btn-success ajax-modal"
                     data-event="modification"
             >
                 <span class="icon icon-checked"></span>
@@ -566,3 +567,9 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         <?php endif; ?>
     <?php endif; ?>
 </div>
+
+<style>
+    h3.categorie {
+        margin-top: 1.25rem;
+    }
+</style>
