@@ -9,7 +9,7 @@ return [
     'rtable'      => 'carriere_niveau_enveloppe',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'niveau_enveloppe_id_uindex',
+    'index'       => 'niveau_enveloppe_pk',
     'columns'     => [
         'niveau_id' => 'id',
     ],

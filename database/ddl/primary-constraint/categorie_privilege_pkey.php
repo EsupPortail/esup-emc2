@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'unicaen_privilege_categorie_pkey',
+    'name'    => 'categorie_privilege_pkey',
     'table'   => 'unicaen_privilege_categorie',
-    'index'   => 'unicaen_privilege_categorie_pkey',
+    'index'   => 'categorie_privilege_pkey',
     'columns' => [
         'id',
     ],

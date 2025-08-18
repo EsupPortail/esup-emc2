@@ -150,7 +150,7 @@ return [
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,
-            'default'     => NULL,
+            'default'     => 'NULL',
             'position'    => 6,
             'commentaire' => NULL,
         ],

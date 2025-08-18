@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'ficheposte_pkey',
+    'name'    => 'fiche_metier_pkey',
     'table'   => 'ficheposte',
-    'index'   => 'ficheposte_pkey',
+    'index'   => 'fiche_metier_pkey',
     'columns' => [
         'id',
     ],
