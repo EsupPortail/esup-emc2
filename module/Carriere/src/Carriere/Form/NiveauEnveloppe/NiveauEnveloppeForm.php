@@ -50,7 +50,7 @@ class NiveauEnveloppeForm extends Form {
             'type' => Select::class,
             'name' => 'valeur_recommandee',
             'options' => [
-                'label' => "Niveau recommandée :",
+                'label' => "Niveau recommandé :",
                 'empty_option' => 'Sélectionner le niveau recommandé ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
