@@ -296,3 +296,7 @@ div.alert-danger .fa-exclamation-triangle {
 {
     border-top: 5px solid var(--unistrap-color-main);
 }
+
+.bg-success.ui-menu-item{
+    background-color: #e9ffe9 !important;
+}
