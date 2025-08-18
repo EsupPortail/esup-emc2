@@ -16,21 +16,28 @@ $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(Correspo
 $canAction = ($canAfficher)
 ?>
 
-<h1 class="page-header">
-    Types de correspondance
-</h1>
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Types de correspondance
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <a href="<?php echo $this->url('correspondance'); ?>"
+           class="btn btn-secondary"
+        >
+            <span class="icon icon-lister"></span>
+            Accéder aux correspondances
+        </a>
+    </div>
+</div>
+
 
 <div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
     <span class="icon icon-refresh"></span>
     Données synchronisées
 </div>
 
-<a href="<?php echo $this->url('correspondance'); ?>"
-   class="btn btn-secondary"
->
-    <span class="icon icon-lister"></span>
-    Accéder aux correspondances
-</a>
 
 <table class="table table-condensed table-hover" id="types">
     <thead>

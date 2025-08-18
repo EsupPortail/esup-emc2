@@ -19,12 +19,24 @@ $canAction = ($canLister);
 $this->headTitle("Liste des correspondances");
 ?>
 
-<h1 class="page-header">
-    Liste des correspondances
-    <span class="badge">
-        <?php echo count($correspondances); ?>
-    </span>
-</h1>
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Liste des correspondances
+            <span class="badge">
+                <?php echo count($correspondances); ?>
+            </span>
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <a href="<?php echo $this->url('carriere/correspondance-type'); ?>"
+           class="btn btn-secondary"
+        >
+            <span class="icon icon-lister"></span>
+            Accéder aux types de correspondance
+        </a>
+    </div>
+</div>
 
 <div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
     <span class="icon icon-refresh"></span>
@@ -36,13 +48,6 @@ $this->headTitle("Liste des correspondances");
     <?php endif; ?>
 </div>
 
-
-<a href="<?php echo $this->url('carriere/correspondance-type'); ?>"
-   class="btn btn-secondary"
->
-    <span class="icon icon-lister"></span>
-    Accéder aux types de correspondance
-</a>
 
 <table class="datatable table table-condensed table-hover" id="correspondances">
     <thead>
