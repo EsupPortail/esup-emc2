@@ -16,18 +16,13 @@ $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(Correspo
 $canAction = ($canAfficher)
 ?>
 
-<div class="row">
-    <div class="col-md-9">
-        <h1 class="page-header">
-            Types de correspondance
-        </h1>
-    </div>
-    <div class="col-md-3">
-        <div class="alert alert-info">
-            <span class="icon icon-synchroniser"></span>
-            Données synchronisées
-        </div>
-    </div>
+<h1 class="page-header">
+    Types de correspondance
+</h1>
+
+<div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
+    <span class="icon icon-refresh"></span>
+    Données synchronisées
 </div>
 
 <a href="<?php echo $this->url('correspondance'); ?>"
@@ -37,7 +32,7 @@ $canAction = ($canAfficher)
     Accéder aux correspondances
 </a>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed table-hover" id="types">
     <thead>
     <tr>
         <th> Code </th>
@@ -74,3 +69,19 @@ $canAction = ($canAfficher)
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(function() {
+        $('table#types').DataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [3], orderable: false }
+            ]
+        });
+    });
+</script>

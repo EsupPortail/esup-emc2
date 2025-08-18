@@ -3,6 +3,7 @@
 /**
  * @see \Carriere\Controller\CorrespondanceController::indexAction()
  * @var Correspondance[] $correspondances
+ * @var bool $avecAgent
  */
 
 use Carriere\Entity\Db\Correspondance;
@@ -18,22 +19,23 @@ $canAction = ($canLister);
 $this->headTitle("Liste des correspondances");
 ?>
 
-<div class="row">
-    <div class="col-md-9">
-        <h1 class="page-header">
-            Liste des correspondances
-            <span class="badge">
-                <?php echo count($correspondances); ?>
-            </span>
-        </h1>
-    </div>
-    <div class="col-md-3">
-        <div class="alert alert-info">
-            <span class="icon icon-synchroniser"></span>
-            Données synchronisées
-        </div>
-    </div>
+<h1 class="page-header">
+    Liste des correspondances
+    <span class="badge">
+        <?php echo count($correspondances); ?>
+    </span>
+</h1>
+
+<div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
+    <span class="icon icon-refresh"></span>
+    Données synchronisées
+    <?php if ($avecAgent) : ?>
+        <br>
+        <span class="icon icon-information"></span>
+        Seuls les correspondances avec au moins un agent·e sont présentées
+    <?php endif; ?>
 </div>
+
 
 <a href="<?php echo $this->url('carriere/correspondance-type'); ?>"
    class="btn btn-secondary"
@@ -42,7 +44,7 @@ $this->headTitle("Liste des correspondances");
     Accéder aux types de correspondance
 </a>
 
-<table class="datatable table table-condensed table-hover">
+<table class="datatable table table-condensed table-hover" id="correspondances">
     <thead>
     <tr>
         <th> Code </th>
@@ -99,8 +101,16 @@ $this->headTitle("Liste des correspondances");
 
 <script>
     $(document).ready(function() {
-        $('.datatable').DataTable({
+        $('table#correspondances').DataTable({
             paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
         });
     });
 </script>

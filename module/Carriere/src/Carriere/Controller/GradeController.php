@@ -17,12 +17,12 @@ class GradeController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $avecAgent = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::GRADE_AVEC_AGENT);
-        $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
-        $grades = $this->getGradeService()->getGrades('libelleLong', 'ASC', $bool);
+        $avecAgent = $this->getParametreService()->getValeurForParametre(CarriereParametres::TYPE,CarriereParametres::GRADE_AVEC_AGENT) === true;
+        $grades = $this->getGradeService()->getGrades('libelleLong', 'ASC', $avecAgent);
 
         return new ViewModel([
             'grades' => $grades,
+            'avecAgent' => $avecAgent,
         ]);
     }
 
