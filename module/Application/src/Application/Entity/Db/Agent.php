@@ -518,7 +518,7 @@ class Agent implements
         $nom = (($this->getNomUsuel()) ?? '<em>' . $this->getNomFamille() . '</em>');
         if ($nomCap) $nom = strtoupper($nom);
         if ($nomBold) $nom = "<strong>" . $nom . "</strong>";
-        if ($prenomFirst) return ucwords(strtolower($prenom), "- ") . ' ' . $nom;
+        if ($prenomFirst) return trim(ucwords(strtolower($prenom), "- ") . ' ' . $nom);
         return trim($nom . ' ' . ucwords(strtolower($prenom), "- "));
 
     }
