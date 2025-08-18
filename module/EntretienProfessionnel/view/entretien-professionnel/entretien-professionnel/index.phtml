@@ -83,7 +83,7 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
                     <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>"> <?php echo $entretien->getResponsable()->getDenomination(true); ?> </td>
                     <td data-order="<?php echo $entretien->getDateEntretien()->getTimestamp(); ?>"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </td>
                     <td data-order="<?php echo ($entretien->getEtatActif())?$entretien->getEtatActif()->getType()->getOrdre():9999; ?>"> <?php echo $this->etatinstance($entretien->getEtatActif()); ?> </td>
-                    <td>
+                    <td class="action">
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
                         <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
                            title="Accéder à l'entretien professionnel"

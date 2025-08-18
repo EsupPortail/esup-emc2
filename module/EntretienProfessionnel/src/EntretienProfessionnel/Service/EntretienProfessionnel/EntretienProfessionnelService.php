@@ -567,8 +567,8 @@ class EntretienProfessionnelService
         try {
             $tmp = 'P' . $delai . 'D';
             $date->add(new DateInterval($tmp));
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème de création du DateInterval",0,$e);
+        } catch (Exception) {
+            return $entretien->getCampagne()->getDateFin();
         }
         return $date;
     }
