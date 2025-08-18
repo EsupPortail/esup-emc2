@@ -6,11 +6,15 @@ use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Ramsey\Uuid\Uuid;
@@ -546,4 +550,26 @@ class EntretienProfessionnelService
         return $result;
     }
 
+    /** FACADE ********************************************************************************************************/
+
+    public function computeMaxSaisiObservation(EntretienProfessionnel $entretien): ?DateTime
+    {
+        $validation = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+        if ($validation === null) return null;
+
+        try {
+            $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT);
+        } catch (Exception $e) {
+            throw new RuntimeException("La valeur du paramètre [".EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT."] n'est probablement pas initialisée",0,$e);
+        }
+
+        $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
+        try {
+            $tmp = 'P' . $delai . 'D';
+            $date->add(new DateInterval($tmp));
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème de création du DateInterval",0,$e);
+        }
+        return $date;
+    }
 }

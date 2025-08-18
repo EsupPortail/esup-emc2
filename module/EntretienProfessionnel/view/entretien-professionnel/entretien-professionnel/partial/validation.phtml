@@ -8,6 +8,7 @@
  *
  * @var Agent[] $superieures
  * @var Agent[] $autorites
+ * @var ?DateTime $dateMaxObservation
  */
 
 use Application\Entity\Db\Agent;
@@ -41,8 +42,7 @@ $validationAgent         = $entretien->getValidationActiveByTypeCode(EntretienPr
 
 $now = new DateTime();
 
-$date = $entretien->getMaxSaisiObservation();
-$depasse = ($date === null or $date < $now);
+$depasse = ($dateMaxObservation === null or $dateMaxObservation < $now);
 
 $agent = $entretien->getAgent();
 $responsable = $entretien->getResponsable();
@@ -168,7 +168,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             Ces observations sont facultatives et l'agent peut exprimer le fait de ne pas vouloir faire d'observation.
             <br/><br/>
             <strong><span class="icon icon-information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
-                (c'est-à-dire le <?php echo ($entretien->getMaxSaisiObservation())?$entretien->getMaxSaisiObservation()->format("d/m/Y à H:i"):"Inconnue"; ?>).
+                (c'est-à-dire le <?php echo ($dateMaxObservation)?$dateMaxObservation->format("d/m/Y à H:i"):"Inconnue"; ?>).
             </strong>
         </div>
     <?php endif; ?>

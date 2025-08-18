@@ -7,8 +7,8 @@ use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Entity\Db\Structure;
+use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenIndicateur\Service\Perimetre\PerimetreServiceInterface;
 use UnicaenIndicateur\Service\Perimetre\PerimetreServiceTrait;
@@ -25,12 +25,13 @@ class PerimetreService implements PerimetreServiceInterface
     use AgentSuperieurServiceAwareTrait;
     use PerimetreServiceTrait;
     use StructureServiceAwareTrait;
+
     /**
      * @param AbstractUser $user
      * @param AbstractRole $role
      * @return array
      */
-    public function getPerimetres(UserInterface $user, RoleInterface $role) : array
+    public function getPerimetres(UserInterface $user, RoleInterface $role): array
     {
         $perimetres = [];
 
@@ -41,7 +42,7 @@ class PerimetreService implements PerimetreServiceInterface
             case AppRoleProvider::ADMIN_FONC:
             case AppRoleProvider::OBSERVATEUR:
             case AppRoleProvider::DRH:
-                $structures = $this->getStructureService()->getStructures();
+                $structures = true;
                 break;
             case StructureRoleProvider::RESPONSABLE:
                 $listing = $this->getStructureService()->getStructuresByResponsable($user);
@@ -57,8 +58,18 @@ class PerimetreService implements PerimetreServiceInterface
                     foreach ($all as $item) $structures[$item->getId()] = $item;
                 }
                 break;
+            case StructureRoleProvider::OBSERVATEUR:
+                $listing = $this->getStructureService()->getStructuresByObservateur($user);
+                foreach ($listing as $structure) {
+                    $all = $this->getStructureService()->getStructuresFilles($structure, true);
+                    foreach ($all as $item) $structures[$item->getId()] = $item;
+                }
+                break;
         }
-        $structures = array_map(function (Structure $s) { return 'STRUCTURE_'.$s->getId();}, $structures);
+        if ($structures !== true) $structures = array_map(function (Structure $s) {
+            return 'STRUCTURE_' . $s->getId();
+        }, $structures);
+        else $structures = ["STRUCTURE_ALL"];
         $perimetres = array_merge($perimetres, $structures);
 
         /** Périmètres d'agent $agents ********************************************************************************/
@@ -68,7 +79,7 @@ class PerimetreService implements PerimetreServiceInterface
             case AppRoleProvider::ADMIN_FONC:
             case AppRoleProvider::OBSERVATEUR:
             case AppRoleProvider::DRH:
-                $agents = $this->getAgentService()->getAgents();
+                $agents = true;
                 break;
             case Agent::ROLE_AUTORITE:
                 $agent = $this->getAgentService()->getAgentByConnectedUser();
@@ -90,18 +101,27 @@ class PerimetreService implements PerimetreServiceInterface
                 foreach ($listing as $item) {
                     $agents[$item->getId()] = $item;
                 }
+                break;
+            case StructureRoleProvider::OBSERVATEUR:
+                $structures = $this->getStructureService()->getStructuresByObservateur($user);
+                $listing = $this->getAgentService()->getAgentsByStructures($structures);
+                foreach ($listing as $item) {
+                    $agents[$item->getId()] = $item;
+                }
+                break;
         }
-        $agents = array_map(function (Agent $a) { return 'AGENT_'.$a->getId();}, $agents);
+        if ($agents !== true) $agents = array_map(function (Agent $a) {
+            return 'AGENT_' . $a->getId();
+        }, $agents);
+        else $agents = ["AGENT_ALL"];
         $perimetres = array_merge($perimetres, $agents);
-
-
 
         //ROLE
         $roles = [$role];
-        $roles = array_map(function (Role $s) { return 'ROLE_'.$s->getId();}, $roles);
+        $roles = array_map(function (Role $s) {
+            return 'ROLE_' . $s->getId();
+        }, $roles);
         $perimetres = array_merge($perimetres, $roles);
-
-
 
 
         return $perimetres;

@@ -23,6 +23,7 @@
  * @var bool $BLOCAGE_COMPTERENDU
  * @var bool $BLOCAGE_VALIDATION
  * @var bool $OBSERVATION_FINALE
+ * @var ?DateTime $dateMaxObservation
  *
  * @var ?int $fromStructure
  */
@@ -53,8 +54,7 @@ $canModifierEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENP
 $canEvenement = $this->isAllowed(EvenementinstancePrivileges::getResourceId(EvenementinstancePrivileges::INSTANCE_CONSULTATION));
 
 $now = new DateTime();
-$date = $entretien->getMaxSaisiObservation();
-$depasseObs = ($date !== null AND $date < $now);
+$depasseObs = ($dateMaxObservation !== null AND $dateMaxObservation < $now);
 
 $step = 0;
 
@@ -232,7 +232,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction','superieures' => $superieures, 'autorites' => $autorites,'step' => $step, 'OBSERVATION_FINALE' => $OBSERVATION_FINALE]); ?>
+        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction','superieures' => $superieures, 'autorites' => $autorites,'step' => $step, 'OBSERVATION_FINALE' => $OBSERVATION_FINALE, 'dateMaxObservation' => $dateMaxObservation]); ?>
     </div>
 
     <div id="mails" class="tab-pane">

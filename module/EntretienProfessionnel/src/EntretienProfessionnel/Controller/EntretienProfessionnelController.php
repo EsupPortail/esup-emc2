@@ -329,6 +329,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
             'ficheposte' => $ficheposte,
             'ficheposteFichier' => $ficheposteFichier,
+            'dateMaxObservation' => $this->getEntretienProfessionnelService()->computeMaxSaisiObservation($entretien),
 
             'fichesmetiers' => $fichesmetiers,
             'mails' => $mails,
@@ -441,7 +442,10 @@ class EntretienProfessionnelController extends AbstractActionController
                     $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
                     $this->getEntretienProfessionnelService()->update($entretien);
                     $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
-                    $dateNotification = (new DateTime())->add(new DateInterval('P1W'));
+
+                    $dateNotification = $this->getEntretienProfessionnelService()->computeMaxSaisiObservation($entretien);
+                    if ($dateNotification === null) throw new RuntimeException("La date de clôture des observations n'a pas pu être calculée");
+
                     $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
                     $this->getEntretienProfessionnelService()->update($entretien);
                     break;

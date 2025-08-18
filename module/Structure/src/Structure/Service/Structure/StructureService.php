@@ -368,6 +368,28 @@ EOS;
     }
 
     /**
+     * @param User $user
+     * @param bool $ouverte
+     * @return Structure[]
+     */
+    public function getStructuresByObservateur(UserInterface $user, bool $ouverte = true): array
+    {
+        $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('observateur')->join('structure.observateurs', 'observateur')
+            ->andWhere('observateur.utilisateur = :user')
+            ->andWhere('responsable.deletedOn IS NULL')
+            ->andWhere('responsable.dateDebut IS NULL or responsable.dateDebut <= :now')
+            ->andWhere('responsable.dateFin IS NULL or responsable.dateFin >= :now')
+            ->setParameter('now', new DateTime())
+            ->setParameter('user', $user)
+            ->orderBy('structure.libelleCourt');
+        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param Structure $structure
      * @param Agent|null $agent
      * @return boolean

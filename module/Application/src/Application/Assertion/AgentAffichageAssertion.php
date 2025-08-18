@@ -2,6 +2,7 @@
 
 namespace Application\Assertion;
 
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
@@ -16,6 +17,8 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieServiceAwareTrait;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\RoleInterface;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
@@ -34,6 +37,36 @@ class AgentAffichageAssertion extends AbstractAssertion
     use PerimetreServiceAwareTrait;
     use PrivilegeCategorieServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
+
+
+    /**
+     * Exemple de ce que l'on pourrait faire avec l'utilisation de périmètre pour remplacer les calculs dans les assertions
+     * TODO :: définir un moyen d'associé des types de périmètre aux rôles (p.e. STRUCTURE => Responsable de structure, AGENT => Supérieure hiérachique directe)
+     * TODO :: provoquer que le calcul des perimètres utiles
+     **/
+    public function computePerimetreCompatible(UserInterface $user, RoleInterface $role, Agent $entity): bool
+    {
+        $perimetres = $this->getPerimetreService()->getPerimetres($user, $role);
+
+        if (in_array($role->getRoleId(), [StructureRoleProvider::OBSERVATEUR, StructureRoleProvider::GESTIONNAIRE, StructureRoleProvider::RESPONSABLE])) {
+            $relevantPerimetres = array_filter($perimetres, function (string $p) { return str_starts_with($p, 'STRUCTURE_'); });
+            $relevantPerimetres = array_map(function (string $p) { return explode("_", $p)[1]; }, $relevantPerimetres);
+
+            if (in_array('ALL', $relevantPerimetres)) {
+                $intersection = ["ALL"];
+            } else {
+                $affectations = $entity->getAffectationsActifs();
+                $structures = array_map(function (AgentAffectation $a) {
+                    return $a->getStructure()->getId();
+                }, $affectations);
+                $intersection = array_intersect($relevantPerimetres, $structures);
+            }
+            return !empty($intersection);
+        }
+
+        return true;
+    }
+
 
     public function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
@@ -63,7 +96,6 @@ class AgentAffichageAssertion extends AbstractAssertion
             $structures[] = $structureAgentForce->getStructure();
         }
 
-        $perimetres = $this->getPerimetreService()->getPerimetres($user, $role);
 
         $isResponsable = false;
         $isSuperieur = false;
@@ -83,7 +115,7 @@ class AgentAffichageAssertion extends AbstractAssertion
             case AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION :
             case AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT :
                 return match ($role->getRoleId()) {
-                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR => true,
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR, AppRoleProvider::DRH => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
                     StructureRoleProvider::OBSERVATEUR => $isObservateur,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
