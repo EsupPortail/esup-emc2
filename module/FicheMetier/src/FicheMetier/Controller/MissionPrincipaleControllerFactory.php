@@ -10,6 +10,7 @@ use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheReferentiel\Form\Importation\ImportationForm;
 use Metier\Form\SelectionnerDomaines\SelectionnerDomainesForm;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -37,12 +38,14 @@ class MissionPrincipaleControllerFactory {
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
 
         /**
+         * @var ImportationForm $importationForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var NiveauEnveloppeForm $niveauEnveloppeForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetencesForm
          * @var SelectionnerDomainesForm $selectionDomainesForm
          */
+        $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -54,6 +57,7 @@ class MissionPrincipaleControllerFactory {
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
+        $controller->setImportationForm($importationForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);

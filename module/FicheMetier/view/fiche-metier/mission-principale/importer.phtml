@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\MissionPrincipaleController::importerAction()
+ * @var string $separateur
+ * @var ImportationForm $form
+ */
+
+use FicheReferentiel\Form\Importation\ImportationForm;$this->headTitle('Importation de missions principales');
+
+?>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Importation de missions principales
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction() */ ?>
+        <a href="<?php echo $this->url('mission-principale') ?>"
+           class="btn btn-secondary">
+            <span class="icon icon-listing"></span>
+            Accéder aux missions principales
+        </a>
+    </div>
+</div>
+
+<!-- Explications ----------------------------------------------------------------------------------------------------->
+
+<div class="alert alert-info">
+    <div class="row">
+        <div class="col-md-6">
+            <span class="icon icon-info"></span>
+            Le fichier importé doit contenir les colonnes suivantes :
+            <ul>
+                <li> <code>Libellé</code>,
+                <li> <code>Activités associées</code> : les différentes activitées doivent être séparées par <code><?php echo $separateur; ?></code>,
+                <li> <code>Famille professionnelle</code> : la famille doit correspondre au libellé de celles déclarés sinon une nouvelle famille sera créée,
+                <li> <code>Niveau</code> : le niveau doit correspondre a un niveau de carrière déclaré,
+                <li> <code>Compétences</code> : liste de code de compétences séparés par <code><?php echo $separateur; ?></code>,
+                <li> <code>Applications</code> : liste de code d'applications séparés par <code><?php echo $separateur; ?></code>,
+                <li> <code>Code Fonction</code> : code fonction utilisé dans les fiches métiers</li>
+                <li> <code>Code Fiche Métier</code> : identification de la fiche métier</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <span class="icon icon-attention"></span>
+            <strong>Remarques :</strong>
+            <ul>
+                <li>L'intitulé des colonnes doit être exactement celui spécifié (accent et ponctuation).</li>
+                <li>L'ordre des colonnes n'a pas besoin être respecté.</li>
+                <li>Si un champ ne fait pas sens il est possible de le laisser vide.</li>
+            </ul>
+
+            <span class="todo">Mettre quelques exemples ?</span>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Formulaire ------------------------------------------------------------------------------------------------------->
+
+<div class="card">
+    <div class="card-header">
+        Importation depuis un fichier
+    </div>
+    <div class="card-body">
+        <?php echo $this->form()->openTag($form); ?>
+            <div class="row">
+                <div class="col-md-9">
+                    <?php echo $this->formControlGroup($form->get('fichier')); ?>
+                    <?php echo $this->formControlGroup($form->get('mode')); ?>
+                </div>
+                <div class="col-md-3">
+                    <?php echo $this->formControlGroup($form->get('creer')); ?>
+                </div>
+            </div>
+        <?php echo $this->form()->closeTag($form); ?>
+    </div>
+</div>
+
+
+<!-- Résultats -------------------------------------------------------------------------------------------------------->
+
+RESULTAT

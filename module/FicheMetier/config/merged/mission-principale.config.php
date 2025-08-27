@@ -62,6 +62,8 @@ return [
                         'gerer-competences',
                         'gerer-applications',
 
+                        'importer',
+
                     ],
                     'privileges' => [
                         MissionPrincipalePrivileges::MISSIONPRINCIPALE_MODIFIER,
@@ -287,6 +289,17 @@ return [
                                 /** @see MissionPrincipaleController::rechercherAction() */
                                 'controller' => MissionPrincipaleController::class,
                                 'action'     => 'rechercher',
+                            ],
+                        ],
+                    ],
+                    'importer' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/importer',
+                            'defaults' => [
+                                /** @see MissionPrincipaleController::importerAction() */
+                                'controller' => MissionPrincipaleController::class,
+                                'action'     => 'importer',
                             ],
                         ],
                     ],

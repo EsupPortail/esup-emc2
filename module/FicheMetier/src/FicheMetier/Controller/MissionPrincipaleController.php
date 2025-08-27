@@ -13,6 +13,7 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
@@ -26,6 +27,7 @@ class MissionPrincipaleController extends AbstractActionController
     use MissionPrincipaleServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
 
+    use ImportationFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
     use SelectionnerDomainesFormAwareTrait;
@@ -348,6 +350,20 @@ class MissionPrincipaleController extends AbstractActionController
             return new JsonModel($result);
         }
         exit;
+    }
+
+    /** IMPORTATIONS **************************************************************************************************/
+
+    public function importerAction() : ViewModel
+    {
+        $separateur = '|';
+
+        $form = $this->getImportationForm();
+
+        return new ViewModel([
+            'separateur' => $separateur,
+            'form' => $form,
+        ]);
     }
 
     /** LEFTOVERS ACTIVITE_CONTROLLER **********************/
