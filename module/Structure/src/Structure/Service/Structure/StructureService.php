@@ -253,6 +253,7 @@ select
 from structure s
 left join structure_type st on st.id = s.type_id
 where s.d_fermeture IS NULL
+and s.deleted_on IS NULL
 order by st.libelle, s.libelle_long
 EOS;
 
