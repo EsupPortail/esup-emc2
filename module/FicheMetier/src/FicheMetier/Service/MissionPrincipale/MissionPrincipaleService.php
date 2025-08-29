@@ -193,9 +193,16 @@ class MissionPrincipaleService
         return $mission;
     }
 
-    /** @return Mission[] */
-    public function createWithCsv($json) : array
+    /** @return ?Mission */
+    public function createOneWithCsv($json) : ?Mission
     {
+        $libelle = $json['Libellé'];
+        $activites = $json['Activités associés'];
+
+        $mission = new Mission();
+        $mission->setLibelle($libelle);
+
+        $a=1;
 
     }
 

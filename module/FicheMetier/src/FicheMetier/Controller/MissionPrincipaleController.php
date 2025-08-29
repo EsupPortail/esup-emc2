@@ -15,6 +15,7 @@ use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
+use Laminas\Form\Element\File;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
@@ -362,7 +363,6 @@ class MissionPrincipaleController extends AbstractActionController
 
         $form = $this->getImportationForm();
         $form->setAttribute('action', $this->url()->fromRoute('mission-principale/importer', ['mode' => 'preview', 'path' => null], [], true));
-//        $form->get('fichier')->setAttribute('multiple', true);
 
         $request = $this->getRequest();
         $error = ""; $warning = ""; $info = "";
@@ -371,7 +371,7 @@ class MissionPrincipaleController extends AbstractActionController
             $data = $request->getPost();
             $file = $request->getFiles();
             $form->setData($data);
-            if ($form->isValid()) {
+            if ($data['mode'] AND $file['fichier']['tmp_name']) {
                 $mode = $data['mode'];
                 if (!in_array($mode, ['preview', 'import'])) {
                     $error .= "Le mode sélectionné est non valide (".$mode." doit être soit 'preview' soit 'import')";
@@ -379,6 +379,9 @@ class MissionPrincipaleController extends AbstractActionController
 
                 $fichier_path = $file['fichier']['tmp_name'];
                 $json = $this->getFichierService()->readCSV($fichier_path, true, $separateur);
+                foreach ($json as $row) {
+                    $mission = $this->getMissionPrincipaleService()->createOneWithCsv($row);
+                }
 
                 $a=1;
             }

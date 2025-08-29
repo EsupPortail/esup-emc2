@@ -20,6 +20,9 @@ class ImportationForm extends Form {
                 'label' => 'Fichier à importer <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
+            'attributes' => [
+                'accept' => '.csv',
+            ],
         ]);
         //mode
         $this->add([
