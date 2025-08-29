@@ -296,3 +296,20 @@ if ($retour)    $query['retour'] = $retour;
 <style>
     span.nope { color: lightgrey; }
 </style>
+
+<script>
+    <?php if (isset($options['id'])) : ?>
+        $(document).ready(function() {
+            $('#<?php echo $options['id']; ?>').DataTable({
+                sorting:   false,
+                autoWidth: false,
+                language: {
+                    "url": "/js/datatables_fr.json",
+                },
+                columnDefs: [
+                    { targets: [5], orderable: false }
+                ]
+            } );
+        } );
+    <?php endif; ?>
+</script>

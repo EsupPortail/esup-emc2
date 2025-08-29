@@ -133,11 +133,15 @@ $nbAgent = count($agents);
 
 <script>
     $(document).ready(function() {
-        $('#agents').DataTable( {
+        $('#agents').DataTable({
             "sorting":   false,
+            autoWidth: false,
             language: {
-                url: '/localisation/fr_FR.json'
-            }
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
         } );
     } );
 </script>

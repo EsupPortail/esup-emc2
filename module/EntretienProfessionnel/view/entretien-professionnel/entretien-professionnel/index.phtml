@@ -159,7 +159,14 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
 
     $(function () {
         $('.datatable').DataTable({
-            paging: false,
+            "sorting":   false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [6], orderable: false }
+            ]
         });
     });
 </script>
