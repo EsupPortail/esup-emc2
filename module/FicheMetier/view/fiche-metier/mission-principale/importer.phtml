@@ -71,18 +71,20 @@ use FicheReferentiel\Form\Importation\ImportationForm;$this->headTitle('Importat
         Importation depuis un fichier
     </div>
     <div class="card-body">
-        <?php echo $this->form()->openTag($form); ?>
-            <div class="row">
-                <div class="col-md-9">
-                    <?php echo $this->formControlGroup($form->get('fichier')); ?>
-                    <?php echo $this->formControlGroup($form->get('mode')); ?>
-                </div>
-                <div class="col-md-3">
-                    <?php echo $this->formControlGroup($form->get('creer')); ?>
-                </div>
-            </div>
-        <?php echo $this->form()->closeTag($form); ?>
+<!--        --><?php //echo $this->form()->openTag($form); ?>
+<!--            <div class="row">-->
+<!--                <div class="col-md-9">-->
+<!--                    --><?php //echo $this->formControlGroup($form->get('fichier')); ?>
+<!--                    --><?php //echo $this->formControlGroup($form->get('mode')); ?>
+<!--                </div>-->
+<!--                <div class="col-md-3">-->
+<!--                    --><?php //echo $this->formControlGroup($form->get('creer')); ?>
+<!--                </div>-->
+<!--            </div>-->
+<!--        --><?php //echo $this->form()->closeTag($form); ?>
     </div>
+
+    <?php echo $this->form($form); ?>
 </div>
 
 

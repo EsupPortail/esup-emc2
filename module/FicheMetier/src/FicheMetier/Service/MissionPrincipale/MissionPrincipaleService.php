@@ -193,5 +193,10 @@ class MissionPrincipaleService
         return $mission;
     }
 
+    /** @return Mission[] */
+    public function createWithCsv($json) : array
+    {
+
+    }
 
 }

@@ -11,6 +11,7 @@ use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheReferentiel\Form\Importation\ImportationForm;
+use Fichier\Service\Fichier\FichierService;
 use Metier\Form\SelectionnerDomaines\SelectionnerDomainesForm;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -28,11 +29,13 @@ class MissionPrincipaleControllerFactory {
     {
         /**
          * @var FicheMetierService $ficheMetierService
+         * @var FichierService $fichierService
          * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          */
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $fichierService = $container->get(FichierService::class);
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
@@ -54,6 +57,7 @@ class MissionPrincipaleControllerFactory {
 
         $controller = new MissionPrincipaleController();
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setFichierService($fichierService);
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);

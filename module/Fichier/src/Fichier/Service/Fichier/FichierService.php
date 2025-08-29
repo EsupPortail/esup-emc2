@@ -153,13 +153,12 @@ class FichierService
     }
 
 
-    public function readCSV(string $fichier_path, bool $explodeMultiline = false): array
+    public function readCSV(string $fichier_path, bool $explodeMultiline = false, string $separator = '|'): array
     {
-
         $handle = fopen($fichier_path, "r");
         $array = [];
         while ($content = fgetcsv($handle, 0, ";")) {
-            $all = implode("|", $content);
+            $all = implode($separator, $content);
             $encoding = mb_detect_encoding($all, 'UTF-8, ISO-8859-1');
             $content = array_map(function (string $st) use ($encoding) {
                 $st = str_replace(chr(63), '\'', $st);
