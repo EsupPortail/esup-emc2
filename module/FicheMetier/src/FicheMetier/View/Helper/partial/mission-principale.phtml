@@ -1,0 +1,132 @@
+<?php
+
+use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\CompetenceElement;
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionActivite;
+
+/**
+ * @see \FicheMetier\View\Helper\MissionPrincipaleViewHelper
+ * @var ?Mission $mission
+ * @var array $options
+ */
+
+?>
+
+<?php if ($mission === null) : ?>
+    <p>Aucune mission</p>
+<?php else: ?>
+    <div>
+        <h3 class="mission-libelle"> <?php echo $mission->getLibelle(); ?> </h3>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12 activites">
+                        <?php
+                            $activites = $mission->getActivites();
+                            usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
+                        ?>
+                        <ul>
+                            <?php foreach ($activites as $activite) : ?>
+                                <li> <?php echo $activite->getLibelle(); ?> </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+
+                    <?php if (!$mission->getApplicationCollection()->isEmpty()) : ?>
+                        <div class="col-md-5 bloc applications">
+                            <h4>Applications</h4>
+                            <ul>
+                                <?php /** @var ApplicationElement $applicationElement */ ?>
+                                <?php foreach ($mission->getApplicationCollection() as $applicationElement) : ?>
+                                    <li> <?php echo $applicationElement->getApplication()->getLibelle(); ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!$mission->getCompetenceCollection()->isEmpty()) : ?>
+                        <div class="col-md-5 bloc competences">
+                            <h4>Compétentes</h4>
+                            <ul>
+                                <?php /** @var CompetenceElement $competenceElement */ ?>
+                                <?php foreach ($mission->getCompetenceCollection() as $competenceElement) : ?>
+                                    <li>
+                                        <?php $competence = $competenceElement->getCompetence(); ?>
+                                        <?php echo $competence->getLibelle(); ?>
+                                        <?php if ($competence->getReferentiel()) : ?>
+                                            <?php echo $this->competenceReference($competence); ?>
+                                        <?php endif; ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-md-4 complements">
+                <h4>Compléments</h4>
+                <dl class="row">
+                    <?php $listing = $mission->getListeFicheMetier(); ?>
+                    <dt class="col-md-4"> Codes Fiche Métier</dt>
+                    <dd class="col-md-8">
+                        <?php if (empty($listing)) : ?>
+                            Aucune fiche métier
+                        <?php else : ?>
+                            <ul>
+                            <?php foreach ($mission->getListeFicheMetier() as $item) : ?>
+                                <li>
+                                    <?php echo $item->getFicheMetier()->getMetier()->getLibelle(); ?>
+                                    <?php $references =  $item->getFicheMetier()->getMetier()->getReferences(); ?>
+                                    <?php foreach ($references as $reference) : ?>
+                                        <?php echo $this->metierReference($reference); ?>
+                                    <?php endforeach; ?>
+                                </li>
+                            <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </dd>
+                    <dt class="col-md-4"> Code Fonction</dt>
+                    <dd class="col-md-8">
+                        <?php if (empty($listing)) : ?>
+                            Aucune fiche métier
+                        <?php else : ?>
+                            <ul>
+                                <?php foreach ($mission->getListeFicheMetier() as $item) : ?>
+                                    <li> <?php echo $item->getFicheMetier()->getCodeFonction(); ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </dd>
+                    <dt class="col-md-4"> Familles professionnelles</dt>
+                    <dd class="col-md-8"> TODO </dd>
+                    <dt class="col-md-4"> Niveaux</dt>
+                    <dd class="col-md-8">
+                        <?php if ($mission->getNiveau()) : ?>
+                            <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
+                        <?php else : ?>
+                            Aucun niveau indiqué
+                        <?php endif; ?>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<style>
+    div.bloc {
+        border: 1px solid lightgrey;
+        margin: 0.25rem;
+        padding: 0.5rem;
+    }
+
+    /* pour le debug *********************************/
+    /**
+        .activites { background: lightblue; }
+        .competences { background: lightpink; }
+        .applications { background: lightyellow; }
+        .complements { background: lightgray; }
+     */
+</style>

@@ -117,6 +117,22 @@ class ApplicationService
         return $this->getApplication($id);
     }
 
+
+    public function getApplicationByLibelle(string $libelle): ?Application
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('LOWER(application.libelle) LIKE :trim')
+            ->setParameter('trim', '%' . strtolower($libelle) . '%');
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Application::class."] partage le même libellé [".$libelle."]", 0, $e);
+        }
+        return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
+
     private function applicationOptionify(Application $application): array
     {
         $groupe = $application->getGroupe();
@@ -135,4 +151,5 @@ class ApplicationService
         ];
         return $this_option;
     }
+
 }

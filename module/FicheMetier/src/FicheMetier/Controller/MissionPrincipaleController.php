@@ -8,6 +8,7 @@ use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Exception;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -15,7 +16,6 @@ use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
-use Laminas\Form\Element\File;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
@@ -37,7 +37,7 @@ class MissionPrincipaleController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $missions = $this->getMissionPrincipaleService()->getMissionsPrincipales();
 
@@ -48,23 +48,23 @@ class MissionPrincipaleController extends AbstractActionController
 
     /** CRUD ****************************************************************************************/
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => "Affichage de la mission principale",
             'modification' => false,
             'mission' => $mission,
             'fichesmetiers' => $mission->getListeFicheMetier(),
-            'fichespostes' =>  $mission->getListeFichePoste(),
+            'fichespostes' => $mission->getListeFichePoste(),
         ]);
         $vm->setTemplate('fiche-metier/mission-principale/modifier');
         return $vm;
     }
 
-    public function ajouterAction() : Response
+    public function ajouterAction(): Response
     {
         $mission = new Mission();
         $this->getMissionPrincipaleService()->create($mission);
@@ -72,10 +72,10 @@ class MissionPrincipaleController extends AbstractActionController
         return $this->redirect()->toRoute('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true);
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
-        $retour = $this->params()->fromQuery('retour')??null;
+        $retour = $this->params()->fromQuery('retour') ?? null;
 
         $split = explode("/", $retour);
         $ficheId = end($split);
@@ -87,12 +87,12 @@ class MissionPrincipaleController extends AbstractActionController
             'modification' => true,
             'ficheMetier' => $ficheMetier,
             'fichesmetiers' => $mission->getListeFicheMetier(),
-            'fichespostes' =>  $mission->getListeFichePoste(),
+            'fichespostes' => $mission->getListeFichePoste(),
             'retour' => $retour,
         ]);
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $this->getMissionPrincipaleService()->historise($mission);
@@ -102,7 +102,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $this->redirect()->toRoute('mission-principale');
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $this->getMissionPrincipaleService()->restore($mission);
@@ -112,7 +112,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $this->redirect()->toRoute('mission-principale');
     }
 
-    public function supprimerAction() : ViewModel
+    public function supprimerAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
@@ -129,12 +129,12 @@ class MissionPrincipaleController extends AbstractActionController
         if ($mission !== null) {
             $nbFicheMetier = count($mission->getListeFicheMetier());
             $nbFichePoste = 0;
-            $warning = "<span class='icon icon-attention'></span> Attention cette mission principale est encore associée à ".$nbFicheMetier." fiches métiers et à ".$nbFichePoste." fiches de poste.";
+            $warning = "<span class='icon icon-attention'></span> Attention cette mission principale est encore associée à " . $nbFicheMetier . " fiches métiers et à " . $nbFichePoste . " fiches de poste.";
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la mission [".$mission->getLibelle()."]",
+                'title' => "Suppression de la mission [" . $mission->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'warning' => (($nbFicheMetier + $nbFichePoste) > 0)?$warning:null,
+                'warning' => (($nbFicheMetier + $nbFichePoste) > 0) ? $warning : null,
                 'action' => $this->url()->fromRoute('mission-principale/supprimer', ["mission-principale" => $mission->getId()], [], true),
             ]);
         }
@@ -143,7 +143,7 @@ class MissionPrincipaleController extends AbstractActionController
 
     /** MODIFICATION DES ELEMENTS **************************************************************************/
 
-    public function modifierLibelleAction() : ViewModel
+    public function modifierLibelleAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $form = $this->getModifierLibelleForm();
@@ -152,7 +152,7 @@ class MissionPrincipaleController extends AbstractActionController
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data  =$request->getPost();
+            $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getMissionPrincipaleService()->update($mission);
@@ -168,7 +168,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function gererDomainesAction() : ViewModel
+    public function gererDomainesAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
@@ -178,7 +178,7 @@ class MissionPrincipaleController extends AbstractActionController
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data  =$request->getPost();
+            $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getMissionPrincipaleService()->update($mission);
@@ -194,7 +194,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function gererNiveauAction() : ViewModel
+    public function gererNiveauAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
@@ -208,7 +208,7 @@ class MissionPrincipaleController extends AbstractActionController
         $form->bind($niveaux);
 
         $request = $this->getRequest();
-        if($request->isPost()) {
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -230,7 +230,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterActiviteAction() : ViewModel
+    public function ajouterActiviteAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
@@ -241,7 +241,7 @@ class MissionPrincipaleController extends AbstractActionController
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data  =$request->getPost();
+            $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getMissionPrincipaleService()->ajouterActivite($mission, $activite);
@@ -257,7 +257,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierActiviteAction() : ViewModel
+    public function modifierActiviteAction(): ViewModel
     {
         $activite = $this->getMissionActiviteService()->getRequestedActivite($this);
         $form = $this->getModifierLibelleForm();
@@ -266,7 +266,7 @@ class MissionPrincipaleController extends AbstractActionController
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data  =$request->getPost();
+            $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getMissionActiviteService()->update($activite);
@@ -282,7 +282,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function supprimerActiviteAction() : Response
+    public function supprimerActiviteAction(): Response
     {
         $activite = $this->getMissionActiviteService()->getRequestedActivite($this);
         $mission = $activite->getMission();
@@ -293,7 +293,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $this->redirect()->toRoute('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true);
     }
 
-    public function gererApplicationsAction() : ViewModel
+    public function gererApplicationsAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $form = $this->getSelectionApplicationForm();
@@ -318,7 +318,7 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function gererCompetencesAction() : ViewModel
+    public function gererCompetencesAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $form = $this->getSelectionCompetenceForm();
@@ -345,7 +345,7 @@ class MissionPrincipaleController extends AbstractActionController
 
     /** FONCTIONS DE RECHERCHE ****************************************************************************************/
 
-    public function rechercherAction() : JsonModel
+    public function rechercherAction(): JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $missions = $this->getMissionPrincipaleService()->findMissionsPrincipalesByExtendedTerm($term);
@@ -357,7 +357,7 @@ class MissionPrincipaleController extends AbstractActionController
 
     /** IMPORTATIONS **************************************************************************************************/
 
-    public function importerAction() : ViewModel
+    public function importerAction(): ViewModel
     {
         $separateur = '|';
 
@@ -365,25 +365,45 @@ class MissionPrincipaleController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('mission-principale/importer', ['mode' => 'preview', 'path' => null], [], true));
 
         $request = $this->getRequest();
-        $error = ""; $warning = ""; $info = "";
+
+        $missions = [];
+        $error = "";
+        $warning = "";
+        $info = "";
 
         if ($request->isPost()) {
             $data = $request->getPost();
             $file = $request->getFiles();
             $form->setData($data);
-            if ($data['mode'] AND $file['fichier']['tmp_name']) {
+            if ($data['mode'] and $file['fichier']['tmp_name']) {
                 $mode = $data['mode'];
                 if (!in_array($mode, ['preview', 'import'])) {
-                    $error .= "Le mode sélectionné est non valide (".$mode." doit être soit 'preview' soit 'import')";
+                    $error .= "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
                 }
 
                 $fichier_path = $file['fichier']['tmp_name'];
                 $json = $this->getFichierService()->readCSV($fichier_path, true, $separateur);
+                $position = 1;
+
                 foreach ($json as $row) {
-                    $mission = $this->getMissionPrincipaleService()->createOneWithCsv($row);
+                    $position++;
+                    try {
+                        [$mission, $debug] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $position);
+                        $missions[] = $mission;
+                        if (isset($debug['info'])) $info.= (($info !== '')?'<br>':'') . implode("<br>",$debug['info']);
+                        if (isset($debug['warning'])) $warning.= (($warning !== '')?'<br>':'') . implode("<br>",$debug['warning']);
+                        if (isset($debug['error'])) $error .= (($error !== '')?'<br>':'') . implode("<br>",$debug['error']);
+                    } catch (Exception $e) {
+                        if ($error !== '') $error.= '<br>';
+                        $error.= $e->getMessage();
+                    }
                 }
 
-                $a=1;
+                if ($mode === 'import') {
+                    foreach ($missions as $mission) {
+                        $this->getMissionPrincipaleService()->create($mission);
+                    }
+                }
             }
         }
 
@@ -391,6 +411,7 @@ class MissionPrincipaleController extends AbstractActionController
             'separateur' => $separateur,
             'form' => $form,
 
+            'missions' => $missions,
             'info' => $info,
             'warning' => $warning,
             'error' => $error,

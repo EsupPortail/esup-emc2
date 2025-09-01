@@ -10,6 +10,8 @@ use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceFactory;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
+use FicheMetier\View\Helper\MissionPrincipaleViewHelper;
+use FicheMetier\View\Helper\MissionPrincipaleViewHelperFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -329,6 +331,12 @@ return [
         'invokables' => [
             'activite' => ActiviteViewHelper::class,
         ],
-    ]
+        'factories' => [
+            MissionPrincipaleViewHelper::class => MissionPrincipaleViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'missionPrincipale' => MissionPrincipaleViewHelper::class,
+        ],
+    ],
 
 ];
