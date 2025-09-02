@@ -12,5 +12,5 @@ interface HasApplicationCollectionInterface {
     public function hasApplication(Application $application) : ?ApplicationElement;
     public function addApplicationElement(ApplicationElement $application) : void ;
     public function removeApplicationElement(ApplicationElement $application) : void;
-
+    public function clearApplications() : void;
 }

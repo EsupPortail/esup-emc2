@@ -10,16 +10,19 @@ use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use FichePoste\Entity\Db\MissionAdditionnelle;
+use Metier\Entity\Db\Interface\HasFamillesProfessionnellesInterface;
+use Metier\Entity\Db\Trait\HasFamillesProfessionnellesTrait;
 use Metier\Entity\HasDomainesInterface;
 use Metier\Entity\HasDomainesTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Mission implements HistoriqueAwareInterface,
-    HasDomainesInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+    HasDomainesInterface, HasFamillesProfessionnellesInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface
 {
     use HistoriqueAwareTrait;
     use HasDomainesTrait;
+    use HasFamillesProfessionnellesTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
@@ -34,9 +37,13 @@ class Mission implements HistoriqueAwareInterface,
     private Collection $listeFicheMetierMission;
     private Collection $listeFichePosteMission;
 
+    /** Source de la mission principale */
+    private ?string $sourceString = null;
+
     public function __construct()
     {
         $this->domaines = new ArrayCollection();
+        $this->famillesProfessionnelles = new ArrayCollection();
         $this->activites = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
@@ -102,8 +109,26 @@ class Mission implements HistoriqueAwareInterface,
         }
         return $result;
     }
+
     public function addMissionActivite(MissionActivite $activite): void
     {
         $this->activites->add($activite);
     }
+
+    public function clearActivites(): void
+    {
+        $this->activites->clear();
+    }
+
+    public function getSourceString(): ?string
+    {
+        return $this->sourceString;
+    }
+
+    public function setSourceString(?string $sourceString): void
+    {
+        $this->sourceString = $sourceString;
+    }
+
+
 }

@@ -58,4 +58,9 @@ trait HasCompetenceCollectionTrait {
     {
         $this->competences->removeElement($element);
     }
+
+    public function clearCompetences() : void
+    {
+        $this->competences->clear();
+    }
 }

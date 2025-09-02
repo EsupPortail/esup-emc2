@@ -9,6 +9,7 @@ use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -28,6 +29,7 @@ class MissionPrincipaleServiceFactory {
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
          * @var CompetenceReferentielService $competenceReferentielService
+         * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var NiveauService $niveauService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
@@ -36,6 +38,7 @@ class MissionPrincipaleServiceFactory {
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
+        $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $niveauService = $container->get(NiveauService::class);
 
         $service = new MissionPrincipaleService();
@@ -45,6 +48,7 @@ class MissionPrincipaleServiceFactory {
         $service->setCompetenceService($competenceService);
         $service->setCompetenceElementService($competenceElementService);
         $service->setCompetenceReferentielService($competenceReferentielService);
+        $service->setFamilleProfessionnelleService($familleProfessionnelleService);
         $service->setNiveauService($niveauService);
         return $service;
     }

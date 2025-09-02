@@ -8,6 +8,8 @@ use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Exception;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
@@ -21,9 +23,13 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerDomaines\SelectionnerDomainesFormAwareTrait;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
 {
+    use ApplicationElementServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichierServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
@@ -77,9 +83,12 @@ class MissionPrincipaleController extends AbstractActionController
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $retour = $this->params()->fromQuery('retour') ?? null;
 
-        $split = explode("/", $retour);
-        $ficheId = end($split);
-        $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheId);
+        $ficheMetier = null;
+        if ($retour) {
+            $split = explode("/", $retour);
+            $ficheId = end($split);
+            $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheId);
+        }
 
 
         return new ViewModel([
@@ -400,8 +409,54 @@ class MissionPrincipaleController extends AbstractActionController
                 }
 
                 if ($mode === 'import') {
+                    /** @var Mission $mission */
                     foreach ($missions as $mission) {
+                        //famille professionnelle
+                        foreach ($mission->getFamillesProfessionnelles() as $famille) {
+                            $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
+                            if ($exist) {
+                                $mission->removeFamilleProfessionnelle($famille);
+                                $mission->addFamilleProfessionnelle($exist);
+                            } else {
+                                $this->getFamilleProfessionnelleService()->create($famille);
+                            }
+                        }
+                        //niveaux
+                        if ($mission->getNiveau()) {
+                            $this->getNiveauEnveloppeService()->create($mission->getNiveau());
+                        }
+                        //activite
+                        $activites = [];
+                        foreach ($mission->getActivites() as $activite) {
+                            $activites[$activite->getOrdre()] = $activite->getLibelle();
+                        }
+                        $mission->clearActivites();
+                        $applications = $mission->getApplicationListe();
+                        $mission->clearApplications();
+                        $competences = $mission->getCompetenceListe();
+                        $mission->clearCompetences();
+                        //mission
                         $this->getMissionPrincipaleService()->create($mission);
+
+                        //linked elements
+                        foreach ($applications as $application) {
+                            $this->getApplicationElementService()->create($application);
+                            $mission->addApplicationElement($application);
+                        }
+                        foreach ($competences as $competence) {
+                            $this->getCompetenceElementService()->create($competence);
+                            $mission->addCompetenceElement($competence);
+                        }
+                        foreach ($activites as $ordre => $libelle) {
+                            $activite = new MissionActivite();
+                            $activite->setLibelle($libelle);
+                            $activite->setMission($mission);
+                            $activite->setOrdre($ordre);
+                            $this->getMissionActiviteService()->create($activite);
+                            $mission->addMissionActivite($activite);
+                        }
+                        $this->getMissionPrincipaleService()->update($mission);
+
                     }
                 }
             }

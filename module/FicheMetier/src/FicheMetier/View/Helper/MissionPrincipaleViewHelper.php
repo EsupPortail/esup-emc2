@@ -13,6 +13,9 @@ class MissionPrincipaleViewHelper extends AbstractHelper
      * @param Mission|null $mission
      * @param array $options
      * @return string|Partial
+     *
+     * LISTE DES OPTIONS
+     * - 'display-source' (default: false) : affiche le contenu de l'attribute sourceString
      */
     public function __invoke(?Mission $mission, array $options = []): string|Partial
     {

@@ -57,4 +57,9 @@ trait HasApplicationCollectionTrait
     {
         $this->applications->removeElement($element);
     }
+
+    public function clearApplications() : void
+    {
+        $this->applications->clear();
+    }
 }

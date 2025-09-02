@@ -112,5 +112,5 @@ $this->headTitle('Importation de missions principales');
 <!-- Résultats -------------------------------------------------------------------------------------------------------->
 
 <?php foreach ($missions as $mission) : ?>
-    <?php echo $this->missionPrincipale($mission); ?>
+    <?php echo $this->missionPrincipale($mission, ['display-source' => false]); ?>
 <?php endforeach; ?>

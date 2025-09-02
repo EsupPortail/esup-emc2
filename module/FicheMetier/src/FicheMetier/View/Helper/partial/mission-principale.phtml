@@ -11,6 +11,8 @@ use FicheMetier\Entity\Db\MissionActivite;
  * @var array $options
  */
 
+$displaySource = isset($options['display-source']) ? $options['display-source'] : false;
+
 ?>
 
 <?php if ($mission === null) : ?>
@@ -100,7 +102,18 @@ use FicheMetier\Entity\Db\MissionActivite;
                         <?php endif; ?>
                     </dd>
                     <dt class="col-md-4"> Familles professionnelles</dt>
-                    <dd class="col-md-8"> TODO </dd>
+                    <dd class="col-md-8">
+                        <?php $familles = $mission->getFamillesProfessionnelles(); ?>
+                        <?php if (empty($familles)) : ?>
+                            Aucune famille professionnelle
+                        <?php else : ?>
+                            <ul>
+                                <?php foreach ($familles as $famille) : ?>
+                                    <li> <?php echo $famille->getLibelle(); ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </dd>
                     <dt class="col-md-4"> Niveaux</dt>
                     <dd class="col-md-8">
                         <?php if ($mission->getNiveau()) : ?>
@@ -112,6 +125,19 @@ use FicheMetier\Entity\Db\MissionActivite;
                 </dl>
             </div>
         </div>
+
+        <?php if ($displaySource) : ?>
+            <div>
+                <h4> Données sources </h4>
+                <?php if ($mission->getSourceString() === null) : ?> : ?>
+                    Aucune donnée source
+                <?php else: ?>
+<pre>
+<?php echo $mission->getSourceString(); ?>
+</pre>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 

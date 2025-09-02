@@ -18,6 +18,8 @@ use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use RuntimeException;
 
 class MissionPrincipaleService
@@ -28,6 +30,7 @@ class MissionPrincipaleService
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
     use NiveauServiceAwareTrait;
 
     /** GESTION DES ENTITES  ******************************************************************************************/
@@ -208,13 +211,16 @@ class MissionPrincipaleService
         return $mission;
     }
 
-    /** @return array (?Mission, string[]) **/
+    /** @return array (?Mission, string[], array) **/
     public function createOneWithCsv($json, string $separateur = '|', ?int $position = null) : array
     {
         $debugs = [
           'info' => [],
           'warning' => [],
           'error' => [],
+        ];
+        $to_create = [
+          'familles' => [],
         ];
 
         /* LIBELLE ****************************************************************************************************/
@@ -308,7 +314,26 @@ class MissionPrincipaleService
 
         }
 
-        return [$mission, $debugs];
+        /** FAMILLE PROFESSIONNELLE ***********************************************************************************/
+        if (isset($json['Familles professionnelles']) AND trim($json['Familles professionnelles']) !== '') {
+            $famillesString = explode($separateur, $json['Familles professionnelles']);
+            foreach ($famillesString as $familleString) {
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($familleString));
+                if ($famille === null) {
+                    $famille = new FamilleProfessionnelle();
+                    $famille->setLibelle(trim($familleString));
+                    $debugs['warning'][] = "La famille professionnelle [".trim($familleString)."] n'existe pas (ligne ".$position.") et est/sera créée.";
+                    $to_create['familles'][] = trim($familleString);
+                }
+                $mission->addFamilleProfessionnelle($famille);
+            }
+        }
+
+        /** SOURCE ****************************************************************************************************/
+        $source_string = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $mission->setSourceString($source_string);
+
+        return [$mission, $debugs, $to_create];
 
     }
 
