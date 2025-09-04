@@ -124,19 +124,3 @@ $structure = ($affectation)?$affectation->getStructure():null;
         </a>
     <?php endif; ?>
 </div>
-
-<script>
-    $(function () {
-        $('#fichespostes').DataTable({
-            autoWidth: false,
-            paging: false,
-            columnDefs: [{
-                "targets": 3,
-                "orderable": false
-            }],
-            language: {
-                url: '/js/datatables_fr.json'
-            }
-        });
-    });
-</script>
