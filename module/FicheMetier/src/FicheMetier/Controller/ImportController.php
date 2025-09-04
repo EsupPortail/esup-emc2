@@ -75,6 +75,8 @@ class ImportController extends AbstractActionController
             $csvFile = fopen($fichier_path, "r");
             if ($csvFile !== false) {
                 $header = fgetcsv($csvFile, null, ";");
+                // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+                $header = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header);
                 $nbElements = count($header);
 
                 while (($row = fgetcsv($csvFile, null, ';')) !== false) {
