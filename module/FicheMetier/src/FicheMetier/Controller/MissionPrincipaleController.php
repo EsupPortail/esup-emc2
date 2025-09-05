@@ -72,15 +72,19 @@ class MissionPrincipaleController extends AbstractActionController
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $retour = $this->params()->fromQuery('retour')??null;
 
-        $split = explode("/", $retour);
-        $ficheId = end($split);
-        $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheId);
+        if ($retour) {
+            $split = explode("/", $retour);
+            $ficheId = end($split);
+            if ($ficheId) {
+                $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheId);
+            }
+        }
 
 
         return new ViewModel([
             'mission' => $mission,
             'modification' => true,
-            'ficheMetier' => $ficheMetier,
+            'ficheMetier' => $ficheMetier??null,
             'fichesmetiers' => $mission->getListeFicheMetier(),
             'fichespostes' =>  $mission->getListeFichePoste(),
             'retour' => $retour,
