@@ -54,7 +54,7 @@ class IdentityProvider extends AbstractIdentityProvider
         }
 
         $agent = $this->getAgentService()->getAgentByUser($user);
-        if ($agent !== null) {
+        if ($agent !== null AND !empty($agent->getAffectationsActifs())) {
             $roleAgent = $this->getRoleService()->findByRoleId(Agent::ROLE_AGENT);
             $roles[] = $roleAgent;
 

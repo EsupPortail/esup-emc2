@@ -512,10 +512,20 @@ EOS;
     /**
      * @return User[]
      */
-    public function getUsersInAgent(): array
+    public function getUsersInAgent(?DateTime $date = null): array
     {
+        if ($date === null) $date = new DateTime();
+
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->join('agent.utilisateur', 'utilisateur')
+            ->andWhere('agent.deletedOn IS NULL')
+
+            ->join('agent.affectations', 'affectation')
+            ->andWhere('affectation.deletedOn IS NULL')
+            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= :date')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')
+            ->setParameter('date', $date)
+
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 

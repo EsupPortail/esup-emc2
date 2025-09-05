@@ -11,6 +11,8 @@
 $data = [
     ["admin", "Administrateur·trice technique"],
     ["metivier", "Administrateur·trice technique"],
+    ["rocher22", "Administrateur·trice technique"],
+    ["grimpar221", "Administrateur·trice technique"],
 ];
 
 
