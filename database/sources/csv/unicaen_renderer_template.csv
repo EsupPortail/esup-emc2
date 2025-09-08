@@ -11,23 +11,6 @@
 <li>Cette mission spécique permet une décharge horaire (<strong>VAR[MISSION_SPECIFIQUE_AFFECTATION#DECHARGE]</strong>)</li>
 </ul>
 <p>Ce document fait preuve.</p>",null,"Application\Provider\Template"
-"FICHE_METIER","<p>Exportation pdf d'une fiche métier</p>","pdf","Fiche_Métier_VAR[FICHE_METIER#INTITULE].pdf","<h1>VAR[FICHE_METIER#INTITULE]</h1>
-<table style=""width: 517px;"">
-<tbody>
-<tr>
-<td style=""width: 234.533px;"">VAR[METIER#REFERENCE]</td>
-<td style=""width: 265.467px;"">VAR[METIER#Domaine]</td>
-</tr>
-</tbody>
-</table>
-<h2>Missions principales</h2>
-<p>VAR[FICHE_METIER#MISSIONS_PRINCIPALES]</p>
-<h2>Compétences</h2>
-<p>VAR[FICHE_METIER#COMPETENCES_COMPORTEMENTALES]<br />VAR[FICHE_METIER#CONNAISSANCES]<br />VAR[FICHE_METIER#COMPETENCES_OPERATIONNELLES]</p>
-<h2>Applications</h2>
-<p>VAR[FICHE_METIER#APPLICATIONS]</p>
-<h2>Parcours de formation</h2>
-<p>VAR[PARCOURS#FORMATIONS]</p>","body {font-size: 9pt;}h1 {font-size: 14pt; color:#123456;}h2 {font-size: 12pt; color:#123456; border-bottom: 1px solid #123456;}h3 {font-size: 10pt; color:#123456;}li.formation-groupe {font-weight:bold;} .mission-principale { padding-bottom:0; margin-bottom:0;}","FicheMetier\Provider\Template"
 "LETTRE_MISSION",null,"pdf","Lettre de mission pour VAR[AGENT#Denomination] réalisant la mission spécifique VAR[MISSIONSPECIFIQUE#Libelle]","<p>L'agent VAR[AGENT#Denomination] réalise la mission spécifique VAR[MISSIONSPECIFIQUE#Libelle]</p>",null,"Application\Provider\Privilege"
 "FICHE_POSTE_VALIDATION_AGENT",null,"mail","Validation de VAR[AGENT#Denomination] de sa fiche de poste","<p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"">Bonjour,</p>
 <p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"">VAR[AGENT#Denomination] vient de valider sa fiche de poste.</p>
@@ -617,16 +600,6 @@
 <p>La DRH reste à votre disposition pour toute demande de renseignement complémentaire.</p>
 <p>Cordialement<br>Le bureau de gestion des personnels BIATSS<br>Le bureau Conseil Carrière Compétences <br>VAR[EMC2#AppName]</p>
 <p> </p>",null,"EntretienProfessionnel\Provider\Template"
-"EMC2_ACCUEIL","<p>Texte de la page d'accueil</p>","texte","Instance de démonstration de EMC2","<p>Instance de démonstration de EMC2.</p>
-<p><em>Ce texte est template modifiable dans la partie Administration &gt; Template.</em></p>
-<p> </p>
-<p> </p>
-<p>À venir lien vers l'organigramme de l'établissement fictif  ""Université de Démonstration""</p>
-<ul>
-<li>Organigramme des structures : <a href=""https://emc2-demo.unicaen.fr/img/Organigrammes/Organigramme_Structurel.png"" target=""_blank"" rel=""noopener"">structures</a></li>
-<li>Direction de la communication : <a href=""https://emc2-demo.unicaen.fr/img/Organigrammes/Organigramme_DirCom.drawio.svg"" target=""_blank"" rel=""noopener"">personnels</a></li>
-<li> </li>
-</ul>",null,"Application\Provider\Template"
 "ENTRETIEN_VALIDATION_1-RESPONSABLE",null,"mail","Validation de l'entretien professionnel pour la campagne VAR[CAMPAGNE#annee] de VAR[AGENT#Denomination] par le responsable de l'entretien VAR[ENTRETIEN#Responsable]","<p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;""><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
 <p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"">Bonjour,</p>
 <p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"">Votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee] a été validé par VAR[ENTRETIEN#Responsable], vous êtes invité<span style=""color: #4d5156; font-family: arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"">·</span>e à en prendre connaissance et y apporter des observations si vous l'estimez nécessaire.</p>
@@ -733,3 +706,28 @@
 <p>Si la date ne vous convient pas veuillez vous adresser à votre responsable d'entretien professionnel ou à votre responsable de structure.</p>
 <p>Merci d'accuser réception de cette convocation en cliquant sur le lien suivant : VAR[URL#EntretienAccepter]<br>En cas d’empêchement, veuillez contacter votre supérieur·e hiérarchique direct·e.</p>
 <p>Cordialement,<br>VAR[EMC2#AppName]</p>",null,"EntretienProfessionnel\Provider\Template"
+"TEST_SUB1","<p>Ceci est un template de test pour l'inclusion des templates</p>","pdf","test","<p>Ceci est un test de sous template VAR[FICHE_METIER#INTITULE]</p>",null,null
+"EMC2_ACCUEIL","<p>Texte de la page d'accueil</p>","texte","Instance de démonstration de EMC2","<p><strong>Instance de démonstration de EMC2</strong></p>
+<p><em>Ce texte est template modifiable dans la partie Administration &gt; Templates.<br><br></em></p>
+<p><strong>Organigramme fictif pour réalisation de tests</strong><br><a href=""https://unicloud.unicaen.fr/index.php/s/e9jf4TtS4YZy5Jf"" target=""_blank"" rel=""noopener"">Liste des agents</a> fictifs avec leur rôle, affectation, structure, hiérarchie etc. vous permettant de réaliser des tests de fonctionnalités</p>",null,"Application\Provider\Template"
+"FICHE_METIER","<p>Exportation pdf d'une fiche métier</p>","pdf","Fiche_Métier_VAR[FICHE_METIER#INTITULE].pdf","<h1>VAR[FICHE_METIER#INTITULE]</h1>
+<table style=""width: 517px;"">
+<tbody>
+<tr>
+<td style=""width: 234.533px;"">VAR[METIER#REFERENCE]</td>
+<td style=""width: 265.467px;"">VAR[METIER#Domaine]</td>
+</tr>
+</tbody>
+</table>
+<h2>Missions principales</h2>
+<p>VAR[FICHE_METIER#MISSIONS_PRINCIPALES]</p>
+<h2>Compétences</h2>
+<p>VAR[FICHE_METIER#COMPETENCES_COMPORTEMENTALES]<br>VAR[FICHE_METIER#CONNAISSANCES]<br>VAR[FICHE_METIER#COMPETENCES_OPERATIONNELLES]</p>
+<h2>Applications</h2>
+<p>VAR[FICHE_METIER#APPLICATIONS]</p>
+<h2>Parcours de formation</h2>
+<p>VAR[PARCOURS#FORMATIONS]</p>
+<h2>Environnement et contexte de travail</h2>
+<p>VAR[FICHE_METIER#Environnement]</p>
+<h2>Tendances d'évolution</h2>
+<p>VAR[FICHE_METIER#Tendances]</p>","body {font-size: 9pt;}h1 {font-size: 14pt; color:#123456;}h2 {font-size: 12pt; color:#123456; border-bottom: 1px solid #123456;}h3 {font-size: 10pt; color:#123456;}li.formation-groupe {font-weight:bold;} .mission-principale { padding-bottom:0; margin-bottom:0;} .tendance-libelle {font-weight: bold;}  .thematique-libelle {font-weight: bold;}","FicheMetier\Provider\Template"
