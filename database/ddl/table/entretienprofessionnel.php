@@ -58,6 +58,18 @@ return [
             'position'    => 5,
             'commentaire' => NULL,
         ],
+        'duree_estimee'         => [
+            'name'        => 'duree_estimee',
+            'type'        => 'float',
+            'bdd-type'    => 'double precision',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 8,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 17,
+            'commentaire' => NULL,
+        ],
         'formation_instance'    => [
             'name'        => 'formation_instance',
             'type'        => 'int',

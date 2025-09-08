@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'application_informations_pkey',
+    'name'    => 'element_application_pkey',
     'table'   => 'element_application',
-    'index'   => 'application_informations_pkey',
+    'index'   => 'element_application_pkey',
     'columns' => [
         'id',
     ],

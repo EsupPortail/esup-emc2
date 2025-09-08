@@ -3,10 +3,11 @@
 //@formatter:off
 
 return [
-    'schema'  => 'public',
-    'name'    => 'specificite_poste_pk',
+    'name'    => 'ficheposte_specificite_id_uindex',
+    'unique'  => TRUE,
+    'type'    => 'btree',
     'table'   => 'ficheposte_specificite',
-    'index'   => 'specificite_poste_pk',
+    'schema'  => 'public',
     'columns' => [
         'id',
     ],

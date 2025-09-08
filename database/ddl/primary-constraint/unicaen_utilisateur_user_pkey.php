@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'user_pkey',
+    'name'    => 'unicaen_utilisateur_user_pkey',
     'table'   => 'unicaen_utilisateur_user',
-    'index'   => 'user_pkey',
+    'index'   => 'unicaen_utilisateur_user_pkey',
     'columns' => [
         'id',
     ],

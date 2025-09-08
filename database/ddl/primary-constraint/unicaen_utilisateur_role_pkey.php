@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'role_pkey',
+    'name'    => 'unicaen_utilisateur_role_pkey',
     'table'   => 'unicaen_utilisateur_role',
-    'index'   => 'role_pkey',
+    'index'   => 'unicaen_utilisateur_role_pkey',
     'columns' => [
         'id',
     ],

@@ -9,7 +9,7 @@ return [
     'rtable'      => 'metier_referentiel',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'metier_referentiel_pk',
+    'index'       => 'metier_referentiel_id_uindex',
     'columns'     => [
         'referentiel_id' => 'id',
     ],
