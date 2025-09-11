@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
@@ -39,6 +40,7 @@ use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Mpdf\MpdfException;
 use RuntimeException;
+use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
@@ -292,10 +294,30 @@ class FichePosteController extends AbstractActionController
         $ficheposte->addDictionnaire('applications', $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
 
+        $date = new DateTime();
+        $validation = $ficheposte->getValidationActiveByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE);
+        if ($validation !== null) $date = $validation->getHistoCreation();
+
+
+        $structures = [];
+        if ($agent !== null) {
+            $affectations = $agent->getAffectationsActifs($date);
+            $affectations = array_filter($affectations, function (AgentAffectation $a) {
+                return $a->isPrincipale();
+            });
+            $structures = array_map(function (AgentAffectation $a) {
+                return $a->getStructure();
+            }, $affectations);
+            $structures = array_filter($structures, function (Structure $s) use ($date) {
+                return $s->isOuverte($date);
+            });
+        }
+
         $vars = [
             'ficheposte' => $ficheposte,
             'agent' => $agent,
-            'structure' => ($agent) ? $agent->getAffectationPrincipale()->getStructure() : null,
+            'structure' => !empty($structures)?current($structures):null,
+//            'structure' => ($agent) ? $agent->getAffectationPrincipale()->getStructure() : null,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_POSTE, $vars);
 

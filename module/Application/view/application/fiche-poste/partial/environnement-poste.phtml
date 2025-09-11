@@ -15,7 +15,6 @@ use Structure\Entity\Db\Structure;
 
 $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
 
-//todo recup date de validation
 $date = new DateTime();
 $validation = $fiche->getValidationActiveByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE);
 if ($validation !== null) $date = $validation->getHistoCreation();
