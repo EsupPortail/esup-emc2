@@ -5,7 +5,6 @@
  * @var FichePoste $fiche
  * @var Competence[] $competences
  * @var Application[] $applications
- * @var Structure $structure
  * @var AgentPoste[] $postes
  * @var Parametre[] $parametres
  */
@@ -87,7 +86,7 @@ $canExport   = $canAfficher;
         </div>
     </div>
 
-    <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'structure' => $structure, 'mode' => 'affichage']); ?>
+    <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'mode' => 'affichage']); ?>
     <?php echo $this->partial('partial/informations-poste', ['postes' => $postes, 'mode' => 'affichage', 'parametres' => $parametres, 'fiche' => $fiche ]); ?>
 
     <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->

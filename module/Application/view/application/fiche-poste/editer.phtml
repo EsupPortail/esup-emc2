@@ -123,7 +123,7 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
         </div>
     </div>
 
-    <?php echo $this->partial('partial/environnement-poste', ['structure' => $structure, 'fiche' => $fiche, 'agent' => $agent, 'mode' => 'edition']); ?>
+    <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'mode' => 'edition']); ?>
     <?php echo $this->partial('partial/informations-poste', ['fiche' => $fiche, 'postes' => $postes, 'mode' => 'edition', 'parametres' => $parametres]); ?>
 
     <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->

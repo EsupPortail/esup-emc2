@@ -175,9 +175,6 @@ class FichePosteController extends AbstractActionController
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        $structureId = $this->params()->fromQuery('structure');
-        $structure = $this->getStructureService()->getStructure($structureId);
-
         $titre = 'Fiche de poste <br/>';
         $titre .= '<strong>';
         if ($fiche->getFicheTypeExternePrincipale()) {
@@ -200,7 +197,6 @@ class FichePosteController extends AbstractActionController
             'applications' => $applications,
             'competences' => $competences,
             'activites' => $activites,
-            'structure' => $structure,
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(FichePosteParametres::TYPE),

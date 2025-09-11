@@ -1,19 +1,38 @@
 <?php
 
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Provider\Validation\FichePosteValidations;
 use Structure\Entity\Db\Structure;
 
 /**
  * @var FichePoste $fiche
  * @var Agent $agent
- * @var Structure|null $structure
  * @var string $mode
  */
 
 $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
 
+//todo recup date de validation
+$date = new DateTime();
+$validation = $fiche->getValidationActiveByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE);
+if ($validation !== null) $date = $validation->getHistoCreation();
+
+$structures = [];
+if ($agent !== null) {
+    $affectations = $agent->getAffectationsActifs($date);
+    $affectations = array_filter($affectations, function (AgentAffectation $a) {
+        return $a->isPrincipale();
+    });
+    $structures = array_map(function (AgentAffectation $a) {
+        return $a->getStructure();
+    }, $affectations);
+    $structures = array_filter($structures, function (Structure $s) use ($date) {
+        return $s->isOuverte($date);
+    });
+}
 ?>
 
 <div class="card panel-info">
@@ -25,11 +44,6 @@ $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIE
         </div>
     </div>
     <div class="card-body">
-        <?php
-            $structures = [];
-            if ($agent !== null) $structures = $agent->getStructures();
-            else if ($structure !== null) $structures[] = $structure;
-        ?>
         <?php if (empty($structures)) : ?>
             <div class="alert alert-warning">
                 <i class="fas fa-exclamation-triangle"></i>
@@ -39,12 +53,13 @@ $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIE
             <?php foreach ($structures as $structure) : ?>
                 <h4> <?php echo $structure->getLibelleLong(); ?> </h4>
 
-                <?php if ($structure->getDescriptionComplete() !== null) :?>
+                <?php if ($structure->getDescriptionComplete() !== null) : ?>
                     <?php echo $structure->getDescriptionComplete(); ?>
                 <?php else: ?>
                     <div class="alert alert-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        Aucune description de fournie pour l'affectation <em><?php echo $structure->getLibelleCourt(); ?></em>.
+                        Aucune description de fournie pour l'affectation
+                        <em><?php echo $structure->getLibelleCourt(); ?></em>.
                     </div>
                 <?php endif; ?>
             <?php endforeach; ?>
