@@ -131,8 +131,8 @@ class AgentAutoriteService
             ->orderBy('agentautorite.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentautorite.histoDestruction IS NULL');
         if ($encours === true) {
-            $qb = $qb->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
-                ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            $qb = $qb->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
+                ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
                 ->setParameter('now', new DateTime());
         }
 
