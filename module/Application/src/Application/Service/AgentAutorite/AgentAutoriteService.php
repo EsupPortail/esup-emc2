@@ -120,7 +120,7 @@ class AgentAutoriteService
     }
 
     /** @return AgentAutorite[] */
-    public function getAgentsAutoritesByAgent(Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
+    public function getAgentsAutoritesByAgent(Agent $agent, bool $histo = false, bool $encours = true, string $champ = 'id', $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.agent = :agent')->setParameter('agent', $agent)
@@ -130,6 +130,11 @@ class AgentAutoriteService
             ->setParameter('now', new DateTime())
             ->orderBy('agentautorite.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentautorite.histoDestruction IS NULL');
+        if ($encours === true) {
+            $qb = $qb->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+                ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+                ->setParameter('now', new DateTime());
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;

@@ -104,16 +104,18 @@ class AgentSuperieurService
     }
 
     /** @return AgentSuperieur[] */
-    public function getAgentsSuperieursByAgent(?Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
+    public function getAgentsSuperieursByAgent(?Agent $agent, bool $histo = false, bool $encours = true, string $champ = 'id', $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('agentsuperieur.deletedOn IS NULL')->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
-            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
-            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
-            ->setParameter('now', new DateTime())
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
+        if ($encours === true) {
+            $qb = $qb->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+                ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+                ->setParameter('now', new DateTime());
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;

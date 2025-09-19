@@ -584,10 +584,10 @@ class AgentHierarchieController extends AbstractActionController
         $chaines = null;
         switch ($type) {
             case 'superieur' :
-                $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent, true);
+                $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent, true, false);
                 break;
             case 'autorite' :
-                $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent, true);
+                $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent, true, false);
                 break;
         }
 

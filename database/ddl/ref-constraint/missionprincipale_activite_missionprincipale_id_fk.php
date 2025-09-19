@@ -8,7 +8,7 @@ return [
     'table'       => 'missionprincipale_activite',
     'rtable'      => 'missionprincipale',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'CASCADE',
+    'delete_rule' => 'NO ACTION',
     'index'       => 'missionprincipale_pk',
     'columns'     => [
         'mission_id' => 'id',

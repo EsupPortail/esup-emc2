@@ -120,9 +120,9 @@ return [
         ],
         'reply_to'               => [
             'name'        => 'reply_to',
-            'type'        => 'clob',
-            'bdd-type'    => 'text',
-            'length'      => 0,
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 2048,
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,

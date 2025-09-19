@@ -9,7 +9,7 @@ return [
     'rtable'      => 'ficheposte_fichemetier',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'fiche_type_externe_id_uindex',
+    'index'       => 'fiche_type_externe_pk',
     'columns'     => [
         'fichemetierexterne_id' => 'id',
     ],

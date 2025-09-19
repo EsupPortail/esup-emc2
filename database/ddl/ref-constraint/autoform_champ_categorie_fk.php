@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_autoform_categorie',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',
-    'index'       => 'autoform_categorie_id_uindex',
+    'index'       => 'autoform_categorie_pk',
     'columns'     => [
         'categorie' => 'id',
     ],

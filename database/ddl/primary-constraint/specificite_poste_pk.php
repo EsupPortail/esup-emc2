@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'ficheposte_specificite_pk',
+    'name'    => 'specificite_poste_pk',
     'table'   => 'ficheposte_specificite',
-    'index'   => 'ficheposte_specificite_pk',
+    'index'   => 'specificite_poste_pk',
     'columns' => [
         'id',
     ],

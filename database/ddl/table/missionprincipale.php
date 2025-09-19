@@ -118,18 +118,6 @@ return [
             'position'    => 3,
             'commentaire' => NULL,
         ],
-        'source_string'         => [
-            'name'        => 'source_string',
-            'type'        => 'clob',
-            'bdd-type'    => 'text',
-            'length'      => 0,
-            'scale'       => NULL,
-            'precision'   => NULL,
-            'nullable'    => TRUE,
-            'default'     => NULL,
-            'position'    => 10,
-            'commentaire' => NULL,
-        ],
     ],
 ];
 

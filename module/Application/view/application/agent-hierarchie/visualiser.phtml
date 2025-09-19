@@ -10,6 +10,22 @@ use Application\Entity\Db\AgentSuperieur;
  * @var AgentSuperieur[]|AgentAutorite[] $chaines
  **/
 
+$revoques = [];
+$historises = [];
+$valides = [];
+foreach ($chaines as $chaine) {
+    if ($chaine->getSourceId() !== 'EMC2' and $chaine->estHistorise()) {
+        $revoques[] = $chaine;
+    } else {
+        if ($chaine->estHistorise()) {
+            $historises[] = $chaine;
+        } else {
+            $valides[] = $chaine;
+        }
+    }
+
+}
+
 ?>
 
 <dl class="row">
@@ -19,24 +35,82 @@ use Application\Entity\Db\AgentSuperieur;
     <dd><?php echo $type; ?></dd>
 </dl>
 
-<ul>
-<?php foreach ($chaines as $chaine) : ?>
-    <?php $agent = $chaine->getAgent(); ?>
-    <?php $hierarchie = ($type === 'superieur')?$chaine->getSuperieur():$chaine->getAutorite(); ?>
+<div class="row">
+    <div class="col-md-6">
+        <h2> Chaînes valides</h2>
 
-    <li>
-        <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
-        <?php echo $hierarchie->getDenomination(true); ?>
-        <?php echo ($chaine->getDateDebut())?$chaine->getDateDebut()->format('d/m/Y'):"---"; ?>
-        &RightArrow;
-        <?php echo ($chaine->getDateFin())?$chaine->getDateFin()->format('d/m/Y'):"---"; ?>
-        <br>
-        <?php if ($chaine->isDeleted()) : ?>
-            <span class="badge bg-danger">Effacée</span>
-        <?php endif; ?>
-        <?php if ($chaine->estNonHistorise()) : ?>
-            <span class="badge bg-warning">Historisée</span>
-        <?php endif; ?>
-    </li>
-<?php endforeach; ?>
-</ul>
+        <?php usort($valides, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            if ($a instanceof AgentSuperieur) return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination();
+            return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination();
+        });
+        ?>
+
+        <ul>
+            <?php foreach ($valides as $chaine) : ?>
+                <?php $agent = $chaine->getAgent(); ?>
+                <?php $hierarchie = ($type === 'superieur') ? $chaine->getSuperieur() : $chaine->getAutorite(); ?>
+                <li>
+                    <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                    <?php echo $hierarchie->getDenomination(true); ?>
+                    (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <div class="col-md-6">
+
+        <h2> Chaînes revoquées</h2>
+        <?php usort($revoques, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            if ($a instanceof AgentSuperieur) return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination();
+            return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination();
+        });
+        ?>
+
+        <ul>
+            <?php foreach ($revoques as $chaine) : ?>
+                <?php $agent = $chaine->getAgent(); ?>
+                <?php $hierarchie = ($type === 'superieur') ? $chaine->getSuperieur() : $chaine->getAutorite(); ?>
+                <li>
+                    <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                    <?php echo $hierarchie->getDenomination(true); ?>
+                    (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h2> Chaînes historisées</h2>
+        <?php usort($historises, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            if ($a instanceof AgentSuperieur) return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination();
+            return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination();
+        });
+        ?>
+
+        <ul>
+            <?php foreach ($historises as $chaine) : ?>
+                <?php $agent = $chaine->getAgent(); ?>
+                <?php $hierarchie = ($type === 'superieur') ? $chaine->getSuperieur() : $chaine->getAutorite(); ?>
+                <li>
+                    <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                    <?php echo $hierarchie->getDenomination(true); ?>
+                    (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+

@@ -4,9 +4,9 @@
 
 return [
     'schema'  => 'public',
-    'name'    => 'unicaen_etat_type_pkey',
+    'name'    => 'unicaen_etat_type_pk',
     'table'   => 'unicaen_etat_type',
-    'index'   => 'unicaen_etat_type_pkey',
+    'index'   => 'unicaen_etat_type_pk',
     'columns' => [
         'id',
     ],
