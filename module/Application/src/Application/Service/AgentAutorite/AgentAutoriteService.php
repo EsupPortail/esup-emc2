@@ -125,9 +125,6 @@ class AgentAutoriteService
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('agentautorite.deletedOn IS NULL')->andWhere('autorite.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
-            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
-            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
-            ->setParameter('now', new DateTime())
             ->orderBy('agentautorite.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentautorite.histoDestruction IS NULL');
         if ($encours === true) {
