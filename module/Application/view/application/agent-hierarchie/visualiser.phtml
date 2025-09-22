@@ -48,19 +48,61 @@ $a=1;
         });
         ?>
 
+        <h3> Passée </h3>
+
         <ul>
             <?php foreach ($valides as $chaine) : ?>
-                <?php $agent = $chaine->getAgent(); ?>
-                <?php $hierarchie = ($type === 'superieur') ? $chaine->getSuperieur() : $chaine->getAutorite(); ?>
-                <li>
-                    <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
-                    <?php echo $hierarchie->getDenomination(true); ?>
-                    (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
-                    &RightArrow;
-                    <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
-                </li>
+                <?php if ($chaine->estFini()) : ?>
+                    <?php $agent = $chaine->getAgent(); ?>
+                    <?php $hierarchie = ($type === 'superieur') ? $chaine->getSuperieur() : $chaine->getAutorite(); ?>
+                    <li>
+                        <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                        <?php echo $hierarchie->getDenomination(true); ?>
+                        (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                        &RightArrow;
+                        <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                    </li>
+                <?php endif; ?>
             <?php endforeach; ?>
         </ul>
+
+        <h3> En cours </h3>
+
+        <ul>
+            <?php foreach ($valides as $chaine) : ?>
+                <?php if ($chaine->estEnCours()) : ?>
+                    <?php $agent = $chaine->getAgent(); ?>
+                    <?php $hierarchie = ($type === 'superieur') ? $chaine->getSuperieur() : $chaine->getAutorite(); ?>
+                    <li>
+                        <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                        <?php echo $hierarchie->getDenomination(true); ?>
+                        (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                        &RightArrow;
+                        <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+
+        <h3> À venir </h3>
+
+        <ul>
+            <?php foreach ($valides as $chaine) : ?>
+                <?php if (!$chaine->estCommence()) : ?>
+                    <?php $agent = $chaine->getAgent(); ?>
+                    <?php $hierarchie = ($type === 'superieur') ? $chaine->getSuperieur() : $chaine->getAutorite(); ?>
+                    <li>
+                        <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                        <?php echo $hierarchie->getDenomination(true); ?>
+                        (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                        &RightArrow;
+                        <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+
+
     </div>
     <div class="col-md-6">
 
@@ -84,11 +126,14 @@ $a=1;
                     (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
                     &RightArrow;
                     <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                    <br>
+                    <em>revoquée le <?php echo $chaine->getHistoDestruction()->format('d/m/Y'); ?>
+                        par <?php echo $chaine->getHistoDestructeur()->getDisplayName(); ?></em>
                 </li>
             <?php endforeach; ?>
         </ul>
 
-        <h2> Chaînes historisées</h2>
+        <h2> Chaînes annulées</h2>
         <?php usort($historises, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
             if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
                 return $a->getDateDebut() <=> $b->getDateDebut();
@@ -108,6 +153,9 @@ $a=1;
                     (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
                     &RightArrow;
                     <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                    <br>
+                    <em>annulée le <?php echo $chaine->getHistoDestruction()->format('d/m/Y'); ?>
+                        par <?php echo $chaine->getHistoDestructeur()->getDisplayName(); ?></em>
                 </li>
             <?php endforeach; ?>
         </ul>
