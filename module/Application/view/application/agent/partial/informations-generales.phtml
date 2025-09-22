@@ -38,6 +38,8 @@ $chaine->setAgent($agent);
 $canModifierChaineGerer = $this->isAllowed(ChainePrivileges::getResourceId(ChainePrivileges::CHAINE_GERER));
 $canModifierChaineGerer = $canModifierChaineGerer && $chaineAssertion->computeAssertion($chaine, ChainePrivileges::CHAINE_GERER);
 
+$canAfficherHistorique = $this->isAllowed(ChainePrivileges::getResourceId(ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE));
+$canAfficherHistorique = $canAfficherHistorique && $this->isAllowed($chaine, ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE);
 $canModifierChaineSynchroniser = $this->isAllowed(ChainePrivileges::getResourceId(ChainePrivileges::CHAINE_SYNCHRONISER));
 $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssertion->computeAssertion($chaine, ChainePrivileges::CHAINE_SYNCHRONISER);
 ?>
@@ -125,7 +127,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
                 <dl>
                     <dt>
                         Autorité hiérarchique
-                        <?php if ($canModifierChaineGerer || $canModifierChaineSynchroniser) : ?>
+                        <?php if ($canAfficherHistorique) : ?>
                             <?php /** @see \Application\Controller\AgentHierarchieController::visualiserAction() */ ?>
                             <a href="<?php echo $this->url('agent/hierarchie/visualiser', ['agent' => $agent->getId(), 'type' => 'autorite'], [], true); ?>"
                                class="action secondary ajax-modal" style="font-weight: normal">
@@ -208,7 +210,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
             <?php if ($canAfficherSuperieure) : ?>
                 <dl>
                     <dt> Supérieur&middot;e hiérarchique direct&middot;e
-                        <?php if ($canModifierChaineGerer || $canModifierChaineSynchroniser) : ?>
+                        <?php if ($canAfficherHistorique) : ?>
                             <?php /** @see \Application\Controller\AgentHierarchieController::visualiserAction() */ ?>
                             <a href="<?php echo $this->url('agent/hierarchie/visualiser', ['agent' => $agent->getId(), 'type' => 'superieur'], [], true); ?>"
                                class="action secondary ajax-modal" style="font-weight: normal">
@@ -312,7 +314,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
 
 <?php if ($canAfficherCarriereComplete) : ?>
     <a
-        <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */ ?>
+            <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */ ?>
             href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
             class="ajax-modal"
     >

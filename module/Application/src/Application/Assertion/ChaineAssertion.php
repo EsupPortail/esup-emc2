@@ -53,9 +53,10 @@ class ChaineAssertion extends AbstractAssertion
 
         switch ($privilege) {
             case ChainePrivileges::CHAINE_AFFICHER :
+            case ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE :
             case ChainePrivileges::CHAINE_SYNCHRONISER :
             case ChainePrivileges::CHAINE_GERER :
-                return match ($role->getRoleId()) {
+                $temp =  match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
@@ -64,13 +65,14 @@ class ChaineAssertion extends AbstractAssertion
                     AppRoleProvider::AGENT => $agentEntity === $agent,
                     default => false,
                 };
+                return $temp;
         }
         return true;
     }
 
     protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
-        if (! $entity instanceof Agent) {
+        if (! $entity instanceof AgentSuperieur && ! $entity instanceof AgentAutorite) {
             return false;
         }
         return $this->computeAssertion($entity, $privilege);
@@ -101,6 +103,7 @@ class ChaineAssertion extends AbstractAssertion
 
         return match ($action) {
             'afficher'       => $this->computeAssertion($chaine, ChainePrivileges::CHAINE_AFFICHER),
+            'visualiser'       => $this->computeAssertion($chaine, ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE),
             'historiser', 'restaurer' => $this->computeAssertion($chaine, ChainePrivileges::CHAINE_SYNCHRONISER),
             'ajouter', 'modifier', 'supprimer' => $this->computeAssertion($chaine, ChainePrivileges::CHAINE_GERER),
             default => true,

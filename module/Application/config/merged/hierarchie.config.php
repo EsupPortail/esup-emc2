@@ -43,6 +43,7 @@ return [
                     [
                         'privileges' => [
                             ChainePrivileges::CHAINE_AFFICHER,
+                            ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE,
                             ChainePrivileges::CHAINE_SYNCHRONISER,
                             ChainePrivileges::CHAINE_GERER,
                         ],
@@ -92,8 +93,7 @@ return [
                         'visualiser',
                     ],
                     'privileges' => [
-                        ChainePrivileges::CHAINE_GERER,
-                        ChainePrivileges::CHAINE_SYNCHRONISER,
+                        ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE,
                     ],
                     'assertion'  => ChaineAssertion::class,
                 ],
