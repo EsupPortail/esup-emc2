@@ -103,6 +103,26 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'camapgne' => [
+                                'label' => 'Campagne',
+                                'route' => 'entretien-professionnel/campagne',
+                                'resource' =>  PrivilegeController::getResourceId(CampagneController::class, 'index'),
+                                'order'    => 3021,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router' => [
         'routes' => [
             'entretien-professionnel' => [

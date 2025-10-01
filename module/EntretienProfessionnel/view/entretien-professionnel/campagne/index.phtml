@@ -33,16 +33,6 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
             </a>
         <?php endif; ?>
     </div>
-    <div class="col-md-3">
-        <a
-            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::indexAction() */?>
-                href="<?php echo $this->url('entretien-professionnel', [], [], true); ?>"
-                class="btn btn-secondary"
-        >
-            <span class="icon icon-listing"></span>
-            Accéder aux entretiens
-        </a>
-    </div>
 </div>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>

@@ -30,13 +30,6 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
             Index des entretiens professionnels
         </h1>
     </div>
-    <div class="col-md-3">
-        <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
-           class="btn btn-secondary">
-            <span class="icon icon-listing"></span>
-            Accéder aux campagnes
-        </a>
-    </div>
 </div>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
