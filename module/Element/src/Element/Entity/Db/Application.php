@@ -15,7 +15,7 @@ class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
     private ?string $libelle = null;
     private ?string $url = null;
     private bool $actif = true;
-    private ?ApplicationTheme $groupe = null;
+    private ?ApplicationTheme $theme = null;
 
     public function getId() : ?int
     {
@@ -54,11 +54,11 @@ class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
 
     public function getGroupe() : ?ApplicationTheme
     {
-        return $this->groupe;
+        return $this->theme;
     }
 
     public function setGroupe(?ApplicationTheme $groupe) : void
     {
-        $this->groupe = $groupe;
+        $this->theme = $groupe;
     }
 }
