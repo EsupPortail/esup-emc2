@@ -2,18 +2,36 @@
 
 namespace FicheMetier\Service\MissionPrincipale;
 
+use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
+use Element\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use RuntimeException;
 
 class MissionPrincipaleService
 {
     use ProvidesObjectManager;
+    use ApplicationServiceAwareTrait;
+    use ApplicationElementServiceAwareTrait;
+    use CompetenceServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
+    use CompetenceReferentielServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
+    use NiveauServiceAwareTrait;
 
     /** GESTION DES ENTITES  ******************************************************************************************/
 
@@ -193,5 +211,130 @@ class MissionPrincipaleService
         return $mission;
     }
 
+    /** @return array (?Mission, string[], array) **/
+    public function createOneWithCsv($json, string $separateur = '|', ?int $position = null) : array
+    {
+        $debugs = [
+          'info' => [],
+          'warning' => [],
+          'error' => [],
+        ];
+        $to_create = [
+          'familles' => [],
+        ];
+
+        /* LIBELLE ****************************************************************************************************/
+        if (!isset($json['Libellé']) OR trim($json['Libellé']) === '') {
+            throw new RuntimeException("La colonne obligatoire [Libellé] est manquante dans le fichier CSV sur la ligne [".($position??"non préciser")."]");
+        } else $libelle = trim($json['Libellé']);
+
+        $mission = new Mission();
+        $mission->setLibelle($libelle);
+
+        /* ACTIVITES **************************************************************************************************/
+        if (isset($json['Activités associées'])) {
+            $activites = explode($separateur, $json['Activités associées']);
+            $positionActivite = 0;
+            foreach ($activites as $activite) {
+                if (trim($activite) !== '') {
+                    $act = new MissionActivite();
+                    $act->setLibelle($activite);
+                    $act->setMission($mission);
+                    $act->setOrdre(++$positionActivite);
+                    $mission->addMissionActivite($act);
+                }
+            }
+        }
+
+        /* APPLICATIONS ***********************************************************************************************/
+        if (isset($json['Applications']) AND trim($json['Applications']) !== '') {
+              $listing = explode($separateur, $json['Applications']);
+              foreach ($listing as $item) {
+                  $application = $this->getApplicationService()->getApplicationByLibelle(trim($item));
+                  if ($application === null) {
+                      $debugs['warning'][] = "L'application [".trim($item)."] n'existe pas (ligne ".$position.").";
+                  } else {
+                      $element = new ApplicationElement();
+                      $element->setApplication($application);
+                      $mission->addApplicationElement($element);
+                  }
+              }
+        }
+
+        /* COMPETENCES ************************************************************************************************/
+        if (isset($json['Compétences']) AND trim($json['Compétences']) !== '') {
+            $referentiels = $this->getCompetenceReferentielService()->getCompetencesReferentiels();
+            $listing = explode($separateur, $json['Compétences']);
+            foreach ($listing as $item) {
+                $split = explode('-', $item);
+                if (count($split) === 2) {
+                    $referentiel = $referentiels[trim($split[0])] ?? null;
+                    $competence = $this->getCompetenceService()->getCompetenceByRefentielAndId($referentiel, trim($split[1]));
+                    if ($competence === null) {
+                        $debugs['warning'][] = "La compétence [".trim($item)."] n'existe pas (ligne ".$position.").";
+                    } else {
+                        $element = new CompetenceElement();
+                        $element->setCompetence($competence);
+                        $mission->addCompetenceElement($element);
+                    }
+                }
+            }
+        }
+
+        /** NIVEAUX ***************************************************************************************************/
+        if (isset($json['Niveau']) AND trim($json['Niveau']) !== '') {
+            $niveau = explode($separateur, $json['Niveau']);
+            if (count($niveau) === 1) {
+                $niv = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
+                if ($niv === null) {
+                    $debugs['warning'][] = "Le niveau [".trim($niveau[0])."] n'existe pas (ligne ".$position.").";
+                } else {
+                    $niveau_ = new NiveauEnveloppe();
+                    $niveau_->setBorneInferieure($niv);
+                    $niveau_->setBorneSuperieure($niv);
+                    $mission->setNiveau($niveau_);
+                }
+            }
+            if (count($niveau) === 2) {
+                $inf = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
+                if ($inf === null) {
+                    $debugs['warning'][] = "Le niveau [" . trim($niveau[0]) . "] n'existe pas (ligne " . $position . ").";
+                }
+                $sup = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[1]));
+                if ($sup === null) {
+                    $debugs['warning'][] = "Le niveau [" . trim($niveau[1]) . "] n'existe pas (ligne " . $position . ").";
+                }
+                if ($inf !== null AND $sup !== null) {
+                    $niveau_ = new NiveauEnveloppe();
+                    $niveau_->setBorneInferieure($inf);
+                    $niveau_->setBorneSuperieure($sup);
+                    $mission->setNiveau($niveau_);
+                }
+            }
+
+        }
+
+        /** FAMILLE PROFESSIONNELLE ***********************************************************************************/
+        if (isset($json['Familles professionnelles']) AND trim($json['Familles professionnelles']) !== '') {
+            $famillesString = explode($separateur, $json['Familles professionnelles']);
+            foreach ($famillesString as $familleString) {
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($familleString));
+                if ($famille === null) {
+                    $famille = new FamilleProfessionnelle();
+                    $famille->setLibelle(trim($familleString));
+                    $debugs['warning'][] = "La famille professionnelle [".trim($familleString)."] n'existe pas (ligne ".$position.") et est/sera créée.";
+                    $to_create['familles'][] = trim($familleString);
+                }
+                $mission->addFamilleProfessionnelle($famille);
+            }
+        }
+
+        /** SOURCE ****************************************************************************************************/
+        $source_string = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $mission->setSourceString($source_string);
+
+        return [$mission, $debugs, $to_create];
+
+    }
 
 }

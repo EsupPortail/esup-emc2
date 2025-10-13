@@ -7,15 +7,21 @@ use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
+use Element\Service\ApplicationElement\ApplicationElementService;
+use Element\Service\CompetenceElement\CompetenceElementService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheReferentiel\Form\Importation\ImportationForm;
+use Fichier\Service\Fichier\FichierService;
 use Metier\Form\SelectionnerDomaines\SelectionnerDomainesForm;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class MissionPrincipaleControllerFactory {
+class MissionPrincipaleControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -23,26 +29,36 @@ class MissionPrincipaleControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : MissionPrincipaleController
+    public function __invoke(ContainerInterface $container): MissionPrincipaleController
     {
         /**
+         * @var ApplicationElementService $applicationElementService
+         * @var CompetenceElementService $competenceElementService
+         * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var FicheMetierService $ficheMetierService
+         * @var FichierService $fichierService
          * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          */
+        $applicationElementService = $container->get(ApplicationElementService::class);
+        $competenceElementService = $container->get(CompetenceElementService::class);
+        $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $fichierService = $container->get(FichierService::class);
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
 
         /**
+         * @var ImportationForm $importationForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var NiveauEnveloppeForm $niveauEnveloppeForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetencesForm
          * @var SelectionnerDomainesForm $selectionDomainesForm
          */
+        $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -50,10 +66,15 @@ class MissionPrincipaleControllerFactory {
         $selectionDomainesForm = $container->get('FormElementManager')->get(SelectionnerDomainesForm::class);
 
         $controller = new MissionPrincipaleController();
+        $controller->setApplicationElementService($applicationElementService);
+        $controller->setCompetenceElementService($competenceElementService);
+        $controller->setFamilleProfessionnelleService($familleProfessionnelleService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setFichierService($fichierService);
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
+        $controller->setImportationForm($importationForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);

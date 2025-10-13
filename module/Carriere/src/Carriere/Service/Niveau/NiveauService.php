@@ -99,7 +99,7 @@ class NiveauService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Niveau partagent le même id [" . $id . "]", 0, $e);
+            throw new RuntimeException("Plusieurs [".Niveau::class."] partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -108,6 +108,19 @@ class NiveauService
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getNiveau($id);
+        return $result;
+    }
+
+    public function getNiveauByEtiquette($etiquette): ?Niveau
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('niveau.etiquette = :etiquette')
+            ->setParameter('etiquette', $etiquette);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Niveau::class."] partagent la même etiquette [" . $etiquette . "]", 0, $e);
+        }
         return $result;
     }
 }

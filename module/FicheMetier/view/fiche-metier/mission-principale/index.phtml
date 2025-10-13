@@ -16,12 +16,20 @@ $canModifier = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
 $canHistoriser = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_HISTORISER));
 $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_SUPPRIMER));
 
+$canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_MODIFIER));
 ?>
 
+<!-- Bloc de titre ---------------------------------------------------------------------------------------------------->
 
-<h1 class="page-header">
-    Missions principales
-</h1>
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Missions principales
+        </h1>
+    </div>
+</div>
+
+<!-- Boutons d'actions ------------------------------------------------------------------------------------------------>
 
 <?php if ($canAjouter) : ?>
     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::ajouterAction() */ ?>
@@ -32,46 +40,64 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
         Ajouter une mission principale
     </a>
 <?php endif; ?>
+<?php if ($canImporter) : ?>
+    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::importerAction() */ ?>
+    <a href="<?php echo $this->url('mission-principale/importer', [], [], true); ?>"
+       class="btn btn-primary"
+    >
+        <span class="icon icon-csv"></span>
+        Importer des missions principales depuis un csv
+    </a>
+<?php endif; ?>
 
-<table class="table table-condensed table-hover">
+<!-- Listing ---------------------------------------------------------------------------------------------------------->
+
+<table class="table table-condensed table-hover" id="missions">
     <thead>
-        <tr>
-            <th> Libellé </th>
-            <th style="width: 15rem;"> Domaines & niveau</th>
-            <th style="width: 10rem;"> Liens </th>
-            <th class="action"> Action </th>
-        </tr>
+    <tr>
+        <th> Libellé</th>
+        <th> Familles professionnelles</th>
+        <th> Niveau</th>
+        <th style="width: 10rem;"> Liens</th>
+        <th class="action"> Action</th>
+    </tr>
     </thead>
     <tbody>
     <?php foreach ($missions as $mission) : ?>
-        <tr class="<?php if ($mission->estHistorise()) echo " historise ";?>">
-            <td> <?php echo $mission->getLibelle(); ?> </td>
-            <td>
-                <?php if (empty($mission->getDomaines())) : ?>
-                    <p><em>Aucun domaine</em></p>
+        <tr class="<?php if ($mission->estHistorise()) echo " historise "; ?>">
+            <td class="col-md-6">
+                <?php echo $mission->getLibelle(); ?>
+                <br>
+                <span style="color: #4b4b4b;">
+                    <?php echo count($mission->getActivites()); ?> activité·s
+                </span>
+            </td>
+            <td class="col-md-2" data-column-id="Familles professionnelles">
+                <?php if (empty($mission->getFamillesProfessionnelles())) : ?>
+                    Aucune famille
                 <?php else : ?>
-                <ul>
-                    <?php foreach ($mission->getDomaines() as $domaine) : ?>
-                        <li> <?php echo $domaine->getLibelle(); ?> </li>
+                    <?php foreach ($mission->getFamillesProfessionnelles() as $famille) : ?>
+                        <li> <?php echo $famille->getLibelle(); ?> </li>
                     <?php endforeach; ?>
-                </ul>
                 <?php endif; ?>
 
+            </td>
+            <td class="col-md-1" data-column-id="Niveau">
                 <?php if ($mission->getNiveau() === null) : ?>
-                    <p><em>Niveau non précisé</em></p>
+                    <p><em>Non précisé</em></p>
                 <?php else : ?>
-                    Niveau : <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
+                    <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
                 <?php endif; ?>
             </td>
-            <td>
+            <td class="col-md-2" data-column-id="Liens">
                 Fiche métier : <?php echo count($mission->getListeFicheMetier()); ?> <br/>
                 Fiche de poste : <?php echo count($mission->getListeFichePoste()); ?>
             </td>
-            <td class="action">
+            <td class="action col-md-1" data-column-id="Action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true); ?>"
-                       class="ajax-modal"
+                       class="ajax-modal action secondary"
                     >
                         <span class="icon icon-voir"></span>
                         Afficher
@@ -81,6 +107,7 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
                     <br/>
                     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="action primary"
                     >
                         <span class="icon icon-editer"></span>
                         modifier
@@ -90,13 +117,17 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
                     <br>
                     <?php if ($mission->estNonHistorise()): ?>
                         <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::historiserAction() */ ?>
-                        <a href="<?php echo $this->url('mission-principale/historiser', ['mission-principale' => $mission->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('mission-principale/historiser', ['mission-principale' => $mission->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-historiser"></span>
                             Historiser
                         </a>
                     <?php else : ?>
                         <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::restaurerAction() */ ?>
-                        <a href="<?php echo $this->url('mission-principale/restaurer', ['mission-principale' => $mission->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('mission-principale/restaurer', ['mission-principale' => $mission->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
                         </a>
@@ -106,12 +137,10 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
                     <br>
                     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('mission-principale/supprimer', ['mission-principale' => $mission->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
+                       class="ajax-modal action danger" data-event="modification"
                     >
-                        <span class="text-danger">
-                            <span class="icon icon-unchecked"></span>
-                            Supprimer
-                        </span>
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
                     </a>
                 <?php endif; ?>
             </td>
@@ -121,10 +150,21 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
 </table>
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+        $('table#missions').DataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [4], orderable: false}
+            ]
         });
     });
 </script>

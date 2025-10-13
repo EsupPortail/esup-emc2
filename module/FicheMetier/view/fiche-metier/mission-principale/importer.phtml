@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\MissionPrincipaleController::importerAction()
+ * @var string $separateur
+ * @var ImportationForm $form
+ * @var Mission[] $missions
+ *
+ * @var string $info
+ * @var string $warning
+ * @var string $error
+ */
+
+use FicheMetier\Entity\Db\Mission;
+use FicheReferentiel\Form\Importation\ImportationForm;
+
+$this->headTitle('Importation de missions principales');
+
+?>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Importation de missions principales
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction() */ ?>
+        <a href="<?php echo $this->url('mission-principale') ?>"
+           class="btn btn-secondary">
+            <span class="icon icon-listing"></span>
+            Accéder aux missions principales
+        </a>
+    </div>
+</div>
+
+<!-- Explications ----------------------------------------------------------------------------------------------------->
+
+<div class="alert alert-info">
+    <div class="row">
+        <div class="col-md-6">
+            <span class="icon icon-info"></span>
+            Le fichier importé doit contenir les colonnes suivantes :
+            <ul>
+                <li><code>Libellé</code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> : le
+                    libellé de la mission principale,
+                <li><code>Activités associées</code> : les différentes activitées doivent être séparées par
+                    <code><?php echo $separateur; ?></code>,
+                <li><code>Famille professionnelle</code> : la famille doit correspondre au libellé de celles déclarés
+                    sinon une nouvelle famille sera créée,
+                <li><code>Niveau</code> : le niveau doit correspondre a un niveau de carrière déclaré,
+                <li><code>Compétences</code> <span class="icon icon-info"
+                                                   title="Les compétences doivent être dans le référentiel des compétences"></span>
+                    : liste de code de compétences séparés par <code><?php echo $separateur; ?></code>,
+                <li><code>Applications</code> <span class="icon icon-info"
+                                                    title="Les applications doivent être dans le référentiel des applications"></span>
+                    : liste de code d'applications séparés par <code><?php echo $separateur; ?></code>,
+                <li><code>Code Fonction</code> <span class="icon icon-info"
+                                                     title="Les codes devront être connus"></span> : code fonction
+                    utilisé dans les fiches métiers
+                </li>
+                <li><code>Code Fiche Métier</code> <span class="icon icon-info"
+                                                         title="Les identifiants devront être connus"></span> :
+                    identification de la fiche métier
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <span class="icon icon-attention"></span>
+            <strong>Remarques :</strong>
+            <ul>
+                <li>L'intitulé des colonnes doit être exactement celui spécifié (accent et ponctuation).</li>
+                <li>L'ordre des colonnes n'a pas besoin être respecté.</li>
+                <li>Si un champ ne fait pas sens il est possible de le laisser vide.</li>
+            </ul>
+
+            <span class="todo">Mettre quelques exemples ?</span>
+            <br>
+            <br>
+            <span class="todo">Écran de paramètrage des attributs utilisés pour l'instance ?</span>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Formulaire ------------------------------------------------------------------------------------------------------->
+
+<div class="card">
+    <div class="card-header">
+        Importation depuis un fichier
+    </div>
+    <div class="card-body">
+        <?php echo $this->form($form); ?>
+    </div>
+</div>
+
+
+<!-- Messages --------------------------------------------------------------------------------------------------------->
+
+<?php if (isset($info) and !empty($info)) : ?>
+    <div class="alert alert-info"><?php echo $info; ?></div>
+<?php endif; ?>
+<?php if (isset($warning) and !empty($warning)) : ?>
+    <div class="alert alert-warning"><?php echo $warning; ?></div>
+<?php endif; ?>
+<?php if (isset($error) and !empty($error)) : ?>
+    <div class="alert alert-danger"><?php echo $error; ?></div>
+<?php endif; ?>
+
+<!-- Résultats -------------------------------------------------------------------------------------------------------->
+
+<?php foreach ($missions as $mission) : ?>
+    <?php echo $this->missionPrincipale($mission, ['display-source' => false]); ?>
+<?php endforeach; ?>

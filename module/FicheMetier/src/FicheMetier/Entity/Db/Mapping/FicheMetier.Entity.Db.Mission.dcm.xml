@@ -23,6 +23,17 @@
             </join-table>
         </many-to-many>
 
+        <many-to-many field="famillesProfessionnelles" target-entity="Metier\Entity\Db\FamilleProfessionnelle">
+            <join-table name="missionprincipale_familleprofessionnelle">
+                <join-columns>
+                    <join-column name="mission_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="famille_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <one-to-many target-entity="FicheMetier\Entity\Db\MissionActivite" mapped-by="mission" field="activites"/>
 
         <many-to-many field="applications" target-entity="Element\Entity\Db\ApplicationElement">
@@ -49,6 +60,7 @@
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="mission" field="listeFicheMetierMission"/>
         <one-to-many target-entity="FichePoste\Entity\Db\MissionAdditionnelle" mapped-by="mission" field="listeFichePosteMission"/>
 
+        <field name="sourceString" type="text" column="source_string"/>
         <!-- HISTO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

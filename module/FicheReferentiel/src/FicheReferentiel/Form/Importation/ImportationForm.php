@@ -55,7 +55,7 @@ class ImportationForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'fichier' => [ 'required' => true,  ],
+            'fichier' => [ 'required' => true, ],
             'mode'  => ['required' => true, ],
         ]));
     }

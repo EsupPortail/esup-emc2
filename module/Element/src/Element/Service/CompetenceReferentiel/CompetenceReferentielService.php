@@ -64,7 +64,13 @@ class CompetenceReferentielService
         $qb = $this->createQueryBuilder()
             ->orderBy('referentiel.' . $champ, $order);
         $result = $qb->getQuery()->getResult();
-        return $result;
+
+        $array = [];
+        /** @var CompetenceReferentiel $item */
+        foreach ($result as $item) {
+            $array[$item->getLibelleCourt()] = $item;
+        }
+        return $array;
     }
 
     /** @return string[] */
