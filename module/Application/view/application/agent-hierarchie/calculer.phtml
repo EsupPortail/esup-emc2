@@ -63,6 +63,7 @@ if ($type === Agent::ROLE_AUTORITE) $listing = $autorites;
                         <td>
                             <?php if ($type === Agent::ROLE_SUPERIEURE) : ?>
                                 <?php echo $responsable->getSuperieur()->getDenomination(); ?>
+                                <?php //echo $responsable->getId(); ?>
                             <?php endif; ?>
                             <?php if ($type === Agent::ROLE_AUTORITE) : ?>
                                 <?php echo $responsable->getAutorite()->getDenomination(); ?>

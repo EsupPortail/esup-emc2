@@ -39,9 +39,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
 
-    const DELAI_OBSERVATION                 = 8;
-
-
     public function generateTag() : string
     {
         return (implode('_', [$this->getResourceId(), $this->getId()]));
@@ -58,6 +55,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?Campagne $campagne = null;
     private ?DateTime $dateEntretien = null;
     private ?string $lieu = null;
+    private ?float $dureeEstimee = null;
 
     private ?FormulaireInstance $formulaireInstance = null;
     private ?FormulaireInstance $formationInstance = null;
@@ -135,6 +133,18 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->lieu = $lieu;
     }
 
+    public function getDureeEstimee(): ?float
+    {
+        return $this->dureeEstimee;
+    }
+
+    public function setDureeEstimee(?float $dureeEstimee): void
+    {
+        $this->dureeEstimee = $dureeEstimee;
+    }
+
+    /** FONCTIONS ***********************/
+
     public function isComplete() : bool
     {
         return $this->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
@@ -167,21 +177,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
         return $date;
 
-    }
-
-    public function getMaxSaisiObservation() : ?DateTime
-    {
-        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
-        if ($validation === null) return null;
-
-        $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
-        try {
-            $tmp = 'P' . EntretienProfessionnel::DELAI_OBSERVATION . 'D';
-            $date->add(new DateInterval($tmp));
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème de création du DateInterval",0,$e);
-        }
-        return $date;
     }
 
     public function getToken() : ?string
@@ -225,7 +220,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $actif;
     }
 
-    public function getObservateurs(bool $withHisto = false): Collection
+    public function getObservateurs(bool $withHisto = false): array
     {
         $observateurs =  $this->observateurs->toArray();
         if (!$withHisto) {
@@ -657,5 +652,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function isDepasse(): bool
     {
         return ($this->getDateEntretien() < (new DateTime()));
+    }
+
+    public function prettyPrint(): string
+    {
+        return $this->getAgent()->getDenomination() . " - entretien planifié le ". $this->getDateEntretien()->format('d/m/Y');
     }
 }

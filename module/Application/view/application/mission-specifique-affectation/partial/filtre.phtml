@@ -33,7 +33,7 @@ foreach ($missions as $mission) {
 
 <div class="card panel-default">
     <div class="card-header">
-        <span class="icon icon-filtrer"></span> Filtre de recherche des affections de missions spécifiques
+        <span class="icon icon-filtrer"></span> Filtre de recherche des affectations de missions spécifiques
     </div>
     <div class="card-body">
         <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
@@ -82,9 +82,10 @@ foreach ($missions as $mission) {
                             </select>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-1">&nbsp;Structure :</div>
+                        <div class="col-md-5">
                             <?php
-                            $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
+                            $structureF = new SearchAndSelect('structure-filtre', []);
                             $structureF
                                 ->setAutocompleteSource($this->url('structure/rechercher'))
                                 ->setSelectionRequired()
@@ -95,9 +96,10 @@ foreach ($missions as $mission) {
                             ?>
                             <?php echo $this->formControlGroup($structureF); ?>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-1">Agent·e :</div>
+                        <div class="col-md-5">
                             <?php
-                            $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
+                            $agentF = new SearchAndSelect('agent-filtre', []);
                             $agentF
                                 ->setAutocompleteSource($this->url('agent/rechercher'))
                                 ->setSelectionRequired()
@@ -111,15 +113,13 @@ foreach ($missions as $mission) {
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <br/>
-                    <button class="btn btn-primary" id="clear">
-                        <span class="icon icon-gommer"></span>
-                        R.A.Z.
-                    </button>
-
                     <button class="btn btn-primary" id="filter">
                         <span class="icon icon-filtrer"></span>
-                        Rechercher
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        Remise à zéro
                     </button>
                 </div>
             </div>

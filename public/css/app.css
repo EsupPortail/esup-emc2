@@ -172,6 +172,9 @@ span.small-lettrine {
     text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
+button[disabled] {
+    cursor: not-allowed;
+}
 /** LIEN **************************************************************************************************************/
 
 div.ui-datepicker {
@@ -286,6 +289,7 @@ small a {
     }
 }
 
+
 /** Keep on */
 
 div.alert-danger .fa-exclamation-triangle {
@@ -295,4 +299,8 @@ div.alert-danger .fa-exclamation-triangle {
 .unistrap .nav-tabs button.active
 {
     border-top: 5px solid var(--unistrap-color-main);
+}
+
+.bg-success.ui-menu-item{
+    background-color: #e9ffe9 !important;
 }

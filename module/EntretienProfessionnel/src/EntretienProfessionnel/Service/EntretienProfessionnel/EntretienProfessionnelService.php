@@ -6,11 +6,15 @@ use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Ramsey\Uuid\Uuid;
@@ -155,6 +159,21 @@ class EntretienProfessionnelService
         }
         return $agents;
     }
+
+    /**
+     * @param string $texte
+     * @return EntretienProfessionnel[]
+     */
+    public function findByAgentTerm(string $texte): array
+    {
+        $qb = $this->createQueryBuilder(false)
+            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
+            ->setParameter('search', '%' . strtolower($texte) . '%');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
 
     /**
      * @param string $texte
@@ -509,5 +528,48 @@ class EntretienProfessionnelService
             $dictionnaire[$etat][] = $entretien;
         }
         return $dictionnaire;
+    }
+
+    /**
+     * @param EntretienProfessionnel[] $entretiens
+     * @return array
+     */
+    public function formatEntretienJSON(array $entretiens): array
+    {
+        $result = [];
+        foreach ($entretiens as $entretien) {
+            $result[] = array(
+                'id' => $entretien->getId(),
+                'label' => $entretien->prettyPrint(),
+                'extra' => "",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
+
+    public function computeMaxSaisiObservation(EntretienProfessionnel $entretien): ?DateTime
+    {
+        $validation = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+        if ($validation === null) return null;
+
+        try {
+            $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT);
+        } catch (Exception $e) {
+            throw new RuntimeException("La valeur du paramètre [".EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT."] n'est probablement pas initialisée",0,$e);
+        }
+
+        $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
+        try {
+            $tmp = 'P' . $delai . 'D';
+            $date->add(new DateInterval($tmp));
+        } catch (Exception) {
+            return $entretien->getCampagne()->getDateFin();
+        }
+        return $date;
     }
 }

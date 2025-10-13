@@ -178,12 +178,68 @@ return [
                         AgentPrivileges::AGENT_AFFICHER,
                     ],
                 ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'mes-agents',
+                        'mes-missions-specifiques',
+                        'mes-fiches-postes',
+                        'mes-entretiens-professionnels',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_AFFICHER,
+                    ],
+                ],
             ],
         ],
     ],
 
     'router' => [
         'routes' => [
+            'mes-agents' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/mes-agents',
+                    'defaults' => [
+                        /** @see AgentController::mesAgentsAction() */
+                        'controller' => AgentController::class,
+                        'action' => 'mes-agents',
+                    ],
+                ],
+            ],
+            'mes-missions-specifiques' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/mes-missions-specifiques',
+                    'defaults' => [
+                        /** @see AgentController::mesMissionsSpecifiquesAction() */
+                        'controller' => AgentController::class,
+                        'action' => 'mes-missions-specifiques',
+                    ],
+                ],
+            ],
+            'mes-fiches-postes' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/mes-fiches-postes',
+                    'defaults' => [
+                        /** @see AgentController::mesFichesPostesAction() */
+                        'controller' => AgentController::class,
+                        'action' => 'mes-fiches-postes',
+                    ],
+                ],
+            ],
+            'mes-entretiens-professionnels' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/mes-entretiens-professionnels[/:campagne]',
+                    'defaults' => [
+                        /** @see AgentController::mesEntretiensProfessionnelsAction() */
+                        'controller' => AgentController::class,
+                        'action' => 'mes-entretiens-professionnels',
+                    ],
+                ],
+            ],
             'agent' => [
                 'type' => Literal::class,
                 'options' => [

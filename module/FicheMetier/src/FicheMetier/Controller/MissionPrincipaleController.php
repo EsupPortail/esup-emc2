@@ -10,6 +10,7 @@ use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Response;
@@ -20,6 +21,7 @@ use Metier\Form\SelectionnerDomaines\SelectionnerDomainesFormAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
 {
+    use FicheMetierServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
@@ -45,6 +47,7 @@ class MissionPrincipaleController extends AbstractActionController
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
+
         $vm =  new ViewModel([
             'title' => "Affichage de la mission principale",
             'modification' => false,
@@ -69,9 +72,19 @@ class MissionPrincipaleController extends AbstractActionController
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
         $retour = $this->params()->fromQuery('retour')??null;
 
+        if ($retour) {
+            $split = explode("/", $retour);
+            $ficheId = end($split);
+            if ($ficheId) {
+                $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheId);
+            }
+        }
+
+
         return new ViewModel([
             'mission' => $mission,
             'modification' => true,
+            'ficheMetier' => $ficheMetier??null,
             'fichesmetiers' => $mission->getListeFicheMetier(),
             'fichespostes' =>  $mission->getListeFichePoste(),
             'retour' => $retour,

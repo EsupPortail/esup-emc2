@@ -1,8 +1,8 @@
 'code';'libelle';'refusable'
+"ENTRETIEN_RESPONSABLE","Validation du responsable d'un entretien professionnel","false"
+"FICHEPOSTE_DRH","Validation de la fiche de poste par la DRH","false"
 "FICHEPOSTE_RESPONSABLE","Validation du responsable","false"
 "FICHEPOSTE_AGENT","Validation de l'agent","false"
 "ENTRETIEN_AGENT","Validation de l'agent d'un entretien professionnel","false"
 "ENTRETIEN_HIERARCHIE","Validation de la DRH d'un entretien professionnel","false"
 "ENTRETIEN_OBSERVATION","Validation des observations","false"
-"ENTRETIEN_RESPONSABLE","Validation du responsable d'un entretien professionnel","false"
-"FICHEPOSTE_DRH","Validation de la fiche de poste par la DRH","false"

@@ -1,9 +1,7 @@
 <?php
 
 /** Requête utilisée pour la collecte des données **/
-//select c.code, c.libelle, c.refusable
-//from unicaen_validation_type c
-//order by c.code
+//select code, libelle, description from  unicaen_evenement_etat
 
 $csvFile = fopen("./database/sources/csv/unicaen_evenement_etat.csv", "r");
 
@@ -14,7 +12,7 @@ while (($item = fgetcsv($csvFile)) !== FALSE) {
         $instance = [
             'code' => $item[0],
             'libelle' => $item[1],
-            'refusable' => ($item[2] === true) ? "t":"f",
+            'description' => $item[2],
         ];
         $array["unicaen_evenement_etat"][] = $instance;
     }

@@ -17,12 +17,12 @@ class CorrespondanceController extends AbstractActionController
 
     public function indexAction() : ViewModel
     {
-        $avecAgent = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::CORRESPONDANCE_AVEC_AGENT);
-        $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
-        $correspondances = $this->getCorrespondanceService()->getCorrespondances('libelleLong', 'ASC', $bool);
+        $avecAgent = $this->getParametreService()->getValeurForParametre(CarriereParametres::TYPE,CarriereParametres::CORRESPONDANCE_AVEC_AGENT) === true;
+        $correspondances = $this->getCorrespondanceService()->getCorrespondances('libelleLong', 'ASC', $avecAgent);
 
         return new ViewModel([
             'correspondances' => $correspondances,
+            'avecAgent' => $avecAgent,
         ]);
     }
 

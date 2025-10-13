@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Controller\AgentController;
 use Application\Controller\IndexController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
@@ -143,6 +144,16 @@ class EntretienProfessionnelController extends AbstractActionController
         exit;
     }
 
+    public function rechercherEntretienAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $structures = $this->getEntretienProfessionnelService()->findByAgentTerm($term);
+            $result = $this->getEntretienProfessionnelService()->formatEntretienJSON($structures);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
     /** Gestion des entretiens professionnels *************************************************************************/
 
     public function creerAction(): ViewModel|Response
@@ -192,13 +203,19 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                $jplus15 = (new DateTime())->add(new DateInterval('P'.((string) $delai).'D'));                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
-                if ($entretien->getDateEntretien() < $jplus15) {
-                    $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                if ($delai) {
+                    try {
+                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
+                    } catch (Exception $e) {
+                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
+                    }
+                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
+
                 $this->getEntretienProfessionnelService()->initialiser($entretien);
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->update($entretien);
+                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
                 $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
@@ -238,17 +255,20 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                if ($delai !== null) {
-                    $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
-                    $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien planifié.");
-                    if ($entretien->getDateEntretien() < $jplus15) {
-                        $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de " . $delai . " jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                if ($delai) {
+                    try {
+                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
+                    } catch (Exception $e) {
+                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
                     }
+                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
+
+
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
-
+                $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien re-planifié.");
                 $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
@@ -309,6 +329,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
             'ficheposte' => $ficheposte,
             'ficheposteFichier' => $ficheposteFichier,
+            'dateMaxObservation' => $this->getEntretienProfessionnelService()->computeMaxSaisiObservation($entretien),
+            'delaiObservation' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT),
 
             'fichesmetiers' => $fichesmetiers,
             'mails' => $mails,
@@ -421,7 +443,10 @@ class EntretienProfessionnelController extends AbstractActionController
                     $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
                     $this->getEntretienProfessionnelService()->update($entretien);
                     $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
-                    $dateNotification = (new DateTime())->add(new DateInterval('P1W'));
+
+                    $dateNotification = $this->getEntretienProfessionnelService()->computeMaxSaisiObservation($entretien);
+                    if ($dateNotification === null) throw new RuntimeException("La date de clôture des observations n'a pas pu être calculée");
+
                     $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
                     $this->getEntretienProfessionnelService()->update($entretien);
                     break;
@@ -451,10 +476,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $text = "Validation de l'entretien";
         switch ($type) {
             case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
+                $parametre = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT)??"<span class='text-danger'>Délai non renseigné</span>";
                 $title = "Validation par le responsable de l'entretien professionnel";
                 $text = "<p>";
                 $text .= "Cette validation figera les comptes-rendus d'entretien et de formation de " . $entretien->getAgent()->getDenomination(true) . ".<br>";
-                $text .= "La validation ouvre la période de huit jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
+                $text .= "La validation ouvre la période de ".$parametre." jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
                 $text .= "</p>";
                 $text .= "Êtes-vous sur·e de vouloir valider ?";
                 break;
@@ -634,12 +660,10 @@ class EntretienProfessionnelController extends AbstractActionController
                 }
                 /** @see IndexController::indexAction() */
                 return $this->redirect()->toRoute('home', [], [], true);
-            case  Agent::ROLE_SUPERIEURE :
-                /** @see IndexController::indexSuperieurAction() */
-                return $this->redirect()->toRoute('index-superieur', [], ["fragment" => "entretien_". $campagne->getId()], true);
             case  Agent::ROLE_AUTORITE :
-                /** @see IndexController::indexAutoriteAction() */
-                return $this->redirect()->toRoute('index-autorite', [], ["fragment" => "entretien_". $campagne->getId()], true);
+            case  Agent::ROLE_SUPERIEURE :
+                /** @see AgentController::mesEntretiensProfessionnelsAction() */
+                return $this->redirect()->toRoute('mes-entretiens-professionnels', ['campagne' => $entretien->getCampagne()->getId()],[], true);
             case  Agent::ROLE_AGENT :
                 /** @see EntretienProfessionnelController::indexAgentAction() */
                 return $this->redirect()->toRoute('entretien-professionnel/index-agent', [], [], true);

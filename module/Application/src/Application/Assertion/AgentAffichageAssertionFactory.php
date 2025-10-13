@@ -6,12 +6,14 @@ use Agent\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Application\Service\Perimetre\PerimetreService;
 use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenUtilisateur\Service\User\UserService;
@@ -34,6 +36,7 @@ class AgentAffichageAssertionFactory
          * @var StructureService $structureService
          * @var UserService $userService
          *
+         * @var ParametreService $parametreService
          * @var PrivilegeService $privilegeService
          * @var PrivilegeCategorieService $categorieService
          */
@@ -45,6 +48,7 @@ class AgentAffichageAssertionFactory
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
+        $perimetreService = $container->get(PerimetreService::class);
         $privilegeService = $container->get(PrivilegeService::class);
         $categorieService = $container->get(PrivilegeCategorieService::class);
 
@@ -56,7 +60,7 @@ class AgentAffichageAssertionFactory
         $assertion->setObservateurService($observateurService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
-
+        $assertion->setPerimetreService($perimetreService);
         $assertion->setPrivilegeService($privilegeService);
         $assertion->setPrivilegeCategorieService($categorieService);
 

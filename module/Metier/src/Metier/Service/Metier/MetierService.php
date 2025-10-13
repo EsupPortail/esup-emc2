@@ -68,7 +68,7 @@ class MetierService
     {
         $qb = $this->getObjectManager()->getRepository(Metier::class)->createQueryBuilder('metier')
             ->addSelect('domaine')->leftJoin('metier.domaines', 'domaine')
-            ->addSelect('famille')->leftJoin('domaine.familles', 'famille')
+            ->addSelect('famille')->leftJoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie');
@@ -157,8 +157,21 @@ class MetierService
         return $result;
     }
 
+    public function getMetierByLibelle(string $libelle): ?Metier
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('metier.libelle = :libelle')->setParameter('libelle', $libelle);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Metier::class."] partagent la même libellé [" . $libelle . "].", 0, $e);
+        }
+        return $result;
+    }
+
     /** FACADE ********************************************************************************************************/
 
+    //TODO à repenser avec la nouvelle modélisation ...
     public function generateCartographyArray(): array
     {
         $metiers = $this->getMetiers();
@@ -175,7 +188,7 @@ class MetierService
 
             foreach ($domaines as $domaine) {
                 $fonction = ($domaine) ? $domaine->getTypeFonction() : null;
-                $familles = ($domaine) ? $domaine->getFamilles() : [];
+                $familles = [];
                 $fTexte = implode(', ', array_map(function (FamilleProfessionnelle $a) {
                     return $a->getLibelle();
                 }, $familles));
@@ -312,16 +325,23 @@ EOS;
         return $tmp;
     }
 
-    public function createWith(string $libelle, string $referentielCode, string $metierCode, string $domaineLibelle, string $familleLibelle, bool $persist = true): ?Metier
+    public function createWith(string $libelle, string $referentielCode, string $metierCode, ?string $domaineLibelle = null, ?string $familleLibelle = null, bool $persist = true): ?Metier
     {
-        $domaine = $this->getDomaineService()->getDomaineByLibelle($domaineLibelle);
-        if ($domaine === null) {
-            $domaine = $this->getDomaineService()->createWith($domaineLibelle);
+        $domaine = null;
+        if ($domaineLibelle) {
+            $domaine = $this->getDomaineService()->getDomaineByLibelle($domaineLibelle);
+            if ($domaine === null) {
+                $domaine = $this->getDomaineService()->createWith($domaineLibelle);
+            }
         }
-        $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($familleLibelle);
-        if ($famille === null) {
-            $famille = $this->getFamilleProfessionnelleService()->createWith($familleLibelle);
+        $famille = null;
+        if ($familleLibelle) {
+            $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($familleLibelle);
+            if ($famille === null) {
+                $famille = $this->getFamilleProfessionnelleService()->createWith($familleLibelle);
+            }
         }
+
         $referentiel = $this->getReferentielService()->getReferentielByCode($referentielCode);
 
         // metier
@@ -330,7 +350,6 @@ EOS;
         if ($persist) $this->create($metier);
 
         //reference
-
         $reference = new Reference();
         $reference->setCode($metierCode);
         $reference->setReferentiel($referentiel);
@@ -338,13 +357,21 @@ EOS;
         if ($persist) $this->getReferenceService()->create($reference);
 
         // domaine et autre
-        $metier->addDomaine($domaine);
-        $domaine->addFamille($famille);
-        if ($persist) $this->getDomaineService()->update($domaine);
+        if ($domaine) {
+            $metier->addDomaine($domaine);
+            if ($persist) $this->getDomaineService()->update($domaine);
+        }
+        if ($famille) {
+            $metier->addFamillesProfessionnelles($famille);
+            if ($persist) $this->getFamilleProfessionnelleService()->update($famille);
+        }
+
         if ($persist) $this->update($metier);
 
         return $metier;
     }
+
+
 
 
 }

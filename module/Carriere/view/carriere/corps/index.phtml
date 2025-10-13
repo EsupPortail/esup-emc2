@@ -3,6 +3,8 @@
 /**
  * @see \Carriere\Controller\CorpsController::indexAction()
  * @var Corps[] $corps
+ * @var Corps[] $corps
+ * @var bool $avecAgent
  */
 
 use Carriere\Entity\Db\Corps;
@@ -16,24 +18,23 @@ $canModifier    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivilege
 $canAction = ($canModifier OR $canLister);
 ?>
 
-<div class="row">
-    <div class="col-md-8">
-        <h1 class="page-header">
-            Liste des corps
-            <span class="badge">
-                <?php echo count($corps); ?>
-            </span>
-        </h1>
-    </div>
-    <div class="col-md-4">
-        <div class="alert alert-info">
-            <span class="icon icon-synchroniser"></span>
-            Données synchronisées
-        </div>
-    </div>
+<h1 class="page-header">
+    Liste des corps
+    <span class="badge">
+        <?php echo count($corps); ?>
+    </span>
+</h1>
+<div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
+    <span class="icon icon-refresh"></span>
+    Données synchronisées
+    <?php if ($avecAgent) : ?>
+        <br>
+        <span class="icon icon-information"></span>
+        Seuls les corps avec au moins un agent·e sont présentés
+    <?php endif; ?>
 </div>
 
-<table class="datatable table table-condensed">
+<table class="datatable table table-condensed" id="corps">
     <thead>
     <tr>
         <th> Libellé</th>
@@ -126,8 +127,16 @@ $canAction = ($canModifier OR $canLister);
             window.location.reload();
         });
 
-        $('.datatable').DataTable({
+        $('table#corps').DataTable({
             paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [5], orderable: false }
+            ]
         });
     });
 </script>

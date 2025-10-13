@@ -21,28 +21,16 @@ class DomaineController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $famille = $this->params()->fromQuery('famille');
-        $famille_ = null;
-        if ($famille AND $famille !== ' ') $famille_ = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($famille);
-
         $type = $this->params()->fromQuery('type');
         $historise = $this->params()->fromQuery('historise');
 
         $domaines = $this->getDomaineService()->getDomaines();
-        if ($famille_ !== null) $domaines = array_filter($domaines, function (Domaine $m) use ($famille_) {
-            return in_array($famille_, $m->getFamilles());
-        });
-        if ($type !== null and $type !== ' ') $domaines = array_filter($domaines, function (Domaine $m) use ($type) { return $m->getTypeFonction() === $type; });
-        if ($historise !== null and $historise !== ' ') $domaines = array_filter($domaines, function (Domaine $m) use ($historise) { if ($historise === '1') return $m->estHistorise(); else return $m->estNonHistorise(); });
-
-        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
+        if ($type !== null and $type !== '') $domaines = array_filter($domaines, function (Domaine $m) use ($type) { return $m->getTypeFonction() === $type; });
+        if ($historise !== null and $historise !== '') $domaines = array_filter($domaines, function (Domaine $m) use ($historise) { if ($historise === '1') return $m->estHistorise(); else return $m->estNonHistorise(); });
 
         return new ViewModel([
             'domaines' => $domaines,
-
-            'familles' => $familles,
             'types' => ['Soutien', 'Support'],
-            'famille' => $famille,
             'type' => $type,
             'historise' => $historise,
         ]);

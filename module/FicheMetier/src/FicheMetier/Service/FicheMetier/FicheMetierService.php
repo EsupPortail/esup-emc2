@@ -9,7 +9,6 @@ use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
@@ -25,12 +24,12 @@ use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareT
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\Metier;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
@@ -111,12 +110,11 @@ class FicheMetierService
         $qb = $this->getObjectManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
             ->addSelect('domaine')->leftjoin('metier.domaines', 'domaine')
-            ->addSelect('famille')->leftjoin('domaine.familles', 'famille')
+            ->addSelect('famille')->leftjoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
-        ;
+            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
         $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
@@ -528,41 +526,6 @@ class FicheMetierService
         ];
     }
 
-    public function importFromCsvArray(array $csvInfos): FicheMetier
-    {
-        //init
-        $fiche = new FicheMetier();
-        $fiche->setMetier($csvInfos['metier']);
-        $this->create($fiche);
-        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_REDACTION);
-
-        // MISSIONS PRINCIPALES
-        $mission = new Mission();
-        $mission->setLibelle($csvInfos['mission']);
-        $this->getMissionPrincipaleService()->create($mission);
-        $this->addMission($fiche, $mission);
-        $this->compressMission($fiche);
-
-        $ordre = 1;
-        foreach ($csvInfos['activites'] as $libelle) {
-            $activite = new MissionActivite();
-            $activite->setMission($mission);
-            $activite->setLibelle($libelle);
-            $activite->setOrdre($ordre);
-            $ordre++;
-            $this->getMissionActiviteService()->create($activite);
-        }
-
-        //APPLICATION (invoker l'hydrator plutôt)
-        $this->getHasApplicationCollectionService()->updateApplications($fiche, ['applications' => $csvInfos['applications']]);
-//        $this->getSelectionApplicationHydrator()->hydrate(['applications' => $csvInfos['applications']], $fiche);
-
-        //COMPETENCE (invoker l'hydrator plutôt)
-        $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
-//        $this->getSelectionCompetenceHydrator()->hydrate(['competences' => $csvInfos['competencesListe']], $fiche);
-        return $fiche;
-    }
-
     public function exporter(?FicheMetier $fichemetier): string
     {
         $vars = [
@@ -583,34 +546,15 @@ class FicheMetierService
         }
     }
 
-    public function genererInfosFromCSV(string $fichier_path): array
+    /** @return FicheMetier[] */
+    public function getFichesMetiersByMetier(Metier $metier, ?string $raw = null): array
     {
-        $csvInfos = $this->readFromCSV($fichier_path);
-
-        $ajouts = $this->getConfigurationService()->getConfigurationsFicheMetier();
-        foreach ($ajouts as $ajout) {
-            if ($ajout->getEntityType() === Application::class) {
-                $application = $ajout->getEntity();
-                $csvInfos['applications'][$application->getId()] = $application;
-            }
-            if ($ajout->getEntityType() === Competence::class) {
-                $competence = $ajout->getEntity();
-                $csvInfos['competencesListe'][$competence->getId()] = $competence;
-                $csvInfos['competences'][$competence->getType()->getLibelle()][$competence->getId()] = $competence;
-            }
-        }
-
-        // tri
-//        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
-//            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {
-//                return $a->getLibelle() <=> $b->getLibelle();
-//            });
-//        }
-        usort($csvInfos['applications'], function (Application $a, Application $b) {
-            return $a->getLibelle() <=> $b->getLibelle();
-        });
-
-        return $csvInfos;
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ficheMetier.metier = :metier')->setParameter('metier', $metier)
+        ;
+        if ($raw !== null) $qb->andWhere('ficheMetier.raw = :raw')->setParameter('raw', $raw);
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }

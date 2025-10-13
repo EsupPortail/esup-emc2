@@ -53,7 +53,7 @@ class AgentAssertion extends AbstractAssertion
             case AgentPrivileges::AGENT_AFFICHER :
             case AgentPrivileges::AGENT_ACQUIS_AFFICHER:
                 return match ($role->getRoleId()) {
-                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR => true,
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR, AppRoleProvider::DRH => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
                     Agent::ROLE_AUTORITE => $isAutorite,

@@ -16,12 +16,12 @@ class EmploiTypeController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $avecAgent = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::GRADE_AVEC_AGENT);
-        $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
-        $emploisTypes = $this->getEmploiTypeService()->getEmploisTypes('libelleLong', 'ASC', $bool);
+        $avecAgent = $this->getParametreService()->getValeurForParametre(CarriereParametres::TYPE,CarriereParametres::EMPLOITYPE_AVEC_AGENT) === true;
+        $emploisTypes = $this->getEmploiTypeService()->getEmploisTypes('libelleLong', 'ASC', $avecAgent);
 
         return new ViewModel([
             "emploisTypes" => $emploisTypes,
+            'avecAgent' => $avecAgent,
         ]);
     }
 

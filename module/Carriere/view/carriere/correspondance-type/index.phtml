@@ -23,21 +23,23 @@ $canAction = ($canAfficher)
         </h1>
     </div>
     <div class="col-md-3">
-        <div class="alert alert-info">
-            <span class="icon icon-synchroniser"></span>
-            Données synchronisées
-        </div>
+        <a href="<?php echo $this->url('correspondance'); ?>"
+           class="btn btn-secondary"
+        >
+            <span class="icon icon-lister"></span>
+            Accéder aux correspondances
+        </a>
     </div>
 </div>
 
-<a href="<?php echo $this->url('correspondance'); ?>"
-   class="btn btn-secondary"
->
-    <span class="icon icon-lister"></span>
-    Accéder aux correspondances
-</a>
 
-<table class="table table-condensed table-hover">
+<div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
+    <span class="icon icon-refresh"></span>
+    Données synchronisées
+</div>
+
+
+<table class="table table-condensed table-hover" id="types">
     <thead>
     <tr>
         <th> Code </th>
@@ -74,3 +76,19 @@ $canAction = ($canAfficher)
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(function() {
+        $('table#types').DataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [3], orderable: false }
+            ]
+        });
+    });
+</script>

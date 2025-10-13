@@ -5,6 +5,8 @@ namespace Carriere\Service\Correspondance;
 use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\CorrespondanceType;
+use Carriere\Service\CorrespondanceType\CorrespondanceTypeServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -14,10 +16,19 @@ use RuntimeException;
 class CorrespondanceService {
 
     use ProvidesObjectManager;
+    use CorrespondanceTypeServiceAwareTrait;
 
     /** GESTION DES ENITIES *******************************************************************************************/
 
-    // les grades sont importés et ne sont pas gérés dans l'application
+    public function create(Correspondance $correspondance): Correspondance
+    {
+        $correspondance->setInsertedOn(new DateTime());
+        $correspondance->setSourceId("EMC2");
+
+        $this->getObjectManager()->persist($correspondance);
+        $this->getObjectManager()->flush();
+        return $correspondance;
+    }
 
     /** REQUETAGE *****************************************************************************************************/
 
@@ -101,5 +112,34 @@ class CorrespondanceService {
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function getCorrespondanceByTypeAndCode(string $typeCode, string $correspondanceCode): ?Correspondance
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ctype.code = :typeCode')->setParameter('typeCode', $typeCode)
+            ->andWhere('correspondance.categorie = :code')->setParameter('code', $correspondanceCode)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Correspondance::class."] partagent le même code [".$typeCode."|".$correspondanceCode."]",0,$e);
+        }
+        return $result;
+    }
+
+    public function createWith(string $typeCode, string $correspondanceCode, string $libelle, bool $persist = true): ?Correspondance
+    {
+        $type = $this->getCorrespondanceTypeService()->getCorrespondanceTypeByCode($typeCode);
+        if ($type === null) { throw new RuntimeException("Aucun [".CorrespondanceType::class."] ne porte le code [".$typeCode."]"); }
+
+        $correspondance = new Correspondance();
+        $correspondance->setId(1000000 + ord($correspondanceCode));
+        $correspondance->setType($type);
+        $correspondance->setCategorie($correspondanceCode);
+        $correspondance->setLibelleLong($libelle);
+
+        if ($persist) $this->create($correspondance);
+        return $correspondance;
     }
 }

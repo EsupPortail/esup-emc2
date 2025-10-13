@@ -57,7 +57,7 @@ class ObservateurController extends AbstractActionController {
         ]);
     }
 
-        public function ajouterAction(): ViewModel
+    public function ajouterAction(): ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 

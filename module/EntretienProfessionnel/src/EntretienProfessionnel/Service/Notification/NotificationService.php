@@ -173,60 +173,64 @@ class NotificationService extends \Application\Service\Notification\Notification
 
     /** Notifications liées à la convation à un entretien *************************************************************/
 
-    public function triggerConvocationDemande(EntretienProfessionnel $entretien): Mail
+    public function triggerConvocationDemande(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ENVOI, $vars);
         $ics = $this->getIcsService()->generateInvitation($entretien);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel', $ics);
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
-    public function triggerConvocationAcceptation(EntretienProfessionnel $entretien): Mail
+    public function triggerConvocationAcceptation(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ACCEPTER, $vars);
         $ics = $this->getIcsService()->generateInvitation($entretien);
         $mail = $this->getMailService()->sendMail($this->getEmailResponsable($entretien), $rendu->getSujet(), $rendu->getCorps(), 'EntretienProfessionnel', $ics);
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
-    public function triggerAnnulationEntretienProfessionnel(?EntretienProfessionnel $entretien)
+    public function triggerAnnulationEntretienProfessionnel(?EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_ANNULATION, $vars);
         $ics = $this->getIcsService()->generateAnnulation($entretien);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel', $ics);
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
     /** Notifications liées aux validations de l'entretien professionnel d'un agent ************************************/
 
-    public function triggerValidationResponsableEntretien(EntretienProfessionnel $entretien): Mail
+    public function triggerValidationResponsableEntretien(EntretienProfessionnel $entretien): ?Mail
     {
-        $vars  =$this->computeVariableFromEntretienProfessionnel($entretien);
+        $vars  = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_1_RESPONSABLE, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
-    public function triggerObservations(EntretienProfessionnel $entretien): Mail
+    public function triggerObservations(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
@@ -246,8 +250,10 @@ class NotificationService extends \Application\Service\Notification\Notification
         } else {
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_PAS_D_OBSERVATION, $vars);
             $mail = $this->getMailService()->sendMail($this->getEmailAutoritesHierarchiques($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
+            if ($mail) {
+                $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+                $this->getMailService()->update($mail);
+            }
         }
         return $mail;
     }
@@ -266,39 +272,44 @@ class NotificationService extends \Application\Service\Notification\Notification
     }
 
 
-    public function triggerValidationResponsableHierarchique(EntretienProfessionnel $entretien): Mail
+    public function triggerValidationResponsableHierarchique(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_3_HIERARCHIE, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
 
         return $mail;
     }
 
-    public function triggerValidationAgent(EntretienProfessionnel $entretien): Mail
+    public function triggerValidationAgent(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_4_AGENT, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailResponsable($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
 
         return $mail;
     }
 
-    public function triggerRappelEntretien(?EntretienProfessionnel $entretien): Mail
+    public function triggerRappelEntretien(?EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ENTRETIEN_AGENT, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 

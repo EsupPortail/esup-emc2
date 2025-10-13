@@ -5,6 +5,7 @@ namespace Application\Service\AgentSuperieur;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -88,16 +89,33 @@ class AgentSuperieurService
     }
 
     /** @return AgentSuperieur[] */
-    public function getAgentsSuperieursByAgent(?Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
+    public function getAgentsSuperieursCourants(): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentsuperieur.histoDestruction IS NULL')
+            ->andWhere('agentsuperieur.deletedOn IS NULL')
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+            ->setParameter('now', new DateTime())
+            ->orderBy('coalesce(agent.nomUsuel, agent.nomFamille), agent.prenom');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return AgentSuperieur[] */
+    public function getAgentsSuperieursByAgent(?Agent $agent, bool $histo = false, bool $encours = true, string $champ = 'id', $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('agentsuperieur.deletedOn IS NULL')->andWhere('superieur.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
-            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
-            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
-            ->setParameter('now', new DateTime())
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
+        if ($encours === true) {
+            $qb = $qb->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut <= :now')
+                ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin >= :now')
+                ->setParameter('now', new DateTime());
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -211,6 +229,19 @@ class AgentSuperieurService
         if ($agent !== null) {
             $superieurs = $this->getAgentsSuperieursByAgent($agent);
             foreach ($superieurs as $superieur) $this->historise($superieur);
+        }
+    }
+
+    public function clotureAll(?Agent $agent, ?DateTime $date = null) : void
+    {
+        if ($date === null) $date = new DateTime();
+        $dateCloture = DateTime::createFromFormat('Y-m-d H:i:s' , $date->sub(new DateInterval('P1D'))->format('Y-m-d 18:00:00'));
+        if ($agent !== null) {
+            $superieurs = $this->getAgentsSuperieursByAgent($agent);
+            foreach ($superieurs as $superieur) {
+                $superieur->setDateFin($dateCloture);
+                $this->update($superieur);
+            }
         }
     }
 

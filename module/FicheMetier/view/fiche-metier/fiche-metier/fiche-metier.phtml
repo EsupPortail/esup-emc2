@@ -11,6 +11,8 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var array $competencesSpecifiques
  * @var array $applications
  * @var array $missions
+ * @var array $tendancesTypes
+ * @var array $tendancesElements
  * @var array $thematiquestypes
  * @var array $thematiqueselements
  * @var Parametre[] $parametres
@@ -63,6 +65,10 @@ $this->headTitle($titre);
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_CONTEXTE]) || $parametres[FicheMetierParametres::DISPLAY_CONTEXTE]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/thematiques', ['fichemetier' => $fiche, 'thematiquesTypes' => $thematiquestypes, 'thematiquesElements' => $thematiqueselements, 'mode' => $mode], [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_TENDANCE]) || $parametres[FicheMetierParametres::DISPLAY_TENDANCE]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/tendances', ['fichemetier' => $fiche, 'tendancesTypes' => $tendancesTypes, 'tendancesElements' => $tendancesElements, 'mode' => $mode], [], true); ?>
 <?php endif; ?>
 
 <script>

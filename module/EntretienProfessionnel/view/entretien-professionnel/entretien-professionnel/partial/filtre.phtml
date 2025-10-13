@@ -28,7 +28,7 @@ use UnicaenEtat\Entity\Db\EtatType;
     <div class="card-body">
         <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <div class="row">
                         <div class="col-md-4">
                             <?php
@@ -105,14 +105,13 @@ use UnicaenEtat\Entity\Db\EtatType;
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <button class="btn btn-primary action" id="clear">
-                        <span class="icon icon-gommer"></span> Remise à zéro
-                    </button>
-
+                <div class="col-md-2">
                     <button class="btn btn-primary action" id="filter">
                         <span class="icon icon-filtrer"></span>
-                        Rechercher
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary action" id="clear">
+                        <span class="icon icon-gommer"></span> Remise à zéro
                     </button>
                 </div>
             </div>

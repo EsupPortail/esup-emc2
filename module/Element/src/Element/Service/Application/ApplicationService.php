@@ -75,7 +75,7 @@ class ApplicationService
         $result = $this->getApplications($champ, $ordre);
         $array = [];
         foreach ($result as $item) {
-            $array[$item->getId()] = $item->getLibelle();
+            $array[$item->getId()] = $this->applicationOptionify($item);
         }
 
         return $array;
@@ -115,5 +115,24 @@ class ApplicationService
     {
         $id = $controller->params()->fromRoute($paramName);
         return $this->getApplication($id);
+    }
+
+    private function applicationOptionify(Application $application): array
+    {
+        $groupe = $application->getGroupe();
+        $texte = $application->getLibelle();
+        $this_option = [
+            'value' => $application->getId(),
+            'attributes' => [
+                'data-content' => "<span class='application' title='".($application->getDescription()??"Aucune description")."' class='badge btn-danger'>" . $texte
+                    . "&nbsp;" . "<span class='badge'>"
+                    . (($groupe !== null) ? $groupe->getLibelle() : "Sans groupe")
+                    . "</span>"
+                    . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>".($application->getDescription()??"Aucune description")."</span>"
+                    ."</span>",
+            ],
+            'label' => $texte,
+        ];
+        return $this_option;
     }
 }

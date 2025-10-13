@@ -19,18 +19,18 @@ if ($mode === 'edition-fiche-metier') {
 <div class="card info">
     <div class="card-header">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-7">
                 <h2>
                     <span class="icon application"></span>
                     Applications
                     <span class="badge"><?php echo count($applications); ?></span>
                 </h2>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-5">
                 <div class="float-end">
                     <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueApplicationsAction() */ ?>
                     <a href="<?php echo $this->url('graphique/applications', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                       class="btn btn-secondary action ajax-modal" style="margin: 0 0.5rem;"
+                       class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
                     >
                         <span class="icon icon-diagramme"></span>
                         Afficher les applications

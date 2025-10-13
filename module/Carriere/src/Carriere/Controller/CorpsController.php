@@ -25,12 +25,12 @@ class CorpsController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $avecAgent = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::CORPS_AVEC_AGENT);
-        $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
-        $corps = $this->getCorpsService()->getCorps('libelleLong', 'ASC', $bool);
+        $avecAgent = $this->getParametreService()->getValeurForParametre(CarriereParametres::TYPE,CarriereParametres::CORPS_AVEC_AGENT) === true;
+        $corps = $this->getCorpsService()->getCorps('libelleLong', 'ASC', $avecAgent);
 
         return new ViewModel([
             "corps" => $corps,
+            "avecAgent" => $avecAgent,
         ]);
     }
 

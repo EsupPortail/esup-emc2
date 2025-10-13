@@ -350,106 +350,151 @@ class Agent implements
     }
 
     /** Prédicats avec temoins ****************************************************************************************/
-    // TODO factoriser le comptage ...
 
-    public function isValideAffectation(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
+    // pour le moment, on va gérer que les ET car plus simple
+    public function isCompatible(array $count, string $temoins): bool
     {
-        $temoins = $parametre->getTemoins();
+        $splittedTemoins = explode('&', $temoins);
+
+        $sat = true;
+        foreach ($splittedTemoins as $temoin)
+        {
+            $type = true;
+            if ($temoin[0] === '!') {
+                $type = false;
+                $temoin = substr($temoin, 1);
+            }
+            $value = (isset($count[$temoin]) AND $count[$temoin]);
+            if (!$type) $sat = ($sat && !$value);
+            else $sat = ($sat && $value);
+        }
+
+        return $sat;
+    }
+
+    /** retourne un tableau [ ?bool, [explications]] */
+    public function isValideAffectation(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
+    {
+        if ($parametre === null) return [null, ["Aucun paramètres"]];
+        $valeurs = $parametre->getValeur();
+        if ($valeurs === null) return [null, ["Valeur du paramètre null"]];
+        $valeurs = trim($valeurs);
+        if ($valeurs === '') return [null, ["Valeur du paramètre vide"]];
+
+        $valeurs = explode(";", $valeurs);
 
         $count = [];
-        $affectations = $this->getAffectationsActifs($date, $structures);
-        if (empty($affectations)) return $emptyResult;
+        $affectations = $this->getAffectations($date);
+        if ($structures !== null) $affectations = array_filter($affectations, function (AgentAffectation $a) use ($structures) { return in_array($a->getStructure(), $structures);});
+        if (empty($affectations)) return [$emptyResult, ["Aucune affectation"]];
+
+        $match = [];
         foreach ($affectations as $affectation) {
             foreach (AgentAffectation::TEMOINS as $temoin) {
                 if ($affectation->getTemoin($temoin)) {
                     $count[$temoin] = true;
                 }
             }
-        }
 
-        return Agent::isTermoinsOk($temoins, $count);
+            foreach ($valeurs as $valeur) {
+                if ($this->isCompatible($count, $valeur)) {
+                    $match[] = $valeur;
+                }
+            }
+        }
+        if (!empty($match)) return [true, $match];
+        return [false, []];
     }
 
-    public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
+    /** retourne un tableau [ ?bool, [explications]] */
+    public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
-        if ($parametre === null) return true;
-        $temoins = $parametre->getTemoins();
+        if ($parametre === null) return [null, ["Aucun paramètres"]];
+        $valeurs = $parametre->getValeur();
+        if ($valeurs === null) return [null, ["Valeur du paramètre null"]];
+        $valeurs = trim($valeurs);
+        if ($valeurs === '') return [null, ["Valeur du paramètre vide"]];
+
+        $valeurs = explode(";", $valeurs);
 
         $count = [];
         $statuts = $this->getStatutsActifs($date);
-        if (empty($statuts)) return $emptyResult;
+        if (empty($statuts)) return [$emptyResult, ["Aucun statut"]];
 
+        $match = [];
         foreach ($statuts as $statut) {
             foreach (AgentStatut::TEMOINS as $temoin) {
                 if ($statut->getTemoin($temoin)) {
                     $count[$temoin] = true;
                 }
             }
-        }
 
-        return Agent::isTermoinsOk($temoins, $count);
+            foreach ($valeurs as $valeur) {
+                if ($this->isCompatible($count, $valeur)) {
+                    $match[] = $valeur;
+                }
+            }
+        }
+        if (!empty($match)) return [true, $match];
+        return [false, []];
     }
 
-    public function isValideEmploiType(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
+    /** retourne un tableau [ ?bool, [explications]] */
+    public function isValideEmploiType(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
-        if ($parametre->getValeur() === null) return $emptyResult;
-        $temoins = $parametre->getTemoins();
+        if ($parametre === null) return [null, ["Aucun paramètres"]];
+        $valeurs = $parametre->getValeur();
+        if ($valeurs === null) return [null, ["Valeur du paramètre null"]];
+        $valeurs = trim($valeurs);
+        if ($valeurs === '') return [null, ["Valeur du paramètre vide"]];
+
+        $valeurs = explode(";", $valeurs);
 
         $count = [];
-        $grades = $this->getEmploiTypesActifs($date);
-        if (empty($grades)) return $emptyResult;
-        foreach ($grades as $grade) {
-            if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
-        }
+        $emplois = $this->getEmploiTypesActifs($date);
+        if (empty($emplois)) return [$emptyResult, ["Aucun emploi"]];
 
-        $res = Agent::isTermoinsOk($temoins, $count);
-        return $res;
+        $match = [];
+        foreach ($emplois as $emploi) {
+            if ($emploi->getEmploiType()) $count[$emploi->getEmploiType()->getCode()] = true;
+
+            foreach ($valeurs as $valeur) {
+                if ($this->isCompatible($count, $valeur)) {
+                    $match[] = $valeur;
+                }
+            }
+        }
+        if (!empty($match)) return [true, $match];
+        return [false, []];
     }
 
-    public function isValideGrade(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
+    /** retourne un tableau [ ?bool, [explications]] */
+    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
     {
-        $temoins = $parametre->getTemoins();
+        if ($parametre === null) return [null, ["Aucun paramètres"]];
+        $valeurs = $parametre->getValeur();
+        if ($valeurs === null) return [null, ["Valeur du paramètre null"]];
+        $valeurs = trim($valeurs);
+        if ($valeurs === '') return [null, ["Valeur du paramètre vide"]];
+
+        $valeurs = explode(";", $valeurs);
 
         $count = [];
         $grades = $this->getGradesActifs($date);
-        if (empty($grades)) return $emptyResult;
-        foreach ($grades as $grade) {
-            if ($grade->getGrade()) $count[$grade->getGrade()->getLibelleCourt()] = true;
-        }
+        if (empty($grades)) return [$emptyResult, ["Aucun corps"]];
 
-        return Agent::isTermoinsOk($temoins, $count);
-    }
-
-    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): bool
-    {
-        $temoins = $parametre->getTemoins();
-
-        $count = [];
-        $grades = $this->getGradesActifs($date);
-        if (empty($grades)) return $emptyResult;
+        $match = [];
         foreach ($grades as $grade) {
             if ($grade->getCorps()) $count[$grade->getCorps()->getLibelleCourt()] = true;
-        }
 
-        return Agent::isTermoinsOk($temoins, $count);
-    }
-
-    public static function isTermoinsOk(array $temoins, array $count): bool
-    {
-        $keep = true;
-        foreach ($temoins['on'] as $temoin) {
-            if (!isset($count[$temoin])) {
-                $keep = false;
-                break;
+            foreach ($valeurs as $valeur) {
+                if ($this->isCompatible($count, $valeur)) {
+                    $match[] = $valeur;
+                }
             }
         }
-        foreach ($temoins['off'] as $temoin) {
-            if (isset($count[$temoin])) {
-                $keep = false;
-                break;
-            }
-        }
-        return $keep;
+        if (!empty($match)) return [true, $match];
+        return [false, []];
     }
 
     /** Autres accesseurs *********************************************************************************************/
@@ -473,8 +518,8 @@ class Agent implements
         $nom = (($this->getNomUsuel()) ?? '<em>' . $this->getNomFamille() . '</em>');
         if ($nomCap) $nom = strtoupper($nom);
         if ($nomBold) $nom = "<strong>" . $nom . "</strong>";
-        if ($prenomFirst) return ucwords(strtolower($prenom), "- ") . ' ' . $nom;
-        return $nom . ' ' . ucwords(strtolower($prenom), "- ");
+        if ($prenomFirst) return trim(ucwords(strtolower($prenom), "- ") . ' ' . $nom);
+        return trim($nom . ' ' . ucwords(strtolower($prenom), "- "));
 
     }
 
@@ -743,16 +788,15 @@ class Agent implements
             return !$a->isDeleted();
         });
         $result = array_filter($result, function (AgentSuperieur $a) {
-            return $a->estEnCours();
-        });
-        $result = array_filter($result, function (AgentSuperieur $a) {
             return (
                 ($a->getSourceId() === 'EMC2' and $a->estNonHistorise())
                 or
                 ($a->getSourceId() !== "EMC2")
             );
-        }
-        );
+        });
+        $result = array_filter($result, function (AgentSuperieur $a) {
+            return $a->estEnCours();
+        });
         if ($histo === false) {
             $result = array_filter($result, function (AgentSuperieur $a) {
                 return $a->estNonHistorise();

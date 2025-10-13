@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Form\EntretienProfessionnel;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use Laminas\Form\Element\Number;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Date;
@@ -48,7 +49,7 @@ class EntretienProfessionnelForm extends Form {
             'options' => [
                 'label' => "Responsable de l'entretien <span class='icon icon-obligatoire' title='Champ obligatoire' ></span> <span class='icon icon-information' title='La liste ci-dessous correspond aux supérieur·es hiérarchique·s direct·es déclaré·es' ></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
-                'empty_option' => "Sélectionner un·e responsable pour l'entretien",
+                'empty_option' => "Sélectionnez un·e responsable pour l'entretien",
                 'value_options' => $this->superieursAsOptions(),
             ],
             'attributes' => [
@@ -66,7 +67,7 @@ class EntretienProfessionnelForm extends Form {
             ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
                 'id' => 'agent',
-                'placeholder' => "Nom de l'agent ...",
+                'placeholder' => "Saisissez l'agent·e (min. 2 caractères)",
             ]);
         $this->add($agent);
         //CAMPAGNE (SELECT)
@@ -79,7 +80,7 @@ class EntretienProfessionnelForm extends Form {
                     'class' => 'control-label',
                 ],
                 'label_options' => [ 'disable_html_escape' => true, ],
-                'empty_option' => "Sélectionner une campagne ... ",
+                'empty_option' => "Sélectionnez une campagne",
                 'value_options' => $this->getCampagneService()->getCampagnesAsOptions(),
             ],
             'attributes' => [
@@ -100,6 +101,7 @@ class EntretienProfessionnelForm extends Form {
             ],
             'attributes' => [
                 'id' => 'date_entretien',
+                'placeholder' => 'jj/mm/aaaaa',
             ],
         ]);
 
@@ -114,6 +116,7 @@ class EntretienProfessionnelForm extends Form {
             ],
             'attributes' => [
                 'id' => 'heure_entretien',
+                'placeholder' => 'HH:mm'
             ],
         ]);
 
@@ -127,9 +130,24 @@ class EntretienProfessionnelForm extends Form {
             ],
             'attributes' => [
                 'id' => 'lieu_entretien',
+                'placeholder' => "Saisissez le lieu de l'entretien (par ex. : Bat A S42, Bureau de Camille, S237, ...)",
             ],
         ]);
-
+        //Lieu
+        $this->add([
+            'type' => Number::class,
+            'name' => 'duree',
+            'options' => [
+                'label' => "Durée estimée de l'entretien (en heure) <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> <span class='icon icon-information' title='Donnée utilisée pour le rendez-vous'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'duree',
+                'min' => 1,
+                'step' => '0.25',
+                'placeholder' => 'Saisissez une durée décimale (par ex. : 1.75)',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -221,6 +239,7 @@ class EntretienProfessionnelForm extends Form {
             ],
             'heure_entretien'          => [ 'required' => true,  ],
             'lieu_entretien'           => [ 'required' => true,  ],
+            'duree'                    => [ 'required' => true,  ],
         ]));
     }
 }

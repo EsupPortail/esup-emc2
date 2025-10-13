@@ -30,13 +30,6 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
             Index des entretiens professionnels
         </h1>
     </div>
-    <div class="col-md-3">
-        <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
-           class="btn btn-primary">
-            <span class="icon icon-listing"></span>
-            Accéder aux campagnes
-        </a>
-    </div>
 </div>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
@@ -83,30 +76,39 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
                     <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>"> <?php echo $entretien->getResponsable()->getDenomination(true); ?> </td>
                     <td data-order="<?php echo $entretien->getDateEntretien()->getTimestamp(); ?>"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </td>
                     <td data-order="<?php echo ($entretien->getEtatActif())?$entretien->getEtatActif()->getType()->getOrdre():9999; ?>"> <?php echo $this->etatinstance($entretien->getEtatActif()); ?> </td>
-                    <td>
+                    <td class="action">
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
-                        <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                           title="Accéder à l'entretien professionnel"
+                        >
                             <span class="icon icon-voir"></span></a>
                         <?php if ($canConvoquer): ?>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::modifierAction() */ ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
+                               title="Modifier l'entretien professionnel"
+                            >
                                 <span class="icon gerer"></span></a>
                         <?php endif; ?>
                         <?php if ($entretien->estNonHistorise()) : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */ ?>
                             <a href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
                                class="ajax-modal" data-event="modification"
+                               title="Historiser l'entretien professionnel"
                             >
                                 <span class="icon icon-historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::restaurerAction() */ ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
+                               title="Restaurer l'entretien professionnel"
+                            >
                                 <span class="icon icon-restaurer"></span></a>
                         <?php endif; ?>
                         <?php if ($entretien->estHistorise()) : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */ ?>
                             <a href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
-                               class="ajax-modal" data-event="modification">
+                               class="ajax-modal" data-event="modification"
+                               title="Supprimer définitivement l'entretien professionnel"
+                            >
                                 <span class="icon icon-unchecked text-danger"></span></a>
                         <?php endif; ?>
                     </td>
@@ -150,7 +152,14 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
 
     $(function () {
         $('.datatable').DataTable({
-            paging: false,
+            "sorting":   false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [6], orderable: false }
+            ]
         });
     });
 </script>

@@ -29,6 +29,7 @@
 
         <field name="dateEntretien" type="datetime" column="date_entretien"/>
         <field name="lieu" length="4096" column="lieu"/>
+        <field name="dureeEstimee" type="float" column="duree_estimee"/>
         <field name="token" length="255" column="token" nullable="true"/>
         <field name="acceptation" type="datetime" column="acceptation" nullable="true"/>
 

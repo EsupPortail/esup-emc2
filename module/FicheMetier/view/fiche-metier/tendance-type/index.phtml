@@ -1,0 +1,127 @@
+<?php
+
+use FicheMetier\Entity\Db\TendanceType;
+use FicheMetier\Provider\Privilege\TendancetypePrivileges;
+
+/**
+ * @see \FicheMetier\Controller\TendanceTypeController::indexAction()
+ * @var TendanceType[] $tendancesTypes
+ */
+
+$this->headTitle("Type de tendances");
+
+$canAfficher = $this->isAllowed(TendancetypePrivileges::getResourceId(TendancetypePrivileges::TENDANCETYPE_AFFICHER));
+$canAjouter  = $this->isAllowed(TendancetypePrivileges::getResourceId(TendancetypePrivileges::TENDANCETYPE_AJOUTER));
+$canModifier = $this->isAllowed(TendancetypePrivileges::getResourceId(TendancetypePrivileges::TENDANCETYPE_MODIFIER));
+$canHistoriser = $this->isAllowed(TendancetypePrivileges::getResourceId(TendancetypePrivileges::TENDANCETYPE_HISTORISER));
+$canSupprimer = $this->isAllowed(TendancetypePrivileges::getResourceId(TendancetypePrivileges::TENDANCETYPE_SUPPRIMER));
+
+?>
+
+<h1 class="page-header">
+    Type de tendance
+</h1>
+
+<div>
+    <?php /** @see \FicheMetier\Controller\TendanceTypeController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('fiche-metier/tendance-type/ajouter', [], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter un type de tendance
+    </a>
+</div>
+
+<table class="table table-condensed datatable" id="tendances">
+    <thead>
+    <tr>
+        <th> Libellé </th>
+        <th> Code </th>
+        <th> Obligatoire </th>
+        <th> Ordre </th>
+        <th class="action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($tendancesTypes as $tendanceType) : ?>
+        <tr>
+            <td> <?php echo $tendanceType->getLibelle(); ?> </td>
+            <td> <?php echo $tendanceType->getCode(); ?> </td>
+            <td> <?php echo ($tendanceType->isObligatoire())?"<span class='text-success'>Oui</span>":"<span class='text-danger'>Non</span>"; ?> </td>
+            <td> <?php echo $tendanceType->getOrdre(); ?></td>
+            <td class="action">
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \FicheMetier\Controller\TendanceTypeController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/tendance-type/afficher', ['tendance-type' => $tendanceType->getId()], [], true); ?>"
+                       class="ajax-modal action secondary"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <br>
+                    <?php /** @see \FicheMetier\Controller\TendanceTypeController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/tendance-type/modifier', ['tendance-type' => $tendanceType->getId()], [], true); ?>"
+                       class="ajax-modal action primary" data-event="modification"
+                    >
+                        <span class="icon icon-modifier"></span>
+                        Modifier
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <br>
+                    <?php if ($tendanceType->estNonHistorise()) : ?>
+                        <?php /** @see \FicheMetier\Controller\TendanceTypeController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/tendance-type/historiser', ['tendance-type' => $tendanceType->getId()], [], true); ?>"
+                           class="action warning"
+                        >
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
+                    <?php else : ?>
+                        <?php /** @see \FicheMetier\Controller\TendanceTypeController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/tendance-type/restaurer', ['tendance-type' => $tendanceType->getId()], [], true); ?>"
+                           class="action warning"
+                        >
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <br>
+                    <?php /** @see \FicheMetier\Controller\TendanceTypeController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/tendance-type/supprimer', ['tendance-type' => $tendanceType->getId()], [], true); ?>"
+                       class="ajax-modal action danger" data-event="modification"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('table#tendances').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            order: [[3, 'asc'], [0, 'asc']],
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
+        });
+    });
+</script>

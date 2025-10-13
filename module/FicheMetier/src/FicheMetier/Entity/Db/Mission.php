@@ -102,4 +102,8 @@ class Mission implements HistoriqueAwareInterface,
         }
         return $result;
     }
+    public function addMissionActivite(MissionActivite $activite): void
+    {
+        $this->activites->add($activite);
+    }
 }

@@ -9,6 +9,7 @@ class CarriereParametres {
     const CORRESPONDANCE_AVEC_AGENT = 'CorrespondanceAvecAgent';
     const CORPS_AVEC_AGENT          = 'CorpsAvecAgent';
     const GRADE_AVEC_AGENT          = 'GradeAvecAgent';
+    const EMPLOITYPE_AVEC_AGENT     = 'EmploitypeAvecAgent';
     const ACTIF_ONLY                = 'ACTIF_ONLY';
 
 }

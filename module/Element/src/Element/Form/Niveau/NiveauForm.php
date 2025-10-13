@@ -80,7 +80,7 @@ class NiveauForm extends Form {
                 'value_options' => [
                     'Application' => 'Niveau associé aux applications',
                     'Competence' => 'Niveau associé aux compétences',
-                    'Thematique' => 'Niveau associé aux thématique',
+                    'Thematique' => 'Niveau associé aux thématiques',
                 ],
                 'empty_option' => "Choisissez un type d'élément ...",
             ],

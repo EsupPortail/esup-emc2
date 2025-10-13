@@ -7,6 +7,7 @@ use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Metier\Form\SelectionnerDomaines\SelectionnerDomainesForm;
@@ -25,10 +26,12 @@ class MissionPrincipaleControllerFactory {
     public function __invoke(ContainerInterface $container) : MissionPrincipaleController
     {
         /**
+         * @var FicheMetierService $ficheMetierService
          * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          */
+        $ficheMetierService = $container->get(FicheMetierService::class);
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
@@ -47,6 +50,7 @@ class MissionPrincipaleControllerFactory {
         $selectionDomainesForm = $container->get('FormElementManager')->get(SelectionnerDomainesForm::class);
 
         $controller = new MissionPrincipaleController();
+        $controller->setFicheMetierService($ficheMetierService);
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);

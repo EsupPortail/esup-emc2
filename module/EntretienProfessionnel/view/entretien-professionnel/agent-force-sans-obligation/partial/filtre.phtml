@@ -23,63 +23,66 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
         <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
             <div class="row">
-                <div class="col-md-3">
-                    <label for="campagne">Campagne d'entretien professionnel: </label><br>
-                    <select id="campagne" name="campagne" class="selectpicker" data-live-search="true">
-                        <option value=""> Toutes les campagnes</option>
-                        <?php foreach ($campagnes as $campagne_) : ?>
-                            <?php $texte = "data-content='" . $campagne_->getAnnee() . "  "; ?>
-                            <?php if ($campagne_->estEnCours()) : ?>
-                                <?php $texte .= '<span class="text-success"><span class="icon icon-checked"></span> En cours </span>'; ?>
-                            <?php else : ?>
-                                <?php $texte .= '<span class="danger"><span class="icon icon-unchecked"></span> Terminée </span>'; ?>
-                            <?php endif; ?>
-                            <?php $texte .= "'"; ?>
-                            <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_ === $campagne) echo " selected "; ?> <?php echo $texte; ?>>
-                                <?php echo $campagne_->getAnnee(); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="forcage"> Type de forçage : </label>
-                    <select id="forcage" name="forcage" class="selectpicker">
-                        <option value=""> Peu importe</option>
-                        <?php foreach (AgentForceSansObligation::FORCAGE_ARRAY as $id => $libelle): ?>
-                            <option value="<?php echo $id; ?>"
-                                <?php if (isset($forcage) and $forcage === $id) echo " selected "; ?>
-                            > <?php echo $libelle; ?> </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="activite"> Agent : </label>
-                    <?php
-                    /** @see  \Application\Controller\AgentController::rechercherAction() */
-                    $agentF = new SearchAndSelect('agent');
-                    $agentF
-                        ->setAutocompleteSource($this->url('agent/rechercher'))
-                        ->setSelectionRequired()
-                        ->setAttributes([
-                            'id' => 'agent',
-                            'placeholder' => "Sélectionner un·e agent·e",
-                        ]);
-                    ?>
-                    <?php echo $this->formControlGroup($agentF); ?>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="campagne">Campagne : </label>
+                            <select id="campagne" name="campagne" class="selectpicker" data-live-search="true">
+                                <option value=""> Toutes les campagnes</option>
+                                <?php foreach ($campagnes as $campagne_) : ?>
+                                    <?php $texte = "data-content='" . $campagne_->getAnnee() . "  "; ?>
+                                    <?php if ($campagne_->estEnCours()) : ?>
+                                        <?php $texte .= '<span class="text-success"><span class="icon icon-checked"></span> En cours </span>'; ?>
+                                    <?php else : ?>
+                                        <?php $texte .= '<span class="danger"><span class="icon icon-unchecked"></span> Terminée </span>'; ?>
+                                    <?php endif; ?>
+                                    <?php $texte .= "'"; ?>
+                                    <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_ === $campagne) echo " selected "; ?> <?php echo $texte; ?>>
+                                        <?php echo $campagne_->getAnnee(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="forcage"> Type de forçage : </label>
+                            <select id="forcage" name="forcage" class="selectpicker">
+                                <option value=""> Peu importe</option>
+                                <?php foreach (AgentForceSansObligation::FORCAGE_ARRAY as $id => $libelle): ?>
+                                    <option value="<?php echo $id; ?>"
+                                        <?php if (isset($forcage) and $forcage === $id) echo " selected "; ?>
+                                    > <?php echo $libelle; ?> </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-1" style="width: auto !important;">
+                            <label for="agent"> Agent·e : </label>
+                        </div>
+                        <div class="col-md-10">
+                            <?php
+                            /** @see  \Application\Controller\AgentController::rechercherAction() */
+                            $agentF = new SearchAndSelect('agent');
+                            $agentF
+                                ->setAutocompleteSource($this->url('agent/rechercher'))
+                                ->setSelectionRequired()
+                                ->setAttributes([
+                                    'id' => 'agent',
+                                    'placeholder' => "Rechercher un·e agent·e (min. 2 lettres)",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($agentF); ?>
+                        </div>
+                    </div>
                 </div>
                 <!-- BOUTON -->
-                <div class="col-md-3">
-                    <div class="pull-right">
-                        <button class="btn btn-primary action" id="clear">
-                            <span class="icon icon-gommer"></span>
-                            R.A.Z.
-                        </button>
-
-                        <button class="btn btn-primary action" id="filter">
-                            <span class="icon icon-filtrer"></span>
-                            Filtrer
-                        </button>
-                    </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary action" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary action" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        Remise à zéro
+                    </button>
                 </div>
             </div>
         </form>

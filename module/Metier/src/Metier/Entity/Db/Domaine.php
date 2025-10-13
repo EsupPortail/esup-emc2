@@ -14,13 +14,11 @@ class Domaine implements HistoriqueAwareInterface {
     private ?string $libelle = null;
     private ?string $typeFonction = null;
 
-    private Collection $familles;
     private Collection $metiers;
 
     public function __construct()
     {
         $this->metiers = new ArrayCollection();
-        $this->familles = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -46,27 +44,6 @@ class Domaine implements HistoriqueAwareInterface {
     public function setTypeFonction(?string $typeFonction) : void
     {
         $this->typeFonction = $typeFonction;
-    }
-
-    /**
-     * @return FamilleProfessionnelle[]
-     */
-    public function getFamilles() : array
-    {
-        $familles =  $this->familles->toArray();
-        usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() <=> $b->getLibelle();});
-        return $familles;
-    }
-
-
-    public function clearFamilles() : void
-    {
-        $this->familles->clear();
-    }
-
-    public function addFamille(FamilleProfessionnelle $famille) : void
-    {
-        $this->familles->add($famille);
     }
 
     /**

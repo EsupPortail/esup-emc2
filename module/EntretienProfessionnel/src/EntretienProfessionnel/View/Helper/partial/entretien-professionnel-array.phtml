@@ -10,9 +10,9 @@ use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations
  * @var array $options
  */
 
+
 $isEnCours = (!empty($entretiens) && current($entretiens)->getCampagne() && current($entretiens)->getCampagne()->estEnCours());
 
-$dropdowns = false;
 
 // recuperation des données à afficher
 $displayAnnee = true;
@@ -75,7 +75,9 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
 
 ?>
 
-<table class="table table-condensed table-hover datatable" id="<?php echo $options['id']; ?>" style="margin:1rem 0;">
+<table class="table table-condensed table-hover datatable"
+       id="<?php echo $options['id']; ?>"
+       style="margin:1rem 0;">
     <thead>
     <tr>
         <?php if ($displayAnnee) : ?>
@@ -159,7 +161,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td class="action">
-            <?php if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)  and !$dropdowns) : ?>
+            <?php if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()],
@@ -170,15 +172,14 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                     Accéder
                 </a>
             <?php endif; ?>
-            <?php if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)  and !$dropdowns) : ?>
+            <?php if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
                     class="action secondary"
                 >
-                    <span class="icon icon-pdf" title="Exporter le compte-rendu d'entretien professionnel ">
-<!--                        <span class="small-lettrine">CREP</span> -->
+                    <span class="icon icon-pdf">
                         Exporter CREP
                 </a>
                 <br>
@@ -187,23 +188,22 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                         href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>"
                         class="action secondary"
                 >
-                    <span class="icon icon-pdf" title="Exporter  le compte-rendu d'entretien de formation">
-<!--                        <span class="small-lettrine">CREF</span>-->
+                    <span class="icon icon-pdf">
                         Exporter CREF
                 </a>
             <?php endif; ?>
-            <?php if ($canConvoquer  and !$dropdowns) : ?>
+            <?php if ($canConvoquer) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::modifierAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
                     class="ajax-modal action primary" data-event="modification"
                 >
-                    <span class="icon icon-gerer" title="Modifier l'entretien professionnel (convocation)"></span>
+                    <span class="icon icon-gerer"></span>
                     Gérer
                 </a>
             <?php endif; ?>
-            <?php if ($canHistoriser  and !$dropdowns) : ?>
+            <?php if ($canHistoriser) : ?>
                 <br>
                 <?php if ($entretien->estNonHistorise()) : ?>
                     <a
@@ -214,7 +214,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                             true); ?>"
                         class="ajax-modal action warning" data-event="modification"
                     >
-                        <span class="icon icon-historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span>
+                        <span class="icon icon-historiser"></span>
                         Historiser
                     </a>
                 <?php else : ?>
@@ -226,13 +226,13 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                             true); ?>"
                         class="action warning"
                     >
-                        <span class="icon icon-restaurer" title="Restaurer le compte-rendu de l'entretien professionnel"></span>
+                        <span class="icon icon-restaurer"></span>
                         Restaurer
                     </a>
                 <?php endif; ?>
             <?php endif; ?>
 
-            <?php if ($canSupprimer and !$dropdowns) : ?>
+            <?php if ($canSupprimer) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */?>
@@ -241,25 +241,9 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                     data-event="modification"
                 >
                     <span class="text-danger">
-                        <span class="icon icon-unchecked" title="Supprimer définitivement le compte-rendu de l'entretien professionnel"></span>
+                        <span class="icon icon-unchecked"></span>
                         Supprimer
                     </span>
-                </a>
-            <?php endif; ?>
-            <?php if ($dropdowns) : ?>
-<!--                <div class="dropdown action-dd">-->
-<!--                    <button class="btn btn-default dropdown-toggle"-->
-<!--                            type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"-->
-<!--                            onclick="alert('clicked');  setActions(--><?php //echo $entretien->getId(); ?>//)">
-//                        <span class="icon actions" title="Actions possible pour l'entretien #<?php //echo $entretien->getId(); ?><!--"></span>-->
-<!--                    </button>-->
-<!--                    <ul id="drop_--><?php //echo $entretien->getId(); ?><!--" class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
-<!--                    </ul>-->
-
-<!--                </div>-->
-                <a href="<?php echo $this->url('entretien-professionnel/action', ['entretien-professionnel' => $entretien->getId()], [], true); ?>" class="ajax-modal"
-                   >
-                    Action
                 </a>
             <?php endif; ?>
         </td>
@@ -297,57 +281,6 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             language: {
                 url: '/js/datatables_fr.json'
             },
-        });
-    });
-
-    function setActions(id) {
-        let url = '../../../../entretien-professionnel/action/' + id;
-        // console.log(url);
-        $.ajax({
-            type: "POST",
-            url: url,
-            beforeSend:
-                function () {
-                    let date = new Date();
-                    $("ul#drop_"+id).html(date.getMinutes() +":" + date.getSeconds() + "." + date.getMilliseconds()+  "<center><span class='icon hourglass'></span> Calcul en cours</center>");
-                },
-            success:
-                function (retour) {
-                    $("ul#drop_"+id).html($("ul#drop_"+id).html() + retour);
-                }
-        });
-        // alert(ficheId);
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-        const button = document.getElementById('myPopoverButton');
-
-        // Initialisation du popover
-        const popover = new bootstrap.Popover(button, {
-            content: 'Chargement en cours...', // Contenu initial
-            trigger: 'click', // Le popover s'affiche au clic
-        });
-
-        // Gestionnaire d'événement au clic
-        button.addEventListener('click', function () {
-            // URL de l'API ou ressource
-            const url = 'https://api.example.com/data';
-
-            // Requête AJAX
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur réseau');
-                    }
-                    return response.text(); // Ou response.json() selon le format attendu
-                })
-                .then(data => {
-                    // Mise à jour dynamique du contenu du popover
-                    popover.setContent({ content: data });
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des données:', error);
-                    popover.setContent({ content: 'Erreur lors du chargement des données.' });
-                });
         });
     });
 </script>

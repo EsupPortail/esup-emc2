@@ -36,7 +36,7 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </span>
 </h2>
 
-<?php echo $this->fichesPostesAsArray($fichesCompletes); ?>
+<?php echo $this->fichesPostesAsArray($fichesCompletes, null, ['id' => 'fichescompletes']); ?>
 
 <h2>
     Fiches incomplètes
@@ -45,7 +45,7 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </span>
 </h2>
 
-<?php echo $this->fichesPostesAsArray($fichesIncompletes); ?>
+<?php echo $this->fichesPostesAsArray($fichesIncompletes, null, ['id' => 'fichesincompletes']); ?>
 
 <h2>
     Fiches vides
@@ -54,7 +54,7 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </span>
 </h2>
 
-<?php echo $this->fichesPostesAsArray($fichesVides); ?>
+<?php echo $this->fichesPostesAsArray($fichesVides, null, ['id' => 'fichesvides']); ?>
 
 
 <?php $ficheId=791; ?>
@@ -86,14 +86,6 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
         $("body").on("edition", function (event) {
             event.div.modal('hide');
             window.location.href = 'fiche-poste/editer';
-        });
-    });
-
-    $(document).ready(function() {
-        $('.datatable').DataTable( {
-            language: {
-                url: '/localisation/fr_FR.json'
-            }
         });
     });
 </script>

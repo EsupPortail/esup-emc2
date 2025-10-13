@@ -65,28 +65,50 @@ $canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(Structur
 <?php echo $this->campagneAvancement([], [], null, ['only-legende' => true]); ?>
 
 <script>
-    $(function () {
+    let base_url = "<?php echo $this->url('entretien-professionnel/campagne/structure-progression'); ?>";
+    let maxConcurrent = 5;
+    let currentConcurrent = 0;
 
-        let base_url = "<?php echo $this->url('entretien-professionnel/campagne/structure-progression'); ?>";
+    function traiterStructure(campagne_id, structure_id) {
+        let id = "progression_" + campagne_id + "_" + structure_id;
+        $.ajax({
+            type: "POST",
+            url: base_url + "/" + campagne_id + "/" + structure_id,
+            beforeSend:
+                function () {
+                    $("td#" + id).html("Chargement en cours ...");
+                },
+            success:
+                function (retour) {
+                    currentConcurrent--;
+                    $("td#" + id).html(retour);
+                }
+        });
+    }
+
+    function traiter(campagne_id, structures_id, process) {
+        if (currentConcurrent < maxConcurrent) {
+            currentConcurrent++;
+            traiterStructure(campagne_id, structures_id.pop());
+        }
+        if (structures_id.length === 0) {
+            clearInterval(process);
+        }
+    }
+
+    $(function () {
+        let structures_id = [];
+        let campagne_id = null;
         $('td.progression').each(function (index, cell) {
             let id = cell.id;
-            let campagne_id = id.split('_')[1];
             let structure_id = id.split('_')[2];
-
-
-            $.ajax({
-                type: "POST",
-                url: base_url + "/" + campagne_id + "/" + structure_id,
-                beforeSend:
-                    function () {
-                        $("td#" + id).html("Chargement en cours ...");
-                    },
-                success:
-                    function (retour) {
-                        $("td#" + id).html(retour);
-                    }
-            });
+            campagne_id = id.split('_')[1];
+            structures_id.push(structure_id);
         });
+        console.log(structures_id.length + " structures à traiter");
+
+        const process = setInterval(() => traiter(campagne_id, structures_id, process), 500);
+
 
         $('table#progression').dataTable({
             paging: false,

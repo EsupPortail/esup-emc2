@@ -54,7 +54,6 @@ class DomaineService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
-            ->addSelect('famille')->leftJoin('domaine.familles', 'famille')
             ->addSelect('metier')->leftJoin('domaine.metiers', 'metier');
         return $qb;
     }
@@ -123,7 +122,7 @@ class DomaineService
         return $domaine;
     }
 
-    public function getDomaineByLibelle(string $libelle): ?Domaine
+    public function getDomaineByLibelle(?string $libelle): ?Domaine
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('domaine.libelle = :libelle')->setParameter('libelle', $libelle)
