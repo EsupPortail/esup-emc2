@@ -172,6 +172,9 @@ span.small-lettrine {
     text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
+button[disabled] {
+    cursor: not-allowed;
+}
 /** LIEN **************************************************************************************************************/
 
 div.ui-datepicker {
@@ -285,6 +288,7 @@ small a {
         min-width: 1750px;
     }
 }
+
 
 /** Keep on */
 
