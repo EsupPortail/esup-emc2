@@ -80,7 +80,7 @@ trait FichePosteMacroTrait {
         foreach ($applications as $application) {
             /** @var ApplicationElement $entite */
             $entite = $application["entite"];
-            $result [$entite->getApplication()->getGroupe()?$entite->getApplication()->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
+            $result [$entite->getApplication()->getTheme()?$entite->getApplication()->getTheme()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
         }
 
         $texte = "<h3> Applications </h3>";

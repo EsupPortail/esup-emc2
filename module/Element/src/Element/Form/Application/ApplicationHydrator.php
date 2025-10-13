@@ -17,7 +17,7 @@ class ApplicationHydrator implements HydratorInterface {
     {
         $data = [
             'libelle' => $object->getLibelle(),
-            'groupe' => ($object->getGroupe())?$object->getGroupe()->getId():null,
+            'groupe' => ($object->getTheme())?$object->getTheme()->getId():null,
             'HasDescription' => [
                 'description' => $object->getDescription()
             ],
@@ -34,7 +34,7 @@ class ApplicationHydrator implements HydratorInterface {
     public function hydrate(array $data, $object) : object
     {
         $groupe = (isset($data['groupe']) AND trim($data['groupe']) !== "")?$this->getApplicationThemeService()->getApplicationTheme($data['groupe']):null;
-        $object->setGroupe($groupe);
+        $object->setTheme($groupe);
 
         $object->setLibelle($data['libelle']);
         if ($data['url'] === null || $data['url'] === '') {

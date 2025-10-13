@@ -81,8 +81,8 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
         <tr class="<?php if ($application->estHistorise()) echo " historise "; ?>">
             <td> <?php echo $application->getLibelle(); ?> </td>
             <td>
-                <?php if ($application->getGroupe()) : ?>
-                    <?php echo $application->getGroupe()->getLibelle(); ?>
+                <?php if ($application->getTheme()) : ?>
+                    <?php echo $application->getTheme()->getLibelle(); ?>
                 <?php else : ?>
                     Sans groupe
                 <?php endif; ?>

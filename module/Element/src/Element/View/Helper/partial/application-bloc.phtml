@@ -107,7 +107,7 @@ foreach ($applications as $application) {
         <?php foreach ($elements as $element) : ?>
             <tr>
                 <td> <?php echo $element->getApplication()->getLibelle(); ?> </td>
-                <td> <?php echo ($element->getApplication()->getGroupe())?->getLibelle(); ?> </td>
+                <td> <?php echo ($element->getApplication()->getTheme())?->getLibelle(); ?> </td>
                 <td data-order="<?php echo ($element->getNiveauMaitrise())?->getNiveau(); ?>">
                     <?php echo ($element->getNiveauMaitrise())?->getLibelle(); ?>
                     <?php if ($element->isClef()) : ?>

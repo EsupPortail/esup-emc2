@@ -52,13 +52,14 @@ class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
         $this->actif = $actif;
     }
 
-    public function getGroupe() : ?ApplicationTheme
+
+    public function getTheme() : ?ApplicationTheme
     {
         return $this->theme;
     }
 
-    public function setGroupe(?ApplicationTheme $groupe) : void
+    public function setTheme(?ApplicationTheme $theme) : void
     {
-        $this->theme = $groupe;
+        $this->theme = $theme;
     }
 }
