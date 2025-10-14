@@ -113,7 +113,7 @@ class CompetenceDisciplineService
     public function getCompetenceDiscipline(?int $id): ?CompetenceDiscipline
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('theme.id = :id')->setParameter('id', $id);
+            ->andWhere('discipline.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {

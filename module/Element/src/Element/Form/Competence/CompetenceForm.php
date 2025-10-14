@@ -3,6 +3,7 @@
 namespace Element\Form\Competence;
 
 use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
@@ -15,6 +16,7 @@ use Laminas\InputFilter\Factory;
 
 class CompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
+    use CompetenceDisciplineServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
@@ -103,6 +105,21 @@ class CompetenceForm extends Form {
                 'id' => 'identifiant',
             ],
         ]);
+        //discipline
+        $this->add([
+            'type' => Select::class,
+            'name' => 'discipline',
+            'options' => [
+                'label' => "Discipline de compétence :",
+                'empty_option' => "Sélectionner la discipline de la compétence ...",
+                'value_options' => $this->getCompetenceDisciplineService()->getCompetencesDisciplinesAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'type',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
 
         //submit
         $this->add([
@@ -123,6 +140,7 @@ class CompetenceForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => [ 'required' => true,  ],
             'description' => [ 'required' => false,  ],
+            'discipline'    => [ 'required' => false, ],
             'type'    => [ 'required' => true, ],
             'theme'   => [ 'required' => false, ],
             'referentiel'   => [ 'required' => false, ],

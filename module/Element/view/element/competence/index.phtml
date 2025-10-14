@@ -108,6 +108,7 @@ $this->headTitle("Liste des compétences");
         <thead>
         <tr>
             <th> Libellé </th>
+            <th> Discipline </th>
             <th> Thème </th>
             <th> Référence </th>
             <th class="action"> Action </th>
@@ -123,6 +124,7 @@ $this->headTitle("Liste des compétences");
                         ></span>
                     <?php endif; ?>
                 </td>
+                <td> <?php echo ($competence->getDiscipline())?$competence->getDiscipline()->getLibelle():"Aucun"; ?> </td>
                 <td> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </td>
                 <td>
                     <?php echo ($competence->getReferentiel())?$this->competenceReference($competence):"Aucun"; ?>

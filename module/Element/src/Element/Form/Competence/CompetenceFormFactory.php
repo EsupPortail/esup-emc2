@@ -3,11 +3,12 @@
 namespace Element\Form\Competence;
 
 use Element\Service\Competence\CompetenceService;
+use Element\Service\CompetenceDiscipline\CompetenceDisciplineService;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
-use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class CompetenceFormFactory {
@@ -22,11 +23,13 @@ class CompetenceFormFactory {
     {
         /**
          * @var CompetenceService $competenceService
+         * @var CompetenceDisciplineService $competenceDisciplineService
          * @var CompetenceReferentielService $competenceReferentielService
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          */
         $competenceService = $container->get(CompetenceService::class);
+        $competenceDisciplineService = $container->get(CompetenceDisciplineService::class);
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
@@ -36,6 +39,7 @@ class CompetenceFormFactory {
         $form = new CompetenceForm();
         $form->setCompetenceService($competenceService);
         $form->setCompetenceReferentielService($competenceReferentielService);
+        $form->setCompetenceDisciplineService($competenceDisciplineService);
         $form->setCompetenceThemeService($competenceThemeService);
         $form->setCompetenceTypeService($competenceTypeService);
         $form->setHydrator($hydrator);
