@@ -17,7 +17,9 @@ use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Request;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
 class ElementController extends AbstractActionController
@@ -141,6 +143,33 @@ class ElementController extends AbstractActionController
         $vm->setTemplate('application/default/default-form');
         return $vm;
     }
+
+    public function toggleClefAction(): JsonModel
+    {
+        $elementType = $this->params()->fromRoute('type');
+        $elementId = $this->params()->fromRoute('id');
+
+        $element = null;
+        $service = null;
+        switch ($elementType AND $elementId) {
+            case ElementController::TYPE_APPLICATION :
+                $element = $this->getApplicationElementService()->getApplicationElement($elementId);
+                $service = $this->getApplicationElementService();
+                break;
+            case ElementController::TYPE_COMPETENCE :
+                $element = $this->getCompetenceElementService()->getCompetenceElement($elementId);
+                $service = $this->getCompetenceElementService();
+                break;
+        }
+
+        $element->setClef(!$element->isClef());
+        $service->update($element);
+
+//        $retour = $this->params()->fromQuery('retour');
+//        return $this->redirect()->toUrl($retour);
+        return new JsonModel();
+    }
+
 
     public function ajouterApplicationElementAction(): ViewModel
     {

@@ -29,14 +29,14 @@ class ApplicationForm extends Form {
         ]);
         //groupe
         $this->add([
-            'name' => 'groupe',
+            'name' => 'theme',
             'type' => Select::class,
             'options' => [
-                'label' => "Groupe de l'application : ",
+                'label' => "Thème : ",
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'empty_option' => 'Sélectionner un groupe ...',
+                'empty_option' => 'Sélectionner un thème',
                 'value_options' => $this->getApplicationThemeService()->getApplicationsGroupesAsOption(),
             ],
             'attributes' => [
@@ -82,7 +82,7 @@ class ApplicationForm extends Form {
         //filter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'               => [ 'required' => true,  ],
-            'groupe'                => [ 'required' => false,  ],
+            'theme'                 => [ 'required' => false,  ],
             'description'           => [ 'required' => false,  ],
             'url'                   => [ 'required' => false,  ],
         ]));

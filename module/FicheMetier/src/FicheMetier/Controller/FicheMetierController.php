@@ -563,92 +563,20 @@ EOS;
         return $vm;
     }
 
+    /** ACTIONS POUR LE RAFRAICHISSEMENT SUR PLACE ********************************************************************/
 
-    /** LEFT OVER *****************************************************************************************************/
+    public function refreshApplicationsAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
+        $mode = $this->params()->fromRoute('mode');
 
-//    public function clonerApplicationsAction(): ViewModel
-//    {
-//        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-//
-//        $form = $this->getSelectionFicheMetierForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/cloner-applications', ['fiche-metier' => $ficheMetier->getId()], [], true));
-//
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $ficheClone = $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']);
-//
-//            if ($ficheClone !== null) {
-//                try {
-//                    /** @var CompetenceElement[] $oldCollection */
-//                    $oldCollection = $ficheMetier->getApplicationCollection();
-//                    foreach ($oldCollection as $element) $element->historiser();
-//
-//                    $newCollection = $ficheClone->getApplicationListe();
-//                    foreach ($newCollection as $element) {
-//                        $newElement = new ApplicationElement();
-//                        $newElement->setApplication($element->getApplication());
-//                        $newElement->setCommentaire("Clonée depuis la fiche #" . $ficheClone->getId());
-//                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
-//                        $this->getFicheMetierService()->getObjectManager()->persist($newElement);
-//                        $ficheMetier->addApplicationElement($newElement);
-//                    }
-//                    $this->getFicheMetierService()->getObjectManager()->flush();
-//                } catch (ORMException $e) {
-//                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-//                }
-//            }
-//
-//        }
-//
-//        $vm = new ViewModel();
-//        $vm->setVariables([
-//            'title' => "Cloner les applications d'une autre fiche métier",
-//            'form' => $form,
-//        ]);
-//        return $vm;
-//    }
-//
-//    public function clonerCompetencesAction(): ViewModel
-//    {
-//        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-//
-//        $form = $this->getSelectionFicheMetierForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/cloner-competences', ['fiche-metier' => $ficheMetier->getId()], [], true));
-//
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $ficheClone = $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']);
-//
-//            if ($ficheClone !== null) {
-//                try {
-//                    /** @var CompetenceElement[] $oldCollection */
-//                    $oldCollection = $ficheMetier->getCompetenceCollection();
-//                    foreach ($oldCollection as $element) $element->historiser();
-//
-//                    $newCollection = $ficheClone->getCompetenceListe();
-//                    foreach ($newCollection as $element) {
-//                        $newElement = new CompetenceElement();
-//                        $newElement->setCompetence($element->getCompetence());
-//                        $newElement->setCommentaire("Clonée depuis la fiche #" . $ficheClone->getId());
-//                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
-//                        $this->getFicheMetierService()->getObjectManager()->persist($newElement);
-//                        $ficheMetier->addCompetenceElement($newElement);
-//                    }
-//                    $this->getFicheMetierService()->getObjectManager()->flush();
-//                } catch (ORMException $e) {
-//                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-//                }
-//            }
-//
-//        }
-//
-//        $vm = new ViewModel();
-//        $vm->setVariables([
-//            'title' => "Cloner les compétences d'une autre fiche métier",
-//            'form' => $form,
-//        ]);
-//        return $vm;
-//    }
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'applications' => $applications,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/refresh-applications');
+        return $vm;
+    }
 }

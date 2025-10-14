@@ -3,6 +3,7 @@
 /**
  * @see \Element\Controller\ApplicationController::afficherAction()
  * @var Application $application
+ * @var bool $withAgent
  * @var Agent[] $agents
  * @var FicheMetier[] $fichesmetiers
  */
@@ -39,13 +40,15 @@ use FicheMetier\Entity\Db\FicheMetier;
     <?php endif; ?>
 </dl>
 
-<h2> Agents ayant en acquis l'application </h2>
+<?php if ($withAgent) : ?>
+    <h2> Agents ayant en acquis l'application </h2>
 
-<ul>
-<?php foreach($agents as $agent): ?>
-    <li> <?php echo $agent->getDenomination(true); ?> </li>
-<?php endforeach; ?>
-</ul>
+    <ul>
+    <?php foreach($agents as $agent): ?>
+        <li> <?php echo $agent->getDenomination(true); ?> </li>
+    <?php endforeach; ?>
+    </ul>
+
 
 <h2> Fiches métiers ayant en acquis l'application </h2>
 
@@ -54,3 +57,5 @@ use FicheMetier\Entity\Db\FicheMetier;
         <li> <?php echo $fichemetier->getIntitule(); ?> </li>
     <?php endforeach; ?>
 </ul>
+
+<?php endif; ?>

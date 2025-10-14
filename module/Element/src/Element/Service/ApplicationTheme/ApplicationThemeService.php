@@ -15,75 +15,75 @@ class ApplicationThemeService
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(ApplicationTheme $groupe): ApplicationTheme
+    public function create(ApplicationTheme $theme): ApplicationTheme
     {
-        $this->getObjectManager()->persist($groupe);
-        $this->getObjectManager()->flush($groupe);
-        return $groupe;
+        $this->getObjectManager()->persist($theme);
+        $this->getObjectManager()->flush($theme);
+        return $theme;
     }
 
-    public function update(ApplicationTheme $groupe): ApplicationTheme
+    public function update(ApplicationTheme $theme): ApplicationTheme
     {
-        $this->getObjectManager()->flush($groupe);
-        return $groupe;
+        $this->getObjectManager()->flush($theme);
+        return $theme;
     }
 
-    public function historise(ApplicationTheme $groupe): ApplicationTheme
+    public function historise(ApplicationTheme $theme): ApplicationTheme
     {
-        $groupe->historiser();
-        $this->getObjectManager()->flush($groupe);
-        return $groupe;
+        $theme->historiser();
+        $this->getObjectManager()->flush($theme);
+        return $theme;
     }
 
-    public function restore(ApplicationTheme $groupe): ApplicationTheme
+    public function restore(ApplicationTheme $theme): ApplicationTheme
     {
-        $groupe->dehistoriser();
-        $this->getObjectManager()->flush($groupe);
-        return $groupe;
+        $theme->dehistoriser();
+        $this->getObjectManager()->flush($theme);
+        return $theme;
     }
 
-    public function delete(ApplicationTheme $groupe): ApplicationTheme
+    public function delete(ApplicationTheme $theme): ApplicationTheme
     {
-        $this->getObjectManager()->remove($groupe);
-        $this->getObjectManager()->flush($groupe);
-        return $groupe;
+        $this->getObjectManager()->remove($theme);
+        $this->getObjectManager()->flush($theme);
+        return $theme;
     }
 
     /** REQUETAGE *****************************************************************************************************/
 
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getObjectManager()->getRepository(ApplicationTheme::class)->createQueryBuilder('groupe')
-            ->addSelect('application')->leftJoin('groupe.applications', 'application');
+        $qb = $this->getObjectManager()->getRepository(ApplicationTheme::class)->createQueryBuilder('theme')
+            ->addSelect('application')->leftJoin('theme.applications', 'application');
         return $qb;
     }
 
     /** @return ApplicationTheme[] */
-    public function getApplicationsGroupes(string $champ = 'ordre', string $ordre = 'ASC'): array
+    public function getApplicationsThemes(string $champ = 'ordre', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('groupe.' . $champ, $ordre);
+            ->orderBy('theme.' . $champ, $ordre);
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function optionify(ApplicationTheme $groupe): array
+    public function optionify(ApplicationTheme $theme): array
     {
         $this_option = [
-            'value' => $groupe->getId(),
-            'label' => $groupe->getLibelle(),
+            'value' => $theme->getId(),
+            'label' => $theme->getLibelle(),
         ];
         return $this_option;
     }
 
     public function getApplicationsGroupesAsOption(): array
     {
-        $groupes = $this->getApplicationsGroupes();
+        $themes = $this->getApplicationsThemes();
         $array = [];
-        foreach ($groupes as $groupe) {
-            $option = $this->optionify($groupe);
-            $array[$groupe->getId()] = $option;
+        foreach ($themes as $theme) {
+            $option = $this->optionify($theme);
+            $array[$theme->getId()] = $option;
         }
         return $array;
     }
@@ -91,12 +91,12 @@ class ApplicationThemeService
     public function getApplicationTheme(?int $id): ?ApplicationTheme
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('groupe.id = :id')
+            ->andWhere('theme.id = :id')
             ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ApplicationTheme paratagent le même id [" . $id . "]",0,$e);
+            throw new RuntimeException("Plusieurs [".ApplicationTheme::class."] paratagent le même id [" . $id . "]",0,$e);
         }
         return $result;
     }

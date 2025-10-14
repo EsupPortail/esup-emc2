@@ -115,7 +115,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Element\Controller\ApplicationController::afficherAction() */?>
-                    <a href="<?php echo $this->url('element/application/afficher', ['id' => $application->getId()], [], true); ?>"
+                    <a href="<?php echo $this->url('element/application/afficher', ['application' => $application->getId(), 'withAgent' => "1"], [], true); ?>"
                        class="ajax-modal action secondary">
                         <span class="icon icon-voir"></span>
                         Afficher

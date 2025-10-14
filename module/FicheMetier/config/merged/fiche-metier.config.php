@@ -44,6 +44,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                        'refresh-applications',
                         'exporter',
                     ],
                     'privileges' => [
@@ -354,6 +355,16 @@ return [
                                 /** @see FicheMetierController::gererCompetencesSpecifiquesAction() */
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'gerer-competences-specifiques',
+                            ],
+                        ],
+                    ],
+                    'refresh-applications' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refresh-applications/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshApplicationsAction() */
+                                'action'     => 'refresh-applications',
                             ],
                         ],
                     ],

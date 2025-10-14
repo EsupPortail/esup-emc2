@@ -165,7 +165,7 @@ return [
                             'afficher' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/afficher/:id',
+                                    'route' => '/afficher/:application[/:withAgent]',
                                     'defaults' => [
                                         /** @see ApplicationController::afficherAction() */
                                         'controller' => ApplicationController::class,

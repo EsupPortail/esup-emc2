@@ -60,7 +60,8 @@ $this->headTitle($titre);
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICAITON]) || $parametres[FicheMetierParametres::DISPLAY_APPLICAITON]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/applications',           ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode ],     [], true); ?>
+    <div id="neue_applications">
+    </div>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_CONTEXTE]) || $parametres[FicheMetierParametres::DISPLAY_CONTEXTE]->getValeur() !== "false") : ?>
@@ -72,10 +73,34 @@ $this->headTitle($titre);
 <?php endif; ?>
 
 <script>
+    function refreshApplications() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshApplicationsAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-applications", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
+        console.log("refreshing applications");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    //$("#neue_applications").html("<div class='card info'><div class='card-header'><h2>Applications </h2></div><div class='card-body'><span class='icon icon-hourglass'></span> Rafraîssement du bloc Applications</div>");
+                    $("#neue_applications div.card-body").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("#neue_applications").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
+        $("body").on("refresh-applications", function (event) {
+            event.div.modal('hide');
+            refreshApplications();
+        });
+        refreshApplications();
     });
 </script>

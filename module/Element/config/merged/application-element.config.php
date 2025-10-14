@@ -8,9 +8,9 @@ use Element\Form\ApplicationElement\ApplicationElementHydrator;
 use Element\Form\ApplicationElement\ApplicationElementHydratorFactory;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\ApplicationElement\ApplicationElementServiceFactory;
+use Element\View\Helper\ApplicationsViewHelper;
+use Element\View\Helper\ApplicationsViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -21,7 +21,7 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
         ],
     ],
@@ -31,7 +31,7 @@ return [
             ApplicationElementService::class => ApplicationElementServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
         ],
     ],
@@ -44,6 +44,13 @@ return [
         'factories' => [
             ApplicationElementHydrator::class => ApplicationElementHydratorFactory::class,
         ],
-    ]
-
+    ],
+    'view_helpers' => [
+        'factories' => [
+            ApplicationsViewHelper::class => ApplicationsViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'applications' => ApplicationsViewHelper::class,
+        ],
+    ],
 ];

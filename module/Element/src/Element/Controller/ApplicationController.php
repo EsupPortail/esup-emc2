@@ -35,8 +35,6 @@ class ApplicationController  extends AbstractActionController {
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
 
-    /** APPLICATION ***************************************************************************************************/
-
     public function indexAction() : ViewModel
     {
         $groupeId = $this->params()->fromQuery('groupe');
@@ -51,7 +49,7 @@ class ApplicationController  extends AbstractActionController {
         } else {
             $applications = $this->getApplicationService()->getApplications();
         }
-        $groupes = $this->getApplicationThemeService()->getApplicationsGroupes('libelle');
+        $groupes = $this->getApplicationThemeService()->getApplicationsThemes('libelle');
 
         if ($activite === "1") $applications = array_filter($applications, function (Application $a) { return $a->isActif();});
         if ($activite === "0") $applications = array_filter($applications, function (Application $a) { return !$a->isActif();});
@@ -62,7 +60,20 @@ class ApplicationController  extends AbstractActionController {
             'groupes' => $groupes,
             'groupeSelected' => $groupeId,
         ]);
-}
+    }
+
+    public function afficherAction(): ViewModel
+    {
+        $application = $this->getApplicationService()->getRequestedApplication($this);
+        $withAgent = $this->params()->fromRoute('with-agent') === "1";
+
+        return new ViewModel([
+            'title' => "Affichage de l'application",
+            'application' => $application,
+            'withAgent' => $withAgent,
+
+        ]);
+    }
 
     public function creerAction() : ViewModel
     {
@@ -155,21 +166,6 @@ class ApplicationController  extends AbstractActionController {
 
         $this->getApplicationService()->update($application);
         return $this->redirect()->toRoute('element/application');
-    }
-
-    public function afficherAction() : ViewModel
-    {
-        $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
-
-        $agents = $this->getApplicationElementService()->getAgentsHavingApplicationFromAgent($application);
-        $fichesmetiers = $this->getApplicationElementService()->getFicheMetierHavingApplication($application);
-
-        return new ViewModel([
-            'title' => "Description de l'application",
-            'application' => $application,
-            'agents' => $agents,
-            'fichesmetiers' => $fichesmetiers,
-        ]);
     }
 
     public function historiserAction() : Response
