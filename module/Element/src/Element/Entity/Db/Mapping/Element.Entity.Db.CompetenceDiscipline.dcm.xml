@@ -1,28 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Element\Entity\Db\Competence" table="element_competence">
+    <entity name="Element\Entity\Db\CompetenceDiscipline" table="element_competence_discipline">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"           length="255"      column="libelle"                />
-        <field name="description"       length="2047"     column="description"            />
-        <field name="source"            length="256"      column="source"                 nullable="true"/>
-        <field name="idSource"          length="256"      column="id_source"              nullable="true"/>
-
-        <many-to-one target-entity="Element\Entity\Db\CompetenceType"  field="type">
-            <join-column name="type_id" />
-        </many-to-one>
-        <many-to-one target-entity="Element\Entity\Db\CompetenceTheme"  field="theme">
-            <join-column name="theme_id" />
-        </many-to-one>
-        <many-to-one target-entity="Element\Entity\Db\CompetenceReferentiel"  field="referentiel">
-            <join-column name="referentiel_id" />
-        </many-to-one>
-        <many-to-one target-entity="Element\Entity\Db\CompetenceDiscipline"  field="discipline">
-            <join-column name="discipline_id" />
-        </many-to-one>
+        <field name="libelle"           length="255"      column="libelle"                              />
+        <field name="description"       type="text"       column="description"       nullable="true"    />
+        <one-to-many target-entity="Element\Entity\Db\Competence" mapped-by="discipline" field="competences" />
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     />

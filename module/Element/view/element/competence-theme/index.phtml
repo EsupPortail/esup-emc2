@@ -6,6 +6,7 @@
  */
 
 use Element\Entity\Db\CompetenceTheme;
+use Element\Provider\Privilege\CompetencedisciplinePrivileges;
 use Element\Provider\Privilege\CompetencePrivileges;
 use Element\Provider\Privilege\CompetencereferentielPrivileges;
 use Element\Provider\Privilege\CompetencethemePrivileges;
@@ -14,6 +15,7 @@ use Element\Provider\Privilege\CompetencetypePrivileges;
 $this->headTitle("Liste des thèmes de compétence");
 
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
+$canCompetenceDisciplineIndex = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_INDEX));
 $canCompetenceTypeIndex = $this->isAllowed(CompetencetypePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_INDEX));
 $canCompetenceReferentielIndex = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_INDEX));
 
@@ -47,6 +49,14 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
             <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-secondary">
                 <span class="icon icon-lister"></span>
                 Accéder aux compétences</a>
+        <?php endif; ?>
+
+        <?php if ($canCompetenceDisciplineIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceDisciplineController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-discipline', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux disciplines</a>
         <?php endif; ?>
 
         <?php if ($canCompetenceTypeIndex) : ?>

@@ -12,6 +12,7 @@ class Competence implements HistoriqueAwareInterface {
     private ?int $id = null;
     private ?string $libelle = null;
     private ?string $description = null;
+    private ?CompetenceDiscipline $discipline = null;
     private ?CompetenceType $type = null;
     private ?CompetenceTheme $theme = null;
     private ?CompetenceReferentiel $referentiel = null;
@@ -41,6 +42,16 @@ class Competence implements HistoriqueAwareInterface {
     public function setDescription(?string $description) : void
     {
         $this->description = $description;
+    }
+
+    public function getDiscipline(): ?CompetenceDiscipline
+    {
+        return $this->discipline;
+    }
+
+    public function setDiscipline(?CompetenceDiscipline $discipline): void
+    {
+        $this->discipline = $discipline;
     }
 
     public function getType() : ?CompetenceType
