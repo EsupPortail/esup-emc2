@@ -236,6 +236,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $competences = array_map(function (CompetenceElement $c) {
             return $c->getCompetence();
         }, $competences);
+        /** @var Competence[] $competences */
         $competences = array_filter($competences, function (Competence $c) use ($typeId) {
             return $c->getType()->getId() === $typeId;
         });
@@ -247,7 +248,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 
         $competence = $competences[0];
         $competenceType = "";
-        switch ($competence->getCompetence()->getType()->getId()) {
+        switch ($competence->getType()->getId()) {
             case 1 :
                 $competenceType = "Compétences comportementales";
                 break;

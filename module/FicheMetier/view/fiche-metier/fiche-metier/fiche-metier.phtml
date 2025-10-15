@@ -1,5 +1,6 @@
 <?php
 
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -28,6 +29,9 @@ if ($mode === 'edition-fiche-metier') $titre = "Modification".$titre;
 
 
 $this->headTitle($titre);
+
+$canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+
 ?>
 
 <div class="row">
@@ -71,6 +75,17 @@ $this->headTitle($titre);
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_TENDANCE]) || $parametres[FicheMetierParametres::DISPLAY_TENDANCE]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/tendances', ['fichemetier' => $fiche, 'tendancesTypes' => $tendancesTypes, 'tendancesElements' => $tendancesElements, 'mode' => $mode], [], true); ?>
 <?php endif; ?>
+
+<div class="float-end">
+<?php if ($canExporterFicheMetier): ?>
+    <?php /** @see \FicheMetier\Controller\FicheMetierController::exporterAction() */ ?>
+    <a href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+       class="btn btn-secondary" target="_blank">
+        <span class="icon icon-pdf"></span>
+        Exporter la fiche métier
+    </a>
+<?php endif; ?>
+</div>
 
 <script>
     function refreshApplications() {

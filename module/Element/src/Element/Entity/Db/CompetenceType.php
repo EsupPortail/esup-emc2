@@ -13,6 +13,7 @@ class CompetenceType implements HistoriqueAwareInterface {
     const CODE_CONNAISSANCE    = 3;
     const CODE_OPERATIONNELLE  = 2;
     const CODE_COMPORTEMENTALE = 1;
+    const CODE_SPECIFIQUE = 5;
 
     private ?int $id = null;
     private ?string $libelle = null;
