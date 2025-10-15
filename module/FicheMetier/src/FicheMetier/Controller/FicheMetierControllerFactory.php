@@ -3,6 +3,7 @@
 namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
+use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -36,6 +37,7 @@ class FicheMetierControllerFactory
     public function __invoke(ContainerInterface $container): FicheMetierController
     {
         /**
+         * @var AgentService $agentService
          * @var DomaineService $domaineService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
@@ -48,6 +50,7 @@ class FicheMetierControllerFactory
          * @var ThematiqueElementService $thematiqueElementService
          * @var ThematiqueTypeService $thematiqueTypeService
          */
+        $agentService = $container->get(AgentService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -78,6 +81,7 @@ class FicheMetierControllerFactory
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
         $controller = new FicheMetierController();
+        $controller->setAgentService($agentService);
         $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setDomaineService($domaineService);
         $controller->setEtatTypeService($etatTypeService);

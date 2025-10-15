@@ -56,6 +56,7 @@ return [
                     'action' => [
                         'ajouter',
                         'dupliquer',
+                        'lister-agents',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AJOUTER,
@@ -169,6 +170,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::afficherAction() */
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'lister-agents' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/lister-agents/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::listerAgentsAction() */
+                                'action'     => 'lister-agents',
                             ],
                         ],
                     ],

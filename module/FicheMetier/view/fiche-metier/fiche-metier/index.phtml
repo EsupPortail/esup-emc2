@@ -75,10 +75,10 @@ $this->headTitle('Index des fiches métiers');
 <table id="fiches" class="table table-condensed datatable">
     <thead>
     <tr>
-        <th> Libellé</th>
-        <th> Famille professionnelle d'activité</th>
-        <th style="width:8rem;"> État</th>
-        <th class="action"> Action</th>
+        <th class="col-md-4"> Libellé</th>
+        <th class="col-md-4"> Famille professionnelle d'activité</th>
+        <th class="col-md-2"> État</th>
+        <th class="col-md-2 action"> Action</th>
     </tr>
     </thead>
     <tbody>
@@ -159,13 +159,13 @@ $this->headTitle('Index des fiches métiers');
                         Exporter
                     </a>
                 <?php endif; ?>
-                <?php if ($canEditer) : ?>
+                <?php if ($canAjouter) : ?>
                     <br/>
-                    <?php /** @see FicheMetierController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                       class="action primary">
-                        <span class="icon icon-editer"></span>
-                        Modifier
+                    <?php /** @see FicheMetierController::listerAgentsAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/lister-agents', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                       class="action secondary ajax-modal">
+                        <span class="icon icon-users"></span>
+                        Lister les agents
                     </a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>

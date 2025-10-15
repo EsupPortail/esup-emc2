@@ -4,6 +4,7 @@ namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
@@ -25,6 +26,7 @@ use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -32,6 +34,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 /** @method FlashMessenger flashMessenger() */
 class FicheMetierController extends AbstractActionController
 {
+    use AgentServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
@@ -92,7 +95,6 @@ class FicheMetierController extends AbstractActionController
         $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
-
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
@@ -578,5 +580,30 @@ EOS;
         ]);
         $vm->setTemplate('fiche-metier/refresh-applications');
         return $vm;
+    }
+
+    public function listerAgentsAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $metier = $fichemetier->getMetier();
+
+        if ($metier === null) {
+            throw new RuntimeException("Aucun métier pour la fiche métier #".$fichemetier->getId(),-1);
+        }
+
+        $array = $this->getMetierService()->getInfosAgentsByMetier($metier);
+        $agentIds = [];
+        foreach ($array as $item) {
+            $agentIds[$item['c_individu']] = $item['c_individu'];
+        }
+        $agents = $this->getAgentService()->getAgentsByIds($agentIds);
+
+        return new ViewModel([
+            'title' => "Liste des agents ayant la fiche métier #".$metier->getId(),
+            'fiche' => $fichemetier,
+            'metier' => $metier,
+            'agents' => $agents,
+            'array' => $array,
+        ]);
     }
 }
