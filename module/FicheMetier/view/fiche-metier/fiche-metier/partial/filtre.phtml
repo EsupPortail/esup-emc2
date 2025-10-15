@@ -2,11 +2,9 @@
 
 /**
  * @var EtatType[] $etatTypes
- * @var Domaine[] $domaines
  * @var array $params
  */
 
-use Metier\Entity\Db\Domaine;
 use UnicaenEtat\Entity\Db\EtatType;
 
 ?>
@@ -21,23 +19,6 @@ use UnicaenEtat\Entity\Db\EtatType;
             <div class="row">
                 <div class="col-md-10">
                     <div class="row">
-                        <!-- DOMAINE -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="domaine">Domaine du métier :</label>
-                                <select id="domaine" name="domaine" class="selectpicker">
-                                    <option value=""> Tous les domaines</option>
-                                    <?php foreach ($domaines as $domaine) : ?>
-                                        <option
-                                                value="<?php echo $domaine->getId(); ?>"
-                                            <?php if ($domaine->getId() == $params['domaine']) echo " selected "; ?>
-                                        >
-                                            <?php echo $domaine->getLibelle(); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
                         <!-- ETAT -->
                         <div class="col-md-4">
                             <div class="form-group">
@@ -99,13 +80,11 @@ use UnicaenEtat\Entity\Db\EtatType;
 
     $('button#filter').on("click", function () {
         let etatId = $('select#etat option:selected').val();
-        let domaineId = $('select#domaine option:selected').val();
         let expertise = $('select#expertise').val();
-        console.log("etat=" + etatId + " | " + "domaine=" + domaineId + " | " + "expertise=" + expertise);
+        console.log("etat=" + etatId + " | "  + "expertise=" + expertise);
 
         let query = "";
         query += "&etat=" + etatId;
-        query += "&domaine=" + domaineId;
         query += "&expertise=" + expertise;
         window.location.href = 'fiche-metier?' + query;
     });

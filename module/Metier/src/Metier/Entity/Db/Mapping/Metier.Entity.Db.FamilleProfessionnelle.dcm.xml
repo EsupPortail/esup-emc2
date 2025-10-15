@@ -10,7 +10,7 @@
 
         <field name="libelle" length="128" column="libelle"/>
 
-        <many-to-many field="metiers" inversed-by="domaines" target-entity="Metier\Entity\Db\Metier">
+        <many-to-many field="metiers" inversed-by="famillesProfessionnelles" target-entity="Metier\Entity\Db\Metier">
             <join-table name="metier_metier_famille">
                 <join-columns>
                     <join-column name="famille_id"  />

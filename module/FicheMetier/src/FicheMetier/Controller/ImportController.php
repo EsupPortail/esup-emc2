@@ -17,7 +17,6 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
@@ -32,7 +31,6 @@ class ImportController extends AbstractActionController
     use CompetenceElementServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
-    use DomaineServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;

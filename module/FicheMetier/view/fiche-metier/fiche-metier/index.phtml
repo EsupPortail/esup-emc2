@@ -2,7 +2,6 @@
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
-use Metier\Entity\Db\Domaine;
 use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Provider\Privilege\ReferentielmetierPrivileges;
@@ -10,7 +9,6 @@ use UnicaenEtat\Entity\Db\EtatType;
 
 /**
  * @see \FicheMetier\Controller\FicheMetierController::indexAction()
- * @var Domaine[] $domaines
  * @var FicheMetier[] $fiches
  * @var EtatType[] $etatTypes
  * @var array $params
@@ -69,7 +67,7 @@ $this->headTitle('Index des fiches métiers');
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 
-<?php echo $this->partial('partial/filtre.phtml', ['etatTypes' => $etatTypes, 'domaines' => $domaines, 'params' => $params]); ?>
+<?php echo $this->partial('partial/filtre.phtml', ['etatTypes' => $etatTypes, 'params' => $params]); ?>
 
 
 <table id="fiches" class="table table-condensed datatable">

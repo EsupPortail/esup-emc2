@@ -13,12 +13,9 @@ use Laminas\Form\Element\Hidden;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
-use Metier\Entity\Db\Reference;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 
 class AjouterFicheMetierForm extends Form {
     use FicheMetierServiceAwareTrait;
-    use DomaineServiceAwareTrait;
 
     private $previous;
 

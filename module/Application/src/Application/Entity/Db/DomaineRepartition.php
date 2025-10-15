@@ -2,13 +2,12 @@
 
 namespace Application\Entity\Db;
 
-use Metier\Entity\Db\Domaine;
 
 class DomaineRepartition {
 
     private ?int $id = null;
     private ?FicheTypeExterne $ficheMetierExterne = null;
-    private ?Domaine $domaine = null;
+//    private ?Domaine $domaine = null;
     private ?int $quotite = null;
 
     public function getId(): ?int
@@ -26,14 +25,15 @@ class DomaineRepartition {
         $this->ficheMetierExterne = $ficheMetierExterne;
     }
 
-    public function getDomaine(): ?Domaine
+    public function getDomaine(): null
     {
-        return $this->domaine;
+//        return $this->domaine;
+        return null;
     }
 
-    public function setDomaine(Domaine $domaine): void
+    public function setDomaine(): void
     {
-        $this->domaine = $domaine;
+//        $this->domaine = $domaine;
     }
 
     public function getQuotite(): ?int

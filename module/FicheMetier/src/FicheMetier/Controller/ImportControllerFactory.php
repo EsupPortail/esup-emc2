@@ -12,7 +12,6 @@ use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheReferentiel\Form\Importation\ImportationForm;
-use Metier\Service\Domaine\DomaineService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Reference\ReferenceService;
@@ -38,7 +37,6 @@ class ImportControllerFactory
          * @var CompetenceReferentielService $competenceReferentielService
          * @var CategorieService $categorieService
          * @var CorrespondanceService $correspondanceService
-         * @var DomaineService $domaineService
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelService
          * @var FicheMetierService $ficheMetierService
@@ -53,7 +51,6 @@ class ImportControllerFactory
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
-        $domaineService = $container->get(DomaineService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -74,7 +71,6 @@ class ImportControllerFactory
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setCompetenceReferentielService($competenceReferentielService);
         $controller->setCorrespondanceService($correspondanceService);
-        $controller->setDomaineService($domaineService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);
         $controller->setFicheMetierService($ficheMetierService);

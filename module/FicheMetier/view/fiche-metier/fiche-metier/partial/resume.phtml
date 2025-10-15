@@ -22,17 +22,6 @@ $metier = $fichemetier->getMetier();
     <dd class="col-md-8">
         <?php echo $this->etatinstance($fichemetier->getEtatActif()); ?>
     </dd>
-    <dt class="col-md-4"> Domaine</dt>
-    <dd class="col-md-8">
-        <?php $domaines = $metier->getDomaines(); ?>
-        <?php if (!empty($domaines)) : ?>
-            <?php foreach ($domaines as $domaine) : ?>
-                <?php echo $domaine->getLibelle(); ?>
-            <?php endforeach; ?>
-        <?php else : ?>
-            Aucun domaine
-        <?php endif; ?>
-    </dd>
     <dt class="col-md-4"> Références</dt>
     <dd class="col-md-8">
         <?php

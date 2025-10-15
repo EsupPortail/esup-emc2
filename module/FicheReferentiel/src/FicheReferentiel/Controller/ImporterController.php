@@ -58,7 +58,6 @@ class ImporterController extends AbstractActionController
                 $listing[] = [
                     'code' => $fiche['Code'],
                     'referentiel' => 'DGAFP',
-                    'domaine' => $fiche['DF'],
                     'famille' => $fiche['Famille'],
                     'libelle' => $fiche['Intitulé'],
                 ];
@@ -152,7 +151,6 @@ class ImporterController extends AbstractActionController
                 $listing[] = [
                     'code' => $fiche['Code emploi type'],
                     'referentiel' => 'REFERENS',
-                    'domaine' => $fiche['Famille d’activité professionnelle'],
                     'categorie' => $fiche['REFERENS_CATEGORIE_EMPLOI'],
                     'famille' => $fiche['Famille d’activité professionnelle'],
                     'libelle' => $fiche['Intitulé de l’emploi type'],

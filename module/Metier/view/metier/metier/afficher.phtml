@@ -53,24 +53,6 @@ use Metier\Entity\Db\Metier;
         <?php endif; ?>
     </dd>
     <dt class="col-md-4">
-        Domaine d'activité
-    </dt>
-    <dd class="col-md-8">
-        <?php $domaines = $metier->getDomaines(); ?>
-        <?php if (empty($domaines)) : ?>
-            <em> Aucun domaine d'associé au métier </em>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($domaines as $domaine) : ?>
-                    <li>
-                        <?php echo $domaine; ?>
-                        <?php echo $this->typefonction($domaine); ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
-    <dt class="col-md-4">
         Catégorie
     </dt>
     <dd class="col-md-8">

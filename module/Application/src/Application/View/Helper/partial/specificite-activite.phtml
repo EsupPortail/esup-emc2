@@ -3,7 +3,6 @@
 use Application\Provider\Privilege\FichePostePrivileges;
 use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\MissionAdditionnelle;
-use Metier\Entity\Db\Domaine;
 
 /**
  * @see \Application\View\Helper\SpecificiteActiviteViewHelper;
@@ -65,17 +64,7 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
                 </div>
             <?php endif; ?>
         </div>
-        <?php $domaines = $mission->getDomaines(); ?>
-        <?php if (!empty($domaines)) : ?>
-        <?php foreach ($domaines as $domaine) : ?>
-            <?php /** @var Domaine $domaine */ ?>
-            <span class="label" style="background: lightskyblue;">
-                <?php echo $domaine->getLibelle(); ?>
-            </span>
-        <?php endforeach; ?>
         <br/>
-        <br/>
-        <?php endif; ?>
     </div>
     <div class="card-body">
         <div class="row">

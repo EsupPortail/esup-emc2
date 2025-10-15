@@ -3,7 +3,6 @@
 namespace Metier\Form\Referentiel;
 
 use Metier\Entity\Db\Referentiel;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Text;
@@ -11,7 +10,6 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
 class ReferentielForm extends Form {
-    use DomaineServiceAwareTrait;
 
     public function init(): void
     {

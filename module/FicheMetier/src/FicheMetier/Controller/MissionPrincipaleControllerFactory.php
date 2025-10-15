@@ -14,7 +14,6 @@ use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheReferentiel\Form\Importation\ImportationForm;
 use Fichier\Service\Fichier\FichierService;
-use Metier\Form\SelectionnerDomaines\SelectionnerDomainesForm;
 use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;

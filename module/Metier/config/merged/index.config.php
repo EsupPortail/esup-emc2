@@ -22,7 +22,6 @@ return [
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_INDEX,
-                        DomainePrivileges::DOMAINE_INDEX,
                         FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_INDEX,
                         ReferentielmetierPrivileges::REFERENTIEL_INDEX,
                         MetierPrivileges::METIER_CARTOGRAPHIE,

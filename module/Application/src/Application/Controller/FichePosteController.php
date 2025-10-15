@@ -896,30 +896,6 @@ class FichePosteController extends AbstractActionController
         ]);
     }
 
-    public function modifierRepartitionAction(): ViewModel
-    {
-        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
-        $fichetype = $this->getFichePosteService()->getFicheTypeExterne($this->params()->fromRoute('fiche-type'));
-
-        $domaines = $fichetype->getFicheType()->getMetier()->getDomaines();
-        $repartitions = $fichetype->getDomaineRepartitionsAsArray();
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $this->getFichePosteService()->updateRepatitions($fichetype, $data);
-        }
-
-        return new ViewModel([
-            'title' => "Changement de la répartition entre domaines",
-            'ficheposte' => $ficheposte,
-            'fichetype' => $fichetype,
-            'domaines' => $domaines,
-            'repartitions' => $repartitions,
-        ]);
-    }
-
     public function validerAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);

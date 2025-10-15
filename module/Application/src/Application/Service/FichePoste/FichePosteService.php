@@ -21,7 +21,6 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Metier\Entity\Db\Domaine;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -273,16 +272,6 @@ EOS;
     {
         $this->getObjectManager()->persist($ficheTypeExterne);
         $this->getObjectManager()->flush($ficheTypeExterne);
-
-        $domaines = $ficheTypeExterne->getFicheType()->getMetier()->getDomaines();
-        foreach ($domaines as $domaine) {
-            $repartition = new DomaineRepartition();
-            $repartition->setFicheMetierExterne($ficheTypeExterne);
-            $repartition->setDomaine($domaine);
-            $repartition->setQuotite(100);
-            $this->getObjectManager()->persist($repartition);
-            $this->getObjectManager()->flush($repartition);
-        }
 
         return $ficheTypeExterne;
     }
@@ -643,34 +632,6 @@ EOS;
         }
 
         return $dictionnaire;
-    }
-
-    public function updateRepatitions(FicheTypeExterne $fichetype, $data): void
-    {
-        /** @var DomaineRepartition[] $repartitions */
-        $repartitions = $fichetype->getDomaineRepartitions()->toArray();
-
-        foreach ($data as $domaineId => $value) {
-            $found = null;
-            /** @var Domaine $domaine */
-            $domaine = $this->getObjectManager()->getRepository(Domaine::class)->find($domaineId);
-            foreach ($repartitions as $repartition) {
-                if ($repartition->getDomaine()->getId() == $domaineId) {
-                    $found = $repartition;
-                    break;
-                }
-            }
-            if ($found === null) {
-                $found = new DomaineRepartition();
-                $found->setFicheMetierExterne($fichetype);
-                $found->setDomaine($domaine);
-                $found->setQuotite(0);
-                $this->getObjectManager()->persist($found);
-            }
-            $value = $data[$domaineId]??0;
-            $found->setQuotite($value);
-            $this->getObjectManager()->flush($found);
-        }
     }
 
     /**

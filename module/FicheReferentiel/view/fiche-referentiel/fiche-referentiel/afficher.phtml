@@ -26,21 +26,6 @@ $this->headTitle("FicheReferentiel #".$ficheReferentiel->getId());
     </dd>
     <dt class="col-md-3">Métier</dt>
     <dd class="col-md-9"><?php echo $ficheReferentiel->getMetier()->getLibelle(); ?></dd>
-    <dt class="col-md-3">Domaine</dt>
-    <dd class="col-md-9">
-        <?php $domaines = $ficheReferentiel->getMetier()->getDomaines(); ?>
-        <?php if (empty($domaines)): ?>
-            <span class="text-warning">
-                Aucun domaine connu
-            </span>
-        <?php else : ?>
-            <ul>
-            <?php foreach ($domaines as $domaine): ?>
-                <li><?php echo $domaine->getLibelle(); ?></li>
-            <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
     <dt class="col-md-3">Famille professionnelle</dt>
     <dd class="col-md-9">
         <?php

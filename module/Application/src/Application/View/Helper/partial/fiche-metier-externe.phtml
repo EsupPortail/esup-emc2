@@ -30,34 +30,6 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
             </div>
             <div class="col-md-7">
                 <div class="col-md-6">
-                    <u>Répartition par domaine</u>
-                    <a  <?php /** @see \Application\Controller\FichePosteController::modifierRepartitionAction() */ ?>
-                        href="<?php echo $this->url("fiche-poste/modifier-repartition", ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type' => $fiche->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon icon-editer" title="Modifier la répartition par domaine"></span>
-                    </a>
-                    <ul>
-                    <?php $repartitions = $fiche->getDomaineRepartitionsAsArray(); ?>
-                        <?php if($repartitions === null OR empty($repartitions)) : ?>
-                            <span class="alert-danger"><span class="icon icon-attention"></span>Aucune répartition de faite</span>
-                        <?php else: ?>
-                            <?php $somme = 0; ?>
-                            <?php foreach ($fichemetier->getMetier()->getDomaines() as $domaine) : ?>
-                                <li>
-                                    <?php echo $domaine->getLibelle(); ?>
-                                    <?php echo $this->typefonction($domaine); ?>
-                                    <?php echo $repartitions[$domaine->getId()]; ?>%
-                                    <?php $somme += $repartitions[$domaine->getId()]; ?>
-                                </li>
-                            <?php endforeach; ?>
-                            <?php if ($somme !== 100) : ?>
-                                <span class="alert-danger"><span class="icon icon-attention"></span>Quotité incorrecte (<strong><?php echo $somme; ?>%</strong> &ne; 100%)</span>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                <div class="col-md-6">
                     <u> Répartition par métier</u>
                     <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
                         <a

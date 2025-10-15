@@ -7,7 +7,6 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationTheme;
-use Element\Form\Application\ApplicationForm;
 use Element\Form\Application\ApplicationFormAwareTrait;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
@@ -19,23 +18,22 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 
-class ApplicationController  extends AbstractActionController {
+class ApplicationController extends AbstractActionController
+{
     use ApplicationServiceAwareTrait;
     use ApplicationThemeServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use AgentServiceAwareTrait;
-    use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use NiveauServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $groupeId = $this->params()->fromQuery('groupe');
         $activite = $this->params()->fromQuery('activite');
@@ -43,7 +41,7 @@ class ApplicationController  extends AbstractActionController {
          * @var Application[] $applications
          * @var ApplicationTheme[] $groupes
          */
-        if ($groupeId !== null AND $groupeId !== "") {
+        if ($groupeId !== null and $groupeId !== "") {
             $groupe = $this->getApplicationThemeService()->getApplicationTheme($groupeId);
             $applications = $this->getApplicationService()->getApplicationsGyGroupe($groupe);
         } else {
@@ -51,8 +49,12 @@ class ApplicationController  extends AbstractActionController {
         }
         $groupes = $this->getApplicationThemeService()->getApplicationsThemes('libelle');
 
-        if ($activite === "1") $applications = array_filter($applications, function (Application $a) { return $a->isActif();});
-        if ($activite === "0") $applications = array_filter($applications, function (Application $a) { return !$a->isActif();});
+        if ($activite === "1") $applications = array_filter($applications, function (Application $a) {
+            return $a->isActif();
+        });
+        if ($activite === "0") $applications = array_filter($applications, function (Application $a) {
+            return !$a->isActif();
+        });
 
         return new ViewModel([
             'applications' => $applications,
@@ -75,7 +77,7 @@ class ApplicationController  extends AbstractActionController {
         ]);
     }
 
-    public function creerAction() : ViewModel
+    public function creerAction(): ViewModel
     {
         $application = new Application();
 
@@ -103,7 +105,7 @@ class ApplicationController  extends AbstractActionController {
         return $vm;
     }
 
-    public function editerAction() : ViewModel
+    public function editerAction(): ViewModel
     {
         /** @var Application $application */
         $applicationId = $this->params()->fromRoute('id');
@@ -133,7 +135,7 @@ class ApplicationController  extends AbstractActionController {
         return $vm;
     }
 
-    public function effacerAction() : ViewModel
+    public function effacerAction(): ViewModel
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
@@ -150,7 +152,7 @@ class ApplicationController  extends AbstractActionController {
         if ($application !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de l'application [" . $application->getLibelle(). "]",
+                'title' => "Suppression de l'application [" . $application->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/application/effacer', ["id" => $application->getId()], [], true),
             ]);
@@ -158,24 +160,24 @@ class ApplicationController  extends AbstractActionController {
         return $vm;
     }
 
-    public function changerStatusAction() : Response
+    public function changerStatusAction(): Response
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
-        $application->setActif( !$application->isActif() );
+        $application->setActif(!$application->isActif());
 
         $this->getApplicationService()->update($application);
         return $this->redirect()->toRoute('element/application');
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
         $this->getApplicationService()->historise($application);
         return $this->redirect()->toRoute('element/application', [], [], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
         $this->getApplicationService()->restore($application);
@@ -184,9 +186,8 @@ class ApplicationController  extends AbstractActionController {
 
     /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
 
-    public function cartographieAction() : ViewModel
+    public function cartographieAction(): ViewModel
     {
-        $domaines = $this->getDomaineService()->getDomaines();
         $metiers = $this->getMetierService()->getMetiers();
         $applications = $this->getApplicationService()->getApplications();
 
@@ -195,7 +196,7 @@ class ApplicationController  extends AbstractActionController {
         foreach ($metiers as $metier) {
             if ($metier->estNonHistorise()) {
                 foreach ($metier->getFichesMetiers() as $ficheMetier) {
-                    if ($ficheMetier->estNonHistorise() AND $ficheMetier->isEtatActif(FicheMetierEtats::ETAT_VALIDE)) {
+                    if ($ficheMetier->estNonHistorise() and $ficheMetier->isEtatActif(FicheMetierEtats::ETAT_VALIDE)) {
                         foreach ($ficheMetier->getApplicationListe() as $applicationElement) {
                             if ($applicationElement->estNonHistorise()) $link[$metier->getLibelle()][$applicationElement->getApplication()->getLibelle()] = 1;
                         }
@@ -205,14 +206,13 @@ class ApplicationController  extends AbstractActionController {
         }
 
         return new ViewModel([
-            'domaines' => $domaines,
             'metiers' => $metiers,
             'applications' => $applications,
             'link' => $link,
         ]);
     }
 
-    public function exporterCartographieAction() : CsvModel
+    public function exporterCartographieAction(): CsvModel
     {
         $metiers = $this->getMetierService()->getMetiers();
         $applications = $this->getApplicationService()->getApplications();
@@ -238,7 +238,7 @@ class ApplicationController  extends AbstractActionController {
         }
 
         $date = (new DateTime())->format('Ymd-His');
-        $filename="cartographie_application_".$date.".csv";
+        $filename = "cartographie_application_" . $date . ".csv";
         $CSV = new CsvModel();
         $CSV->setDelimiter(';');
         $CSV->setEnclosure('"');

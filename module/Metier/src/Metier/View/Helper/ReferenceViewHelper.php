@@ -3,7 +3,6 @@
 namespace Metier\View\Helper;
 
 use Laminas\View\Renderer\PhpRenderer;
-use Metier\Entity\Db\Domaine;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
 use Laminas\View\Resolver\TemplatePathStack;

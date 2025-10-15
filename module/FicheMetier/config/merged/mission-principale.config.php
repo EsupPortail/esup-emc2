@@ -54,7 +54,6 @@ return [
                         'modifier',
 
                         'modifier-libelle',
-                        'gerer-domaines',
                         'gerer-niveau',
 
                         'ajouter-activite',

@@ -10,9 +10,9 @@
             <join-column name="fichemetierexterne_id"  />
         </many-to-one>
 
-        <many-to-one target-entity="Metier\Entity\Db\Domaine" field="domaine">
-            <join-column name="domaine_id"  />
-        </many-to-one>
+<!--        <many-to-one target-entity="Metier\Entity\Db\Domaine" field="domaine">-->
+<!--            <join-column name="domaine_id"  />-->
+<!--        </many-to-one>-->
 
         <field name="quotite"     type="integer"                 column="quotite"     />
 

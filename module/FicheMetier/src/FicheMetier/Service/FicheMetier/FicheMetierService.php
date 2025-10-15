@@ -29,8 +29,9 @@ use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
-use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
 use RuntimeException;
@@ -48,6 +49,7 @@ class FicheMetierService
     use ConfigurationServiceAwareTrait;
     use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
@@ -108,7 +110,6 @@ class FicheMetierService
     {
         $qb = $this->getObjectManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
-            ->addSelect('domaine')->leftjoin('metier.domaines', 'domaine')
             ->addSelect('famille')->leftjoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
@@ -148,10 +149,6 @@ class FicheMetierService
         if (isset($filtre['etat']) and $filtre['etat'] != '') {
             $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $filtre['etat']);
         }
-        if (isset($filtre['domaine']) and $filtre['domaine'] != '') {
-            $qb = $qb->andWhere('domaine.id = :domaine')->setParameter('domaine', $filtre['domaine']);
-        }
-
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -241,11 +238,10 @@ class FicheMetierService
     }
 
     /** @return FicheMetier[] */
-    public function getFicheByDomaine(Domaine $domaine): array
+    public function getFicheByFamilleProfessionnelle(FamilleProfessionnelle $famille): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('domaine = :domaine')
-            ->setParameter('domaine', $domaine)
+            ->andWhere('famille = :famille')->setParameter('famille', $famille)
             ->orderBy('metier.libelle');
 
         $result = $qb->getQuery()->getResult();
@@ -254,17 +250,17 @@ class FicheMetierService
 
     public function getFichesMetiersAsOptionGroup(): array
     {
-        $domaines = $this->getDomaineService()->getDomaines();
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
         $options = [];
 
-        foreach ($domaines as $domaine) {
+        foreach ($familles as $famille) {
             $optionsoptions = [];
-            foreach ($this->getFicheByDomaine($domaine) as $fiche) {
+            foreach ($this->getFicheByFamilleProfessionnelle($famille) as $fiche) {
                 if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . " (dernière modification " . $fiche->getHistoModification()->format("d/m/Y") . ")";
             }
             asort($optionsoptions);
             $array = [
-                'label' => $domaine->getLibelle(),
+                'label' => $famille->getLibelle(),
                 'options' => $optionsoptions,
             ];
             $options[] = $array;
@@ -568,9 +564,7 @@ class FicheMetierService
         $qb = $qb->andWhere('competence.discipline = :discipline')->setParameter('discipline', $discipline);
 
         $result = $qb->getQuery()->getResult();
-        if ($discipline !== null) {
-            return $result;
-        }
+        return $result;
     }
 
     public function getFichesMetiersByDisciplines(array $disciplines): array

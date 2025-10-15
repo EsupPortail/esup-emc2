@@ -14,17 +14,6 @@
 
         <one-to-many target-entity="Metier\Entity\Db\Reference" mapped-by="metier" field="references"/>
 
-        <many-to-many field="domaines" inversed-by="metiers" target-entity="Metier\Entity\Db\Domaine">
-            <join-table name="metier_metier_domaine">
-                <join-columns>
-                    <join-column name="metier_id"  />
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="domaine_id"  />
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-
         <many-to-many field="famillesProfessionnelles" inversed-by="metiers" target-entity="Metier\Entity\Db\FamilleProfessionnelle">
             <join-table name="metier_metier_famille">
                 <join-columns>

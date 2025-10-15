@@ -2,17 +2,9 @@
 
 /**
  * @see \Metier\View\Helper\TypeFonctionViewHelper
- * @var Domaine $domaine
  */
 
-use Metier\Entity\Db\Domaine;
-
-$type = ($domaine->getTypeFonction())??"Aucun";
 ?>
-
-<span class="badge" id="<?php echo $type; ?>">
-    <?php echo $type; ?>
-</span>
 
 <style>
     span.badge#Support {
