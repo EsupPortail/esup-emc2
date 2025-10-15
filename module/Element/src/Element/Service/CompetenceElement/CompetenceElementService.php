@@ -125,6 +125,5 @@ class CompetenceElementService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
-
 }
 

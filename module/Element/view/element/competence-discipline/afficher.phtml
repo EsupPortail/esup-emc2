@@ -3,9 +3,23 @@
 /**
  * @see \Element\Controller\CompetenceDisciplineController::afficherAction()
  * @var CompetenceDiscipline $discipline
+ * @var FicheMetier[] $fichesMetiers
  */
 
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceDiscipline;
+use Element\Provider\Privilege\CompetencePrivileges;
+use FicheMetier\Entity\Db\FicheMetier;
+
+$canAfficherCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+$canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+
+$competences = $discipline->getCompetences();
+usort($competences, function (Competence $a, Competence $b) {
+    if ($a->getType() !== $b->getType()) { return $a->getType()->getLibelle() <=> $b->getType()->getLibelle(); }
+    return $a->getLibelle() <=> $b->getLibelle();
+});
 
 ?>
 
@@ -14,11 +28,46 @@ use Element\Entity\Db\CompetenceDiscipline;
     <dd> <?php echo $discipline->getLibelle(); ?> </dd>
     <dt> Compétences associées </dt>
     <dd>
-        <span class="badge"> <?php echo count($discipline->getCompetences()); ?></span>
+        <?php echo count($competences); ?> compétence·s associée·s
         <ul>
-            <?php foreach ($discipline->getCompetences() as $competence) : ?>
-                <li> <?php echo $competence->getLibelle(); ?> </li>
+            <?php foreach ($competences as $competence) : ?>
+                <li>
+                    <span class="badge"> <?php echo $competence->getType()->getLibelle(); ?> </span>
+                    <?php echo $competence->getLibelle(); ?>
+                    <?php if ($canAfficherCompetence) : ?>
+                        <?php /** @see \Element\Controller\CompetenceController::afficherAction() */ ?>
+                        <span class="action">
+                        <a  href="<?php echo $this->url('element/competence/afficher', ['competence' => $competence->getId()], [], true); ?>"
+                            class="action secondary">
+                            <span class="icon icon-voir"></span>
+                            Accéder
+                        </a>
+                    </span>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
+    <dt> Fiches métiers ayant une compétence de cette displine </dt>
+    <dd>
+        <?php echo count($fichesMetiers); ?> Fiche·s métier·s associée·s
+        <ul>
+            <?php foreach ($fichesMetiers as $ficheMetier) : ?>
+            <li>
+                <?php echo $this->etatinstance($ficheMetier->getEtatActif()); ?> <?php echo $ficheMetier->getMetier()->getLibelle(); ?>
+                <?php if ($canAfficherFicheMetier) : ?>
+                    <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
+                    <span class="action">
+                    <a  href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $ficheMetier->getId()], [], true); ?>"
+                        class="action secondary">
+                        <span class="icon icon-voir"></span>
+                        Accéder
+                    </a>
+                    </span>
+                <?php endif; ?>
+            </li>
             <?php endforeach; ?>
         </ul>
     </dd>
 </dl>
+

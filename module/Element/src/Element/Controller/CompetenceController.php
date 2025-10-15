@@ -95,7 +95,7 @@ class CompetenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('element/competence/modifier');
         $vm->setVariables([
             'title' => "Ajout d'une compétence",
             'form' => $form,
@@ -121,7 +121,7 @@ class CompetenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('element/competence/modifier');
         $vm->setVariables([
             'title' => "Modification d'une compétence",
             'form' => $form,

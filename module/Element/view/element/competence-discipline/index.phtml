@@ -3,6 +3,7 @@
 /**
  * @see \Element\Controller\CompetenceDisciplineController::indexAction()
  * @var CompetenceDiscipline[] $disciplines ;
+ * @var array<int, array>  $dictionnaire (int => array)
  */
 
 use Element\Entity\Db\CompetenceDiscipline;
@@ -80,9 +81,10 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
 <table class="table table-condensed table-hover">
     <thead>
     <tr>
-        <th> Libellé</th>
-        <th> #Compétence</th>
-        <th class="action"> Action</th>
+        <th class="col-md-6"> Libellé</th>
+        <th class="col-md-2"> #Compétence</th>
+        <th class="col-md-2"> #Fiche Métier</th>
+        <th class="col-md-2 action"> Action</th>
     </tr>
     </thead>
     <tbody>
@@ -90,6 +92,7 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
         <tr class="<?php if ($discipline->estHistorise()) echo " historise "; ?>">
             <td> <?php echo $discipline->getLibelle(); ?> </td>
             <td> <?php echo count($discipline->getCompetences()); ?> </td>
+            <td> <?php echo count($dictionnaire[$discipline->getId()]); ?> </td>
             <?php if ($canAction) : ?>
                 <td class="action">
                     <?php if ($canAfficher) : ?>
@@ -134,7 +137,6 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
                            class="ajax-modal action danger" data-event="modification">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-
                         </a>
                     <?php endif; ?>
                 </td>

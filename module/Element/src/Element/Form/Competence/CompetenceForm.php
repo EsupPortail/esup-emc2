@@ -44,7 +44,7 @@ class CompetenceForm extends Form {
             ],
             'attributes' => [
                 'id' => 'description',
-                'class' => "type2",
+                'class' => "tinymce",
             ],
         ]);
         //type
@@ -115,7 +115,7 @@ class CompetenceForm extends Form {
                 'value_options' => $this->getCompetenceDisciplineService()->getCompetencesDisciplinesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'type',
+                'id' => 'discipline',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ],

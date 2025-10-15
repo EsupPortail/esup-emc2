@@ -1,0 +1,65 @@
+<?php
+
+use Element\Form\Competence\CompetenceForm;
+
+/**
+ * @see \Element\Controller\CompetenceController::ajouterAction()
+ * @see \Element\Controller\CompetenceController::modifierAction()
+ * @var CompetenceForm $form
+ */
+
+?>
+
+<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->formControlGroup($form->get('libelle')); ?>
+<?php echo $this->formControlGroup($form->get('type')); ?>
+<?php echo $this->formControlGroup($form->get('theme')); ?>
+<?php echo $this->formControlGroup($form->get('referentiel')); ?>
+<?php echo $this->formControlGroup($form->get('identifiant')); ?>
+<div id="discipline">
+    <?php echo $this->formControlGroup($form->get('discipline')); ?>
+</div>
+
+<?php echo $this->formControlGroup($form->get('description')); ?>
+<?php echo $this->formControlGroup($form->get('creer')); ?>
+<?php echo $this->form()->closeTag();?>
+
+
+<script>
+    function spe() {
+        if ($('#type option:selected').text() === 'Compétence spécifique') {
+            console.log('specifique');
+            $('div#discipline').show();
+        } else{
+            console.log('pas specifique');
+            $('div#discipline').hide();
+        }
+    }
+
+    $(function() {
+        spe();
+        $('select').selectpicker();
+        tinymce.init({
+            selector: '.tinymce',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            menubar: false,
+            height: 200,
+            // body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    // console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+
+        $('#type').change(spe);
+    });
+</script>

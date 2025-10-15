@@ -5,6 +5,7 @@ namespace Element\Controller;
 use Element\Entity\Db\CompetenceDiscipline;
 use Element\Form\CompetenceDiscipline\CompetenceDisciplineFormAwareTrait;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -12,13 +13,17 @@ use Laminas\View\Model\ViewModel;
 
 class CompetenceDisciplineController extends AbstractActionController {
     use CompetenceDisciplineServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
+
     use CompetenceDisciplineFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
         $disciplines = $this->getCompetenceDisciplineService()->getCompetencesDisciplines();
+        $dictionnaire = $this->getFicheMetierService()->getFichesMetiersByDisciplines($disciplines);
         return new ViewModel([
             'disciplines' => $disciplines,
+            'dictionnaire' => $dictionnaire,
         ]);
     }
 
@@ -26,9 +31,12 @@ class CompetenceDisciplineController extends AbstractActionController {
     public function afficherAction() : ViewModel
     {
         $discipline = $this->getCompetenceDisciplineService()->getRequestedCompetenceDiscipline($this);
+        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersByDiscipline($discipline);
+
         return new ViewModel([
             'title' => "Affiche d'une discipline de compétence",
             'discipline' => $discipline,
+            'fichesMetiers' => $fichesMetiers,
         ]);
     }
 

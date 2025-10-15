@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceDiscipline;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\SelectionApplication\SelectionApplicationHydratorAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceHydratorAwareTrait;
@@ -555,6 +556,33 @@ class FicheMetierService
         if ($raw !== null) $qb->andWhere('ficheMetier.raw = :raw')->setParameter('raw', $raw);
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function getFichesMetiersByDiscipline(?CompetenceDiscipline $discipline): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->join('ficheMetier.competences', 'competenceElement')->addSelect('competenceElement')
+            ->join('competenceElement.competence', 'competence')->addSelect('competence')
+            ->leftjoin('competence.discipline', 'discipline')->addSelect('discipline')
+            ->andWhere('ficheMetier.histoDestruction IS NULL')
+            ->orderby('metier.libelle')
+        ;
+        $qb = $qb->andWhere('competence.discipline = :discipline')->setParameter('discipline', $discipline);
+
+        $result = $qb->getQuery()->getResult();
+        if ($discipline !== null) {
+            return $result;
+        }
+    }
+
+    public function getFichesMetiersByDisciplines(array $disciplines): array
+    {
+        //note : si trop lent faire en dql ...
+        $results = [];
+        foreach ($disciplines as $discipline) {
+            $results[$discipline->getId()] = $this->getFichesMetiersByDiscipline($discipline);
+        }
+        return $results;
     }
 
 }
