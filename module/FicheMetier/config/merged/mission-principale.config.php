@@ -63,6 +63,7 @@ return [
 
                         'gerer-competences',
                         'gerer-applications',
+                        'gerer-familles-professionnelles',
 
                         'importer',
 
@@ -239,14 +240,13 @@ return [
                             ],
                         ],
                     ],
-                    'gerer-domaines' => [
+                    'gerer-familles-professionnelles' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-domaines/:mission-principale',
+                            'route'    => '/gerer-familles-professionnelles/:mission-principale',
                             'defaults' => [
-                                /** @see MissionPrincipaleController::gererDomainesAction() */
-                                'controller' => MissionPrincipaleController::class,
-                                'action'     => 'gerer-domaines',
+                                /** @see MissionPrincipaleController::gererFamillesProfessionnellesAction() */
+                                'action'     => 'gerer-familles-professionnelles',
                             ],
                         ],
                     ],

@@ -41,7 +41,6 @@ class FicheMetierServiceFactory {
          * @var CompetenceElementService $competenceElementService
          * @var CompetenceReferentielService $competenceReferentielService
          * @var ConfigurationService $configurationService
-         * @var DomaineService $domaineService
          * @var EtatInstanceService $etatInstanceService
          * @var FicheMetierMissionService $ficheMetierMissionService
          * @var MissionActiviteService $missionActiviteService
@@ -59,7 +58,6 @@ class FicheMetierServiceFactory {
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $configurationService = $container->get(ConfigurationService::class);
-        $domaineService = $container->get(DomaineService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $missionActiviteService = $container->get(MissionActiviteService::class);
@@ -84,7 +82,6 @@ class FicheMetierServiceFactory {
         $service->setCompetenceElementService($competenceElementService);
         $service->setCompetenceReferentielService($competenceReferentielService);
         $service->setConfigurationService($configurationService);
-        $service->setDomaineService($domaineService);
         $service->setEtatInstanceService($etatInstanceService);
         $service->setFicheMetierMissionService($ficheMetierMissionService);
         $service->setMissionActiviteService($missionActiviteService);

@@ -31,7 +31,6 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
 use Metier\Entity\Db\Metier;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
 use RuntimeException;
@@ -47,7 +46,6 @@ class FicheMetierService
     use CompetenceElementServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
-    use DomaineServiceAwareTrait;
     use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;

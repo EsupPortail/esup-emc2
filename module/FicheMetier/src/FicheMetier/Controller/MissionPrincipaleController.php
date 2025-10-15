@@ -22,7 +22,7 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Metier\Form\SelectionnerDomaines\SelectionnerDomainesFormAwareTrait;
+use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
@@ -39,9 +39,9 @@ class MissionPrincipaleController extends AbstractActionController
     use ImportationFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
-    use SelectionnerDomainesFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
+    use SelectionnerFamilleProfessionnelleFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -179,12 +179,12 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function gererDomainesAction(): ViewModel
+    public function gererFamillesProfessionnellesAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
-        $form = $this->getSelectionnerDomainesForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/gerer-domaines', ['mission-principale' => $mission->getId()], [], true));
+        $form = $this->getSelectionnerFamilleProfessionnelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/gerer-familles-professionnelles', ['mission' => $mission->getId()], [], true));
         $form->bind($mission);
 
         $request = $this->getRequest();
@@ -193,12 +193,11 @@ class MissionPrincipaleController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getMissionPrincipaleService()->update($mission);
-                exit();
             }
         }
 
         $vm = new ViewModel([
-            'title' => "Gérer les domaines",
+            'title' => "Sélectionner les familles professionnelles associé à la mission principale",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');

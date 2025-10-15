@@ -12,16 +12,13 @@ use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Metier\Entity\Db\Interface\HasFamillesProfessionnellesInterface;
 use Metier\Entity\Db\Trait\HasFamillesProfessionnellesTrait;
-use Metier\Entity\HasDomainesInterface;
-use Metier\Entity\HasDomainesTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Mission implements HistoriqueAwareInterface,
-    HasDomainesInterface, HasFamillesProfessionnellesInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+    HasFamillesProfessionnellesInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface
 {
     use HistoriqueAwareTrait;
-    use HasDomainesTrait;
     use HasFamillesProfessionnellesTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
@@ -42,7 +39,6 @@ class Mission implements HistoriqueAwareInterface,
 
     public function __construct()
     {
-        $this->domaines = new ArrayCollection();
         $this->famillesProfessionnelles = new ArrayCollection();
         $this->activites = new ArrayCollection();
         $this->applications = new ArrayCollection();

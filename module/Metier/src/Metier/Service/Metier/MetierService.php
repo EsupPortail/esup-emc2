@@ -12,7 +12,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
 use Metier\Entity\Db\Reference;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
@@ -21,7 +20,6 @@ use RuntimeException;
 class MetierService
 {
     use ProvidesObjectManager;
-    use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use ReferenceServiceAwareTrait;
     use ReferentielServiceAwareTrait;
@@ -327,13 +325,6 @@ EOS;
 
     public function createWith(string $libelle, string $referentielCode, string $metierCode, ?string $domaineLibelle = null, ?string $familleLibelle = null, bool $persist = true): ?Metier
     {
-        $domaine = null;
-        if ($domaineLibelle) {
-            $domaine = $this->getDomaineService()->getDomaineByLibelle($domaineLibelle);
-            if ($domaine === null) {
-                $domaine = $this->getDomaineService()->createWith($domaineLibelle);
-            }
-        }
         $famille = null;
         if ($familleLibelle) {
             $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($familleLibelle);
@@ -356,11 +347,6 @@ EOS;
         $reference->setMetier($metier);
         if ($persist) $this->getReferenceService()->create($reference);
 
-        // domaine et autre
-        if ($domaine) {
-            $metier->addDomaine($domaine);
-            if ($persist) $this->getDomaineService()->update($domaine);
-        }
         if ($famille) {
             $metier->addFamillesProfessionnelles($famille);
             if ($persist) $this->getFamilleProfessionnelleService()->update($famille);

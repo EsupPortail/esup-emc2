@@ -4,6 +4,10 @@ namespace Metier;
 
 use Metier\Controller\FamilleProfessionnelleController;
 use Metier\Controller\FamilleProfessionnelleControllerFactory;
+use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
+use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormFactory;
+use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleHydrator;
+use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleHydratorFactory;
 use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
@@ -191,10 +195,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            SelectionnerFamilleProfessionnelleForm::class  => SelectionnerFamilleProfessionnelleFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            SelectionnerFamilleProfessionnelleHydrator::class  => SelectionnerFamilleProfessionnelleHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

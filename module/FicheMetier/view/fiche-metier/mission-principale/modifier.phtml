@@ -84,21 +84,23 @@ $canModifier = ($modification and $this->isAllowed(MissionPrincipalePrivileges::
         </ul>
     </dd>
     <dt>
-        Domaine·s
+        Famille·s Professionnelle·s
         <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererDomainesAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/gerer-domaines', ['mission-principale' => $mission->getId()], [], true); ?>"
+            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererFamillesProfessionnellesAction() */ ?>
+            <a href="<?php echo $this->url('mission-principale/gerer-familles-professionnelles', ['mission-principale' => $mission->getId()], [], true); ?>"
                class="btn btn-primary btn-sm ajax-modal" data-event="modification"
             >
                 <span class="icon icon-editer"></span>
-                Gérer les domaines associés
+                Gérer les familles professionnelles associées
             </a>
         <?php endif; ?>
     </dt>
     <dd>
-        <?php foreach ($mission->getDomaines() as $domaine) : ?>
-            <li> <?php echo $domaine->getLibelle(); ?> </li>
+        <ul>
+        <?php foreach ($mission->getFamillesProfessionnelles() as $famille) : ?>
+            <li> <?php echo $famille->getLibelle(); ?> </li>
         <?php endforeach; ?>
+        </ul>
     </dd>
     <dt> Niveau
         <?php if ($canModifier) : ?>

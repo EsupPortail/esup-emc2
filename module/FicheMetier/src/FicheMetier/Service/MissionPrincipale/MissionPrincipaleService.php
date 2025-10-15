@@ -77,7 +77,6 @@ class MissionPrincipaleService
             ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
             ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
             ->leftJoin('mission.activites', 'activite')->addSelect('activite')
-            ->leftJoin('mission.domaines', 'domaine')->addSelect('domaine')
 
             //            ->leftJoin('mission.applications', 'applicationelement')->addSelect('applicationelement')
             //            ->leftJoin('applicationelement.application', 'application')->addSelect('application')

@@ -58,7 +58,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
-            'title' => 'Ajouter une nouvelle famille de métiers',
+            'title' => 'Ajouter une nouvelle famille professionnelle',
             'form' => $form,
         ]);
         return $vm;
@@ -85,7 +85,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
-            'title' => 'Modifier une famille de métiers',
+            'title' => 'Modifier une famille professionnelle',
             'form' => $form,
         ]);
         return $vm;

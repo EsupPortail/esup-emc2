@@ -15,6 +15,7 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheReferentiel\Form\Importation\ImportationForm;
 use Fichier\Service\Fichier\FichierService;
 use Metier\Form\SelectionnerDomaines\SelectionnerDomainesForm;
+use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -56,14 +57,14 @@ class MissionPrincipaleControllerFactory
          * @var NiveauEnveloppeForm $niveauEnveloppeForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetencesForm
-         * @var SelectionnerDomainesForm $selectionDomainesForm
+         * @var SelectionnerFamilleProfessionnelleForm $selectionnerFamillesProfessionnellesForm
          */
         $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetencesForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
-        $selectionDomainesForm = $container->get('FormElementManager')->get(SelectionnerDomainesForm::class);
+        $selectionnerFamillesProfessionnellesForm = $container->get('FormElementManager')->get(SelectionnerFamilleProfessionnelleForm::class);
 
         $controller = new MissionPrincipaleController();
         $controller->setApplicationElementService($applicationElementService);
@@ -79,7 +80,7 @@ class MissionPrincipaleControllerFactory
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetencesForm);
-        $controller->setSelectionnerDomainesForm($selectionDomainesForm);
+        $controller->setSelectionnerFamilleProfessionnelleForm($selectionnerFamillesProfessionnellesForm);
         return $controller;
     }
 }
