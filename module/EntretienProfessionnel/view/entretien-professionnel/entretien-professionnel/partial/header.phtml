@@ -252,6 +252,14 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                         <?php echo $this->etatinstance($entretien->getEtatActif()); ?>
                     </dd>
                 </dl>
+
+                <?php $mention = $entretien->mentionFacultatif(); ?>
+                <?php if ($mention !== "") : ?>
+                    <span class="text-info">
+                        <span class="icon icon-info"></span>
+                        <?php echo $mention; ?>
+                    </span>
+                <?php endif; ?>
             </div>
         </div>
     </div>

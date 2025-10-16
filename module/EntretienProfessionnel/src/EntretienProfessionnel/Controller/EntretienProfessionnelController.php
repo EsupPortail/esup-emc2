@@ -318,6 +318,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $cref = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormationInstance()->getId());
         $observateurs = $this->getObservateurService()->getObservateursByEntretienProfessionnel($entretien);
 
+        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
+        if (!empty($facultatif)) {
+            $entretien->setStatut("facultatif");
+        }
+
         return new ViewModel([
             'entretien' => $entretien,
 
@@ -553,6 +558,11 @@ class EntretienProfessionnelController extends AbstractActionController
     public function exporterCrepAction(): string
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
+        if (!empty($facultatif)) {
+            $entretien->setStatut("facultatif");
+        }
+
         $vars = [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),

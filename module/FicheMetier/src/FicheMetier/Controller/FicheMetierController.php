@@ -62,13 +62,11 @@ class FicheMetierController extends AbstractActionController
         $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
 
         $etatTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
-        $domaines = $this->getDomaineService()->getDomaines();
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
 
         return new ViewModel([
             'params' => $params,
-            'domaines' => $domaines,
             'etatTypes' => $etatTypes,
             'fiches' => $fichesMetiers,
         ]);

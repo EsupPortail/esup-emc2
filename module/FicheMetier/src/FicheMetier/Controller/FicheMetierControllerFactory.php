@@ -16,7 +16,6 @@ use FicheMetier\Service\TendanceType\TendanceTypeService;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementService;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
-use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -38,7 +37,6 @@ class FicheMetierControllerFactory
     {
         /**
          * @var AgentService $agentService
-         * @var DomaineService $domaineService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
@@ -51,7 +49,6 @@ class FicheMetierControllerFactory
          * @var ThematiqueTypeService $thematiqueTypeService
          */
         $agentService = $container->get(AgentService::class);
-        $domaineService = $container->get(DomaineService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
@@ -83,7 +80,6 @@ class FicheMetierControllerFactory
         $controller = new FicheMetierController();
         $controller->setAgentService($agentService);
         $controller->setCodeFonctionForm($codeFonctionForm);
-        $controller->setDomaineService($domaineService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);

@@ -67,6 +67,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?string $token = null;
     private ?DateTime $acceptation = null;
 
+    /** Pour la mention facultatif */
+    private ?string $statut = null;
+
     public function __construct()
     {
         $this->etats = new ArrayCollection();
@@ -141,6 +144,16 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function setDureeEstimee(?float $dureeEstimee): void
     {
         $this->dureeEstimee = $dureeEstimee;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): void
+    {
+        $this->statut = $statut;
     }
 
     /** FONCTIONS ***********************/
@@ -652,6 +665,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function isDepasse(): bool
     {
         return ($this->getDateEntretien() < (new DateTime()));
+    }
+
+    /** @noinspection PhpUnused ENTRETIEN#Facultatif */
+    public function mentionFacultatif(): string
+    {
+        if ($this->statut === "facultatif") return "L'agent·e n'avait pas d'obligation à passer l'entretien pour cette campagne.";
+        return "";
     }
 
     public function prettyPrint(): string

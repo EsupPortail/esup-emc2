@@ -17,7 +17,6 @@ use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
