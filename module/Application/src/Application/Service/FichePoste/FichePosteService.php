@@ -3,7 +3,6 @@
 namespace Application\Service\FichePoste;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\DomaineRepartition;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
