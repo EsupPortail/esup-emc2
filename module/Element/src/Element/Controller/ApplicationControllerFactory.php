@@ -11,7 +11,6 @@ use Element\Service\ApplicationTheme\ApplicationThemeService;
 use Element\Service\Niveau\NiveauService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -39,7 +38,6 @@ class ApplicationControllerFactory {
         $applicationGroupeService = $container->get(ApplicationThemeService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
         $agentService = $container->get(AgentService::class);
-        $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $maitriseNiveauService = $container->get(NiveauService::class);
         $metierService = $container->get(MetierService::class);
@@ -56,7 +54,6 @@ class ApplicationControllerFactory {
         $controller->setApplicationThemeService($applicationGroupeService);
         $controller->setApplicationElementService($applicationElementService);
         $controller->setAgentService($agentService);
-        $controller->setDomaineService($domaineService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setNiveauService($maitriseNiveauService);
         $controller->setMetierService($metierService);

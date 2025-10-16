@@ -591,8 +591,13 @@ class AgentHierarchieController extends AbstractActionController
                 break;
         }
 
+        $title = "Historique des ";
+        if ($type === 'autorite') $title .= "autorité·s hiérarchiques";
+        if ($type === 'superieur') $title .= "supérieur·es hiérarchiques direct·es";
+        $title .= " de " . $agent->getDenomination();
+
         $vm = new ViewModel([
-            'title' => "Historisque des chaines hiérarchiques [" . $type . "]",
+            'title' => $title,
             'agent' => $agent,
             'type' => $type,
             'chaines' => $chaines,
