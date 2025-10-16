@@ -28,7 +28,11 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Template\TexteTemplates;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
@@ -39,8 +43,10 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\HasValidationsInterface;
@@ -61,13 +67,16 @@ class AgentController extends AbstractActionController
     use EntretienProfessionnelServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use UserServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
 
+    use CampagneServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
@@ -93,8 +102,12 @@ class AgentController extends AbstractActionController
             if (isset($params['type']) and $params['type'] === 'acceder') {
                 $agentId = $params['agent-sas']['id'] ?? null;
                 if ($agentId) return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentId], [], true);
+                $agentLabel = $params['agent-sas']['label'] ?? null;
+                $agents = $this->getAgentService()->getAgentsLargeByTerm($agentLabel);
+                if (count($agents) === 1) return $this->redirect()->toRoute('agent/afficher', ['agent' => current($agents)->getId()], [], true);
+
             }
-            if (isset($params['type']) and $params['type'] === 'filtrer') {
+            if (empty($agents) and isset($params['type']) and $params['type'] === 'filtrer') {
                 $agents = $this->getAgentService()->getAgentsWithFiltre($params);
             }
         }
@@ -412,4 +425,147 @@ class AgentController extends AbstractActionController
         exit;
     }
 
+    public function mesAgentsAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
+        $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents);
+
+        $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+            'campagne' => $campagne,
+
+            'grades' => $grades,
+            'affectations' => $affectations,
+
+        ]);
+        return $vm;
+    }
+
+    public function mesMissionsSpecifiquesAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+
+        $missions = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgents($agents);
+        $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+            'campagne' => $campagne,
+
+            'missions' => $missions,
+        ]);
+        return $vm;
+    }
+
+    public function mesFichesPostesAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+        $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $fichesDePoste = [];
+        foreach ($agents as $agent_) {
+            if ($agent_ instanceof StructureAgentForce) $agent_ = $agent_->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent_);
+            $fichesDePoste[$agent_->getId()] = $fiches;
+        }
+        $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+            'campagne' => $campagne,
+            'fichesDePoste' => $fichesDePoste,
+            'fichesDePostePdf' => $fichesDePostePdf
+        ]);
+        return $vm;
+    }
+
+    public function mesEntretiensProfessionnelsAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $role = $this->getUserService()->getConnectedRole();
+        $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
+
+        $agents = []; $entretiensS = []; $entretiensR = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+            $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($connectedAgent, $campagne, false, false);
+        }
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+            $entretiensR = [];
+        }
+
+        $entretiens = [];
+        foreach ($entretiensR as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
+        foreach ($entretiensS as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
+
+        //Extraction de la liste des campagnes
+        $campagnes = $this->getCampagneService()->getCampagnes();
+
+        //manque le tri des agents !!!!
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $finalises = [];
+        $encours = [];
+        foreach ($entretiens as $entretien) {
+            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $finalises[] = $entretien;
+            } else {
+                $encours[] = $entretien;
+            }
+        }
+
+        /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
+        $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne];
+        $templates = [];
+        $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION] = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION, $vars, false);
+
+        $vm = new ViewModel([
+            'campagnes' => $campagnes,
+            'campagne' => $campagne,
+            'agent' => $connectedAgent,
+            'agents' => $agents,
+            'obligatoires' => $obligatoires,
+            'facultatifs' => $facultatifs,
+            'raisons' => $raisons,
+
+            'entretiens' => $entretiens,
+            'encours' => $encours,
+            'finalises' => $finalises,
+
+            'templates' => $templates,
+        ]);
+        return $vm;
+    }
+
+    /** @return Agent[] */
+    public function listerAgents(): array
+    {
+        $role = $this->getUserService()->getConnectedRole();
+        $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
+
+        $agents = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($connectedAgent);
+            $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); }, $chaines);
+        }
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($connectedAgent);
+            $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); }, $chaines);
+        }
+
+        return $agents;
+    }
 }

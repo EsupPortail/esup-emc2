@@ -37,7 +37,7 @@ $this->headTitle("Familles professionnelles");
     <thead>
     <tr>
         <th class="col-md-5"> Libelle</th>
-        <th class="col-md-5"> Domaines</th>
+        <th class="col-md-5"> Métiers</th>
         <th class="col-md-2"> Action</th>
     </tr>
     </thead>
@@ -46,11 +46,11 @@ $this->headTitle("Familles professionnelles");
         <tr <?php if ($famille->estHistorise()) echo ' class="historise" '; ?>>
             <td> <?php echo $famille->getLibelle(); ?> </td>
             <td>
-                <?php if (!empty($famille->getDomaines())) : ?>
+                <?php if (!empty($famille->getMetiers())) : ?>
                 <ul>
-                    <?php foreach ($famille->getDomaines() as $domaine_) : ?>
+                    <?php foreach ($famille->getMetiers() as $metier) : ?>
                         <li>
-                            <?php echo $domaine_->getLibelle(); ?>
+                            <?php echo $metier->getLibelle(); ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

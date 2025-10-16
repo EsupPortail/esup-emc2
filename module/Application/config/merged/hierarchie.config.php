@@ -43,6 +43,7 @@ return [
                     [
                         'privileges' => [
                             ChainePrivileges::CHAINE_AFFICHER,
+                            ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE,
                             ChainePrivileges::CHAINE_SYNCHRONISER,
                             ChainePrivileges::CHAINE_GERER,
                         ],
@@ -79,10 +80,20 @@ return [
                         'ajouter',
                         'modifier',
                         'supprimer',
-                        'visualiser',
+                        'exporter-chaines',
                     ],
                     'privileges' => [
                         ChainePrivileges::CHAINE_GERER
+                    ],
+                    'assertion'  => ChaineAssertion::class,
+                ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
+                        'visualiser',
+                    ],
+                    'privileges' => [
+                        ChainePrivileges::CHAINE_AFFICHER_HISTORIQUE,
                     ],
                     'assertion'  => ChaineAssertion::class,
                 ],
@@ -252,11 +263,23 @@ return [
                             'visualiser' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/importer/:agent/:type',
+                                    'route'    => '/visualiser/:agent/:type',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::visualiserAction() */
                                         'controller' => AgentHierarchieController::class,
                                         'action'     => 'visualiser',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'exporter-chaines' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/exporter-chaines/:type',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::exporterChainesAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'exporter-chaines',
                                     ],
                                 ],
                                 'may_terminate' => true,

@@ -5,6 +5,7 @@ namespace Application\Service\AgentAutorite;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -102,17 +103,35 @@ class AgentAutoriteService
         return $result;
     }
 
+
     /** @return AgentAutorite[] */
-    public function getAgentsAutoritesByAgent(Agent $agent, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
+    public function getAgentsAutoritesCourants(): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentautorite.histoDestruction IS NULL')
+            ->andWhere('agentautorite.deletedOn IS NULL')
+            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
+            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
+            ->setParameter('now', new DateTime())
+            ->orderBy('coalesce(agent.nomUsuel, agent.nomFamille), agent.prenom');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return AgentAutorite[] */
+    public function getAgentsAutoritesByAgent(Agent $agent, bool $histo = false, bool $encours = true, string $champ = 'id', $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('agentautorite.deletedOn IS NULL')->andWhere('autorite.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')
-            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
-            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
-            ->setParameter('now', new DateTime())
             ->orderBy('agentautorite.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentautorite.histoDestruction IS NULL');
+        if ($encours === true) {
+            $qb = $qb->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut <= :now')
+                ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin >= :now')
+                ->setParameter('now', new DateTime());
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -234,6 +253,19 @@ class AgentAutoriteService
         if ($agent !== null) {
             $autorites = $this->getAgentsAutoritesByAgent($agent);
             foreach ($autorites as $autorite) $this->historise($autorite);
+        }
+    }
+
+    public function clotureAll(?Agent $agent, ?DateTime $date = null) : void
+    {
+        if ($date === null) $date = new DateTime();
+        $dateCloture = DateTime::createFromFormat('Y-m-d H:i:s' , $date->sub(new DateInterval('P1D'))->format('Y-m-d 18:00:00'));
+        if ($agent !== null) {
+            $autorites = $this->getAgentsAutoritesByAgent($agent);
+            foreach ($autorites as $autorite) {
+                $autorite->setDateFin($dateCloture);
+                $this->update($autorite);
+            }
         }
     }
 

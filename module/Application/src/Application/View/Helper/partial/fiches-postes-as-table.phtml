@@ -234,9 +234,9 @@ if ($retour)    $query['retour'] = $retour;
                             ><span
                                         data-bs-toggle="tooltip" data-bs-html="true"
                                         title="Exporter en PDF la fiche de poste"
-                                        class="icon icon-pdf"></span><span class="lettrine">P</span></a>
+                                        class="icon icon-pdf"></span></a>
                         <?php else : ?>
-                            <span class="icon icon-pdf nope" ></span><span class="lettrine nope">P</span>
+                            <span class="icon icon-pdf nope" ></span>
                         <?php endif; ?>
 
                         <!-- MODIFICATION ----------------------------------------------------------------------------->
@@ -296,3 +296,20 @@ if ($retour)    $query['retour'] = $retour;
 <style>
     span.nope { color: lightgrey; }
 </style>
+
+<script>
+    <?php if (isset($options['id'])) : ?>
+        $(document).ready(function() {
+            $('#<?php echo $options['id']; ?>').DataTable({
+                sorting:   false,
+                autoWidth: false,
+                language: {
+                    "url": "/js/datatables_fr.json",
+                },
+                columnDefs: [
+                    { targets: [5], orderable: false }
+                ]
+            } );
+        } );
+    <?php endif; ?>
+</script>

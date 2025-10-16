@@ -68,11 +68,22 @@ class ChaineForm extends  Form {
             'type' => Checkbox::class,
             'name' => 'historisation',
             'options' => [
-                'label' => "Historisation des chaînes existantes",
+                'label' => "Historisation des chaînes existantes <span class='icon icon-info text-info' title='Les chaînes en cours seront historisées et ne seront plus considéré.'></span>",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'historisation',
+            ],
+        ]);
+        $this->add([
+            'type' => Checkbox::class,
+            'name' => 'cloture',
+            'options' => [
+                'label' => "Clôture des chaînes existantes <span class='icon icon-info text-info' title='Les chaînes en cours recevront comme date de fin la date actuelle.'></span>",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'cloture',
             ],
         ]);
         //bouton
@@ -98,6 +109,7 @@ class ChaineForm extends  Form {
             'date_debut' => ['required' => true,],
             'date_fin' => ['required' => false,],
             'historisation' => ['required' => false,],
+            'cloture' => ['required' => false,],
         ]));
     }
 }

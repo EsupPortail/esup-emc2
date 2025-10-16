@@ -4,6 +4,7 @@ namespace Metier\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Carriere\Entity\Db\Categorie;
+use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,7 +24,9 @@ class Metier implements HistoriqueAwareInterface {
     private ?Categorie $categorie = null;
     private ?NiveauEnveloppe $niveaux = null;
 
+    private Collection $correspondances;
     private Collection $domaines;
+    private Collection $famillesProfessionnelles;
     private Collection $references;
     private Collection $fichesMetiers;
 
@@ -31,7 +34,9 @@ class Metier implements HistoriqueAwareInterface {
     {
         $this->references = new ArrayCollection();
         $this->fichesMetiers = new ArrayCollection();
+        $this->correspondances = new ArrayCollection();
         $this->domaines = new ArrayCollection();
+        $this->famillesProfessionnelles = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -113,9 +118,30 @@ class Metier implements HistoriqueAwareInterface {
         return $this->references->toArray();
     }
 
-    /**
-     * @return Domaine[]
-     */
+    /** @return Correspondance[] */
+    public function getCorrespondances() : array
+    {
+        $correspondances =  $this->correspondances->toArray();
+        usort($correspondances, function (Correspondance $a, Correspondance $b) { return $a->getLibelleLong() <=> $b->getLibelleLong();});
+        return $correspondances;
+    }
+
+    public function clearCorrespondances() : void
+    {
+        $this->correspondances->clear();
+    }
+
+    public function addCorrespondance(Correspondance $correspondance): void
+    {
+        $this->correspondances->add($correspondance);
+    }
+
+    public function hasCorrespondance(Correspondance $correspondance) : bool
+    {
+        return $this->correspondances->contains($correspondance);
+    }
+
+    /** @return Domaine[] */
     public function getDomaines() : array
     {
         $domaines =  $this->domaines->toArray();
@@ -128,9 +154,41 @@ class Metier implements HistoriqueAwareInterface {
         $this->domaines->clear();
     }
 
-    public function addDomaine(Domaine $domaine)
+    public function addDomaine(Domaine $domaine): void
     {
         $this->domaines->add($domaine);
+    }
+
+    public function hasDomaine(Domaine $domaine) : bool
+    {
+        return $this->domaines->contains($domaine);
+    }
+
+    /** @return FamilleProfessionnelle[] */
+    public function getFamillesProfessionnelles() : array
+    {
+        $familles =  $this->famillesProfessionnelles->toArray();
+        usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() <=> $b->getLibelle();});
+        return $familles;
+    }
+
+    public function clearFamillesProfessionnelles() : void
+    {
+        $this->famillesProfessionnelles->clear();
+    }
+
+    public function addFamillesProfessionnelles(FamilleProfessionnelle $famille): void
+    {
+        $this->famillesProfessionnelles->add($famille);
+    }
+
+    public function hasFamilleProfessionnelle(FamilleProfessionnelle $famille) : bool
+    {
+        foreach ($this->famillesProfessionnelles as $famillesProfessionnelle) {
+            $res = $famille === $famillesProfessionnelle;
+            $a=1;
+        }
+        return $this->famillesProfessionnelles->contains($famille);
     }
 
     /** Fonctions pour affichage **************************************************************************************/
@@ -143,15 +201,15 @@ class Metier implements HistoriqueAwareInterface {
         $html .= htmlentities($this->getLibelle(), ENT_QUOTES);
         $html .= '</span><br/>';
 
-        /** Lignes sur les domaines du metier **/
-        $html .= '<strong>Domaines</strong> :';
-        $html .= '<ul>';
-        foreach ($this->getDomaines() as $domaine) {
-            $html .= '<li>';
-            $html .= htmlentities($domaine->getLibelle(), ENT_QUOTES);
-            $html .= '</li>';
-        }
-        $html .= '</ul>';
+//        /** Lignes sur les domaines du metier **/
+//        $html .= '<strong>Famille </strong> :';
+//        $html .= '<ul>';
+//        foreach ($this->getDomaines() as $domaine) {
+//            $html .= '<li>';
+//            $html .= htmlentities($domaine->getLibelle(), ENT_QUOTES);
+//            $html .= '</li>';
+//        }
+//        $html .= '</ul>';
         /** Ligne sur les refs */
         $html .= '<strong>Références</strong> :';
         foreach ($this->getReferences() as $reference) {
@@ -195,28 +253,6 @@ class Metier implements HistoriqueAwareInterface {
     }
 
     /** @noinspection PhpUnused */
-    public function getDomaineAndFamille() : string
-    {
-        $texte = "";
-        /** @var Domaine $domaine */
-        $texte .= "<ul>";
-        foreach ($this->domaines as $domaine) {
-            $texte .= "<li>";
-            $texte .= $domaine->getLibelle();
-            $texte .= "<ul>";
-            foreach ($domaine->getFamilles() as $famille) {
-                $texte .= "<li>";
-                $texte .= $famille->getLibelle();
-                $texte .= "</li>";
-            }
-            $texte .= "</ul>";
-            $texte .= "</li>";
-        }
-        $texte .= "</ul>";
-        return $texte;
-    }
-
-    /** @noinspection PhpUnused */
     public function toStringDomaines() : string
     {
         $texte  = "<table style='width: 25rem;'>";
@@ -244,17 +280,7 @@ class Metier implements HistoriqueAwareInterface {
         return $this->getLibelle();
     }
 
-    /**
-     * @param Domaine $domaine
-     * @return bool
-     */
-    public function hasDomaine(Domaine $domaine) : bool
-    {
-        foreach ($this->domaines as $domaine_) {
-            if ($domaine_ === $domaine) return true;
-        }
-        return false;
-    }
+
 
     public function __toString()
     {

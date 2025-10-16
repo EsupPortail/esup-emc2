@@ -1,0 +1,99 @@
+<?php
+
+use Agent\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentGrade;
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @see \Application\Controller\AgentController::mesAgentsAction()
+ * @var Agent[] $agents
+ * @var Campagne $campagne
+ *
+ * @var AgentAffectation[] $affectations
+ * @var AgentGrade[] $grades
+ */
+
+?>
+
+<?php echo $this->partial('partial/onglets', ['current' => 'agents', 'campagne' => $campagne]); ?>
+
+<h1 class="page-header"> Liste des agent·es dont je suis responsable </h1>
+<div>
+    <table class="table table-condensed" id="agents">
+        <thead>
+        <tr>
+            <th> Dénomination </th>
+            <th> Affectations courrantes </th>
+            <th> Situations actuelles </th>
+            <th class="action"> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($agents as $agent) : ?>
+        <tr>
+            <td data-column-id="Dénomination" data-order="<?php echo $agent->getDenomination(); ?>">
+                <?php echo $agent->getDenomination(true); ?>
+            </td>
+            <td data-column-id="Affectations courrantes" >
+                <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
+                    <?php $structure = $affectation->getStructure(); ?>
+                    <?php if ($structure) : ?>
+                        <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                    <?php else : ?>
+                        <span class="text-warning">
+                            <span class="icon icon-attention"></span>
+                            Aucune structure connue
+                        </span>
+                    <?php endif; ?>
+                    <?php if ($affectation->isPrincipale()): ?>
+                        <span class="badge" style="background: darkgreen;" title="Affectation principale">P</span>
+                    <?php endif; ?>
+                    <?php if ($affectation->isHierarchique()): ?>
+                        <span class="badge" style="background: darkslategrey;" title="Affectation hiérarchique">H</span>
+                    <?php endif; ?>
+                    <?php if ($affectation->isFonctionnelle()): ?>
+                        <span class="badge" style="background: darkred;" title="Affectation fonctionnelle">F</span>
+                    <?php endif; ?>
+                    <br/>
+                <?php endforeach; ?>
+            </td>
+            <td data-column-id="Grades courrants" >
+                <?php foreach ($grades[$agent->getId()] as $grade) : ?>
+                    <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                    <br>
+                <?php endforeach; ?>
+            </td>
+            <td class="action" data-column-id="Actions">
+                <!-- Si on fait jouer l'assertion, on augmente le nombre de requètes -->
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)): ?>
+                    <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url("agent/afficher", ["agent" => $agent->getId()], [], true); ?>"
+                       class="action secondary">
+                        <span class="icon icon-voir"></span>
+                        Accéder
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        $('#agents').DataTable({
+            autoWidth: false,
+            paging: false,
+            columnDefs: [{
+                "targets": 3,
+                "orderable": false,
+            }],
+            language: {
+                url: '/js/datatables_fr.json'
+            }
+        });
+    });
+</script>

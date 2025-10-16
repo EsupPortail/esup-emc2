@@ -53,16 +53,6 @@ return [
                 [
                     'controller' => CampagneController::class,
                     'action' => [
-                        'superieur',
-                        'autorite',
-                    ],
-                    'privileges' => [
-                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER
-                    ],
-                ],
-                [
-                    'controller' => CampagneController::class,
-                    'action' => [
                         'ajouter',
                         'notifier-ouverture',
                     ],
@@ -107,6 +97,26 @@ return [
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_DETRUIRE,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'camapgne' => [
+                                'label' => 'Campagne',
+                                'route' => 'entretien-professionnel/campagne',
+                                'resource' =>  PrivilegeController::getResourceId(CampagneController::class, 'index'),
+                                'order'    => 3021,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -181,7 +191,7 @@ return [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/structure/:campagne/:structure',
+                                    'route'    => '/structure/:structure[/:campagne]',
                                     'defaults' => [
                                         /** @see CampagneController::structureAction() */
                                         'controller' => CampagneController::class,
@@ -198,28 +208,6 @@ return [
                                         /** @see CampagneController::structureProgressionAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'structure-progression',
-                                    ],
-                                ],
-                            ],
-                            'superieur' => [
-                                'type'  => Segment::class,
-                                'may_terminate' => true,
-                                'options' => [
-                                    'route'    => '/superieur/:campagne[/:agent]',
-                                    'defaults' => [
-                                        /** @see CampagneController::superieurAction() */
-                                        'action'     => 'superieur',
-                                    ],
-                                ],
-                            ],
-                            'autorite' => [
-                                'type'  => Segment::class,
-                                'may_terminate' => true,
-                                'options' => [
-                                    'route'    => '/autorite/:campagne[/:agent]',
-                                    'defaults' => [
-                                        /** @see CampagneController::autoriteAction() */
-                                        'action'     => 'autorite',
                                     ],
                                 ],
                             ],

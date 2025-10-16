@@ -97,9 +97,11 @@ class StructureController extends AbstractActionController {
         $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
         $gestionnaires = $this->getStructureService()->getGestionnaires($structure, new DateTime());
         $observateurs = $this->getObservateurService()->getObservateursByStructures([$structure]);
+        $contacts = $structure->getContacts(true);
 
         $blocGestionnaire = $this->getParametreService()->getValeurForParametre(StructureParametres::TYPE, StructureParametres::BLOC_GESTIONNAIRE);
         $blocObservateur = $this->getParametreService()->getValeurForParametre(StructureParametres::TYPE, StructureParametres::BLOC_OBSERVATEUR);
+        $blocContact = $this->getParametreService()->getValeurForParametre(StructureParametres::TYPE, StructureParametres::BLOC_CONTACT);
 
         $niveau2 = $structure?->getNiv2();
         $parent = $structure?->getParent();
@@ -118,6 +120,7 @@ class StructureController extends AbstractActionController {
             'responsables' => $responsables,
             'gestionnaires' => $gestionnaires,
             'observateurs' => $observateurs,
+            'contacts' => $contacts,
 
             'niveau2' => $niveau2,
             'parent' => $parent,
@@ -128,6 +131,7 @@ class StructureController extends AbstractActionController {
 
             'blocGestionnaire' => $blocGestionnaire,
             'blocObservateur' => $blocObservateur,
+            'blocContact' => $blocContact,
         ]);
     }
 

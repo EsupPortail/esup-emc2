@@ -53,6 +53,22 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'fichemetier';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('tendancetype', 'Gestion des types de tendance', 200, 'FicheMetier\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'tendancetype_index', 'Accéder à l''index', 10 UNION
+    SELECT 'tendancetype_afficher', 'Afficher', 20 UNION
+    SELECT 'tendancetype_ajouter', 'Ajouter', 30 UNION
+    SELECT 'tendancetype_modifier', 'Modifier', 40 UNION
+    SELECT 'tendancetype_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'tendancetype_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'tendancetype';
+
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('thematiquetype', 'Gestion des types de thématiques', 200, 'FicheMetier\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -66,7 +82,7 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-JOIN unicaen_privilege_categorie cp ON cp.CODE = 'thematiquetype';
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'thematiquetype';
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Macros et templates -------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------

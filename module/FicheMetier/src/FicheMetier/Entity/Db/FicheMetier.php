@@ -37,7 +37,10 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 
     private Collection $activites;
     private Collection $missions;
+    private Collection $tendances;
     private Collection $thematiques;
+
+    private ?string $raw = null;
 
     public function __construct()
     {
@@ -48,12 +51,23 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->competences = new ArrayCollection();
         $this->competencesSpecifiques = new ArrayCollection();
 
+        $this->tendances = new ArrayCollection();
         $this->thematiques = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getRaw(): ?string
+    {
+        return $this->raw;
+    }
+
+    public function setRaw(?string $raw): void
+    {
+        $this->raw = $raw;
     }
 
     public function hasExpertise(): bool
@@ -94,6 +108,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
             return $a->getOrdre() <=> $b->getOrdre();
         });
         return $missions;
+    }
+
+    public function addMission(FicheMetierMission $ficheMetierMission): void
+    {
+        $this->missions->add($ficheMetierMission);
     }
 
     /** Compétences ***************************************************************************************************/
@@ -296,8 +315,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
             return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
         });
 
-        $texte = "<table>";
-        $texte .= "<thead><tr><th>Libelle</th><th>Niveau</th></tr></thead>";
+        $texte = "<table style='width:100%; border-collapse: collapse;'>";
+        $texte .= "<thead><tr><th style='border-bottom: 1px solid black; text-align: left;'>Libelle</th><th style='border-bottom: 1px solid black; text-align: left;'>Niveau</th></tr></thead>";
         $texte .= "<tbody>";
         foreach ($thematiques as $thematique) {
             $texte .= "<tr>";
@@ -309,5 +328,30 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $texte .= "</table>";
         return $texte;
     }
+
+    /** @noinspection PhpUnused */
+    public function toStringTendances(): string
+    {
+        /** @var TendanceElement[] $tendances */
+        $tendances = $this->tendances->toArray();
+        $tendances = array_filter($tendances, function (TendanceElement $a) {
+            return $a->estNonHistorise() && $a->getType()->estNonHistorise();
+        });
+        usort($tendances, function (TendanceElement $a, TendanceElement $b) {
+            return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
+        });
+
+        $texte = "<div class='tendances'>";
+        foreach ($tendances as $tendance) {
+            $texte .= "<div class='tendance'>";
+            $texte .= "<div class='tendance-libelle'>" . $tendance->getType()->getLibelle() . "</div>";
+            $texte .= "<div class='tendance-texte'>" . $tendance->getTexte() . "</div>";
+            $texte .= "</div>";
+        }
+        $texte .= "</div>";
+        return $texte;
+    }
+
+
 
 }

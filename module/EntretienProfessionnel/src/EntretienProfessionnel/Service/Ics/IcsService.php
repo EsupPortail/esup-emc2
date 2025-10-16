@@ -16,7 +16,8 @@ class IcsService
     {
         $now = new DateTime();
         $debut = $e->getDateEntretien();
-        $fin = DateTime::createFromFormat("YmdHis", $e->getDateEntretien()->format("YmdHis"))->add(new DateInterval('PT2H'));
+        $dureeEnMinute = $e->getDureeEstimee()*60;
+        $fin = DateTime::createFromFormat("YmdHis", $e->getDateEntretien()->format("YmdHis"))->add(new DateInterval('PT'.$dureeEnMinute.'M'));
         $lieu = $e->getLieu();
         $agentDenomination = trim($e->getAgent()->getDenomination());
         $agentEmail = $e->getAgent()->getEmail();

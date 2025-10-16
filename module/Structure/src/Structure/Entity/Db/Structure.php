@@ -6,15 +6,19 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenContact\Entity\Traits\HasContactsTrait;
+use UnicaenContact\Entity\Interfaces\HasContactsInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchronisableInterface
+class Structure implements ResourceInterface, HasDescriptionInterface, HasContactsInterface, IsSynchronisableInterface
 {
     use IsSynchronisableTrait;
     use HasDescriptionTrait;
+    use HasContactsTrait;
 
     public function getResourceId(): string
     {
@@ -62,6 +66,11 @@ class Structure implements ResourceInterface, HasDescriptionInterface, IsSynchro
     private Collection $agentsForces;       //[StructureAgentForce]
 
     private Collection $fichesPostesRecrutements; //[FichePoste]
+
+    public function __construct()
+    {
+        $this->contacts = new ArrayCollection();
+    }
 
     public function getId(): string
     {

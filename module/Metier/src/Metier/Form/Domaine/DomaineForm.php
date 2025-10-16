@@ -2,15 +2,14 @@
 
 namespace Metier\Form\Domaine;
 
-use Laminas\InputFilter\Factory;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
-class DomaineForm extends Form {
-    use FamilleProfessionnelleServiceAwareTrait;
+class DomaineForm extends Form
+{
 
     public function init(): void
     {
@@ -20,7 +19,7 @@ class DomaineForm extends Form {
             'name' => 'libelle',
             'options' => [
                 'label' => "Libelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -40,25 +39,8 @@ class DomaineForm extends Form {
             ],
             'attributes' => [
                 'id' => 'fonction',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
-        // famille
-        $this->add([
-            'type' => Select::class,
-            'name' => 'famille',
-            'options' => [
-                'label' => "Famille professionnelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
-                'empty_option' => "Sélectionner une famille ...",
-                'value_options' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesAsOptions(),
-            ],
-            'attributes' => [
-                'id' => 'famille',
-                'multiple'          => 'multiple',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ],
         ]);
 
@@ -68,7 +50,7 @@ class DomaineForm extends Form {
             'name' => 'creer',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -77,9 +59,8 @@ class DomaineForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle'             => [ 'required' => true,  ],
-            'fonction'            => [ 'required' => false,  ],
-            'famille'             => [ 'required' => true,  ],
+            'libelle' => ['required' => true,],
+            'fonction' => ['required' => false,],
         ]));
     }
 }

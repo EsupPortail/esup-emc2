@@ -69,7 +69,7 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                                         ->setSelectionRequired()
                                         ->setAttributes([
                                             'id' => 'structure',
-                                            'placeholder' => "Structure de l'affectation",
+                                            'placeholder' =>  "Saisissez une structure (2 caractères min.)",
                                         ]);
                                     ?>
                                     <?php echo $this->formControlGroup($structureF); ?>
@@ -86,7 +86,7 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
                                     ->setSelectionRequired()
                                     ->setAttributes([
                                         'id' => 'corps',
-                                        'placeholder' => "Corps de l'agent·e",
+                                        'placeholder' => "Saisissez un corps (2 caractères min.)",
                                     ]);
                                 ?>
                                 <?php echo $this->formControlGroup($corpsF); ?>
@@ -240,10 +240,11 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
 
 <script>
     function generateSas2(idSas) {
+        let libelle = "Saisissez une compétence (2 caractères min.)";
         return ''
             + '<div class="mb-2">'
-            + '     <input type="text" id="competence-filtre_'+idSas+'"              name="competence-filtre_'+idSas+'[id]"     placeholder="Aucune compétence" class="sas" value="" style="display:none;">'
-            + '     <input type="text" id="competence-filtre_'+idSas+'-autocomplete" name="competence-filtre_'+idSas+'[label]"  placeholder="Aucune compétence" class="sas-autocomplete form-control form-control-sm" value="">'
+            + '     <input type="text" id="competence-filtre_'+idSas+'"              name="competence-filtre_'+idSas+'[id]"     placeholder="'+libelle+'" class="sas" value="" style="display:none;">'
+            + '     <input type="text" id="competence-filtre_'+idSas+'-autocomplete" name="competence-filtre_'+idSas+'[label]"  placeholder="'+libelle+'" class="sas-autocomplete form-control form-control-sm" value="">'
             + '</div>'
             + ''
             ;
@@ -286,8 +287,8 @@ $this->headTitle("Rechercher des agent·es avec un ensemble de compétences");
         // let id = 15;
         $('div#competence-bloc').append(
             '<div class="row" id="competence_'+id+'">' +
-            '   <div class="col-md-1"> <span class="icon icon-minus text-danger span-action" onclick="retirerCompetence('+id+')"></span></div>' +
-            '   <div class="col-md-5">' + generateSas2(id) + '</div>' +
+            '   <div class="col-md-1" style="width:1rem;margin-top: 0.5rem;"> <span class="icon icon-minus text-danger span-action" onclick="retirerCompetence('+id+')"></span></div>' +
+            '   <div class="col-md-5" style="margin-top: 0.5rem;">' + generateSas2(id) + '</div>' +
             generateOperateurSelect(id) +
             generateNiveauSelect(id) +
             '</div>');

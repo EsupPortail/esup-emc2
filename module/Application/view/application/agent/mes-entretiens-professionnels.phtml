@@ -1,0 +1,133 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Template\TexteTemplates;
+use UnicaenRenderer\Entity\Db\Rendu;
+use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
+
+/**
+ * /**
+ * @see \Application\Controller\AgentController::mesEntretiensProfessionnelsAction()
+ *
+ * @var Agent[] $agents
+ * @var Agent[] $obligatoires
+ * @var Agent[] $facultatifs
+ * @var string[] $raisons
+ *
+ * @var Campagne[] $campagnes
+ * @var Campagne|null $campagne
+ * @var Campagne[] $campagnes
+ * @var EntretienProfessionnel[] $entretiens
+ * @var Agent[] $agents
+ * @var Rendu[] $templates
+ */
+
+$sansObligatoires = [];
+$sansFacultatifs = [];
+foreach ($obligatoires as $obligatoire) {
+    if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
+}
+foreach ($facultatifs as $facultatif) {
+    if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
+}
+
+$canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));
+
+$this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
+?>
+
+<?php echo $this->partial('partial/onglets', ['current' => 'campagne', 'campagne' => $campagne]); ?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <label for="campagne">Sélectionner une campagne</label>
+        <select id="campagne" name="campagne">
+            <?php foreach ($campagnes as $campagne_) : ?>
+                <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_ === $campagne) echo " selected "; ?>><?php echo $campagne_->getAnnee(); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3> Information sur la campagne</h3>
+        <?php echo $this->campagneInformation($campagne); ?>
+    </div>
+    <div class="col-md-6">
+        <h3> Complétion de la campagne</h3>
+        <?php echo $this->campagneAvancement($entretiens, $obligatoires); ?>
+    </div>
+</div>
+
+<?php if (!empty($finalises)) : ?>
+    <h2>
+        Entretiens professionnels finalisés
+        <span class="badge"> <?php echo count($finalises); ?> </span>
+    </h2>
+
+    <?php echo $this->entretienProfessionnelArray($finalises, ['affichages' => ['annee' => false], 'id' => 'complet']); ?>
+<?php endif; ?>
+
+
+<?php if (!empty($encours)) : ?>
+    <h2>
+        Entretiens professionnels en cours d'évaluation
+        <span class="badge"> <?php echo count($encours); ?> </span>
+    </h2>
+
+    <?php echo $this->entretienProfessionnelArray($encours, ['affichages' => ['annee' => false], 'id' => 'encours']); ?>
+<?php endif; ?>
+
+<?php if (!empty($obligatoires)) : ?>
+    <h2>
+        Agent·es en attente d'entretien professionnel
+        <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
+    </h2>
+    <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien', 'raison' => $raisons]); ?>
+<?php endif; ?>
+
+<?php if (!empty($facultatifs)) : ?>
+    <h2>
+        Agent·es sans obligation d'entretien professionnel
+        <span class="badge"> <?php echo count($sansFacultatifs); ?> </span>
+    </h2>
+
+    <div class="alert alert-info">
+        <div class="row">
+            <div class="col-md-10">
+                <?php echo $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION]->getCorps(); ?>
+            </div>
+            <div class="col-md-2">
+                <?php if ($canTemplateModifier) : ?>
+                    <?php /** @see \UnicaenRenderer\Controller\TemplateController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('contenu/template/modifier', ['template' => $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION]->getTemplate()->getId()], [], true); ?>"
+                       class="action primary">
+                        <span class="icon icon-editer"></span> Modifier
+                    </a>
+                <?php endif; ?>
+            </div>
+
+        </div>
+    </div>
+    <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raisons]); ?>
+<?php endif; ?>
+
+<script>
+    let baseUrl = <?php echo "'" . $this->url('mes-entretiens-professionnels') . "'" ; ?>;
+
+    $(document).ready(function() {
+        $('#campagne').on('change', function() {
+            window.location.href = baseUrl + '/' + $(this).val();
+        });
+    });
+</script>

@@ -87,16 +87,6 @@ return [
                 [
                     'controller' => IndexController::class,
                     'action' => [
-                        'index-superieur',
-                        'index-autorite',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
-                    ],
-                ],
-                [
-                    'controller' => IndexController::class,
-                    'action' => [
                         'infos',
                     ],
                     'roles' => [
@@ -215,28 +205,6 @@ return [
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
                         'action' => 'index-validateur',
-                    ],
-                ],
-            ],
-            'index-superieur' => [
-                'type' => Literal::class,
-                'may_terminate' => true,
-                'options' => [
-                    'route' => '/index-superieur',
-                    'defaults' => [
-                        'controller' => 'Application\Controller\Index', // <-- change here
-                        'action' => 'index-superieur',
-                    ],
-                ],
-            ],
-            'index-autorite' => [
-                'type' => Literal::class,
-                'may_terminate' => true,
-                'options' => [
-                    'route' => '/index-autorite',
-                    'defaults' => [
-                        'controller' => 'Application\Controller\Index', // <-- change here
-                        'action' => 'index-autorite',
                     ],
                 ],
             ],
@@ -367,6 +335,7 @@ return [
             '050_select2' => "vendor/select2-4.0.13/dist/js/select2.min.js",
             '050_select2_fr' => "vendor/select2-4.0.13/dist/js/i18n/fr.js",
             '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
+            '150_' => 'vendor/tinymce_7.6.0/js/tinymce/tinymce.min.js',
 
         ],
         'inline_scripts' => [
@@ -379,7 +348,8 @@ return [
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
             '120_bootstrap-select' => '/vendor/bootstrap-select-1.14.0-beta3/js/bootstrap-select.min.js',
             '120_bootstrap-select-fr' => '/vendor/bootstrap-select-1.14.0-beta3/js/i18n/defaults-fr_FR.js',
-            '150_' => 'vendor/tinymce-6.8.2/js/tinymce/tinymce.min.js',
+//            '150_' => 'vendor/tinymce-6.8.2/js/tinymce/tinymce.min.js',
+
         ],
         'stylesheets' => [
             '000_unistra' => 'css/font-local.css',

@@ -29,8 +29,6 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
     Agent·es avec forçage d'entretien professionnel
 </h1>
 
-<?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'campagne' => $campagne, 'agent' => $agent, 'forcage' => $forcage]); ?>
-
 <?php if ($canAjouter) : ?>
     <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::ajouterAction() */ ?>
     <a href="<?php echo $this->url('entretien-professionnel/agent-avec-forcage/ajouter', [], [], true); ?>"
@@ -39,6 +37,8 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
         Ajouter un forçage
     </a>
 <?php endif; ?>
+
+<?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'campagne' => $campagne, 'agent' => $agent, 'forcage' => $forcage]); ?>
 
 <?php if (empty($agentsForcesSansObligation)) : ?>
     <em> Aucun·e agent·e n'est forcé·e sans obligation </em>

@@ -569,6 +569,7 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'duree_estimee',
     ],
     'entretienprofessionnel_agent_force'                => [
         'id',
@@ -1031,6 +1032,7 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'source_string',
     ],
     'missionprincipale_activite'                        => [
         'id',
@@ -2320,6 +2322,36 @@ return [
     ],
     'metier_metier_famille'                             => [
         'metier_id',
+        'famille_id',
+    ],
+    'fichemetier_tendance_element'                      => [
+        'id',
+        'fichemetier_id',
+        'tendancetype_id',
+        'texte',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+    ],
+    'fichemetier_tendance_type'                         => [
+        'id',
+        'code',
+        'libelle',
+        'description',
+        'obligatoire',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+        'ordre',
+    ],
+    'missionprincipale_familleprofessionnelle'          => [
+        'mission_id',
         'famille_id',
     ],
 ];

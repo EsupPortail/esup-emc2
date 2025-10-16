@@ -6,7 +6,9 @@
  * @var boolean[] $droits
  */
 
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Metier\Entity\Db\Referentiel;
+use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Provider\Privilege\ReferentielmetierPrivileges;
 
 $canAfficher = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_AFFICHER));
@@ -17,12 +19,37 @@ $canEffacer = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(Refere
 
 $canAction = ($canAfficher or $canAjouter or $canEditer or $canHistoriser or $canEffacer);
 
+$canMetier = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_INDEX));
+$canFicheMetier =  $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
+
 $this->headTitle("Liste des référentiels métiers");
 ?>
 
-<h1 class="page-header">
-    Liste des référentiels métiers
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Liste des référentiels métiers
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canMetier) : ?>
+            <?php /** @see \Metier\Controller\MetierController::indexAction() */ ?>
+            <a href="<?php echo $this->url('metier', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-listing"></span>
+                Accéder aux métiers
+            </a>
+        <?php endif; ?>
+        <?php if ($canMetier) : ?>
+            <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-listing"></span>
+                Accéder aux fiches métiers
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
 <?php if ($canAjouter) : ?>
     <a <?php /** @see \Metier\Controller\ReferentielController::ajouterAction() */ ?>

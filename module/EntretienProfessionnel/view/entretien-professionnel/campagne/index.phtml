@@ -26,22 +26,12 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::ajouterAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/campagne/ajouter', [], [], true); ?>"
-                    class="btn btn-primary action ajax-modal" data-event="modification"
+                    class="btn btn-primary ajax-modal" data-event="modification"
             >
                 <span class="icon icon-ajouter"></span>
                 Ajouter une campagne
             </a>
         <?php endif; ?>
-    </div>
-    <div class="col-md-3">
-        <a
-            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::indexAction() */?>
-                href="<?php echo $this->url('entretien-professionnel', [], [], true); ?>"
-                class="btn btn-primary action"
-        >
-            <span class="icon icon-listing"></span>
-            Accéder aux entretiens
-        </a>
     </div>
 </div>
 

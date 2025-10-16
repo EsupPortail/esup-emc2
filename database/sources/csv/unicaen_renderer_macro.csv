@@ -15,7 +15,6 @@
 "FICHE_METIER#APPLICATIONS","<p>Affiche les applications associ&eacute;s &agrave; une fiche m&eacute;tier</p>","fichemetier","getApplicationsAffichage"
 "FICHE_METIER#INTITULE","<p>Retourne le titre du m&eacute;tier associ&eacute; &agrave; la fiche m&eacute;tier</p>","fichemetier","getIntitule"
 "FICHE_METIER#CONNAISSANCES",null,"fichemetier","getConnaissances"
-"FICHEMETIER#Environnement","<p>Affiche le tableau contenant les thématiques déclarées pour la partie <strong>Contexte et environnement de travail</strong></p>","fichemetier","toStringThematiques"
 "STRUCTURE#bloc",null,"structure","toStringStructureBloc"
 "STRUCTURE#gestionnaires","<p>Affiche sous la forme d'un listing les Gestionnaires de la structure</p>","structure","toStringGestionnaires"
 "STRUCTURE#libelle","<p>Retourne le libellé de la structure</p>","structure","toStringLibelle"
@@ -106,3 +105,5 @@
 "URL#EntretienRenseigner",null,"UrlService","getUrlEntretienRenseigner"
 "Campagne#DatePrisePoste","<p>Affiche la date de prise de poste au plus tard pour la campagne</p>","campagne","getDatePrisePosteToString"
 "EMC2#AppName",null,"MacroService","getAppName"
+"FICHE_METIER#Tendances","","fichemetier","toStringTendances"
+"FICHE_METIER#Environnement","<p>Affiche le tableau contenant les thématiques déclarées pour la partie <strong>Contexte et environnement de travail</strong></p>","fichemetier","toStringThematiques"

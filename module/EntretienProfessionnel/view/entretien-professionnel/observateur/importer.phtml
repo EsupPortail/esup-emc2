@@ -1,0 +1,110 @@
+<?php
+
+use Application\Provider\Parametre\GlobalParametres;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\Observateur;
+use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurForm;
+
+/**
+ * @see \EntretienProfessionnel\Controller\ObservateurController::importerAction()
+ * @var string $title
+ * @var ImporterObservateurForm $form
+ * @var array $data
+ *
+ * @var ?Campagne $campagne
+ * @var EntretienProfessionnel[] $entretiens
+ * @var array $error
+ * @var array $warning
+ * @var array $done
+ * @var Observateur[] $newObservateurs
+ */
+
+$this->headTitle($title);
+
+$appName = $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::APP_NAME);
+$appName = $appName!==""?$appName:"interne"
+?>
+
+
+<h1 class="page-header">
+    <?php echo $title; ?>
+</h1>
+
+<div class="alert alert-info">
+    <p>
+        <span class="icon icon-information"></span>Pour pouvoir désigner une personne comme observatrice d'un entretien professionnel (ou d'un·e agent), il faut que l'entretien professionnel soit créé.
+    </p>
+
+    Le format attendu est le suivant : <code>agent_id</code>;<code>observateur_id</code>. Avec :
+    <ul>
+        <li> <code>agent_id</code> l'identifiant <?php echo $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::APP_NAME); ?> de l'agent·e </li>
+        <li> <code>observateur_id</code> l'identifiant <?php echo $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::APP_NAME); ?> de l'agent·e qui est désigné·e comme observateur·trice</li>
+    </ul>
+
+    <p>
+        <span class="icon icon-attention"></span>Il est nécessaire que l'observateur·trice se soient déjà connecté·e à l'application
+    </p>
+</div>
+
+<?php echo $this->form($form); ?>
+
+<?php if (isset($campagne)) : ?>
+    <div class="alert alert-info">
+        Campagne <?php echo $campagne->getAnnee(); ?> utilisée. <br>
+        Cette campagne contient <?php echo count($entretiens); ?> entretiens professionnels. <br>
+
+        <?php if (isset($data['mode'])) : ?>
+            Le mode est [<?php echo $data['mode']; ?>]
+        <?php else : ?>
+            <?php var_dump($data); ?>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($error) and !empty($error)): ?>
+    <div class="alert alert-danger">
+        Erreur·s <span class="badge"><?php echo count($error); ?></span> :
+        <ul>
+            <?php foreach ($error as $item): ?>
+                <li><?php echo $item; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+
+<?php if (isset($warning) and !empty($warning)): ?>
+    <div class="alert alert-warning">
+        Avertissement·s <span class="badge"><?php echo count($warning); ?></span> :
+        <ul>
+            <?php foreach ($warning as $item): ?>
+                <li><?php echo $item; ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($newObservateurs)) : ?>
+
+    <table class="table table-condensed datatable">
+        <thead>
+        <tr>
+            <th> Agent </th>
+            <th> Observateur</th>
+            <th> Commentaire</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($newObservateurs as $observateur): ?>
+            <tr>
+                <td> <?php echo $observateur->getEntretienProfessionnel()->getAgent()->getDenomination(true); ?> </td>
+                <td> <?php echo $observateur->getUser()->getDisplayName(); ?> </td>
+                <td> <?php echo $observateur->getDescription(); ?> </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<?php endif; ?>
+

@@ -122,9 +122,9 @@ class AjouterFicheMetierForm extends Form {
 
         $dictionnaire = [];
         foreach ($fichesMetiers as $ficheMetier) {
-            $domaines = $ficheMetier->getMetier()->getDomaines();
-            foreach ($domaines as $domaine) {
-                $dictionnaire[($domaine) ? $domaine->getLibelle() : "Sans domaine"][] = $ficheMetier;
+            $familles = $ficheMetier->getMetier()->getFamillesProfessionnelles();
+            foreach ($familles as $famille) {
+                $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
             }
         }
 
@@ -178,11 +178,11 @@ class AjouterFicheMetierForm extends Form {
         $options = [];
         $dictionnaire = [];
         foreach ($fiches as $ficheMetier) {
-            $domaines = $ficheMetier->getMetier()->getDomaines();
-            foreach ($domaines as $domaine) {
-                $dictionnaire[($domaine) ? $domaine->getLibelle() : "Sans domaine"][] = $ficheMetier;
+            $familles = $ficheMetier->getMetier()->getFamillesProfessionnelles();
+            foreach ($familles as $famille) {
+                $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
             }
-            if (empty($domaines)) $dictionnaire["Sans domaine"][] = $ficheMetier;
+            if (empty($familles)) $dictionnaire["Sans famille professionnelle"][] = $ficheMetier;
         }
 
         ksort($dictionnaire);

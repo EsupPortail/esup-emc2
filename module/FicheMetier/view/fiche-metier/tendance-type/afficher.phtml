@@ -1,0 +1,51 @@
+<?php
+
+use FicheMetier\Entity\Db\TendanceType;
+
+/**
+ * @see \FicheMetier\Controller\TendanceTypeController::afficherAction()
+ * @var TendanceType $tendanceType
+ */
+
+?>
+
+<dl class="row">
+    <dt class="col-md-4">Identifiant</dt>
+    <dd class="col-md-8">
+        <?php echo $tendanceType->getId(); ?>
+    </dd>
+    <dt class="col-md-4">Code</dt>
+    <dd class="col-md-8">
+        <code><?php echo $tendanceType->getCode(); ?></code>
+    </dd>
+    <dt class="col-md-4">Libellé</dt>
+    <dd class="col-md-8">
+        <?php echo $tendanceType->getLibelle(); ?>
+    </dd>
+    <dt class="col-md-4">Description </dt>
+    <dd class="col-md-8">
+        <?php if ($tendanceType->getDescription()) : ?>
+            <?php echo $tendanceType->getDescription(); ?>
+        <?php else : ?>
+            <em> Aucune description </em>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4">Ordre </dt>
+    <dd class="col-md-8">
+        <?php echo $tendanceType->getOrdre(); ?>
+    </dd>
+    <dt class="col-md-4">Obligatoire </dt>
+    <dd class="col-md-8">
+        <?php if ($tendanceType->isObligatoire()) : ?>
+            <span class="text-success">
+                <span class="icon icon-checked"></span>
+                Oui
+            </span>
+        <?php else : ?>
+            <span class="text-danger">
+                <span class="icon icon-unchecked"></span>
+                Non
+            </span>
+        <?php endif; ?>
+    </dd>
+</dl>

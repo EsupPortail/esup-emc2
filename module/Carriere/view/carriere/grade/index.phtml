@@ -3,6 +3,7 @@
 /**
  * @see \Carriere\Controller\GradeController::indexAction()
  * @var Grade[] $grades
+ * @var bool $avecAgent
  */
 
 use Carriere\Entity\Db\Grade;
@@ -16,24 +17,24 @@ $canAction = ($canLister);
 $this->headTitle("Liste des grades");
 ?>
 
-<div class="row">
-    <div class="col-md-8">
-        <h1 class="page-header">
-            Liste des grades
-            <span class="badge">
-                <?php echo count($grades); ?>
-            </span>
-        </h1>
-    </div>
-    <div class="col-md-4">
-        <div class="alert alert-info">
-            <span class="icon icon-synchroniser"></span>
-            Données synchronisées
-        </div>
-    </div>
+<h1 class="page-header">
+    Liste des grades
+    <span class="badge">
+        <?php echo count($grades); ?>
+    </span>
+</h1>
+
+<div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
+    <span class="icon icon-refresh"></span>
+    Données synchronisées
+    <?php if ($avecAgent) : ?>
+        <br>
+        <span class="icon icon-information"></span>
+        Seuls les grades avec au moins un agent·e sont présentés
+    <?php endif; ?>
 </div>
 
-<table class="datatable table table-condensed table-hover">
+<table class="datatable table table-condensed table-hover" id="grades">
     <thead>
     <tr>
         <th > Libellé </th>
@@ -74,8 +75,16 @@ $this->headTitle("Liste des grades");
 
 <script>
     $(document).ready(function() {
-        $('.datatable').DataTable({
+        $('table#grades').DataTable({
             paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [2], orderable: false }
+            ]
         });
     });
 </script>

@@ -103,13 +103,13 @@ if ($canSupprimer) $nbAction++;
 <table class="table table-condensed datatable" id="<?php echo $options['id'] ?? 'competences'; ?>">
     <thead>
     <tr>
-        <th class="col-md-5"> Compétences</th>
-        <th class="col-md-5"> Référentiel</th>
+        <th class="col-md-<?php echo (!isset($options['mode']) or $options['mode'] !== 'affichage')?"2":"3"; ?>"> Compétences</th>
+        <th class="col-md-2"> Référentiel</th>
         <th class="col-md-2"> Thèmes</th>
         <th class="col-md-2"> Type</th>
         <th class="col-md-2" data-type="num"> Niveau</th>
         <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
-            <th class="col-md-1"> Action</th>
+            <th class="col-md-2"> Action</th>
         <?php endif; ?>
     </tr>
     </thead>

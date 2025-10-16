@@ -56,6 +56,19 @@ class CorrespondanceTypeService
         return $result;
     }
 
+    public function getCorrespondanceTypeByCode(string $code): ?CorrespondanceType
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ctype.code = :code')->setParameter('code', $code)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".CorrespondanceType::class."] partagent le même id [" . $code . "]", 0, $e);
+        }
+        return $result;
+    }
+
     /** FACADE ********************************************************************************************************/
 
 

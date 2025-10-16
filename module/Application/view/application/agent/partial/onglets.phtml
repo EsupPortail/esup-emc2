@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @var string $current
+ * @var Campagne|null $campagne
+ */
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+?>
+
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <?php /** @see \Application\Controller\AgentController::mesAgentsAction() */ ?>
+    <button class="nav-link" id="agents-tab"
+            data-bs-toggle="tab" data-bs-target="#agents"
+            type="button" role="tab" aria-controls="agents" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('mes-agents', [],[], true); ?>'"
+    >
+        Liste des Agent·es
+    </button>
+    <?php /** @see \Structure\Controller\StructureController::fichesDePosteAction() */ ?>
+    <button class="nav-link" id="fiches-de-poste-tab"
+            data-bs-toggle="tab" data-bs-target="#fiches-de-poste"
+            type="button" role="tab" aria-controls="fiches-de-poste" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('mes-fiches-postes', [],[], true); ?>'"
+    >
+        Fiches de poste
+    </button>
+    <?php /** @see \Structure\Controller\StructureController::mesMissionsSpecifiquesAction() */ ?>
+    <button class="nav-link" id="mission-specifique-tab"
+            data-bs-toggle="tab" data-bs-target="#mission-specifique"
+            type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('mes-missions-specifiques', [],[], true); ?>'"
+    >
+        Missions spécifiques
+    </button>
+    <?php if ($campagne !== null) : ?>
+        <?php /** @see \Application\Controller\AgentController::mesEntretiensProfessionnelsAction() */ ?>
+        <button class="nav-link" id="campagne-tab"
+                data-bs-toggle="tab" data-bs-target="#campagne"
+                type="button" role="tab" aria-controls="campagne" aria-selected="true"
+                onclick="location.href='<?php echo $this->url('mes-entretiens-professionnels', ['campagne' => $campagne->getId()],[],true); ?>'"
+        >
+            Entretiens professionnels
+        </button>
+    <?php endif; ?>
+</div>
+
+<script>
+    $('button[aria-controls="<?php echo $current; ?>"]').addClass('active');
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+    //$(function() {
+    //    $('select#structure-selecteur').change(function() {
+    //        let id = $('select#structure-selecteur option:selected').val();
+    //        if (id !== "" && id !== "<?php //echo $structure->getId(); ?>//") {
+    //            window.location.href = './' + id;
+    //        }
+    //    });
+    //});
+
+</script>

@@ -2,14 +2,20 @@
 
 namespace EntretienProfessionnel\Form\Observateur;
 
+use DoctrineModule\Persistence\ProvidesObjectManager;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class ObservateurForm extends Form
 {
+
+    use ProvidesObjectManager;
 
     private ?string $urlUser = null;
 
@@ -18,9 +24,26 @@ class ObservateurForm extends Form
         $this->urlUser = $urlUser;
     }
 
+    private ?string $urlEntretien = null;
+
+    public function setUrlEntretien(?string $urlEntretien): void
+    {
+        $this->urlEntretien = $urlEntretien;
+    }
+
 
     public function init(): void
     {
+        // entretien
+        $entretien = new SearchAndSelect('entretien', ['label' => "Entretien professionnel * :"]);
+        $entretien
+            ->setAutocompleteSource($this->urlEntretien)
+            ->setSelectionRequired()
+            ->setAttributes([
+                'id' => 'entretien',
+                'placeholder' => "Nom de l'agent·e passant l'entretien ...",
+            ]);
+        $this->add($entretien);
         // Utilisateur
         $utilisateur = new SearchAndSelect('user', ['label' => "Utilisateur·trice * :"]);
         $utilisateur
@@ -61,7 +84,42 @@ class ObservateurForm extends Form
 
         // Input filter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'user' => ['required' => true,],
+            'entretien' => [
+                'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "Aucun entretien professionnel sélectionné",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            if ($context['entretien']['id'] == "") return false;
+                            $user = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->findOneBy(['id' => $context['entretien']['id']]);
+                            if ($user == null) return false;
+                            return true;
+                        },
+                        //'break_chain_on_failure' => true,
+                    ],
+                ]],
+            ],
+            'user' => [
+                'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "Aucun·e observateur·trice sélectionné·e",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            if ($context['user']['id'] == "") return false;
+                            $user = $this->getObjectManager()->getRepository(User::class)->findOneBy(['id' => $context['user']['id']]);
+                            if ($user == null) return false;
+                            return true;
+                        },
+                        //'break_chain_on_failure' => true,
+                    ],
+                ]],
+            ],
             'description' => ['required' => false,],
         ]));
 

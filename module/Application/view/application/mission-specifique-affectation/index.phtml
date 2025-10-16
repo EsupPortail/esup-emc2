@@ -31,20 +31,21 @@ $canDetruire = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResou
     Affectations de missions spécifiques
 </h1>
 
+<?php if ($canAjouter) : ?>
+    <?php /** @see MissionSpecifiqueAffectationController::ajouterAction */ ?>
+    <a href="<?php echo $this->url('mission-specifique-affectation/ajouter', [], ["query" => $params], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter une mission spécifique à un·e agent·e
+    </a>
+<?php endif; ?>
+
 <div class="filter">
     <?php echo $this->partial('partial/filtre', ['params' => $params, 'themes' => $themes, 'types' => $types, 'missions' => $missions], [], true); ?>
 </div>
 
-<div class="main">
-    <?php if ($canAjouter) : ?>
-        <?php /** @see MissionSpecifiqueAffectationController::ajouterAction */ ?>
-        <a href="<?php echo $this->url('mission-specifique-affectation/ajouter', [], ["query" => $params], true); ?>"
-           class="btn btn-primary ajax-modal" data-event="modification"
-        >
-            <span class="icon icon-ajouter"></span>
-            Ajouter une mission spécifique
-        </a>
-    <?php endif; ?>
+
 
     <?php if ($affectations === null or empty($affectations)) : ?>
         <br>
@@ -55,7 +56,6 @@ $canDetruire = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResou
     <?php else : ?>
         <?php echo $this->affectationsMissionSpecifique($affectations); ?>
     <?php endif; ?>
-</div>
 
 
 

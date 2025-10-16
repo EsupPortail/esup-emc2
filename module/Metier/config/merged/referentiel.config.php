@@ -167,25 +167,25 @@ return [
         ],
     ],
 
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            [
-                                'order' => 1400,
-                                'label' => 'Référentiels métiers',
-                                'route' => 'metier/referentiel',
-                                'resource' => PrivilegeController::getResourceId(ReferentielController::class, 'index'),
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            [
+//                                'order' => 1400,
+//                                'label' => 'Référentiels métiers',
+//                                'route' => 'metier/referentiel',
+//                                'resource' => PrivilegeController::getResourceId(ReferentielController::class, 'index'),
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'service_manager' => [
         'factories' => [

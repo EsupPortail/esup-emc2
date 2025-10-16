@@ -27,20 +27,12 @@ class FamilleProfessionnelleController extends AbstractActionController {
     public function afficherAction() : ViewModel
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
-        $domaines = $famille->getDomaines();
 
-        $metiers = [];
-        foreach ($domaines as $domaine) {
-            $ms = $domaine->getMetiers();
-            foreach ($ms as $metier) {
-                $metiers[$metier->getId()] = $metier;
-            }
-        }
+        $metiers = $famille->getMetiers();
 
         return new ViewModel([
             'title' => "Affichage de la famille professionnelle",
             'famille' => $famille,
-            'domaines' => $domaines,
             'metiers' => $metiers,
         ]);
     }
