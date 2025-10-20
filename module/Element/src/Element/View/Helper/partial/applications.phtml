@@ -154,7 +154,7 @@ if ($mode === 'modification' and $scope !== null) {
             ]
         });
 
-        $("span.toggleClef").click(function () {
+        $("table#<?php echo $tableId; ?> span.toggleClef").click(function () {
             $("#neue_applications div.card-body").addClass('refreshing');
             let id = $(this).attr('id');
             <?php /** @see ElementController::toggleClefAction() */ ?>

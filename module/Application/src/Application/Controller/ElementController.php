@@ -151,19 +151,23 @@ class ElementController extends AbstractActionController
 
         $element = null;
         $service = null;
-        switch ($elementType AND $elementId) {
-            case ElementController::TYPE_APPLICATION :
-                $element = $this->getApplicationElementService()->getApplicationElement($elementId);
-                $service = $this->getApplicationElementService();
-                break;
-            case ElementController::TYPE_COMPETENCE :
-                $element = $this->getCompetenceElementService()->getCompetenceElement($elementId);
-                $service = $this->getCompetenceElementService();
-                break;
-        }
+        if ($elementType AND $elementId) {
+            switch ($elementType) {
+                case ElementController::TYPE_APPLICATION :
+                    $element = $this->getApplicationElementService()->getApplicationElement($elementId);
+                    $service = $this->getApplicationElementService();
+                    break;
+                case ElementController::TYPE_COMPETENCE :
+                    $element = $this->getCompetenceElementService()->getCompetenceElement($elementId);
+                    $service = $this->getCompetenceElementService();
+                    break;
+            }
 
-        $element->setClef(!$element->isClef());
-        $service->update($element);
+            if ($element AND $service) {
+                $element->setClef(!$element->isClef());
+                $service->update($element);
+            }
+        }
 
 //        $retour = $this->params()->fromQuery('retour');
 //        return $this->redirect()->toUrl($retour);

@@ -1,6 +1,7 @@
 <?php
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Element\Entity\Db\CompetenceType;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -8,6 +9,7 @@ use UnicaenParametre\Entity\Db\Parametre;
 /**
  * @see \FicheMetier\Controller\FicheMetierController::afficherAction()
  * @var FicheMetier $fiche
+ * @var CompetenceType[] $types
  * @var array $competences
  * @var array $competencesSpecifiques
  * @var array $applications
@@ -25,8 +27,6 @@ $libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libell
 $titre = " de la fiche métier #" . $fiche->getId(). " : " . $libelle;
 if ($mode === 'affichage') $titre = "Affichage".$titre;
 if ($mode === 'edition-fiche-metier') $titre = "Modification".$titre;
-
-
 
 $this->headTitle($titre);
 
@@ -55,12 +55,50 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
    <?php echo $this->partial('partial/missions-principales',   ['fichemetier' => $fiche, 'missionsprincipales' => $missions, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
 
+<!-- COMPETENCES STANDARDS -------------------------------------------------------------------------------------------->
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/competences',            ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode ],       [], true); ?>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-5">
+                    <h2> Compétences </h2>
+                </div>
+                <div class="col-md-7">
+                    <div class="float-end">
+                        <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
+                        <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
+                        >
+                            <span class="icon icon-diagramme"></span>
+                            Afficher les compétences
+                        </a>
+
+                        <?php if ($mode === 'edition-fiche-metier'): ?>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                               class="btn btn-primary ajax-modal" data-event="refresh-competences">
+                                <span class="icon icon-lister"></span>
+                                Gérer les compétences
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <?php foreach($types as $type): ?>
+                <div id="competence_<?php echo str_replace(" ","_",$type->getLibelle()); ?>" > </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 <?php endif; ?>
+
+
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/competences-specifiques',            ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode ],       [], true); ?>
+    <div id="neue_competences_specifiques">
+    </div>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICAITON]) || $parametres[FicheMetierParametres::DISPLAY_APPLICAITON]->getValeur() !== "false") : ?>
@@ -97,7 +135,6 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
             url: url,
             beforeSend:
                 function () {
-                    //$("#neue_applications").html("<div class='card info'><div class='card-header'><h2>Applications </h2></div><div class='card-body'><span class='icon icon-hourglass'></span> Rafraîssement du bloc Applications</div>");
                     $("#neue_applications div.card-body").addClass('refreshing');
                 },
             success:
@@ -107,7 +144,28 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
         });
     }
 
+    function refreshCompetences(type) {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-competences", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
+        if (type !== undefined) url += "/"+type;
+        console.log("refreshing competences " + type);
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("div#competence_" + type).addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("div#competence_" + type).html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
     $(function() {
+        let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getLibelle())."'"; }, $types)); ?>];
+
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
@@ -116,6 +174,15 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
             event.div.modal('hide');
             refreshApplications();
         });
+        $("body").on("refresh-competences", function (event) {
+            event.div.modal('hide');
+            types.forEach(function (type) {
+                refreshCompetences(type);
+            });
+        });
         refreshApplications();
+        types.forEach(function (type) {
+            refreshCompetences(type);
+        });
     });
 </script>

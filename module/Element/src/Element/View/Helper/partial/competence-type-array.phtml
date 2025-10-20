@@ -1,0 +1,182 @@
+<?php
+
+use Application\Controller\ElementController;
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Element\Entity\Db\CompetenceElement;
+use Element\Entity\Db\CompetenceType;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Element\Provider\Privilege\CompetencePrivileges;
+use FicheMetier\Entity\Db\FicheMetier;
+use FichePoste\Provider\Privilege\FichePostePrivileges;
+
+/**
+ * @see CompetencesViewHelper
+ * @var CompetenceElement[] $competences
+ * @var CompetenceType[] $type
+ * @var HasCompetenceCollectionInterface $object
+ * @var string $mode
+ */
+
+$debug = false;
+
+$tableId = 'competence_' . str_replace(" ","_",$type->getLibelle());
+
+$canAfficherCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+
+$scope = null;
+if ($object instanceof FicheMetier) $scope = FicheMetier::class;
+if ($object instanceof FichePoste) $scope = FichePoste::class;
+
+
+$canModifierCompetenceElement = false;
+$canSupprimerCompetenceElement = false;
+$canSetClefCompetenceElement = false;
+$canSetNiveauCompetenceElement = false;
+if ($mode === 'modification' and $scope !== null) {
+    switch ($scope) {
+        case FicheMetier::class :
+            $canModifierCompetenceElement = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+            $canSupprimerCompetenceElement = $canModifierCompetenceElement;
+            $canSetClefCompetenceElement = $canModifierCompetenceElement;
+            $canSetNiveauCompetenceElement = $canModifierCompetenceElement;
+            break;
+        case FichePoste::class :
+            $canModifierCompetenceElement = $this->isAllowed($object, FichePostePrivileges::FICHEPOSTE_MODIFIER_POSTE);
+            $canSupprimerCompetenceElement = $canModifierCompetenceElement;
+            $canSetClefCompetenceElement = $canModifierCompetenceElement;
+            $canSetNiveauCompetenceElement = $canModifierCompetenceElement;
+            break;
+    }
+}
+
+?>
+
+<div id="<?php echo $tableId; ?>">
+
+
+    <?php if (!empty($competences)) : ?>
+        <h3> <?php echo $type->getLibelle(); ?> </h3>
+
+        <?php if ($scope === null and $mode = 'modification') : ?>
+            <div class="alert alert-warning">
+                <span class="icon icon-warning"></span>
+                La portée du tableau des compétences n'a pas pu être déterminé : blocage des options de modification des
+                compétences.
+            </div>
+        <?php endif; ?>
+
+        <table class="table table-condensed datatable" id="<?php echo $tableId; ?>">
+            <thead>
+            <tr>
+                <th class="col-md-3"> Compétence</th>
+                <th class="col-md-3"> Thème</th>
+                <th class="col-md-2" data-type="num"> Niveau de maîtrise</th>
+                <th class="col-md-2"> Clef</th>
+                <th class="action col-md-2"> Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($competences as $competenceArray) : ?>
+                <?php
+                //todo examiner l'utilité d'envoyé les élements sous la forme d'un tableau [entite, raison, conserve]
+                $competenceElement = $competenceArray['entite'];
+                $competence = $competenceElement->getCompetence();
+                ?>
+                <?php $niveau = $competenceElement->getNiveauMaitrise(); ?>
+                <tr>
+                    <td data-column-id="Compétence">
+                        <?php echo $competence->getLibelle(); ?>
+                        <br>
+                        <?php echo ($competence->getReferentiel())?$this->competenceReference($competence):"Aucun"; ?>
+                    </td>
+                    <td data-column-id="Thème"> <?php echo($competence->getTheme() ? $competence->getTheme()->getLibelle() : "<em>Aucun thème</em>"); ?> </td>
+                    <td data-column-id="Niveau de maîtrise"
+                        data-order="<?php echo $niveau ? $niveau->getNiveau() : PHP_INT_MAX; ?>"> <?php echo($niveau ? $niveau->getLibelle() : "<em>Non renseigné</em>"); ?>
+                        <?php if ($canSetNiveauCompetenceElement) : ?>
+                            <br>
+                            <span class="action">
+                            <?php /** @see ElementController::changerNiveauAction() */ ?>
+                                <a href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId(), 'clef' => 'masquer'], [], true); ?>"
+                                   class="action primary ajax-modal" data-event="refresh-competences">
+                                <span class="icon icon-editer"></span>
+                                Modifier niveau
+                            </a>
+                            </span>
+                        <?php endif; ?>
+                    </td>
+                    <td data-column-id="Clef">
+                        <?php if ($competenceElement->isClef()) : ?>
+                            <span class="icon icon-clef" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                            Compétence clef
+                        <?php endif; ?>
+                        <?php if ($canSetClefCompetenceElement) : ?>
+                        <br>
+                        <span class="action">
+                            <span
+                                    class="action primary toggleClef" data-competence-type="<?php echo $competence->getType()->getLibelle(); ?>" id="<?php echo $competenceElement->getId() ?>">
+                                <span class="icon icon-refresh"></span>
+                                Modifier clef
+                            </span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="action" data-column-id="Action">
+                        <?php if ($canAfficherCompetence) : ?>
+                            <?php /** @see \Element\Controller\CompetenceController::afficherAction(); */ ?>
+                            <a href="<?php echo $this->url('element/competence/afficher', ['competence' => $competence->getId()], [], true); ?>"
+                               class="action secondary ajax-modal">
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canSupprimerCompetenceElement) : ?>
+                            <br>
+                            <?php /** @see ElementController::supprimerAction() */ ?>
+                            <a href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId()], [], true); ?>"
+                               class="action danger ajax-modal" data-event="refresh-competences">
+                                <span class="icon icon-unchecked"></span>
+                                Supprimer
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<script>
+    $(function () {
+        console.log("datatable pour <?php echo $tableId; ?>");
+        $('table#<?php echo $tableId; ?>').DataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [4], orderable: false}
+            ]
+        });
+
+        $("table#<?php echo $tableId; ?> span.toggleClef").click(function () {
+            $("#neue_competences div.card-body").addClass('refreshing');
+            let id = $(this).attr('id');
+            let type = $(this).data('competence-type');
+            console.log(type);
+            <?php /** @see ElementController::toggleClefAction() */ ?>
+            let url = "<?php echo $this->url("element_/toggle-clef", ['type' => ElementController::TYPE_COMPETENCE]); ?>" + "/" + id;
+            console.log("toggleing clef")
+            $.ajax({
+                type: "POST",
+                url: url,
+                success:
+                    function () {
+                        refreshCompetences(type);
+                    }
+            });
+        });
+    });
+</script>

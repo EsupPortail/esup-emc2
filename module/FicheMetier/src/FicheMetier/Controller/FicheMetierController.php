@@ -6,8 +6,10 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Element\Entity\Db\Competence;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
@@ -34,6 +36,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 class FicheMetierController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use CompetenceTypeServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
@@ -92,8 +95,10 @@ class FicheMetierController extends AbstractActionController
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
 
+
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'types' => $this->getCompetenceTypeService()->getCompetencesTypes('ordre', 'ASC'),
             'missions' => $missions,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
@@ -162,6 +167,7 @@ class FicheMetierController extends AbstractActionController
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'types' => $this->getCompetenceTypeService()->getCompetencesTypes('ordre', 'ASC'),
             'missions' => $missions,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
@@ -575,6 +581,29 @@ EOS;
             'mode' => $mode,
         ]);
         $vm->setTemplate('fiche-metier/refresh-applications');
+        return $vm;
+    }
+
+    public function refreshCompetencesAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $typeLibelle = str_replace("_"," ", $this->params()->fromRoute('type'));
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($typeLibelle);
+
+        if ($type == null) {
+            throw new RuntimeException("Aucun type de compétences avec libellé [".$type."]",-1);
+        }
+
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $type, true);
+
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'competences' => $competences,
+            'type' => $type,
+            'mode' => $this->params()->fromRoute('mode'),
+        ]);
+        $vm->setTemplate('fiche-metier/refresh-competences');
         return $vm;
     }
 

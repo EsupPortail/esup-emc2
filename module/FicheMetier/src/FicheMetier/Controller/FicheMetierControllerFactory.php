@@ -7,6 +7,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
+use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
@@ -37,6 +38,7 @@ class FicheMetierControllerFactory
     {
         /**
          * @var AgentService $agentService
+         * @var CompetenceTypeService $competenceTypeService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
@@ -49,6 +51,7 @@ class FicheMetierControllerFactory
          * @var ThematiqueTypeService $thematiqueTypeService
          */
         $agentService = $container->get(AgentService::class);
+        $competenceTypeService = $container->get(CompetenceTypeService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
@@ -79,6 +82,7 @@ class FicheMetierControllerFactory
 
         $controller = new FicheMetierController();
         $controller->setAgentService($agentService);
+        $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);

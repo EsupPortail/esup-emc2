@@ -13,6 +13,7 @@ use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceDiscipline;
 use Element\Entity\Db\CompetenceElement;
+use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationHydratorAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceHydratorAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
@@ -354,6 +355,32 @@ class FicheMetierService
 //                $dictionnaire[$application->getId()]["conserve"] = true;
 //            }
 //        }
+
+        return $dictionnaire;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param bool $asElement
+     * @return array
+     */
+    public function getCompetencesDictionnairesByType(FicheMetier $fiche, CompetenceType $type, bool $asElement = false): array
+    {
+        //todo faire mieux en requetant correctement
+        $listing = $fiche->getCompetenceListe();
+        $listing = array_filter($listing, function (CompetenceElement $element) use ($type) {
+            $competence = $element->getCompetence();
+            return $competence->getType() === $type;
+        });
+
+        $dictionnaire = [];
+
+        foreach ($listing as $competenceElement) {
+            $competence = ($asElement) ? $competenceElement : $competenceElement->getCompetence();
+            $dictionnaire[$competence->getId()]["entite"] = $competence;
+            $dictionnaire[$competence->getId()]["raison"][] = $fiche;
+            $dictionnaire[$competence->getId()]["conserve"] = true;
+        }
 
         return $dictionnaire;
     }
