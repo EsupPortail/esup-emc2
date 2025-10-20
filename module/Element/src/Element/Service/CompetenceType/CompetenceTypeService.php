@@ -78,15 +78,12 @@ class CompetenceTypeService
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $order
-     * @return CompetenceType[]
-     */
-    public function getCompetencesTypes(string $champ = 'libelle', string $order = 'ASC'): array
+    /** @return CompetenceType[] */
+    public function getCompetencesTypes(bool $withHisto = false, string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('type.' . $champ, $order);
+        if ($withHisto === false) $qb = $qb->andWhere('type.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -98,7 +95,7 @@ class CompetenceTypeService
      */
     public function getCompetencesTypesAsOptions(string $champ = 'libelle', string $order = 'ASC'): array
     {
-        $types = $this->getCompetencesTypes($champ, $order);
+        $types = $this->getCompetencesTypes(false, $champ, $order);
         $options = [];
         foreach ($types as $type) {
             $options[$type->getId()] = $type->getLibelle();

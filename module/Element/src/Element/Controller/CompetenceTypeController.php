@@ -16,7 +16,7 @@ class CompetenceTypeController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $types = $this->getCompetenceTypeService()->getCompetencesTypes();
+        $types = $this->getCompetenceTypeService()->getCompetencesTypes(true);
 
         return new ViewModel([
             'types' => $types,

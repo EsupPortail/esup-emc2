@@ -98,7 +98,7 @@ class FicheMetierController extends AbstractActionController
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
-            'types' => $this->getCompetenceTypeService()->getCompetencesTypes('ordre', 'ASC'),
+            'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'missions' => $missions,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
@@ -167,7 +167,7 @@ class FicheMetierController extends AbstractActionController
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
-            'types' => $this->getCompetenceTypeService()->getCompetencesTypes('ordre', 'ASC'),
+            'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'missions' => $missions,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,

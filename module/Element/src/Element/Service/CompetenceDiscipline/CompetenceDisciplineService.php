@@ -78,15 +78,12 @@ class CompetenceDisciplineService
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $order
-     * @return CompetenceDiscipline[]
-     */
-    public function getCompetencesDisciplines(string $champ = 'libelle', string $order = 'ASC'): array
+    /** @return CompetenceDiscipline[] */
+    public function getCompetencesDisciplines(bool $withHisto = false, string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('discipline.' . $champ, $order);
+        if (!$withHisto) $qb = $qb->andWhere('discipline.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -98,7 +95,7 @@ class CompetenceDisciplineService
      */
     public function getCompetencesDisciplinesAsOptions(string $champ = 'libelle', string $order = 'ASC'): array
     {
-        $types = $this->getCompetencesDisciplines($champ, $order);
+        $types = $this->getCompetencesDisciplines(false, $champ, $order);
         $options = [];
         foreach ($types as $type) {
             $options[$type->getId()] = $type->getLibelle();

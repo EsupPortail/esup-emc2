@@ -19,7 +19,7 @@ class CompetenceDisciplineController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $disciplines = $this->getCompetenceDisciplineService()->getCompetencesDisciplines();
+        $disciplines = $this->getCompetenceDisciplineService()->getCompetencesDisciplines(true);
         $dictionnaire = $this->getFicheMetierService()->getFichesMetiersByDisciplines($disciplines);
         return new ViewModel([
             'disciplines' => $disciplines,

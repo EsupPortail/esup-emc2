@@ -79,14 +79,13 @@ class CompetenceThemeService
     }
 
     /**
-     * @param string $champ
-     * @param string $order
      * @return CompetenceTheme[]
      */
-    public function getCompetencesThemes(string $champ = 'libelle', string $order = 'ASC'): array
+    public function getCompetencesThemes(bool $withHisto = false, string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('theme.' . $champ, $order);
+        if (!$withHisto) $qb = $qb->andWhere('theme.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -98,7 +97,7 @@ class CompetenceThemeService
      */
     public function getCompetencesThemesAsOptions(string $champ = 'libelle', string $order = 'ASC'): array
     {
-        $types = $this->getCompetencesThemes($champ, $order);
+        $types = $this->getCompetencesThemes(false, $champ, $order);
         $options = [];
         foreach ($types as $type) {
             $options[$type->getId()] = $type->getLibelle();

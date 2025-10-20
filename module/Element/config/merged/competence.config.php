@@ -31,6 +31,7 @@ return [
                     'controller' => CompetenceController::class,
                     'action' => [
                         'index',
+                        'listing',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_INDEX,
@@ -130,6 +131,17 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'listing' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/listing[/:competence-type]',
+                                    'defaults' => [
+                                        /** @see CompetenceController::listingAction() */
+                                        'controller' => CompetenceController::class,
+                                        'action' => 'listing',
+                                    ],
+                                ],
+                            ],
                             'afficher' => [
                                 'type' => Segment::class,
                                 'options' => [
@@ -244,8 +256,8 @@ return [
                         'pages' => [
                             [
                                 'label' => 'Compétences',
-                                'route' => 'element/competence',
-                                'resource' => PrivilegeController::getResourceId(CompetenceController::class, 'index') ,
+                                'route' => 'element/competence/listing',
+                                'resource' => PrivilegeController::getResourceId(CompetenceController::class, 'listing') ,
                                 'order' => 3200,
                                 'icon' => 'fas fa-angle-right',
                             ],

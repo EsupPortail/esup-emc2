@@ -61,7 +61,8 @@ class CompetenceService
     {
         $qb = $this->getObjectManager()->getRepository(Competence::class)->createQueryBuilder('competence')
             ->addSelect('type')->leftJoin('competence.type', 'type')
-            ->addSelect('theme')->leftJoin('competence.theme', 'theme');
+            ->addSelect('theme')->leftJoin('competence.theme', 'theme')
+            ->addSelect('discipline')->leftJoin('competence.discipline', 'discipline');
         return $qb;
     }
 
@@ -70,6 +71,33 @@ class CompetenceService
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('competence.' . $champ, $order);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getCompetencesByType(?CompetenceType $type = null): array
+    {
+        $qb = $this->createQueryBuilder();
+        if ($type !== null) $qb = $qb->where('competence.type = :type')->setParameter('type', $type);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return Competence[] */
+    public function getCompetencesWithFiltre(array $params): array
+    {
+        $qb = $this->createQueryBuilder();
+        if (isset($params['type']) AND $params['type'] !== "") {
+            $qb = $qb->andWhere("type.id = :type")->setParameter('type', $params['type']);
+        }
+        if (isset($params['theme']) AND $params['theme'] !== "") {
+            $qb = $qb->andWhere("theme.id = :theme")->setParameter('theme', $params['theme']);
+        }
+        if (isset($params['discipline']) AND $params['discipline'] !== "") {
+            $qb = $qb->andWhere("discipline.id = :discipline")->setParameter('discipline', $params['discipline']);
+        }
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -327,6 +355,8 @@ class CompetenceService
         });
         return $result;
     }
+
+
 
 
 }

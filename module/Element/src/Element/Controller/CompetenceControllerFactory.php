@@ -7,6 +7,7 @@ use Carriere\Service\Grade\GradeService;
 use Element\Form\Competence\CompetenceForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\Competence\CompetenceService;
+use Element\Service\CompetenceDiscipline\CompetenceDisciplineService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
@@ -30,6 +31,7 @@ class CompetenceControllerFactory
     {
         /**
          * @var CompetenceService $competenceService
+         * @var CompetenceDisciplineService $competenceDisciplineService
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          * @var CompetenceElementService $competenceElementService
@@ -41,6 +43,7 @@ class CompetenceControllerFactory
          * @var StructureService $structureService
          */
         $competenceService = $container->get(CompetenceService::class);
+        $competenceDisciplineService = $container->get(CompetenceDisciplineService::class);
         $maitriseNiveauService = $container->get(NiveauService::class);
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
@@ -60,6 +63,7 @@ class CompetenceControllerFactory
 
         $controller = new CompetenceController();
         $controller->setCompetenceService($competenceService);
+        $controller->setCompetenceDisciplineService($competenceDisciplineService);
         $controller->setCompetenceThemeService($competenceThemeService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCompetenceElementService($competenceElementService);

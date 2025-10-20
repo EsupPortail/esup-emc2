@@ -9,6 +9,7 @@ use Element\Entity\Db\Competence;
 use Element\Form\Competence\CompetenceFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
@@ -25,6 +26,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 class CompetenceController extends AbstractActionController
 {
     use CompetenceServiceAwareTrait;
+    use CompetenceDisciplineServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -42,18 +44,46 @@ class CompetenceController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
-        $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
-        $niveaux = $this->getNiveauService()->getMaitrisesNiveaux('Compétence', 'niveau', 'ASC', true);
-        $array = $this->getCompetenceService()->getCompetencesByTypes();
+        $types = $this->getCompetenceTypeService()->getCompetencesTypes(false, 'ordre');
+//        $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
+//        $niveaux = $this->getNiveauService()->getMaitrisesNiveaux('Compétence', 'niveau', 'ASC', true);
+//        $array = $this->getCompetenceService()->getCompetencesByTypes();
 
         return new ViewModel([
-            'competencesByType' => $array,
-            'themes' => $themes,
             'types' => $types,
-            'niveaux' => $niveaux,
+//            'competencesByType' => $array,
+//            'themes' => $themes,
+
+//            'niveaux' => $niveaux,
         ]);
     }
+
+    public function listingAction(): ViewModel
+    {
+        $types = $this->getCompetenceTypeService()->getCompetencesTypes(false, 'ordre');
+        $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
+        $disciplines = $this->getCompetenceDisciplineService()->getCompetencesDisciplines();
+
+        $params = $this->params()->fromQuery();
+        $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
+
+        if ($type === null) {
+            $competences = $this->getCompetenceService()->getCompetencesWithFiltre($params);
+        } else {
+            $competences = $this->getCompetenceService()->getCompetencesByType($type);
+        }
+
+        return new ViewModel([
+            'types' => $types,
+            'themes' => $themes,
+            'disciplines' => $disciplines,
+            'params' => $params,
+
+            'type' => $type,
+            'competences' => $competences,
+        ]);
+    }
+
 
     /** COMPETENCE ****************************************************************************************************/
 
@@ -133,6 +163,9 @@ class CompetenceController extends AbstractActionController
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
         $this->getCompetenceService()->historise($competence);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('element/competence', [], [], true);
     }
 
@@ -140,6 +173,9 @@ class CompetenceController extends AbstractActionController
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
         $this->getCompetenceService()->restore($competence);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('element/competence', [], [], true);
     }
 

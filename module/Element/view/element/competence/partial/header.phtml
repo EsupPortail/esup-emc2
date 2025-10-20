@@ -1,0 +1,126 @@
+<?php
+
+use Element\Entity\Db\CompetenceType;
+use Element\Provider\Privilege\CompetencedisciplinePrivileges;
+use Element\Provider\Privilege\CompetencePrivileges;
+use Element\Provider\Privilege\CompetencereferentielPrivileges;
+use Element\Provider\Privilege\CompetencethemePrivileges;
+use Element\Provider\Privilege\CompetencetypePrivileges;
+
+/**
+ * @var CompetenceType[] $types
+ * @var ?CompetenceType $type
+ */
+
+$canVoir        = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+$canAjouter     = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AJOUTER));
+$canModifier    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_MODIFIER));
+$canHistoriser  = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_HISTORISER));
+$canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EFFACER));
+$canSubstituer  = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_SUBSTITUER));
+
+$canCompetenceDisciplineIndex = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_INDEX));
+$canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
+$canCompetenceTypeIndex = $this->isAllowed(CompetencetypePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_INDEX));
+$canCompetenceReferentielIndex = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_INDEX));
+$canRechercherAgents = $canVoir;
+
+
+$this->headTitle("Compétences");
+?>
+
+
+<h1 class="page-header">
+    Compétences
+</h1>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <?php if ($canAjouter) : ?>
+            <?php /** @see \Element\Controller\CompetenceController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/ajouter', [], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon icon-ajouter"></span>
+                Ajouter une compétence
+            </a>
+            <?php /** @see \Element\Controller\CompetenceImporterController::importerAction() */ ?>
+            <a href="<?php echo $this->url('competence-import', [], [], true); ?>"
+               class="btn btn-primary ajax-modal" >
+                <span class="icon icon-ajouter"></span>
+                Importer un référentiel
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="col-md-6">
+
+        <?php if ($canCompetenceDisciplineIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceDisciplineController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-discipline', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux disciplines</a>
+        <?php endif; ?>
+
+
+        <?php if ($canCompetenceThemeIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceThemeController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-theme', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux thèmes</a>
+        <?php endif; ?>
+
+        <?php if ($canCompetenceTypeIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceTypeController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-type', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux types</a>
+        <?php endif; ?>
+
+        <?php if ($canCompetenceReferentielIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceReferentielController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-referentiel', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux référentiels</a>
+        <?php endif; ?>
+        <?php if ($canRechercherAgents) : ?>
+            <?php /** @see \Element\Controller\CompetenceController::rechercherAgentsAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/rechercher-agents', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-search"></span>
+                Rechercher des agents avec des compétences</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link" id="competences-all"
+            data-bs-target="#competences-all"
+            type="button" role="tab" aria-controls="competences-all" aria-selected="true"
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            onclick="location.href='<?php echo $this->url('element/competence/listing', ['competence-type' => null],[], true); ?>'"
+    >
+        Toutes les compétences
+    </button>
+
+    <?php foreach ($types as $type_onglet): ?>
+        <button class="nav-link" id="competences-<?php echo $type_onglet->getId(); ?>"
+                data-bs-target="#competences-<?php echo $type_onglet->getId(); ?>"
+                type="button" role="tab" aria-controls="competences-<?php echo $type_onglet->getId(); ?>" aria-selected="true"
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+                onclick="location.href='<?php echo $this->url('element/competence/listing', ['competence-type' => $type_onglet->getId()],[], true); ?>'"
+        >
+            <?php echo $type_onglet->getLibelle(); ?>
+        </button>
+    <?php endforeach; ?>
+</div>
+
+<script>
+    $(function() {
+        $('button#competences-<?php echo $type?$type->getId():'all'; ?>').addClass('active');
+    });
+</script>
