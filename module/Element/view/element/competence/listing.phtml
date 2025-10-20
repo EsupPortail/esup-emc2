@@ -24,8 +24,11 @@ $canDetruire = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePr
 $canSubstituer = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_SUBSTITUER));
 
 
-$positionAction = 4;
-if ($type !== null and $type->getLibelle() !== "Compétence spécifique") $positionAction--;
+$positionAction = 5;
+if ($type !== null) {
+    $positionAction--;
+    if ($type->getLibelle() !== "Compétence spécifique") $positionAction--;
+}
 ?>
 
 
@@ -144,7 +147,6 @@ if ($type !== null and $type->getLibelle() !== "Compétence spécifique") $posit
 <script>
     $(function() {
         $("table#competences-<?php echo $type?$type->getId():''; ?>").DataTable({
-            "sorting":   false,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",
