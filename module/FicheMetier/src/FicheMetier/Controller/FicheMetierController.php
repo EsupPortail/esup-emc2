@@ -60,9 +60,8 @@ class FicheMetierController extends AbstractActionController
     {
         $fromQueries = $this->params()->fromQuery();
         $etatId = $fromQueries['etat'] ?? null;
-        $domaineId = $fromQueries['domaine'] ?? null;
         $expertise = $fromQueries['expertise'] ?? null;
-        $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
+        $params = ['etat' => $etatId, 'expertise' => $expertise];
 
         $etatTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
 

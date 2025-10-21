@@ -5,7 +5,6 @@ namespace Metier;
 use Laminas\Router\Http\Literal;
 use Metier\Controller\IndexController;
 use Metier\Controller\IndexControllerFactory;
-use Metier\Provider\Privilege\DomainePrivileges;
 use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Provider\Privilege\ReferentielmetierPrivileges;

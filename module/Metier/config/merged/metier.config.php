@@ -17,7 +17,6 @@ use Metier\Form\SelectionnerMetier\SelectionnerMetierHydratorFactory;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceFactory;
-use Metier\View\Helper\TypeFonctionViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -290,7 +289,6 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'typefonction' => TypeFonctionViewHelper::class,
         ],
     ],
 ];
