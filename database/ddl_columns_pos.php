@@ -1032,7 +1032,6 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
-        'source_string',
     ],
     'missionprincipale_activite'                        => [
         'id',

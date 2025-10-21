@@ -185,7 +185,7 @@ return [
             'length'      => 1,
             'scale'       => NULL,
             'precision'   => NULL,
-            'nullable'    => TRUE,
+            'nullable'    => FALSE,
             'default'     => '\'O\'',
             'position'    => 15,
             'commentaire' => NULL,
