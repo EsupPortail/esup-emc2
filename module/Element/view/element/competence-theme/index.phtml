@@ -12,7 +12,7 @@ use Element\Provider\Privilege\CompetencereferentielPrivileges;
 use Element\Provider\Privilege\CompetencethemePrivileges;
 use Element\Provider\Privilege\CompetencetypePrivileges;
 
-$this->headTitle("Liste des thèmes de compétence");
+$this->headTitle("Thèmes associés aux compétences");
 
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
 $canCompetenceDisciplineIndex = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_INDEX));
@@ -29,7 +29,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
 ?>
 
 <h1 class="page-header">
-    Liste des thèmes de compétence
+    Thèmes associés aux compétences
 </h1>
 
 <div class="row">
@@ -45,8 +45,8 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
     </div>
     <div class="col-md-6">
         <?php if ($canCompetenceIndex) : ?>
-            <?php /** @see \Element\Controller\CompetenceController::indexAction() */ ?>
-            <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-secondary">
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/listing', [], [], true); ?>" class="btn btn-secondary">
                 <span class="icon icon-lister"></span>
                 Accéder aux compétences</a>
         <?php endif; ?>
@@ -94,7 +94,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Element\Controller\CompetenceThemeController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-theme/afficher', ['competence-theme' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal">
+                       class="ajax-modal action secondary">
                         <span class="icon icon-voir"></span>
                         Afficher
                     </a>
@@ -103,7 +103,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                     <br>
                     <?php /** @see \Element\Controller\CompetenceThemeController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-theme/modifier', ['competence-theme' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
+                       class="ajax-modal action primary" data-event="modification">
                         <span class="icon icon-editer"></span>
                         Modifier
                     </a>
@@ -112,13 +112,17 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                     <br>
                     <?php if($theme->estNonHistorise()) : ?>
                         <?php /** @see \Element\Controller\CompetenceThemeController::historiserAction() */?>
-                        <a href="<?php echo $this->url('element/competence-theme/historiser', ['competence-theme' => $theme->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/competence-theme/historiser', ['competence-theme' => $theme->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-historiser"></span>
                             Historiser
                         </a>
                     <?php else : ?>
                         <?php /** @see \Element\Controller\CompetenceThemeController::restaurerAction() */?>
-                        <a href="<?php echo $this->url('element/competence-theme/restaurer', ['competence-theme' => $theme->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/competence-theme/restaurer', ['competence-theme' => $theme->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
                         </a>
@@ -128,12 +132,9 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                     <br>
                     <?php /** @see \Element\Controller\CompetenceThemeController::detruireAction() */?>
                     <a href="<?php echo $this->url('element/competence-theme/detruire', ['competence-theme' => $theme->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="text-danger">
+                       class="ajax-modal action danger" data-event="modification">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
-
                     </a>
                 <?php endif; ?>
             </td>

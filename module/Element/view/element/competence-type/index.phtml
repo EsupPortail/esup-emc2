@@ -12,7 +12,7 @@ use Element\Provider\Privilege\CompetencereferentielPrivileges;
 use Element\Provider\Privilege\CompetencethemePrivileges;
 use Element\Provider\Privilege\CompetencetypePrivileges;
 
-$this->headTitle("Liste des types de compétence");
+$this->headTitle("Types de compétences");
 
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
 $canCompetenceDisciplineIndex = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_INDEX));
@@ -30,7 +30,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
 ?>
 
 <h1 class="page-header">
-    Liste des types de compétence
+    Types de compétences
 </h1>
 
 
@@ -47,8 +47,8 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
     </div>
     <div class="col-md-6">
         <?php if ($canCompetenceIndex) : ?>
-            <?php /** @see \Element\Controller\CompetenceController::indexAction() */ ?>
-            <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-secondary">
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/listing', [], [], true); ?>" class="btn btn-secondary">
                 <span class="icon icon-lister"></span>
                 Accéder aux compétences</a>
         <?php endif; ?>
@@ -99,7 +99,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Element\Controller\CompetenceTypeController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-type/afficher', ['competence-type' => $type->getId()], [], true); ?>"
-                       class="ajax-modal">
+                       class="ajax-modal action secondary">
                         <span class="icon icon-voir"></span>
                         Afficher
                     </a>
@@ -108,7 +108,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                     <br>
                     <?php /** @see \Element\Controller\CompetenceTypeController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-type/modifier', ['competence-type' => $type->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
+                       class="ajax-modal action primary" data-event="modification">
                         <span class="icon icon-editer"></span>
                         Modifier
                     </a>
@@ -117,13 +117,17 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                     <br>
                     <?php if($type->estNonHistorise()) : ?>
                         <?php /** @see \Element\Controller\CompetenceTypeController::historiserAction() */ ?>
-                        <a href="<?php echo $this->url('element/competence-type/historiser', ['competence-type' => $type->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/competence-type/historiser', ['competence-type' => $type->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-historiser"></span>
                             Historiser
                         </a>
                     <?php else : ?>
                         <?php /** @see \Element\Controller\CompetenceTypeController::restaurerAction() */ ?>
-                        <a href="<?php echo $this->url('element/competence-type/restaurer', ['competence-type' => $type->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('element/competence-type/restaurer', ['competence-type' => $type->getId()], [], true); ?>"
+                           class="action warning"
+                        >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
                         </a>
@@ -133,11 +137,9 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
                     <br>
                     <?php /** @see \Element\Controller\CompetenceTypeController::detruireAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-type/detruire', ['competence-type' => $type->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="text-danger">
+                       class="ajax-modal action danger" data-event="modification">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
                     </a>
                 <?php endif; ?>
             </td>

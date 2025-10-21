@@ -30,7 +30,6 @@ return [
                 [
                     'controller' => CompetenceController::class,
                     'action' => [
-                        'index',
                         'listing',
                     ],
                     'privileges' => [
@@ -123,13 +122,7 @@ return [
                         'type' => Literal::class,
                         'options' => [
                             'route' => '/competence',
-                            'defaults' => [
-                                /** @see CompetenceController::indexAction() */
-                                'controller' => CompetenceController::class,
-                                'action' => 'index',
-                            ],
                         ],
-                        'may_terminate' => true,
                         'child_routes' => [
                             'listing' => [
                                 'type' => Segment::class,

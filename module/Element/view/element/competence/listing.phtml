@@ -113,7 +113,7 @@ if ($type !== null) {
                     <br/>
                     <?php if ($competence->estNonHistorise()) : ?>
                         <?php /** @see CompetenceController::historiserAction() */ ?>
-                        <a href="<?php echo $this->url('element/competence/historiser', ['competence' => $competence->getId()], ['query' => ['retour' => $this->url('element/competence/listing',['type' => $type?->getId()], [], true)]], true); ?>"
+                        <a href="<?php echo $this->url('element/competence/historiser', ['competence' => $competence->getId()], ['query' => ['retour' => $this->url('element/competence/listing',['type' => $type?->getId()], ["query" => $params], true)]], true); ?>"
                            class="action warning"
                         >
                             <span class="icon icon-historiser"></span>
@@ -121,7 +121,7 @@ if ($type !== null) {
                         </a>
                     <?php else : ?>
                         <?php /** @see CompetenceController::restaurerAction() */ ?>
-                        <a href="<?php echo $this->url('element/competence/restaurer', ['competence' => $competence->getId()], ['query' => ['retour' => $this->url('element/competence/listing',['type' => $type?->getId()], [], true)]], true); ?>"
+                        <a href="<?php echo $this->url('element/competence/restaurer', ['competence' => $competence->getId()], ['query' => ['retour' => $this->url('element/competence/listing',['type' => $type?->getId()], ["query" => $params], true)]], true); ?>"
                            class="action warning"
                         >
                             <span class="icon icon-restaurer"></span>

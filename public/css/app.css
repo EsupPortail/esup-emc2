@@ -120,8 +120,12 @@ div.tab-content {
 }
 /** HISTORISER ****************************************************************************************************************/
 
-tr.historise td:not(.action) {
-    text-decoration: line-through darkred 2px;
+/*tr.historise td:not(.action) {*/
+/*    text-decoration: line-through darkred 2px;*/
+/*}*/
+
+tr.historise td {
+    background: #fdc2c2;
 }
 
 li.historise,

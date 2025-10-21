@@ -12,7 +12,7 @@ use Element\Provider\Privilege\CompetencereferentielPrivileges;
 use Element\Provider\Privilege\CompetencethemePrivileges;
 use Element\Provider\Privilege\CompetencetypePrivileges;
 
-$this->headTitle("Liste des types de compétence");
+$this->headTitle("Référentiels de compétences");
 
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
 $canCompetenceDisciplineIndex = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_INDEX));
@@ -31,7 +31,7 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
 ?>
 
 <h1 class="page-header">
-    Liste des référentiels de compétences
+    Référentiels de compétences
 </h1>
 
 
@@ -48,8 +48,8 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
     </div>
     <div class="col-md-6">
         <?php if ($canCompetenceIndex) : ?>
-            <?php /** @see \Element\Controller\CompetenceController::indexAction() */ ?>
-            <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-secondary">
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/listing', [], [], true); ?>" class="btn btn-secondary">
                 <span class="icon icon-lister"></span>
                 Accéder aux compétences</a>
         <?php endif; ?>
@@ -105,7 +105,7 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
                     <?php if ($canAfficher) : ?>
                         <?php /** @see \Element\Controller\CompetenceReferentielController::afficherAction() */ ?>
                         <a href="<?php echo $this->url('element/competence-referentiel/afficher', ['competence-referentiel' => $referentiel->getId()], [], true); ?>"
-                           class="ajax-modal">
+                           class="ajax-modal action secondary">
                             <span class="icon icon-voir"></span>
                             Afficher
                         </a>
@@ -114,7 +114,7 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
                         <br>
                         <?php /** @see \Element\Controller\CompetenceReferentielController::modifierAction() */ ?>
                         <a href="<?php echo $this->url('element/competence-referentiel/modifier', ['competence-referentiel' => $referentiel->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification">
+                           class="ajax-modal action primary" data-event="modification">
                             <span class="icon icon-editer"></span>
                             Modifier
                         </a>
@@ -123,13 +123,17 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
                         <br>
                         <?php if ($referentiel->estNonHistorise()) : ?>
                             <?php /** @see \Element\Controller\CompetenceReferentielController::historiserAction() */ ?>
-                            <a href="<?php echo $this->url('element/competence-referentiel/historiser', ['competence-referentiel' => $referentiel->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('element/competence-referentiel/historiser', ['competence-referentiel' => $referentiel->getId()], [], true); ?>"
+                               class="action warning"
+                            >
                                 <span class="icon icon-historiser"></span>
                                 Historiser
                             </a>
                         <?php else : ?>
                             <?php /** @see \Element\Controller\CompetenceReferentielController::restaurerAction() */ ?>
-                            <a href="<?php echo $this->url('element/competence-referentiel/restaurer', ['competence-referentiel' => $referentiel->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('element/competence-referentiel/restaurer', ['competence-referentiel' => $referentiel->getId()], [], true); ?>"
+                               class="action warning"
+                            >
                                 <span class="icon icon-restaurer"></span>
                                 Restaurer
                             </a>
@@ -139,22 +143,18 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
                         <br>
                         <?php /** @see \Element\Controller\CompetenceReferentielController::viderAction() */ ?>
                         <a href="<?php echo $this->url('element/competence-referentiel/vider', ['competence-referentiel' => $referentiel->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification">
-                        <span class="text-warning">
+                           class="ajax-modal action warning" data-event="modification">
                             <span class="icon icon-vider"></span>
                             Vider
-                        </span>
                         </a>
                     <?php endif; ?>
                     <?php if ($canDetruire) : ?>
                         <br>
                         <?php /** @see \Element\Controller\CompetenceReferentielController::supprimerAction() */ ?>
                         <a href="<?php echo $this->url('element/competence-referentiel/supprimer', ['competence-referentiel' => $referentiel->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification">
-                        <span class="text-danger">
+                           class="ajax-modal action danger" data-event="modification">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
                         </a>
                     <?php endif; ?>
                 </td>

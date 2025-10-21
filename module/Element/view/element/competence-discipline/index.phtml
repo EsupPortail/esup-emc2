@@ -13,7 +13,7 @@ use Element\Provider\Privilege\CompetencereferentielPrivileges;
 use Element\Provider\Privilege\CompetencethemePrivileges;
 use Element\Provider\Privilege\CompetencetypePrivileges;
 
-$this->headTitle("Liste des disciplines de compétence");
+$this->headTitle("Disciplines associées aux compétences");
 
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
 
@@ -31,7 +31,7 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
 ?>
 
 <h1 class="page-header">
-    Liste des disciplines de compétence
+    Disciplines associées aux compétences
 </h1>
 
 <div class="row">
@@ -47,8 +47,8 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
     </div>
     <div class="col-md-6">
         <?php if ($canCompetenceIndex) : ?>
-            <?php /** @see \Element\Controller\CompetenceController::indexAction() */ ?>
-            <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-secondary">
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/listing', [], [], true); ?>" class="btn btn-secondary">
                 <span class="icon icon-lister"></span>
                 Accéder aux compétences</a>
         <?php endif; ?>
