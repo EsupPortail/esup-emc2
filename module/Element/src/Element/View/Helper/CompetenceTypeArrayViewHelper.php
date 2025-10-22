@@ -18,8 +18,8 @@ class CompetenceTypeArrayViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      *
-     * Note :: parmi les options on a :
-     * titre qui conditionne l'afficahge d'une section
+     * Note. Liste des options :
+     * - titre qui conditionne l'affichage d'une section
      */
     public function __invoke(array $competences, CompetenceType $type, ?HasApplicationCollectionInterface $objet = null, string $mode = "affichage", array $options = []): string|Partial
     {

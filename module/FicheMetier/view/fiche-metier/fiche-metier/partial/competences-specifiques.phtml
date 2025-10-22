@@ -23,7 +23,7 @@ if ($mode === 'edition-fiche-metier') {
                 <h2>
                     <span class="icon competence"></span>
                     Compétences spécifiques
-                    <span class="badge"><?php echo count($competences); ?></span>
+<!--                    <span class="badge">--><?php //echo count($competences); ?><!--</span>-->
                 </h2>
             </div>
             <div class="col-md-5">
@@ -62,8 +62,8 @@ if ($mode === 'edition-fiche-metier') {
         </div>
     </div>
     <div class="card-body">
-        <?php echo $this->competenceBloc($competences, $fichemetier,
-            ['display' => ['titre' => false, 'validation' => false, 'raison' => false], 'id' => 'competences-specifiques', 'mode' => $mode,
-                'actions' => $actions]); ?>
+        <div id="competence_Compétence_spécifique">
+            <h3>Compétence spécifique</h3>
+        </div>
     </div>
 </div>

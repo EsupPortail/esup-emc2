@@ -33,8 +33,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?string $raison = null;
     private ?string $codeFonction = null;
 
-    public Collection $competencesSpecifiques;
-
     private Collection $activites;
     private Collection $missions;
     private Collection $tendances;
@@ -49,7 +47,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
-        $this->competencesSpecifiques = new ArrayCollection();
 
         $this->tendances = new ArrayCollection();
         $this->thematiques = new ArrayCollection();
@@ -113,57 +110,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function addMission(FicheMetierMission $ficheMetierMission): void
     {
         $this->missions->add($ficheMetierMission);
-    }
-
-    /** Compétences ***************************************************************************************************/
-
-    /** Les compétences "standards" sont gérées dans le trait HasCompetenceCollection */
-
-    public function getCompetencesSpecifiquesCollection(): Collection
-    {
-        return $this->competencesSpecifiques;
-    }
-
-
-    /** @return CompetenceElement[] */
-    public function getCompetencesSpecifiques(bool $histo = false): array
-    {
-        $competences = $this->competencesSpecifiques->toArray();
-        if (!$histo) $competences = array_filter($competences, function (CompetenceElement $element) {
-            return $element->estNonHistorise();
-        });
-        return $competences;
-    }
-
-    /** @return CompetenceElement[] */
-    public function getCompetenceSpecifiqueListe(bool $avecHisto = false) : array
-    {
-        $competences = [];
-        /** @var CompetenceElement $competenceElement */
-        foreach ($this->competencesSpecifiques as $competenceElement) {
-            if ($avecHisto OR $competenceElement->estNonHistorise()) $competences[$competenceElement->getCompetence()->getId()] = $competenceElement;
-        }
-        return $competences;
-    }
-
-    public function hasCompetenceSpecifique(CompetenceElement $element): bool
-    {
-        return $this->competencesSpecifiques->contains($element);
-    }
-
-    public function addCompetenceSpecifique(CompetenceElement $element): void
-    {
-        if ($this->hasCompetenceSpecifique($element)) $this->competencesSpecifiques->add($element);
-    }
-
-    public function removeCompetenceSpecifique(CompetenceElement $element): void
-    {
-        if ($this->hasCompetenceSpecifique($element)) $this->competencesSpecifiques->removeElement($element);
-    }
-
-    public function clearCompetencesSpecifiques(): void
-    {
-        $this->competencesSpecifiques->clear();
     }
 
     /** FONCTION POUR MACRO *******************************************************************************************/

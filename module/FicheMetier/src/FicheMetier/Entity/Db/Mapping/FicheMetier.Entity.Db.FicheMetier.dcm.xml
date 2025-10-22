@@ -43,17 +43,6 @@
             </join-table>
         </many-to-many>
 
-        <many-to-many field="competencesSpecifiques" target-entity="Element\Entity\Db\CompetenceElement">
-            <join-table name="fichemetier_competence_specifique">
-                <join-columns>
-                    <join-column name="fichemetier_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="competence_element_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="ficheMetier" field="missions"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier" field="thematiques"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\TendanceElement" mapped-by="ficheMetier" field="tendances"/>

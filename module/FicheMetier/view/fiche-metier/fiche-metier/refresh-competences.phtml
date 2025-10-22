@@ -18,9 +18,8 @@ if ($mode === 'edition-fiche-metier') {
 }
 
 ?>
-        <?php /** @see \Element\View\Helper\CompetenceTypeArrayViewHelper */ ?>
-        <?php echo $this->competenceTypeArray($competences, $type,  $fichemetier,
-                ($mode === 'edition-fiche-metier'?"modification":"affichage"),
-                ['table-id' => str_replace(" ","_", $type->getLibelle()), 'title' => $type->getLibelle()]); ?>
-<!--    </div>-->
-<!--</div>-->
+
+<?php /** @see \Element\View\Helper\CompetenceTypeArrayViewHelper */ ?>
+<?php echo $this->competenceTypeArray($competences, $type,  $fichemetier,
+        ($mode === 'edition-fiche-metier'?"modification":"affichage"),
+        ['table-id' => str_replace(" ","_", $type->getLibelle()), 'title' => $type->getLibelle()]); ?>

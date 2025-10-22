@@ -411,16 +411,7 @@ class FicheMetierService
      */
     public function getCompetencesSpecifiquesDictionnaires(FicheMetier $fiche, bool $asElement = false): array
     {
-        $dictionnaire = [];
-
-        foreach ($fiche->getCompetenceSpecifiqueListe() as $competenceElement) {
-            $competence = ($asElement) ? $competenceElement : $competenceElement->getCompetence();
-            $dictionnaire[$competence->getId()]["entite"] = $competence;
-            $dictionnaire[$competence->getId()]["raison"][] = $fiche;
-            $dictionnaire[$competence->getId()]["conserve"] = true;
-        }
-
-        return $dictionnaire;
+        return [];
     }
 
     /**

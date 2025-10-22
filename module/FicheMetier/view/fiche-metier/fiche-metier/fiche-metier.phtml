@@ -87,7 +87,11 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
         </div>
         <div class="card-body">
             <?php foreach($types as $type): ?>
-                <div id="competence_<?php echo str_replace(" ","_",$type->getLibelle()); ?>" > </div>
+                <?php if ($type->getLibelle() !== "Compétence spécifique"): ?>
+                    <div id="competence_<?php echo str_replace(" ","_",$type->getLibelle()); ?>">
+                        <h3><?php echo $type->getLibelle(); ?> </h3>
+                    </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>
@@ -97,8 +101,6 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/competences-specifiques',            ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode ],       [], true); ?>
-    <div id="neue_competences_specifiques">
-    </div>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICAITON]) || $parametres[FicheMetierParametres::DISPLAY_APPLICAITON]->getValeur() !== "false") : ?>
@@ -158,7 +160,9 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
                 },
             success:
                 function (retour) {
-                    $("div#competence_" + type).html(retour).removeClass('refreshing');
+                    $("div#competence_" + type)
+                        .html(retour)
+                        .removeClass('refreshing');
                 }
         });
     }

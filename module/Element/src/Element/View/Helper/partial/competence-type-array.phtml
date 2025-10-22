@@ -52,9 +52,6 @@ if ($mode === 'modification' and $scope !== null) {
 
 ?>
 
-<div id="<?php echo $tableId; ?>">
-
-
     <?php if (!empty($competences)) : ?>
         <h3> <?php echo $type->getLibelle(); ?> </h3>
 
@@ -144,11 +141,9 @@ if ($mode === 'modification' and $scope !== null) {
             </tbody>
         </table>
     <?php endif; ?>
-</div>
 
 <script>
     $(function () {
-        console.log("datatable pour <?php echo $tableId; ?>");
         $('table#<?php echo $tableId; ?>').DataTable({
             paging: false,
             info: false,
@@ -162,10 +157,11 @@ if ($mode === 'modification' and $scope !== null) {
         });
 
         $("table#<?php echo $tableId; ?> span.toggleClef").click(function () {
-            $("#neue_competences div.card-body").addClass('refreshing');
+
             let id = $(this).attr('id');
-            let type = $(this).data('competence-type');
+            let type = $(this).data('competence-type').replaceAll(' ','_');
             console.log(type);
+            $("div#competence_" + type).addClass('refreshing');
             <?php /** @see ElementController::toggleClefAction() */ ?>
             let url = "<?php echo $this->url("element_/toggle-clef", ['type' => ElementController::TYPE_COMPETENCE]); ?>" + "/" + id;
             console.log("toggleing clef")
