@@ -486,6 +486,8 @@ EOS;
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-competences', ['fiche-metier' => $fichemetier->getId()], [], true));
         $form->bind($fichemetier);
 
+
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -524,46 +526,44 @@ EOS;
 
     public function gererCompetencesSpecifiquesAction(): ViewModel
     {
-//        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-//        $form = $this->getSelectionCompetenceForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fichemetier->getId()], [], true));
-//
-//        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle("Compétence spécifique");
-////        $comptences = $this->getFicheMetierService()->getCompetencesByType($type);
-//        $form->getHydrator()->setCollection($fichemetier->getCompetencesSpecifiquesCollection());
-////        $form->getHydrator()->setCollection($comptences);
-//        $form->bind($fichemetier);
-//
-//
-//        //todo modifier hydrator
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $form->setData($data);
-//            if ($form->isValid()) {
-//                $this->getFicheMetierService()->update($fichemetier);
-//                exit();
-//            }
-//        }
-//
-//        $css=<<<EOS
-//.dropdown-item:hover span.text span.competence span.description {
-//    display: block !important; font-style: italic;
-//}
-//
-//span.competence {
-//    display: inline-block;
-//}
-//
-//.bootstrap-select .filter-option-inner {
-//    white-space: normal;
-//    height: auto;
-//}
-//EOS;
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle('Compétence spécifique');
+
+        $form = $this->getSelectionCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $form->reinit($type);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $css=<<<EOS
+.dropdown-item:hover span.text span.competence span.description {
+    display: block !important; font-style: italic;
+}
+
+span.competence {
+    display: inline-block;
+}
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+EOS;
 
         $vm = new ViewModel([
             'title' => "Gestion des compétences spécifiques associées à la fiche métier",
-            'form' => null,
+            'form' => $form,
+            'css' => $css,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;

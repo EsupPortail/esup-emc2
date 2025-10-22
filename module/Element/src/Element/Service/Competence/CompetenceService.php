@@ -134,7 +134,7 @@ class CompetenceService
         return $competence;
     }
 
-    public function getCompetencesAsGroupOptions(): array
+    public function getCompetencesAsGroupOptions(?CompetenceType $type = null): array
     {
         $competences = $this->getCompetences();
         $dictionnaire = [];
@@ -152,13 +152,17 @@ class CompetenceService
             });
 
             foreach ($listing as $competence) {
-                $optionsoptions[$competence->getId()] = $this->competenceOptionify($competence);
+                if ($type === null OR $competence->getType() === $type) {
+                    $optionsoptions[$competence->getId()] = $this->competenceOptionify($competence);
+                }
             }
 
-            $options[] = [
-                'label' => $clef,
-                'options' => $optionsoptions,
-            ];
+            if (!empty($optionsoptions)) {
+                $options[] = [
+                    'label' => $clef,
+                    'options' => $optionsoptions,
+                ];
+            }
         }
         return $options;
     }

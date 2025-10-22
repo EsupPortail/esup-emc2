@@ -3,6 +3,7 @@
 namespace Element\Form\SelectionCompetence;
 
 use Doctrine\Common\Collections\Collection;
+use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
@@ -12,6 +13,7 @@ use Laminas\InputFilter\Factory;
 class SelectionCompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
 
+    private ?CompetenceType $type = null;
     private ?Collection $collection = null;
 
     public function getCollection(): ?Collection
@@ -64,5 +66,12 @@ class SelectionCompetenceForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'competences'               => [ 'required' => false,  ],
         ]));
+    }
+
+    public function reinit(CompetenceType $type): void
+    {
+        $this->type = $type;
+        $this->hydrator->setType($type);
+        $this->get('competences')->setValueOptions($this->getCompetenceService()->getCompetencesAsGroupOptions($type));
     }
 }

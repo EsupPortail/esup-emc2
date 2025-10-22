@@ -3,6 +3,7 @@
 namespace Element\Form\SelectionCompetence;
 
 use Doctrine\Common\Collections\Collection;
+use Element\Entity\Db\CompetenceType;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
@@ -15,16 +16,11 @@ class SelectionCompetenceHydrator implements HydratorInterface {
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
 
-    private ?Collection $collection = null;
+    private ?CompetenceType $type = null;
 
-    public function getCollection(): ?Collection
+    public function setType(?CompetenceType $type): void
     {
-        return $this->collection;
-    }
-
-    public function setCollection(?Collection $collection): void
-    {
-        $this->collection = $collection;
+        $this->type = $type;
     }
 
 
@@ -34,8 +30,7 @@ class SelectionCompetenceHydrator implements HydratorInterface {
      */
     public function extract($object): array
     {
-        $collection = ($this->getCollection() !== null)?$this->getCollection():$object->getCompetenceCollection();
-        $array = $collection->toArray();
+        $collection = $object->getCompetenceCollection();
         $competences = array_map(function (CompetenceElement $a) { return $a->getCompetence(); }, $collection->toArray());
         $competenceIds = array_map(function (Competence $f) { return $f->getId();}, $competences);
         $data = [
@@ -51,7 +46,7 @@ class SelectionCompetenceHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object) : object
     {
-        $collection = ($this->getCollection() !== null)?$this->getCollection():$object->getCompetenceCollection();
+        $collection = $object->getCompetenceCollection();
         $competenceIds = $data["competences"];
 
         $competences = [];
@@ -62,7 +57,9 @@ class SelectionCompetenceHydrator implements HydratorInterface {
 
         foreach ($collection as $competenceElement) {
             if (! isset($competences[$competenceElement->getCompetence()->getId()])) {
-                $collection->removeElement($competenceElement);
+                if ($this->type === null OR $this->type === $competenceElement->getCompetence()->getType()) {
+                    $collection->removeElement($competenceElement);
+                }
             }
         }
 
