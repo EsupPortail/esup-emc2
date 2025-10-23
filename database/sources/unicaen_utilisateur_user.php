@@ -14,8 +14,9 @@ $data = [
     ["houillier","Fanny HOUILLIER","fanny.houillier@unicaen.fr","ldap","t"],
     ["cauchon251","Marine CAUCHON","marine.cauchon@unicaen.fr","ldap","t"],
     ["rocher202","Fabien ROCHER","fabien.rocher@unicaen.fr","ldap","t"],
-    ["grimpar221","Marine CAUCHON","marine.cauchon@unicaen.fr","ldap","t"],
+    ["grimpar221","Aurelien GRIMPARD","marine.cauchon@unicaen.fr","ldap","t"],
 ];
+
 
 $array = [];
 foreach ($data as $item) {

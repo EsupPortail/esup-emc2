@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @see \Carriere\Controller\FonctionTypeController::afficherAction()
+ * @var FonctionType $fonctionType
+ */
+
+use Carriere\Entity\Db\FonctionType;
+
+?>
+
+<?php if ($fonctionType->estHistorise()) : ?>
+    <span class="badge" style="background:darkred;"> Historisée </span>
+<?php endif; ?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-4">Code</dt>
+            <dd class="col-md-8"><code><?php echo $fonctionType->getCode(); ?> </code></dd>
+            <dt class="col-md-4">Libellé</dt>
+            <dd class="col-md-8"><?php echo $fonctionType->getLibelle(); ?></dd>
+            <?php if ($fonctionType->getDescription()): ?>
+            <dt> Descritpion</dt>
+            <dd>
+                <?php echo $fonctionType->getDescription(); ?>
+            </dd>
+            <?php endif; ?>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-4">Dernière modification </dt>
+            <dd class="col-md-8">Le <?php echo $fonctionType->getHistoModification()->format("d/m/Y à H:i"); ?> par <?php echo $fonctionType->getHistoModificateur()->getDisplayName(); ?> </dd>
+        </dl>
+        <?php if ($fonctionType->estHistorise()) : ?>
+            <dl class="row">
+                <dt class="col-md-4">Historisation</dt>
+                <dd class="col-md-8">Le <?php echo $fonctionType->getHistoDestruction()->format("d/m/Y à H:i"); ?> par <?php echo $fonctionType->getHistoDestructeur()->getDisplayName(); ?> </dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
