@@ -27,9 +27,9 @@ use Laminas\Form\Form;
 <script>
     $(document).ready(function () {
 
-        // tinymce.remove();
+        tinymce.remove();
         tinymce.init({
-            selector: '.tinymce',
+            selector: 'textarea.tinymce',
             toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
             resize: true,
             language: 'fr_FR',

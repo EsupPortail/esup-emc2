@@ -36,7 +36,7 @@ $canSupprimer = $this->isAllowed(FonctiontypePrivileges::getResourceId(Fonctiont
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<table class="table table-condensed" id="types">
+<table class="table table-condensed" id="fonctionstypes">
     <thead>
     <tr>
         <th class="col-md-2"> Code </th>
@@ -112,8 +112,9 @@ $canSupprimer = $this->isAllowed(FonctiontypePrivileges::getResourceId(Fonctiont
     });
 
     $(function () {
-        $('table#types').DataTable({
+        $('table#fonctionstypes').DataTable({
             autoWidth: false,
+            paging: false,
             language: {
                 "url": "/js/datatables_fr.json",
             },
