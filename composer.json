@@ -14,7 +14,7 @@
     "unicaen/autoform": "^6.2",
     "unicaen/utilisateur": "^7.0",
     "unicaen/privilege": "6.2.1",
-    "unicaen/renderer": "^7",
+    "unicaen/renderer": "^8",
     "unicaen/pdf": "^6",
     "unicaen/mail": "^7.2",
     "unicaen/parametre": "^6",
