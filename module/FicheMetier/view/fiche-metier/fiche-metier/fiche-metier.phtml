@@ -31,6 +31,8 @@ if ($mode === 'edition-fiche-metier') $titre = "Modification".$titre;
 $this->headTitle($titre);
 
 $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+$canAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+$canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 
 ?>
 
@@ -45,6 +47,35 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
             <?php echo $this->partial('partial/resume',   ['fichemetier' => $fiche, 'mode' => $mode, 'parametres' => $parametres ],  [], true); ?>
         <?php endif; ?>
     </div>
+</div>
+
+<div class="row">
+<div class="float-end">
+    <?php if ($canExporterFicheMetier): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::exporterAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+           class="btn btn-secondary" target="_blank">
+            <span class="icon icon-pdf"></span>
+            Exporter la fiche métier
+        </a>
+    <?php endif; ?>
+    <?php if ($canModifier AND $mode === "affichage"): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::modifierAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-editer"></span>
+            Basculer en mode Édition
+        </a>
+    <?php endif; ?>
+    <?php if ($canModifier AND $mode === "edition-fiche-metier"): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-voir"></span>
+            Basculer en mode Visualisation
+        </a>
+    <?php endif; ?>
+</div>
 </div>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>
@@ -116,16 +147,7 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
     <?php echo $this->partial('partial/tendances', ['fichemetier' => $fiche, 'tendancesTypes' => $tendancesTypes, 'tendancesElements' => $tendancesElements, 'mode' => $mode], [], true); ?>
 <?php endif; ?>
 
-<div class="float-end">
-<?php if ($canExporterFicheMetier): ?>
-    <?php /** @see \FicheMetier\Controller\FicheMetierController::exporterAction() */ ?>
-    <a href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-       class="btn btn-secondary" target="_blank">
-        <span class="icon icon-pdf"></span>
-        Exporter la fiche métier
-    </a>
-<?php endif; ?>
-</div>
+
 
 <script>
     function refreshApplications() {

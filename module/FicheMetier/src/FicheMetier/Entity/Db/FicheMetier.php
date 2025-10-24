@@ -236,6 +236,12 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @noinspection PhpUnused */
+    public function getCompetencesSpecifique(): string
+    {
+        return $this->getComptencesByType(CompetenceType::CODE_SPECIFIQUE);
+    }
+
+    /** @noinspection PhpUnused */
     public function getApplicationsAffichage(): string
     {
         $applications = $this->getApplicationListe();
@@ -248,6 +254,13 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         }
         $texte .= "</ul>";
         return $texte;
+    }
+
+    /** @noinspection PhpUnused */
+
+    public function toStringRaison() : string
+    {
+        return $this->raison;
     }
 
     /** @noinspection PhpUnused */

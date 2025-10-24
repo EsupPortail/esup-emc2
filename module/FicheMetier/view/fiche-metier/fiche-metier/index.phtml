@@ -168,6 +168,13 @@ $this->headTitle('Index des fiches métiers');
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <br/>
+                    <?php /** @see FicheMetierController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                       class="action primary">
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
+                    <br/>
                     <?php /** @see FicheMetierController::dupliquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                        class="action primary">

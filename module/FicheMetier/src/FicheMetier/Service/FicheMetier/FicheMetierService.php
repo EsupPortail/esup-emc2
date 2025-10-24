@@ -5,6 +5,7 @@ namespace FicheMetier\Service\FicheMetier;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Application\Service\Macro\MacroServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -26,6 +27,7 @@ use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareT
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -37,6 +39,7 @@ use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
 use RuntimeException;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
@@ -52,8 +55,10 @@ class FicheMetierService
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;
+    use MacroServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
 
     use HasApplicationCollectionServiceAwareTrait;
@@ -541,9 +546,13 @@ class FicheMetierService
 
     public function exporter(?FicheMetier $fichemetier): string
     {
+        $app = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_APPLICAITON);
+
         $vars = [
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
+            'MacroService' => $this->getMacroService(),
+            'app' => $app,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_METIER, $vars);
 

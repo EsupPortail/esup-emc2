@@ -3,6 +3,7 @@
 namespace FicheMetier\Service\FicheMetier;
 
 use Application\Service\Configuration\ConfigurationService;
+use Application\Service\Macro\MacroService;
 use Doctrine\ORM\EntityManager;
 use Element\Form\SelectionApplication\SelectionApplicationHydrator;
 use Element\Form\SelectionCompetence\SelectionCompetenceHydrator;
@@ -21,6 +22,7 @@ use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FicheMetierServiceFactory {
@@ -42,8 +44,10 @@ class FicheMetierServiceFactory {
          * @var ConfigurationService $configurationService
          * @var EtatInstanceService $etatInstanceService
          * @var FicheMetierMissionService $ficheMetierMissionService
+         * @var MacroService $macroService
          * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var ParametreService $parametreService
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
@@ -59,8 +63,10 @@ class FicheMetierServiceFactory {
         $configurationService = $container->get(ConfigurationService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
+        $macroService = $container->get(MacroService::class);
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
@@ -83,8 +89,10 @@ class FicheMetierServiceFactory {
         $service->setConfigurationService($configurationService);
         $service->setEtatInstanceService($etatInstanceService);
         $service->setFicheMetierMissionService($ficheMetierMissionService);
+        $service->setMacroService($macroService);
         $service->setMissionActiviteService($missionActiviteService);
         $service->setMissionPrincipaleService($missionPrincipaleService);
+        $service->setParametreService($parametreService);
         $service->setRenduService($renduService);
 
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);
