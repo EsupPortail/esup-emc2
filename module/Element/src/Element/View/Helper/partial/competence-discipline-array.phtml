@@ -4,6 +4,7 @@ use Application\Controller\ElementController;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceDiscipline;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
@@ -21,7 +22,7 @@ use FichePoste\Provider\Privilege\FichePostePrivileges;
 
 $debug = false;
 
-$tableId = 'competence_' . str_replace(" ","_",$type->getLibelle());
+$tableId = 'competence_' . str_replace(" ", "_", $type->getLibelle());
 
 $canAfficherCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
 
@@ -51,20 +52,39 @@ if ($mode === 'modification' and $scope !== null) {
     }
 }
 
+
+$empty=new CompetenceDiscipline(); $empty->setLibelle("Sans discipline"); $empty->setId(PHP_INT_MAX);
+$discipline = [];
+$dictionnaire = [];
+foreach ($competences as $competence) {
+    $c = $competence['entite']->getCompetence();
+    $d = $c->getDiscipline()??$empty;
+    $key = ($d === null)?-1:$d->getId();
+    $discipline[$key] = $d;
+    $dictionnaire[$key][] = $competence;
+}
+
+usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) { return $a->getLibelle() <=> $b->getLibelle(); });
+
 ?>
 
-    <?php if (!empty($competences)) : ?>
-        <h3> <?php echo $type->getLibelle(); ?> </h3>
+<?php if (!empty($discipline)) : ?>
+    <?php if ($scope === null and $mode = 'modification') : ?>
+        <div class="alert alert-warning">
+            <span class="icon icon-warning"></span>
+            La portée du tableau des compétences n'a pas pu être déterminé : blocage des options de modification des
+            compétences.
+        </div>
+    <?php endif; ?>
 
-        <?php if ($scope === null and $mode = 'modification') : ?>
-            <div class="alert alert-warning">
-                <span class="icon icon-warning"></span>
-                La portée du tableau des compétences n'a pas pu être déterminé : blocage des options de modification des
-                compétences.
-            </div>
-        <?php endif; ?>
+    <div id="specifique">
+    <?php foreach ($discipline as $d) : ?>
+        <?php $key = $d->getId(); ?>
 
-        <table class="table table-condensed datatable" id="<?php echo $tableId; ?>">
+        <h3> <?php echo $d->getLibelle(); ?> </h3>
+
+
+        <table class="table table-condensed datatable" id="<?php echo str_replace(" ", "_", $d->getLibelle()) ?>); ?>">
             <thead>
             <tr>
                 <th class="col-md-3"> Compétence</th>
@@ -75,7 +95,7 @@ if ($mode === 'modification' and $scope !== null) {
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($competences as $competenceArray) : ?>
+            <?php foreach ($dictionnaire[$key] as $competenceArray) : ?>
                 <?php
                 //todo examiner l'utilité d'envoyé les élements sous la forme d'un tableau [entite, raison, conserve]
                 $competenceElement = $competenceArray['entite'];
@@ -87,10 +107,12 @@ if ($mode === 'modification' and $scope !== null) {
                     <td data-column-id="Compétence">
                         <?php echo $competence->getLibelle(); ?>
                         <?php if ($competence->getDescription()) : ?>
-                            <span class="icon icon-info" title="<?php echo strip_tags($competence->getDescription()); ?>" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                            <span class="icon icon-info"
+                                  title="<?php echo strip_tags($competence->getDescription()); ?>"
+                                  data-bs-toggle="tooltip" data-bs-html="true"></span>
                         <?php endif; ?>
                         <br>
-                        <?php echo ($competence->getReferentiel())?$this->competenceReference($competence):"Aucun"; ?>
+                        <?php echo ($competence->getReferentiel()) ? $this->competenceReference($competence) : "Aucun"; ?>
                     </td>
                     <td data-column-id="Thème"> <?php echo($competence->getTheme() ? $competence->getTheme()->getLibelle() : "<em>Aucun thème</em>"); ?> </td>
                     <td data-column-id="Niveau de maîtrise"
@@ -100,7 +122,8 @@ if ($mode === 'modification' and $scope !== null) {
                             <span class="action">
                             <?php /** @see ElementController::changerNiveauAction() */ ?>
                                 <a href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId(), 'clef' => 'masquer'], [], true); ?>"
-                                       class="action primary ajax-modal" data-event="refresh-competences" data-competence-type="<?php echo str_replace(" ","_",$type->getLibelle()); ?>">
+                                   class="action primary ajax-modal" data-event="refresh-competences"
+                                   data-competence-type="<?php echo str_replace(" ", "_", $type->getLibelle()); ?>">
                                     <span class="icon icon-editer"></span>
                                     Modifier niveau
                                 </a>
@@ -116,7 +139,9 @@ if ($mode === 'modification' and $scope !== null) {
                         <br>
                         <span class="action">
                             <span
-                                    class="action primary toggleClef" data-competence-type="<?php echo $competence->getType()->getLibelle(); ?>" id="<?php echo $competenceElement->getId() ?>">
+                                    class="action primary toggleClef"
+                                    data-competence-type="<?php echo $competence->getType()->getLibelle(); ?>"
+                                    id="<?php echo $competenceElement->getId() ?>">
                                 <span class="icon icon-refresh"></span>
                                 Modifier clef
                             </span>
@@ -135,7 +160,8 @@ if ($mode === 'modification' and $scope !== null) {
                             <br>
                             <?php /** @see ElementController::supprimerAction() */ ?>
                             <a href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId()], [], true); ?>"
-                               class="action danger ajax-modal" data-event="refresh-competences" data-competence-type="<?php echo str_replace(" ","_",$type->getLibelle()); ?>">
+                               class="action danger ajax-modal" data-event="refresh-competences"
+                               data-competence-type="<?php echo str_replace(" ", "_", $type->getLibelle()); ?>">
                                 <span class="icon icon-unchecked"></span>
                                 Supprimer
                             </a>
@@ -145,7 +171,9 @@ if ($mode === 'modification' and $scope !== null) {
             <?php endforeach; ?>
             </tbody>
         </table>
-    <?php endif; ?>
+    <?php endforeach; ?>
+    </div>
+<?php endif; ?>
 
 <script>
     $(function () {
@@ -161,14 +189,14 @@ if ($mode === 'modification' and $scope !== null) {
             ]
         });
 
-        $("table#<?php echo $tableId; ?> span.toggleClef").click(function () {
+        $("div#specifique table span.toggleClef").click(function () {
 
             let id = $(this).attr('id');
-            let type = $(this).data('competence-type').replaceAll(' ','_');
+            let type = $(this).data('competence-type').replaceAll(' ', '_');
             $("div#competence_" + type).addClass('refreshing');
             <?php /** @see ElementController::toggleClefAction() */ ?>
             let url = "<?php echo $this->url("element_/toggle-clef", ['type' => ElementController::TYPE_COMPETENCE]); ?>" + "/" + id;
-            console.log("toggleing clef (" +type+ ")");
+            console.log("toggleing clef (" + type + ")");
             $.ajax({
                 type: "POST",
                 url: url,

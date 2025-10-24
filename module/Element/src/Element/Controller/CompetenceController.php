@@ -129,6 +129,7 @@ class CompetenceController extends AbstractActionController
         $vm->setVariables([
             'title' => "Ajout d'une compétence",
             'form' => $form,
+            'type' => $type,
         ]);
         return $vm;
     }
@@ -155,6 +156,7 @@ class CompetenceController extends AbstractActionController
         $vm->setVariables([
             'title' => "Modification d'une compétence",
             'form' => $form,
+            'type' => $competence->getType(),
         ]);
         return $vm;
     }

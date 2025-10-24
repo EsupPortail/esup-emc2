@@ -73,7 +73,7 @@ class CompetenceForm extends Form {
                 'value_options' => $this->getCompetenceThemeService()->getCompetencesThemesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'type',
+                'id' => 'theme',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ],
@@ -138,11 +138,11 @@ class CompetenceForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle' => [ 'required' => true,  ],
-            'description' => [ 'required' => false,  ],
+            'libelle'       => [ 'required' => true,  ],
+            'description'   => [ 'required' => false,  ],
             'discipline'    => [ 'required' => false, ],
-            'type'    => [ 'required' => true, ],
-            'theme'   => [ 'required' => false, ],
+            'type'          => [ 'required' => true, ],
+            'theme'         => [ 'required' => false, ],
             'referentiel'   => [ 'required' => false, ],
             'identifiant'   => [ 'required' => false, ],
         ]));

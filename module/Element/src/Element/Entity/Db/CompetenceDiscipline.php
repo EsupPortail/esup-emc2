@@ -21,6 +21,11 @@ class CompetenceDiscipline implements HistoriqueAwareInterface {
         $this->competences = new ArrayCollection();
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getId() : ?int
     {
         return $this->id;

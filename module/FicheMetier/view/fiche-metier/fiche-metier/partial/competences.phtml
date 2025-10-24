@@ -40,7 +40,7 @@ if ($mode === 'edition-fiche-metier') {
                         <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                            class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                           data-event="modification"
+                           data-event="refresh-competences">"
                         >
                             <span class="icon icon-lister"></span>
                             Gérer les compétences

@@ -27,7 +27,8 @@ use Element\Form\Competence\CompetenceForm;
 
 <script>
     function spe() {
-        if ($('#type option:selected').text() === 'Compétence spécifique') {
+        console.log($('select#type option:selected').text());
+        if ($('select#type option:selected').text() === 'Compétence spécifique') {
             console.log('specifique');
             $('div#discipline').show();
         } else{
@@ -37,8 +38,8 @@ use Element\Form\Competence\CompetenceForm;
     }
 
     $(function() {
-        spe();
         $('select').selectpicker();
+        spe();
         tinymce.init({
             selector: '.tinymce',
             toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
@@ -60,6 +61,6 @@ use Element\Form\Competence\CompetenceForm;
             }
         });
 
-        $('#type').change(spe);
+        $('select#type').on("change", spe);
     });
 </script>

@@ -19,7 +19,14 @@ if ($mode === 'edition-fiche-metier') {
 
 ?>
 
+<?php if ($type->getLibelle() === "Compétence spécifique") : ?>
+    <?php /** @see \Element\View\Helper\CompetenceDisciplineArrayViewHelper */ ?>
+    <?php echo $this->competenceDisciplineArray($competences, $type,  $fichemetier,
+        ($mode === 'edition-fiche-metier'?"modification":"affichage"),
+        ['table-id' => str_replace(" ","_", $type->getLibelle()), 'title' => $type->getLibelle()]); ?>
+<?php else : ?>
 <?php /** @see \Element\View\Helper\CompetenceTypeArrayViewHelper */ ?>
 <?php echo $this->competenceTypeArray($competences, $type,  $fichemetier,
         ($mode === 'edition-fiche-metier'?"modification":"affichage"),
         ['table-id' => str_replace(" ","_", $type->getLibelle()), 'title' => $type->getLibelle()]); ?>
+<?php endif; ?>

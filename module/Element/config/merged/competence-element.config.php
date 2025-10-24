@@ -10,6 +10,8 @@ use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceElement\CompetenceElementServiceFactory;
 use Element\View\Helper\ApplicationsViewHelper;
 use Element\View\Helper\ApplicationsViewHelperFactory;
+use Element\View\Helper\CompetenceDisciplineArrayViewHelper;
+use Element\View\Helper\CompetenceDisciplineArrayViewHelperFactory;
 use Element\View\Helper\CompetencesViewHelper;
 use Element\View\Helper\CompetencesViewHelperFactory;
 use Element\View\Helper\CompetenceTypeArrayViewHelper;
@@ -54,9 +56,11 @@ return [
         'factories' => [
             CompetencesViewHelper::class => CompetencesViewHelperFactory::class,
             CompetenceTypeArrayViewHelper::class => CompetenceTypeArrayViewHelperFactory::class,
+            CompetenceDisciplineArrayViewHelper::class => CompetenceDisciplineArrayViewHelperFactory::class,
         ],
         'aliases' => [
             'competences' => CompetencesViewHelper::class,
+            'competenceDisciplineArray' => CompetenceDisciplineArrayViewHelper::class,
             'competenceTypeArray' => CompetenceTypeArrayViewHelper::class,
         ],
     ],
