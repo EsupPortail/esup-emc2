@@ -134,7 +134,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     <?php echo $this->partial('partial/competences-specifiques',            ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode ],       [], true); ?>
 <?php endif; ?>
 
-<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICAITON]) || $parametres[FicheMetierParametres::DISPLAY_APPLICAITON]->getValeur() !== "false") : ?>
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) || $parametres[FicheMetierParametres::DISPLAY_APPLICATION]->getValeur() !== "false") : ?>
     <div id="neue_applications">
     </div>
 <?php endif; ?>

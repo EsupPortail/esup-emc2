@@ -546,13 +546,27 @@ class FicheMetierService
 
     public function exporter(?FicheMetier $fichemetier): string
     {
-        $app = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_APPLICAITON);
+        $displayResume = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RESUME);
+        $displayRaison = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RAISON);
+        $displayMission = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_MISSION);
+        $displayApplications = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_APPLICATION);
+        $displayCompetences = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_COMPETENCE);
+        $displayCompetencesSpecifiques = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE);
+        $displayContexte = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_CONTEXTE);
+        $displayTendance = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_TENDANCE);
 
         $vars = [
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
             'MacroService' => $this->getMacroService(),
-            'app' => $app,
+            'DISPLAY_RESUME' => $displayResume,
+            'DISPLAY_RAISON' => $displayRaison,
+            'DISPLAY_MISSION' => $displayMission,
+            'DISPLAY_APPLICATION' => $displayApplications,
+            'DISPLAY_COMPETENCE' => $displayCompetences,
+            'DISPLAY_COMPETENCE_SPECIFIQUE' => $displayCompetencesSpecifiques,
+            'DISPLAY_CONTEXTE' => $displayContexte,
+            'DISPLAY_TENDANCE' => $displayTendance,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_METIER, $vars);
 

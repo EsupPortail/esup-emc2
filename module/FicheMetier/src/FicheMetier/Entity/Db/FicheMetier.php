@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Application\Provider\Etat\FicheMetierEtats;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\ApplicationElement;
@@ -139,13 +140,82 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return $metier->getLibelle();
     }
 
+    /** @noinspection PhpUnused */
+    public function toStringResume(array $parameters = []): string
+    {
+        $on = $parameters[0] ?? true;
+        if ($on === false) return "";
+
+        $html = <<<EOS
+<h2>Résumé</h2>
+
+<table style='width:100%; border-collapse: collapse;'>
+EOS;
+
+        //metier
+        $html .= "<tr><th>Métier</th><td>".$this->getMetier()->getLibelle()."</td>";
+        $html .= "<tr><th>Correspondance</th><td><ul>";
+        foreach ($this->getMetier()->getCorrespondances() as $correspondance) {
+            $html .="<li>";
+            $html .= $correspondance->getType()->getLibelleCourt(). " " . $correspondance->getCategorie();
+            $html .="</li>";
+        }
+        $html .="</ul></td>";
+        $html .= "<tr><th>Famille</th><td><ul>";
+        foreach ($this->getMetier()->getFamillesProfessionnelles() as $familleProfessionnelle) {
+            $html .="<li>";
+            $html .= $familleProfessionnelle->getLibelle();
+            $html .="</li>";
+        }
+        $html .="</ul></td>";
+        //$html .= "<tr><th>Code Fonction</th><td>".$this->getMetier()->getLibelle()."</td>";
+        $html .= "<tr><th>Référence·s</th><td>";
+        foreach ($this->getMetier()->getReferences() as $reference) {
+            $html .="<li>";
+            $html .= $reference->getReferentiel()->getLibelleCourt(). " " . $reference->getCode();
+            $html .="</li>";
+        }
+        $html .= "</td>";
+        $html .= "<tr><th>Expertise</th><td>".($this->hasExpertise()?"Oui":"Non")."</td></tr>";
+        $html .= "<tr><th>Date de dépôt</th><td>";
+        $etat = $this->getEtatActif();
+        if ($etat === null) $html .= "État inconnu";
+        else {
+            $type = $etat->getType();
+            if ($type === null) $html .= "Type de l'état inconnu";
+            else {
+                switch ($type->getCode()) {
+                    case FicheMetierEtats::ETAT_VALIDE :
+                        $html .= "Validée le ".$etat->getHistoCreation()->format("d/M/Y");
+                        break;
+                    case FicheMetierEtats::ETAT_REDACTION :
+                        $html .= "Créée le ".$etat->getHistoCreation()->format("d/M/Y");
+                        break;
+                    default :
+                        $html .= "Le ".$etat->getHistoCreation()->format("d/M/Y");
+                        break;
+                }
+            }
+        }
+        $html .= "</td></tr>";
+
+
+        $html .= <<<EOS
+</table>
+EOS;
+
+        return $html;
+    }
     /**
      * Utiliser dans la macro FICHE_METIER#MISSIONS_PRINCIPALES
      * @noinspection PhpUnused
      */
-    public function getMissionsAsList(): string
+    public function getMissionsAsList(array $parameters = []): string
     {
-        $texte = "";
+        $on = $parameters[0]??true;
+        if ($on === false OR empty($this->getMissions()))  return "";
+
+        $texte = "<h2> Mission·s principale·s</h2>";
         foreach ($this->getMissions() as $mission) {
             $texte .= "<h3 class='mission-principale'>" . $mission->getMission()->getLibelle() . "</h3>";
             $activites = $mission->getMission()->getActivites();
@@ -241,32 +311,26 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return $this->getComptencesByType(CompetenceType::CODE_SPECIFIQUE);
     }
 
-    /** @noinspection PhpUnused */
-    public function getApplicationsAffichage(): string
-    {
-        $applications = $this->getApplicationListe();
 
-        $texte = "<ul>";
-        /** @var ApplicationElement $applicationElement */
-        foreach ($applications as $applicationElement) {
-            $application = $applicationElement->getApplication();
-            $texte .= "<li>" . $application->getLibelle() . "</li>";
-        }
-        $texte .= "</ul>";
+    /** @noinspection PhpUnused */
+    public function toStringRaison(array $parameters = []): string
+    {
+        $on = $parameters[0]??true;
+        if ($on === false OR $this->raison === null)  return "";
+
+        $texte  = "<h2>Raison d'être métier dans l'établissement</h2>";
+        $texte .= $this->raison;
+
         return $texte;
     }
 
     /** @noinspection PhpUnused */
-
-    public function toStringRaison() : string
+    public function toStringThematiques(array $parameters = []): string
     {
-        return $this->raison;
-    }
+        $on = $parameters[0]??true;
+        if ($on === false) return "";
 
-    /** @noinspection PhpUnused */
-    public function toStringThematiques(): string
-    {
-        /** @var ThematiqueElement[] $thematiques */
+            /** @var ThematiqueElement[] $thematiques */
         $thematiques = $this->thematiques->toArray();
         $thematiques = array_filter($thematiques, function (ThematiqueElement $a) {
             return $a->estNonHistorise() && $a->getType()->estNonHistorise();
@@ -274,24 +338,41 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) {
             return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
         });
+        if (empty($thematiques)) return "";
 
-        $texte = "<table style='width:100%; border-collapse: collapse;'>";
-        $texte .= "<thead><tr><th style='border-bottom: 1px solid black; text-align: left;'>Libelle</th><th style='border-bottom: 1px solid black; text-align: left;'>Niveau</th></tr></thead>";
-        $texte .= "<tbody>";
+        $html = <<<EOS
+<h2>Environnement et contexte de travail</h2>
+
+<table style='width:100%; border-collapse: collapse;'>
+<thead>
+    <tr>
+        <th> Libellé </th>
+        <th style="width: 11rem;"> Niveau</th>
+    </tr>
+</thead>
+<tbody>
+EOS;
+
         foreach ($thematiques as $thematique) {
-            $texte .= "<tr>";
-            $texte .= "<td>" . $thematique->getType()->getLibelle() . "</td>";
-            $texte .= "<td>" . $thematique->getNiveauMaitrise()->getLibelle() . "</td>";
-            $texte .= "</tr>";
+            $html .= "<tr>";
+            $html .= "<td>" . $thematique->getType()->getLibelle() . "</td>";
+            $html .= "<td>" . $thematique->getNiveauMaitrise()->getLibelle() . "</td>";
+            $html .= "</tr>";
         }
-        $texte .= "</tbody>";
-        $texte .= "</table>";
-        return $texte;
+        $html .= <<<EOS
+</tbody>
+</table>
+EOS;
+
+        return $html;
     }
 
     /** @noinspection PhpUnused */
-    public function toStringTendances(): string
+    public function toStringTendances(array $parameters = []): string
     {
+        $on = $parameters[0]??true;
+        if ($on === false) return "";
+
         /** @var TendanceElement[] $tendances */
         $tendances = $this->tendances->toArray();
         $tendances = array_filter($tendances, function (TendanceElement $a) {
@@ -300,18 +381,20 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         usort($tendances, function (TendanceElement $a, TendanceElement $b) {
             return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
         });
+        if (empty($tendances)) return "";
 
-        $texte = "<div class='tendances'>";
+        $html = <<<EOS
+<h2>Tendances d'évolution </h2>
+EOS;
+
+        $html .= "<div class='tendances'>";
         foreach ($tendances as $tendance) {
-            $texte .= "<div class='tendance'>";
-            $texte .= "<div class='tendance-libelle'>" . $tendance->getType()->getLibelle() . "</div>";
-            $texte .= "<div class='tendance-texte'>" . $tendance->getTexte() . "</div>";
-            $texte .= "</div>";
+            $html .= "<div class='tendance'>";
+            $html .= "<div class='tendance-libelle'>" . $tendance->getType()->getLibelle() . "</div>";
+            $html .= "<div class='tendance-texte'>" . $tendance->getTexte() . "</div>";
+            $html .= "</div>";
         }
-        $texte .= "</div>";
-        return $texte;
+        $html .= "</div>";
+        return $html;
     }
-
-
-
 }

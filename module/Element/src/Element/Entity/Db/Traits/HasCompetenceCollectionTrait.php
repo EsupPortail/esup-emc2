@@ -2,9 +2,11 @@
 
 namespace Element\Entity\Db\Traits;
 
+use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Doctrine\Common\Collections\ArrayCollection;
+use Element\Entity\Db\CompetenceType;
 
 trait HasCompetenceCollectionTrait {
 
@@ -62,5 +64,137 @@ trait HasCompetenceCollectionTrait {
     public function clearCompetences() : void
     {
         $this->competences->clear();
+    }
+
+    /** Methode pour les macros ***************************************************************************************/
+
+    public function toArrayCompetences(array $parameters = []): string
+    {
+        $on = $parameters[0]??true;
+        if ($on === false)  return "";
+
+
+        //recupération des types présents dans la collection
+        $competences = $this->getCompetenceListe();
+        $types = [];
+        $dictionnaires = [];
+        foreach ($competences as $competence) {
+            $type = $competence->getCompetence()->getType();
+            if ($type->getLibelle() !== "Compétence spécifique") {
+                $types[$type->getId()] = $competence->getCompetence()->getType();
+                $dictionnaires[$type->getId()][] = $competence;
+            }
+        }
+
+        if (empty($types)) return "";
+
+        usort($types, function (CompetenceType $a, CompetenceType $b) {
+            if ($a->getOrdre() !== $b->getOrdre()) return $a->getOrdre() <=> $b->getOrdre();
+            return $a->getLibelle() <=> $b->getLibelle();
+        });
+
+        $html = "<h2> Compétences</h2>";
+        foreach ($types as $type) {
+            if (!empty($dictionnaires[$type->getId()])) {
+                usort($dictionnaires[$type->getId()], function (CompetenceElement $a, CompetenceElement $b) {
+                    $aa = $a->getCompetence();
+                    $ba = $b->getCompetence();
+                    $aat = $aa->getTheme() ? $aa->getTheme()->getLibelle() : "ZZZZ";
+                    $bat = $ba->getTheme() ? $ba->getTheme()->getLibelle() : "ZZZZ";
+                    if ($aat !== $bat) return $aat <=> $bat;
+                    return $aa->getLibelle() <=> $ba->getLibelle();
+                });
+                $html .= "<h3>" . $type->getLibelle() . "</h3>";
+                $html .= <<<EOS
+
+<table style='width:100%; border-collapse: collapse;'>
+<thead>
+    <tr>
+        <th> Compétences </th>
+        <th style="width: 21rem;"> Thème </th>
+        <th style="width: 11rem;"> Niveau de maîtrise</th>
+        <th style="width: 2rem;"> Clef </th>
+    </tr>
+</thead>
+<tbody>
+EOS;
+
+                foreach ($dictionnaires[$type->getId()] as $competence) {
+                    $app = $competence->getCompetence();
+                    $html .= "<tr>";
+                    $html .= "<td>" . $app->getLibelle() . "</td>";
+                    $html .= "<td>" . ($app->getTheme()?$app->getTheme()->getLibelle():"Sans thème") . "</td>";
+                    $html .= "<td>" . ($competence->getNiveauMaitrise()?$competence->getNiveauMaitrise()->getLibelle():"Non précisé") . "</td>";
+                    $html .= "<td>" . ($competence->isClef()?"Oui":"") . "</td>";
+                    $html .= "</tr>";
+                }
+
+                $html .= <<<EOS
+</tbody>
+</table>
+EOS;
+            }
+
+        }
+        return $html;
+    }
+
+    public function toArrayCompetencesSpecifiques(array $parameters = []): string
+    {
+        $on = $parameters[0]??true;
+        if ($on === false)  return "";
+
+
+        //recupération des types présents dans la collection
+        $competences = $this->getCompetenceListe();
+        $dictionnaires = [];
+        foreach ($competences as $competence) {
+            $type = $competence->getCompetence()->getType();
+            if ($type->getLibelle() === "Compétence spécifique") {
+                $dictionnaires[] = $competence;
+            }
+        }
+
+        if (empty($dictionnaires)) return "";
+
+        $html = "<h2> Compétences spécifiques </h2>";
+        usort($dictionnaires[$type->getId()], function (CompetenceElement $a, CompetenceElement $b) {
+            $aa = $a->getCompetence();
+            $ba = $b->getCompetence();
+            $aat = $aa->getTheme() ? $aa->getTheme()->getLibelle() : "ZZZZ";
+            $bat = $ba->getTheme() ? $ba->getTheme()->getLibelle() : "ZZZZ";
+            if ($aat !== $bat) return $aat <=> $bat;
+            return $aa->getLibelle() <=> $ba->getLibelle();
+        });
+        $html .= <<<EOS
+
+<table style='width:100%; border-collapse: collapse;'>
+<thead>
+    <tr>
+        <th> Compétences </th>
+        <th style="width: 21rem;"> Thème </th>
+        <th style="width: 11rem;"> Niveau de maîtrise</th>
+        <th style="width: 2rem;"> Clef </th>
+    </tr>
+</thead>
+<tbody>
+EOS;
+
+                foreach ($dictionnaires[$type->getId()] as $competence) {
+                    $app = $competence->getCompetence();
+                    $html .= "<tr>";
+                    $html .= "<td>" . $app->getLibelle() . "</td>";
+                    $html .= "<td>" . ($app->getTheme()?$app->getTheme()->getLibelle():"Sans thème") . "</td>";
+                    $html .= "<td>" . ($competence->getNiveauMaitrise()?$competence->getNiveauMaitrise()->getLibelle():"Non précisé") . "</td>";
+                    $html .= "<td>" . ($competence->isClef()?"Oui":"") . "</td>";
+                    $html .= "</tr>";
+                }
+
+                $html .= <<<EOS
+</tbody>
+</table>
+EOS;
+
+        return $html;
     }
 }

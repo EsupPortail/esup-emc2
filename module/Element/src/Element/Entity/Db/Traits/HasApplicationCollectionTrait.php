@@ -75,13 +75,14 @@ trait HasApplicationCollectionTrait
         if ($on === false)  return "";
 
         $applications = $this->getApplicationListe();
+        if (empty($applications)) return "";
+
         usort($applications, function (ApplicationElement $a, ApplicationElement $b) {
             $aa = $a->getApplication(); $ba = $b->getApplication();
             $aat = $aa->getTheme()?$aa->getTheme()->getOrdre():PHP_INT_MAX; $bat = $ba->getTheme()?$ba->getTheme()->getOrdre():PHP_INT_MAX;
             if ($aat !== $bat) return $aat <=> $bat;
             return $aa->getLibelle() <=> $ba->getLibelle();
         });
-        if (empty($applications))  return "";
 
         $html = <<<EOS
 <h2>Applications</h2>
@@ -89,10 +90,10 @@ trait HasApplicationCollectionTrait
 <table style='width:100%; border-collapse: collapse;'>
 <thead>
     <tr>
-        <th> Nom de l'application </th>
-        <th> Thème </th>
-        <th> Niveau de maîtrice</th>
-        <th> Clef </th>
+        <th> Application </th>
+        <th style="width: 21rem;"> Thème </th>
+        <th style="width: 11rem;"> Niveau de maîtrise</th>
+        <th style="width: 2rem;"> Clef </th>
     </tr>
 </thead>
 <tbody>
@@ -104,7 +105,7 @@ EOS;
             $html .= "<td>" . $app->getLibelle() . "</td>";
             $html .= "<td>" . ($app->getTheme()?$app->getTheme()->getLibelle():"Sans thème") . "</td>";
             $html .= "<td>" . ($application->getNiveauMaitrise()?$application->getNiveauMaitrise()->getLibelle():"Non précisé") . "</td>";
-            $html .= "<td>" . ($application->isClef()?"Application clef":"") . "</td>";
+            $html .= "<td>" . ($application->isClef()?"Oui":"") . "</td>";
             $html .= "</tr>";
         }
 
@@ -114,5 +115,28 @@ EOS;
 EOS;
 
         return $html;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toListApplications(array $parameters = []): string
+    {
+        $on = $parameters[0]??true;
+        if ($on === false)  return "";
+
+        $applications = $this->getApplicationListe();
+        if (empty($applications)) return "";
+
+        usort($applications, function (ApplicationElement $a, ApplicationElement $b) {
+            $aa = $a->getApplication(); $ba = $b->getApplication();
+            return $aa->getLibelle() <=> $ba->getLibelle();
+        });
+
+        $texte = "<ul>";
+        foreach ($applications as $applicationElement) {
+            $application = $applicationElement->getApplication();
+            $texte .= "<li>" . $application->getLibelle() . "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
     }
 }
