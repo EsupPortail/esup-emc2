@@ -95,10 +95,10 @@ if ($mode === 'modification' and $scope !== null) {
                             <span class="action">
                             <?php /** @see ElementController::changerNiveauAction() */ ?>
                                 <a href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId(), 'clef' => 'masquer'], [], true); ?>"
-                                   class="action primary ajax-modal" data-event="refresh-competences">
-                                <span class="icon icon-editer"></span>
-                                Modifier niveau
-                            </a>
+                                       class="action primary ajax-modal" data-event="refresh-competences" data-competence-type="<?php echo str_replace(" ","_",$type->getLibelle()); ?>">
+                                    <span class="icon icon-editer"></span>
+                                    Modifier niveau
+                                </a>
                             </span>
                         <?php endif; ?>
                     </td>
@@ -130,7 +130,7 @@ if ($mode === 'modification' and $scope !== null) {
                             <br>
                             <?php /** @see ElementController::supprimerAction() */ ?>
                             <a href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId()], [], true); ?>"
-                               class="action danger ajax-modal" data-event="refresh-competences">
+                               class="action danger ajax-modal" data-event="refresh-competences" data-competence-type="<?php echo str_replace(" ","_",$type->getLibelle()); ?>">
                                 <span class="icon icon-unchecked"></span>
                                 Supprimer
                             </a>
@@ -160,11 +160,10 @@ if ($mode === 'modification' and $scope !== null) {
 
             let id = $(this).attr('id');
             let type = $(this).data('competence-type').replaceAll(' ','_');
-            console.log(type);
             $("div#competence_" + type).addClass('refreshing');
             <?php /** @see ElementController::toggleClefAction() */ ?>
             let url = "<?php echo $this->url("element_/toggle-clef", ['type' => ElementController::TYPE_COMPETENCE]); ?>" + "/" + id;
-            console.log("toggleing clef")
+            console.log("toggleing clef (" +type+ ")");
             $.ajax({
                 type: "POST",
                 url: url,

@@ -202,10 +202,14 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         });
         $("body").on("refresh-competences", function (event) {
             event.div.modal('hide');
-            types.forEach(function (type) {
-                refreshCompetences(type);
-            });
+            // console.log(event.a.data('competence-type'));
+            let type = event.a.data('competence-type');
+            refreshCompetences(type);
         });
+            // types.forEach(function (type) {
+                //refreshCompetences(type);
+            // });
+        //});
         refreshApplications();
         types.forEach(function (type) {
             refreshCompetences(type);
