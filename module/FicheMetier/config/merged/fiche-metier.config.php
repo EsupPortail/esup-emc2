@@ -104,6 +104,7 @@ return [
                         'modifier-metier',
                         'modifier-raison',
                         'modifier-code-emploi-type',
+                        'supprimer-code-emploi-type',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -305,6 +306,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::modifierCodeEmploiTypeAction() */
                                 'action'     => 'modifier-code-emploi-type',
+                            ],
+                        ],
+                    ],
+                    'supprimer-code-emploi-type' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-code-emploi-type/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::supprimerCodeEmploiTypeAction() */
+                                'action'     => 'supprimer-code-emploi-type',
                             ],
                         ],
                     ],

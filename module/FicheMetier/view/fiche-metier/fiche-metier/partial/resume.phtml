@@ -88,6 +88,15 @@ $metier = $fichemetier->getMetier();
                         Modifier
                     </small>
                 </a>
+                <?php /** @see FicheMetierController::supprimerCodeEmploiTypeAction() */ ?>
+                <a href="<?php echo $this->url('fiche-metier/supprimer-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                   class="action danger"
+                >
+                    <small>
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </small>
+                </a>
             <?php endif; ?>
         </dd>
     <?php endif; ?>

@@ -337,6 +337,19 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
+    public function supprimerCodeEmploiTypeAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $code = $fichemetier->getCodeEmploiType();
+
+        $code->historiser();
+        $this->getFicheMetierService()->getObjectManager()->flush($code);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
     public function modifierMetierAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
