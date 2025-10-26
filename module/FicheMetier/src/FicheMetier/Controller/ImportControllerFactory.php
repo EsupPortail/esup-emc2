@@ -7,11 +7,11 @@ use Carriere\Service\Correspondance\CorrespondanceService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
-use FicheReferentiel\Form\Importation\ImportationForm;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Reference\ReferenceService;
@@ -62,9 +62,9 @@ class ImportControllerFactory
         $referentielService = $container->get(ReferentielService::class);
 
         /**
-         * @var ImportationForm $importationForm
+         * @var FicheMetierImportationForm $ficheMetierImportationForm
          */
-        $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
+        $ficheMetierImportationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
 
         $controller = new ImportController();
         $controller->setCompetenceService($competenceService);
@@ -80,7 +80,7 @@ class ImportControllerFactory
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);
-        $controller->setImportationForm($importationForm);
+        $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
 
         return $controller;
     }

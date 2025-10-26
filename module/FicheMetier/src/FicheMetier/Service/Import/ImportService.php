@@ -10,6 +10,7 @@ use Element\Entity\Db\Competence;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Entity\Db\Referentiel;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 
@@ -117,10 +118,10 @@ class ImportService
         return $famillesProfessionnelles;
     }
 
-    public function readMetier(array $header, array $data, string $mode, array $famillesProfessionnelles, array $correspondances, array $categories, array &$info, array &$warning, array&$error): array
+    public function readMetier(array $header, array $data, string $mode, array $famillesProfessionnelles, array $correspondances, array $categories, Referentiel $referentiel, array &$info, array &$warning, array&$error): array
     {
-        $codeReferentiel = "REFERENS3";
         $metiers = [];
+        $codeReferentiel = $referentiel->getLibelleCourt();
         if (in_array("Code emploi type", $header)) {
             foreach ($data as $item) {
                 $code = $item["Code emploi type"] ?? null;
@@ -128,7 +129,7 @@ class ImportService
                 if ($metier === null)
                 {
                     $intitule = $item["Intitulé de l’emploi type"] ?? null;
-                    $metier = $this->getMetierService()->createWith($intitule, "REFERENS3", $code, null, null, $mode === 'import');
+                    $metier = $this->getMetierService()->createWith($intitule, $codeReferentiel, $code, null, $mode === 'import');
 
                     if ($item["Famille d’activité professionnelle"]) {
                         $elements = explode("|", $item["Famille d’activité professionnelle"]);

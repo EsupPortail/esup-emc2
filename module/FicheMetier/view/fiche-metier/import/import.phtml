@@ -2,7 +2,7 @@
 
 /**
  * @see \FicheMetier\Controller\ImportController::importAction()
- * @var ImportationForm $form
+ * @var FicheMetierImportationForm $form
  *
  * @var array $info
  * @var array $warning
@@ -13,7 +13,7 @@
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheReferentiel\Form\Importation\ImportationForm;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 
 $canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
 
@@ -24,7 +24,7 @@ $this->headTitle("Importation des fiches métiers");
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
-            Importation des fiches métiers
+            Importation des fiches métiers (import.phtml)
         </h1>
     </div>
     <div class="col-md-4">
@@ -77,7 +77,7 @@ $this->headTitle("Importation des fiches métiers");
     Catégorie :
     <ul>
         <li>
-            <?php if ($metier->getCategorie()) :?>
+            <?php if ($metier->getCategorie()) : ?>
                 <?php echo ($fiche->getMetier()->getCategorie())?->getLibelle(); ?>
             <?php else : ?>
                 <span class="text-warning">
@@ -85,13 +85,13 @@ $this->headTitle("Importation des fiches métiers");
                     Aucune catégorie de connue pour le métier
                 </span>
             <?php endif; ?>
-         </li>
+        </li>
     </ul>
     Correspondances :
     <ul>
-    <?php foreach ($fiche->getMetier()->getCorrespondances() as $correspondance) : ?>
-        <li> <?php echo $correspondance->getCategorie(); ?> - <?php echo $correspondance->getLibelleLong(); ?> </li>
-    <?php endforeach; ?>
+        <?php foreach ($fiche->getMetier()->getCorrespondances() as $correspondance) : ?>
+            <li> <?php echo $correspondance->getCategorie(); ?> - <?php echo $correspondance->getLibelleLong(); ?> </li>
+        <?php endforeach; ?>
     </ul>
     Familles professionnelles :
     <ul>

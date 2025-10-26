@@ -7,9 +7,12 @@ use Laminas\Form\Element\File;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class FicheMetierImportationForm extends Form {
 
+
+    use ReferentielServiceAwareTrait;
 
     public function init(): void
     {
@@ -20,6 +23,20 @@ class FicheMetierImportationForm extends Form {
             'options' => [
                 'label' => 'Fiche métier au format CSV <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
                 'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+        ]);
+        //referentiel
+        $this->add([
+            'type' => Select::class,
+            'name' => 'referentiel',
+            'options' => [
+                'label' => 'Mode  <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'empty_option' => 'Sélectionnez un référentiel',
+                'value_options' => $this->getReferentielService()->getReferentielsAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'referentiel',
             ],
         ]);
         //mode

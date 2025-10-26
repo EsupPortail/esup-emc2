@@ -10,6 +10,7 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
@@ -40,11 +41,11 @@ class ImportController extends AbstractActionController
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
 
-    use ImportationFormAwareTrait;
+    use FicheMetierImportationFormAwareTrait;
 
     public function importAction(): ViewModel
     {
-        $form = $this->getImportationForm();
+        $form = $this->getFicheMetierImportationForm();
         $form->setAttribute("action", $this->url()->fromRoute("fiche-metier/import"));
 
         $fiches = [];
@@ -52,107 +53,120 @@ class ImportController extends AbstractActionController
         $warning = [];
         $error = [];
 
+        $referentiel = null;
+        $mode = null;
+        $fichier_path = null;
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $request->getPost();
             $file = $request->getFiles();
 
+            $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
+            $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
+            $mode = (isset($data["mode"]) AND $data["mode"] !== "") ? $data["mode"] : null;
             $fichier_path = $file['fichier']['tmp_name'];
-            $mode = $data['mode'];
 
+            if ($referentiel !== null AND $mode !== null AND $fichier_path !== "") {
+                $header = [];
+                $data = [];
+                // Lecture du fichier de REFERENS3
+                $csvFile = fopen($fichier_path, "r");
+                if ($csvFile !== false) {
+                    $header = fgetcsv($csvFile, null, ";");
+                    // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+                    $header = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header);
+                    $nbElements = count($header);
 
-            $referentiel = $this->getReferentielService()->getReferentielByCode("REFERENS3");
-            if ($referentiel === null) {
-                $error[] = "Le référentiel [REFERENS3] n'est pas présent dans l'application";
-            }
-
-            $header = [];
-            $data = [];
-            // Lecture du fichier de REFERENS3
-            $csvFile = fopen($fichier_path, "r");
-            if ($csvFile !== false) {
-                $header = fgetcsv($csvFile, null, ";");
-                // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
-                $header = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header);
-                $nbElements = count($header);
-
-                while (($row = fgetcsv($csvFile, null, ';')) !== false) {
-                    $item = [];
-                    for ($position = 0; $position < $nbElements; ++$position) {
-                        $item[$header[$position]] = $row[$position];
+                    while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                        $item = [];
+                        for ($position = 0; $position < $nbElements; ++$position) {
+                            $item[$header[$position]] = $row[$position];
+                        }
+                        $data[] = $item;
                     }
-                    $data[] = $item;
+                    fclose($csvFile);
                 }
-                fclose($csvFile);
-            }
 
 
-            $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning, $error);
-            $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning, $error);
-            $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning, $error);
-            $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning, $error);
-            $metiers = $this->getImportService()->readMetier($header, $data, $mode, $famillesProfessionnelles, $correspondances, $categories, $info, $warning, $error);
+                $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning, $error);
+                $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning, $error);
+                $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning, $error);
+                $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning, $error);
+                $metiers = $this->getImportService()->readMetier($header, $data, $mode, $famillesProfessionnelles, $correspondances, $categories, $referentiel, $info, $warning, $error);
 
 
-            /** @var FicheMetier[] $fiches */
-            foreach ($data as $item) {
-                $raw = json_encode($item);
-                $existingFiches = ($mode === 'import') ? $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw) : [];
-                if (!empty($existingFiches)) {
-                    $warning[] = "Une fiche de métier pour métier [".$item["Code emploi type"]."|".$item["Intitulé de l’emploi type"]."] existe déjà avec les mêmes données sources.";
-                } else {
-                    $fiche = new FicheMetier();
-                    $fiche->setRaw($raw);
-                    $fiche->setMetier($metiers[$item["Code emploi type"]]);
-                    if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
-                    if ($item["COMPETENCES_ID"]) {
-                        $ids = explode('|', $item["COMPETENCES_ID"]);
-                        foreach ($ids as $id) {
-                            if (isset($competences[$id])) {
-                                $element = new CompetenceElement();
-                                $element->setCompetence($competences[$id]);
-                                $fiche->addCompetenceElement($element);
-                                if ($mode === 'import') {
-                                    $this->getCompetenceElementService()->create($element);
+                /** @var FicheMetier[] $fiches */
+                foreach ($data as $item) {
+                    $raw = json_encode($item);
+                    $existingFiches = ($mode === 'import') ? $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw) : [];
+                    if (!empty($existingFiches)) {
+                        $warning[] = "Une fiche de métier pour métier [" . $item["Code emploi type"] . "|" . $item["Intitulé de l’emploi type"] . "] existe déjà avec les mêmes données sources.";
+                    } else {
+                        $fiche = new FicheMetier();
+                        $fiche->setRaw($raw);
+                        $fiche->setMetier($metiers[$item["Code emploi type"]]);
+                        if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
+                        if ($item["COMPETENCES_ID"]) {
+                            $ids = explode('|', $item["COMPETENCES_ID"]);
+                            foreach ($ids as $id) {
+                                if (isset($competences[$id])) {
+                                    $element = new CompetenceElement();
+                                    $element->setCompetence($competences[$id]);
+                                    $fiche->addCompetenceElement($element);
+                                    if ($mode === 'import') {
+                                        $this->getCompetenceElementService()->create($element);
+                                    }
                                 }
                             }
                         }
-                    }
-                    //Mission et activité
-                    if (isset($item["Mission"])) {
-                        $intitule = $item["Mission"];
-                        $activites = [];
-                        if (isset($item["Activités principales"])) {
-                            $activites = explode("|", $item["Activités principales"]);
+                        //Mission et activité
+                        if (isset($item["Mission"])) {
+                            $intitule = $item["Mission"];
+                            $activites = [];
+                            if (isset($item["Activités principales"])) {
+                                $activites = explode("|", $item["Activités principales"]);
+                            }
+                            $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
+
+
+                            $ficheMetierMission = new FicheMetierMission();
+                            $ficheMetierMission->setMission($mission);
+                            $ficheMetierMission->setFicheMetier($fiche);
+                            $ficheMetierMission->setOrdre(1);
+
+                            if ($mode === 'import') {
+                                $this->getFicheMetierMissionService()->create($ficheMetierMission);
+                                $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
+                            } else {
+                                $fiche->addMission($ficheMetierMission);
+                            }
+
+
                         }
-                        $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
-
-
-                        $ficheMetierMission = new FicheMetierMission();
-                        $ficheMetierMission->setMission($mission);
-                        $ficheMetierMission->setFicheMetier($fiche);
-                        $ficheMetierMission->setOrdre(1);
 
                         if ($mode === 'import') {
-                            $this->getFicheMetierMissionService()->create($ficheMetierMission);
-                            $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
-                        } else {
-                            $fiche->addMission($ficheMetierMission);
+                            $this->getFicheMetierService()->update($fiche);
                         }
 
-
-                    }
-
-                    if ($mode === 'import') { $this->getFicheMetierService()->update($fiche); }
-
-                    //if ($mode === 'import') {
+                        //if ($mode === 'import') {
                         //print((++$position) . "/" . count($data) . $fiche->getMetier()->getLibelle() . "<br>");
                         //flush();
-                    //}
-                    $fiches[] = $fiche;
+                        //}
+                        $fiches[] = $fiche;
+                    }
                 }
             }
+        }
+
+        if ($referentiel === null) $error[] = "Aucun référentiel de sélectionné";
+        else $form->get('referentiel')->setValue($referentiel->getId());
+        if ($mode === null) $error[] = "Aucun mode d'importation de sélectionné";
+        else $form->get('mode')->setValue($mode);
+        if ($fichier_path === "") $error[] = "Aucun fichier fourni";
+        else {
+            $form->get('fichier')->setValue($data['fichier']??null);
         }
 
         return new ViewModel([
