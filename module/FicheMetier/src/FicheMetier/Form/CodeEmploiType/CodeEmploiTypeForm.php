@@ -5,6 +5,7 @@ namespace FicheMetier\Form\CodeEmploiType;
 
 use Carriere\Service\FonctionType\FonctionTypeServiceAwareTrait;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
@@ -31,16 +32,30 @@ class CodeEmploiTypeForm extends Form
                 'data-live-search'  => 'true',
             ],
         ]);
-        // complement
+        // Correspondance
         $this->add([
             'type' => Text::class,
-            'name' => 'complement',
+            'name' => 'correspondance',
             'options' => [
-                'label' => "Complément <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Correspondance <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
-                'id' => 'complement',
+                'id' => 'correspondance',
+            ],
+        ]);
+        // Niveau
+        $this->add([
+            'type' => Number::class,
+            'name' => 'niveau',
+            'options' => [
+                'label' => "Niveau <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'niveau',
+                'min' => 1,
+                'max' => 5,
             ],
         ]);
         // action
@@ -62,7 +77,8 @@ class CodeEmploiTypeForm extends Form
         //inputFilter
         $this->setInputFilter((new Factory())->createInputFilter([
             'code_fonction' => [ 'required' => true, ],
-            'complement' => [ 'required' => true, ],
+            'correspondance' => [ 'required' => true, ],
+            'niveau' => [ 'required' => true, ],
         ]));
     }
 }

@@ -105,6 +105,12 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return current($code);
     }
 
+    /** @return CodeEmploiType[] */
+    public function getCodesEmploiType(): array
+    {
+        return $this->codesEmploiType->toArray();
+    }
+
     public function addCodeEmploiType(CodeEmploiType $codeEmploiType): void
     {
         $code = $this->getCodeEmploiType(); $code->historiser();

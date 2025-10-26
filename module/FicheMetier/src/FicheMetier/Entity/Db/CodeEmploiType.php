@@ -13,7 +13,8 @@ class CodeEmploiType implements HistoriqueAwareInterface
     private ?int $id = null;
     private ?FicheMetier $fichemetier = null;
     private ?FonctionType $codefonction = null;
-    private ?string $complement = null;
+    private ?string $correspondance = null;
+    private ?string $niveau = null;
 
     public function getId(): ?int
     {
@@ -45,18 +46,31 @@ class CodeEmploiType implements HistoriqueAwareInterface
         $this->codefonction = $codeFonction;
     }
 
-    public function getComplement(): ?string
+    public function getCorrespondance(): ?string
     {
-        return $this->complement;
+        return $this->correspondance;
     }
 
-    public function setComplement(?string $complement): void
+    public function setCorrespondance(?string $correspondance): void
     {
-        $this->complement = $complement;
+        $this->correspondance = $correspondance;
+    }
+
+    public function getNiveau(): ?string
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau(?string $niveau): void
+    {
+        $this->niveau = $niveau;
     }
 
     public function prettyPrint(): string
     {
-        return "<string>".($this->getCodeFonction()?$this->getCodeFonction()->getCode():"nill").$this->getComplement()."</string>";
+        return
+            ($this->getCodeFonction()?$this->getCodeFonction()->getCode():"nill").
+            ($this->getCorrespondance()??"?").
+            ($this->getNiveau()??"?");
     }
 }

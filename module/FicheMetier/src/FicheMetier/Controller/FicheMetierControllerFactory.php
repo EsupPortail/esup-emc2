@@ -8,6 +8,7 @@ use Application\Service\FichePoste\FichePosteService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\CompetenceType\CompetenceTypeService;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
@@ -68,7 +69,6 @@ class FicheMetierControllerFactory
         $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
         /**
-         * @var CodeFonctionForm $codeFonctionForm ;
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var RaisonForm $raisonForm
          * @var SelectionApplicationForm $selectionnerApplicationForm
@@ -76,8 +76,8 @@ class FicheMetierControllerFactory
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
+         * @var CodeEmploiTypeForm $codeEmploiTypeForm
          */
-        $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -85,11 +85,12 @@ class FicheMetierControllerFactory
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
+        $codeEmploiTypeForm = $container->get('FormElementManager')->get(CodeEmploiTypeForm::class);
 
         $controller = new FicheMetierController();
         $controller->setAgentService($agentService);
         $controller->setCompetenceTypeService($competenceTypeService);
-        $controller->setCodeFonctionForm($codeFonctionForm);
+        $controller->setCodeEmploiTypeForm($codeEmploiTypeForm);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierMissionService($ficheMetierMissionService);

@@ -70,7 +70,7 @@ $metier = $fichemetier->getMetier();
         <?php endif; ?>
     </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Code fonction</dt>
+        <dt class="col-md-4"> Code Emploi Type</dt>
         <dd class="col-md-8">
             <?php $code = $fichemetier->getCodeEmploiType(); ?>
             <?php if ($code !== null) : ?>
@@ -79,8 +79,8 @@ $metier = $fichemetier->getMetier();
                 Non renseigné
             <?php endif; ?>
             <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
-                <?php /** @see FicheMetierController::modifierCodeFonctionAction() */ ?>
-                <a href="<?php echo $this->url('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                <?php /** @see FicheMetierController::modifierCodeEmploiTypeAction() */ ?>
+                <a href="<?php echo $this->url('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                    class="ajax-modal action primary" data-event="modification"
                 >
                     <small>

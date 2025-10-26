@@ -4,6 +4,10 @@ namespace FichePoste;
 
 use FicheMetier\Controller\FicheMetierController;
 use FicheMetier\Controller\FicheMetierControllerFactory;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormFactory;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydrator;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydratorFactory;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormFactory;
 use FicheMetier\Form\CodeFonction\CodeFonctionHydrator;
@@ -99,7 +103,7 @@ return [
                         'modifier-expertise',
                         'modifier-metier',
                         'modifier-raison',
-                        'modifier-code-fonction',
+                        'modifier-code-emploi-type',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -294,13 +298,13 @@ return [
                             ],
                         ],
                     ],
-                    'modifier-code-fonction' => [
+                    'modifier-code-emploi-type' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-code-fonction/:fiche-metier',
+                            'route'    => '/modifier-code-emploi-type/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::modifierCodeFonctionAction() */
-                                'action'     => 'modifier-code-fonction',
+                                /** @see FicheMetierController::modifierCodeEmploiTypeAction() */
+                                'action'     => 'modifier-code-emploi-type',
                             ],
                         ],
                     ],
@@ -404,6 +408,7 @@ return [
     'form_elements' => [
         'factories' => [
             CodeFonctionForm::class => CodeFonctionFormFactory::class,
+            CodeEmploiTypeForm::class => CodeEmploiTypeFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
@@ -412,6 +417,7 @@ return [
     'hydrators' => [
         'factories' => [
             CodeFonctionHydrator::class => CodeFonctionHydratorFactory::class,
+            CodeEmploiTypeHydrator::class => CodeEmploiTypeHydratorFactory::class,
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],
