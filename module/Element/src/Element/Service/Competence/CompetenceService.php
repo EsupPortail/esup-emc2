@@ -227,7 +227,7 @@ class CompetenceService
         return $competences;
     }
 
-    public function getCompetenceByRefentiel(CompetenceReferentiel $referentiel, string $id)
+    public function getCompetenceByRefentiel(CompetenceReferentiel $referentiel, string $id) : ?Competence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.referentiel = :referentiel')
@@ -460,40 +460,46 @@ class CompetenceService
             foreach ($data as $item) {
                 $id = $item[$positionId];
                 $competence = $this->getCompetenceByRefentiel($referentiel, $id);
-                //todo check for difference
                 if ($competence === null) {
                     $competence = new Competence();
-                    // obligatoire
-                    $competence->setReferentiel($referentiel);
-                    $competence->setIdSource($id);
-                    $competence->setLibelle($item[$positionLibelle]);
-                    $type = $types[$item[$positionType]];
-                    $competence->setType($type);
-                    // facultatif
-                    if ($positionTheme !== false) {
-                        $theme = $themes[$item[$positionTheme]];
-                        $competence->setTheme($theme);
-                    }
-                    if ($positionDefinition !== false) {
-                        $competence->setDescription($item[$positionDefinition] !== ""?$item[$positionDefinition]:null);
-                    }
-                    if ($positionDiscipline !== false) {
-                        $discipline = $disciplines[$item[$positionDiscipline]];
-                        $competence->setDiscipline($discipline);
-                    }
-                    if ($positionEmploiType !== false) {
-                        $competence->setEmploisTypes($item[$positionEmploiType]);
-                    }
-                    if ($positionSynonyme !== false) {
-                        $competence->setEmploisTypes($item[$positionSynonyme]);
-                    }
-                    $raw = [];
-                    foreach ($header as $position => $element) {
-                        $raw[$element] = $item[$position];
-                    }
-                    $raw = json_encode($raw);
-                    $competence->setRaw($raw);
+                } else {
+                    if ($competence->getLibelle() !== $item[$positionLibelle]) $warning[] = "Mise à jour du libellé de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($competence->getType() !== $types[$item[$positionType]]) $warning[] = "Mise à jour du type de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $warning[] = "Mise à jour du thème de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionDefinition !== false and $competence->getDescription() !== $item[$positionDefinition]) $warning[] = "Mise à jour de la définition de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $warning[] = "Mise à jour de la discipline de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionSynonyme !== false and $competence->getSynonymes() !== $item[$positionSynonyme]) $warning[] = "Mise à jour de la liste des synonymes de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
                 }
+                // obligatoire
+                $competence->setReferentiel($referentiel);
+                $competence->setIdSource($id);
+                $competence->setLibelle($item[$positionLibelle]);
+                $type = $types[$item[$positionType]];
+                $competence->setType($type);
+                // facultatif
+                if ($positionTheme !== false) {
+                    $theme = $themes[$item[$positionTheme]];
+                    $competence->setTheme($theme);
+                }
+                if ($positionDefinition !== false) {
+                    $competence->setDescription($item[$positionDefinition] !== ""?$item[$positionDefinition]:null);
+                }
+                if ($positionDiscipline !== false) {
+                    $discipline = $disciplines[$item[$positionDiscipline]];
+                    $competence->setDiscipline($discipline);
+                }
+                if ($positionEmploiType !== false) {
+                    $competence->setEmploisTypes($item[$positionEmploiType]);
+                }
+                if ($positionSynonyme !== false) {
+                    $competence->setEmploisTypes($item[$positionSynonyme]);
+                }
+                $raw = [];
+                foreach ($header as $position => $element) {
+                    $raw[$element] = $item[$position];
+                }
+                $raw = json_encode($raw);
+                $competence->setRaw($raw);
                 $competences[$nLine++] = $competence;
             }
 
@@ -501,7 +507,7 @@ class CompetenceService
                 foreach ($types as $type) {
                     if ($type->getId() === null) {
                         $this->getCompetenceTypeService()->create($type);
-                        $info[] = "Création du type de compétences [id:".$type->getId()."libelle:".$type->getLibelle()."]";
+                        $info[] = "Création du type de compétences [id:".$type->getId()." | libelle:".$type->getLibelle()."]";
                     }
                 }
                 foreach ($themes as $theme) {

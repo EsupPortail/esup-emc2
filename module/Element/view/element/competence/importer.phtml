@@ -44,9 +44,9 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                 <form enctype="multipart/form-data"
                       action="<?php echo $this->url('element/competence/importer', ['path' => null], [], true); ?>"
                       method="post">
-                    <label for="file">Fichier à importer</label>
+                    <label for="file">Fichier à importer <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
                     <input type="file" name="file" id="file" class="form-control" accept=".csv"/>
-                    <label for="referentiel"> Référentiel </label>
+                    <label for="referentiel"> Référentiel <span class="icon icon-obligatoire" title="Champ obligatoire"></span> </label>
                     <select class="selectpicker show-tick form-control" id="referentiel" name="referentiel">
                         <option value="">Sélectionnez un référentiel</option>
                         <?php foreach ($referentiels as $referentiel): ?>
@@ -60,7 +60,7 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                         <?php endforeach; ?>
                     </select>
                     <br>
-                    <label for="mode"> Mode de traitement </label>
+                    <label for="mode"> Mode de traitement <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
                     <select class="selectpicker show-tick form-control" id="mode" name="mode">
                         <option value="preview"
                             <?php if (isset($data["mode"]) AND $data["mode"] === "preview") : ?>

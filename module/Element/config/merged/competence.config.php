@@ -48,8 +48,16 @@ return [
                 [
                     'controller' => CompetenceController::class,
                     'action' => [
+                        'importer',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_IMPORTER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceController::class,
+                    'action' => [
                         'ajouter',
-                        'importer', //todo faire un privilege
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_AJOUTER,

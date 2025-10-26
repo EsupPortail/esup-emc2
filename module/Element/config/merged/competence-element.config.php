@@ -8,8 +8,6 @@ use Element\Form\CompetenceElement\CompetenceElementHydrator;
 use Element\Form\CompetenceElement\CompetenceElementHydratorFactory;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceElement\CompetenceElementServiceFactory;
-use Element\View\Helper\ApplicationsViewHelper;
-use Element\View\Helper\ApplicationsViewHelperFactory;
 use Element\View\Helper\CompetenceDisciplineArrayViewHelper;
 use Element\View\Helper\CompetenceDisciplineArrayViewHelperFactory;
 use Element\View\Helper\CompetencesViewHelper;

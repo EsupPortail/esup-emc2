@@ -37,9 +37,23 @@ $this->headTitle('Importation de missions principales');
 
 <!-- Explications ----------------------------------------------------------------------------------------------------->
 
-<div class="alert alert-info">
-    <div class="row">
-        <div class="col-md-6">
+
+<!-- Formulaire ------------------------------------------------------------------------------------------------------->
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Importation depuis un fichier
+            </div>
+            <div class="card-body">
+                <?php echo $this->form($form); ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+        <div class="alert alert-info">
             <span class="icon icon-info"></span>
             Le fichier importé doit contenir les colonnes suivantes :
             <ul>
@@ -65,8 +79,6 @@ $this->headTitle('Importation de missions principales');
                     identification de la fiche métier
                 </li>
             </ul>
-        </div>
-        <div class="col-md-6">
             <span class="icon icon-attention"></span>
             <strong>Remarques :</strong>
             <ul>
@@ -74,25 +86,7 @@ $this->headTitle('Importation de missions principales');
                 <li>L'ordre des colonnes n'a pas besoin être respecté.</li>
                 <li>Si un champ ne fait pas sens il est possible de le laisser vide.</li>
             </ul>
-
-            <span class="todo">Mettre quelques exemples ?</span>
-            <br>
-            <br>
-            <span class="todo">Écran de paramètrage des attributs utilisés pour l'instance ?</span>
         </div>
-    </div>
-
-
-</div>
-
-<!-- Formulaire ------------------------------------------------------------------------------------------------------->
-
-<div class="card">
-    <div class="card-header">
-        Importation depuis un fichier
-    </div>
-    <div class="card-body">
-        <?php echo $this->form($form); ?>
     </div>
 </div>
 
