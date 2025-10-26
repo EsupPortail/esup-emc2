@@ -49,6 +49,7 @@ return [
                     'controller' => CompetenceController::class,
                     'action' => [
                         'ajouter',
+                        'importer', //todo faire un privilege
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_AJOUTER,
@@ -124,6 +125,17 @@ return [
                             'route' => '/competence',
                         ],
                         'child_routes' => [
+                            'importer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/importer[/:referentiel]',
+                                    'defaults' => [
+                                        /** @see CompetenceController::importerAction() */
+                                        'controller' => CompetenceController::class,
+                                        'action' => 'importer',
+                                    ],
+                                ],
+                            ],
                             'listing' => [
                                 'type' => Segment::class,
                                 'options' => [

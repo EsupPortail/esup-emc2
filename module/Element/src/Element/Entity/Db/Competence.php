@@ -16,6 +16,9 @@ class Competence implements HistoriqueAwareInterface {
     private ?CompetenceType $type = null;
     private ?CompetenceTheme $theme = null;
     private ?CompetenceReferentiel $referentiel = null;
+    private ?string $synonymes = null;
+    private ?string $emploisTypes = null;
+    private ?string $raw = null;
     private ?string $source = null;
     private ?string $idSource = null;
 
@@ -106,5 +109,34 @@ class Competence implements HistoriqueAwareInterface {
         return $this;
     }
 
+    public function getSynonymes(): ?string
+    {
+        return $this->synonymes;
+    }
+
+    public function setSynonymes(?string $synonymes): void
+    {
+        $this->synonymes = $synonymes;
+    }
+
+    public function getEmploisTypes(): ?string
+    {
+        return $this->emploisTypes;
+    }
+
+    public function setEmploisTypes(?string $emploisTypes): void
+    {
+        $this->emploisTypes = $emploisTypes;
+    }
+
+    public function getRaw(): ?string
+    {
+        return $this->raw;
+    }
+
+    public function setRaw(?string $raw): void
+    {
+        $this->raw = $raw;
+    }
 
 }

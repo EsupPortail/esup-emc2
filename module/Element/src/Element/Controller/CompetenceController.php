@@ -11,11 +11,13 @@ use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -28,6 +30,7 @@ class CompetenceController extends AbstractActionController
     use CompetenceServiceAwareTrait;
     use CompetenceDisciplineServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
+    use CompetenceReferentielServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use CorpsServiceAwareTrait;
@@ -306,6 +309,45 @@ class CompetenceController extends AbstractActionController
             'criteria' => $criteres,
             'structureFiltre' => $structure,
             'corpsFiltre' => $corps,
+        ]);
+    }
+
+    public function importerAction() : ViewModel
+    {
+        $error = [];
+        $warning = [];
+        $info = [];
+
+        $data = null;
+        $file = null;
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $mode = ($data["mode"] !== "")?$data["mode"]:null;
+            if ($mode === null) $error[] = "Aucun mode sélectionné";
+            $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentiel($data["referentiel"]!== ""?$data["referentiel"]:null);
+            if ($referentiel === null) $error[] = "Aucun référentiel sélectionné";
+
+            $files = $request->getFiles()->toArray();
+            $file = !empty($files)?current($files):null;
+            if ($file === null) $error[] = "Aucun fichier fourni";
+
+            $result = [];
+            if ($file !== null AND $referentiel !== null AND $mode !== null) {
+                $result = $this->getCompetenceService()->import($file, $referentiel, $mode, $info, $warning, $error);
+            }
+
+        }
+
+        return new ViewModel([
+            'referentiels' => $this->getCompetenceReferentielService()->getCompetencesReferentiels(),
+            'competences' => $result['competences']??[],
+            'info' => $info,
+            'warning' => $warning,
+            'error' => $error,
+
+            'data' => $data,
+            'file' => $file,
         ]);
     }
 

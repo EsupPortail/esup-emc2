@@ -9,6 +9,7 @@ use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineService;
 use Element\Service\CompetenceElement\CompetenceElementService;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use Element\Service\Niveau\NiveauService;
@@ -32,6 +33,7 @@ class CompetenceControllerFactory
         /**
          * @var CompetenceService $competenceService
          * @var CompetenceDisciplineService $competenceDisciplineService
+         * @var CompetenceReferentielService $competenceReferentielService
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          * @var CompetenceElementService $competenceElementService
@@ -45,6 +47,7 @@ class CompetenceControllerFactory
         $competenceService = $container->get(CompetenceService::class);
         $competenceDisciplineService = $container->get(CompetenceDisciplineService::class);
         $maitriseNiveauService = $container->get(NiveauService::class);
+        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -67,6 +70,7 @@ class CompetenceControllerFactory
         $controller->setCompetenceThemeService($competenceThemeService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCompetenceElementService($competenceElementService);
+        $controller->setCompetenceReferentielService($competenceReferentielService);
         $controller->setCorpsService($corpsService);
         $controller->setFicheMetierService($ficherMetierService);
         $controller->setGradeService($gradeService);

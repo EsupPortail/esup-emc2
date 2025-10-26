@@ -7,17 +7,22 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceDiscipline;
 use Element\Entity\Db\CompetenceReferentiel;
 use Element\Entity\Db\CompetenceTheme;
 use Element\Entity\Db\CompetenceType;
+use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
+use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
 class CompetenceService
 {
     use ProvidesObjectManager;
+    use CompetenceDisciplineServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
+    use CompetenceTypeServiceAwareTrait;
 
     /** COMPETENCES : ENTITY ******************************************************************************************/
 
@@ -360,7 +365,179 @@ class CompetenceService
         return $result;
     }
 
+    public function import(array $file, CompetenceReferentiel $referentiel, string $mode, array &$info, array &$warning, array &$error) : array
+    {
+        $handle = fopen($file['tmp_name'], "r");
 
+        /** Fetching the header ***************************************************************************************/
+        $header = fgetcsv($handle,null,";");
+        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+        $header[0] = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header[0]);
+
+        // Note il y a une typo dans le csv de Referens3 ...
+        $positionId = array_search("Id_compérence", $header);
+        if ($positionId === false) {$positionId = array_search("Id_compétence", $header); }
+        $positionLibelle = array_search("Compétence", $header);
+        $positionType = array_search("Registre", $header);
+        $positionTheme = array_search("Domaine", $header);
+        $positionDiscipline = array_search("Discipline", $header);
+        $positionDefinition = array_search("Définition", $header);
+        $positionEmploiType = array_search("id_Emplois_types_RéFérens", $header);
+        $positionSynonyme = array_search("Synonymes", $header);
+
+        $positions = ['id' => $positionId, 'libelle' => $positionLibelle, 'theme' => $positionTheme, 'type' => $positionType, 'discipline' => $positionDiscipline, 'definition' => $positionDefinition, 'emploi_type' => $positionEmploiType];
+
+        if ($positionId === false) $error[] = "La colonne <code>Id_compétence</code> obligatoire est manquante !";
+        if ($positionLibelle === false) $error[] = "La colonne <code>Compétence</code> obligatoire est manquante !";
+        if ($positionType === false) $error[] = "La colonne <code>Registre</code> obligatoire est manquante !";
+        if ($positionTheme === false) $warning[] = "La colonne <code>Domaine</code> facultative est manquante !";
+        if ($positionDefinition === false) $warning[] = "La colonne <code>Définition</code> facultative est manquante !";
+        if ($positionDiscipline === false) $warning[] = "La colonne <code>Discipline</code> facultative est manquante !";
+        if ($positionSynonyme === false) $warning[] = "La colonne <code>Synonymes</code> facultative est manquante !";
+
+        /** Reading the data ******************************************************************************************/
+
+        $data = [];
+        while ($content = fgetcsv($handle, null, ";")) {
+            $data[] = $content;
+        }
+
+        /** Checking for connected entities ***************************************************************************/
+
+        $disciplines = [];
+        if ($positionDiscipline !== false)  {
+            foreach ($data as $item) {
+                $libelle = $item[$positionDiscipline];
+                if  (!isset($disciplines[$libelle])) {
+                    $discipline = $this->getCompetenceDisciplineService()->getCompetenceDisciplineByLibelle($libelle);
+                    if ($discipline === null) {
+                        $discipline = new CompetenceDiscipline();
+                        $discipline->setLibelle($libelle);
+                        $info[] = "Nouvelle Discipline : " . $libelle;
+                    }
+                    $disciplines[$libelle] = $discipline;
+                }
+            }
+        }
+
+        $themes = [];
+        if ($positionType !== false)  {
+            foreach ($data as $item) {
+                $libelle = $item[$positionTheme];
+                if (!isset($themes[$libelle])) {
+                    $type = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($libelle);
+                    if ($type === null) {
+                        $type = new CompetenceTheme();
+                        $type->setLibelle($libelle);
+                        $info[] = "Nouveau thème : " . $libelle;
+                    }
+                    $themes[$libelle] = $type;
+                }
+            }
+        }
+
+        $types = [];
+        if ($positionType !== false)  {
+            foreach ($data as $item) {
+                $libelle = $item[$positionType];
+                if (!isset($types[$libelle])) {
+                    $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($libelle);
+                    if ($type === null) {
+                        $type = new CompetenceType();
+                        $type->setLibelle($libelle);
+                        $info[] = "Nouveau type : " . $libelle;
+                    }
+                    $types[$libelle] = $type;
+                }
+            }
+        }
+
+        /** Reading competence ****************************************************************************************/
+
+        $competences = [];
+        if ($positionId !== false AND $positionLibelle !== false AND $positionType !== false) {
+            $nLine = 1;
+            foreach ($data as $item) {
+                $id = $item[$positionId];
+                $competence = $this->getCompetenceByRefentiel($referentiel, $id);
+                //todo check for difference
+                if ($competence === null) {
+                    $competence = new Competence();
+                    // obligatoire
+                    $competence->setReferentiel($referentiel);
+                    $competence->setIdSource($id);
+                    $competence->setLibelle($item[$positionLibelle]);
+                    $type = $types[$item[$positionType]];
+                    $competence->setType($type);
+                    // facultatif
+                    if ($positionTheme !== false) {
+                        $theme = $themes[$item[$positionTheme]];
+                        $competence->setTheme($theme);
+                    }
+                    if ($positionDefinition !== false) {
+                        $competence->setDescription($item[$positionDefinition] !== ""?$item[$positionDefinition]:null);
+                    }
+                    if ($positionDiscipline !== false) {
+                        $discipline = $disciplines[$item[$positionDiscipline]];
+                        $competence->setDiscipline($discipline);
+                    }
+                    if ($positionEmploiType !== false) {
+                        $competence->setEmploisTypes($item[$positionEmploiType]);
+                    }
+                    if ($positionSynonyme !== false) {
+                        $competence->setEmploisTypes($item[$positionSynonyme]);
+                    }
+                    $raw = [];
+                    foreach ($header as $position => $element) {
+                        $raw[$element] = $item[$position];
+                    }
+                    $raw = json_encode($raw);
+                    $competence->setRaw($raw);
+                }
+                $competences[$nLine++] = $competence;
+            }
+
+            if ($mode === 'import') {
+                foreach ($types as $type) {
+                    if ($type->getId() === null) {
+                        $this->getCompetenceTypeService()->create($type);
+                        $info[] = "Création du type de compétences [id:".$type->getId()."libelle:".$type->getLibelle()."]";
+                    }
+                }
+                foreach ($themes as $theme) {
+                    if ($theme->getId() === null) {
+                        $this->getCompetenceThemeService()->create($theme);
+                        $info[] = "Création du thème de compétences [id:".$theme->getId()."libelle:".$theme->getLibelle()."]";
+                    }
+                }
+                foreach ($disciplines as $discipline) {
+                    if ($discipline->getId() === null) {
+                        $this->getCompetenceDisciplineService()->create($discipline);
+                        $info[] = "Création de la discipline de compétences [id:".$discipline->getId()."libelle:".$discipline->getLibelle()."]";
+                    }
+                }
+                foreach ($competences as $competence) {
+                    if ($competence->getId() === null) {
+                        $this->create($competence);
+                        $info[] = "Création de la compétence [id:".$competence->getId()."libelle:".$competence->getLibelle()."]";
+                    }
+                }
+            }
+        } else {
+            $error[] = "Au moins une colonne obligatoire est manquante !";
+        }
+
+        $results =  [
+            'positions' => $positions,
+            'data' => $data,
+            'disciplines' => $disciplines,
+            'themes' => $themes,
+            'types' => $types,
+            'competences' => $competences,
+        ];
+
+        return $results;
+    }
 
 
 }

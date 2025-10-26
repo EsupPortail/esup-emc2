@@ -44,11 +44,11 @@ $this->headTitle("Compétences");
                 <span class="icon icon-ajouter"></span>
                 Ajouter une compétence
             </a>
-            <?php /** @see \Element\Controller\CompetenceImporterController::importerAction() */ ?>
-            <a href="<?php echo $this->url('competence-import', [], [], true); ?>"
-               class="btn btn-primary ajax-modal" >
-                <span class="icon icon-ajouter"></span>
-                Importer un référentiel
+            <?php /** @see \Element\Controller\CompetenceController::importerAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/importer', [], [], true); ?>"
+               class="btn btn-primary" >
+                <span class="icon icon-csv"></span>
+                Importer un référentiel depuis un CSV
             </a>
         <?php endif; ?>
     </div>
