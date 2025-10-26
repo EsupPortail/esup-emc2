@@ -72,9 +72,9 @@ $metier = $fichemetier->getMetier();
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-4"> Code fonction</dt>
         <dd class="col-md-8">
-            <?php $code = $fichemetier->getCodeFonction(); ?>
+            <?php $code = $fichemetier->getCodeEmploiType(); ?>
             <?php if ($code !== null) : ?>
-                <code> <?php echo $code; ?> </code>
+                <code> <?php echo $code->prettyPrint(); ?> </code>
             <?php else : ?>
                 Non renseigné
             <?php endif; ?>

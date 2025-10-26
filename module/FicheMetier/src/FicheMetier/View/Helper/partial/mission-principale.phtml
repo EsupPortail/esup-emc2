@@ -65,11 +65,7 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                         <?php if (empty($listing)) : ?>
                             Aucune fiche métier
                         <?php else : ?>
-                            <ul>
-                                <?php foreach ($mission->getListeFicheMetier() as $item) : ?>
-                                    <li> <?php echo $item->getFicheMetier()->getCodeFonction(); ?> </li>
-                                <?php endforeach; ?>
-                            </ul>
+                           <span class="todo"> Nouveau code emploi type</span>
                         <?php endif; ?>
                     </dd>
                     <dt class="col-md-4"> Familles professionnelles</dt>

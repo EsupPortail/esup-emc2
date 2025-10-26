@@ -49,7 +49,8 @@
 
         <field name="hasExpertise" type="boolean" column="expertise" nullable="true"/>
         <field name="raison" type="string" length="9999" column="raison" nullable="true"/>
-        <field name="codeFonction" type="string" length="256" column="code_fonction" nullable="true"/>
+
+        <one-to-many target-entity="FicheMetier\Entity\Db\CodeEmploiType" mapped-by="fichemetier" field="codesEmploiType"/>
 
         <field name="raw" type="text" column="raw" nullable="true"/>
 

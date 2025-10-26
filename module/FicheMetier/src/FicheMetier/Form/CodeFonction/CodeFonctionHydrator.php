@@ -10,7 +10,7 @@ class CodeFonctionHydrator implements HydratorInterface
 {
     public function extract(object $object): array
     {
-        /** @var FicheMetier|FichePoste $object */
+        /** @var FichePoste $object */
         $data = [
             'code-fonction' => $object->getCodeFonction(),
         ];
@@ -21,7 +21,7 @@ class CodeFonctionHydrator implements HydratorInterface
     {
         $code = (isset($data['code-fonction']) AND trim($data['code-fonction']) !=='') ? trim ($data['code-fonction']) : null;
 
-        /** @var FicheMetier|FichePoste $object */
+        /** @var FichePoste $object */
         $object->setCodeFonction($code);
         return $object;
     }

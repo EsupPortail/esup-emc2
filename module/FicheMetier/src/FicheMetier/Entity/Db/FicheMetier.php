@@ -16,6 +16,7 @@ use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
 use Metier\Entity\HasMissionsPrincipalesInterface;
 use Metier\Entity\HasMissionsPrincipalesTrait;
+use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -34,7 +35,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?int $id = -1;
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
-    private ?string $codeFonction = null;
+
+    private Collection $codesEmploiType;
 
     private Collection $activites;
     private Collection $tendances;
@@ -49,6 +51,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
+        $this->codesEmploiType = new ArrayCollection();
 
         $this->tendances = new ArrayCollection();
         $this->thematiques = new ArrayCollection();
@@ -89,15 +92,25 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->raison = $raison;
     }
 
-    public function getCodeFonction(): ?string
+    public function getCodeEmploiType(): ?CodeEmploiType
     {
-        return $this->codeFonction;
+        $code = $this->codesEmploiType->toArray();
+        $code = array_filter($code, function(CodeEmploiType $item) { return $item->estNonHistorise();});
+
+        if (count($code) > 1) {
+            throw new RuntimeException("Plusieurs [".CodeEmploiType::class ."] actif simultanément.",-1);
+        }
+
+        if (empty($code)) return null;
+        return current($code);
     }
 
-    public function setCodeFonction(?string $codeFonction): void
+    public function addCodeEmploiType(CodeEmploiType $codeEmploiType): void
     {
-        $this->codeFonction = $codeFonction;
+        $code = $this->getCodeEmploiType(); $code->historiser();
+        $this->codesEmploiType->add($codeEmploiType);
     }
+
 
     /** FONCTION POUR MACRO *******************************************************************************************/
 
