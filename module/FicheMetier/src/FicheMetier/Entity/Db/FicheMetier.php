@@ -5,7 +5,6 @@ namespace FicheMetier\Entity\Db;
 use Application\Provider\Etat\FicheMetierEtats;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
@@ -15,12 +14,14 @@ use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
+use Metier\Entity\HasMissionsPrincipalesInterface;
+use Metier\Entity\HasMissionsPrincipalesTrait;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface,
+class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface, HasMissionsPrincipalesInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface
 {
     use HistoriqueAwareTrait;
@@ -28,6 +29,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     use HasEtatsTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
+    use HasMissionsPrincipalesTrait;
 
     private ?int $id = -1;
     private ?bool $hasExpertise = false;
@@ -35,7 +37,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?string $codeFonction = null;
 
     private Collection $activites;
-    private Collection $missions;
     private Collection $tendances;
     private Collection $thematiques;
 
@@ -96,21 +97,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setCodeFonction(?string $codeFonction): void
     {
         $this->codeFonction = $codeFonction;
-    }
-
-    /** @return FicheMetierMission[] */
-    public function getMissions(): array
-    {
-        $missions = $this->missions->toArray();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
-            return $a->getOrdre() <=> $b->getOrdre();
-        });
-        return $missions;
-    }
-
-    public function addMission(FicheMetierMission $ficheMetierMission): void
-    {
-        $this->missions->add($ficheMetierMission);
     }
 
     /** FONCTION POUR MACRO *******************************************************************************************/

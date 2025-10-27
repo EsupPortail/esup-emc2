@@ -16,12 +16,10 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Mission implements HistoriqueAwareInterface,
-    HasFamillesProfessionnellesInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+    HasFamillesProfessionnellesInterface
 {
     use HistoriqueAwareTrait;
     use HasFamillesProfessionnellesTrait;
-    use HasApplicationCollectionTrait;
-    use HasCompetenceCollectionTrait;
 
     private ?int $id = null;
     private ?string $libelle = null;
@@ -41,8 +39,6 @@ class Mission implements HistoriqueAwareInterface,
     {
         $this->famillesProfessionnelles = new ArrayCollection();
         $this->activites = new ArrayCollection();
-        $this->applications = new ArrayCollection();
-        $this->competences = new ArrayCollection();
 
         $this->listeFicheMetierMission = new ArrayCollection();
         $this->listeFichePosteMission = new ArrayCollection();

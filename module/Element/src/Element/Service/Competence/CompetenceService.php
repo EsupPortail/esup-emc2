@@ -498,7 +498,7 @@ class CompetenceService
                 foreach ($header as $position => $element) {
                     $raw[$element] = $item[$position];
                 }
-                $raw = json_encode($raw);
+                $raw = json_encode($raw, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                 $competence->setRaw($raw);
                 $competences[$nLine++] = $competence;
             }

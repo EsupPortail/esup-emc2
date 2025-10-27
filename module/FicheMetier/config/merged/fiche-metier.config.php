@@ -107,9 +107,7 @@ return [
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
-                        'ajouter-mission',
                         'deplacer-mission',
-                        'supprimer-mission',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -118,6 +116,7 @@ return [
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
+                        'gerer-missions-principales',
                         'gerer-applications',
                         'gerer-competences',
                         'gerer-competences-specifiques',
@@ -304,17 +303,6 @@ return [
                             ],
                         ],
                     ],
-                    'ajouter-mission' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-mission/:fiche-metier',
-                            'defaults' => [
-                                /** @see FicheMetierController::ajouterMissionAction() */
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'ajouter-mission',
-                            ],
-                        ],
-                    ],
                     'deplacer-mission' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -326,24 +314,12 @@ return [
                             ],
                         ],
                     ],
-                    'supprimer-mission' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer-mission/:fiche-metier/:mission-principale',
-                            'defaults' => [
-                                /** @see FicheMetierController::supprimerMissionAction() */
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'supprimer-mission',
-                            ],
-                        ],
-                    ],
                     'gerer-applications' => [
                         'type'  => Segment::class,
                         'options' => [
                             'route'    => '/gerer-application/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererApplicationsAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'gerer-applications',
                             ],
                         ],
@@ -354,7 +330,6 @@ return [
                             'route'    => '/gerer-competences/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererCompetencesAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'gerer-competences',
                             ],
                         ],
@@ -365,8 +340,17 @@ return [
                             'route'    => '/gerer-competences-specifiques/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererCompetencesSpecifiquesAction() */
-                                'controller' => FicheMetierController::class,
                                 'action'     => 'gerer-competences-specifiques',
+                            ],
+                        ],
+                    ],
+                    'gerer-missions-principales' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-missions-principales/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::gererMissionsPrincipalesAction() */
+                                'action'     => 'gerer-missions-principales',
                             ],
                         ],
                     ],

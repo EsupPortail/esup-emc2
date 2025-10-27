@@ -24,30 +24,15 @@ class MissionPrincipaleServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
-         * @var ApplicationService $applicationService
-         * @var ApplicationElementService $applicationElementService
-         * @var CompetenceService $competenceService
-         * @var CompetenceElementService $competenceElementService
-         * @var CompetenceReferentielService $competenceReferentielService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var NiveauService $niveauService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $applicationService = $container->get(ApplicationService::class);
-        $applicationElementService = $container->get(ApplicationElementService::class);
-        $competenceService = $container->get(CompetenceService::class);
-        $competenceElementService = $container->get(CompetenceElementService::class);
-        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $niveauService = $container->get(NiveauService::class);
 
         $service = new MissionPrincipaleService();
         $service->setObjectManager($entityManager);
-        $service->setApplicationService($applicationService);
-        $service->setApplicationElementService($applicationElementService);;
-        $service->setCompetenceService($competenceService);
-        $service->setCompetenceElementService($competenceElementService);
-        $service->setCompetenceReferentielService($competenceReferentielService);
         $service->setFamilleProfessionnelleService($familleProfessionnelleService);
         $service->setNiveauService($niveauService);
         return $service;

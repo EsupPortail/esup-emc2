@@ -10,6 +10,7 @@ use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
+use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
@@ -71,6 +72,7 @@ class FicheMetierControllerFactory
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
+         * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
          */
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
@@ -78,6 +80,7 @@ class FicheMetierControllerFactory
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
+        $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
         $controller = new FicheMetierController();
@@ -100,6 +103,7 @@ class FicheMetierControllerFactory
         $controller->setSelectionCompetenceForm($selectionnerCompetenceForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);
         $controller->setSelectionnerMetierForm($selectionnerMetierForm);
+        $controller->setSelectionnerMissionPrincipaleForm($selectionnerMissionPrincipaleForm);
         return $controller;
     }
 }

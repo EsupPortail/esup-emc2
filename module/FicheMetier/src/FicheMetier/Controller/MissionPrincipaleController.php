@@ -432,22 +432,9 @@ class MissionPrincipaleController extends AbstractActionController
                             $activites[$activite->getOrdre()] = $activite->getLibelle();
                         }
                         $mission->clearActivites();
-                        $applications = $mission->getApplicationListe();
-                        $mission->clearApplications();
-                        $competences = $mission->getCompetenceListe();
-                        $mission->clearCompetences();
                         //mission
                         $this->getMissionPrincipaleService()->create($mission);
 
-                        //linked elements
-                        foreach ($applications as $application) {
-                            $this->getApplicationElementService()->create($application);
-                            $mission->addApplicationElement($application);
-                        }
-                        foreach ($competences as $competence) {
-                            $this->getCompetenceElementService()->create($competence);
-                            $mission->addCompetenceElement($competence);
-                        }
                         foreach ($activites as $ordre => $libelle) {
                             $activite = new MissionActivite();
                             $activite->setLibelle($libelle);

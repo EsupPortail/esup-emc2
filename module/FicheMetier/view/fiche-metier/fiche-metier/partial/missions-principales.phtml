@@ -6,25 +6,29 @@
  * @var string $mode
  */
 
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 
+$canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 ?>
 
 <div class="card info">
     <div class="card-header">
         <div class="row">
-            <div class="col-md-9"> <h2> Missions principales </h2> </div>
-            <div class="col-md-3">
-                <?php if ($mode === 'edition-fiche-metier') : ?>
-                    <?php /** @see FicheMetierController::ajouterMissionAction() */ ?>
-                    <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                       data-event="modification"
-                    href="<?php echo $this->url('fiche-metier/ajouter-mission', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
-                    <span class="icon icon-ajouter"></span>
-                    Ajouter une mission
-                    </a>
-                <?php endif; ?>
+            <div class="col-md-6"><h2> Missions principales </h2></div>
+            <div class="col-md-6">
+                <div class="float-end">
+                    <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
+                            <?php /** @see FicheMetierController::gererMissionsPrincipalesAction() */ ?>
+                            <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="modification"
+                               href="<?php echo $this->url('fiche-metier/gerer-missions-principales', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
+                                <span class="icon icon-listing"></span>
+                                Gerer les missions
+                            </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>

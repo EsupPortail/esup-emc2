@@ -5,6 +5,10 @@ namespace FichePoste;
 use Application\View\Helper\ActiviteViewHelper;
 use FicheMetier\Controller\MissionPrincipaleController;
 use FicheMetier\Controller\MissionPrincipaleControllerFactory;
+use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
+use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormFactory;
+use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydrator;
+use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydratorFactory;
 use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceFactory;
@@ -317,14 +321,19 @@ return [
     ],
     'controllers'     => [
         'factories' => [
-            MissionPrincipaleController::class => MissionPrincipaleControllerFactory::class
+            MissionPrincipaleController::class => MissionPrincipaleControllerFactory::class,
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            SelectionnerMissionPrincipaleForm::class  => SelectionnerMissionPrincipaleFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            SelectionnerMissionPrincipaleHydrator::class => SelectionnerMissionPrincipaleHydratorFactory::class,
+
+        ],
     ],
     'view_helpers' => [
         'invokables' => [

@@ -1,10 +1,10 @@
 <?php
 
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use FicheMetier\Entity\Db\FicheMetier;
-use Application\Entity\Db\FichePoste;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
@@ -27,127 +27,117 @@ $canModifier = true;
 $type = null;
 if ($mission instanceof FicheMetierMission) {
     $type = $mission;
-    $mission  = $mission->getMission();
+    $mission = $mission->getMission();
 }
 
-$ficheposte  = (isset($options['ficheposte'])) ?   $ficheposte  = $options['ficheposte'] : null;
-$fichemetier = (isset($options['fichemetier'])) ?  $fichemetier = $options['fichemetier'] : null;
-$retirees    = (isset($options['retirees'])) ?     $retirees    = $options['retirees'] : null;
+$ficheposte = (isset($options['ficheposte'])) ? $ficheposte = $options['ficheposte'] : null;
+$fichemetier = (isset($options['fichemetier'])) ? $fichemetier = $options['fichemetier'] : null;
+$retirees = (isset($options['retirees'])) ? $retirees = $options['retirees'] : null;
 
-$competencesListe   = $mission->getCompetenceListe();
-usort($competencesListe, function (CompetenceElement $a, CompetenceElement $b) { return $a->getCompetence()->getLibelle() <=> $b->getCompetence()->getLibelle();});
-$nbCompetence  = count($competencesListe);
-$applicationsListe  = $mission->getApplicationListe();
-usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) { return $a->getApplication()->getLibelle() <=> $b->getApplication()->getLibelle();});
+$competencesListe = $mission->getCompetenceListe();
+usort($competencesListe, function (CompetenceElement $a, CompetenceElement $b) {
+    return $a->getCompetence()->getLibelle() <=> $b->getCompetence()->getLibelle();
+});
+$nbCompetence = count($competencesListe);
+$applicationsListe = $mission->getApplicationListe();
+usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) {
+    return $a->getApplication()->getLibelle() <=> $b->getApplication()->getLibelle();
+});
 $nbApplication = count($applicationsListe);
 
-$nbObject      = $nbCompetence +  $nbApplication;
+$nbObject = $nbCompetence + $nbApplication;
 ?>
 
 <div>
 
-<!--    <div class="alert-warning">-->
-<!--        Mode : --><?php //echo $mode; ?>
-<!--    </div>-->
+    <!--    <div class="alert-warning">-->
+    <!--        Mode : --><?php //echo $mode; ?>
+    <!--    </div>-->
 
     <!-- TITRE -------------------------------------------------------------------------------------------------------->
     <?php if ($mode !== 'modifier-activite') : ?>
         <div class="titre-bloc">
-            <?php if ($mode === "edition-fiche-poste") : ?>
-            <div class="row">
-                <div class="col-md-9">
-                    <h3> <?php echo $mission->getLibelle(); ?> </h3>
+            <?php if ($mode === "edition-fiche-poste" or $mode === "edition-fiche-metier") : ?>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3> <?php echo $mission->getLibelle(); ?> </h3>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="float-end">
+                            <?php if ($mode == 'edition-fiche-metier') : ?>
+                                <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'up'], [], true); ?>"
+                                   class="btn btn-primary">
+                                    <span class="icon icon-monter"></span>
+                                    Remonter
+                                </a>
+                                <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'down'], [], true); ?>"
+                                   class="btn btn-primary">
+                                    <span class="icon icon-descendre"></span>
+                                    Descendre
+                                </a>
+                            <?php endif; ?>
+                            <?php if ($mode === "edition-fiche-poste") : ?>
+                                <?php /** @see \Application\Controller\FichePosteController::selectionnerDescriptionsRetireesAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-poste/selectionner-descriptions-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId()], [], true); ?>"
+                                   class="btn btn-primary ajax-modal" data-event="modification">
+                                    Sélectionner des descriptions
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
-                <div class="pull-right">
-                    <?php /** @see \Application\Controller\FichePosteController::selectionnerDescriptionsRetireesAction() */?>
-                    <a href="<?php echo $this->url('fiche-poste/selectionner-descriptions-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId()], [], true); ?>"
-                       class="btn btn-primary ajax-modal" data-event="modification">
-                        Sélectionner des descriptions
-                    </a>
-                </div>
-            </div>
             <?php else : ?>
                 <h3><?php echo $mission->getLibelle(); ?></h3>
             <?php endif; ?>
         </div>
     <?php endif; ?>
 
-    <div class="row">
-
-    <?php if ($mode == 'edition-fiche-metier') : ?>
-        <div class="pull-right">
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/modifier', ['mission-principale' => $mission->getId()], ['query' => ['retour' => $this->url(null, [], [], true)]], true); ?>"
-               class="btn btn-primary"
-            >
-                <span class="icon icon-editer"></span>
-                Modifier
-            </a>
-
-            <?php /** @see FicheMetierController::supprimerMissionAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/supprimer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary">
-                <span class="icon icon-unchecked"></span>
-                Supprimer
-            </a>
-
-            <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'up'], [], true); ?>"
-               class="btn btn-primary">
-                <span class="icon icon-monter"></span>
-                Remonter
-            </a>
-
-            <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'down'], [], true); ?>"
-               class="btn btn-primary">
-                <span class="icon icon-descendre"></span>
-                Descendre
-            </a>
-        </div>
-    <?php endif; ?>
-    </div>
-
     <!-- description -------------------------------------------------------------------------------------------------->
 
     <?php
-        $activites = $mission->getActivites();
-        usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
+    $activites = $mission->getActivites();
+    usort($activites, function (MissionActivite $a, MissionActivite $b) {
+        return $a->getOrdre() <=> $b->getOrdre();
+    });
 
-//        var_dump("INIT");
-//        foreach ($activites as $activite) {
-//            var_dump($activite->getId() . " - ".$activite->getLibelle());
-//        }
+    //        var_dump("INIT");
+    //        foreach ($activites as $activite) {
+    //            var_dump($activite->getId() . " - ".$activite->getLibelle());
+    //        }
 
-        if ($ficheposte !== null) {
-            $removed = array_map(function (FicheposteActiviteDescriptionRetiree $a) { return $a->getActivite()->getId(); } , $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $mission));
+    if ($ficheposte !== null) {
+        $removed = array_map(function (FicheposteActiviteDescriptionRetiree $a) {
+            return $a->getActivite()->getId();
+        }, $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $mission));
 
 //            var_dump("TO REMOVE :");
 //            foreach ($removed as $retrait) {
 //                var_dump($retrait);
 //            };
 
-            $activites = array_filter($activites, function (MissionActivite $d) use ($removed){
-                return (!in_array($d->getId(), $removed));
-            });
+        $activites = array_filter($activites, function (MissionActivite $d) use ($removed) {
+            return (!in_array($d->getId(), $removed));
+        });
 
 //            foreach ($activites as $activite) {
 //                var_dump($activite->getId() . " - ".$activite->getLibelle());
 //            }
-        }
+    }
     ?>
     <ul>
         <?php foreach ($activites as $activite) : ?>
             <li>
-                <?php echo $activite->getLibelle();?>
-                <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-                    <a  <?php /** @see ActiviteController::modifierDescriptionAction() */?>
+                <?php echo $activite->getLibelle(); ?>
+                <?php if ($canModifier and $mode === 'modifier-activite') : ?>
+                    <a <?php /** @see ActiviteController::modifierDescriptionAction() */ ?>
                             href="<?php echo $this->url('activite/modifier-description', ['description' => $activite->getId()], [], true); ?>"
                             class="ajax-modal"
                             data-event="modification"
                     >
                         <span class="icon icon-editer" title="Modifier la description"></span></a>
-                    <a  <?php /** @see ActiviteController::supprimerDescriptionAction() */?>
+                    <a <?php /** @see ActiviteController::supprimerDescriptionAction() */ ?>
                             href="<?php echo $this->url('activite/supprimer-description', ['description' => $activite->getId()], [], true); ?>"
                     >
                         <span class="icon icon-historiser" title="Historiser la description"></span></a>
@@ -155,119 +145,38 @@ $nbObject      = $nbCompetence +  $nbApplication;
             </li>
         <?php endforeach; ?>
     </ul>
-
-    <!-- complement --------------------------------------------------------------------------------------------------->
-    <?php if ($mode === 'modifier-activite' OR $nbObject !== 0) : ?>
-        <div class="row" style="border:1px lightblue solid; margin: 1rem; ">
-            <?php if ($mode === 'modifier-activite' OR $nbCompetence > 0) : ?>
-                <div class="col-md-4">
-                    <h4>
-                        <span class="icon competence"></span>
-                        Compétences
-                        <span class="badge"> <?php echo $nbCompetence; ?></span>
-
-                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-                            <a
-                                <?php /** @see ActiviteController::modifierCompetenceAction() */?>
-                                    href="<?php echo $this->url("activite/modifier-competence", ["activite" => $mission->getId()], [], true); ?>"
-                                    class="ajax-modal" data-event="modification"
-                            >
-                                <span class="icon icon-editer" title="Modifier les compétences associées à la mission"></span></a>
-                        <?php endif; ?>
-                    </h4>
-                    <ul>
-                        <?php foreach ($competencesListe as $competenceElement) : ?>
-                            <li title="<?php if ($competenceElement->getCommentaire()) echo $competenceElement->getCommentaire(); ?>">
-                                <?php echo $competenceElement->getCompetence()->getLibelle(); ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-            <?php if ($mode === 'modifier-activite' OR $nbApplication > 0) : ?>
-                <div class="col-md-4">
-                    <h4>
-                        <span class="icon application"></span>
-                        Applications
-                        <span class="badge"> <?php echo $nbApplication; ?></span>
-                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-                            <a
-                                <?php /** @see ActiviteController::modifierApplicationAction() */?>
-                                    href="<?php echo $this->url("activite/modifier-application", ["activite" => $mission->getId()], [], true); ?>"
-                                    class="ajax-modal" data-event="modification"
-                            >
-                                <span class="icon icon-editer" title="Modifier les applications associées à la mission"></span></a>
-                        <?php endif; ?>
-                    </h4>
-
-                    <ul>
-                        <?php foreach ($applicationsListe as $applicationElement) : ?>
-                            <li title="<?php if ($applicationElement->getCommentaire()) echo $applicationElement->getCommentaire(); ?>">
-                                <?php echo $applicationElement->getApplication()->getLibelle(); ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-<!--            --><?php //if ($mode === 'modifier-activite' OR $nbFormation > 0) : ?>
-<!--                <div class="col-md-4">-->
-<!--                    <h4>-->
-<!--                        <span class="icon formation"></span>-->
-<!--                        Formations-->
-<!--                        <span class="badge"> --><?php //echo $nbFormation; ?><!--</span>-->
-<!--                        --><?php //if ($canModifier AND $mode === 'modifier-activite') : ?>
-<!--                            <a-->
-<!--                                --><?php ///** @see ActiviteController::modifierFormationAction() */?>
-<!--                                    href="--><?php //echo $this->url("activite/modifier-formation", ["activite" => $mission->getId()], [], true); ?><!--"-->
-<!--                                    class="ajax-modal"-->
-<!--                                    data-event="modification"-->
-<!--                            >-->
-<!--                                <span class="icon icon-editer" title="Modifier les formations associées à la mission"></span></a>-->
-<!--                        --><?php //endif; ?>
-<!--                    </h4>-->
-<!--                    <ul>-->
-<!--                        --><?php //foreach ($formationsListe as $formationElement) : ?>
-<!--                            <li title="--><?php //if ($formationElement->getCommentaire()) echo $formationElement->getCommentaire(); ?><!--">-->
-<!--                                --><?php //echo $formationElement->getFormation()->getLibelle(); ?>
-<!--                            </li>-->
-<!--                        --><?php //endforeach; ?>
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            --><?php //endif; ?>
-        </div>
-    <?php endif; ?>
 </div>
 
 <script>
-    $(function() {
-        let mode = <?php echo "'".$mode."'"; ?>;
+    $(function () {
+        let mode = <?php echo "'" . $mode . "'"; ?>;
         // console.log(mode);
-        if (<?php echo "'".$mode."'"; ?> === 'modifier-activite') {
+        if (<?php echo "'" . $mode . "'"; ?> === 'modifier-activite')
+        {
             $('ul#descriptions').sortable({
-                update: function( event, ui ) {
+                update: function (event, ui) {
                     let ordre = "";
                     $('ul#descriptions li').each(function () {
                         if (ordre !== "") ordre += "_";
-                        ordre += $(this)[0].id ;
+                        ordre += $(this)[0].id;
                     });
                     <?php /** @see ActiviteController::updateOrdreDescriptionAction() */ ?>
-                    let url = '../update-ordre-description/' + <?php echo "'".$mission->getId()."'"; ?> + '/' + ordre;
+                    let url = '../update-ordre-description/' + <?php echo "'" . $mission->getId() . "'"; ?> +'/' + ordre;
                     // console.log(url);
                     $.ajax({
-                       type: "POST",
-                       url: url,
-                       beforeSend:
-                           function () {
-                               $( "ul#descriptions" ).sortable( "option", "disabled", true );
-                           },
-                       success:
-                           function (retour) {
-                               $( "ul#descriptions" ).sortable( "option", "disabled", false );
-                           }
+                        type: "POST",
+                        url: url,
+                        beforeSend:
+                            function () {
+                                $("ul#descriptions").sortable("option", "disabled", true);
+                            },
+                        success:
+                            function (retour) {
+                                $("ul#descriptions").sortable("option", "disabled", false);
+                            }
                     });
                 }
-            });
-            $('ul#descriptions').disableSelection();
+            }).disableSelection();
         }
     });
 </script>

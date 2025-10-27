@@ -13,6 +13,7 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
+use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -54,6 +55,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SelectionnerMetierFormAwareTrait;
+    use SelectionnerMissionPrincipaleFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -380,47 +382,48 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    /** GESTION DES MISSIONS ******************************************************************************************/
+    /** GESTIONS DES BLOCS ********************************************************************************************/
 
-    public function ajouterMissionAction(): ViewModel
+    public function gererMissionsPrincipalesAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        $mission = new Mission();
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter-mission', ['fiche-metier' => $fichemetier->getId()], [], true));
-        $form->bind($mission);
+        $form = $this->getSelectionnerMissionPrincipaleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-missions-principales', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
+            if (!isset($data['missions'])) $data['missions'] = [];
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getMissionPrincipaleService()->create($mission);
-                $this->getFicheMetierService()->addMission($fichemetier, $mission);
-                $this->getFicheMetierService()->compressMission($fichemetier);
-                exit();
+                $this->getFicheMetierService()->update($fichemetier);
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter une mission',
+        $css=<<<EOS
+.dropdown-item:hover span.text span.mission span.description { 
+    display: block !important; font-style: italic; 
+}    
+
+span.mission {    
+    display: inline-block;
+}
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+EOS;
+
+        $vm = new ViewModel([
+            'title' => "Gestion des missions principales associées à la fiche métier",
             'form' => $form,
+            'css' => $css,
         ]);
+        $vm->setTemplate('default/default-form');
         return $vm;
-    }
-
-    public function supprimerMissionAction(): Response
-    {
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
-
-        $this->getFicheMetierService()->removeMission($fichemetier, $mission);
-        $this->getFicheMetierService()->compressMission($fichemetier);
-
-        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
     }
 
     public function deplacerMissionAction(): Response
@@ -435,7 +438,6 @@ class FicheMetierController extends AbstractActionController
         return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
     }
 
-    /** GESTION DES APPLICATIONS ET DES COMPETENTES *******************************************************************/
 
     public function gererApplicationsAction(): ViewModel
     {
