@@ -114,52 +114,6 @@ $canModifier = ($modification and $this->isAllowed(MissionPrincipalePrivileges::
         <?php endif; ?>
     </dt>
     <dd> <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?> </dd>
-    <dt> Compétences
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererCompetencesAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/gerer-competences', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-editer"></span>
-                Gérer les compétences associées
-            </a>
-        <?php endif; ?>
-    </dt>
-    <dd>
-        <?php $competences = $mission->getCompetenceListe(); ?>
-        <?php if (empty($competences)) : ?>
-            <em> Aucune compétence </em>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($competences as $competence) : ?>
-                    <li> <?php echo $competence->getLibelle(); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
-    <dt> Applications
-        <?php if ($canModifier) : ?>
-            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererApplicationsAction() */ ?>
-            <a href="<?php echo $this->url('mission-principale/gerer-applications', ['mission-principale' => $mission->getId()], [], true); ?>"
-               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
-            >
-                <span class="icon icon-editer"></span>
-                Gérer les applications associées
-            </a>
-        <?php endif; ?>
-    </dt>
-    <dd>
-        <?php $applications = $mission->getApplicationListe(); ?>
-        <?php if (empty($applications)) : ?>
-            <em> Aucune application </em>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($applications as $application) : ?>
-                    <li> <?php echo $application->getLibelle(); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
 </dl>
 
 Cette mission est attachée aux <?php echo count($fichesmetiers); ?> fiche·s métier·s
