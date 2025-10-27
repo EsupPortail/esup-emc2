@@ -12,6 +12,7 @@ use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
@@ -42,6 +43,7 @@ class FicheMetierControllerFactory
          * @var CompetenceTypeService $competenceTypeService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
+         * @var FicheMetierMissionService $ficheMetierMissionService
          * @var FichePosteService $fichePosteService
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
@@ -55,6 +57,7 @@ class FicheMetierControllerFactory
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $metierService = $container->get(metierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
@@ -89,6 +92,7 @@ class FicheMetierControllerFactory
         $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setFicheMetierMissionService($ficheMetierMissionService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setMetierService($metierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);

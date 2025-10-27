@@ -22,7 +22,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
                     <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
                             <?php /** @see FicheMetierController::gererMissionsPrincipalesAction() */ ?>
                             <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                               data-event="modification"
+                               data-event="refresh-missions"
                                href="<?php echo $this->url('fiche-metier/gerer-missions-principales', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
                                 <span class="icon icon-listing"></span>
                                 Gerer les missions
@@ -32,9 +32,27 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             </div>
         </div>
     </div>
-    <div class="card-body" style="color:rgb(80,80,80);">
-        <?php foreach ($missionsprincipales as $missionprincipale) : ?>
-            <?php echo $this->activite($missionprincipale, $mode, ['fichemetier' => $fichemetier]); ?>
-        <?php endforeach; ?>
+    <div class="card-body" style="color:rgb(80,80,80);" id="missions_view">
+        Chargement des missions principales
     </div>
 </div>
+
+<script>
+    $(document).on('click', 'span.refresh-move', function() {
+        $("#missions_view").addClass('refreshing');
+        let fichemetier = $(this).data('fichemetier');
+        let mission = $(this).data('mission');
+        let direction = $(this).data('direction');
+        <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
+        let url = "<?php echo $this->url('fiche-metier/deplacer-mission', [], [], true); ?>" + "/" + fichemetier + "/" + mission + "/" + direction;
+        console.log("toggleing deplacement " + fichemetier + " " + mission + " " + direction +" ")
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function () {
+                    refreshMissions()
+                }
+        });
+    });
+</script>

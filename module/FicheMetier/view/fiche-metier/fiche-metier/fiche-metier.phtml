@@ -168,6 +168,24 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         });
     }
 
+    function refreshMissions() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshMissionsAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-missions", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
+        console.log("refreshing missions principales");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("#missions_view").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("#missions_view").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
     function refreshCompetences(type) {
         <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesAction() */ ?>
         let url = "<?php echo $this->url("fiche-metier/refresh-competences", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
@@ -192,15 +210,17 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     $(function() {
         let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getLibelle())."'"; }, $types)); ?>];
 
-        $("body").on("modification", function (event) {
+        $("body")
+            .on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
-        });
-        $("body").on("refresh-applications", function (event) {
+        }).on("refresh-missions", function (event) {
+            event.div.modal('hide');
+            refreshMissions();
+        })            .on("refresh-applications", function (event) {
             event.div.modal('hide');
             refreshApplications();
-        });
-        $("body").on("refresh-competences", function (event) {
+        }).on("refresh-competences", function (event) {
             event.div.modal('hide');
             let type = event.a.data('competence-type');
             if (type !== undefined) {
@@ -212,6 +232,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             }
         });
 
+        refreshMissions();
         refreshApplications();
         types.forEach(function (type) {
             refreshCompetences(type);

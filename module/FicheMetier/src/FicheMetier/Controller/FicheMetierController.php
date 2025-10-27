@@ -16,6 +16,7 @@ use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
@@ -24,6 +25,7 @@ use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
@@ -39,6 +41,7 @@ class FicheMetierController extends AbstractActionController
     use CompetenceTypeServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FicheMetierMissionServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
@@ -426,7 +429,7 @@ EOS;
         return $vm;
     }
 
-    public function deplacerMissionAction(): Response
+    public function deplacerMissionAction(): JsonModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
@@ -435,7 +438,7 @@ EOS;
         $this->getFicheMetierService()->compressMission($fichemetier);
         $this->getFicheMetierService()->moveMission($fichemetier, $mission, $direction);
 
-        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+        return new JsonModel([]);
     }
 
 
@@ -571,6 +574,22 @@ EOS;
     }
 
     /** ACTIONS POUR LE RAFRAICHISSEMENT SUR PLACE ********************************************************************/
+
+    public function refreshMissionsAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $missions = $this->getFicheMetierMissionService()->getFichesMetiersMissionsByFicheMetier($fichemetier);
+        $mode = $this->params()->fromRoute('mode');
+
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'missions' => $missions,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/refresh-missions');
+        return $vm;
+    }
+
 
     public function refreshApplicationsAction(): ViewModel
     {

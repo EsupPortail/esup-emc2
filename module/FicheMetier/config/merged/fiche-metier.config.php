@@ -46,6 +46,7 @@ return [
                         'afficher',
                         'refresh-applications',
                         'refresh-competences',
+                        'refresh-missions',
                         'exporter',
                     ],
                     'privileges' => [
@@ -306,7 +307,7 @@ return [
                     'deplacer-mission' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/deplacer-mission/:fiche-metier/:mission-principale/:direction',
+                            'route'    => '/deplacer-mission[/:fiche-metier/:mission-principale/:direction]',
                             'defaults' => [
                                 /** @see FicheMetierController::deplacerMissionAction() */
                                 'controller' => FicheMetierController::class,
@@ -371,6 +372,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::refreshCompetencesAction() */
                                 'action'     => 'refresh-competences',
+                            ],
+                        ],
+                    ],
+                    'refresh-missions' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refresh-missions/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshMissionsAction() */
+                                'action'     => 'refresh-missions',
                             ],
                         ],
                     ],

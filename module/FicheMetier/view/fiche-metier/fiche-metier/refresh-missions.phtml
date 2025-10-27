@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::refreshMissionsAction()
+ * @var FicheMetier $fichemetier
+ * @var FicheMetierMission[] $missions
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetierMission;
+
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
+
+foreach ($missions as $mission) {
+    /** @see \Application\View\Helper\ActiviteViewHelper */
+    echo $this->activite($mission, $mode, ['fichemetier' => $fichemetier]);
+}

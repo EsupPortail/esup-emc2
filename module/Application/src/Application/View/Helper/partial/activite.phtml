@@ -37,11 +37,6 @@ $retirees = (isset($options['retirees'])) ? $retirees = $options['retirees'] : n
 ?>
 
 <div>
-
-    <!--    <div class="alert-warning">-->
-    <!--        Mode : --><?php //echo $mode; ?>
-    <!--    </div>-->
-
     <!-- TITRE -------------------------------------------------------------------------------------------------------->
     <?php if ($mode !== 'modifier-activite') : ?>
         <div class="titre-bloc">
@@ -53,18 +48,14 @@ $retirees = (isset($options['retirees'])) ? $retirees = $options['retirees'] : n
                     <div class="col-md-4">
                         <div class="float-end">
                             <?php if ($mode == 'edition-fiche-metier') : ?>
-                                <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
-                                <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'up'], [], true); ?>"
-                                   class="btn btn-primary">
+                                <span class="refresh-move action primary" data-fichemetier="<?php echo $fichemetier->getId(); ?>" data-mission="<?php echo $mission->getId(); ?>" data-direction="up">
                                     <span class="icon icon-monter"></span>
                                     Remonter
-                                </a>
-                                <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
-                                <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'down'], [], true); ?>"
-                                   class="btn btn-primary">
+                                </span>
+                                <span class="refresh-move action primary" data-fichemetier="<?php echo $fichemetier->getId(); ?>" data-mission="<?php echo $mission->getId(); ?>" data-direction="down">
                                     <span class="icon icon-descendre"></span>
                                     Descendre
-                                </a>
+                                </span>
                             <?php endif; ?>
                             <?php if ($mode === "edition-fiche-poste") : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::selectionnerDescriptionsRetireesAction() */ ?>

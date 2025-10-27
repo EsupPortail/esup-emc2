@@ -83,4 +83,15 @@ class FicheMetierMissionService
         }
         return $result;
     }
+
+    public function getFichesMetiersMissionsByFicheMetier(?FicheMetier $fichemetier)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fichemetiermission.ficheMetier = :ficheMetier')->setParameter('ficheMetier', $fichemetier)
+            ->orderBy('fichemetiermission.ordre, mission.libelle', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+    }
 }
