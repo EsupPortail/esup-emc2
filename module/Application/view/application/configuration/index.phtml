@@ -14,12 +14,15 @@ use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use UnicaenAutoform\Entity\Db\Champ;
 
 $canAjouter     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
 $canModifier     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
 $canDetruire    = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_DETRUIRE));
 $canReappliquer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_REAPPLIQUER));
+
+$canGererRecopie = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
 
 $this->headTitle("Configuration de l'application");
 ?>
@@ -68,29 +71,29 @@ $this->headTitle("Configuration de l'application");
                     <div class="alert alert-info">
                         Les éléments paramètrables de l'entretien professionnel sont :
                         <ul>
-                            <li> la période durant laquelle l'agent peut modifier son entretien <span class="todo">TODO</span> ; </li>
-                            <li> les champs qui sont repris d'une année à l'autre ; </li>
-                            <li> les conditions pour la reprise de donnée ;</li>
-                            <li> integerface de configuration<span class="todo">TODO</span>.</li>
+<!--                            <li> la période durant laquelle l'agent peut modifier son entretien <span class="todo">TODO</span> ; </li>-->
+                            <li> les champs qui sont repris d'une année à l'autre. </li>
+<!--                            <li> les conditions pour la reprise de donnée ;</li>-->
+<!--                            <li> integerface de configuration<span class="todo">TODO</span>.</li>-->
                         </ul>
                     </div>
 
-                    <h3> Période durant laquel un agent peut modifier un entretien </h3>
-
-                    <ul>
-                        <li>Un agent peut modifier un de ses entretiens professionnels de <em>sa date de création jusqu'à la date de l'entretien</em>.</li>
-                        <li>Le <em>responsable de l'entretien peut empécher toute modification</em> via une option de l'entretien professionnel<span class="todo">TODO</span>.</li>
-                    </ul>
-
-                    <h3> Règle de reprise des données </h3>
-
-                    <ul>
-                        <li>Les données du plus récent entretien (par rapport à l'entretien courant) seront reprises.</li>
-                    </ul>
-
-                    <p>
-                        <u>NB:</u> On peut imaginer plus de chose comme seulement entretien de l'an passé, verifier qu'il n'y a pas eu de changement de poste, ... <span class="todo">TODO</span>
-                    </p>
+<!--                    <h3> Période durant laquel un agent peut modifier un entretien </h3>-->
+<!---->
+<!--                    <ul>-->
+<!--                        <li>Un agent peut modifier un de ses entretiens professionnels de <em>sa date de création jusqu'à la date de l'entretien</em>.</li>-->
+<!--                        <li>Le <em>responsable de l'entretien peut empécher toute modification</em> via une option de l'entretien professionnel<span class="todo">TODO</span>.</li>-->
+<!--                    </ul>-->
+<!---->
+<!--                    <h3> Règle de reprise des données </h3>-->
+<!---->
+<!--                    <ul>-->
+<!--                        <li>Les données du plus récent entretien (par rapport à l'entretien courant) seront reprises.</li>-->
+<!--                    </ul>-->
+<!---->
+<!--                    <p>-->
+<!--                        <u>NB:</u> On peut imaginer plus de chose comme seulement entretien de l'an passé, verifier qu'il n'y a pas eu de changement de poste, ... <span class="todo">TODO</span>-->
+<!--                    </p>-->
 
                     <h3> Champs transferables d'un entretien professionnel à un autre </h3>
 
@@ -98,7 +101,7 @@ $this->headTitle("Configuration de l'application");
                         Possibilité lors de la création d'un entretien professionnel de reprendre des données d'un champ A et de les insérer dans un champ B.
                     </p>
 
-                    <?php if ($canAjouter): ?>
+                    <?php if ($canGererRecopie): ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
                                 href="<?php echo $this->url("configuration/ajouter-recopie", ['formulaire' => EntretienProfessionnel::FORMULAIRE_CREP], [], true); ?>"
@@ -109,7 +112,7 @@ $this->headTitle("Configuration de l'application");
                         </a>
                     <?php endif; ?>
 
-                    <?php if ($canAjouter): ?>
+                    <?php if ($canGererRecopie): ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
                                 href="<?php echo $this->url("configuration/ajouter-recopie", ['formulaire' => EntretienProfessionnel::FORMULAIRE_CREF], [], true); ?>"
@@ -164,22 +167,28 @@ $this->headTitle("Configuration de l'application");
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if ($canModifier): ?>
+                                    <?php if ($canGererRecopie): ?>
                                         <a
                                             <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::modifierRecopieAction() */ ?>
                                                 href="<?php echo $this->url("configuration/modifier-recopie", ['recopie' => $recopie->getId(), 'formulaire' => $form], [], true); ?>"
                                                 title="Modifier la recopie"
-                                                class="ajax-modal" data-event="modification"
+                                                class="ajax-modal action primary" data-event="modification"
                                         >
-                                            <span class="icon icon-editer"></span></a>
+                                            <span class="icon icon-editer"></span>
+                                            Modifier
+                                        </a>
                                     <?php endif; ?>
-                                    <?php if ($canDetruire): ?>
+                                    <?php if ($canGererRecopie): ?>
+                                        <br>
                                         <a
                                             <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::supprimerRecopieAction() */ ?>
                                                 href="<?php echo $this->url("configuration/supprimer-recopie", ['recopie' => $recopie->getId()], [], true); ?>"
+                                                class="action danger"
                                                 title="Supprimer la recopie"
                                         >
-                                            <span class="icon icon-unchecked"></span></a>
+                                            <span class="icon icon-unchecked"></span>
+                                            Supprimer
+                                        </a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -199,16 +208,19 @@ $this->headTitle("Configuration de l'application");
             event.div.modal('hide');
             window.location.reload();
         });
-    });
 
-    $(document).ready(function() {
-        $('#recopies').DataTable( {
-            "paging":   false,
+        $("table#recopies").dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
             language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
-    } );
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [3], orderable: false }
+            ]
+        });
+    });
 
     $(function () {
         let hash = $(location).attr('hash');
