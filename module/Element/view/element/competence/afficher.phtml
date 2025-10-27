@@ -3,7 +3,6 @@
 /**
  * @see CompetenceController::afficherAction()
  *
- * @var Mission[] $missions
  * @var Competence $competence
  * @var FicheMetier[] $fiches
  * @var Agent[] $agents
@@ -36,16 +35,6 @@ use FicheMetier\Entity\Db\Mission;
         <ul>
             <?php foreach ($fiches as $fiche) : ?>
                 <li> <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)</li>
-            <?php endforeach; ?>
-        </ul>
-    </dd>
-    <dt class="col-md-4"> Mission·s principale·s </dt>
-    <dd class="col-md-8">
-        <!-- Nombre de fiches metiers : -->
-        <?php echo count($missions); ?> mission·s principale·s
-        <ul>
-            <?php foreach ($missions as $mission) : ?>
-                <li> <?php echo $mission->getLibelle(); ?> (#<?php echo $mission->getId(); ?>)</li>
             <?php endforeach; ?>
         </ul>
     </dd>
