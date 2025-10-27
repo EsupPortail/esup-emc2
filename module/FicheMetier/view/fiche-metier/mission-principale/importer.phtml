@@ -63,14 +63,8 @@ $this->headTitle('Importation de missions principales');
                     <code><?php echo $separateur; ?></code>,
                 <li><code>Famille professionnelle</code> : la famille doit correspondre au libellé de celles déclarés
                     sinon une nouvelle famille sera créée,
-                <li><code>Niveau</code> : le niveau doit correspondre a un niveau de carrière déclaré,
-                <li><code>Code Fonction</code> <span class="icon icon-info"
-                                                     title="Les codes devront être connus"></span> : code fonction
-                    utilisé dans les fiches métiers
-                </li>
-                <li><code>Code Fiche Métier</code> <span class="icon icon-info"
-                                                         title="Les identifiants devront être connus"></span> :
-                    identification de la fiche métier
+                <li><code>Niveau</code> : le niveau doit correspondre à un niveau de carrière déclaré,
+                <li><code>Complément</code> : complément textuel permant une identification de la mission (par exemple : code function, code metier, ...)
                 </li>
             </ul>
             <span class="icon icon-attention"></span>
@@ -78,7 +72,7 @@ $this->headTitle('Importation de missions principales');
             <ul>
                 <li>L'intitulé des colonnes doit être exactement celui spécifié (accent et ponctuation).</li>
                 <li>L'ordre des colonnes n'a pas besoin être respecté.</li>
-                <li>Si un champ ne fait pas sens il est possible de le laisser vide.</li>
+                <li>Si un champ ne fait pas sens, il est possible de le laisser vide.</li>
             </ul>
         </div>
     </div>
@@ -100,5 +94,6 @@ $this->headTitle('Importation de missions principales');
 <!-- Résultats -------------------------------------------------------------------------------------------------------->
 
 <?php foreach ($missions as $mission) : ?>
+    <?php /** @see \FicheMetier\View\Helper\MissionPrincipaleViewHelper */ ?>
     <?php echo $this->missionPrincipale($mission, ['display-source' => false]); ?>
 <?php endforeach; ?>

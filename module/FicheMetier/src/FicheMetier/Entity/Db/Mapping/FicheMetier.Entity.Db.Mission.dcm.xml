@@ -7,6 +7,7 @@
         </id>
 
         <field name="libelle" type="string" length="1024" column="libelle"/>
+        <field name="complement" type="text" column="complement"/>
 
         <many-to-one target-entity="Carriere\Entity\Db\NiveauEnveloppe"  field="niveau">
             <join-column name="niveau_id" referenced-column-name="id"/>
@@ -24,7 +25,6 @@
         </many-to-many>
 
         <one-to-many target-entity="FicheMetier\Entity\Db\MissionActivite" mapped-by="mission" field="activites"/>
-
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="mission" field="listeFicheMetierMission"/>
         <one-to-many target-entity="FichePoste\Entity\Db\MissionAdditionnelle" mapped-by="mission" field="listeFichePosteMission"/>
 

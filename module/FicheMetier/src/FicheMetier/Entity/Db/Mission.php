@@ -23,6 +23,7 @@ class Mission implements HistoriqueAwareInterface,
 
     private ?int $id = null;
     private ?string $libelle = null;
+    private ?string $complement = null;
 
     /** Composition de la mission */
     private ?NiveauEnveloppe $niveau = null;
@@ -110,6 +111,16 @@ class Mission implements HistoriqueAwareInterface,
     public function clearActivites(): void
     {
         $this->activites->clear();
+    }
+
+    public function getComplement(): ?string
+    {
+        return $this->complement;
+    }
+
+    public function setComplement(?string $complement): void
+    {
+        $this->complement = $complement;
     }
 
     public function getSourceString(): ?string

@@ -282,6 +282,11 @@ class MissionPrincipaleService
             }
         }
 
+        /* COMPLEMENT *************************************************************************************************/
+        if (isset($json['Complément']) and trim($json['Complément']) !== '') {
+            $mission->setComplement(trim($json['Complément']));
+        }
+
         /** SOURCE ****************************************************************************************************/
         $source_string = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $mission->setSourceString($source_string);
@@ -314,15 +319,21 @@ class MissionPrincipaleService
             $description .= "</ul>";
         }
 
+        $texte = "<span class='mission' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
+
+        if ($mission->getComplement() !== null) {
+            $texte .= "&nbsp;" . "<span class='badge'>"
+                . $mission->getComplement()
+                . "</span>";
+        }
+
+        $texte .= "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
+            . "</span>";
+
         $this_option = [
             'value' => $mission->getId(),
             'attributes' => [
-                'data-content' => "<span class='mission' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte
-//                    . "&nbsp;" . "<span class='badge'>"
-//                    . (($type !== null) ? $type->getLibelle() : "Sans type")
-//                    . "</span>"
-                    . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
-                    . "</span>",
+                'data-content' => $texte
             ],
             'label' => $texte,
         ];

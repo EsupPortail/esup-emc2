@@ -93,6 +93,12 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                             Aucun niveau indiqué
                         <?php endif; ?>
                     </dd>
+                    <?php if ($mission->getComplement()) : ?>
+                        <dt class="col-md-4"> Autres </dt>
+                        <dd class="col-md-8">
+                            <?php echo $mission->getComplement(); ?>
+                        </dd>
+                    <?php endif; ?>
                 </dl>
             </div>
         </div>
