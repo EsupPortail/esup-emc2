@@ -424,23 +424,6 @@ EOS;
 
                 //provenant des activités
                 $keptActivites = explode(";", $fichemetiertype->getActivites());
-                foreach ($fichemetier->getMissions() as $mission) {
-                    if (in_array($mission->getId(), $keptActivites)) {
-                        foreach ($mission->getMission()->getApplicationListe() as $applicationElement) {
-                            $application = $applicationElement->getApplication();
-                            if (!isset($applications[$application->getId()])) {
-                                $applications[$application->getId()] = [
-                                    'entity' => $application,
-                                    'display' => true,
-                                    'raisons' => [['Activité', $mission->getMission()]]
-                                ];
-                            } else {
-                                $applications[$application->getId()]['raisons'][] = ['Activité', $mission->getMission()];
-                            }
-                        }
-                    }
-                }
-
             }
         }
 
@@ -559,15 +542,6 @@ EOS;
             }
         }
 
-        foreach ($missions as $mission) {
-            foreach ($mission->getApplicationListe() as $applicationElement) {
-                $application = $applicationElement->getApplication();
-                $dictionnaire[$application->getId()]["entite"] = $applicationElement;
-                $dictionnaire[$application->getId()]["raison"][] = $mission;
-                $dictionnaire[$application->getId()]["conserve"] = true;
-            }
-        }
-
         $retirees = $fiche->getApplicationsRetirees();
         foreach ($retirees as $retiree) {
             $dictionnaire[$retiree->getApplication()->getId()]["conserve"] = false;
@@ -611,15 +585,6 @@ EOS;
                 //$dictionnaire[$competence->getId()]["object"] = $competence;
                 $dictionnaire[$competence->getId()]["entite"] = $competenceElement;
                 $dictionnaire[$competence->getId()]["raison"][] = $ficheMetier;
-                $dictionnaire[$competence->getId()]["conserve"] = true;
-            }
-        }
-
-        foreach ($missions as $mission) {
-            foreach ($mission->getCompetenceListe() as $competenceElement) {
-                $competence = $competenceElement->getCompetence();
-                $dictionnaire[$competence->getId()]["entite"] = $competenceElement;
-                $dictionnaire[$competence->getId()]["raison"][] = $mission;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
         }

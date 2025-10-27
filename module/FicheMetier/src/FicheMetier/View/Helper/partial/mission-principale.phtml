@@ -36,35 +36,6 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                         </ul>
                     </div>
 
-                    <?php if (!$mission->getApplicationCollection()->isEmpty()) : ?>
-                        <div class="col-md-5 bloc applications">
-                            <h4>Applications</h4>
-                            <ul>
-                                <?php /** @var ApplicationElement $applicationElement */ ?>
-                                <?php foreach ($mission->getApplicationCollection() as $applicationElement) : ?>
-                                    <li> <?php echo $applicationElement->getApplication()->getLibelle(); ?> </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (!$mission->getCompetenceCollection()->isEmpty()) : ?>
-                        <div class="col-md-5 bloc competences">
-                            <h4>Compétentes</h4>
-                            <ul>
-                                <?php /** @var CompetenceElement $competenceElement */ ?>
-                                <?php foreach ($mission->getCompetenceCollection() as $competenceElement) : ?>
-                                    <li>
-                                        <?php $competence = $competenceElement->getCompetence(); ?>
-                                        <?php echo $competence->getLibelle(); ?>
-                                        <?php if ($competence->getReferentiel()) : ?>
-                                            <?php echo $this->competenceReference($competence); ?>
-                                        <?php endif; ?>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
                 </div>
             </div>
             <div class="col-md-4 complements">
