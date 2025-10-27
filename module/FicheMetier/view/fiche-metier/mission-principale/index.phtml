@@ -19,15 +19,10 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
 $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_MODIFIER));
 ?>
 
-<!-- Bloc de titre ---------------------------------------------------------------------------------------------------->
 
-<div class="row">
-    <div class="col-md-9">
-        <h1 class="page-header">
-            Missions principales
-        </h1>
-    </div>
-</div>
+<h1 class="page-header">
+    Missions principales
+</h1>
 
 <!-- Boutons d'actions ------------------------------------------------------------------------------------------------>
 
@@ -110,7 +105,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
                        class="action primary"
                     >
                         <span class="icon icon-editer"></span>
-                        modifier
+                        Modifier
                     </a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
