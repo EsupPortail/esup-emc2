@@ -34,18 +34,6 @@ $ficheposte = (isset($options['ficheposte'])) ? $ficheposte = $options['fichepos
 $fichemetier = (isset($options['fichemetier'])) ? $fichemetier = $options['fichemetier'] : null;
 $retirees = (isset($options['retirees'])) ? $retirees = $options['retirees'] : null;
 
-$competencesListe = $mission->getCompetenceListe();
-usort($competencesListe, function (CompetenceElement $a, CompetenceElement $b) {
-    return $a->getCompetence()->getLibelle() <=> $b->getCompetence()->getLibelle();
-});
-$nbCompetence = count($competencesListe);
-$applicationsListe = $mission->getApplicationListe();
-usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) {
-    return $a->getApplication()->getLibelle() <=> $b->getApplication()->getLibelle();
-});
-$nbApplication = count($applicationsListe);
-
-$nbObject = $nbCompetence + $nbApplication;
 ?>
 
 <div>
