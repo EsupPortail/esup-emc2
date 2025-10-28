@@ -144,8 +144,13 @@ if ($type !== null) {
     </tbody>
 </table>
 
+
 <script>
-    $(function() {
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
         $("table#competences-<?php echo $type?$type->getId():''; ?>").DataTable({
             autoWidth: false,
             language: {

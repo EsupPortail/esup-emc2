@@ -59,7 +59,7 @@ class CompetenceForm extends Form {
             ],
             'attributes' => [
                 'id' => 'type',
-                'class'             => 'bootstrap-selectpicker show-tick',
+                'class'             => 'show-tick',
                 'data-live-search'  => 'true',
             ],
         ]);
@@ -74,7 +74,7 @@ class CompetenceForm extends Form {
             ],
             'attributes' => [
                 'id' => 'theme',
-                'class'             => 'bootstrap-selectpicker show-tick',
+                'class'             => 'show-tick',
                 'data-live-search'  => 'true',
             ],
         ]);

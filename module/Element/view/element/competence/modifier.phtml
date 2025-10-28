@@ -10,6 +10,7 @@ use Element\Form\Competence\CompetenceForm;
 
 ?>
 
+<div id="form_modification">
 <?php echo $this->form()->openTag($form); ?>
 <?php echo $this->formControlGroup($form->get('libelle')); ?>
 <?php echo $this->formControlGroup($form->get('type')); ?>
@@ -23,12 +24,11 @@ use Element\Form\Competence\CompetenceForm;
 <?php echo $this->formControlGroup($form->get('description')); ?>
 <?php echo $this->formControlGroup($form->get('creer')); ?>
 <?php echo $this->form()->closeTag();?>
-
+</div>
 
 <script>
     function spe() {
-        console.log($('select#type option:selected').text());
-        if ($('select#type option:selected').text() === 'Compétence spécifique') {
+        if ($('div#form_modification select#type option:selected').text() === 'Compétence spécifique') {
             console.log('specifique');
             $('div#discipline').show();
         } else{
@@ -38,8 +38,9 @@ use Element\Form\Competence\CompetenceForm;
     }
 
     $(function() {
-        $('select').selectpicker();
+        // $('select').selectpicker();
         spe();
+        tinymce.remove();
         tinymce.init({
             selector: '.tinymce',
             toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
