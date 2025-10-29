@@ -6,6 +6,7 @@ use Carriere\Entity\Db\FonctionType;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use FicheMetier\Entity\Db\CodeEmploiType;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
@@ -112,5 +113,16 @@ class FonctionTypeService
         if ($result === null) return true;
         if ($result === $type) return true;
         return false;
+    }
+
+    /** @return CodeEmploiType[] */
+    public function getCodesEmploisTypesByCodeFonction(FonctionType $type, bool $withHisto = false): array
+    {
+        $qb = $this->getObjectManager()->getRepository(CodeEmploiType::class)->createQueryBuilder('codeemploitype')
+            ->andWhere('codeemploitype.codefonction = :type')->setParameter('type', $type)
+        ;
+        if (!$withHisto) $qb = $qb->andWhere('codeemploitype.histoDestruction IS NULL');
+        $result  = $qb->getQuery()->getResult();
+        return $result;
     }
 }

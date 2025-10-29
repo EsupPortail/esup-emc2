@@ -85,7 +85,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             'fonction-type' => [
-                                'label' => 'Type de fonction',
+                                'label' => 'Code Fonction',
                                 'route' => 'fonction-type',
                                 'resource' => PrivilegeController::getResourceId(FonctionTypeController::class, 'index'),
                                 'order' => 2501,

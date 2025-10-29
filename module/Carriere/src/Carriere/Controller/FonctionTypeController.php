@@ -30,10 +30,12 @@ class FonctionTypeController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $fonctionType = $this->getFonctionTypeService()->getRequestedFonctionType($this);
+        $codesEmploisTypes = $this->getFonctionTypeService()->getCodesEmploisTypesByCodeFonction($fonctionType);
 
         return new ViewModel([
-            'title' => "Affichage du type de fonction",
+            'title' => "Affichage du code fonction",
             'fonctionType' => $fonctionType,
+            'codesEmploisTypes' => $codesEmploisTypes,
         ]);
     }
 
@@ -56,7 +58,7 @@ class FonctionTypeController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout du type de fonction",
+            'title' => "Ajout d'un code fonction",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -82,7 +84,7 @@ class FonctionTypeController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Modification du type de fonction",
+            'title' => "Modification d'un code fonction",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -130,7 +132,7 @@ class FonctionTypeController extends AbstractActionController
         if ($fonctionType !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du type fonction [" . $fonctionType->getCode() . "]",
+                'title' => "Suppression du code fonction [" . $fonctionType->getCode() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fonction-type/supprimer', ["fonction-type" => $fonctionType->getId()], [], true),
             ]);

@@ -3,9 +3,11 @@
 /**
  * @see \Carriere\Controller\FonctionTypeController::afficherAction()
  * @var FonctionType $fonctionType
+ * @var CodeEmploiType[] $codesEmploisTypes
  */
 
 use Carriere\Entity\Db\FonctionType;
+use FicheMetier\Entity\Db\CodeEmploiType;
 
 ?>
 
@@ -41,3 +43,14 @@ use Carriere\Entity\Db\FonctionType;
         <?php endif; ?>
     </div>
 </div>
+
+<h2>
+    Codes Emplois Types associés
+    <span class="badge"><?php echo count($codesEmploisTypes); ?></span>
+</h2>
+
+<ul>
+    <?php foreach ($codesEmploisTypes as $codeEmploiType) : ?>
+        <li> <code><?php echo $codeEmploiType->prettyPrint(); ?></code></li>
+    <?php endforeach; ?>
+</ul>

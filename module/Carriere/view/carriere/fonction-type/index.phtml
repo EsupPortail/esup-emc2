@@ -10,7 +10,7 @@ use Carriere\Entity\Db\FonctionType;
 use Carriere\Provider\Privilege\FonctiontypePrivileges;
 use Carriere\Service\FonctionType\FonctionTypeService;
 
-$this->headTitle("Types de fonction");
+$this->headTitle("Code Fonction");
 
 $canAfficher = $this->isAllowed(FonctiontypePrivileges::getResourceId(FonctiontypePrivileges::FONCTIONTYPE_AFFICHER));
 $canAjouter = $this->isAllowed(FonctiontypePrivileges::getResourceId(FonctiontypePrivileges::FONCTIONTYPE_AJOUTER));
@@ -21,7 +21,7 @@ $canSupprimer = $this->isAllowed(FonctiontypePrivileges::getResourceId(Fonctiont
 ?>
 
 <h1 class="page-header">
-    Types de fonction
+    Codes Fonctions
 </h1>
 
 <?php if($canAjouter) : ?>
@@ -30,7 +30,7 @@ $canSupprimer = $this->isAllowed(FonctiontypePrivileges::getResourceId(Fonctiont
         class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
-        Ajouter un type de fonction
+        Ajouter un code fonction
     </a>
 <?php endif; ?>
 
