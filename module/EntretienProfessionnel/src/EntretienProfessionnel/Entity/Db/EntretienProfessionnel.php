@@ -4,14 +4,12 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
-use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
-use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEvenement\Entity\HasEvenementsInterface;
@@ -483,8 +481,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringCREP_Champ($motsClefs): string
     {
-        $mots = explode(";", $motsClefs);
-        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
+//        $mots = explode(";", $motsClefs);
+//        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
+        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($motsClefs);
         return str_replace("_"," ",$texte);
     }
 
@@ -493,15 +492,15 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringCREF_Champ($motsClefs) : ?string
     {
-        $mots = explode(";", $motsClefs);
-        return $this->formationInstance->fetchChampReponseByMotsClefs($mots);
+//        $mots = explode(";", $motsClefs);
+        return $this->formationInstance->fetchChampReponseByMotsClefs($motsClefs);
     }
 
     /** @noinspection PhpUnused */
     public function toStringCREF_Champs($motsClefs) : ?string
     {
-        $mots = explode(";", $motsClefs);
-        return $this->formationInstance->fetchChampsReponseByMotsClefs($mots);
+//        $mots = explode(";", $motsClefs);
+        return $this->formationInstance->fetchChampsReponseByMotsClefs($motsClefs);
     }
 
     /** @noinspection PhpUnused */
