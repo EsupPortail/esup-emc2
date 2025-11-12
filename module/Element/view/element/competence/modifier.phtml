@@ -14,13 +14,12 @@ use Element\Form\Competence\CompetenceForm;
 <?php echo $this->form()->openTag($form); ?>
 <?php echo $this->formControlGroup($form->get('libelle')); ?>
 <?php echo $this->formControlGroup($form->get('type')); ?>
+    <div id="discipline">
+        <?php echo $this->formControlGroup($form->get('discipline')); ?>
+    </div>
 <?php echo $this->formControlGroup($form->get('theme')); ?>
 <?php echo $this->formControlGroup($form->get('referentiel')); ?>
 <?php echo $this->formControlGroup($form->get('identifiant')); ?>
-<div id="discipline">
-    <?php echo $this->formControlGroup($form->get('discipline')); ?>
-</div>
-
 <?php echo $this->formControlGroup($form->get('description')); ?>
 <?php echo $this->formControlGroup($form->get('creer')); ?>
 <?php echo $this->form()->closeTag();?>

@@ -87,7 +87,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
         <table class="table table-condensed datatable" id="<?php echo str_replace(" ", "_", $d->getLibelle()) ?>); ?>">
             <thead>
             <tr>
-                <th class="col-md-3"> Compétence</th>
+                <th class="col-md-3"> Libellé</th>
                 <th class="col-md-3"> Thème</th>
                 <th class="col-md-2" data-type="num"> Niveau de maîtrise</th>
                 <th class="col-md-2"> Clef</th>
@@ -104,7 +104,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
                 ?>
                 <?php $niveau = $competenceElement->getNiveauMaitrise(); ?>
                 <tr>
-                    <td data-column-id="Compétence">
+                    <td data-column-id="Libellé">
                         <?php echo $competence->getLibelle(); ?>
                         <?php if ($competence->getDescription()) : ?>
                             <span class="icon icon-info"

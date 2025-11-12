@@ -70,7 +70,7 @@ $metier = $fichemetier->getMetier();
         <?php endif; ?>
     </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Code Emploi Type</dt>
+        <dt class="col-md-4"> Code Fonction</dt>
         <dd class="col-md-8">
             <?php $code = $fichemetier->getCodeEmploiType(); ?>
             <?php if ($code !== null) : ?>

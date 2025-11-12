@@ -72,7 +72,7 @@ if ($mode === 'modification' and $scope !== null) {
         <th class="col-md-3"> Application</th>
         <th class="col-md-3"> Thème</th>
         <th class="col-md-2" data-type="num"> Niveau de maîtrise</th>
-        <th class="col-md-2"> Clef</th>
+        <th class="col-md-2"> Clé</th>
         <th class="action col-md-2"> Action</th>
     </tr>
     </thead>
@@ -104,15 +104,19 @@ if ($mode === 'modification' and $scope !== null) {
             <td data-column-id="Clef">
                 <?php if ($applicationElement->isClef()) : ?>
                     <span class="icon icon-clef" data-bs-toggle="tooltip" data-bs-html="true"></span>
-                    Application clef
+                    Application clé
                 <?php endif; ?>
                 <?php if ($canSetClefApplicationElement) : ?>
                     <br>
                     <span class="action">
                     <span
                        class="action primary toggleClef" id="<?php echo $applicationElement->getId() ?>">
-                        <span class="icon icon-refresh"></span>
-                        Modifier clef
+                        <?php if ($applicationElement->isClef()) : ?>
+                            <span class="icon icon-toggle-on"></span>
+                        <?php else : ?>
+                            <span class="icon icon-toggle-off"></span>
+                        <?php endif; ?>
+                        Modifier clé
                     </span>
                 <?php endif; ?>
             </td>
