@@ -27,7 +27,7 @@ $canSubstituer = $this->isAllowed(CompetencePrivileges::getResourceId(Competence
 $positionAction = 5;
 if ($type !== null) {
     $positionAction--;
-    if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) $positionAction--;
+    if ($type->getCode() === CompetenceType::CODE_SPECIFIQUE) $positionAction--;
 }
 ?>
 
@@ -47,7 +47,7 @@ if ($type !== null) {
     <?php echo $this->partial('partial/filtre', ['types' => $types, 'themes' => $themes, 'disciplines' => $disciplines,'params' => $params??null]); ?>
 <?php endif; ?>
 
-<table class="table table-condensed table-hover datatable" id="competences-<?php echo $type?->getId(); ?>">
+<table class="table table-condensed table-hover datatable" id="competences-<?php echo $type?->getCode(); ?>">
     <thead>
     <tr>
         <th> Libellé</th>
@@ -151,7 +151,7 @@ if ($type !== null) {
             event.div.modal('hide');
             window.location.reload();
         });
-        $("table#competences-<?php echo $type?$type->getId():''; ?>").DataTable({
+        $("table#competences-<?php echo $type?$type->getCode():''; ?>").DataTable({
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",
