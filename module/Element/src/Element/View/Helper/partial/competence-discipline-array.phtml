@@ -87,10 +87,10 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
         <table class="table table-condensed datatable" id="<?php echo str_replace(" ", "_", $d->getLibelle()) ?>); ?>">
             <thead>
             <tr>
-                <th class="col-md-3"> Libellé</th>
+                <th class="col-md-4"> Libellé</th>
                 <th class="col-md-3"> Thème</th>
                 <th class="col-md-2" data-type="num"> Niveau de maîtrise</th>
-                <th class="col-md-2"> Clef</th>
+                <th class="col-md-1"> Clé</th>
                 <th class="action col-md-2"> Action</th>
             </tr>
             </thead>
@@ -130,21 +130,24 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
                             </span>
                         <?php endif; ?>
                     </td>
-                    <td data-column-id="Clef">
+                    <td data-column-id="Clé">
                         <?php if ($competenceElement->isClef()) : ?>
-                            <span class="icon icon-clef" data-bs-toggle="tooltip" data-bs-html="true"></span>
-                            Compétence clef
+                            <div style="width:2rem; display: inline-block;">
+                                <span class="icon icon-clef" title="Cette compétence est clé"></span>
+                            </div>
+                        <?php else: ?>
+                            <div style="width:2rem; display: inline-block;"></div>
                         <?php endif; ?>
-                        <?php if ($canSetClefCompetenceElement) : ?>
-                        <br>
-                        <span class="action">
-                            <span
-                                    class="action primary toggleClef"
-                                    data-competence-type="<?php echo $competence->getType()->getLibelle(); ?>"
-                                    id="<?php echo $competenceElement->getId() ?>">
-                                <span class="icon icon-refresh"></span>
-                                Modifier clef
-                            </span>
+                        <?php if ($mode === "modification") : ?>
+                            <span class="<?php if ($canSetClefCompetenceElement) echo " toggleClef "; ?>"
+                                  data-competence-type="<?php echo $competence->getType()->getLibelle(); ?>"
+                                  id="<?php echo $competenceElement->getId() ?>">
+                                <?php if ($competenceElement->isClef()) : ?>
+                                    <span class="text-success icon icon-toggle-on"></span>
+                                <?php else : ?>
+                                    <span class="text-danger icon icon-toggle-off"></span>
+                                <?php endif; ?>
+                        </span>
                         <?php endif; ?>
                     </td>
                     <td class="action" data-column-id="Action">

@@ -69,10 +69,10 @@ if ($mode === 'modification' and $scope !== null) {
 <table class="table table-condensed datatable" id="<?php echo $tableId; ?>">
     <thead>
     <tr>
-        <th class="col-md-3"> Application</th>
+        <th class="col-md-4"> Libellé</th>
         <th class="col-md-3"> Thème</th>
         <th class="col-md-2" data-type="num"> Niveau de maîtrise</th>
-        <th class="col-md-2"> Clé</th>
+        <th class="col-md-1"> Clé</th>
         <th class="action col-md-2"> Action</th>
     </tr>
     </thead>
@@ -101,24 +101,23 @@ if ($mode === 'modification' and $scope !== null) {
                     </span>
                 <?php endif; ?>
             </td>
-            <td data-column-id="Clef">
+            <td data-column-id="Clé">
                 <?php if ($applicationElement->isClef()) : ?>
-                    <span class="icon icon-clef" data-bs-toggle="tooltip" data-bs-html="true"></span>
-                    Application clé
+                    <div style="width:2rem; display: inline-block;">
+                        <span class="icon icon-clef" title="Cette application est clé"></span>
+                    </div>
+                <?php else: ?>
+                    <div style="width:2rem; display: inline-block;"></div>
                 <?php endif; ?>
-                <?php if ($canSetClefApplicationElement) : ?>
-                    <br>
-                    <span class="action">
-                    <span
-                       class="action primary toggleClef" id="<?php echo $applicationElement->getId() ?>">
+                <?php if ($mode === "modification") : ?>
+                    <span class="<?php if ($canSetClefApplicationElement) echo " toggleClef "; ?>" id="<?php echo $applicationElement->getId() ?>">
                         <?php if ($applicationElement->isClef()) : ?>
-                            <span class="icon icon-toggle-on"></span>
+                            <span class="text-success icon icon-toggle-on"></span>
                         <?php else : ?>
-                            <span class="icon icon-toggle-off"></span>
+                            <span class="text-danger icon icon-toggle-off"></span>
                         <?php endif; ?>
-                        Modifier clé
+                    <?php endif; ?>
                     </span>
-                <?php endif; ?>
             </td>
             <td class="action" data-column-id="Action">
                 <?php if ($canAfficherApplication) : ?>
@@ -143,6 +142,12 @@ if ($mode === 'modification' and $scope !== null) {
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<style>
+    span.toggleClef {
+        cursor: pointer;
+    }
+</style>
 
 <script>
     $(function () {
