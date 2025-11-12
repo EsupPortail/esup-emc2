@@ -203,6 +203,7 @@ EOS;
             }
         }
         $html .= "</td></tr>";
+        $html .= "<tr><th>Code Fonction</th><td>".($this->getCodeEmploiType()?$this->getCodeEmploiType()->prettyPrint():"N.C.")."</td></tr>";
 
 
         $html .= <<<EOS

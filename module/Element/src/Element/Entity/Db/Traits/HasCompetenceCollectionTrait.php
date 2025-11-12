@@ -148,26 +148,34 @@ EOS;
         //recupération des types présents dans la collection
         $competences = $this->getCompetenceListe();
         $dictionnaires = [];
+        $discplines = [];
         foreach ($competences as $competence) {
             $type = $competence->getCompetence()->getType();
-            if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) {
-                $dictionnaires[] = $competence;
+            $discpline = $competence->getCompetence()->getDiscipline();
+            $discplines[$discpline?$discpline->getId():PHP_INT_MAX] = $discpline;
+            if ($type->getCode() === CompetenceType::CODE_SPECIFIQUE) {
+                $dictionnaires[$discpline?$discpline->getId():PHP_INT_MAX][] = $competence;
             }
         }
 
         if (empty($dictionnaires)) return "";
 
         $html = "<h2> Compétences spécifiques </h2>";
-        usort($dictionnaires[$type->getId()], function (CompetenceElement $a, CompetenceElement $b) {
-            $aa = $a->getCompetence();
-            $ba = $b->getCompetence();
-            $aat = $aa->getTheme() ? $aa->getTheme()->getLibelle() : "ZZZZ";
-            $bat = $ba->getTheme() ? $ba->getTheme()->getLibelle() : "ZZZZ";
-            if ($aat !== $bat) return $aat <=> $bat;
-            return $aa->getLibelle() <=> $ba->getLibelle();
-        });
-        $html .= <<<EOS
 
+        foreach ($discplines as $discpline) {
+
+            if (!empty($dictionnaires[$discpline?$discpline->getId():PHP_INT_MAX])) {
+            $html .= "<h3>" . ($discpline?$discpline->getLibelle():"Sans discipline") . "</h3>";
+
+            usort($dictionnaires[$discpline?$discpline->getId():PHP_INT_MAX], function (CompetenceElement $a, CompetenceElement $b) {
+                $aa = $a->getCompetence();
+                $ba = $b->getCompetence();
+                $aat = $aa->getTheme() ? $aa->getTheme()->getLibelle() : "ZZZZ";
+                $bat = $ba->getTheme() ? $ba->getTheme()->getLibelle() : "ZZZZ";
+                if ($aat !== $bat) return $aat <=> $bat;
+                return $aa->getLibelle() <=> $ba->getLibelle();
+            });
+            $html .= <<<EOS
 <table style='width:100%; border-collapse: collapse;'>
 <thead>
     <tr>
@@ -180,20 +188,22 @@ EOS;
 <tbody>
 EOS;
 
-                foreach ($dictionnaires[$type->getId()] as $competence) {
-                    $app = $competence->getCompetence();
-                    $html .= "<tr>";
-                    $html .= "<td>" . $app->getLibelle() . "</td>";
-                    $html .= "<td>" . ($app->getTheme()?$app->getTheme()->getLibelle():"Sans thème") . "</td>";
-                    $html .= "<td>" . ($competence->getNiveauMaitrise()?$competence->getNiveauMaitrise()->getLibelle():"Non précisé") . "</td>";
-                    $html .= "<td>" . ($competence->isClef()?"Oui":"") . "</td>";
-                    $html .= "</tr>";
-                }
+            foreach ($dictionnaires[$discpline?$discpline->getId():PHP_INT_MAX] as $competence) {
+                $app = $competence->getCompetence();
+                $html .= "<tr>";
+                $html .= "<td>" . $app->getLibelle() . "</td>";
+                $html .= "<td>" . ($app->getTheme() ? $app->getTheme()->getLibelle() : "Sans thème") . "</td>";
+                $html .= "<td>" . ($competence->getNiveauMaitrise() ? $competence->getNiveauMaitrise()->getLibelle() : "Non précisé") . "</td>";
+                $html .= "<td>" . ($competence->isClef() ? "Oui" : "") . "</td>";
+                $html .= "</tr>";
+            }
 
-                $html .= <<<EOS
+            $html .= <<<EOS
 </tbody>
 </table>
 EOS;
+        }
+        }
 
         return $html;
     }
