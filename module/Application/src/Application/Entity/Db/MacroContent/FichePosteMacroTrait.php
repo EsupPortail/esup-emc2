@@ -99,19 +99,14 @@ trait FichePosteMacroTrait {
         return $texte;
     }
 
-    /**
-     * @param int $typeId
-     * @param bool $all
-     * @return string
-     */
-    public function toStringCompetencesByTypes(int $typeId, bool $all=false) : string
+    public function toStringCompetencesByTypes(string $code, bool $all=false) : string
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
 
         $dictionnaire = $ficheposte->getDictionnaire('competences');
         if (!$all) $dictionnaire = array_filter($dictionnaire, function ($a) { return $a["conserve"] === true;});
-        $dictionnaire = array_filter($dictionnaire, function ($a) use ($typeId) { return $a["entite"]->getCompetence()->getType()->getId() === $typeId;});
+        $dictionnaire = array_filter($dictionnaire, function ($a) use ($code) { return $a["entite"]->getCompetence()->getType()->getId() === $typeId;});
         usort($dictionnaire, function ($a, $b) { return $a["entite"]->getCompetence()->getLibelle() <=> $b["entite"]->getCompetence()->getLibelle();});
 
         if (empty($dictionnaire)) return "";

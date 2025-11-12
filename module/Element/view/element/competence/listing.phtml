@@ -27,7 +27,7 @@ $canSubstituer = $this->isAllowed(CompetencePrivileges::getResourceId(Competence
 $positionAction = 5;
 if ($type !== null) {
     $positionAction--;
-    if ($type->getLibelle() !== "Compétence spécifique") $positionAction--;
+    if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) $positionAction--;
 }
 ?>
 
@@ -54,7 +54,7 @@ if ($type !== null) {
         <?php if ($type ===null) : ?>
             <th> Type </th>
         <?php endif; ?>
-        <?php if ($type === null || $type->getLibelle() === "Compétence spécifique") : ?>
+        <?php if ($type === null || $type->getCode() !== CompetenceType::CODE_SPECIFIQUE) : ?>
             <th> Discipline</th>
         <?php endif; ?>
         <th> Thème</th>
@@ -75,7 +75,7 @@ if ($type !== null) {
             <?php if ($type === null) : ?>
                 <td> <?php echo $competence->getType()?->getLibelle(); ?> </td>
             <?php endif; ?>
-            <?php if ($type === null || $type->getLibelle() === "Compétence spécifique") : ?>
+            <?php if ($type === null || $type->getCode() !== CompetenceType::CODE_SPECIFIQUE) : ?>
                 <td> <?php echo ($competence->getDiscipline()) ? $competence->getDiscipline()->getLibelle() : "Aucune"; ?> </td>
             <?php endif; ?>
             <td> <?php echo ($competence->getTheme()) ? $competence->getTheme()->getLibelle() : "Aucun"; ?> </td>

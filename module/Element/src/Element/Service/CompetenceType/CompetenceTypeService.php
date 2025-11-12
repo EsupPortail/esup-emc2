@@ -123,15 +123,26 @@ class CompetenceTypeService
         return $type;
     }
 
-    public function getCompetenceTypeByLibelle(string $libelle)
+    public function getCompetenceTypeByLibelle(string $libelle): ?CompetenceType
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('type.libelle = :libelle')
-            ->setParameter('libelle', $libelle);
+            ->andWhere('type.libelle = :libelle')->setParameter('libelle', $libelle);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs CompetenceType partagent le même id [" . $libelle . "]", 0, $e);
+        }
+        return $result;
+    }
+
+    public function getCompetenceTypeByCode(?string $code): ?CompetenceType
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('type.code = :code')->setParameter('code', $code);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs CompetenceType partagent le même code [" . $code . "]", 0, $e);
         }
         return $result;
     }

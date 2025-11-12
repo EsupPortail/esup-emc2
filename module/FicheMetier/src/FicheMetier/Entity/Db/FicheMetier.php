@@ -251,15 +251,15 @@ EOS;
     }
 
     /** @noinspection PhpUnused */
-    public function getComptencesByType(int $typeId): string
+    public function getComptencesByType(string $code): string
     {
         $competences = $this->getCompetenceListe();
         $competences = array_map(function (CompetenceElement $c) {
             return $c->getCompetence();
         }, $competences);
         /** @var Competence[] $competences */
-        $competences = array_filter($competences, function (Competence $c) use ($typeId) {
-            return $c->getType()->getId() === $typeId;
+        $competences = array_filter($competences, function (Competence $c) use ($code) {
+            return $c->getType()->getId() === $code;
         });
         usort($competences, function (Competence $a, Competence $b) {
             return $a->getLibelle() <=> $b->getLibelle();

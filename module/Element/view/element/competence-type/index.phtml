@@ -83,6 +83,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
     <thead>
     <tr>
         <th> Libellé </th>
+        <th> Code</th>
         <th> #Compétence </th>
         <th> Ordre </th>
         <th class="action"> Action </th>
@@ -92,6 +93,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
     <?php foreach ($types as $type) : ?>
         <tr class="<?php if ($type->estHistorise()) echo " historise "; ?>">
             <td> <?php echo $type->getLibelle(); ?> </td>
+            <td> <code> <?php echo $type->getCode(); ?> </code> </td>
             <td> <?php echo count($type->getCompetences()); ?> </td>
             <td> <?php echo $type->getOrdre(); ?> </td>
             <?php if ($canAction) : ?>

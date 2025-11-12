@@ -80,7 +80,7 @@ trait HasCompetenceCollectionTrait {
         $dictionnaires = [];
         foreach ($competences as $competence) {
             $type = $competence->getCompetence()->getType();
-            if ($type->getLibelle() !== "Compétence spécifique") {
+            if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) {
                 $types[$type->getId()] = $competence->getCompetence()->getType();
                 $dictionnaires[$type->getId()][] = $competence;
             }
@@ -150,7 +150,7 @@ EOS;
         $dictionnaires = [];
         foreach ($competences as $competence) {
             $type = $competence->getCompetence()->getType();
-            if ($type->getLibelle() === "Compétence spécifique") {
+            if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) {
                 $dictionnaires[] = $competence;
             }
         }

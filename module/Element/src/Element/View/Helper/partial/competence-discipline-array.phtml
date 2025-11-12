@@ -22,8 +22,6 @@ use FichePoste\Provider\Privilege\FichePostePrivileges;
 
 $debug = false;
 
-$tableId = 'competence_' . str_replace(" ", "_", $type->getLibelle());
-
 $canAfficherCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
 
 $scope = null;
@@ -83,8 +81,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
 
         <h3> <?php echo $d->getLibelle(); ?> </h3>
 
-
-        <table class="table table-condensed datatable" id="<?php echo str_replace(" ", "_", $d->getLibelle()) ?>); ?>">
+        <table class="table table-condensed datatable" id="<?php echo str_replace(" ", "_", $d->getLibelle()) ?>">
             <thead>
             <tr>
                 <th class="col-md-4"> Libellé</th>
@@ -180,17 +177,19 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
 
 <script>
     $(function () {
-        $('table#<?php echo $tableId; ?>').DataTable({
-            paging: false,
-            info: false,
-            autoWidth: false,
-            language: {
-                "url": "/js/datatables_fr.json",
-            },
-            columnDefs: [
-                {targets: [4], orderable: false}
-            ]
-        });
+        <?php foreach ($discipline as $d): ?>
+            $('table#<?php echo str_replace(" ", "_", $d->getLibelle()); ?>').DataTable({
+                paging: false,
+                info: false,
+                autoWidth: false,
+                language: {
+                    "url": "/js/datatables_fr.json",
+                },
+                columnDefs: [
+                    {targets: [4], orderable: false}
+                ]
+            });
+        <?php endforeach; ?>
 
         $("div#specifique table span.toggleClef").click(function () {
 

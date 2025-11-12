@@ -118,8 +118,8 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         </div>
         <div class="card-body">
             <?php foreach($types as $type): ?>
-                <?php if ($type->getLibelle() !== "Compétence spécifique"): ?>
-                    <div id="competence_<?php echo str_replace(" ","_",$type->getLibelle()); ?>">
+                <?php if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE): ?>
+                    <div id="competence_<?php echo str_replace(" ","_",$type->getCode()); ?>">
                         <h3><?php echo $type->getLibelle(); ?> </h3>
                     </div>
                 <?php endif; ?>
@@ -208,7 +208,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     }
 
     $(function() {
-        let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getLibelle())."'"; }, $types)); ?>];
+        let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getCode())."'"; }, $types)); ?>];
 
         $("body")
             .on("modification", function (event) {

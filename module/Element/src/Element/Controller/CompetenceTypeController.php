@@ -64,6 +64,7 @@ class CompetenceTypeController extends AbstractActionController {
         $form = $this->getCompetenceTypeForm();
         $form->setAttribute('action', $this->url()->fromRoute('element/competence-type/modifier', ['competence-type' => $type->getId()], [], true));
         $form->bind($type);
+        $form->oldcode = $type->getCode();
 
         /** @var Request $request */
         $request = $this->getRequest();

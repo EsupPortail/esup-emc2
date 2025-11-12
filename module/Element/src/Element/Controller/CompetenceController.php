@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceType;
 use Element\Form\Competence\CompetenceFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
@@ -131,6 +132,7 @@ class CompetenceController extends AbstractActionController
             'title' => "Ajout d'une compétence",
             'form' => $form,
             'type' => $type,
+            'spec' => $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_SPECIFIQUE),
         ]);
         return $vm;
     }
@@ -158,6 +160,7 @@ class CompetenceController extends AbstractActionController
             'title' => "Modification d'une compétence",
             'form' => $form,
             'type' => $competence->getType(),
+            'spec' => $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_SPECIFIQUE),
         ]);
         return $vm;
     }

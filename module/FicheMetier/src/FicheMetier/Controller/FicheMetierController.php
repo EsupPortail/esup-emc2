@@ -6,6 +6,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
@@ -552,7 +553,7 @@ EOS;
     public function gererCompetencesSpecifiquesAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle('Compétence spécifique');
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_SPECIFIQUE);
 
         $form = $this->getSelectionCompetenceForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fichemetier->getId()], [], true));
@@ -631,11 +632,13 @@ EOS;
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        $typeLibelle = str_replace("_"," ", $this->params()->fromRoute('type'));
-        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($typeLibelle);
+//        $typeLibelle = str_replace("_"," ", $this->params()->fromRoute('type'));
+//        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($typeLibelle);
+        $typeCode = str_replace("_"," ", $this->params()->fromRoute('type'));
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($typeCode);
 
         if ($type == null) {
-            throw new RuntimeException("Aucun type de compétences avec libellé [".$type."]",-1);
+            throw new RuntimeException("Aucun type de compétences avec le code [".$typeCode."]",-1);
         }
 
         $competences = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $type, true);

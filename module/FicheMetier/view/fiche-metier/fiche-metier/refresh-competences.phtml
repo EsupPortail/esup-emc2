@@ -19,7 +19,7 @@ if ($mode === 'edition-fiche-metier') {
 
 ?>
 
-<?php if ($type->getLibelle() === "Compétence spécifique") : ?>
+<?php if ($type->getCode() === CompetenceType::CODE_SPECIFIQUE) : ?>
     <?php /** @see \Element\View\Helper\CompetenceDisciplineArrayViewHelper */ ?>
     <?php echo $this->competenceDisciplineArray($competences, $type,  $fichemetier,
         ($mode === 'edition-fiche-metier'?"modification":"affichage"),

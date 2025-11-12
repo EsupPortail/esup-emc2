@@ -10,12 +10,13 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class CompetenceType implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    const CODE_CONNAISSANCE    = 3;
-    const CODE_OPERATIONNELLE  = 2;
-    const CODE_COMPORTEMENTALE = 1;
-    const CODE_SPECIFIQUE = 5;
+    const CODE_CONNAISSANCE    = 'CONN';
+    const CODE_OPERATIONNELLE  = 'OPER';
+    const CODE_COMPORTEMENTALE = 'COMP';
+    const CODE_SPECIFIQUE = 'SPEC';
 
     private ?int $id = null;
+    private ?string $code = null;
     private ?string $libelle = null;
     private Collection $competences;
     private ?int $ordre = null;
@@ -25,87 +26,60 @@ class CompetenceType implements HistoriqueAwareInterface {
         $this->competences = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelle()
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): void
+    {
+        $this->code = $code;
+    }
+
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string $libelle
-     * @return CompetenceType
-     */
-    public function setLibelle($libelle)
+    public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
-        return $this;
     }
 
-
-    /**
-     * @return Competence[]
-     */
-    public function getCompetences()
+    /** @return Competence[] */
+    public function getCompetences(): array
     {
         return $this->competences->toArray();
     }
 
-    /**
-     * @param Competence $competence
-     * @return CompetenceType
-     */
-    public function addCompetence($competence)
+    public function addCompetence(Competence $competence): void
     {
         $this->competences->add($competence);
-        return $this;
     }
 
-    /**
-     * @param Competence $competence
-     * @return CompetenceType
-     */
-    public function removeCompetence($competence)
+    public function removeCompetence(Competence $competence) : void
     {
         $this->competences->removeElement($competence);
-        return $this;
     }
 
-    /**
-     * @param Competence $competence
-     * @return boolean
-     */
-    public function hasCompetence($competence)
+    public function hasCompetence(Competence $competence): bool
     {
         return $this->competences->contains($competence);
     }
 
-    /**
-     * @return int
-     */
-    public function getOrdre()
+    public function getOrdre(): ?int
     {
         return $this->ordre;
     }
 
-    /**
-     * @param int $ordre
-     * @return CompetenceType
-     */
-    public function setOrdre($ordre)
+    public function setOrdre(?int $ordre): void
     {
         $this->ordre = $ordre;
-        return $this;
     }
-
 
 }

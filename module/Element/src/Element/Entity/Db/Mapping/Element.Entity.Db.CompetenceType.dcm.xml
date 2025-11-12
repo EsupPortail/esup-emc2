@@ -7,7 +7,8 @@
         </id>
 
         <field name="libelle"            length="255"      column="libelle"                />
-        <field name="ordre"             type="integer"                  column="ordre"                  />
+        <field name="code"               length="64"       column="code"                />
+        <field name="ordre"              type="integer"    column="ordre"                  />
         <one-to-many target-entity="Element\Entity\Db\Competence" mapped-by="type" field="competences"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
