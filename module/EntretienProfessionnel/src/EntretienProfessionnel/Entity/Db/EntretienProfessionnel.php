@@ -669,7 +669,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused ENTRETIEN#Facultatif */
     public function mentionFacultatif(): string
     {
-        if ($this->statut === "facultatif") return "L'agent·e n'avait pas d'obligation à passer l'entretien pour cette campagne.";
+        if ($this->statut === "facultatif") return "L'entretien professionnel pour cet·te agent·e n'est pas obligatoire pour cette campagne";
         return "";
     }
 

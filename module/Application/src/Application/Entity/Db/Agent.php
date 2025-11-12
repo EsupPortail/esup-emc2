@@ -389,6 +389,7 @@ class Agent implements
         if (empty($affectations)) return [$emptyResult, ["Aucune affectation"]];
 
         $match = [];
+
         foreach ($affectations as $affectation) {
             foreach (AgentAffectation::TEMOINS as $temoin) {
                 if ($affectation->getTemoin($temoin)) {
