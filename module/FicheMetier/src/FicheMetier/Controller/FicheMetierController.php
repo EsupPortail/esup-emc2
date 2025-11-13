@@ -432,6 +432,14 @@ class FicheMetierController extends AbstractActionController
     display: block !important; font-style: italic; 
 }    
 
+.dropdown-item:hover span.text span.mission span.full { 
+    display: block !important;  
+}
+.dropdown-item:hover span.text span.mission span.shorten { 
+    display: none !important;  
+}
+
+
 span.mission {    
     display: inline-block;
 }

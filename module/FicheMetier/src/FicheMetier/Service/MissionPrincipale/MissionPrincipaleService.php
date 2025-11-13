@@ -308,7 +308,9 @@ class MissionPrincipaleService
 
     private function missionOptionify(Mission $mission): array
     {
-        $texte = $mission->getLibelle();
+//        $texte  = $mission->getLibelle();
+        $texte  = "<span class='libelle_mission shorten'>".MissionPrincipaleService::tronquerTexte($mission->getLibelle(),180)."</span>";
+        $texte .= "<span class='libelle_mission full' style='display: none'>".$mission->getLibelle()."</span>";
         $description = null;
 
         if (!empty($mission->getActivites())) {
@@ -338,5 +340,25 @@ class MissionPrincipaleService
             'label' => $texte,
         ];
         return $this_option;
+    }
+
+    static public function tronquerTexte(?string $texte, int $limite = 80): string
+    {
+        if ($texte === null) return "";
+        // Si le texte est plus court que la limite, on ne fait rien
+        if (mb_strlen($texte) <= $limite) {
+            return $texte;
+        }
+
+        // On tronque à la limite sans couper un mot
+        $texteTronque = mb_substr($texte, 0, $limite);
+
+        // Si on a coupé au milieu d’un mot, on recule jusqu’au dernier espace
+        $dernierEspace = mb_strrpos($texteTronque, ' ');
+        if ($dernierEspace !== false) {
+            $texteTronque = mb_substr($texteTronque, 0, $dernierEspace);
+        }
+
+        return rtrim($texteTronque) . ' ...';
     }
 }
