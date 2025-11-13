@@ -678,7 +678,7 @@ EOS;
         $agents = $this->getAgentService()->getAgentsByIds($agentIds);
 
         return new ViewModel([
-            'title' => "Liste des agents ayant la fiche métier #".$metier->getId(),
+            'title' => "Liste des agents ayant la fiche métier <strong>".$metier->getLibelle()."</strong>",
             'fiche' => $fichemetier,
             'metier' => $metier,
             'agents' => $agents,
