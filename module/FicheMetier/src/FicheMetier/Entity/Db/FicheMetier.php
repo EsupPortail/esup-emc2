@@ -33,6 +33,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     use HasMissionsPrincipalesTrait;
 
     private ?int $id = -1;
+    private ?string $libelle = null;
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
 
@@ -70,6 +71,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setRaw(?string $raw): void
     {
         $this->raw = $raw;
+    }
+
+    public function getLibelle(): ?string
+    {
+        return $this->libelle;
+    }
+
+    public function setLibelle(?string $libelle): void
+    {
+        $this->libelle = $libelle;
     }
 
     public function hasExpertise(): bool
@@ -140,6 +151,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     /** @noinspection PhpUnused */
     public function getIntitule(): string
     {
+        if ($this->getLibelle()) return $this->getLibelle();
         $metier = $this->getMetier();
         if ($metier === null) return "Aucun métier est associé.";
         return $metier->getLibelle();

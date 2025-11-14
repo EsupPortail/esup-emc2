@@ -53,7 +53,7 @@ $date = new DateTime();
         <?php
             $canAjouterActivite = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
             $missionsAdditionnelles = $fiche->getMissionsAdditionnelles();
-            usort($missionsAdditionnelles, function (MissionAdditionnelle $a, MissionAdditionnelle $b) { return $a->getMission()->getLibelle() > $b->getMission()->getLibelle();});
+            usort($missionsAdditionnelles, function (MissionAdditionnelle $a, MissionAdditionnelle $b) { return $a->getMission()->getLibelle() <=> $b->getMission()->getLibelle();});
         ?>
 
         <?php if (!empty($missionsAdditionnelles)) : ?>

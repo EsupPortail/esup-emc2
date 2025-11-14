@@ -91,10 +91,10 @@ $this->headTitle('Index des fiches métiers');
                         <a href="<?php echo $this->url('metier/afficher', ['metier' => $fiche->getMetier()->getId()], [], true); ?>"
                            class="ajax-modal"
                         >
-                            <?php echo $fiche->getMetier()->getLibelle(); ?>
+                            <?php echo $fiche->getLibelle()??$fiche->getMetier()->getLibelle(); ?>
                         </a>
                     <?php else : ?>
-                        <?php echo $fiche->getMetier()->getLibelle(); ?>
+                        <?php echo $fiche->getLibelle()??$fiche->getMetier()->getLibelle(); ?>
                     <?php endif; ?>
                 </span>
                 <?php if ($fiche->hasExpertise() === true) : ?>

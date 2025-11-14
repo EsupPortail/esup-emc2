@@ -50,12 +50,12 @@ $metier = $fichemetier->getMetier();
         <?php else : ?>
             Non sujet à expertise
         <?php endif; ?>
-        <?php if ($mode === 'edition-fiche-metier') : ?>
+        <?php if ($mode !== 'affichage') : ?>
             <a
                 <?php /** @see FicheMetierController::modifierExpertiseAction() */ ?>
                     href="<?php echo $this->url('fiche-metier/modifier-expertise', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
             >
-                <span class="icon icon-synchroniser"></span>
+                <span class="icon icon-refresh"></span>
             </a>
         <?php endif; ?>
     </dd>

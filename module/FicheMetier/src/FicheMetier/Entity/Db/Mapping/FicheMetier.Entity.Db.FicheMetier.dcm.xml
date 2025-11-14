@@ -47,8 +47,9 @@
         <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier" field="thematiques"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\TendanceElement" mapped-by="ficheMetier" field="tendances"/>
 
+        <field name="libelle" length="10124" column="libelle" nullable="true"/>
         <field name="hasExpertise" type="boolean" column="expertise" nullable="true"/>
-        <field name="raison" type="string" length="9999" column="raison" nullable="true"/>
+        <field name="raison" type="text" column="raison" nullable="true"/>
 
         <one-to-many target-entity="FicheMetier\Entity\Db\CodeEmploiType" mapped-by="fichemetier" field="codesEmploiType"/>
 

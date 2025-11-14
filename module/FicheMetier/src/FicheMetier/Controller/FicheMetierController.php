@@ -264,6 +264,57 @@ class FicheMetierController extends AbstractActionController
 
     /** COMPOSITION FICHE *********************************************************************************************/
 
+    public function modifierLibelleAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $form = $this->getModifierLibelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-libelle', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier la libellé de la fiche métier",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function reinitialiserLibelleAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $fichemetier->setLibelle(null);
+                $this->getFicheMetierService()->update($fichemetier);
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($fichemetier !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Réinitialisation du libellé associé à la fiche métier",
+                'text' =>  "La réinitialisation forcera le libelle de la fiche à celui du métier associé (".($fichemetier->getMetier()?$fichemetier->getMetier()->getLibelle():"Aucun métier").")",
+                'action' => $this->url()->fromRoute('fiche-metier/reinitialiser-libelle', ["fiche-metier" => $fichemetier->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     public function modifierEtatAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');

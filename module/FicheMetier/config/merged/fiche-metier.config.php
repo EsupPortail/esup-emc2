@@ -91,6 +91,8 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'modifier',
+                        'modifier-libelle',
+                        'reinitialiser-libelle',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -206,6 +208,26 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::ajouterAction() */
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                    ],
+                    'modifier-libelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-libelle/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierLibelleAction() */
+                                'action'     => 'modifier-libelle',
+                            ],
+                        ],
+                    ],
+                    'reinitialiser-libelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/reinitialiser-libelle/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::reinitialiserLibelleAction() */
+                                'action'     => 'reinitialiser-libelle',
                             ],
                         ],
                     ],

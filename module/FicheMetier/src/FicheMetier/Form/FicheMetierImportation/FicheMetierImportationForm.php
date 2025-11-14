@@ -24,6 +24,9 @@ class FicheMetierImportationForm extends Form {
                 'label' => 'Fiche métier au format CSV <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
+            'attributes' => [
+                'accept' => '.csv',
+            ]
         ]);
         //referentiel
         $this->add([
