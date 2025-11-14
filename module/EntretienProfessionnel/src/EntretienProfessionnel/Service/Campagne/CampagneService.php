@@ -322,21 +322,26 @@ class CampagneService
                 continue;
             }
 
-            // Exclusion CORPS //
-            $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],$campagne->getDateEnPoste());
-            if ($result[0] === true) continue;
+            /** NOTE À PROPOS DU FORCAGE ET DES REGLES D'EXCLUSION
+             * On priorise ici le forçage ; on shinte les exclusions si il y a forçage.
+             */
+            if (!$agent->isForceAvecObligation($campagne)) {
+                // Exclusion CORPS //
+                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateEnPoste());
+                if ($result[0] === true) continue;
 
-            // Exclusion AFFECTATIONS //
-            $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS],$campagne->getDateEnPoste(), $structures);
-            if ($result[0] === true) continue;
+                // Exclusion AFFECTATIONS //
+                $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateEnPoste(), $structures);
+                if ($result[0] === true) continue;
 
-            // Exclusion STATUTS //
-            $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS],$campagne->getDateEnPoste());
-            if ($result[0] === true) continue;
+                // Exclusion STATUTS //
+                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateEnPoste());
+                if ($result[0] === true) continue;
 
-            // Exclusion EMPLOI-TYPE //
-            $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS],$campagne->getDateEnPoste());
-            if ($result[0] === true) continue;
+                // Exclusion EMPLOI-TYPE //
+                $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS], $campagne->getDateEnPoste());
+                if ($result[0] === true) continue;
+            }
 
             $kept = true;
 
