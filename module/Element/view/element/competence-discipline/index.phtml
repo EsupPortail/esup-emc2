@@ -90,7 +90,15 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
     <tbody>
     <?php foreach ($disciplines as $discipline) : ?>
         <tr class="<?php if ($discipline->estHistorise()) echo " historise "; ?>">
-            <td> <?php echo $discipline->getLibelle(); ?> </td>
+            <td>
+                <?php echo $discipline->getLibelle(); ?>
+                <?php if ($discipline->getDescription()) : ?>
+                    <br>
+                    <span class="description">
+                        <?php echo $discipline->getDescription(); ?>
+                    </span>
+                <?php endif; ?>
+            </td>
             <td> <?php echo count($discipline->getCompetences()); ?> </td>
             <td> <?php echo count($dictionnaire[$discipline->getId()]); ?> </td>
             <?php if ($canAction) : ?>
@@ -154,3 +162,10 @@ $canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
         });
     });
 </script>
+
+<style>
+    span.description {
+        color: gray;
+        font-style: italic;
+    }
+</style>
