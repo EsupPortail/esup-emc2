@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Controller;
+namespace FicheMetier\Controller;
 
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierFormAwareTrait;
@@ -9,7 +9,7 @@ use Element\Entity\Db\Application;
 use Element\Entity\Db\Competence;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Form\Element\Select;
 use Laminas\Http\Request;
@@ -17,52 +17,40 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
-use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
-class ConfigurationController extends AbstractActionController  {
-    use ConfigurationServiceAwareTrait;
+class ConfigurationController extends AbstractActionController
+{
     use ApplicationServiceAwareTrait;
     use CompetenceServiceAwareTrait;
+    use ConfigurationServiceAwareTrait; //todo à deplacer
     use FicheMetierServiceAwareTrait;
-    use FormulaireServiceAwareTrait;
+    use ParametreServiceAwareTrait;
+
     use ConfigurationFicheMetierFormAwareTrait;
 
-
-    public function indexAction(): ViewModel
+    public function competenceAction() : ViewModel
     {
-        $applications = $this->getConfigurationService()->getConfigurationsFicheMetier(Application::class);
-        $competences  = $this->getConfigurationService()->getConfigurationsFicheMetier(Competence::class);
-
-        $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
-        $formulaire_crep = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREP);
-        $champs_crep = [];
-        foreach ($formulaire_crep->getCategories() as $categorie) {
-            foreach ($categorie->getChamps() as $champ) {
-                $champs_crep[$champ->getId()] = $champ;
-            }
-        }
-
-        $formulaire_cref = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREF);
-        $champs_cref = [];
-        foreach ($formulaire_cref->getCategories() as $categorie) {
-            foreach ($categorie->getChamps() as $champ) {
-                $champs_cref[$champ->getId()] = $champ;
-            }
-        }
+        $defaultCompetence =  $this->getConfigurationService()->getConfigurationsFicheMetier(Competence::class);
 
         return new ViewModel([
-            'applications' => $applications,
-            'competences' => $competences,
-
-            'recopies' => $recopies,
-            'champsCREP' => $champs_crep,
-            'champsCREF' => $champs_cref,
+            'defaultCompetence' => $defaultCompetence,
         ]);
     }
 
-    public function ajouterConfigurationFicheMetierAction()
+    public function applicationAction() : ViewModel
+    {
+        $defaultApplication =  $this->getConfigurationService()->getConfigurationsFicheMetier(Application::class);
+
+        return new ViewModel([
+            'defaultApplication' => $defaultApplication,
+        ]);
+    }
+
+
+    public function ajouterAction()
     {
         $entity = $this->params()->fromRoute('type');
         $select = [];
@@ -81,7 +69,7 @@ class ConfigurationController extends AbstractActionController  {
         $configuration = new ConfigurationFicheMetier();
 
         $form = $this->getConfigurationFicheMetierForm();
-        $form->setAttribute('action', $this->url()->fromRoute('configuration/ajouter-configuration-fiche-metier', ['type' => $entity], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/configuration/ajouter', ['type' => $entity], [], true));
         $form->bind($configuration);
         $form->get('operation')->setValue('ajout');
         $form->get('type')->setValue($type);
@@ -101,7 +89,7 @@ class ConfigurationController extends AbstractActionController  {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Ajouter une ". $entity." par défaut",
             'form' => $form,
@@ -109,22 +97,39 @@ class ConfigurationController extends AbstractActionController  {
         return $vm;
     }
 
-    public function detruireConfigurationFicheMetierAction(): Response
+    public function retirerAction(): Response
     {
-        $configuration = $this->getConfigurationService()->getRequestedConfigurationFicheMetier($this);
+        $configuration = $this->getConfigurationService()->getRequestedConfigurationFicheMetier($this, 'id');
         $this->getConfigurationService()->delete($configuration);
-        return $this->redirect()->toRoute('configuration', [], [],true);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        /** @see ConfigurationController::indexAction() */
+        return $this->redirect()->toRoute('fiche-metier/configuration', [], [],true);
     }
 
-    public function reappliquerConfigurationFicheMetierAction(): Response
+    public function reappliquerAction(): Response
     {
+        $entity = $this->params()->fromRoute('type');
+        $type = null;
+
+        switch ($entity) {
+            case  'application' :
+                $type = Application::class;
+                break;
+            case 'competence' :
+                $type = Competence::class;
+                break;
+        }
+
         $fiches = $this->getFicheMetierService()->getFichesMetiers();
         foreach ($fiches as $fiche) {
-            $fiche = $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
+            $fiche = $this->getConfigurationService()->addDefaultToFicheMetier($fiche, $type);
             $this->getFicheMetierService()->update($fiche);
         }
         $this->flashMessenger()->addSuccessMessage("Ré-application terminée");
-        return $this->redirect()->toRoute('configuration', [], [],true);
-
+        /** @see ConfigurationController::indexAction() */
+        return $this->redirect()->toRoute('fiche-metier/configuration', [], [],true);
     }
+
 }

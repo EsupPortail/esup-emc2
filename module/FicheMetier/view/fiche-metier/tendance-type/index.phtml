@@ -18,9 +18,7 @@ $canSupprimer = $this->isAllowed(TendancetypePrivileges::getResourceId(Tendancet
 
 ?>
 
-<h1 class="page-header">
-    Type de tendance
-</h1>
+<?php echo $this->partial('fiche-metier/configuration/header', ['selected' => "tendance"]); ?>
 
 <div>
     <?php /** @see \FicheMetier\Controller\TendanceTypeController::ajouterAction() */ ?>

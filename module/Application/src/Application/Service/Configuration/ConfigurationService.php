@@ -98,10 +98,9 @@ class ConfigurationService
     }
 
 
-    public function addDefaultToFicheMetier(FicheMetier $fiche): FicheMetier
+    public function addDefaultToFicheMetier(FicheMetier $fiche, ?string $entity = null): FicheMetier
     {
-        $ajouts = $this->getConfigurationsFicheMetier();
-
+        $ajouts = $this->getConfigurationsFicheMetier($entity);
         foreach ($ajouts as $ajout) {
             if ($ajout->getEntityType() === Application::class and !$fiche->hasApplication($ajout->getEntity())) {
                 $applicationElement = new ApplicationElement();

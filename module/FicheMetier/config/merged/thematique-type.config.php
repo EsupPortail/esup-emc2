@@ -78,25 +78,25 @@ return [
         ],
     ],
 
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'thematique' => [
-                                'label' => 'Thématiques',
-                                'route' => 'fiche-metier/thematique-type',
-                                'resource' => PrivilegeController::getResourceId(ThematiqueTypeController::class, 'index'),
-                                'order' => 1020,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            'thematique' => [
+//                                'label' => 'Thématiques',
+//                                'route' => 'fiche-metier/thematique-type',
+//                                'resource' => PrivilegeController::getResourceId(ThematiqueTypeController::class, 'index'),
+//                                'order' => 1020,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

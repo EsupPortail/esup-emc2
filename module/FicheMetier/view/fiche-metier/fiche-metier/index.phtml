@@ -25,23 +25,35 @@ $canAfficherFamille = $this->isAllowed(FamilleprofessionnellePrivileges::getReso
 $canAfficherMetier = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AFFICHER));
 
 $canReferentiel = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_INDEX));
+$canConfigurer = true; //todo
+
 $this->headTitle('Index des fiches métiers');
 
 ?>
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-8">
         <h1 class="page-header">
             Fiches métiers
         </h1>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-4">
         <?php if ($canReferentiel) : ?>
             <?php /** @see \Metier\Controller\ReferentielController::indexAction() */ ?>
             <a href="<?php echo $this->url('metier/referentiel', [], [], true); ?>"
                class="btn btn-secondary">
                 <span class="icon icon-listing"></span>
                 Accéder aux référentiels des métiers
+            </a>
+        <?php endif; ?>
+        <?php if ($canConfigurer) : ?>
+        <br>
+            <?php /** @see \FicheMetier\Controller\ConfigurationController::competenceAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/configuration/competence', [], [], true); ?>"
+               class="btn btn-secondary"
+           >
+                <span class="icon icon-gerer"></span>
+                Configurer les fiches métiers
             </a>
         <?php endif; ?>
     </div>

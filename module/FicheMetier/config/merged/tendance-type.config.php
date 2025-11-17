@@ -78,25 +78,25 @@ return [
         ],
     ],
 
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'tendance' => [
-                                'label' => 'Tendances',
-                                'route' => 'fiche-metier/tendance-type',
-                                'resource' => PrivilegeController::getResourceId(TendanceTypeController::class, 'index'),
-                                'order' => 1020,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            'tendance' => [
+//                                'label' => 'Tendances',
+//                                'route' => 'fiche-metier/tendance-type',
+//                                'resource' => PrivilegeController::getResourceId(TendanceTypeController::class, 'index'),
+//                                'order' => 1020,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

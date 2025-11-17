@@ -18,9 +18,8 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
 
 ?>
 
-<h1 class="page-header">
-    Type de thèmatiques
-</h1>
+<?php echo $this->partial('fiche-metier/configuration/header', ['selected' => "thematique"]); ?>
+
 
 <div>
     <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::ajouterAction() */ ?>

@@ -9,6 +9,7 @@ use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieFormFac
 use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieHydrator;
 use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieHydratorFactory;
 use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -19,6 +20,7 @@ return [
                 [
                     'controller' => ConfigurationController::class,
                     'action' => [
+                        'index',
                         'ajouter-recopie',
                         'modifier-recopie',
                         'supprimer-recopie',
@@ -34,15 +36,15 @@ return [
     'router' => [
         'routes' => [
             'configuration' => [
-//                'type'  => Literal::class,
-//                'options' => [
-//                    'route'    => '/configuration',
-//                    'defaults' => [
-//                        'controller' => ConfigurationController::class,
-//                        'action'     => 'index',
-//                    ],
-//                ],
-//                'may_terminate' => true,
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/configuration',
+                    'defaults' => [
+                        'controller' => ConfigurationController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
                 'child_routes' => [
                     /** configuration des entretien pro ***************************************************************/
                     'ajouter-recopie' => [
