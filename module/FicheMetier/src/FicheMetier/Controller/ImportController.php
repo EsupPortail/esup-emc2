@@ -118,7 +118,7 @@ class ImportController extends AbstractActionController
                             $fiche->setRaw($raw);
                             $fiche->setMetier($metiers[$item["Code emploi type"]]);
                             if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
-                            if ($item["COMPETENCES_ID"]) {
+                            if (isset($item["COMPETENCES_ID"]) and $item["COMPETENCES_ID"] !== '') {
                                 $ids = explode('|', $item["COMPETENCES_ID"]);
                                 foreach ($ids as $id) {
                                     if (isset($competences[$id])) {
@@ -132,7 +132,7 @@ class ImportController extends AbstractActionController
                                 }
                             }
                             //Mission et activité
-                            if (isset($item["Mission"])) {
+                            if (isset($item["Mission"]) and $item["Mission"] !== '') {
                                 $intitule = $item["Mission"];
                                 $activites = [];
                                 if (isset($item["Activités principales"])) {

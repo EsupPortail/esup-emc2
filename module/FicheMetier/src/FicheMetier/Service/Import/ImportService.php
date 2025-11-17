@@ -131,14 +131,14 @@ class ImportService
                     $intitule = $item["Intitulé de l’emploi type"] ?? null;
                     $metier = $this->getMetierService()->createWith($intitule, $codeReferentiel, $code, null, $mode === 'import');
 
-                    if ($item["Famille d’activité professionnelle"]) {
+                    if (isset($item["Famille d’activité professionnelle"])) {
                         $elements = explode("|", $item["Famille d’activité professionnelle"]);
                         foreach ($elements as $element) {
                             $metier->addFamillesProfessionnelles($famillesProfessionnelles[$element]);
                         }
                     }
-                    if ($item["Code de la branche d’activité professionnelle"] and $correspondances[$item["Code de la branche d’activité professionnelle"]]) $metier->addCorrespondance($correspondances[$item["Code de la branche d’activité professionnelle"]]);
-                    if ($item["REFERENS_CATEGORIE_EMPLOI"] and $categories[$item["REFERENS_CATEGORIE_EMPLOI"]]) $metier->setCategorie($categories[$item["REFERENS_CATEGORIE_EMPLOI"]]);
+                    if (isset($item["Code de la branche d’activité professionnelle"]) and $item["Code de la branche d’activité professionnelle"] !== '' and $correspondances[$item["Code de la branche d’activité professionnelle"]]) $metier->addCorrespondance($correspondances[$item["Code de la branche d’activité professionnelle"]]);
+                    if (isset($item["REFERENS_CATEGORIE_EMPLOI"]) AND $item["REFERENS_CATEGORIE_EMPLOI"] !== '' and $categories[$item["REFERENS_CATEGORIE_EMPLOI"]]) $metier->setCategorie($categories[$item["REFERENS_CATEGORIE_EMPLOI"]]);
                     if ($mode === 'import') $this->getMetierService()->update($metier);
                 }
                 $metiers[$code] = $metier;
