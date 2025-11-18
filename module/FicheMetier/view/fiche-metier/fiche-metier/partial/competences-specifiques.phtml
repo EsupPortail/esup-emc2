@@ -6,6 +6,7 @@
  * @var string $mode
  */
 
+use Element\Entity\Db\CompetenceType;
 use FicheMetier\Entity\Db\FicheMetier;
 
 $actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
@@ -23,40 +24,21 @@ if ($mode === 'edition-fiche-metier') {
                 <h2>
                     <span class="icon competence"></span>
                     Compétences spécifiques
-<!--                    <span class="badge">--><?php //echo count($competences); ?><!--</span>-->
                 </h2>
             </div>
             <div class="col-md-5">
                 <div class="float-end">
-<!--                    --><?php ///** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
-<!--                    <a href="--><?php //echo $this->url('graphique/competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?><!--"-->
-<!--                       class="btn btn-secondary action ajax-modal"-->
-<!--                    >-->
-<!--                        <span class="icon icon-diagramme"></span>-->
-<!--                        Afficher les compétences-->
-<!--                    </a>-->
-
                     <?php if ($actions['modifier'] === true) : ?>
                         <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesSpecifiquesAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                            class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                           data-event="refresh-competences" data-competence-type="Compétence_spécifique"
+                           data-event="refresh-competences"
+                           data-competence-type="<?php echo CompetenceType::CODE_SPECIFIQUE; ?>"
                         >
                             <span class="icon icon-lister"></span>
                             Gérer les compétences
                         </a>
                     <?php endif; ?>
-
-<!--                    --><?php //if ($actions['modifier'] === true) : ?>
-<!--                        --><?php ///** @see \Application\Controller\FicheMetierController::clonerCompetencesAction() */ ?>
-<!--                        <a href="--><?php //echo $this->url('fiche-metier-type/cloner-competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?><!--"-->
-<!--                           class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"-->
-<!--                           data-event="modification"-->
-<!--                        >-->
-<!--                            <span class="icon icon-cloner"></span>-->
-<!--                            Cloner depuis une autre fiche-->
-<!--                        </a>-->
-<!--                    --><?php //endif; ?>
                 </div>
             </div>
         </div>
