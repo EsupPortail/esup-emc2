@@ -120,7 +120,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
                             <?php /** @see ElementController::changerNiveauAction() */ ?>
                                 <a href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId(), 'clef' => 'masquer'], [], true); ?>"
                                    class="action primary ajax-modal" data-event="refresh-competences"
-                                   data-competence-type="<?php echo str_replace(" ", "_", $type->getLibelle()); ?>">
+                                   data-competence-type="<?php echo $competence->getType()->getCode(); ?>">
                                     <span class="icon icon-editer"></span>
                                     Modifier niveau
                                 </a>
@@ -137,7 +137,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
                         <?php endif; ?>
                         <?php if ($mode === "modification") : ?>
                             <span class="<?php if ($canSetClefCompetenceElement) echo " toggleClef "; ?>"
-                                  data-competence-type="<?php echo $competence->getType()->getLibelle(); ?>"
+                                  data-competence-type="<?php echo $competence->getType()->getCode(); ?>"
                                   id="<?php echo $competenceElement->getId() ?>">
                                 <?php if ($competenceElement->isClef()) : ?>
                                     <span class="text-success icon icon-toggle-on"></span>
@@ -161,7 +161,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
                             <?php /** @see ElementController::supprimerAction() */ ?>
                             <a href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $competenceElement->getId()], [], true); ?>"
                                class="action danger ajax-modal" data-event="refresh-competences"
-                               data-competence-type="<?php echo str_replace(" ", "_", $type->getLibelle()); ?>">
+                               data-competence-type="<?php echo $competence->getType()->getCode(); ?>">
                                 <span class="icon icon-unchecked"></span>
                                 Supprimer
                             </a>
