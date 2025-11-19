@@ -63,6 +63,14 @@ class MissionActiviteService
         return $this->getActivite($id);
     }
 
+    /** @return MissionActivite[] */
+    public function getActivites(bool $withHisto = false): array
+    {
+        $qb = $this->createQueryBuilder();
+        if (!$withHisto) { $qb = $qb->andWhere("missionactivite.histoDestruction IS NULL"); }
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
     /** Facade ********************************************************************************************************/
 
 }

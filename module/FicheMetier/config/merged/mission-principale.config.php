@@ -98,17 +98,17 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
                             'mission-pincipale' => [
-                                'label'    => 'Missions principales',
-                                'route'    => 'mission-principale',
-                                'resource' => PrivilegeController::getResourceId(MissionPrincipaleController::class, 'index') ,
-                                'order'    => 1020,
+                                'label' => 'Missions principales',
+                                'route' => 'mission-principale',
+                                'resource' => PrivilegeController::getResourceId(MissionPrincipaleController::class, 'index'),
+                                'order' => 1020,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -118,193 +118,193 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'mission-principale' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/mission-principale',
+                    'route' => '/mission-principale',
                     'defaults' => [
                         /** @see MissionPrincipaleController::indexAction() */
                         'controller' => MissionPrincipaleController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
                     'afficher' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/afficher/:mission-principale',
+                            'route' => '/afficher/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::afficherAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'afficher',
+                                'action' => 'afficher',
                             ],
                         ],
                     ],
                     'ajouter' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/ajouter',
+                            'route' => '/ajouter',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::ajouterAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'ajouter',
+                                'action' => 'ajouter',
                             ],
                         ],
                     ],
                     'modifier' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier/:mission-principale',
+                            'route' => '/modifier/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::modifierAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'modifier',
+                                'action' => 'modifier',
                             ],
                         ],
                     ],
                     'historiser' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/historiser/:mission-principale',
+                            'route' => '/historiser/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::historiserAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'historiser',
+                                'action' => 'historiser',
                             ],
                         ],
                     ],
                     'restaurer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer/:mission-principale',
+                            'route' => '/restaurer/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::restaurerAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'restaurer',
+                                'action' => 'restaurer',
                             ],
                         ],
                     ],
                     'supprimer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer/:mission-principale',
+                            'route' => '/supprimer/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::supprimerAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'supprimer',
+                                'action' => 'supprimer',
                             ],
                         ],
                     ],
 
                     'modifier-libelle' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-libelle/:mission-principale',
+                            'route' => '/modifier-libelle/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::modifierLibelleAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'modifier-libelle',
+                                'action' => 'modifier-libelle',
                             ],
                         ],
                     ],
                     'ajouter-activite' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-activite/:mission-principale',
+                            'route' => '/ajouter-activite/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::ajouterActiviteAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'ajouter-activite',
+                                'action' => 'ajouter-activite',
                             ],
                         ],
                     ],
                     'modifier-activite' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-activite/:activite',
+                            'route' => '/modifier-activite/:activite',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::modifierActiviteAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'modifier-activite',
+                                'action' => 'modifier-activite',
                             ],
                         ],
                     ],
                     'supprimer-activite' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-activite/:activite',
+                            'route' => '/supprimer-activite/:activite',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::supprimerActiviteAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'supprimer-activite',
+                                'action' => 'supprimer-activite',
                             ],
                         ],
                     ],
                     'gerer-familles-professionnelles' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-familles-professionnelles/:mission-principale',
+                            'route' => '/gerer-familles-professionnelles/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::gererFamillesProfessionnellesAction() */
-                                'action'     => 'gerer-familles-professionnelles',
+                                'action' => 'gerer-familles-professionnelles',
                             ],
                         ],
                     ],
                     'gerer-niveau' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-niveau/:mission-principale',
+                            'route' => '/gerer-niveau/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::gererNiveauAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'gerer-niveau',
+                                'action' => 'gerer-niveau',
                             ],
                         ],
                     ],
                     'gerer-applications' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-applications/:mission-principale',
+                            'route' => '/gerer-applications/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::gererApplicationsAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'gerer-applications',
+                                'action' => 'gerer-applications',
                             ],
                         ],
                     ],
                     'gerer-competences' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-competences/:mission-principale',
+                            'route' => '/gerer-competences/:mission-principale',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::gererCompetencesAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'gerer-competences',
+                                'action' => 'gerer-competences',
                             ],
                         ],
                     ],
                     'rechercher' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/rechercher',
+                            'route' => '/rechercher',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::rechercherAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'rechercher',
+                                'action' => 'rechercher',
                             ],
                         ],
                     ],
                     'importer' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/importer',
+                            'route' => '/importer',
                             'defaults' => [
                                 /** @see MissionPrincipaleController::importerAction() */
                                 'controller' => MissionPrincipaleController::class,
-                                'action'     => 'importer',
+                                'action' => 'importer',
                             ],
                         ],
                     ],
@@ -319,14 +319,14 @@ return [
             MissionActiviteService::class => MissionActiviteServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             MissionPrincipaleController::class => MissionPrincipaleControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            SelectionnerMissionPrincipaleForm::class  => SelectionnerMissionPrincipaleFormFactory::class,
+            SelectionnerMissionPrincipaleForm::class => SelectionnerMissionPrincipaleFormFactory::class,
         ],
     ],
     'hydrators' => [

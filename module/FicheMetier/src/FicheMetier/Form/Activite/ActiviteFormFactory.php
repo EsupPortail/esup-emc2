@@ -1,30 +1,29 @@
 <?php
 
-namespace FicheReferentiel\Form\Importation;
+namespace FicheMetier\Form\Activite;
 
 use Metier\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ImportationFormFactory {
+class ActiviteFormFactory
+{
 
     /**
-     * @param ContainerInterface $container
-     * @return ImportationForm
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : ImportationForm
+    public function __invoke(ContainerInterface $container): ActiviteForm
     {
         /**
          * @var ReferentielService $referentielService
-         * @var ImportationHydrator $hydrator
+         * @var ActiviteHydrator $hydrator
          */
         $referentielService = $container->get(ReferentielService::class);
-        $hydrator = $container->get('HydratorManager')->get(ImportationHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(ActiviteHydrator::class);
 
-        $form = new ImportationForm();
+        $form = new ActiviteForm();
         $form->setReferentielService($referentielService);
         $form->setHydrator($hydrator);
         return $form;

@@ -7,8 +7,11 @@ use Laminas\Form\Element\File;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class ImportationForm extends Form {
+
+    use ReferentielServiceAwareTrait;
 
     public function init(): void
     {
@@ -22,6 +25,20 @@ class ImportationForm extends Form {
             ],
             'attributes' => [
                 'accept' => '.csv',
+            ],
+        ]);
+        //referentiel
+        $this->add([
+            'type' => Select::class,
+            'name' => 'referentiel',
+            'options' => [
+                'label' => 'Référentiel  <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'empty_option' => "Sélectionner le référentiel associé",
+                'value_options' => $this->getReferentielService()->getReferentielsAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'referentiel',
             ],
         ]);
         //mode
@@ -56,6 +73,7 @@ class ImportationForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'fichier' => [ 'required' => true, ],
+            'referentiel' => [ 'required' => true, ],
             'mode'  => ['required' => true, ],
         ]));
     }
