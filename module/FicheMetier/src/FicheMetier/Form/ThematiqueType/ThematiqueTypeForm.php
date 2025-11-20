@@ -29,7 +29,7 @@ class ThematiqueTypeForm extends Form
             'type' => Text::class,
             'name' => 'code',
             'options' => [
-                'label' => "Code associé au type <span class='icon icon-obligatoire text-danger' title='Champ obligatoire et unique'></span> :",
+                'label' => "Code associé au type <span class='icon icon-obligatoire' title='Champ obligatoire et unique'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -40,7 +40,7 @@ class ThematiqueTypeForm extends Form
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libellé du type <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label' => "Libellé du type <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [

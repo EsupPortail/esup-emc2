@@ -27,7 +27,7 @@ class ThematiqueTypeController extends AbstractActionController {
         $thematiqueType = $this->getThematiqueTypeService()->getRequestedThematiqueType($this);
 
         return new ViewModel([
-            'title' => "Affichage du type de thématique",
+            'title' => "Affichage du type de \"Contexte et environnement de travail\"",
             'thematiqueType' => $thematiqueType,
         ]);
     }
@@ -51,7 +51,7 @@ class ThematiqueTypeController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout d'un type de thématique",
+            'title' => "Ajout d'un type de \"Contexte et environnement de travail\"",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -79,7 +79,7 @@ class ThematiqueTypeController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Modificaiton d'un type de thématique",
+            'title' => "Modification d'un type de \"Contexte et environnement de travail\"",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');

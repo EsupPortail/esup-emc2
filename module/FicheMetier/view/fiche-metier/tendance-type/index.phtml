@@ -26,25 +26,25 @@ $canSupprimer = $this->isAllowed(TendancetypePrivileges::getResourceId(Tendancet
        class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
-        Ajouter un type de tendance
+        Ajouter un type de "Tendance d'évolution"
     </a>
 </div>
 
 <table class="table table-condensed datatable" id="tendances">
     <thead>
     <tr>
-        <th> Libellé </th>
-        <th> Code </th>
-        <th> Obligatoire </th>
-        <th> Ordre </th>
-        <th class="action"> Action </th>
+        <th class="col-md-6"> Libellé </th>
+        <th class="col-md-2"> Code </th>
+        <th class="col-md-1"> Obligatoire </th>
+        <th class="col-md-1"> Ordre </th>
+        <th class="col-md-2 action"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($tendancesTypes as $tendanceType) : ?>
         <tr>
             <td> <?php echo $tendanceType->getLibelle(); ?> </td>
-            <td> <?php echo $tendanceType->getCode(); ?> </td>
+            <td> <code><?php echo $tendanceType->getCode(); ?></code> </td>
             <td> <?php echo ($tendanceType->isObligatoire())?"<span class='text-success'>Oui</span>":"<span class='text-danger'>Non</span>"; ?> </td>
             <td> <?php echo $tendanceType->getOrdre(); ?></td>
             <td class="action">

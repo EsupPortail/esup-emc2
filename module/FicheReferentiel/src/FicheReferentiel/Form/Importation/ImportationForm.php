@@ -4,6 +4,7 @@ namespace FicheReferentiel\Form\Importation;
 
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\File;
+use Laminas\Form\Element\Hidden;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
@@ -27,6 +28,9 @@ class ImportationForm extends Form {
                 'accept' => '.csv',
             ],
         ]);
+        //save du fichier
+        $this->add([ 'type' => Hidden::class, 'name' => 'file_name', ]);
+        $this->add([ 'type' => Hidden::class, 'name' => 'file_tmp_name', ]);
         //referentiel
         $this->add([
             'type' => Select::class,
@@ -72,7 +76,9 @@ class ImportationForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'fichier' => [ 'required' => true, ],
+            'fichier'       => [ 'required' => true, ],
+            'file_name'     => [ 'required' => false, ],
+            'file_tmp_name' => [ 'required' => false, ],
             'referentiel' => [ 'required' => true, ],
             'mode'  => ['required' => true, ],
         ]));

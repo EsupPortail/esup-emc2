@@ -392,9 +392,8 @@ class Agent implements
          * Attention certains établissements découpent leurs affectations de façon atomique et ne regroupent pas les
          * temoins d'affectation comme hiérarchique et fonctionnelle cela afin d'exprimer des quotités d'affectation
          * fonctionnelle et hiérarchique.
-         * Par conséquent, il est nécessaire de regrouper les témoins avant de calcul l'application des règles de tri.
+         * Par conséquent, il est nécessaire de regrouper les témoins avant de calculer l'application des règles de tri.
          */
-
         $count = [];
         foreach ($affectations as $affectation) {
             foreach (AgentAffectation::TEMOINS as $temoin) {
@@ -403,7 +402,6 @@ class Agent implements
                 }
             }
         }
-
         $match = [];
         foreach ($valeurs as $valeur) {
             if ($this->isCompatible($count, $valeur)) {

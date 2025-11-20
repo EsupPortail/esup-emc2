@@ -53,7 +53,7 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             type="button" role="tab" aria-controls="tendance"
             aria-selected="true"
             onclick="location.href='<?php echo $this->url('fiche-metier/tendance-type', [], [], true); ?>'">
-        Tendances
+        Tendances d'évolution
     </button>
     <button class="nav-link <?php if ($selected === "thematique") echo " active "; ?>"
             id="thematique-tab"
@@ -61,7 +61,7 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             type="button" role="tab" aria-controls="thematique"
             aria-selected="true"
             onclick="location.href='<?php echo $this->url('fiche-metier/thematique-type', [], [], true); ?>'">
-        Thématiques
+        Contexte et environnement de travail
     </button>
 </div>
 

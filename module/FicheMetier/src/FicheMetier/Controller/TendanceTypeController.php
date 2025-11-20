@@ -27,7 +27,7 @@ class TendanceTypeController extends AbstractActionController {
         $tendanceType = $this->getTendanceTypeService()->getRequestedTendanceType($this);
 
         return new ViewModel([
-            'title' => "Affichage du type de tendance",
+            'title' => "Affichage du type de \"Tendance d'évolution\"",
             'tendanceType' => $tendanceType,
         ]);
     }
@@ -51,7 +51,7 @@ class TendanceTypeController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout d'un type de tendance",
+            'title' => "Ajout d'un type de \"Tendance d'évolution\"",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -79,7 +79,7 @@ class TendanceTypeController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Modificaiton d'un type de tendance",
+            'title' => "Modificaiton d'un type de \"Tendance d'évolution\"",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
