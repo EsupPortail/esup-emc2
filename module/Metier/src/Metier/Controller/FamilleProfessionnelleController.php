@@ -2,8 +2,6 @@
 
 namespace Metier\Controller;
 
-use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Metier\Form\FamilleProfessionnelle\FamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;

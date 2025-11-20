@@ -29,8 +29,9 @@ class ImportationForm extends Form {
             ],
         ]);
         //save du fichier
-        $this->add([ 'type' => Hidden::class, 'name' => 'file_name', ]);
-        $this->add([ 'type' => Hidden::class, 'name' => 'file_tmp_name', ]);
+//        $this->add([ 'type' => Hidden::class, 'name' => 'file_name', ]);
+//        $this->add([ 'type' => Hidden::class, 'name' => 'file_tmp_name', ]);
+        $this->add([ 'type' => Hidden::class, 'name' => 'filepath', ]);
         //referentiel
         $this->add([
             'type' => Select::class,

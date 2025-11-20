@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use DateTime;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Form\Activite\ActiviteFormAwareTrait;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
@@ -134,16 +135,15 @@ class ActiviteController extends AbstractActionController
     public function importerAction(): ViewModel {
 
         $form = $this->getImportationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('activite/importer', [], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('activite/importer', [ 'path' => null ], [], true));
 
-        $activites = []; $info = []; $warning = []; $error = []; $params = [];
+        $activites = []; $info = []; $warning = []; $error = [];
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $continue = true; $referentiel = null;
 
             $data = $request->getPost();
-            $params = $data;
             if (isset($data['referentiel'])) {
                 $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
             }
@@ -153,9 +153,20 @@ class ActiviteController extends AbstractActionController
             }
             $files = $request->getFiles()->toArray();
             $file = !empty($files)?current($files):null;
-            if ($file === null OR $file['tmp_name'] === '') {
-                $error[] = "Fichier non trouvé";
-                $continue = false;
+
+            if ($file['size'] === 0 AND $data['filepath'] === "") {
+                    $error[] = "Fichier non trouvé";
+                    $continue = false;
+            } else {
+                if ($file['size'] !== 0) {
+                    $filepath = '/tmp/import_activites_' . (new DateTime())->getTimestamp() . '.csv';
+                    copy($file['tmp_name'], $filepath);
+                    $form->get('filepath')->setValue($filepath);
+                    $data['filepath'] = $filepath;
+                } else {
+                    $file['tmp_name'] = $data['filepath'];
+                    $form->get('filepath')->setValue($data['filepath']);
+                }
             }
 
             if ($continue) {
@@ -185,7 +196,8 @@ class ActiviteController extends AbstractActionController
         }
 
         return new ViewModel([
-            'params' => $params,
+            'data' => $data??null,
+            'file' => $file??null,
             'form' => $form,
             'activites' => $activites,
             'info' => $info,
@@ -196,8 +208,6 @@ class ActiviteController extends AbstractActionController
 
     //todo fonction de recherche
     // public function rechercherAction(): Json {}
-
-
 
 
 }

@@ -6,7 +6,8 @@ use FicheReferentiel\Form\Importation\ImportationForm;
 /**
  * @see \FicheMetier\Controller\ActiviteController::importerAction()
  * @var ImportationForm $form
- * @var array $params
+ * @var array $data
+ * @var array $file
  * @var Activite[] $activites
  * @var string[] $info
  * @var string[] $warning
@@ -17,12 +18,37 @@ $this->headTitle("Importation d'activité");
 
 ?>
 
+<script>
+    function reset() {
+        console.log("reset");
+        //
+    }
+</script>
+
 <h1 class="page-header">
     Importation d'activité
 </h1>
 
+<!--<div class="row">-->
+<!--    <div class="col-md-6">-->
+<!--        --><?php //var_dump($data); ?>
+<!--    </div>-->
+<!--    <div class="col-md-6">-->
+<!--        --><?php //var_dump($file); ?>
+<!--    </div>-->
+<!--</div>-->
+
 <div class="row">
     <div class="col-md-6">
+        <?php if (!empty($file)) : ?>
+            <script>
+                $(function() {
+                    $("input[name='fichier']").parent().hide();
+                    $("div.fichier").html("<?php echo $data['filepath']; ?> <span class='icon icon-unchecked' id='remove_file'></span>");
+                });
+            </script>
+        <?php endif; ?>
+        <div class="fichier"> </div>
         <?php echo $this->form($form); ?>
     </div>
     <div class="col-md-6">
@@ -98,12 +124,19 @@ $this->headTitle("Importation d'activité");
 <?php endif; ?>
 
 <script>
-    <?php if (isset($params['referentiel'])): ?>
-        let valueReferentiel = '<?php echo $params['referentiel']; ?>';
+    <?php if (isset($data['referentiel'])): ?>
+        let valueReferentiel = '<?php echo $data['referentiel']; ?>';
         $('select[name="referentiel"]').val(valueReferentiel);
     <?php endif; ?>
-    <?php if (isset($params['mode'])): ?>
-        let valueMode = '<?php echo $params['mode']; ?>';
+    <?php if (isset($data['mode'])): ?>
+        let valueMode = '<?php echo $data['mode']; ?>';
         $('select[name="mode"]').val(valueMode);
     <?php endif; ?>
+
+    $(function() {
+        $('#remove_file').on('click', function() {
+            window.location.href="../activite/importer";
+        });
+    })
+
 </script>
