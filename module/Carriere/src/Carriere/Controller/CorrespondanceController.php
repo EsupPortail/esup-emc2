@@ -26,6 +26,16 @@ class CorrespondanceController extends AbstractActionController
         ]);
     }
 
+    public function afficherAction(): ViewModel
+    {
+        $correspondance = $this->getCorrespondanceService()->getRequestedCorrespondance($this);
+
+        return new ViewModel([
+            'title' => "Affichage de la correspondance",
+            'correspondance' => $correspondance,
+        ]);
+    }
+
     public function afficherAgentsAction() : ViewModel
     {
         $actifOnly = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::ACTIF_ONLY);

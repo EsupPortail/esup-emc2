@@ -32,6 +32,15 @@ return [
                 [
                     'controller' => CorrespondanceController::class,
                     'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
                         'afficher-agents',
                     ],
                     'privileges' => [
@@ -125,17 +134,25 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:correspondance',
+                            'defaults' => [
+                                /** @see CorrespondanceController::afficherAction() */
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
                     'afficher-agents' => [
                         'type'  => Segment::class,
                         'options' => [
                             'route'    => '/afficher-agents/:correspondance',
                             'defaults' => [
                                 /** @see CorrespondanceController::afficherAgentsAction() */
-                                'controller' => CorrespondanceController::class,
                                 'action'     => 'afficher-agents',
                             ],
                         ],
-                        'may_terminate' => true,
                     ],
                 ],
             ],

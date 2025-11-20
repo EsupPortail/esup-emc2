@@ -75,7 +75,7 @@ class CorrespondanceService {
         return $options;
     }
 
-    public function getCorrespondance(int $id, bool $avecAgent = true) : ?Correspondance
+    public function getCorrespondance(?int $id, bool $avecAgent = true) : ?Correspondance
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('correspondance.id = :id')

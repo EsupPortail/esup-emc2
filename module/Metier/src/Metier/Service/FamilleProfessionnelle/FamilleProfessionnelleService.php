@@ -2,6 +2,7 @@
 
 namespace Metier\Service\FamilleProfessionnelle;
 
+use Carriere\Entity\Db\Correspondance;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -116,6 +117,49 @@ class FamilleProfessionnelleService
         return $result;
     }
 
+    public function getFamilleProfessionnelleByPositionnement(?Correspondance $correspondance, $position): ?FamilleProfessionnelle
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('famille.correspondance = :correspondance')->setParameter('correspondance', $correspondance)
+            ->andWhere('famille.position = :position')->setParameter('position', $position)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".FamilleProfessionnelle::class."] famille professionnelle partagent le même positionnement [".$correspondance?->getLibelleCourt()."|".$position."]",-1,$e);
+        }
+        return $result;
+    }
+
+    /** @return FamilleProfessionnelle[] */
+    public function getFamillesProfessionnellesWithFilter(array $params): array
+    {
+        $qb = $this->createQueryBuilder();
+        if (isset($params['historisation'])) {
+            if ($params['historisation'] === "1") {
+                $qb = $qb->andWhere('famille.histoDestruction IS NOT NULL');
+            }
+            if ($params['historisation'] === "0") {
+                $qb = $qb->andWhere('famille.histoDestruction IS NULL');
+            }
+        }
+        $a=1;
+        if (isset($params['correspondance']) AND $params['correspondance'] !== "") {
+            if ($params['correspondance'] === "-1") {
+                $qb = $qb->andWhere('famille.correspondance IS NULL');
+            } else {
+                $qb = $qb
+                        ->join('famille.correspondance', 'correspondance')
+                        ->andWhere('correspondance = :correspondance')->setParameter('correspondance', $params['correspondance']);
+            }
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
+
     public function createWith(string $familleLibelle, bool $persist = true): ?FamilleProfessionnelle
     {
         $famille = new FamilleProfessionnelle();
@@ -123,4 +167,8 @@ class FamilleProfessionnelleService
         if ($persist) $this->create($famille);
         return $famille;
     }
+
+
+
+
 }

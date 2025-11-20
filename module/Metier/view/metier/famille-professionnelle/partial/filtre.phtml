@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @see \Metier\Controller\FamilleProfessionnelleController::indexAction()
+ * @var Correspondance[] $correspondances
+ * @var array $params
+ */
+
+use Carriere\Entity\Db\Correspondance;
+
+$correspondanceParams = $params['correspondance']??null;
+$historisationParams = $params['historisation']??null;
+?>
+
+
+<div class="card" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+    <div class="card-header bg-default">
+        <span class="icon icon-filtrer"></span> Filtre de recherche des familles d'activités professionnelles
+    </div>
+    <div class="card-body">
+        <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <!-- CORRESPONDANCE -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="correspondance">Correspondance :</label>
+                                <select id="correspondance" name="correspondance" class="selectpicker">
+                                    <option value=""> Toutes les correspondances</option>
+                                    <option value="-1" <?php if ($correspondanceParams == -1) echo " selected "; ?> > Aucune correspondance</option>
+                                    <?php foreach ($correspondances as $correspondance) : ?>
+                                        <option value="<?php echo $correspondance->getId(); ?>" <?php if ($correspondanceParams == $correspondance->getId()) echo " selected "; ?> >
+                                            <?php echo $correspondance->getLibelleLong(); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- HISTORISATION -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="historisation">Historisation :</label>
+                                <select id="historisation" name="historisation" class="selectpicker">
+                                    <option value="">Peu importe</option>
+                                    <option value="1" <?php if ($historisationParams === "1") echo " selected "; ?> >
+                                        Historisée
+                                    </option>
+                                    <option value="0" <?php if ($historisationParams === "0") echo " selected "; ?>  >
+                                        Non historisée
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- BOUTON -->
+                <div class="col-md-3">
+                    <button class="btn btn-primary" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        Remise à zéro
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $('button#clear').on("click", function (e) {
+        e.preventDefault();
+        window.location.href = 'famille-professionnelle';
+    });
+</script>

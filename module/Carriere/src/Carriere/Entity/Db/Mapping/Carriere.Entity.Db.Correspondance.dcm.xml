@@ -18,6 +18,7 @@
         </many-to-one>
 
         <one-to-many field="agentGrades" target-entity="Agent\Entity\Db\AgentGrade" mapped-by="correspondance"/>
+        <one-to-many field="familles" target-entity="Metier\Entity\Db\FamilleProfessionnelle" mapped-by="correspondance"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="createdOn" column="created_on" type="datetime"/>

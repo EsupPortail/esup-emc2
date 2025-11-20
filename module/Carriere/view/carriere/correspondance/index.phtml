@@ -12,6 +12,7 @@ use Carriere\Provider\Privilege\CorrespondancePrivileges;
 $date = new DateTime();
 $correspondances = array_filter($correspondances, function (Correspondance $a) use ($date) { return $a->getDateFin() === null OR $a->getDateFin() > $date;});
 
+$canAfficher      = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
 $canLister      = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_LISTER_AGENTS));
 
 $canAction = ($canLister);
@@ -64,7 +65,7 @@ $this->headTitle("Liste des correspondances");
     <tbody>
     <?php foreach($correspondances as $correspondance): ?>
         <tr>
-            <td> <?php echo $correspondance->getCategorie(); ?> </td>
+            <td> <code><?php echo $correspondance->getCategorie(); ?></code> </td>
             <td>
                 <span
                     title="<?php echo $correspondance->generateTooltip(); ?>"
@@ -87,11 +88,22 @@ $this->headTitle("Liste des correspondances");
             <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
             <?php if ($canAction) : ?>
             <td class="action">
+                <?php if ($canAfficher) : ?>
+                    <a
+                            <?php /** @see \Carriere\Controller\CorrespondanceController::afficherAction() */ ?>
+                            href="<?php echo $this->url('correspondance/afficher', ['correspondance' => $correspondance->getId()], [], true); ?>"
+                            class="action secondary ajax-modal"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
                 <?php if ($canLister) : ?>
+                    <br>
                     <a
                         <?php /** @see \Carriere\Controller\CorrespondanceController::afficherAgentsAction() */ ?>
                         href="<?php echo $this->url('correspondance/afficher-agents', ['correspondance' => $correspondance->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
+                        class="action secondary ajax-modal"
                     >
                             <span class="icon icon-users"></span>
                             Lister les agents

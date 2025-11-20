@@ -4,6 +4,8 @@ namespace Metier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
+use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Metier\Form\FamilleProfessionnelle\FamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Laminas\Http\Request;
@@ -12,15 +14,19 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
 class FamilleProfessionnelleController extends AbstractActionController {
+    use CorrespondanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
-    use ModifierLibelleFormAwareTrait;
+    use FamilleProfessionnelleFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
-        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
+        $params = $this->params()->fromQuery();
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesWithFilter($params);
 
         return new ViewModel([
             'familles' => $familles,
+            'correspondances' => $this->getCorrespondanceService()->getCorrespondances(),
+            'params' => $params
         ]);
     }
 
@@ -41,7 +47,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = new FamilleProfessionnelle();
 
-        $form = $this->getModifierLibelleForm();
+        $form = $this->getFamilleProfessionnelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('famille-professionnelle/ajouter', [], [], true));
         $form->bind($famille);
 
@@ -68,7 +74,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
-        $form = $this->getModifierLibelleForm();
+        $form = $this->getFamilleProfessionnelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('famille-professionnelle/modifier', ['famille-professionnelle' => $famille->getId()], [], true));
         $form->bind($famille);
 
