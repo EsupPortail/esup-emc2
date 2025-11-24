@@ -88,26 +88,22 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
         <div class="alert alert-info">
             <span class="icon icon-info"></span> <strong>À propos du format des imports de compétences.</strong>
             <br>
-            Le format d'importation est celui proposé par <strong>Referens3</strong> avec l'ajout de la colonne <code>Discipline</code>.
-            Il est à noter que l'importation ne tient pas compte de l'ordre des colonnes, mais du libellé (exact) de
-            celles-ci.
-            Voici la liste des libellés interprétés :
+            Vous pouvez importer vos compétences "normales" en même temps que vos compétences spécifiques si ces dernières peuvent être affectées au même référentiel.
+            En revanche, si vous souhaitez qu'elles soient étiquetées "Référentiel Compétences Spécifiques" par exemple, vous devrez construire et importer 2 fichiers différents en choisissant à chaque fois le bon référentiel.
+            <br>
+            Pour construire votre fichier, respectez les colonnes suivantes.
+            L'importation ne tient pas compte de l'ordre des colonnes, mais du libellé exact (avec accent et majuscule) de celles-ci :
             <ul>
-                <li><code>Id_compétence</code> <span class="icon icon-obligatoire" title="colonne obligatoire"></span>
-                    l'identifiant unique de la compétence,
-                </li>
-                <li><code>Compétence</code> <span class="icon icon-obligatoire" title="colonne obligatoire"></span>
-                    le libellé de la compétence,
-                </li>
-                <li><code>Registre</code> <span class="icon icon-obligatoire" title="colonne obligatoire"></span>
-                    le type de la compétence (connaissance, compétence comportementale, compétence opérationnelle, compétence spécifique),
-                </li>
+                <li><code>Id_compétence</code> <span class="icon icon-obligatoire"></span> l'identifiant unique de la compétence,</li>
+                <li><code>Compétence</code> <span class="icon icon-obligatoire"></span> le libellé de la compétence,</li>
+                <li><code>Registre</code> <span class="icon icon-obligatoire"></span> le type de la compétence (mettre Connaissance ou Compétence comportementale ou Compétence opérationnelle ou Compétence spécifique),</li>
                 <li><code>Domaine</code> le ou les thèmes associés à la compétence,</li>
-                <li><code>Définition</code> la définition asssociée à la compétence,</li>
-                <li><code>Discipline</code> colonne pour les compétences spécifiques uniquement - laisser vide pour les compétences "normales",
-                </li>
-                <li><code>Synonymes</code> la liste des libellés synonymes,</li>
+                <li><code>Définition</code> la définition associée à la compétence,</li>
+                <li><code>Discipline</code> colonne pour les compétences spécifiques uniquement - laisser vide pour les compétences "normales",</li>
+                <li><code>Synonymes</code> la liste des libellés synonymes.</li>
             </ul>
+
+            <u>Remarques :</u> les colonnes obligatoires sont désignées par l'icone <span class="icon icon-obligatoire"></span>.
         </div>
     </div>
 </div>

@@ -24,6 +24,9 @@
             <join-column name="discipline_id" />
         </many-to-one>
 
+        <field name="raw"               type="text"      column="raw"/>
+        <field name="synonymes"         type="text"      column="synonymes"/>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
         <field name="histoModification" type="datetime"                 column="histo_modification" />

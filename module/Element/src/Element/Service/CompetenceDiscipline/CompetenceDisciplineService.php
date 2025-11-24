@@ -138,7 +138,7 @@ class CompetenceDisciplineService
     public function getCompetenceDisciplineByLibelle(string $libelle): ?CompetenceDiscipline
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('discipline.libelle = :libelle')->setParameter('libelle', $libelle);
+            ->andWhere('lower(discipline.libelle) = :libelle')->setParameter('libelle', strtolower($libelle));
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();

@@ -140,7 +140,7 @@ class CompetenceThemeService
     public function getCompetenceThemeByLibelle(string $libelle): ?CompetenceTheme
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('theme.libelle = :libelle')->setParameter('libelle', $libelle);
+            ->andWhere('lower(theme.libelle) = :libelle')->setParameter('libelle', strtolower($libelle));
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();

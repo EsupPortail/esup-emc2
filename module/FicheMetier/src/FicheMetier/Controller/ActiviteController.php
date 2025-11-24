@@ -144,7 +144,7 @@ class ActiviteController extends AbstractActionController
             $continue = true; $referentiel = null;
 
             $data = $request->getPost();
-            if (isset($data['referentiel'])) {
+            if (isset($data['referentiel']) AND $data['referentiel'] !== '') {
                 $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
             }
             if ($referentiel === null) {
@@ -162,7 +162,9 @@ class ActiviteController extends AbstractActionController
                     $filepath = '/tmp/import_activites_' . (new DateTime())->getTimestamp() . '.csv';
                     copy($file['tmp_name'], $filepath);
                     $form->get('filepath')->setValue($filepath);
+                    $form->get('filename')->setValue($file['name']);
                     $data['filepath'] = $filepath;
+                    $data['filename'] = $file['name'];
                 } else {
                     $file['tmp_name'] = $data['filepath'];
                     $form->get('filepath')->setValue($data['filepath']);

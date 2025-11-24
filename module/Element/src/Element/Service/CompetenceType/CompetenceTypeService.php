@@ -126,7 +126,7 @@ class CompetenceTypeService
     public function getCompetenceTypeByLibelle(string $libelle): ?CompetenceType
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('type.libelle = :libelle')->setParameter('libelle', $libelle);
+            ->andWhere('lower(type.libelle) = :libelle')->setParameter('libelle', strtolower($libelle));
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {

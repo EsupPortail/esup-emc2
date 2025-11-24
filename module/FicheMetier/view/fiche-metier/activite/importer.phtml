@@ -18,25 +18,10 @@ $this->headTitle("Importation d'activité");
 
 ?>
 
-<script>
-    function reset() {
-        console.log("reset");
-        //
-    }
-</script>
-
 <h1 class="page-header">
     Importation d'activité
 </h1>
 
-<!--<div class="row">-->
-<!--    <div class="col-md-6">-->
-<!--        --><?php //var_dump($data); ?>
-<!--    </div>-->
-<!--    <div class="col-md-6">-->
-<!--        --><?php //var_dump($file); ?>
-<!--    </div>-->
-<!--</div>-->
 
 <div class="row">
     <div class="col-md-6">
@@ -44,7 +29,13 @@ $this->headTitle("Importation d'activité");
             <script>
                 $(function() {
                     $("input[name='fichier']").parent().hide();
-                    $("div.fichier").html("<?php echo $data['filepath']; ?> <span class='icon icon-unchecked' id='remove_file'></span>");
+                    let html  = `
+                        <span class="form-label">Fichier téléversé : </span><br>
+                        <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
+                            <?php echo $data['filename']; ?> <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span>
+                        </div>
+                    `;
+                    $("div.fichier").html(html);
                 });
             </script>
         <?php endif; ?>
@@ -138,5 +129,10 @@ $this->headTitle("Importation d'activité");
             window.location.href="../activite/importer";
         });
     })
-
 </script>
+
+<style>
+    span#remove_file {
+        color: var(--bs-danger);
+    }
+</style>
