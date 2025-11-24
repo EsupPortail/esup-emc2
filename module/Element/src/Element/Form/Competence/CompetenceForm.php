@@ -2,6 +2,7 @@
 
 namespace Element\Form\Competence;
 
+use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
@@ -13,6 +14,7 @@ use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 
 class CompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
@@ -140,8 +142,38 @@ class CompetenceForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'       => [ 'required' => true,  ],
             'description'   => [ 'required' => false,  ],
-            'discipline'    => [ 'required' => false, ],
-            'type'          => [ 'required' => true, ],
+            'type'          => [
+                'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "Le champ discipline est obligatoire pour les compétences spécifiques.",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            $type = $this->getCompetenceTypeService()->getCompetenceType($context['type']);
+                            if ($type?->getCode() !== CompetenceType::CODE_SPECIFIQUE) return false;
+                            return ($context['discipline'] !== null and trim($context['discipline']) !== '');
+                        },
+                    ],
+                ]],
+            ],
+            'discipline'    => [
+                'required' => false,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "Le champ discipline est obligatoire pour les compétences spécifiques.",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            $type = $this->getCompetenceTypeService()->getCompetenceType($context['type']);
+                            if ($type?->getCode() !== CompetenceType::CODE_SPECIFIQUE) return false;
+                            return ($context['discipline'] !== null and trim($context['discipline']) !== '');
+                        },
+                    ],
+                ]],
+            ],
             'theme'         => [ 'required' => false, ],
             'referentiel'   => [ 'required' => false, ],
             'identifiant'   => [ 'required' => false, ],
