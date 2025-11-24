@@ -493,7 +493,11 @@ class CompetenceService
                     $competence->setEmploisTypes($item[$positionEmploiType]);
                 }
                 if ($positionSynonyme !== false) {
-                    $competence->setSynonymes($item[$positionSynonyme]);
+                    if ($item[$positionSynonyme] === "") {
+                        $competence->setSynonymes(null);
+                    } else {
+                        $competence->setSynonymes($item[$positionSynonyme]);
+                    }
                 }
                 $raw = [];
                 foreach ($header as $position => $element) {
