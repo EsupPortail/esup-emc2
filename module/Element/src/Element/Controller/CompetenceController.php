@@ -5,6 +5,7 @@ namespace Element\Controller;
 use Application\Entity\Db\Agent;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
+use DateTime;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\Competence\CompetenceFormAwareTrait;
@@ -331,11 +332,22 @@ class CompetenceController extends AbstractActionController
 
             $files = $request->getFiles()->toArray();
             $file = !empty($files)?current($files):null;
-            if ($file === null) $error[] = "Aucun fichier fourni";
 
+            $filename = $data['filename']??null;
+            $filepath = $data['filepath']??null;
+
+            if (($file === null OR $file['tmp_name'] === "") AND $filepath === null) {
+                $error[] = "Aucun fichier fourni";
+            } else {
+                if ($filepath === null) {
+                    $filepath = '/tmp/import_competence_' . (new DateTime())->getTimestamp() . '.csv';
+                    $filename = $file['name'];
+                    copy($file['tmp_name'], $filepath);
+                }
+            }
             $result = [];
-            if ($file !== null AND $referentiel !== null AND $mode !== null) {
-                $result = $this->getCompetenceService()->import($file, $referentiel, $mode, $info, $warning, $error);
+            if ($filepath !== null AND $filepath !== "" AND $referentiel !== null AND $mode !== null) {
+                $result = $this->getCompetenceService()->import($filepath, $referentiel, $mode, $info, $warning, $error);
             }
 
         }
@@ -349,6 +361,8 @@ class CompetenceController extends AbstractActionController
 
             'data' => $data,
             'file' => $file,
+            'filepath' => $filepath??null,
+            'filename' => $filename??null,
         ]);
     }
 

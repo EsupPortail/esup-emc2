@@ -365,9 +365,9 @@ class CompetenceService
         return $result;
     }
 
-    public function import(array $file, CompetenceReferentiel $referentiel, string $mode, array &$info, array &$warning, array &$error) : array
+    public function import(string $filepath, CompetenceReferentiel $referentiel, string $mode, array &$info, array &$warning, array &$error) : array
     {
-        $handle = fopen($file['tmp_name'], "r");
+        $handle = fopen($filepath, "r");
 
         /** Fetching the header ***************************************************************************************/
         $header = fgetcsv($handle,null,";");
@@ -464,12 +464,12 @@ class CompetenceService
                 if ($competence === null AND $libelle !== "") {
                     $competence = new Competence();
                 } else {
-                    if ($competence->getLibelle() !== $item[$positionLibelle]) $warning[] = "Mise à jour du libellé de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
-                    if ($competence->getType() !== $types[$item[$positionType]]) $warning[] = "Mise à jour du type de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
-                    if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $warning[] = "Mise à jour du thème de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
-                    if ($positionDefinition !== false and $competence->getDescription() !== $item[$positionDefinition]) $warning[] = "Mise à jour de la définition de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
-                    if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $warning[] = "Mise à jour de la discipline de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
-                    if ($positionSynonyme !== false and $competence->getSynonymes() !== $item[$positionSynonyme]) $warning[] = "Mise à jour de la liste des synonymes de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($competence->getType() !== $types[$item[$positionType]]) $info[] = "Mise à jour du type de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $info[] = "Mise à jour du thème de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $info[] = "Mise à jour de la discipline de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionSynonyme !== false and $competence->getSynonymes() !== (($item[$positionSynonyme]!=='')?$item[$positionSynonyme]:null)) $info[] = "Mise à jour de la liste des synonymes de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
+                    if ($positionDefinition !== false and $competence->getDescription() !== (($item[$positionDefinition]!=='')?$item[$positionDefinition]:null)) $info[] = "Mise à jour de la définition de la compétence [id:".$competence->getId()." | libelle:".$competence->getLibelle()."]";
                 }
                 // obligatoire
                 $competence->setReferentiel($referentiel);
@@ -534,13 +534,14 @@ class CompetenceService
                     }
                     else {
                         $this->update($competence);
-                        $info[] = "Mise à jour de la compétence [id:".$competence->getId()."libelle:".$competence->getLibelle()."]";
+//                        $info[] = "Mise à jour de la compétence [id:".$competence->getId()."libelle:".$competence->getLibelle()."]";
                     }
                 }
             }
         } else {
             $error[] = "Au moins une colonne obligatoire est manquante !";
         }
+        fclose($handle);
 
         $results =  [
             'positions' => $positions,

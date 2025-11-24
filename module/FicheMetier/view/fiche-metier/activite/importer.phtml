@@ -30,9 +30,12 @@ $this->headTitle("Importation d'activité");
                 $(function() {
                     $("input[name='fichier']").parent().hide();
                     let html  = `
-                        <span class="form-label">Fichier téléversé : </span><br>
+                            <span class="form-label">Fichier téléversé : </span><br>
                         <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
-                            <?php echo $data['filename']; ?> <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span>
+                            <div class='row'>
+                                <div class='col-md-9'> <?php echo $data['filename']; ?> </div>
+                                <div class='col-md-3 float-end'><span class='remove_file icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span></div>
+                            </div>
                         </div>
                     `;
                     $("div.fichier").html(html);

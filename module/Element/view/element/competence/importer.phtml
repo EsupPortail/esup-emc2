@@ -10,6 +10,9 @@
  * @var string[] $info
  * @var string[] $warning
  * @var string[] $error
+ *
+ * @var ?string $filepath
+ * @var ?string $filename
  */
 
 use Element\Entity\Db\Competence;
@@ -21,6 +24,13 @@ $this->headTitle("Importation de compétences");
 
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
 ?>
+
+<script>
+    function reset() {
+        console.log('click');
+        window.location.href="../competence/importer";
+    }
+</script>
 
 <div class="row">
     <div class="col-md-6">
@@ -44,8 +54,25 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                 <form enctype="multipart/form-data"
                       action="<?php echo $this->url('element/competence/importer', ['path' => null], [], true); ?>"
                       method="post">
-                    <label for="file">Fichier à importer <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
-                    <input type="file" name="file" id="file" class="form-control" accept=".csv"/>
+                    <?php if ($filepath !== null) : ?>
+                        <span class="form-label">Fichier téléversé : </span><br>
+                        <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
+                            <div class='row'>
+                                <div class='col-md-9'> <?php echo $filename; ?> </div>
+                                <div class='col-md-3'>
+                                    <div class='float-end'>
+                                        <span class="action text-danger" style="cursor: pointer;" onclick="reset()">
+                                            <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span> Retirer
+                                        </span>
+                                </div></div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="filepath" id="filepath" value="<?php echo $filepath; ?>">
+                        <input type="hidden" name="filename" id="filename" value="<?php echo $filename; ?>">
+                    <?php else : ?>
+                        <label for="file">Fichier à importer <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
+                        <input type="file" name="file" id="file" class="form-control" accept=".csv"/>
+                    <?php endif; ?>
                     <label for="referentiel"> Référentiel <span class="icon icon-obligatoire" title="Champ obligatoire"></span> </label>
                     <select class="selectpicker show-tick form-control" id="referentiel" name="referentiel">
                         <option value="">Sélectionnez un référentiel</option>
@@ -188,4 +215,6 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
     $(function () {
         $('select').selectpicker({});
     });
+
+
 </script>
