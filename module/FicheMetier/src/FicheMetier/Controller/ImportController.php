@@ -10,12 +10,14 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
+use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
-use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
@@ -37,11 +39,15 @@ class ImportController extends AbstractActionController
     use FicheMetierServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;
     use MetierServiceAwareTrait;
+    use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
 
     use FicheMetierImportationFormAwareTrait;
+
+    const FORMAT_RMFP = 'FORMAT_RMFP';
+    const FORMAT_REFERENS3 = 'FORMAT_REFERENS3';
 
     public function importAction(): ViewModel
     {
@@ -61,12 +67,20 @@ class ImportController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $request->getPost();
-            $file = $request->getFiles();
+            $files = $request->getFiles();
+            var_dump($data);
+            var_dump($files);
+
+            if ($data['format'] === ImportController::FORMAT_RMFP) {
+                $this->readAsRmfp($data, $files['fichier'],999);
+                dd("OK");
+            }
+
 
             $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
             $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
             $mode = (isset($data["mode"]) AND $data["mode"] !== "") ? $data["mode"] : null;
-            $fichier_path = $file['fichier']['tmp_name'];
+            $fichier_path = $files['fichier']['tmp_name'];
 
             if ($referentiel !== null AND $mode !== null AND $fichier_path !== "") {
                 $header = [];
@@ -189,4 +203,125 @@ class ImportController extends AbstractActionController
         ]);
     }
 
+    public function readAsRmfp($data, array $file, int $verbosity = 0) : array
+    {
+        $csvFile = fopen($file['tmp_name'], "r");
+        // lecture du header + position colonne
+        if ($csvFile !== false) {
+            $header = fgetcsv($csvFile, null, ";");
+            // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+            $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $nbElements = count($header);
+
+            if ($verbosity > 0) {
+                var_dump($nbElements . " colonnes dans le header");
+                var_dump($header);
+            }
+
+            $positionIntitule = array_search('Intitulé', $header);
+
+
+            //lecture des fiches
+            $raws = [];
+            while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                $item = [];
+                for ($position = 0; $position < $nbElements; ++$position) {
+                    $item[$header[$position]] = $row[$position];
+                }
+                $raws[] = $item;
+            }
+            $nbFiches = count($raws);
+            if ($verbosity > 0) {
+                var_dump($nbFiches . " fiches dans le csv");
+            }
+
+            foreach ($raws as $raw) {
+                // Intitulé + (domaine ...)
+                $intitule = $raw["Intitulé"];
+                $fiche = new FicheMetier();
+                $fiche->setLibelle($intitule);
+//                $this->getFicheMetierService()->create($fiche);
+
+
+                /** Partie Mission et activités ***********************************************************************/
+
+                // !!quid!!
+                // > revoir un peu la fiche pour avoir une définition + une liste d'activité sans mission ?
+                // > fiche metier devrait pouvoir avoir des activités hors mission ?
+
+                $missionLibelle = $raw["Définition synthétique de l'ER"];
+                $activites = explode("\n",$raw["Activités de l'ER"]);
+
+                $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($missionLibelle);
+                if ($mission === null) {
+                    $mission = new Mission();
+                    $mission->setLibelle($missionLibelle);
+//                    $this->getMissionPrincipaleService()->create($mission);
+                    // todo set code
+
+                    $position = 1;
+                    foreach ($activites as $activiteLibelle) {
+                        $activite = new MissionActivite();
+                        $activite->setLibelle($activiteLibelle);
+                        $activite->setOrdre($position++);
+                        $activite->setMission($mission);
+//                        $this->getMissionActiviteService()->create($activite);
+                    }
+
+                    $ficheMission = new FicheMetierMission();
+                    $ficheMission->setMission($mission);
+                    $ficheMission->setFicheMetier($fiche);
+                    $ficheMission->setOrdre(1);
+//                    $this->getFicheMetierMissionService()->create($ficheMission);
+                    $fiche->addMission($ficheMission);
+                }
+
+                /** COMPETENCES ***************************************************************************************/
+
+                $rmfp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('RMFP');
+
+                $connaissances = explodeAndTrim($raw["Connaissances"], "\n");
+                foreach ($connaissances as $item) {
+                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
+                    if ($connaissance !== null) {
+                        $element = new CompetenceElement();
+                        $element->setCompetence($connaissance);
+//                        $this->getCompetenceElementService()->create($element);
+                        $fiche->addCompetenceElement($element);
+                    }
+                }
+                $connaissances = explodeAndTrim($raw["Savoir-êtres"], "\n");
+                foreach ($connaissances as $item) {
+                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
+                    if ($connaissance !== null) {
+                        $element = new CompetenceElement();
+                        $element->setCompetence($connaissance);
+//                        $this->getCompetenceElementService()->create($element);
+                        $fiche->addCompetenceElement($element);
+                    }
+                }
+
+
+//                $this->getFicheMetierService()->update($fiche);
+
+
+
+                $fiches[] = $fiche;
+
+            }
+
+        }
+        fclose($csvFile);
+
+        return [];
+    }
+
+    /** @return $string */
+    static public function explodeAndTrim(?string $listing, string $separateur = "\n"): array
+    {
+        if ($listing === null) { return []; }
+        $result = explode($separateur, $listing);
+        $result = array_map(function(string $s) { return trim($s); }, $result);
+        return $result;
+    }
 }

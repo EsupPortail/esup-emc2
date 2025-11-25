@@ -113,6 +113,20 @@ class MissionPrincipaleService
         return $result;
     }
 
+    public function getMissionPrincipaleByLibelle(?string $libelle): ?Mission
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('mission.libelle = :libelle')->setParameter('libelle', $libelle);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            // todo probablement ajouter la notion de référentiel ...
+            throw new RuntimeException("Plusieurs [".Mission::class."] partagent le même libellé [".$libelle."]", -1, $e."]");
+        }
+        return $result;
+    }
+
     /** FACADE ********************************************************************************************************/
 
 
@@ -361,4 +375,6 @@ class MissionPrincipaleService
 
         return rtrim($texteTronque) . ' ...';
     }
+
+
 }

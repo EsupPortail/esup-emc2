@@ -152,7 +152,7 @@ class CompetenceForm extends Form {
                         ],
                         'callback' => function ($value, $context = []) {
                             $type = $this->getCompetenceTypeService()->getCompetenceType($context['type']);
-                            if ($type?->getCode() !== CompetenceType::CODE_SPECIFIQUE) return false;
+                            if ($type?->getCode() !== CompetenceType::CODE_SPECIFIQUE) return true;
                             return ($context['discipline'] !== null and trim($context['discipline']) !== '');
                         },
                     ],
@@ -160,19 +160,6 @@ class CompetenceForm extends Form {
             ],
             'discipline'    => [
                 'required' => false,
-                'validators' => [[
-                    'name' => Callback::class,
-                    'options' => [
-                        'messages' => [
-                            Callback::INVALID_VALUE => "Le champ discipline est obligatoire pour les compétences spécifiques.",
-                        ],
-                        'callback' => function ($value, $context = []) {
-                            $type = $this->getCompetenceTypeService()->getCompetenceType($context['type']);
-                            if ($type?->getCode() !== CompetenceType::CODE_SPECIFIQUE) return false;
-                            return ($context['discipline'] !== null and trim($context['discipline']) !== '');
-                        },
-                    ],
-                ]],
             ],
             'theme'         => [ 'required' => false, ],
             'referentiel'   => [ 'required' => false, ],

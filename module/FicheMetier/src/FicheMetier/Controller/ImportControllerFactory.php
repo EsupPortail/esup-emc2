@@ -11,6 +11,7 @@ use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
+use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
@@ -44,6 +45,7 @@ class ImportControllerFactory
          * @var ImportService $importService
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var MissionActiviteService $missionActiviteService
          * @var ReferenceServiceAwareTrait $referenceService
          * @var ReferentielService $referentielService
          */
@@ -57,6 +59,7 @@ class ImportControllerFactory
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $importService = $container->get(ImportService::class);
         $metierService = $container->get(MetierService::class);
+        $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $referenceService = $container->get(ReferenceService::class);
         $referentielService = $container->get(ReferentielService::class);
@@ -77,6 +80,7 @@ class ImportControllerFactory
         $controller->setFicheMetierMissionService($ficheMetierMissionService);
         $controller->setImportService($importService);
         $controller->setMetierService($metierService);
+        $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);
