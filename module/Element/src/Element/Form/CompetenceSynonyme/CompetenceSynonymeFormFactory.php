@@ -20,7 +20,7 @@ class CompetenceSynonymeFormFactory
          * @var CompetenceSynonymeHydrator $hydrator
          */
         $competenceService = $container->get(CompetenceService::class);
-        $hydrator = $container->get('FormElementHydrator')->get(CompetenceSynonymeHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(CompetenceSynonymeHydrator::class);
 
         $form = new CompetenceSynonymeForm();
         $form->setCompetenceService($competenceService);

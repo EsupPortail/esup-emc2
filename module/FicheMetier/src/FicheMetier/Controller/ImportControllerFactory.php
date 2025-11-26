@@ -7,6 +7,7 @@ use Carriere\Service\Correspondance\CorrespondanceService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
+use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
@@ -36,6 +37,7 @@ class ImportControllerFactory
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
          * @var CompetenceReferentielService $competenceReferentielService
+         * @var CompetenceTypeService $competenceTypeService
          * @var CategorieService $categorieService
          * @var CorrespondanceService $correspondanceService
          * @var EtatInstanceService $etatInstanceService
@@ -52,6 +54,7 @@ class ImportControllerFactory
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceReferentielService = $container->get(CompetenceReferentielService::class);
+        $competenceTypeService = $container->get(CompetenceTypeService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
@@ -73,6 +76,7 @@ class ImportControllerFactory
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setCompetenceReferentielService($competenceReferentielService);
+        $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCorrespondanceService($correspondanceService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);

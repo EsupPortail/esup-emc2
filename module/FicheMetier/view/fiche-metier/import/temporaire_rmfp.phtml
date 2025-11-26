@@ -4,9 +4,16 @@ use FicheMetier\Entity\Db\FicheMetier;
 
 /**
  * @var FicheMetier[] $fiches
+ * @var string[] $warning
  */
 
 ?>
+
+<?php if (!empty($warning)) : ?>
+    <?php foreach ($warning as $item) : ?>
+        <?php echo $item; ?> <br/>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <?php foreach ($fiches as $fiche) : ?>
     <h3>

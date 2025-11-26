@@ -41,6 +41,7 @@ class CompetenceSynonymeController extends AbstractActionController
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
 
         $synonyme = new CompetenceSynonyme();
+        $synonyme->setCompetence($competence);
         $form = $this->getCompetenceSynonymeForm();
         $form->setAttribute('action', $this->url()->fromRoute('element/competence-synonyme/ajouter', ['competence' => $competence?->getId()], [], true));
         $form->bind($synonyme);
@@ -56,9 +57,9 @@ class CompetenceSynonymeController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout d'un synonyme pour la competence [".$competence->getLibelle()."]",
+            'title' => "Ajout d'un synonyme pour la competence [".$competence?->getLibelle()."]",
             'form' => $form,
-            //todo masquer si competence
+            'js' => ($competence !== null)?'$("#competence").parent().hide()':'',
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
@@ -85,9 +86,38 @@ class CompetenceSynonymeController extends AbstractActionController
         $vm = new ViewModel([
             'title' => "Modification du synonyme pour la competence [".$competence->getLibelle()."]",
             'form' => $form,
-            //todo masquer si competence
+            'js' => '$("#competence").parent().hide()',
         ]);
         $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function viderAction(): ViewModel
+    {
+        $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $synonymes = $this->getCompetenceSynonymeService()->getCompetencesSynonymesByCompetence($competence);
+                foreach ($synonymes as $synonyme) {
+                    $this->getCompetenceSynonymeService()->delete($synonyme);
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($competence !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression des synonymes associé à [".$competence->getLibelle()."]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('element/competence-synonyme/vider', ["competence" => $competence->getId()], [], true),
+            ]);
+        }
         return $vm;
     }
 

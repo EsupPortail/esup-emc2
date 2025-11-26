@@ -25,8 +25,10 @@ $canModifier = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePr
     </div>
     <div class="col-md-3">
         <?php if ($canIndex): ?>
-            <?php /** @see \Element\Controller\CompetenceController::indexAction() */ ?>
-            <a href="<?php echo $this->url('element/competence', [], [], true); ?>">
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/listing', [], [], true); ?>"
+               class="btn btn-secondary"
+            >
                 <span class="icon icon-listing"></span>
                 Accéder aux compétences
             </a>
@@ -36,7 +38,7 @@ $canModifier = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePr
 
 <?php if ($canModifier): ?>
     <?php /** @see \Element\Controller\CompetenceSynonymeController::ajouterAction()  */ ?>
-    <a href="<?php echo $this->url('element/competence-synonyme', [], [], true); ?>"
+    <a href="<?php echo $this->url('element/competence-synonyme/ajouter', [], [], true); ?>"
        class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
@@ -57,22 +59,30 @@ $canModifier = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePr
             <tr>
                 <td data-column-id="Compétence">
                     <?php echo $synonyme->getCompetence()->getLibelle(); ?>
+                    <?php /** @see \Element\Controller\CompetenceSynonymeController::ajouterAction()  */ ?>
+                    <a href="<?php echo $this->url('element/competence-synonyme/ajouter', ['competence' => $synonyme->getCompetence()?->getId()], [], true); ?>"
+                       class="action primary ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-ajouter"></span>
+                        Ajouter un synonyme
+                    </a>
                 </td>
                 <td data-column-id="Synonyme">
                     <?php echo $synonyme->getLibelle(); ?>
                 </td>
-                <td data-column-id="Action">
+                <td class='action' data-column-id="Action">
                     <?php if ($canModifier): ?>
                         <?php /** @see \Element\Controller\CompetenceSynonymeController::modifierAction() */ ?>
                         <a href="<?php echo $this->url('element/competence-synonyme/modifier', ['competence-synonyme' => $synonyme->getId()], [], true); ?>"
                            class="action primary ajax-modal" data-event="modification">
-                            <span class="icon-modifier"></span>
+                            <span class="icon icon-modifier"></span>
                             Modifier
                         </a>
+                    <br>
                         <?php /** @see \Element\Controller\CompetenceSynonymeController::supprimerAction() */ ?>
                         <a href="<?php echo $this->url('element/competence-synonyme/supprimer', ['competence-synonyme' => $synonyme->getId()], [], true); ?>"
                            class="action danger ajax-modal" data-event="modification">
-                            <span class="icon-unchecked"></span>
+                            <span class="icon icon-unchecked"></span>
                             Supprimer
                         </a>
                     <?php endif; ?>

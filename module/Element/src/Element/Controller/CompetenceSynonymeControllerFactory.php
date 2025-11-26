@@ -24,7 +24,7 @@ class CompetenceSynonymeControllerFactory {
          */
         $competenceService = $container->get(CompetenceService::class);
         $competenceSynonymeService = $container->get(CompetenceSynonymeService::class);
-        $competenceSynonymeForm = $container->get(CompetenceSynonymeForm::class);
+        $competenceSynonymeForm = $container->get('FormElementManager')->get(CompetenceSynonymeForm::class);
 
         $controller = new CompetenceSynonymeController();
         $controller->setCompetenceService($competenceService);

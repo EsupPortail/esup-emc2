@@ -5,9 +5,11 @@ namespace FicheMetier\Controller;
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Element\Entity\Db\CompetenceElement;
+use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
+use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
@@ -33,6 +35,7 @@ class ImportController extends AbstractActionController
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use CompetenceReferentielServiceAwareTrait;
+    use CompetenceTypeServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
@@ -72,10 +75,11 @@ class ImportController extends AbstractActionController
             var_dump($files);
 
             if ($data['format'] === ImportController::FORMAT_RMFP) {
-                $fiches = $this->readAsRmfp($data, $files['fichier'],999);
+                $result = $this->readAsRmfp($data, $files['fichier'],0);
 
                 $vm = new ViewModel([
-                    'fiches' => $fiches,
+                    'warning' => $result['warning'],
+                    'fiches' => $result['fiches'],
                 ]);
                 $vm->setTemplate('fiche-metier/import/temporaire_rmfp');
                 return $vm;
@@ -210,6 +214,8 @@ class ImportController extends AbstractActionController
 
     public function readAsRmfp($data, array $file, int $verbosity = 0) : array
     {
+        $warning = [];
+
         $csvFile = fopen($file['tmp_name'], "r");
         // lecture du header + position colonne
         if ($csvFile !== false) {
@@ -295,32 +301,41 @@ class ImportController extends AbstractActionController
 
                 $connaissances = self::explodeAndTrim($raw["Connaissances"], "\n");
                 foreach ($connaissances as $item) {
-                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
+                    $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
+                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
                     if ($connaissance !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($connaissance);
 //                        $this->getCompetenceElementService()->create($element);
                         $fiche->addCompetenceElement($element);
+                    } else {
+                        $warning[] = "[".$item."] compétence de type [".$tConnaissance->getLibelle()."] non trouvée.";
                     }
                 }
                 $savoiretres = self::explodeAndTrim($raw["Savoir-être"], "\n");
                 foreach ($savoiretres as $item) {
-                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
+                    $tsavoiretre = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_COMPORTEMENTALE);
+                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
                     if ($savoiretre !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($savoiretre);
 //                        $this->getCompetenceElementService()->create($element);
                         $fiche->addCompetenceElement($element);
+                    } else {
+                        $warning[] = "[".$item."] compétence de type [".$tsavoiretre->getLibelle()."] non trouvée.";
                     }
                 }
                 $savoirfaires = self::explodeAndTrim($raw["Savoir-faire"], "\n");
                 foreach ($savoirfaires as $item) {
-                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
+                    $tsavoirfaire = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_OPERATIONNELLE);
+                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
                     if ($savoirfaire !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($savoirfaire);
 //                        $this->getCompetenceElementService()->create($element);
                         $fiche->addCompetenceElement($element);
+                    } else {
+                        $warning[] = "[".$item."] compétence de type [".$tsavoirfaire->getLibelle()."] non trouvée.";
                     }
                 }
 
@@ -336,7 +351,7 @@ class ImportController extends AbstractActionController
         }
         fclose($csvFile);
 
-        return $fiches;
+        return ['fiches' => $fiches, 'warning' => $warning];
     }
 
     /** @return $string */

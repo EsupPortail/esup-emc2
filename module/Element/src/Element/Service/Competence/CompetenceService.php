@@ -332,7 +332,7 @@ class CompetenceService
         return $competence;
     }
 
-    public function getCompetenceByRefentielAndLibelle(?CompetenceReferentiel $referentiel, ?string $libelle): ?Competence
+    public function getCompetenceByRefentielAndLibelle(?CompetenceReferentiel $referentiel, ?string $libelle, ?CompetenceType $type = null): ?Competence
     {
         if ($referentiel === null) return null;
         if ($libelle === null) return null;
@@ -340,10 +340,26 @@ class CompetenceService
             ->andWhere('competence.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
             ->andWhere('competence.libelle = :libelle')->setParameter('libelle', $libelle)
             ->andWhere('competence.histoDestruction IS NULL');
+        if ($type !== null) {
+            $qb->andWhere('competence.type = :type')->setParameter('type', $type);
+        }
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs [" . Competence::class . "] partagent le même référentiel [" . $referentiel->getLibelleCourt() . "] et le même libellé [" . $libelle . "]", 0, $e);
+        }
+
+        if ($result === null) {
+            $qb = $this->createQueryBuilder()
+                ->join('competence.synonymes', 'synonyme')
+                ->andWhere('competence.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
+                ->andWhere('synonyme.libelle = :libelle')->setParameter('libelle', $libelle)
+                ->andWhere('competence.histoDestruction IS NULL');
+            try {
+                $result = $qb->getQuery()->getOneOrNullResult();
+            } catch (NonUniqueResultException $e) {
+                throw new RuntimeException("Plusieurs [" . Competence::class . "] partagent le même référentiel [" . $referentiel->getLibelleCourt() . "] et le même libellé [" . $libelle . "]", 0, $e);
+            }
         }
         return $result;
     }
@@ -586,6 +602,8 @@ class CompetenceService
 
         return $results;
     }
+
+
 
 
 }

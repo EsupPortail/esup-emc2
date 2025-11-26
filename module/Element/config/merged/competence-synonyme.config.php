@@ -2,17 +2,17 @@
 
 namespace Element;
 
-use CompetenceSynonyme\CompetenceSynonymeHydratorFactory;
-use Element\Controller\ApplicationController;
 use Element\Controller\CompetenceSynonymeController;
 use Element\Controller\CompetenceSynonymeControllerFactory;
 use Element\Form\CompetenceSynonyme\CompetenceSynonymeForm;
 use Element\Form\CompetenceSynonyme\CompetenceSynonymeFormFactory;
 use Element\Form\CompetenceSynonyme\CompetenceSynonymeHydrator;
+use Element\Form\CompetenceSynonyme\CompetenceSynonymeHydratorFactory;
 use Element\Provider\Privilege\CompetencePrivileges;
 use Element\Service\CompetenceSynonyme\CompetenceSynonymeService;
 use Element\Service\CompetenceSynonyme\CompetenceSynonymeServiceFactory;
 use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -33,6 +33,7 @@ return [
                     'action' => [
                         'ajouter',
                         'modifier',
+                        'vider',
                         'supprimer',
                     ],
                     'privileges' => [
@@ -43,6 +44,7 @@ return [
         ],
     ],
 
+
     'router' => [
         'routes' => [
             'element' => [
@@ -50,22 +52,60 @@ return [
                 'options' => [
                     'route' => '/element',
                 ],
-                'may_terminate' => true,
                 'child_routes' => [
-                    'competence' => [
+                    'competence-synonyme' => [
                         'type' => Literal::class,
                         'options' => [
-                            'route' => '/competence',
+                            'route' => '/competence-synonyme',
+                            'defaults' => [
+                                /** @see CompetenceSynonymeController::indexAction() */
+                                'controller' => CompetenceSynonymeController::class,
+                                'action' => 'index',
+                            ],
                         ],
+                        'may_terminate' => true,
                         'child_routes' => [
-                            'importer' => [
+                            'ajouter' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/importer[/:referentiel]',
+                                    'route' => '/ajouter[/:competence]',
                                     'defaults' => [
-                                        /** @see CompetenceController::importerAction() */
-                                        'controller' => CompetenceController::class,
-                                        'action' => 'importer',
+                                        /** @see CompetenceSynonymeController::ajouterAction() */
+                                        'controller' => CompetenceSynonymeController::class,
+                                        'action' => 'ajouter',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/modifier/:competence-synonyme',
+                                    'defaults' => [
+                                        /** @see CompetenceSynonymeController::modifierAction() */
+                                        'controller' => CompetenceSynonymeController::class,
+                                        'action' => 'modifier',
+                                    ],
+                                ],
+                            ],
+                            'vider' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/vider/:competence',
+                                    'defaults' => [
+                                        /** @see CompetenceSynonymeController::viderAction() */
+                                        'controller' => CompetenceSynonymeController::class,
+                                        'action' => 'vider',
+                                    ],
+                                ],
+                            ],
+                            'supprimer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/supprimer/:competence-synonyme',
+                                    'defaults' => [
+                                        /** @see CompetenceSynonymeController::supprimerAction() */
+                                        'controller' => CompetenceSynonymeController::class,
+                                        'action' => 'supprimer',
                                     ],
                                 ],
                             ],
@@ -94,12 +134,8 @@ return [
     'hydrators' => [
         'factories' => [
             CompetenceSynonymeHydrator::class => CompetenceSynonymeHydratorFactory::class,
+
         ],
     ],
-    'view_helpers' => [
-        'factories' => [
-        ],
-        'aliases' => [
-        ],
-    ],
+
 ];

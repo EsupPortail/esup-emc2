@@ -24,7 +24,7 @@ class CompetenceSynonymeService
 
     public function update(CompetenceSynonyme $competenceSynonyme): void
     {
-        $this->getObjectManager()->persist($competenceSynonyme);
+        $this->getObjectManager()->flush($competenceSynonyme);
     }
 
     public function delete(CompetenceSynonyme $competenceSynonyme): void
