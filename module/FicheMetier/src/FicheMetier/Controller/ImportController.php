@@ -72,8 +72,13 @@ class ImportController extends AbstractActionController
             var_dump($files);
 
             if ($data['format'] === ImportController::FORMAT_RMFP) {
-                $this->readAsRmfp($data, $files['fichier'],999);
-                dd("OK");
+                $fiches = $this->readAsRmfp($data, $files['fichier'],999);
+
+                $vm = new ViewModel([
+                    'fiches' => $fiches,
+                ]);
+                $vm->setTemplate('fiche-metier/import/temporaire_rmfp');
+                return $vm;
             }
 
 
@@ -218,7 +223,9 @@ class ImportController extends AbstractActionController
                 var_dump($header);
             }
 
-            $positionIntitule = array_search('Intitulé', $header);
+            $positionCode       = array_search("Code", $header);
+            $positionIntitule   = array_search("Intitulé", $header);
+            $positionDefinition = array_search("Définition synthétique de l'ER", $header);
 
 
             //lecture des fiches
@@ -238,14 +245,16 @@ class ImportController extends AbstractActionController
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
                 $intitule = $raw["Intitulé"];
+                $code = $raw["Code"];
                 $fiche = new FicheMetier();
                 $fiche->setLibelle($intitule);
+                $fiche->setCode($code);
 //                $this->getFicheMetierService()->create($fiche);
 
 
                 /** Partie Mission et activités ***********************************************************************/
 
-                // !!quid!!
+                // !! quid !!
                 // > revoir un peu la fiche pour avoir une définition + une liste d'activité sans mission ?
                 // > fiche metier devrait pouvoir avoir des activités hors mission ?
 
@@ -266,6 +275,7 @@ class ImportController extends AbstractActionController
                         $activite->setOrdre($position++);
                         $activite->setMission($mission);
 //                        $this->getMissionActiviteService()->create($activite);
+                        $mission->addMissionActivite($activite);
                     }
 
                     $ficheMission = new FicheMetierMission();
@@ -280,7 +290,10 @@ class ImportController extends AbstractActionController
 
                 $rmfp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('RMFP');
 
-                $connaissances = explodeAndTrim($raw["Connaissances"], "\n");
+                //todo ajouter le type pour eviter les homonymies
+                //todo ajouter un boolean pour la recherche parmi les synonymes
+
+                $connaissances = self::explodeAndTrim($raw["Connaissances"], "\n");
                 foreach ($connaissances as $item) {
                     $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
                     if ($connaissance !== null) {
@@ -290,12 +303,22 @@ class ImportController extends AbstractActionController
                         $fiche->addCompetenceElement($element);
                     }
                 }
-                $connaissances = explodeAndTrim($raw["Savoir-êtres"], "\n");
-                foreach ($connaissances as $item) {
-                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
-                    if ($connaissance !== null) {
+                $savoiretres = self::explodeAndTrim($raw["Savoir-être"], "\n");
+                foreach ($savoiretres as $item) {
+                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
+                    if ($savoiretre !== null) {
                         $element = new CompetenceElement();
-                        $element->setCompetence($connaissance);
+                        $element->setCompetence($savoiretre);
+//                        $this->getCompetenceElementService()->create($element);
+                        $fiche->addCompetenceElement($element);
+                    }
+                }
+                $savoirfaires = self::explodeAndTrim($raw["Savoir-faire"], "\n");
+                foreach ($savoirfaires as $item) {
+                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item);
+                    if ($savoirfaire !== null) {
+                        $element = new CompetenceElement();
+                        $element->setCompetence($savoirfaire);
 //                        $this->getCompetenceElementService()->create($element);
                         $fiche->addCompetenceElement($element);
                     }
@@ -313,7 +336,7 @@ class ImportController extends AbstractActionController
         }
         fclose($csvFile);
 
-        return [];
+        return $fiches;
     }
 
     /** @return $string */

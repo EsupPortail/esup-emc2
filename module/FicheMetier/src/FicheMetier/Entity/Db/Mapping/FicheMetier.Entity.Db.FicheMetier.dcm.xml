@@ -54,6 +54,7 @@
         <one-to-many target-entity="FicheMetier\Entity\Db\CodeEmploiType" mapped-by="fichemetier" field="codesEmploiType"/>
 
         <field name="raw" type="text" column="raw" nullable="true"/>
+        <field name="code" type="text" column="code" nullable="true"/>
 
         <!-- Historisation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation" type="datetime" column="histo_creation" nullable="false"/>

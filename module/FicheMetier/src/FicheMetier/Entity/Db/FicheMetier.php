@@ -33,6 +33,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     use HasMissionsPrincipalesTrait;
 
     private ?int $id = -1;
+    private ?string $code = null;
     private ?string $libelle = null;
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
@@ -71,6 +72,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setRaw(?string $raw): void
     {
         $this->raw = $raw;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): void
+    {
+        $this->code = $code;
     }
 
     public function getLibelle(): ?string

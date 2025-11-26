@@ -2,6 +2,8 @@
 
 namespace Element\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -16,12 +18,18 @@ class Competence implements HistoriqueAwareInterface {
     private ?CompetenceType $type = null;
     private ?CompetenceTheme $theme = null;
     private ?CompetenceReferentiel $referentiel = null;
-    private ?string $synonymes = null;
     private ?string $emploisTypes = null;
     private ?string $raw = null;
     private ?string $source = null;
     private ?string $idSource = null;
 
+    private Collection $synonymes;
+
+
+    public function __construct()
+    {
+        $this->synonymes = new ArrayCollection();
+    }
     public function getId() : ?int
     {
         return $this->id;
@@ -109,16 +117,6 @@ class Competence implements HistoriqueAwareInterface {
         return $this;
     }
 
-    public function getSynonymes(): ?string
-    {
-        return $this->synonymes;
-    }
-
-    public function setSynonymes(?string $synonymes): void
-    {
-        $this->synonymes = $synonymes;
-    }
-
     public function getEmploisTypes(): ?string
     {
         return $this->emploisTypes;
@@ -128,6 +126,39 @@ class Competence implements HistoriqueAwareInterface {
     {
         $this->emploisTypes = $emploisTypes;
     }
+
+    /** Gestion des synonymes *****************************************************************************************/
+
+    /** @return CompetenceSynonyme[] */
+    public function getSynonymes(): array
+    {
+        return $this->synonymes->toArray();
+    }
+
+    public function isSynonyme(string $libelle) : bool
+    {
+        foreach ($this->getSynonymes() as $synonyme) {
+            if ($synonyme->getLibelle() === $libelle) return true;
+        }
+        return false;
+    }
+
+    public function addSynonyme(CompetenceSynonyme $synonyme): void
+    {
+        $this->synonymes->add($synonyme);
+    }
+
+    public function removeSynonyme(CompetenceSynonyme $synonyme): void
+    {
+        $this->synonymes->removeElement($synonyme);
+    }
+
+    public function clearSynonymes(): void
+    {
+        $this->synonymes->clear();
+    }
+
+    /** Gestion de texte brut associé à une compétence importée *******************************************************/
 
     public function getRaw(): ?string
     {

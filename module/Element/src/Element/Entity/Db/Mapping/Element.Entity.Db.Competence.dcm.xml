@@ -24,8 +24,9 @@
             <join-column name="discipline_id" />
         </many-to-one>
 
+        <one-to-many field="synonymes" target-entity="Element\Entity\Db\CompetenceSynonyme" mapped-by="competence" />
+
         <field name="raw"               type="text"      column="raw"/>
-        <field name="synonymes"         type="text"      column="synonymes"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
