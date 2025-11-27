@@ -18,55 +18,33 @@ $metier = $fichemetier->getMetier();
 ?>
 
 <dl class="row">
-    <dt class="col-md-4"> État</dt>
+    <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
+        <dt class="col-md-4"> Niveau <span style="color:darkred" class="icon icon-question" title="[JPM] n'a de sens que si le code fonction est activé ?"></span> </dt>
+        <dd class="col-md-8">
+            <?php if ($fichemetier->getCodeEmploiType()): ?>
+                <?php echo $fichemetier->getCodeEmploiType()->getCodeFonction()->getLibelle(); ?>
+            <?php else : ?>
+                Aucun code fonction associé <span style="color:darkred" class="icon icon-question" title="bon terme ?"></span>
+            <?php endif; ?>
+        </dd>
+    <?php endif; ?>
+    <?php $famille = $fichemetier->getFamilleProfessionnelle(); ?>
+    <dt class="col-md-4"> Spécialité </dt>
     <dd class="col-md-8">
-        <?php echo $this->etatinstance($fichemetier->getEtatActif()); ?>
-    </dd>
-    <dt class="col-md-4"> Références</dt>
-    <dd class="col-md-8">
-        <?php
-        $references = $metier->getReferences();
-        $first = true;
-        ?>
-        <?php if (!empty($references)) : ?>
-            <?php foreach ($references as $reference) : ?>
-                <?php if ($first) : ?>
-                    <?php $first = false; ?>
-                <?php else : ?>
-                    <br/>
-                <?php endif; ?>
-                <a href="<?php echo $reference->getUrl(); ?>">
-                    <?php echo $reference->getTitre(); ?>
-                </a>
-            <?php endforeach; ?>
+        <?php if ($famille === null) : ?>
+            <em>Aucune spécialité</em> <span class="icon icon-info" title="L'absence de famille empêche de déterminer la spécialité"></span>
+        <?php elseif ($famille->getCorrespondance() === null) : ?>
+            <em>Aucune spécialité </em><span class="icon icon-info" title="Aucune spécialité liée à la famille professionnelle"></span>
         <?php else : ?>
-            Aucune référence
+            <?php echo $famille->getCorrespondance()->getLibelleLong(); ?>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-4"> Expertise</dt>
+    <dt class="col-md-4"> Famille </dt>
     <dd class="col-md-8">
-        <?php if ($fichemetier->hasExpertise()) : ?>
-            Sujet à expertise
+        <?php if ($famille === null) : ?>
+            <em>Aucune famille professionnelle </em>
         <?php else : ?>
-            Non sujet à expertise
-        <?php endif; ?>
-        <?php if ($mode !== 'affichage') : ?>
-            <a
-                <?php /** @see FicheMetierController::modifierExpertiseAction() */ ?>
-                    href="<?php echo $this->url('fiche-metier/modifier-expertise', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-            >
-                <span class="icon icon-refresh"></span>
-            </a>
-        <?php endif; ?>
-    </dd>
-    <dt class="col-md-4"> Niveau</dt>
-    <dd class="col-md-8">
-        <?php $enveloppe = $metier->getNiveaux(); ?>
-        <?php if ($enveloppe !== null) : ?>
-            De <?php echo $enveloppe->getBorneInferieure()->getLibelle(); ?> (<?php echo $enveloppe->getBorneInferieure()->getEtiquette(); ?>)
-            à <?php echo $enveloppe->getBorneSuperieure()->getLibelle(); ?> (<?php echo $enveloppe->getBorneSuperieure()->getEtiquette(); ?>)
-        <?php else : ?>
-            Non renseigné
+            <?php echo $famille->getLibelle(); ?>
         <?php endif; ?>
     </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
@@ -100,4 +78,52 @@ $metier = $fichemetier->getMetier();
             <?php endif; ?>
         </dd>
     <?php endif; ?>
+    <dt class="col-md-4"> Références</dt>
+    <dd class="col-md-8">
+        <?php if ($fichemetier->getCode()): ?>
+            <?php echo $fichemetier->getCode(); ?>
+        <?php endif; ?>
+        <?php if ($metier): ?>
+            <?php
+            $references = $metier->getReferences();
+            $first = true;
+            ?>
+            <?php if (!empty($references)) : ?>
+                <?php foreach ($references as $reference) : ?>
+                    <?php if ($first) : ?>
+                        <?php $first = false; ?>
+                    <?php else : ?>
+                        <br/>
+                    <?php endif; ?>
+                    <a href="<?php echo $reference->getUrl(); ?>">
+                        <?php echo $reference->getTitre(); ?>
+                    </a>
+                <?php endforeach; ?>
+            <?php else : ?>
+                Aucune référence
+            <?php endif; ?>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Expertise</dt>
+    <dd class="col-md-8">
+        <?php if ($fichemetier->hasExpertise()) : ?>
+            Sujet à expertise
+        <?php else : ?>
+            Non sujet à expertise
+        <?php endif; ?>
+        <?php if ($mode !== 'affichage') : ?>
+            <a
+                <?php /** @see FicheMetierController::modifierExpertiseAction() */ ?>
+                    href="<?php echo $this->url('fiche-metier/modifier-expertise', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+            >
+                <span class="icon icon-refresh"></span>
+            </a>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Date de dépôt</dt>
+    <dd class="col-md-8"> <?php echo $fichemetier->getEtatActif()?->getHistoCreation()->format("d/m/Y"); ?></dd>
+    <dt class="col-md-4"> État</dt>
+    <dd class="col-md-8">
+        <?php echo $this->etatinstance($fichemetier->getEtatActif()); ?>
+    </dd>
 </dl>

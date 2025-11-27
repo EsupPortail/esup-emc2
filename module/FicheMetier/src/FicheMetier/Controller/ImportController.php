@@ -72,17 +72,60 @@ class ImportController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $request->getPost();
+            $mode = ($data['mode'] === 'import')?'import':'preview';
             $files = $request->getFiles();
 //            var_dump($data);
 //            var_dump($files);
 
             if ($data['format'] === ImportController::FORMAT_RMFP) {
                 $result = $this->readAsRmfp($data, $files['fichier'],0);
+                /** @var FicheMetier[] $fiches */
+                $fiches = $result["fiches"];
 
+                if ($mode === 'import') {
+                    // recuperation des nouvelles familles professionnelles
+                    foreach ($fiches as $fiche) {
+                        $here = true;
+                        if ($fiche->getFamilleProfessionnelle() AND $fiche->getFamilleProfessionnelle()->getId() === null) {
+                            $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
+                        }
+                    }
+                    $missions = [];
+                    $elements = [];
+                    foreach ($fiches as $fiche) {
+                        foreach ($fiche->getMissions() as $mission) {
+                            $missions[] = $mission;
+                        }
+                        $fiche->clearMissions();
+                        foreach ($fiche->getCompetenceCollection() as $competence) {
+                            $elements[] = $competence;
+                        }
+                        $fiche->clearCompetences();
+
+                        //todo attention au update
+                        $this->getFicheMetierService()->create($fiche);
+
+
+
+                        foreach ($missions as $mission) {
+                            $this->getFicheMetierMissionService()->deepCreate($mission);
+                            $fiche->addMission($mission);
+                        }
+                        $this->getFicheMetierService()->update($fiche);
+                        foreach ($elements as $element) {
+                            $this->getCompetenceElementService()->create($element);
+                            $fiche->addCompetenceElement($element);
+                        }
+
+                        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
+                        $this->getFicheMetierService()->update($fiche);
+                    }
+                    //
+                }
                 $vm = new ViewModel([
                     'warning' => $result['warning'],
                     'info' => $result['info'],
-                    'fiches' => $result['fiches'],
+                    'fiches' => $fiches,
                 ]);
                 $vm->setTemplate('fiche-metier/import/temporaire_rmfp');
                 return $vm;
@@ -215,8 +258,16 @@ class ImportController extends AbstractActionController
         ]);
     }
 
+    public function readAsReferens($data, array $file, int $verbosity = 0) : array
+    {
+        return ['error' => ["Not yep re-implemented"]];
+    }
+
     public function readAsRmfp($data, array $file, int $verbosity = 0) : array
     {
+        $mode = ($data['mode'] === 'import')?'import':'preview';
+        $info[] = "Mode activé [".$mode."]";
+
         $debut = (new DateTime())->getTimestamp();
 
         $warning = [];
@@ -237,7 +288,7 @@ class ImportController extends AbstractActionController
             $positionCode       = array_search("Code", $header);
             $positionIntitule   = array_search("Intitulé", $header);
             $positionDefinition = array_search("Définition synthétique de l'ER", $header);
-            $positionFamille = array_search("Famille", $header);
+            $positionFamille    = array_search("Famille", $header);
 
 
             //lecture des fiches
@@ -264,7 +315,11 @@ class ImportController extends AbstractActionController
 //                $this->getFicheMetierService()->create($fiche);
 
                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw["Famille"]));
-                if ($famille === null) $famille = new FamilleProfessionnelle(); $famille->setLibelle(trim($raw["Famille"]));
+                if ($famille === null) {
+                    $famille = new FamilleProfessionnelle();
+                    $famille->setLibelle(trim($raw["Famille"]));
+
+                }
                 $fiche->setFamilleProfessionnelle($famille);
 
                 /** Partie Mission et activités ***********************************************************************/
@@ -296,14 +351,15 @@ class ImportController extends AbstractActionController
 //                        $this->getMissionActiviteService()->create($activite);
                         $mission->addMissionActivite($activite);
                     }
-
-                    $ficheMission = new FicheMetierMission();
-                    $ficheMission->setMission($mission);
-                    $ficheMission->setFicheMetier($fiche);
-                    $ficheMission->setOrdre(1);
-//                    $this->getFicheMetierMissionService()->create($ficheMission);
-                    $fiche->addMission($ficheMission);
                 }
+
+                $ficheMission = new FicheMetierMission();
+                $ficheMission->setMission($mission);
+                $ficheMission->setFicheMetier($fiche);
+                $ficheMission->setOrdre(1);
+//                    $this->getFicheMetierMissionService()->create($ficheMission);
+                $fiche->addMission($ficheMission);
+
 
                 /** COMPETENCES ***************************************************************************************/
 

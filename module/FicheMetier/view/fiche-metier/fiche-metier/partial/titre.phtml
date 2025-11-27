@@ -38,7 +38,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         <span class="icon icon-editer"></span>
         Modifier le libellé
     </a>
-    <?php if ($fichemetier->getLibelle() !== null) : ?>
+    <?php if ($fichemetier->getLibelle() !== null And $fichemetier->getMetier()) : ?>
         <?php /** @see \FicheMetier\Controller\FicheMetierController::reinitialiserLibelleAction() */ ?>
         <a href="<?php echo $this->url('fiche-metier/reinitialiser-libelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
            class="action warning ajax-modal"  data-event="modification"
