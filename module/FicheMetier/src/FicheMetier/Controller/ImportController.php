@@ -4,6 +4,7 @@ namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use DateTime;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
@@ -22,6 +23,7 @@ use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
@@ -71,14 +73,15 @@ class ImportController extends AbstractActionController
 
             $data = $request->getPost();
             $files = $request->getFiles();
-            var_dump($data);
-            var_dump($files);
+//            var_dump($data);
+//            var_dump($files);
 
             if ($data['format'] === ImportController::FORMAT_RMFP) {
                 $result = $this->readAsRmfp($data, $files['fichier'],0);
 
                 $vm = new ViewModel([
                     'warning' => $result['warning'],
+                    'info' => $result['info'],
                     'fiches' => $result['fiches'],
                 ]);
                 $vm->setTemplate('fiche-metier/import/temporaire_rmfp');
@@ -214,6 +217,8 @@ class ImportController extends AbstractActionController
 
     public function readAsRmfp($data, array $file, int $verbosity = 0) : array
     {
+        $debut = (new DateTime())->getTimestamp();
+
         $warning = [];
 
         $csvFile = fopen($file['tmp_name'], "r");
@@ -232,6 +237,7 @@ class ImportController extends AbstractActionController
             $positionCode       = array_search("Code", $header);
             $positionIntitule   = array_search("Intitulé", $header);
             $positionDefinition = array_search("Définition synthétique de l'ER", $header);
+            $positionFamille = array_search("Famille", $header);
 
 
             //lecture des fiches
@@ -257,6 +263,9 @@ class ImportController extends AbstractActionController
                 $fiche->setCode($code);
 //                $this->getFicheMetierService()->create($fiche);
 
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw["Famille"]));
+                if ($famille === null) $famille = new FamilleProfessionnelle(); $famille->setLibelle(trim($raw["Famille"]));
+                $fiche->setFamilleProfessionnelle($famille);
 
                 /** Partie Mission et activités ***********************************************************************/
 
@@ -266,6 +275,10 @@ class ImportController extends AbstractActionController
 
                 $missionLibelle = $raw["Définition synthétique de l'ER"];
                 $activites = explode("\n",$raw["Activités de l'ER"]);
+
+
+
+
 
                 $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($missionLibelle);
                 if ($mission === null) {
@@ -350,8 +363,10 @@ class ImportController extends AbstractActionController
 
         }
         fclose($csvFile);
+        $fin = (new DateTime())->getTimestamp();
+        $info[] = "Temps de traitement : " . max(1,($fin-$debut)) . " seconde·s";
 
-        return ['fiches' => $fiches, 'warning' => $warning];
+        return ['fiches' => $fiches, 'warning' => $warning, 'info' => $info];
     }
 
     /** @return $string */

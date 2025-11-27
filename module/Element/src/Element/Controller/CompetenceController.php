@@ -346,9 +346,13 @@ class CompetenceController extends AbstractActionController
                 }
             }
             $result = [];
+
+
             if ($filepath !== null AND $filepath !== "" AND $referentiel !== null AND $mode !== null) {
                 $result = $this->getCompetenceService()->import($filepath, $referentiel, $mode, $info, $warning, $error);
             }
+
+            var_dump(new DateTime());
 
         }
 

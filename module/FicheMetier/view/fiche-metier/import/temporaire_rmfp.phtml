@@ -9,16 +9,27 @@ use FicheMetier\Entity\Db\FicheMetier;
 
 ?>
 
+<?php if (!empty($info)) : ?>
+    <div class="alert alert-info">
+        <?php foreach ($info as $item) : ?>
+            <?php echo $item; ?> <br/>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
 <?php if (!empty($warning)) : ?>
+    <div class="alert alert-warning">
     <?php foreach ($warning as $item) : ?>
         <?php echo $item; ?> <br/>
     <?php endforeach; ?>
+    </div>
 <?php endif; ?>
 
 <?php foreach ($fiches as $fiche) : ?>
     <h3>
         <span class="badge"><?php echo $fiche->getCode()?$fiche->getCode():"Aucun code"; ?></span>
         <?php echo $fiche->getLibelle(); ?> </h3>
+        <?php echo $fiche->getFamilleProfessionnelle()?->getLibelle(); ?>
 
     <?php foreach ($fiche->getMissions() as $mission) : ?>
         <div class="card">

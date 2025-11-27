@@ -12,6 +12,7 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
 use Metier\Entity\HasMissionsPrincipalesInterface;
@@ -35,6 +36,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?int $id = -1;
     private ?string $code = null;
     private ?string $libelle = null;
+    private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
 
@@ -92,6 +94,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
+    }
+
+    public function getFamilleProfessionnelle(): ?FamilleProfessionnelle
+    {
+        return $this->familleProfessionnelle;
+    }
+
+    public function setFamilleProfessionnelle(?FamilleProfessionnelle $familleProfessionnelle): void
+    {
+        $this->familleProfessionnelle = $familleProfessionnelle;
     }
 
     public function hasExpertise(): bool

@@ -2,6 +2,7 @@
 
 namespace Element\Service\Competence;
 
+use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -475,7 +476,7 @@ class CompetenceService
         if ($positionType !== false) {
             foreach ($data as $item) {
                 if ($positionTheme !== false) {
-                    $libelle = $item[$positionTheme];
+                    $libelle = trim($item[$positionTheme]);
                     if (!isset($themes[$libelle])) {
                         $type = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($libelle);
                         if ($type === null and $libelle !== "") {
@@ -492,7 +493,7 @@ class CompetenceService
         $types = [];
         if ($positionType !== false) {
             foreach ($data as $item) {
-                $libelle = $item[$positionType];
+                $libelle = trim($item[$positionType]);
                 if (!isset($types[$libelle])) {
                     $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($libelle);
                     if ($type === null and $libelle !== "") {
@@ -529,7 +530,7 @@ class CompetenceService
                 // obligatoire
                 $competence->setReferentiel($referentiel);
                 $competence->setIdSource($id);
-                $competence->setLibelle($item[$positionLibelle]);
+                $competence->setLibelle(trim($item[$positionLibelle]));
                 $type = $types[$item[$positionType]];
                 $competence->setType($type);
                 // facultatif
