@@ -189,7 +189,10 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                         <strong>Définition </strong> <?php echo $competence->getDescription(); ?>
                     <?php endif; ?>
                     <?php if ($competence->getSynonymes()) : ?>
-                        <strong>Synonymes </strong> <?php echo $competence->getSynonymes(); ?>
+                        <strong>Synonymes </strong>
+                            <?php foreach ($competence->getSynonymes() as $synonyme) : ?>
+                                <?php echo $synonyme->getLibelle(); ?>;&nbsp;
+                            <?php endforeach; ?>
                     <?php endif; ?>
                 </td>
             </tr>

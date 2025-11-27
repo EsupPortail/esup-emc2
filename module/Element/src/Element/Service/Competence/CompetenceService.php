@@ -9,6 +9,7 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceDiscipline;
 use Element\Entity\Db\CompetenceReferentiel;
+use Element\Entity\Db\CompetenceSynonyme;
 use Element\Entity\Db\CompetenceTheme;
 use Element\Entity\Db\CompetenceType;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
@@ -473,15 +474,17 @@ class CompetenceService
         $themes = [];
         if ($positionType !== false) {
             foreach ($data as $item) {
-                $libelle = $item[$positionTheme];
-                if (!isset($themes[$libelle])) {
-                    $type = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($libelle);
-                    if ($type === null and $libelle !== "") {
-                        $type = new CompetenceTheme();
-                        $type->setLibelle($libelle);
-                        $info[] = "Nouveau thème : " . $libelle;
+                if ($positionTheme !== false) {
+                    $libelle = $item[$positionTheme];
+                    if (!isset($themes[$libelle])) {
+                        $type = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($libelle);
+                        if ($type === null and $libelle !== "") {
+                            $type = new CompetenceTheme();
+                            $type->setLibelle($libelle);
+                            $info[] = "Nouveau thème : " . $libelle;
+                        }
+                        $themes[$libelle] = $type;
                     }
-                    $themes[$libelle] = $type;
                 }
             }
         }
@@ -504,7 +507,7 @@ class CompetenceService
 
         /** Reading competence ****************************************************************************************/
 
-        $competences = [];
+        $competences = []; $oldSynonymes = [];
         if ($positionId !== false and $positionLibelle !== false and $positionType !== false) {
             $nLine = 1;
             foreach ($data as $item) {
@@ -513,6 +516,9 @@ class CompetenceService
                 if ($competence === null and $libelle !== "") {
                     $competence = new Competence();
                 } else {
+                    $oldSynonymes = $competence->getSynonymes();
+                    $competence->clearSynonymes();
+
                     if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
                     if ($competence->getType() !== $types[$item[$positionType]]) $info[] = "Mise à jour du type de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
                     if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $info[] = "Mise à jour du thème de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
@@ -542,10 +548,14 @@ class CompetenceService
                     $competence->setEmploisTypes($item[$positionEmploiType]);
                 }
                 if ($positionSynonyme !== false) {
-                    if ($item[$positionSynonyme] === "") {
-                        $competence->setSynonymes(null);
-                    } else {
-                        $competence->setSynonymes($item[$positionSynonyme]);
+                    if ($item[$positionSynonyme] !== "") {
+                        $liste = explode(";", $item[$positionSynonyme]);
+                        foreach ($liste as $synonyme) {
+                            $eSynonyme = new CompetenceSynonyme();
+                            $eSynonyme->setCompetence($competence);
+                            $eSynonyme->setLibelle($synonyme);
+                            $competence->addSynonyme($eSynonyme);
+                        }
                     }
                 }
                 $raw = [];
@@ -558,6 +568,10 @@ class CompetenceService
             }
 
             if ($mode === 'import') {
+                foreach ($oldSynonymes as $synonyme) {
+                    $this->getObjectManager()->remove($synonyme);
+                    $this->getObjectManager()->flush($synonyme);
+                }
                 foreach ($types as $type) {
                     if ($type->getId() === null) {
                         $this->getCompetenceTypeService()->create($type);
@@ -577,12 +591,23 @@ class CompetenceService
                     }
                 }
                 foreach ($competences as $competence) {
+                    $synonymes = $competence->getSynonymes();
+                    $competence->clearSynonymes();
                     if ($competence->getId() === null) {
                         $this->create($competence);
                         $info[] = "Création de la compétence [id:" . $competence->getId() . "libelle:" . $competence->getLibelle() . "]";
                     } else {
+                        //clear synonymes ???
+
                         $this->update($competence);
 //                        $info[] = "Mise à jour de la compétence [id:".$competence->getId()."libelle:".$competence->getLibelle()."]";
+                    }
+                    foreach ($synonymes as $synonyme) {
+                        if ($synonyme->getId() === null) {
+                            $this->getObjectManager()->persist($synonyme);
+                        }
+                        $this->getObjectManager()->flush($synonyme);
+                        $competence->addSynonyme($synonyme);
                     }
                 }
             }
