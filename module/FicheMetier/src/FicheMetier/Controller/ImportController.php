@@ -135,15 +135,7 @@ class ImportController extends AbstractActionController
                         $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
                         $this->getFicheMetierService()->update($fiche);
                     }
-                    //
                 }
-//                $vm = new ViewModel([
-//                    'warning' => $result['warning'],
-//                    'info' => $result['info'],
-//                    'fiches' => $fiches,
-//                ]);
-////                $vm->setTemplate('fiche-metier/import/temporaire_rmfp');
-//                return $vm;
             }
 
             if ($data['format'] === ImportController::FORMAT_REFERENS3) {
@@ -154,7 +146,7 @@ class ImportController extends AbstractActionController
 
                 if ($referentiel !== null AND $mode !== null AND $filepath !== "") {
                     $header = [];
-                    $data = [];
+                    $raw = [];
                     // Lecture du fichier de REFERENS3
                     $csvFile = fopen($filepath, "r");
                     if ($csvFile !== false) {
@@ -168,7 +160,7 @@ class ImportController extends AbstractActionController
                             for ($position = 0; $position < $nbElements; ++$position) {
                                 $item[$header[$position]] = $row[$position];
                             }
-                            $data[] = $item;
+                            $raw[] = $item;
                         }
                         fclose($csvFile);
                     }
@@ -184,22 +176,22 @@ class ImportController extends AbstractActionController
                     }
 
                     if ($ok) {
-                        $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning, $error);
-                        $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning, $error);
-                        $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning, $error);
-                        $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning, $error);
-                        $metiers = $this->getImportService()->readMetier($header, $data, $mode, $famillesProfessionnelles, $correspondances, $categories, $referentiel, $info, $warning, $error);
+                        $categories = $this->getImportService()->readCategorie($header, $raw, $mode, $info, $warning, $error);
+                        $competences = $this->getImportService()->readCompetence($header, $raw, $mode, $info, $warning, $error);
+                        $correspondances = $this->getImportService()->readCorrespondance($header, $raw, $mode, $info, $warning, $error);
+                        $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $raw, $mode, $info, $warning, $error);
+                        $metiers = $this->getImportService()->readMetier($header, $raw, $mode, $famillesProfessionnelles, $correspondances, $categories, $referentiel, $info, $warning, $error);
 
 
                         /** @var FicheMetier[] $fiches */
-                        foreach ($data as $item) {
-                            $raw = json_encode($item);
+                        foreach ($raw as $item) {
+                            $raw_ = json_encode($item);
                             $existingFiches = ($mode === 'import') ? $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw) : [];
                             if (!empty($existingFiches)) {
                                 $warning[] = "Une fiche de métier pour métier [" . $item["Code emploi type"] . "|" . $item["Intitulé de l’emploi type"] . "] existe déjà avec les mêmes données sources.";
                             } else {
                                 $fiche = new FicheMetier();
-                                $fiche->setRaw($raw);
+                                $fiche->setRaw($raw_);
                                 $fiche->setMetier($metiers[$item["Code emploi type"]]);
                                 if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
                                 if (isset($item["COMPETENCES_ID"]) and $item["COMPETENCES_ID"] !== '') {
