@@ -19,12 +19,12 @@ $metier = $fichemetier->getMetier();
 
 <dl class="row">
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Niveau <span style="color:darkred" class="icon icon-question" title="[JPM] n'a de sens que si le code fonction est activé ?"></span> </dt>
+        <dt class="col-md-4"> Niveau  </dt>
         <dd class="col-md-8">
             <?php if ($fichemetier->getCodeEmploiType()): ?>
                 <?php echo $fichemetier->getCodeEmploiType()->getCodeFonction()->getLibelle(); ?>
             <?php else : ?>
-                Aucun code fonction associé <span style="color:darkred" class="icon icon-question" title="bon terme ?"></span>
+                Aucun niveau associé
             <?php endif; ?>
         </dd>
     <?php endif; ?>
@@ -104,22 +104,23 @@ $metier = $fichemetier->getMetier();
             <?php endif; ?>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-4"> Expertise</dt>
-    <dd class="col-md-8">
-        <?php if ($fichemetier->hasExpertise()) : ?>
-            Sujet à expertise
-        <?php else : ?>
-            Non sujet à expertise
-        <?php endif; ?>
-        <?php if ($mode !== 'affichage') : ?>
-            <a
-                <?php /** @see FicheMetierController::modifierExpertiseAction() */ ?>
-                    href="<?php echo $this->url('fiche-metier/modifier-expertise', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-            >
-                <span class="icon icon-refresh"></span>
-            </a>
-        <?php endif; ?>
-    </dd>
+<!-- Partie expertise désactivée avant suppression -->
+<!--    <dt class="col-md-4"> Expertise</dt>-->
+<!--    <dd class="col-md-8">-->
+<!--        --><?php //if ($fichemetier->hasExpertise()) : ?>
+<!--            Sujet à expertise-->
+<!--        --><?php //else : ?>
+<!--            Non sujet à expertise-->
+<!--        --><?php //endif; ?>
+<!--        --><?php //if ($mode !== 'affichage') : ?>
+<!--            <a-->
+<!--                --><?php ///** @see FicheMetierController::modifierExpertiseAction() */ ?>
+<!--                    href="--><?php //echo $this->url('fiche-metier/modifier-expertise', ['fiche-metier' => $fichemetier->getId()], [], true); ?><!--"-->
+<!--            >-->
+<!--                <span class="icon icon-refresh"></span>-->
+<!--            </a>-->
+<!--        --><?php //endif; ?>
+<!--    </dd>-->
     <dt class="col-md-4"> Date de dépôt</dt>
     <dd class="col-md-8"> <?php echo $fichemetier->getEtatActif()?->getHistoCreation()->format("d/m/Y"); ?></dd>
     <dt class="col-md-4"> État</dt>

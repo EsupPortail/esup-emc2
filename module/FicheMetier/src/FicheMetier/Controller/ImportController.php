@@ -68,19 +68,37 @@ class ImportController extends AbstractActionController
         $mode = null;
         $fichier_path = null;
 
+        $data = null;
+        $file = null;
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $request->getPost();
             $mode = ($data['mode'] === 'import')?'import':'preview';
-            $files = $request->getFiles();
-//            var_dump($data);
-//            var_dump($files);
+            $files = $request->getFiles()->toArray();
+            $file = !empty($files)?current($files):null;
+
+            $filename = $data['filename']??null;
+            $filepath = $data['filepath']??null;
+
+            if (($file === null OR $file['tmp_name'] === "") AND $filepath === null) {
+                $error[] = "Aucun fichier fourni";
+            } else {
+                if ($filepath === null) {
+                    $filepath = '/tmp/import_fichemetier_' . (new DateTime())->getTimestamp() . '.csv';
+                    $filename = $file['name'];
+                    copy($file['tmp_name'], $filepath);
+                }
+            }
 
             if ($data['format'] === ImportController::FORMAT_RMFP) {
-                $result = $this->readAsRmfp($data, $files['fichier'],0);
+                $result = $this->readAsRmfp($data, $filepath,0);
                 /** @var FicheMetier[] $fiches */
                 $fiches = $result["fiches"];
+
+                $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
+                $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
 
                 if ($mode === 'import') {
                     // recuperation des nouvelles familles professionnelles
@@ -119,118 +137,119 @@ class ImportController extends AbstractActionController
                     }
                     //
                 }
-                $vm = new ViewModel([
-                    'warning' => $result['warning'],
-                    'info' => $result['info'],
-                    'fiches' => $fiches,
-                ]);
-                $vm->setTemplate('fiche-metier/import/temporaire_rmfp');
-                return $vm;
+//                $vm = new ViewModel([
+//                    'warning' => $result['warning'],
+//                    'info' => $result['info'],
+//                    'fiches' => $fiches,
+//                ]);
+////                $vm->setTemplate('fiche-metier/import/temporaire_rmfp');
+//                return $vm;
             }
 
+            if ($data['format'] === ImportController::FORMAT_REFERENS3) {
 
-            $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
-            $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
-            $mode = (isset($data["mode"]) AND $data["mode"] !== "") ? $data["mode"] : null;
-            $fichier_path = $files['fichier']['tmp_name'];
+                $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
+                $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
+                $mode = (isset($data["mode"]) AND $data["mode"] !== "") ? $data["mode"] : null;
 
-            if ($referentiel !== null AND $mode !== null AND $fichier_path !== "") {
-                $header = [];
-                $data = [];
-                // Lecture du fichier de REFERENS3
-                $csvFile = fopen($fichier_path, "r");
-                if ($csvFile !== false) {
-                    $header = fgetcsv($csvFile, null, ";");
-                    // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
-                    $header = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header);
-                    $nbElements = count($header);
+                if ($referentiel !== null AND $mode !== null AND $filepath !== "") {
+                    $header = [];
+                    $data = [];
+                    // Lecture du fichier de REFERENS3
+                    $csvFile = fopen($filepath, "r");
+                    if ($csvFile !== false) {
+                        $header = fgetcsv($csvFile, null, ";");
+                        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+                        $header = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header);
+                        $nbElements = count($header);
 
-                    while (($row = fgetcsv($csvFile, null, ';')) !== false) {
-                        $item = [];
-                        for ($position = 0; $position < $nbElements; ++$position) {
-                            $item[$header[$position]] = $row[$position];
+                        while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                            $item = [];
+                            for ($position = 0; $position < $nbElements; ++$position) {
+                                $item[$header[$position]] = $row[$position];
+                            }
+                            $data[] = $item;
                         }
-                        $data[] = $item;
+                        fclose($csvFile);
                     }
-                    fclose($csvFile);
-                }
 
-                $ok = true;
-                if (!in_array("Code emploi type", $header)) {
-                    $ok = false;
-                    $error[] = "La colonne obligatoire <code>Code emploi type</code> est absente";
-                }
-                if (!in_array("Intitulé de l’emploi type", $header)) {
-                    $ok = false;
-                    $error[] = "La colonne obligatoire <code>Intitulé de l’emploi type</code> est absente";
-                }
+                    $ok = true;
+                    if (!in_array("Code emploi type", $header)) {
+                        $ok = false;
+                        $error[] = "La colonne obligatoire <code>Code emploi type</code> est absente";
+                    }
+                    if (!in_array("Intitulé de l’emploi type", $header)) {
+                        $ok = false;
+                        $error[] = "La colonne obligatoire <code>Intitulé de l’emploi type</code> est absente";
+                    }
 
-                if ($ok) {
-                    $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning, $error);
-                    $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning, $error);
-                    $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning, $error);
-                    $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning, $error);
-                    $metiers = $this->getImportService()->readMetier($header, $data, $mode, $famillesProfessionnelles, $correspondances, $categories, $referentiel, $info, $warning, $error);
+                    if ($ok) {
+                        $categories = $this->getImportService()->readCategorie($header, $data, $mode, $info, $warning, $error);
+                        $competences = $this->getImportService()->readCompetence($header, $data, $mode, $info, $warning, $error);
+                        $correspondances = $this->getImportService()->readCorrespondance($header, $data, $mode, $info, $warning, $error);
+                        $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $data, $mode, $info, $warning, $error);
+                        $metiers = $this->getImportService()->readMetier($header, $data, $mode, $famillesProfessionnelles, $correspondances, $categories, $referentiel, $info, $warning, $error);
 
 
-                    /** @var FicheMetier[] $fiches */
-                    foreach ($data as $item) {
-                        $raw = json_encode($item);
-                        $existingFiches = ($mode === 'import') ? $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw) : [];
-                        if (!empty($existingFiches)) {
-                            $warning[] = "Une fiche de métier pour métier [" . $item["Code emploi type"] . "|" . $item["Intitulé de l’emploi type"] . "] existe déjà avec les mêmes données sources.";
-                        } else {
-                            $fiche = new FicheMetier();
-                            $fiche->setRaw($raw);
-                            $fiche->setMetier($metiers[$item["Code emploi type"]]);
-                            if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
-                            if (isset($item["COMPETENCES_ID"]) and $item["COMPETENCES_ID"] !== '') {
-                                $ids = explode('|', $item["COMPETENCES_ID"]);
-                                foreach ($ids as $id) {
-                                    if (isset($competences[$id])) {
-                                        $element = new CompetenceElement();
-                                        $element->setCompetence($competences[$id]);
-                                        $fiche->addCompetenceElement($element);
-                                        if ($mode === 'import') {
-                                            $this->getCompetenceElementService()->create($element);
+                        /** @var FicheMetier[] $fiches */
+                        foreach ($data as $item) {
+                            $raw = json_encode($item);
+                            $existingFiches = ($mode === 'import') ? $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw) : [];
+                            if (!empty($existingFiches)) {
+                                $warning[] = "Une fiche de métier pour métier [" . $item["Code emploi type"] . "|" . $item["Intitulé de l’emploi type"] . "] existe déjà avec les mêmes données sources.";
+                            } else {
+                                $fiche = new FicheMetier();
+                                $fiche->setRaw($raw);
+                                $fiche->setMetier($metiers[$item["Code emploi type"]]);
+                                if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
+                                if (isset($item["COMPETENCES_ID"]) and $item["COMPETENCES_ID"] !== '') {
+                                    $ids = explode('|', $item["COMPETENCES_ID"]);
+                                    foreach ($ids as $id) {
+                                        if (isset($competences[$id])) {
+                                            $element = new CompetenceElement();
+                                            $element->setCompetence($competences[$id]);
+                                            $fiche->addCompetenceElement($element);
+                                            if ($mode === 'import') {
+                                                $this->getCompetenceElementService()->create($element);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            //Mission et activité
-                            if (isset($item["Mission"]) and $item["Mission"] !== '') {
-                                $intitule = $item["Mission"];
-                                $activites = [];
-                                if (isset($item["Activités principales"])) {
-                                    $activites = explode("|", $item["Activités principales"]);
+                                //Mission et activité
+                                if (isset($item["Mission"]) and $item["Mission"] !== '') {
+                                    $intitule = $item["Mission"];
+                                    $activites = [];
+                                    if (isset($item["Activités principales"])) {
+                                        $activites = explode("|", $item["Activités principales"]);
+                                    }
+                                    $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
+
+
+                                    $ficheMetierMission = new FicheMetierMission();
+                                    $ficheMetierMission->setMission($mission);
+                                    $ficheMetierMission->setFicheMetier($fiche);
+                                    $ficheMetierMission->setOrdre(1);
+
+                                    if ($mode === 'import') {
+                                        $this->getFicheMetierMissionService()->create($ficheMetierMission);
+                                        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
+                                    } else {
+                                        $fiche->addMission($ficheMetierMission);
+                                    }
+
+
                                 }
-                                $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
-
-
-                                $ficheMetierMission = new FicheMetierMission();
-                                $ficheMetierMission->setMission($mission);
-                                $ficheMetierMission->setFicheMetier($fiche);
-                                $ficheMetierMission->setOrdre(1);
 
                                 if ($mode === 'import') {
-                                    $this->getFicheMetierMissionService()->create($ficheMetierMission);
-                                    $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
-                                } else {
-                                    $fiche->addMission($ficheMetierMission);
+                                    $this->getFicheMetierService()->update($fiche);
                                 }
 
-
+                                //if ($mode === 'import') {
+                                //print((++$position) . "/" . count($data) . $fiche->getMetier()->getLibelle() . "<br>");
+                                //flush();
+                                //}
+                                $fiches[] = $fiche;
                             }
-
-                            if ($mode === 'import') {
-                                $this->getFicheMetierService()->update($fiche);
-                            }
-
-                            //if ($mode === 'import') {
-                            //print((++$position) . "/" . count($data) . $fiche->getMetier()->getLibelle() . "<br>");
-                            //flush();
-                            //}
-                            $fiches[] = $fiche;
                         }
                     }
                 }
@@ -252,6 +271,12 @@ class ImportController extends AbstractActionController
             'warning' => $warning,
             'error' => $error,
             'fiches' => $fiches,
+
+            'referentiels' => $this->getReferentielService()->getReferentiels(),
+            'data' => $data,
+            'file' => $file,
+            'filepath' => $filepath??null,
+            'filename' => $filename??null,
         ]);
     }
 
@@ -260,7 +285,7 @@ class ImportController extends AbstractActionController
         return ['error' => ["Not yep re-implemented"]];
     }
 
-    public function readAsRmfp($data, array $file, int $verbosity = 0) : array
+    public function readAsRmfp($data, string $filepath, int $verbosity = 0) : array
     {
         /** Préparation pour le traitement des compétences */
         $rmfp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('RMFP');
@@ -279,7 +304,7 @@ class ImportController extends AbstractActionController
 
         $warning = [];
 
-        $csvFile = fopen($file['tmp_name'], "r");
+        $csvFile = fopen($filepath, "r");
         // lecture du header + position colonne
         if ($csvFile !== false) {
             $header = fgetcsv($csvFile, null, ";");
