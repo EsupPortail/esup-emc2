@@ -98,7 +98,7 @@ class CompetenceController extends AbstractActionController
         $agents = $this->getCompetenceElementService()->getAgentsHavinCompetenceFromAgent($competence);
         $fiches = $this->getFicheMetierService()->getFichesMetiersByCompetence($competence);
         return new ViewModel([
-            'title' => "Affiche d'une compétence",
+            'title' => "Affichage d'une compétence",
             'competence' => $competence,
             'agents' => $agents,
             'fiches' => $fiches,

@@ -2,10 +2,12 @@
 
 use FicheMetier\Entity\Db\ThematiqueType;
 use FicheMetier\Provider\Privilege\ThematiquetypePrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \FicheMetier\Controller\ThematiqueTypeController::indexAction()
  * @var ThematiqueType[] $thematiquesTypes
+ * @var Parametre[] $parametres
  */
 
 $this->headTitle("Type de thématiques");
@@ -18,7 +20,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
 
 ?>
 
-<?php echo $this->partial('fiche-metier/configuration/header', ['selected' => "thematique"]); ?>
+<?php echo $this->partial('fiche-metier/configuration/header', ['selected' => "thematique", 'parametres' => $parametres]); ?>
 
 
 <div>

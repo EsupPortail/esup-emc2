@@ -85,7 +85,6 @@ class ImportController extends AbstractActionController
                 if ($mode === 'import') {
                     // recuperation des nouvelles familles professionnelles
                     foreach ($fiches as $fiche) {
-                        $here = true;
                         if ($fiche->getFamilleProfessionnelle() AND $fiche->getFamilleProfessionnelle()->getId() === null) {
                             $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
                         }
@@ -104,8 +103,6 @@ class ImportController extends AbstractActionController
 
                         //todo attention au update
                         $this->getFicheMetierService()->create($fiche);
-
-
 
                         foreach ($missions as $mission) {
                             $this->getFicheMetierMissionService()->deepCreate($mission);
@@ -265,6 +262,16 @@ class ImportController extends AbstractActionController
 
     public function readAsRmfp($data, array $file, int $verbosity = 0) : array
     {
+        /** Préparation pour le traitement des compétences */
+        $rmfp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('RMFP');
+        $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
+        $tsavoiretre = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_COMPORTEMENTALE);
+        $tsavoirfaire = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_OPERATIONNELLE);
+
+        $dictionnaireConnaissances = $this->getCompetenceService()->generateDictionnaire($rmfp, $tConnaissance);
+        $dictionnaireSavoirFaire = $this->getCompetenceService()->generateDictionnaire($rmfp, $tsavoirfaire);
+        $dictionnaireSavoirEtre = $this->getCompetenceService()->generateDictionnaire($rmfp, $tsavoiretre);
+
         $mode = ($data['mode'] === 'import')?'import':'preview';
         $info[] = "Mode activé [".$mode."]";
 
@@ -310,6 +317,7 @@ class ImportController extends AbstractActionController
                 $intitule = $raw["Intitulé"];
                 $code = $raw["Code"];
                 $fiche = new FicheMetier();
+                $fiche->setRaw(json_encode($raw));
                 $fiche->setLibelle($intitule);
                 $fiche->setCode($code);
 //                $this->getFicheMetierService()->create($fiche);
@@ -363,19 +371,18 @@ class ImportController extends AbstractActionController
 
                 /** COMPETENCES ***************************************************************************************/
 
-                $rmfp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('RMFP');
+
 
                 //todo ajouter le type pour eviter les homonymies
                 //todo ajouter un boolean pour la recherche parmi les synonymes
 
                 $connaissances = self::explodeAndTrim($raw["Connaissances"], "\n");
                 foreach ($connaissances as $item) {
-                    $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
-                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
+//                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
+                    $connaissance = $dictionnaireConnaissances[$item]??null;
                     if ($connaissance !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($connaissance);
-//                        $this->getCompetenceElementService()->create($element);
                         $fiche->addCompetenceElement($element);
                     } else {
                         $warning[] = "[".$item."] compétence de type [".$tConnaissance->getLibelle()."] non trouvée.";
@@ -383,8 +390,8 @@ class ImportController extends AbstractActionController
                 }
                 $savoiretres = self::explodeAndTrim($raw["Savoir-être"], "\n");
                 foreach ($savoiretres as $item) {
-                    $tsavoiretre = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_COMPORTEMENTALE);
-                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
+//                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
+                    $savoiretre = $dictionnaireSavoirEtre[$item]??null;
                     if ($savoiretre !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($savoiretre);
@@ -396,8 +403,8 @@ class ImportController extends AbstractActionController
                 }
                 $savoirfaires = self::explodeAndTrim($raw["Savoir-faire"], "\n");
                 foreach ($savoirfaires as $item) {
-                    $tsavoirfaire = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_OPERATIONNELLE);
-                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
+//                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
+                    $savoirfaire = $dictionnaireSavoirFaire[$item]??null;
                     if ($savoirfaire !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($savoirfaire);
@@ -407,8 +414,6 @@ class ImportController extends AbstractActionController
                         $warning[] = "[".$item."] compétence de type [".$tsavoirfaire->getLibelle()."] non trouvée.";
                     }
                 }
-
-
 //                $this->getFicheMetierService()->update($fiche);
 
 

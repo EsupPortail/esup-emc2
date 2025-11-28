@@ -4,6 +4,7 @@ use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use Element\Provider\Privilege\CompetencePrivileges;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use UnicaenParametre\Entity\Db\Parametre;
 
 /**
@@ -49,14 +50,17 @@ $canVoirCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(Compet
             onclick="location.href='<?php echo $this->url('fiche-metier/configuration', [], [], true); ?>'">
         Compétences par défaut
     </button>
-    <button class="nav-link"
-            id="application-tab"
-            data-bs-toggle="tab" data-bs-target="#element"
-            type="button" role="tab" aria-controls="element"
-            aria-selected="true"
-            onclick="location.href='<?php echo $this->url('fiche-metier/configuration', [], [], true); ?>'">
-        Applications par défaut
-    </button>
+    <?php $a=1; ?>
+    <?php if ($parametres[FicheMetierParametres::DISPLAY_APPLICATION] AND $parametres[FicheMetierParametres::DISPLAY_APPLICATION]->getValeur() === true) : ?>
+        <button class="nav-link"
+                id="application-tab"
+                data-bs-toggle="tab" data-bs-target="#element"
+                type="button" role="tab" aria-controls="element"
+                aria-selected="true"
+                onclick="location.href='<?php echo $this->url('fiche-metier/configuration', [], [], true); ?>'">
+            Applications par défaut
+        </button>
+    <?php endif; ?>
     <button class="nav-link"
             id="element-tab"
             data-bs-toggle="tab" data-bs-target="#element"

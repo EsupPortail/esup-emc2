@@ -1,10 +1,15 @@
 <?php
 
 /**
+ * @see \FicheMetier\Controller\ConfigurationController::competenceAction()
+ * @see \FicheMetier\Controller\ConfigurationController::applicationAction()
  * @var string $selected
+ * @var Parametre[] $parametres
  */
 
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
 
 $this->headTitle("Configuration des fiches métiers");
 
@@ -39,14 +44,16 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             onclick="location.href='<?php echo $this->url('fiche-metier/configuration/competence', [], [], true); ?>'">
         Compétences par défaut
     </button>
-    <button class="nav-link <?php if ($selected === "application") echo " active "; ?>"
-            id="application-tab"
-            data-bs-toggle="tab" data-bs-target="#application"
-            type="button" role="tab" aria-controls="application"
-            aria-selected="true"
-            onclick="location.href='<?php echo $this->url('fiche-metier/configuration/application', [], [], true); ?>'">
-        Applications par défaut
-    </button>
+        <?php if (isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) AND $parametres[FicheMetierParametres::DISPLAY_APPLICATION]?->getValeur() === true) : ?>
+        <button class="nav-link <?php if ($selected === "application") echo " active "; ?>"
+                id="application-tab"
+                data-bs-toggle="tab" data-bs-target="#application"
+                type="button" role="tab" aria-controls="application"
+                aria-selected="true"
+                onclick="location.href='<?php echo $this->url('fiche-metier/configuration/application', [], [], true); ?>'">
+            Applications par défaut
+        </button>
+    <?php endif; ?>
     <button class="nav-link <?php if ($selected === "tendance") echo " active "; ?>"
             id="tendance-tab"
             data-bs-toggle="tab" data-bs-target="#tendance"

@@ -4,21 +4,26 @@ namespace FicheMetier\Controller;
 
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Form\TendanceType\TendanceTypeFormAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class TendanceTypeController extends AbstractActionController {
     use TendanceTypeServiceAwareTrait;
     use TendanceTypeFormAwareTrait;
+    use ParametreServiceAwareTrait;
 
     public function indexAction(): ViewModel
     {
         $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes('ordre','ASC', true);
+        $parametres = $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE);
 
         return new ViewModel([
             'tendancesTypes' => $tendancesTypes,
+            'parametres' => $parametres,
         ]);
     }
 

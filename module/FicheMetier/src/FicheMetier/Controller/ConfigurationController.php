@@ -34,21 +34,24 @@ class ConfigurationController extends AbstractActionController
     public function competenceAction() : ViewModel
     {
         $defaultCompetence =  $this->getConfigurationService()->getConfigurationsFicheMetier(Competence::class);
+        $parametres        =  $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE);
 
         return new ViewModel([
             'defaultCompetence' => $defaultCompetence,
+            'parametres' => $parametres,
         ]);
     }
 
     public function applicationAction() : ViewModel
     {
         $defaultApplication =  $this->getConfigurationService()->getConfigurationsFicheMetier(Application::class);
+        $parametres        =  $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE);
 
         return new ViewModel([
             'defaultApplication' => $defaultApplication,
+            'parametres' => $parametres,
         ]);
     }
-
 
     public function ajouterAction()
     {

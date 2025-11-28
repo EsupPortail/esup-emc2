@@ -2,10 +2,12 @@
 
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Provider\Privilege\TendancetypePrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \FicheMetier\Controller\TendanceTypeController::indexAction()
  * @var TendanceType[] $tendancesTypes
+ * @var Parametre[] $parametres
  */
 
 $this->headTitle("Type de tendances");
@@ -18,7 +20,7 @@ $canSupprimer = $this->isAllowed(TendancetypePrivileges::getResourceId(Tendancet
 
 ?>
 
-<?php echo $this->partial('fiche-metier/configuration/header', ['selected' => "tendance"]); ?>
+<?php echo $this->partial('fiche-metier/configuration/header', ['selected' => "tendance", 'parametres' => $parametres]); ?>
 
 <div>
     <?php /** @see \FicheMetier\Controller\TendanceTypeController::ajouterAction() */ ?>

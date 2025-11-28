@@ -34,7 +34,7 @@ class CompetenceDisciplineController extends AbstractActionController {
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersByDiscipline($discipline);
 
         return new ViewModel([
-            'title' => "Affiche d'une discipline de compétence",
+            'title' => "Affichage d'une discipline de compétence",
             'discipline' => $discipline,
             'fichesMetiers' => $fichesMetiers,
         ]);

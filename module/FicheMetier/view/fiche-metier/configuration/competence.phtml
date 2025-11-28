@@ -1,12 +1,15 @@
 <?php
 
 /**
+ * @see \FicheMetier\Controller\ConfigurationController::competenceAction()
  * @var ConfigurationFicheMetier[] $defaultCompetence
+ * @var Parametre[] $parametres
  */
 
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Element\Entity\Db\Competence;
 use Element\Provider\Privilege\CompetencePrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
 
 $this->headTitle("Configuration des fiches métiers");
 
@@ -18,8 +21,7 @@ $retour = $this->url('fiche-metier/configuration/competence', [], [], true);
 ?>
 
 <!-- inclusion du header -->
-<?php echo $this->partial('header', ['selected' => 'competence']); ?>
-
+<?php echo $this->partial('header', ['selected' => 'competence', 'parametres' => $parametres]); ?>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 

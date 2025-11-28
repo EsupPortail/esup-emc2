@@ -4,21 +4,26 @@ namespace FicheMetier\Controller;
 
 use FicheMetier\Entity\Db\ThematiqueType;
 use FicheMetier\Form\ThematiqueType\ThematiqueTypeFormAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class ThematiqueTypeController extends AbstractActionController {
     use ThematiqueTypeServiceAwareTrait;
     use ThematiqueTypeFormAwareTrait;
+    use ParametreServiceAwareTrait;
 
     public function indexAction(): ViewModel
     {
         $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('ordre','ASC', true);
+        $parametres = $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE);
 
         return new ViewModel([
             'thematiquesTypes' => $thematiquesTypes,
+            'parametres' => $parametres
         ]);
     }
 

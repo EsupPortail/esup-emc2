@@ -1,12 +1,15 @@
 <?php
 
 /**
+ * @see \FicheMetier\Controller\ConfigurationController::applicationAction()
  * @var ConfigurationFicheMetier[] $defaultApplication
+ * @var Parametre[] $parametres
  */
 
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Element\Entity\Db\Application;
 use Element\Provider\Privilege\ApplicationPrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
 
 $this->headTitle("Configuration des fiches métiers");
 
@@ -18,7 +21,7 @@ $retour = $this->url('fiche-metier/configuration/application', [], [], true);
 ?>
 
 <!-- inclusion du header -->
-<?php echo $this->partial('header', ['selected' => 'application']); ?>
+<?php echo $this->partial('header', ['selected' => 'application', 'parametres' => $parametres]); ?>
 
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>

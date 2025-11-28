@@ -2,7 +2,6 @@
 
 namespace Element\Service\Competence;
 
-use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -17,6 +16,7 @@ use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Metier\Entity\Db\Referentiel;
 use RuntimeException;
 
 class CompetenceService
@@ -245,11 +245,17 @@ class CompetenceService
     }
 
     /** @return Competence[] */
-    public function getCompetencesByRefentiel(?CompetenceReferentiel $referentiel): array
+    public function getCompetencesByRefentiel(?CompetenceReferentiel $referentiel, ?CompetenceType $type = null): array
     {
         $qb = $this->createQueryBuilder()
+            ->leftjoin('competence.synonymes', 'synonyme')->addSelect('synonyme')
             ->andWhere('competence.referentiel = :referentiel')
             ->setParameter('referentiel', $referentiel);
+
+        if ($type !== null) {
+            $qb = $qb->andWhere('competence.type = :type')->setParameter('type', $type);
+        }
+
         $result = $qb->getQuery()->getResult();
 
         /** @var Competence[] $result */
@@ -413,6 +419,31 @@ class CompetenceService
         });
         return $result;
     }
+
+
+    /** FACADE ********************************************************************************************************/
+
+    //Note
+    // L'import des fiches métiers est "lent" car on fait beaucoup d'appel à la méthode getCompetenceByReferentielAndLibelle
+    // Création d'une méthode pour générer un dictionnaire de compétences [libelle => Compétence]
+    // Quid de la consommation mémoire qui pourrait être bottleneck
+
+    /** @return array<string, Competence> */
+    public function generateDictionnaire(CompetenceReferentiel $referentiel, CompetenceType $type): array
+    {
+        $dictionnaire = [];
+
+        $competences = $this->getCompetencesByRefentiel($referentiel, $type);
+        foreach ($competences as $competence) {
+            $dictionnaire[$competence->getLibelle()] = $competence;
+            foreach ($competence->getSynonymes() as $synonyme) {
+                $dictionnaire[$synonyme->getLibelle()] = $synonyme->getCompetence();
+            }
+        }
+        return $dictionnaire;
+    }
+
+
 
     public function import(string $filepath, CompetenceReferentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
     {
