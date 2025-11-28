@@ -68,12 +68,8 @@ trait HasCompetenceCollectionTrait {
 
     /** Methode pour les macros ***************************************************************************************/
 
-    public function toArrayCompetences(array $parameters = []): string
+    public function toArrayCompetences(): string
     {
-        $on = $parameters[0]??true;
-        if ($on === false)  return "";
-
-
         //recupération des types présents dans la collection
         $competences = $this->getCompetenceListe();
         $types = [];
@@ -139,11 +135,8 @@ EOS;
         return $html;
     }
 
-    public function toArrayCompetencesSpecifiques(array $parameters = []): string
+    public function toArrayCompetencesSpecifiques(): string
     {
-        $on = $parameters[0]??true;
-        if ($on === false)  return "";
-
 
         //recupération des types présents dans la collection
         $competences = $this->getCompetenceListe();

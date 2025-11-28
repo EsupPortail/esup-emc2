@@ -69,11 +69,8 @@ trait HasApplicationCollectionTrait
 
     /** Methode pour les macros ***************************************************************************************/
 
-    public function toArrayApplications(array $parameters = []): string
+    public function toArrayApplications(): string
     {
-        $on = $parameters[0]??true;
-        if ($on === false)  return "";
-
         $applications = $this->getApplicationListe();
         if (empty($applications)) return "";
 

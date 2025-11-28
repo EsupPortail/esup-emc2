@@ -181,11 +181,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @noinspection PhpUnused */
-    public function toStringResume(array $parameters = []): string
+    public function toStringResume(): string
     {
-        $on = $parameters[0] ?? true;
-        if ($on === false) return "";
-
         $html = <<<EOS
 <h2>Résumé</h2>
 
@@ -251,11 +248,8 @@ EOS;
      * Utiliser dans la macro FICHE_METIER#MISSIONS_PRINCIPALES
      * @noinspection PhpUnused
      */
-    public function getMissionsAsList(array $parameters = []): string
+    public function getMissionsAsList(): string
     {
-        $on = $parameters[0]??true;
-        if ($on === false OR empty($this->getMissions()))  return "";
-
         $texte = "<h2> Mission·s principale·s</h2>";
         foreach ($this->getMissions() as $mission) {
             $texte .= "<h3 class='mission-principale'>" . $mission->getMission()->getLibelle() . "</h3>";
@@ -354,11 +348,8 @@ EOS;
 
 
     /** @noinspection PhpUnused */
-    public function toStringRaison(array $parameters = []): string
+    public function toStringRaison(): string
     {
-        $on = $parameters[0]??true;
-        if ($on === false OR $this->raison === null)  return "";
-
         $texte  = "<h2>Raison d'être métier dans l'établissement</h2>";
         $texte .= $this->raison;
 
@@ -366,12 +357,9 @@ EOS;
     }
 
     /** @noinspection PhpUnused */
-    public function toStringThematiques(array $parameters = []): string
+    public function toStringThematiques(): string
     {
-        $on = $parameters[0]??true;
-        if ($on === false) return "";
-
-            /** @var ThematiqueElement[] $thematiques */
+        /** @var ThematiqueElement[] $thematiques */
         $thematiques = $this->thematiques->toArray();
         $thematiques = array_filter($thematiques, function (ThematiqueElement $a) {
             return $a->estNonHistorise() && $a->getType()->estNonHistorise();
@@ -409,11 +397,8 @@ EOS;
     }
 
     /** @noinspection PhpUnused */
-    public function toStringTendances(array $parameters = []): string
+    public function toStringTendances(): string
     {
-        $on = $parameters[0]??true;
-        if ($on === false) return "";
-
         /** @var TendanceElement[] $tendances */
         $tendances = $this->tendances->toArray();
         $tendances = array_filter($tendances, function (TendanceElement $a) {
