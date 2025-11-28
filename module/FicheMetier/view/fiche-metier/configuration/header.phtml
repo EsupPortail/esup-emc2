@@ -44,7 +44,7 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             onclick="location.href='<?php echo $this->url('fiche-metier/configuration/competence', [], [], true); ?>'">
         Compétences par défaut
     </button>
-        <?php if (isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) AND $parametres[FicheMetierParametres::DISPLAY_APPLICATION]?->getValeur() === true) : ?>
+        <?php if (isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) AND $parametres[FicheMetierParametres::DISPLAY_APPLICATION]?->getValeur() === "true") : ?>
         <button class="nav-link <?php if ($selected === "application") echo " active "; ?>"
                 id="application-tab"
                 data-bs-toggle="tab" data-bs-target="#application"
