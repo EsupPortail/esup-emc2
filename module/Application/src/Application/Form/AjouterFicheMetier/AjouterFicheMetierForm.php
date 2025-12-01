@@ -119,7 +119,11 @@ class AjouterFicheMetierForm extends Form {
 
         $dictionnaire = [];
         foreach ($fichesMetiers as $ficheMetier) {
-            $familles = $ficheMetier->getMetier()->getFamillesProfessionnelles();
+            if ($ficheMetier->getFamilleProfessionnelle()) {
+                $famille = $ficheMetier->getFamilleProfessionnelle();
+                $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
+            }
+            $familles = $ficheMetier->getMetier()?$ficheMetier->getMetier()->getFamillesProfessionnelles():[];
             foreach ($familles as $famille) {
                 $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
             }
@@ -131,11 +135,13 @@ class AjouterFicheMetierForm extends Form {
             /** @var FicheMetier $fiche */
             foreach ($listing as $fiche) {
                 $references = [];
-                foreach ($fiche->getMetier()->getReferences() as $reference) {
-                    $references[] = $reference->getTitre();
+                if ($fiche->getMetier()) {
+                    foreach ($fiche->getMetier()->getReferences() as $reference) {
+                        $references[] = $reference->getTitre();
+                    }
+                    $str_references = implode(", ", $references);
+                    $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . (!empty($references) ? " (" . $str_references . ")" : "");
                 }
-                $str_references = implode(", ", $references);
-                $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . (!empty($references)?" (".$str_references.")":"") ;
             }
             $array = [
                 'label' => $clef,
@@ -169,7 +175,7 @@ class AjouterFicheMetierForm extends Form {
             return (
                 $a->estNonHistorise() AND
                 $a->isEtatActif(FicheMetierEtats::ETAT_VALIDE) AND
-                ($a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe())));
+                ($a->getMetier() AND $a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe())));
         });
 
         $options = [];
