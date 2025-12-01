@@ -20,9 +20,9 @@ class NiveauEnveloppeForm extends Form {
             'type' => Select::class,
             'name' => 'borne_inferieure',
             'options' => [
-                'label' => "Niveau le plus bas <span title='Champ obligatoire'></span>:",
+                'label' => "Niveau le plus élevé <span title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
-                'empty_option' => 'Sélectionner le niveau le plus bas ...',
+                'empty_option' => 'Sélectionner le niveau le plus élevé ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
@@ -35,9 +35,9 @@ class NiveauEnveloppeForm extends Form {
             'type' => Select::class,
             'name' => 'borne_superieure',
             'options' => [
-                'label' => "Niveau le plus haut <span title='Champ obligatoire'></span>:",
+                'label' => "Niveau le plus bas <span title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
-                'empty_option' => 'Sélectionner le niveau le plus élevé ...',
+                'empty_option' => 'Sélectionner le niveau le plus bas ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
@@ -97,12 +97,12 @@ class NiveauEnveloppeForm extends Form {
                     'name' => Callback::class,
                     'options' => [
                         'messages' => [
-                            Callback::INVALID_VALUE => "La borne inférieure est incompatible avec la borne supérieure",
+                            Callback::INVALID_VALUE => "La borne supérieure est incompatible avec la borne inférieure",
                         ],
                         'callback' => function ($value, $context = []) {
                             $niveau_bas = $this->niveaux[((int) $context["borne_inferieure"])]->getNiveau();
                             $niveau_haut = $this->niveaux[((int) $context["borne_superieure"])]->getNiveau();
-                            return ($niveau_bas >= $niveau_haut);
+                            return ($niveau_bas <= $niveau_haut);
                         },
                     ],
                 ]],
@@ -113,12 +113,12 @@ class NiveauEnveloppeForm extends Form {
                     'name' => Callback::class,
                     'options' => [
                         'messages' => [
-                            Callback::INVALID_VALUE => "La borne supérieure est incompatible avec la borne inférieure",
+                            Callback::INVALID_VALUE => "La borne inférieure est incompatible avec la borne supérieure",
                         ],
                         'callback' => function ($value, $context = []) {
                             $niveau_bas = $this->niveaux[((int) $context["borne_inferieure"])]->getNiveau();
                             $niveau_haut = $this->niveaux[((int) $context["borne_superieure"])]->getNiveau();
-                            return ($niveau_bas >= $niveau_haut);
+                            return ($niveau_bas <= $niveau_haut);
                         },
                     ],
                 ]],
