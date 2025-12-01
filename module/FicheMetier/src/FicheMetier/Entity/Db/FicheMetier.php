@@ -372,10 +372,10 @@ EOS;
     /** @noinspection PhpUnused */
     public function toStringRaison(): string
     {
-        $texte  = "<h2>Raison d'être métier dans l'établissement</h2>";
-        $texte .= $this->raison;
-
-        return $texte;
+        if ($this->raison === null) {
+            return "Aucune raison communiquée";
+        }
+        return $this->raison;
     }
 
     /** @noinspection PhpUnused */

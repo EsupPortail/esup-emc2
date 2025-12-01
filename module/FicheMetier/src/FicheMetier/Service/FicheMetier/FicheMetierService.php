@@ -544,7 +544,7 @@ class FicheMetierService
         ];
     }
 
-    public function exporter(?FicheMetier $fichemetier): string
+    public function     exporter(?FicheMetier $fichemetier): string
     {
         $displayResume = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RESUME);
         $displayRaison = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RAISON);

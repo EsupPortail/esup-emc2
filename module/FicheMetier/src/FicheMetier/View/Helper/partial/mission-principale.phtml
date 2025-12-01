@@ -20,6 +20,7 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
 <?php else: ?>
     <div>
         <h3 class="mission-libelle"> <?php echo $mission->getLibelle(); ?> </h3>
+        <?php echo $mission->printReference(); ?>
 
         <div class="row">
             <div class="col-md-8">

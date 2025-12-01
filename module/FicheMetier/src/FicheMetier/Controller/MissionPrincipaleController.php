@@ -6,6 +6,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
+use DateTime;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
@@ -24,6 +25,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
 {
@@ -35,6 +37,7 @@ class MissionPrincipaleController extends AbstractActionController
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
 
     use ImportationFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
@@ -96,7 +99,7 @@ class MissionPrincipaleController extends AbstractActionController
         return new ViewModel([
             'mission' => $mission,
             'modification' => true,
-            'ficheMetier' => $ficheMetier??null,
+            'ficheMetier' => $ficheMetier ?? null,
             'fichesmetiers' => $mission->getListeFicheMetier(),
             'fichespostes' => $mission->getListeFichePoste(),
             'retour' => $retour,
@@ -369,6 +372,12 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function importerAction(): ViewModel
     {
+        $header_id = 'Id_Mission';
+        $header_libelle = 'Libellé';
+        $header_familles = 'Familles professionnelles';
+        $header_niveau = 'Niveau';
+        $header_complement = 'Complément';
+
         $separateur = '|';
 
         $form = $this->getImportationForm();
@@ -376,75 +385,123 @@ class MissionPrincipaleController extends AbstractActionController
 
         $request = $this->getRequest();
 
+        $data = null;
         $missions = [];
-        $error = "";
-        $warning = "";
-        $info = "";
+        $error = [];
+        $warning = [];
+        $info = [];
+
+        $filename = null;
+        $filepath = null;
 
         if ($request->isPost()) {
             $data = $request->getPost();
-            $file = $request->getFiles();
+            $mode = ($data['mode'] === 'import')?'import':'preview';
+            $files = $request->getFiles()->toArray();
+            $file = !empty($files)?current($files):null;
+
+            $filename = $data['filename']??null;
+            $filepath = $data['filepath']??null;
+
+            if (($file === null OR $file['tmp_name'] === "") AND $filepath === null) {
+                $error[] = "Aucun fichier fourni";
+            } else {
+                if ($filepath === null) {
+                    $filepath = '/tmp/import_mission_' . (new DateTime())->getTimestamp() . '.csv';
+                    $filename = $file['name'];
+                    copy($file['tmp_name'], $filepath);
+                }
+            }
+
             $form->setData($data);
-            if ($data['mode'] and $file['fichier']['tmp_name']) {
+            if ($data['mode'] and $filepath) {
                 $mode = $data['mode'];
                 if (!in_array($mode, ['preview', 'import'])) {
-                    $error .= "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
+                    $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
                 }
 
-                $fichier_path = $file['fichier']['tmp_name'];
-                $json = $this->getFichierService()->readCSV($fichier_path, true, $separateur);
-                $position = 1;
+                $json = $this->getFichierService()->readCSV($filepath, true, $separateur);
+                $array = $json;
 
-                foreach ($json as $row) {
-                    $position++;
-                    try {
-                        [$mission, $debug] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $position);
-                        $missions[] = $mission;
-                        if (isset($debug['info'])) $info.= (($info !== '')?'<br>':'') . implode("<br>",$debug['info']);
-                        if (isset($debug['warning'])) $warning.= (($warning !== '')?'<br>':'') . implode("<br>",$debug['warning']);
-                        if (isset($debug['error'])) $error .= (($error !== '')?'<br>':'') . implode("<br>",$debug['error']);
-                    } catch (Exception $e) {
-                        if ($error !== '') $error.= '<br>';
-                        $error.= $e->getMessage();
-                    }
+                // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////////
+                $header = [];
+                foreach ($array[0] as $key => $value) {
+                    $header[] = $key;
                 }
+                $hasIdMission = in_array($header_id, $header);
+                if (!$hasIdMission) $error[] = "La colonne obligatoire [" . $header_id . "] est manquante";
+                $hasLibelle = in_array($header_libelle, $header);
+                if (!$hasLibelle) $error[] = "La colonne obligatoire [" . $header_libelle . "] est manquante";
+                $hasFamilles = in_array($header_familles, $header);
+                if (!$hasFamilles) $warning[] = "La colonne facultative [" . $header_familles . "] est manquante";
+                $hasNiveau = in_array($header_niveau, $header);
+                if (!$hasNiveau) $warning[] = "La colonne facultative [" . $header_niveau . "] est manquante";
+                $hasComplement = in_array($header_complement, $header);
+                if (!$hasComplement) $warning[] = "La colonne facultative [" . $header_complement . "] est manquante";
 
-                if ($mode === 'import') {
-                    /** @var Mission $mission */
-                    foreach ($missions as $mission) {
-                        //famille professionnelle
-                        foreach ($mission->getFamillesProfessionnelles() as $famille) {
-                            $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
-                            if ($exist) {
-                                $mission->removeFamilleProfessionnelle($famille);
-                                $mission->addFamilleProfessionnelle($exist);
-                            } else {
-                                $this->getFamilleProfessionnelleService()->create($famille);
+                $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
+                if ($referentiel === null)  $error[] = "Le référentiel n'a pas pu être récupéré.";
+
+
+                if ($hasIdMission and $hasLibelle and $referentiel !== null) {
+                    $position = 1;
+
+                    foreach ($json as $row) {
+                        $position++;
+                        try {
+                            [$mission, $debug] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $referentiel, $position);
+                            $missions[] = $mission;
+                            if (isset($debug['info'])) {
+                                foreach ($debug['info'] as $line) { $info[] = $line; }
                             }
+                            if (isset($debug['warning'])) {
+                                foreach ($debug['warning'] as $line) { $warning[] = $line; }
+                            }
+                            if (isset($debug['error'])) {
+                                foreach ($debug['error'] as $line) { $error[] = $line; }
+                            }
+                        } catch (Exception $e) {
+                            if ($error !== '') $error[] = $e->getMessage();
                         }
-                        //niveaux
-                        if ($mission->getNiveau()) {
-                            $this->getNiveauEnveloppeService()->create($mission->getNiveau());
-                        }
-                        //activite
-                        $activites = [];
-                        foreach ($mission->getActivites() as $activite) {
-                            $activites[$activite->getOrdre()] = $activite->getLibelle();
-                        }
-                        $mission->clearActivites();
-                        //mission
-                        $this->getMissionPrincipaleService()->create($mission);
+                    }
 
-                        foreach ($activites as $ordre => $libelle) {
-                            $activite = new MissionActivite();
-                            $activite->setLibelle($libelle);
-                            $activite->setMission($mission);
-                            $activite->setOrdre($ordre);
-                            $this->getMissionActiviteService()->create($activite);
-                            $mission->addMissionActivite($activite);
-                        }
-                        $this->getMissionPrincipaleService()->update($mission);
+                    if ($mode === 'import') {
+                        /** @var Mission $mission */
+                        foreach ($missions as $mission) {
+                            //famille professionnelle
+                            foreach ($mission->getFamillesProfessionnelles() as $famille) {
+                                $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
+                                if ($exist) {
+                                    $mission->removeFamilleProfessionnelle($famille);
+                                    $mission->addFamilleProfessionnelle($exist);
+                                } else {
+                                    $this->getFamilleProfessionnelleService()->create($famille);
+                                }
+                            }
+                            //niveaux
+                            if ($mission->getNiveau()) {
+                                $this->getNiveauEnveloppeService()->create($mission->getNiveau());
+                            }
+                            //activite
+                            $activites = [];
+                            foreach ($mission->getActivites() as $activite) {
+                                $activites[$activite->getOrdre()] = $activite->getLibelle();
+                            }
+                            $mission->clearActivites();
+                            //mission
+                            $this->getMissionPrincipaleService()->create($mission);
 
+                            foreach ($activites as $ordre => $libelle) {
+                                $activite = new MissionActivite();
+                                $activite->setLibelle($libelle);
+                                $activite->setMission($mission);
+                                $activite->setOrdre($ordre);
+                                $this->getMissionActiviteService()->create($activite);
+                                $mission->addMissionActivite($activite);
+                            }
+                            $this->getMissionPrincipaleService()->update($mission);
+
+                        }
                     }
                 }
             }
@@ -458,38 +515,11 @@ class MissionPrincipaleController extends AbstractActionController
             'info' => $info,
             'warning' => $warning,
             'error' => $error,
+
+            'referentiels' => $this->getReferentielService()->getReferentiels(),
+            'data' => $data,
+            'filepath' => $filepath,
+            'filename' => $filename,
         ]);
     }
-
-    /** LEFTOVERS ACTIVITE_CONTROLLER **********************/
-
-//    public function initialiserNiveauxAction() : Response
-//    {
-//        $activites = $this->getActiviteService()->getActivites();
-//        foreach ($activites as $activite) {
-//            if ($activite->getNiveaux() === null) {
-//                $inferieure = null;
-//                $superieure = null;
-//                /** @var FicheMetierActivite $ficheMetier */
-//                foreach ($activite->getFichesMetiers() as $ficheMetier) {
-//                    $niveaux = $ficheMetier->getFiche()->getMetier()->getNiveaux();
-//                    if ($niveaux) {
-//                        if ($inferieure === null OR $niveaux->getBorneInferieure() < $inferieure) $inferieure = $niveaux->getBorneInferieure();
-//                        if ($superieure === null OR $niveaux->getBorneSuperieure() > $superieure) $superieure = $niveaux->getBorneSuperieure();
-//                    }
-//                }
-//                if ($inferieure !== null AND $superieure !== null) {
-//                    $niveaux = new NiveauEnveloppe();
-//                    $niveaux->setBorneInferieure($inferieure);
-//                    $niveaux->setBorneSuperieure($superieure);
-//                    $niveaux->setDescription("Recupérer de l'ancien système de niveau");
-//                    $this->getNiveauEnveloppeService()->create($niveaux);
-//                    $activite->setNiveaux($niveaux);
-//                    $this->getActiviteService()->update($activite);
-//                }
-//            }
-//        }
-//
-//        return $this->redirect()->toRoute('activite');
-//    }
 }

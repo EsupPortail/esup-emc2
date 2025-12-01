@@ -63,6 +63,8 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
             <td class="col-md-6">
                 <?php echo $mission->getLibelle(); ?>
                 <br>
+                <?php echo $mission->printReference(); ?>
+                <br>
                 <span style="color: #4b4b4b;">
                     <?php echo count($mission->getActivites()); ?> activité·s
                 </span>

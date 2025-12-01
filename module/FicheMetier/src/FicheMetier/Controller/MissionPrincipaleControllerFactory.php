@@ -16,6 +16,7 @@ use FicheReferentiel\Form\Importation\ImportationForm;
 use Fichier\Service\Fichier\FichierService;
 use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Metier\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -40,6 +41,7 @@ class MissionPrincipaleControllerFactory
          * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauEnveloppeService $niveauEnveloppeService
+         * @var ReferentielService $referentielService
          */
         $applicationElementService = $container->get(ApplicationElementService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -49,6 +51,7 @@ class MissionPrincipaleControllerFactory
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
+        $referentielService = $container->get(ReferentielService::class);
 
         /**
          * @var ImportationForm $importationForm
@@ -74,6 +77,7 @@ class MissionPrincipaleControllerFactory
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
+        $controller->setReferentielService($referentielService);
         $controller->setImportationForm($importationForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);

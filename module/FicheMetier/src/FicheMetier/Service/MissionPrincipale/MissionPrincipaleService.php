@@ -12,6 +12,7 @@ use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Entity\Db\Referentiel;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use RuntimeException;
 
@@ -65,11 +66,6 @@ class MissionPrincipaleService
             ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
             ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
             ->leftJoin('mission.activites', 'activite')->addSelect('activite')
-
-            //            ->leftJoin('mission.applications', 'applicationelement')->addSelect('applicationelement')
-            //            ->leftJoin('applicationelement.application', 'application')->addSelect('application')
-            //            ->leftJoin('mission.competences', 'competenceelement')->addSelect('competenceelement')
-            //            ->leftJoin('competenceelement.competence', 'competence')->addSelect('competence')
         ;
         return $qb;
     }
@@ -104,15 +100,6 @@ class MissionPrincipaleService
     }
 
 
-    public function getMissionsHavingCompetence(?Competence $competence)
-    {
-        $qb = $this->createQueryBuilder()
-            ->leftJoin('mission.competences', 'competence')->addSelect('competence')
-            ->andWhere('competence.id = :competenceId')->setParameter('competenceId', $competence->getId());
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
     public function getMissionPrincipaleByLibelle(?string $libelle): ?Mission
     {
         $qb = $this->createQueryBuilder()
@@ -123,6 +110,19 @@ class MissionPrincipaleService
         } catch (NonUniqueResultException $e) {
             // todo probablement ajouter la notion de référentiel ...
             throw new RuntimeException("Plusieurs [".Mission::class."] partagent le même libellé [".$libelle."]", -1, $e."]");
+        }
+        return $result;
+    }
+
+    public function getMissionPrincipaleByReference(Referentiel $referentiel, string $reference): ?Mission
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('mission.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
+            ->andWhere('mission.reference = :reference')->setParameter('reference', $reference);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Mission::class."] partagent la même référence [".$referentiel->getLibelleCourt()."-".$reference."]", -1, $e);
         }
         return $result;
     }
@@ -214,7 +214,7 @@ class MissionPrincipaleService
     }
 
     /** @return array (?Mission, string[], array) * */
-    public function createOneWithCsv($json, string $separateur = '|', ?int $position = null): array
+    public function createOneWithCsv($json, string $separateur = '|', ?Referentiel $referentiel = null, ?int $position = null ): array
     {
         $debugs = [
             'info' => [],
@@ -229,9 +229,21 @@ class MissionPrincipaleService
         if (!isset($json['Libellé']) or trim($json['Libellé']) === '') {
             throw new RuntimeException("La colonne obligatoire [Libellé] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
         } else $libelle = trim($json['Libellé']);
+        if (!isset($json['Id_Mission']) or trim($json['Id_Mission']) === '') {
+            throw new RuntimeException("La colonne obligatoire [Id_Mission] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+        } else $idOrig = trim($json['Id_Mission']);
 
-        $mission = new Mission();
+
+        /*Recupération ou creation */
+
+        $mission = $this->getMissionPrincipaleByReference($referentiel, $json['Id_Mission']);
+        if ($mission === null) {
+            $mission = new Mission();
+        }
+
         $mission->setLibelle($libelle);
+        $mission->setReferentiel($referentiel);
+        $mission->setReference($idOrig);
 
         /* ACTIVITES **************************************************************************************************/
         if (isset($json['Activités associées'])) {

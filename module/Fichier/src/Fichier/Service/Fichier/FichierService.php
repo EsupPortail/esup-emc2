@@ -156,6 +156,12 @@ class FichierService
     public function readCSV(string $fichier_path, bool $explodeMultiline = false, string $separator = '|'): array
     {
         $handle = fopen($fichier_path, "r");
+
+        $header = fgetcsv($handle, null, ";");
+        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+        $header[0] = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header[0]);
+        $header = array_map('trim', $header);
+
         $array = [];
         while ($content = fgetcsv($handle, 0, ";")) {
             $all = implode($separator, $content);
@@ -168,21 +174,19 @@ class FichierService
             $array[] = $content;
         }
 
-        $header = $array[0];
-        $data = array_splice($array, 1);
-
         $jsonData = [];
-        foreach ($data as $item) {
+        foreach ($array as $item) {
             $jsonItem = [];
-            foreach ($header as $key => $value) {
+            for ($position = 0; $position < count($header); $position++) {
+                $key = $header[$position];
                 if ($explodeMultiline) {
-                    if (strstr($item[$key], PHP_EOL)) {
-                        $jsonItem[$value] = explode(PHP_EOL, $item[$key]);
+                    if (strstr($item[$position], PHP_EOL)) {
+                        $jsonItem[$key] = explode(PHP_EOL, $item[$position]);
                     } else {
-                        $jsonItem[$value] = $item[$key];
+                        $jsonItem[$key] = $item[$position];
                     }
                 } else {
-                    $jsonItem[$value] = $item[$key];
+                    $jsonItem[$key] = $item[$position];
                 }
             }
             $jsonData[] = $jsonItem;

@@ -2,13 +2,11 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasReferenceInterface;
+use Application\Entity\Db\Traits\HasReferenceTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
-use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
-use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Metier\Entity\Db\Interface\HasFamillesProfessionnellesInterface;
 use Metier\Entity\Db\Trait\HasFamillesProfessionnellesTrait;
@@ -16,10 +14,11 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Mission implements HistoriqueAwareInterface,
-    HasFamillesProfessionnellesInterface
+    HasFamillesProfessionnellesInterface, HasReferenceInterface
 {
     use HistoriqueAwareTrait;
     use HasFamillesProfessionnellesTrait;
+    use HasReferenceTrait;
 
     private ?int $id = null;
     private ?string $libelle = null;
