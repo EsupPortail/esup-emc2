@@ -42,6 +42,7 @@ $modules = [
     'UnicaenObservation',
     'UnicaenContact',
 
+    'Referentiel',
     'Agent',
     'MissionSpecifique',
     'Structure',
