@@ -226,6 +226,12 @@ $formats = [
         <?php endforeach; ?>
     </div>
 
+    <?php foreach ($fiche->getTendances() as $tendance) : ?>
+        <strong><?php echo $tendance->getType()->getLibelle(); ?></strong>
+        <?php echo $tendance->getTexte(); ?>
+        <br>
+    <?php endforeach; ?>
+
 
     <!--    --><?php //$metier = $fiche->getMetier(); ?>
     <!--    <hr>-->

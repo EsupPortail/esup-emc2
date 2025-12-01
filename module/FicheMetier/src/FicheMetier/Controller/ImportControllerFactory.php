@@ -14,6 +14,8 @@ use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheMetier\Service\TendanceElement\TendanceElementService;
+use FicheMetier\Service\TendanceType\TendanceTypeService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Reference\ReferenceService;
@@ -50,6 +52,8 @@ class ImportControllerFactory
          * @var MissionActiviteService $missionActiviteService
          * @var ReferenceServiceAwareTrait $referenceService
          * @var ReferentielService $referentielService
+         * @var TendanceElementService $tendanceElementService
+         * @var TendanceTypeService $tendanceTypeService
          */
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -66,6 +70,8 @@ class ImportControllerFactory
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $referenceService = $container->get(ReferenceService::class);
         $referentielService = $container->get(ReferentielService::class);
+        $tendanceElementService = $container->get(TendanceElementService::class);
+        $tendanceTypeService = $container->get(TendanceTypeService::class);
 
         /**
          * @var FicheMetierImportationForm $ficheMetierImportationForm
@@ -88,6 +94,8 @@ class ImportControllerFactory
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);
+        $controller->setTendanceElementService($tendanceElementService);
+        $controller->setTendanceTypeService($tendanceTypeService);
         $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
 
         return $controller;

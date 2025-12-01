@@ -15,12 +15,16 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Entity\Db\TendanceElement;
+use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
+use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Metier\Entity\Db\FamilleProfessionnelle;
@@ -48,6 +52,8 @@ class ImportController extends AbstractActionController
     use MissionPrincipaleServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
+    use TendanceElementServiceAwareTrait;
+    use TendanceTypeServiceAwareTrait;
 
     use FicheMetierImportationFormAwareTrait;
 
@@ -109,6 +115,7 @@ class ImportController extends AbstractActionController
                     }
                     $missions = [];
                     $elements = [];
+                    $tendances = [];
                     foreach ($fiches as $fiche) {
                         foreach ($fiche->getMissions() as $mission) {
                             $missions[] = $mission;
@@ -119,6 +126,11 @@ class ImportController extends AbstractActionController
                         }
                         $fiche->clearCompetences();
 
+                        foreach ($fiche->getTendances() as $tendance) {
+                            $tendances[] = $tendance;
+                        }
+                        $fiche->clearTendances();
+
                         //todo attention au update
                         $this->getFicheMetierService()->create($fiche);
 
@@ -126,11 +138,18 @@ class ImportController extends AbstractActionController
                             $this->getFicheMetierMissionService()->deepCreate($mission);
                             $fiche->addMission($mission);
                         }
-                        $this->getFicheMetierService()->update($fiche);
+                        //$this->getFicheMetierService()->update($fiche);
                         foreach ($elements as $element) {
                             $this->getCompetenceElementService()->create($element);
                             $fiche->addCompetenceElement($element);
                         }
+                        //$this->getFicheMetierService()->update($fiche);
+                        foreach ($tendances as $tendance) {
+                            $tendance->setFicheMetier($fiche);
+                            $this->getTendanceElementService()->create($tendance);
+                            $fiche->addTendance($tendance);
+                        }
+                        //$this->getFicheMetierService()->update($fiche);
 
                         $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
                         $this->getFicheMetierService()->update($fiche);
@@ -279,6 +298,8 @@ class ImportController extends AbstractActionController
 
     public function readAsRmfp($data, string $filepath, int $verbosity = 0) : array
     {
+        $warning = [];
+
         /** Préparation pour le traitement des compétences */
         $rmfp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('RMFP');
         $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
@@ -288,13 +309,17 @@ class ImportController extends AbstractActionController
         $dictionnaireConnaissances = $this->getCompetenceService()->generateDictionnaire($rmfp, $tConnaissance);
         $dictionnaireSavoirFaire = $this->getCompetenceService()->generateDictionnaire($rmfp, $tsavoirfaire);
         $dictionnaireSavoirEtre = $this->getCompetenceService()->generateDictionnaire($rmfp, $tsavoiretre);
+        $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
+        $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
+        if ($tendanceImpact === null) { $warning[] = "Aucune type de tendance [".TendanceType::IMPACT."] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte"; }
+        if ($tendanceFacteur === null) { $warning[] = "Aucune type de tendance [".TendanceType::FACTEUR."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
 
         $mode = ($data['mode'] === 'import')?'import':'preview';
         $info[] = "Mode activé [".$mode."]";
 
         $debut = (new DateTime())->getTimestamp();
 
-        $warning = [];
+
 
         $csvFile = fopen($filepath, "r");
         // lecture du header + position colonne
@@ -313,6 +338,7 @@ class ImportController extends AbstractActionController
             $positionIntitule   = array_search("Intitulé", $header);
             $positionDefinition = array_search("Définition synthétique de l'ER", $header);
             $positionFamille    = array_search("Famille", $header);
+
 
 
             //lecture des fiches
@@ -388,8 +414,6 @@ class ImportController extends AbstractActionController
 
                 /** COMPETENCES ***************************************************************************************/
 
-
-
                 //todo ajouter le type pour eviter les homonymies
                 //todo ajouter un boolean pour la recherche parmi les synonymes
 
@@ -433,8 +457,20 @@ class ImportController extends AbstractActionController
                 }
 //                $this->getFicheMetierService()->update($fiche);
 
+                /** TENDANCE ******************************************************************************************/
 
-
+                if ($tendanceFacteur AND isset($raw["Tendance / évolution"]) AND trim($raw["Tendance / évolution"]) !== "") {
+                    $facteur = new TendanceElement();
+                    $facteur->setType($tendanceFacteur);
+                    $facteur->setTexte(trim($raw["Tendance / évolution"]));
+                    $fiche->addTendance($facteur);
+                }
+                if ($tendanceImpact AND isset($raw["Impact sur l'ER"]) AND trim($raw["Impact sur l'ER"]) !== "") {
+                    $facteur = new TendanceElement();
+                    $facteur->setType($tendanceImpact);
+                    $facteur->setTexte(trim($raw["Impact sur l'ER"]));
+                    $fiche->addTendance($facteur);
+                }
                 $fiches[] = $fiche;
 
             }

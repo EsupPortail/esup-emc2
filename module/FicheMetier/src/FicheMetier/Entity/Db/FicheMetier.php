@@ -151,6 +151,28 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->codesEmploiType->add($codeEmploiType);
     }
 
+    /** @return TendanceElement[] */
+    public function getTendances(): array
+    {
+        $tendances = [];
+        foreach ($this->tendances as $tendance) {
+            if ($tendance->estNonHistorise()) {
+                $tendances[] = $tendance;
+            }
+        }
+        return $tendances;
+    }
+
+    public function addTendance(TendanceElement $tendance): void
+    {
+        $this->tendances->add($tendance);
+    }
+
+    public function clearTendances(): void
+    {
+        $this->tendances->clear();
+    }
+
 
     /** FONCTION POUR MACRO *******************************************************************************************/
 
