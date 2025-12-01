@@ -134,7 +134,10 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                 <ul>
                     <li>Les colonnes obligatoires sont désignées par l'icone <span class="icon icon-obligatoire"></span>.</li>
                     <li>Le séparateur dans les listes est <code>|</code>. Par exemple la liste "Rigueur", "Rigoureux" et "Faire preuve de rigueur" sera représentée par <code>Rigueur|Rigoureux|Faire preuve de rigueur</code>.</li>
+                    <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong></li>
                 </ul>
+
+            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_competences.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de compétences</a>
         </div>
     </div>
 </div>
