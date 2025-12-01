@@ -44,7 +44,7 @@ foreach ($tendancesElements as $tendancesElement) {
             <thead>
             <tr>
                 <th class="col-md-4"> Libellé </th>
-                <th class="col-md-<?php echo ($editable)?7:8; ?>">
+                <th class="col-md-<?php echo ($editable)?7:8; ?>">Description</th>
                 <?php if ($editable) : ?>
                     <th class="col-md-1"> Action </th>
                 <?php endif; ?>
@@ -55,7 +55,7 @@ foreach ($tendancesElements as $tendancesElement) {
             <?php foreach ($tendancesTypes as $tendanceType): ?>
                 <?php if ($editable || $tendanceType->isObligatoire() ||  isset($elements[$tendanceType->getCode()])) : ?>
                 <tr>
-                    <td>
+                    <td data-column-id="Libellé">
                         <span>
                             <?php echo $tendanceType->getLibelle(); ?>
                             <?php if ($tendanceType->isObligatoire()): ?>
@@ -66,7 +66,7 @@ foreach ($tendancesElements as $tendancesElement) {
                             <span data-bs-toggle="tooltip" data-bs-html="true" class="icon icon-information" title="<?php echo $tendanceType->getDescription(); ?>"></span>
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td data-column-id="Description">
                         <?php if (isset($elements[$tendanceType->getCode()])) : ?>
                             <?php if ($elements[$tendanceType->getCode()]->getTexte() !== null) : ?>
                                 <?php echo $elements[$tendanceType->getCode()]->getTexte(); ?>
@@ -76,7 +76,7 @@ foreach ($tendancesElements as $tendancesElement) {
                         <?php endif; ?>
                     </td>
                     <?php if ($editable) : ?>
-                        <td class="action">
+                        <td data-column-id="Action" class="action">
                             <?php /** @see \FicheMetier\Controller\TendanceElementController::modifierAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/tendance-element/modifier', ['fiche-metier'=>$fichemetier->getId(), 'tendance-type' => $tendanceType->getId()],[], true); ?>"
                                class="ajax-modal" data-event="modification"
