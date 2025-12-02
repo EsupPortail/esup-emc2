@@ -96,4 +96,10 @@ class Referentiel implements HistoriqueAwareInterface
         return $this->fichesmetiers->toArray();
     }
 
+    /** FACADE **************************************/
+
+    public function printLabel(): string
+    {
+        return "<span class='badge' style='background:".$this->getCouleur()."'>".$this->getLibelleCourt()."</span> ". $this->getLibelleLong();
+    }
 }

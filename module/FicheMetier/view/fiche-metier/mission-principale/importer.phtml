@@ -3,7 +3,6 @@
 /**
  * @see \FicheMetier\Controller\MissionPrincipaleController::importerAction()
  * @var string $separateur
- * @var ImportationForm $form
  * @var Mission[] $missions
  *
  * @var Referentiel[] $referentiels
@@ -16,7 +15,6 @@
  */
 
 use FicheMetier\Entity\Db\Mission;
-use FicheReferentiel\Form\Importation\ImportationForm;
 use Referentiel\Entity\Db\Referentiel;
 
 $this->headTitle('Importation de missions principales');
@@ -132,11 +130,9 @@ $this->headTitle('Importation de missions principales');
                 <li><code>Libellé</code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> : le
                     libellé de la mission principale,
                 <li><code>Activités associées</code> : les différentes activités composant la mission,</li>
-                <li><code>Familles professionnelles</code> : les familles doivent correspondre au libellé de celles déclarées
-                    sinon une nouvelle famille sera créée, </li>
+                <li><code>Familles professionnelles</code> : la liste des familles professionnelles rattachées à la mission, </li>
                 <li><code>Niveau</code> : le niveau doit correspondre à un niveau de carrière déclaré,
-                <li><code>Complément</code> : complément textuel permettant une identification de la mission (par
-                    exemple : code fonction, code metier, ...)
+                <li><code>Codes Fiche Métier</code> : la liste des codes des fiches métiers incluant la mission,
                 </li>
             </ul>
             <span class="icon icon-attention"></span>

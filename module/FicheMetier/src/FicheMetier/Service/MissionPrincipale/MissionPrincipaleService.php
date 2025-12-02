@@ -19,6 +19,7 @@ class MissionPrincipaleService
 {
     use ProvidesObjectManager;
     use FamilleProfessionnelleServiceAwareTrait;
+//    use FicheMetierServiceAwareTrait;
     use NiveauServiceAwareTrait;
 
     /** GESTION DES ENTITES  ******************************************************************************************/
@@ -64,7 +65,10 @@ class MissionPrincipaleService
         $qb = $this->getObjectManager()->getRepository(Mission::class)->createQueryBuilder('mission')
             ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
             ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
-            ->leftJoin('mission.activites', 'activite')->addSelect('activite');
+            ->leftJoin('mission.activites', 'activite')->addSelect('activite')
+            ->leftJoin('mission.famillesProfessionnelles', 'famille')->addSelect('famille')
+            ->leftJoin('mission.referentiel', 'referentiel')->addSelect('referentiel')
+        ;
         return $qb;
     }
 
@@ -122,6 +126,27 @@ class MissionPrincipaleService
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs [" . Mission::class . "] partagent la même référence [" . $referentiel->getLibelleCourt() . "-" . $reference . "]", -1, $e);
         }
+        return $result;
+    }
+
+    /** @return Mission[]*/
+    public function getMissionsPrincipalesWithFiltre(array $params = []): array
+    {
+        $qb = $this->createQueryBuilder();
+        if (isset($params['referentiel']) AND $params['referentiel'] !== '') {
+            $referentielId = $params['referentiel'];
+            $qb = $qb->andWhere('referentiel.id = :referentiel')->setParameter('referentiel', $referentielId);
+        }
+        if (isset($params['famille']) AND $params['famille'] !== '') {
+            $familleId = $params['famille'];
+            $qb = $qb->andWhere('famille.id = :famille')->setParameter('famille', $familleId);
+        }
+        if (isset($params['histo']) AND $params['histo'] !== '') {
+            if ($params['histo'] == 0) $qb = $qb->andWhere('mission.histoDestruction IS NULL');
+            if ($params['histo'] == 1) $qb = $qb->andWhere('mission.histoDestruction IS NOT NULL');
+        }
+
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 
@@ -307,8 +332,18 @@ class MissionPrincipaleService
         }
 
         /* COMPLEMENT *************************************************************************************************/
-        if (isset($json['Complément']) and trim($json['Complément']) !== '') {
-            $mission->setComplement(trim($json['Complément']));
+        if (isset($json['Codes Fiche Métier']) and trim($json['Codes Fiche Métier']) !== '') {
+            $mission->setCodesFicheMetier(trim($json['Codes Fiche Métier']));
+            $codes = explode($separateur, trim($json['Codes Fiche Métier']));
+//            foreach ($codes as $code) {
+//                $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
+//                if ($fichemetier === null) {
+//                    $debugs['warning'][] = "Aucune fiche metier identifiée [".$referentiel->getLibelleCourt()."|".$code."]";
+//
+//                } else {
+//                    $this->getFicheMetierService()->addMission($fichemetier, $mission);
+//                }
+//            }
         }
 
         /** SOURCE ****************************************************************************************************/
@@ -347,9 +382,9 @@ class MissionPrincipaleService
 
         $texte = "<span class='mission' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
 
-        if ($mission->getComplement() !== null) {
-            $texte .= "&nbsp;" . "<span class='badge'>"
-                . $mission->getComplement()
+        if ($mission->getCodesFicheMetier() !== null) {
+            $texte .= "&nbsp;" . "<span class='badge'>".
+                $mission->getCodesFicheMetier()
                 . "</span>";
         }
 

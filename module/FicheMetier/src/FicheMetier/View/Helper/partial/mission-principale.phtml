@@ -90,10 +90,15 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                             Aucun niveau indiqué
                         <?php endif; ?>
                     </dd>
-                    <?php if ($mission->getComplement()) : ?>
-                        <dt class="col-md-4"> Autres </dt>
+                    <?php if ($mission->getCodesFicheMetier()) : ?>
+                        <dt class="col-md-4"> Codes Fiche Métier </dt>
                         <dd class="col-md-8">
-                            <?php echo $mission->getComplement(); ?>
+                            <?php $codes = explode('|', $mission->getCodesFicheMetier()); ?>
+                            <ul>
+                                <?php foreach ($codes as $code) : ?>
+                                    <li> <?php echo $code; ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </dd>
                     <?php endif; ?>
                 </dl>

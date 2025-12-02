@@ -22,7 +22,7 @@ class Mission implements HistoriqueAwareInterface,
 
     private ?int $id = null;
     private ?string $libelle = null;
-    private ?string $complement = null;
+    private ?string $codesFicheMetier = null;
 
     /** Composition de la mission */
     private ?NiveauEnveloppe $niveau = null;
@@ -112,14 +112,14 @@ class Mission implements HistoriqueAwareInterface,
         $this->activites->clear();
     }
 
-    public function getComplement(): ?string
+    public function getCodesFicheMetier(): ?string
     {
-        return $this->complement;
+        return $this->codesFicheMetier;
     }
 
-    public function setComplement(?string $complement): void
+    public function setCodesFicheMetier(?string $codesFicheMetier): ?string
     {
-        $this->complement = $complement;
+        return $this->codesFicheMetier = $codesFicheMetier;
     }
 
     public function getSourceString(): ?string

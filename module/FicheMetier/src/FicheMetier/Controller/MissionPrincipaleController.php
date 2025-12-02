@@ -46,10 +46,14 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $missions = $this->getMissionPrincipaleService()->getMissionsPrincipales();
+        $params = $this->params()->fromQuery();
+        $missions = $this->getMissionPrincipaleService()->getMissionsPrincipalesWithFiltre($params);
 
         return new ViewModel([
             'missions' => $missions,
+            'referentiels' => $this->getReferentielService()->getReferentiels(),
+            'familles' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles(),
+            'params' => $params,
         ]);
     }
 
@@ -378,7 +382,7 @@ class MissionPrincipaleController extends AbstractActionController
         $header_libelle = 'Libellé';
         $header_familles = 'Familles professionnelles';
         $header_niveau = 'Niveau';
-        $header_complement = 'Complément';
+        $header_codes = 'Codes Fiche Métier';
 
         $separateur = '|';
 
@@ -435,8 +439,8 @@ class MissionPrincipaleController extends AbstractActionController
                 if (!$hasFamilles) $warning[] = "La colonne facultative [" . $header_familles . "] est manquante";
                 $hasNiveau = in_array($header_niveau, $header);
                 if (!$hasNiveau) $warning[] = "La colonne facultative [" . $header_niveau . "] est manquante";
-                $hasComplement = in_array($header_complement, $header);
-                if (!$hasComplement) $warning[] = "La colonne facultative [" . $header_complement . "] est manquante";
+                $hasCodesFichesMetiers = in_array($header_codes, $header);
+                if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . $header_codes . "] est manquante";
 
                 $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
                 if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";

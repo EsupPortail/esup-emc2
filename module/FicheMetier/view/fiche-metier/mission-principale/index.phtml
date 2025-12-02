@@ -2,10 +2,15 @@
 
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use Referentiel\Entity\Db\Referentiel;
 
 /**
  * @see \FicheMetier\Controller\MissionPrincipaleController::indexAction()
  * @var Mission[] $missions
+ * @var Referentiel[] $referentiels
+ * @var FamilleProfessionnelle[] $familles
+ * @var array $params
  */
 
 $this->headTitle('Missions principales');
@@ -23,6 +28,69 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
 <h1 class="page-header">
     Missions principales
 </h1>
+
+<!-- Filtre ----------------------------------------------------------------------------------------------------------->
+<div class="card">
+    <div class="card-header bg-default">
+        <span class="icon icon-filtrer"></span>
+        Filtre de recherche des missions principales
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url('mission-principale', [], [], true); ?>">
+        <div class="row">
+            <div class="col-md-10">
+                <!-- fitres -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="referentiel">Référentiel :</label>
+                        <select id="referentiel" name="referentiel" class="form-control selectpicker" data-live-search="true">
+                            <option value="">Peu importe</option>
+                            <?php foreach ($referentiels as $referentiel) : ?>
+                                <option value="<?php echo $referentiel->getId(); ?>" data-content="<?php echo $referentiel->printLabel(); ?>"
+                                        <?php if ($params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
+                                >
+                                    <?php echo $referentiel->getLibelleLong(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="famille">Famille professionnelle :</label>
+                        <select id="famille" name="famille" class="form-control selectpicker" data-live-search="true">
+                            <option value="">Peu importe</option>
+                            <?php foreach ($familles as $famille) : ?>
+                                <option value="<?php echo $famille->getId(); ?>"
+                                        <?php if ($params['famille'] == $famille->getId()) echo 'selected'; ?>
+                                >
+                                    <?php echo $famille->getLibelle(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="histo">Historisation :</label>
+                        <select id="histo" name="histo" class="form-control selectpicker">
+                            <option value="">Peu importe</option>
+                            <option value="0" <?php if ($params['histo'] == 0) echo 'selected'; ?>>Non historisée</option>
+                            <option value="1" <?php if ($params['histo'] == 1) echo 'selected'; ?>>Historisée</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" id="filter">
+                    <span class="icon icon-filtrer"></span>
+                    Filtrer
+                </button>
+                <button class="btn btn-primary" id="clear">
+                    <span class="icon icon-gommer"></span>
+                    Remise à zéro
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
 
 <!-- Boutons d'actions ------------------------------------------------------------------------------------------------>
 
@@ -163,5 +231,11 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
                 {targets: [4], orderable: false}
             ]
         });
+    });
+
+    $('button#clear').click(function(e) {
+        e.preventDefault();
+        console.log("Clicked");
+        window.location.href = '?';
     });
 </script>
