@@ -13,18 +13,17 @@ use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
-use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 
 class CompetenceController extends AbstractActionController
@@ -32,7 +31,6 @@ class CompetenceController extends AbstractActionController
     use CompetenceServiceAwareTrait;
     use CompetenceDisciplineServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
-    use CompetenceReferentielServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use CorpsServiceAwareTrait;
@@ -40,6 +38,7 @@ class CompetenceController extends AbstractActionController
     use GradeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
@@ -357,7 +356,7 @@ class CompetenceController extends AbstractActionController
         }
 
         return new ViewModel([
-            'referentiels' => $this->getCompetenceReferentielService()->getCompetencesReferentiels(),
+            'referentiels' => $this->getReferentielService()->getReferentiels(),
             'competences' => $result['competences']??[],
             'info' => $info,
             'warning' => $warning,

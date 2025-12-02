@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Entity\Db\Traits;
+namespace Referentiel\Entity\Db\Traits;
 
-use Metier\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Referentiel;
 
 trait HasReferenceTrait
 {
@@ -31,8 +31,9 @@ trait HasReferenceTrait
 
     public function printReference(): string
     {
-        $texte  = "<span class='badge'>";
-        $texte .= ($this->getReferentiel()?$this->getReferentiel()->getLibelleCourt():"Aucun référentiel");
+        $referentiel = $this->getReferentiel();
+        $texte  = "<span class='badge' style='background:".($referentiel?$referentiel->getCouleur():"grey")."'>";
+        $texte .= ($referentiel?$referentiel->getLibelleCourt():"Aucun référentiel");
         $texte .= " - ";
         $texte .= ($this->getReference()??"Aucune référence");
         $texte .= "</span>";

@@ -2,14 +2,14 @@
 
 namespace FicheMetier\Entity\Db;
 
-use Application\Entity\Db\Interfaces\HasReferenceInterface;
-use Application\Entity\Db\Traits\HasReferenceTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Metier\Entity\Db\Interface\HasFamillesProfessionnellesInterface;
 use Metier\Entity\Db\Trait\HasFamillesProfessionnellesTrait;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 

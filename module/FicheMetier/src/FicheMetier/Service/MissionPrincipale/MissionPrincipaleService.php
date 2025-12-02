@@ -7,13 +7,12 @@ use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Element\Entity\Db\Competence;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Entity\Db\Referentiel;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
 
 class MissionPrincipaleService
@@ -65,8 +64,7 @@ class MissionPrincipaleService
         $qb = $this->getObjectManager()->getRepository(Mission::class)->createQueryBuilder('mission')
             ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
             ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
-            ->leftJoin('mission.activites', 'activite')->addSelect('activite')
-        ;
+            ->leftJoin('mission.activites', 'activite')->addSelect('activite');
         return $qb;
     }
 
@@ -109,7 +107,7 @@ class MissionPrincipaleService
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             // todo probablement ajouter la notion de référentiel ...
-            throw new RuntimeException("Plusieurs [".Mission::class."] partagent le même libellé [".$libelle."]", -1, $e."]");
+            throw new RuntimeException("Plusieurs [" . Mission::class . "] partagent le même libellé [" . $libelle . "]", -1, $e . "]");
         }
         return $result;
     }
@@ -122,7 +120,7 @@ class MissionPrincipaleService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".Mission::class."] partagent la même référence [".$referentiel->getLibelleCourt()."-".$reference."]", -1, $e);
+            throw new RuntimeException("Plusieurs [" . Mission::class . "] partagent la même référence [" . $referentiel->getLibelleCourt() . "-" . $reference . "]", -1, $e);
         }
         return $result;
     }
@@ -214,7 +212,7 @@ class MissionPrincipaleService
     }
 
     /** @return array (?Mission, string[], array) * */
-    public function createOneWithCsv($json, string $separateur = '|', ?Referentiel $referentiel = null, ?int $position = null ): array
+    public function createOneWithCsv($json, string $separateur = '|', ?Referentiel $referentiel = null, ?int $position = null): array
     {
         $debugs = [
             'info' => [],
@@ -335,8 +333,8 @@ class MissionPrincipaleService
     private function missionOptionify(Mission $mission): array
     {
 //        $texte  = $mission->getLibelle();
-        $texte  = "<span class='libelle_mission shorten'>".MissionPrincipaleService::tronquerTexte($mission->getLibelle(),180)."</span>";
-        $texte .= "<span class='libelle_mission full' style='display: none'>".$mission->getLibelle()."</span>";
+        $texte = "<span class='libelle_mission shorten'>" . MissionPrincipaleService::tronquerTexte($mission->getLibelle(), 180) . "</span>";
+        $texte .= "<span class='libelle_mission full' style='display: none'>" . $mission->getLibelle() . "</span>";
         $description = null;
 
         if (!empty($mission->getActivites())) {

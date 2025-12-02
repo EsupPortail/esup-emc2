@@ -16,7 +16,7 @@ use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Metier\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
 
 class CompetenceService
@@ -145,7 +145,9 @@ class CompetenceService
     {
         if ($type === null) {
             $competences = $this->getCompetences();
-            $competences = array_filter($competences, function (Competence $competence) { return $competence->getType() AND $competence->getType()->getCode() !== CompetenceType::CODE_SPECIFIQUE;});
+            $competences = array_filter($competences, function (Competence $competence) {
+                return $competence->getType() and $competence->getType()->getCode() !== CompetenceType::CODE_SPECIFIQUE;
+            });
         } else {
             $competences = $this->getCompetencesByType($type);
         }
@@ -245,7 +247,7 @@ class CompetenceService
     }
 
     /** @return Competence[] */
-    public function getCompetencesByRefentiel(?CompetenceReferentiel $referentiel, ?CompetenceType $type = null): array
+    public function getCompetencesByRefentiel(?Referentiel $referentiel, ?CompetenceType $type = null): array
     {
         $qb = $this->createQueryBuilder()
             ->leftjoin('competence.synonymes', 'synonyme')->addSelect('synonyme')
@@ -266,7 +268,7 @@ class CompetenceService
         return $competences;
     }
 
-    public function getCompetenceByRefentiel(CompetenceReferentiel $referentiel, string $id): ?Competence
+    public function getCompetenceByRefentiel(Referentiel $referentiel, string $id): ?Competence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.referentiel = :referentiel')
@@ -299,7 +301,7 @@ class CompetenceService
 
     /** FACADE ****************************************************************************************************/
 
-    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id, bool $persist = true): Competence
+    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, Referentiel $referentiel, string $id, bool $persist = true): Competence
     {
         if ($id === -1) {
             $id = $this->getCompetenceMaxIdByRefentiel($referentiel) + 1;
@@ -388,7 +390,7 @@ class CompetenceService
         return $result;
     }
 
-    private function getCompetenceMaxIdByRefentiel(CompetenceReferentiel $referentiel)
+    private function getCompetenceMaxIdByRefentiel(Referentiel $referentiel)
     {
         $competences = $this->getCompetencesByRefentiel($referentiel);
         $max = 0;
@@ -429,7 +431,7 @@ class CompetenceService
     // Quid de la consommation mémoire qui pourrait être bottleneck
 
     /** @return array<string, Competence> */
-    public function generateDictionnaire(CompetenceReferentiel $referentiel, CompetenceType $type): array
+    public function generateDictionnaire(Referentiel $referentiel, CompetenceType $type): array
     {
         $dictionnaire = [];
 
@@ -444,8 +446,7 @@ class CompetenceService
     }
 
 
-
-    public function import(string $filepath, CompetenceReferentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
+    public function import(string $filepath, Referentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
     {
         $handle = fopen($filepath, "r");
 
@@ -539,7 +540,8 @@ class CompetenceService
 
         /** Reading competence ****************************************************************************************/
 
-        $competences = []; $oldSynonymes = [];
+        $competences = [];
+        $oldSynonymes = [];
         if ($positionId !== false and $positionLibelle !== false and $positionType !== false) {
             $nLine = 1;
             foreach ($data as $item) {
@@ -659,8 +661,6 @@ class CompetenceService
 
         return $results;
     }
-
-
 
 
 }

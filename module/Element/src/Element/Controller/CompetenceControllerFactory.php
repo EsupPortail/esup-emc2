@@ -18,6 +18,7 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 use Structure\Service\Structure\StructureService;
 
 class CompetenceControllerFactory
@@ -33,7 +34,6 @@ class CompetenceControllerFactory
         /**
          * @var CompetenceService $competenceService
          * @var CompetenceDisciplineService $competenceDisciplineService
-         * @var CompetenceReferentielService $competenceReferentielService
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          * @var CompetenceElementService $competenceElementService
@@ -42,12 +42,12 @@ class CompetenceControllerFactory
          * @var GradeService $gradeService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauService $maitriseNiveauService
+         * @var ReferentielService $referentielService
          * @var StructureService $structureService
          */
         $competenceService = $container->get(CompetenceService::class);
         $competenceDisciplineService = $container->get(CompetenceDisciplineService::class);
         $maitriseNiveauService = $container->get(NiveauService::class);
-        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -55,6 +55,7 @@ class CompetenceControllerFactory
         $ficherMetierService = $container->get(FicheMetierService::class);
         $gradeService = $container->get(GradeService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $referentielService = $container->get(ReferentielService::class);
         $structureService = $container->get(StructureService::class);
 
         /**
@@ -70,7 +71,6 @@ class CompetenceControllerFactory
         $controller->setCompetenceThemeService($competenceThemeService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCompetenceElementService($competenceElementService);
-        $controller->setCompetenceReferentielService($competenceReferentielService);
         $controller->setCorpsService($corpsService);
         $controller->setFicheMetierService($ficherMetierService);
         $controller->setGradeService($gradeService);
@@ -78,6 +78,7 @@ class CompetenceControllerFactory
         $controller->setNiveauService($maitriseNiveauService);
         $controller->setStructureService($structureService);
         $controller->setCompetenceForm($competenceForm);
+        $controller->setReferentielService($referentielService);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
         return $controller;
     }

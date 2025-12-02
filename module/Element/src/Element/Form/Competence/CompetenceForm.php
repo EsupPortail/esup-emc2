@@ -5,7 +5,6 @@ namespace Element\Form\Competence;
 use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Laminas\Form\Element\Button;
@@ -15,13 +14,14 @@ use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class CompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
     use CompetenceDisciplineServiceAwareTrait;
-    use CompetenceReferentielServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
 
     public function init(): void
     {
@@ -87,7 +87,7 @@ class CompetenceForm extends Form {
             'options' => [
                 'label' => "Référentiel de compétence :",
                 'empty_option' => "Sélectionner un référentiel pour la compétence ...",
-                'value_options' => $this->getCompetenceReferentielService()->getCompetencesReferentielsAsOptions(),
+                'value_options' => $this->getReferentielService()->getReferentielsAsOptions(),
             ],
             'attributes' => [
                 'id' => 'referentiel',

@@ -2,6 +2,11 @@
 
 namespace Referentiel\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Element\Entity\Db\Competence;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\Mission;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -15,7 +20,16 @@ class Referentiel implements HistoriqueAwareInterface
     private ?string $couleur = null;
     private ?string $description = null;
 
-    //linkage vers les autres elements
+    private Collection $missions;
+    private Collection $competences;
+    private Collection $fichesmetiers;
+
+    public function __construct()
+    {
+        $this->missions = new ArrayCollection();
+        $this->competences = new ArrayCollection();
+        $this->fichesmetiers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -67,5 +81,19 @@ class Referentiel implements HistoriqueAwareInterface
         $this->description = $description;
     }
 
+    /** @return Mission[] */
+    public function getMissions(): array {
+        return $this->missions->toArray();
+    }
+
+    /** @return Competence[] */
+    public function getCompetences(): array {
+        return $this->competences->toArray();
+    }
+
+    /** @return FicheMetier[] */
+    public function getFichesMetiers(): array {
+        return $this->fichesmetiers->toArray();
+    }
 
 }

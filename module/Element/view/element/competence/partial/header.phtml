@@ -22,7 +22,6 @@ $canSubstituer  = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
 $canCompetenceDisciplineIndex = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_INDEX));
 $canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
 $canCompetenceTypeIndex = $this->isAllowed(CompetencetypePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_INDEX));
-$canCompetenceReferentielIndex = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_INDEX));
 $canRechercherAgents = $canVoir;
 
 
@@ -79,13 +78,6 @@ $this->headTitle("Compétences");
                 Accéder aux types</a>
         <?php endif; ?>
 
-        <?php if ($canCompetenceReferentielIndex) : ?>
-            <?php /** @see \Element\Controller\CompetenceReferentielController::indexAction() */ ?>
-            <a href="<?php echo $this->url('element/competence-referentiel', [], [], true); ?>"
-               class="btn btn-secondary">
-                <span class="icon icon-lister"></span>
-                Accéder aux référentiels</a>
-        <?php endif; ?>
         <?php if ($canRechercherAgents) : ?>
             <?php /** @see \Element\Controller\CompetenceController::rechercherAgentsAction() */ ?>
             <a href="<?php echo $this->url('element/competence/rechercher-agents', [], [], true); ?>"

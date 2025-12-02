@@ -17,7 +17,7 @@
         <many-to-one target-entity="Element\Entity\Db\CompetenceTheme"  field="theme">
             <join-column name="theme_id" />
         </many-to-one>
-        <many-to-one target-entity="Element\Entity\Db\CompetenceReferentiel"  field="referentiel">
+        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel"  field="referentiel">
             <join-column name="referentiel_id" />
         </many-to-one>
         <many-to-one target-entity="Element\Entity\Db\CompetenceDiscipline"  field="discipline">

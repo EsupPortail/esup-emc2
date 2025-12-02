@@ -21,7 +21,6 @@ use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
@@ -37,6 +36,7 @@ use Metier\Entity\Db\Metier;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -49,7 +49,7 @@ class FicheMetierService
     use ApplicationElementServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
-    use CompetenceReferentielServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
     use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
@@ -223,8 +223,7 @@ class FicheMetierService
 
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -515,7 +514,7 @@ class FicheMetierService
         $competences_index = array_search('COMPETENCES_ID', $array[0]);
         $competences_ids = explode(FicheMetierService::REFERENS_SEP, $array[1][$competences_index]);
 
-        $referens = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('REFERENS');
+        $referens = $this->getReferentielService()->getReferentielByLibelleCourt('REFERENS3');
         if ($referens === null) {
             throw new RuntimeException("<strong>Aucun référentiel de compétence [REFERENS].</strong><br>Celui-ci est nécessaire pour l'import de fiche CSV ReferensIII.");
         }
@@ -544,7 +543,7 @@ class FicheMetierService
         ];
     }
 
-    public function     exporter(?FicheMetier $fichemetier): string
+    public function exporter(?FicheMetier $fichemetier): string
     {
         $displayResume = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RESUME);
         $displayRaison = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RAISON);
@@ -586,8 +585,7 @@ class FicheMetierService
     public function getFichesMetiersByMetier(Metier $metier, ?string $raw = null): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('ficheMetier.metier = :metier')->setParameter('metier', $metier)
-        ;
+            ->andWhere('ficheMetier.metier = :metier')->setParameter('metier', $metier);
         if ($raw !== null) $qb->andWhere('ficheMetier.raw = :raw')->setParameter('raw', $raw);
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -600,8 +598,7 @@ class FicheMetierService
             ->join('competenceElement.competence', 'competence')->addSelect('competence')
             ->leftjoin('competence.discipline', 'discipline')->addSelect('discipline')
             ->andWhere('ficheMetier.histoDestruction IS NULL')
-            ->orderby('metier.libelle')
-        ;
+            ->orderby('metier.libelle');
         $qb = $qb->andWhere('competence.discipline = :discipline')->setParameter('discipline', $discipline);
 
         $result = $qb->getQuery()->getResult();

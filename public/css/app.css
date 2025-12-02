@@ -336,3 +336,14 @@ div.alert-danger .fa-exclamation-triangle {
     position: relative;
     /*background: Green;*/
 }
+
+.badge.mission {
+    background: var(--emc2-mission);
+}
+.badge.competence {
+    background: var(--emc2-competence);
+}
+
+.badge.fichemetier {
+    background: var(--emc2-fichemetier);
+}

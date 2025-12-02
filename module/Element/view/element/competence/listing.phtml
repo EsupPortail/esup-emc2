@@ -131,7 +131,7 @@ if ($type !== null) {
             <?php endif; ?>
             <td> <?php echo ($competence->getTheme()) ? $competence->getTheme()->getLibelle() : "Aucun"; ?> </td>
             <td>
-                <?php echo ($competence->getReferentiel()) ? $this->competenceReference($competence) : "Aucun"; ?>
+                <?php echo ($competence->getReferentiel()) ? $competence->getReferentiel()->getLibelleCourt() : "Aucun"; ?>
             </td>
             <td class="action">
                 <?php if ($canVoir): ?>

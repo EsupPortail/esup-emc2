@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Entity\Db\Interfaces;
+namespace Referentiel\Entity\Db\Interfaces;
 
-use Metier\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Referentiel;
 
 interface HasReferenceInterface
 {

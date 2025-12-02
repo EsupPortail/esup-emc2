@@ -19,6 +19,10 @@
     --unistrap-color-main: rgb(55, 104, 155);
     --unistrap-color-dark: rgb(15,64,95);
     --unistrap-color-light: rgb(155, 204, 255);
+
+    --emc2-mission: rgb(129, 1, 1);
+    --emc2-competence: rgb(0, 107, 60);
+    --emc2-fichemetier: rgb(62, 1, 93);
 }
 
 footer div#etablissement {

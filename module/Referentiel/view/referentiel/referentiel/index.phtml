@@ -53,7 +53,16 @@ $this->headTitle("Référentiels");
                 <?php if ($referentiel->getDescription() !== null) : ?>
                     <?php echo $referentiel->getDescription(); ?>
                 <?php else : ?>
-                    <em style="color:grey;">Aucune description</em>
+                    <em style="color:grey;">Aucune description</em><br><br>
+                <?php endif; ?>
+
+                <?php $nbMissions = count($referentiel->getMissions()); ?>
+                <?php if ($nbMissions > 0) : ?>
+                    <span class="badge mission"> <?php echo $nbMissions; ?> mission·s </span>
+                <?php endif; ?>
+                <?php $nbCompetences = count($referentiel->getCompetences()); ?>
+                <?php if ($nbCompetences > 0) : ?>
+                    <span class="badge competence"> <?php echo $nbCompetences; ?> compétence·s </span>
                 <?php endif; ?>
             </td>
             <td class="action">

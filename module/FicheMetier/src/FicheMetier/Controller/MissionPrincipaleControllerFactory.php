@@ -12,11 +12,10 @@ use Element\Service\CompetenceElement\CompetenceElementService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
-use FicheReferentiel\Form\Importation\ImportationForm;
 use Fichier\Service\Fichier\FichierService;
 use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
-use Metier\Service\Referentiel\ReferentielService;
+use Referentiel\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -54,14 +53,12 @@ class MissionPrincipaleControllerFactory
         $referentielService = $container->get(ReferentielService::class);
 
         /**
-         * @var ImportationForm $importationForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var NiveauEnveloppeForm $niveauEnveloppeForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetencesForm
          * @var SelectionnerFamilleProfessionnelleForm $selectionnerFamillesProfessionnellesForm
          */
-        $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -78,7 +75,6 @@ class MissionPrincipaleControllerFactory
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setReferentielService($referentielService);
-        $controller->setImportationForm($importationForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);

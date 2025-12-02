@@ -8,18 +8,18 @@ use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Referentiel;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class ImportService
 {
 
     use CategorieServiceAwareTrait;
     use CompetenceServiceAwareTrait;
-    use CompetenceReferentielServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
@@ -54,7 +54,7 @@ class ImportService
     public function readCompetence(array $header, array $data, string $mode, array &$info, array &$warning, array &$error): array
     {
         $competences = [];
-        $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode("REFERENS3");
+        $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt("REFERENS3");
         $allCompetences = $this->getCompetenceService()->getCompetencesByRefentiel($referentiel);
         if ($referentiel === null) $error[] = "Le référentiel [REFERENS3] n'existe pas.";
         if (in_array("COMPETENCES_ID", $header)) {

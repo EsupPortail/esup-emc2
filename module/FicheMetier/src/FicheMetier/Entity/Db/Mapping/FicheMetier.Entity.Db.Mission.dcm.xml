@@ -31,7 +31,7 @@
         <field name="sourceString" type="text" column="source_string"/>
 
         <!-- HAS REFERENCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <many-to-one target-entity="Metier\Entity\Db\Referentiel"  field="referentiel">
+        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel"  field="referentiel">
             <join-column name="referentiel_id" referenced-column-name="id"/>
         </many-to-one>
         <field name="reference" length="256" column="reference"/>

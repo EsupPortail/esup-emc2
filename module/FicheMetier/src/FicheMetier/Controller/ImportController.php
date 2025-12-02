@@ -9,7 +9,6 @@ use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
@@ -31,7 +30,7 @@ use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 
 class ImportController extends AbstractActionController
@@ -40,7 +39,6 @@ class ImportController extends AbstractActionController
 
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
-    use CompetenceReferentielServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
@@ -301,7 +299,7 @@ class ImportController extends AbstractActionController
         $warning = [];
 
         /** Préparation pour le traitement des compétences */
-        $rmfp = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('RMFP');
+        $rmfp = $this->getReferentielService()->getReferentiel('RMFP');
         $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
         $tsavoiretre = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_COMPORTEMENTALE);
         $tsavoirfaire = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_OPERATIONNELLE);

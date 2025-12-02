@@ -17,7 +17,6 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
-use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -25,7 +24,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
 {
@@ -39,7 +38,6 @@ class MissionPrincipaleController extends AbstractActionController
     use NiveauEnveloppeServiceAwareTrait;
     use ReferentielServiceAwareTrait;
 
-    use ImportationFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -76,7 +74,11 @@ class MissionPrincipaleController extends AbstractActionController
     public function ajouterAction(): Response
     {
         $mission = new Mission();
+        $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
+        $mission->setReferentiel($referentiel);
         $this->getMissionPrincipaleService()->create($mission);
+        $mission->setReference($mission->getId());
+        $this->getMissionPrincipaleService()->update($mission);
 
         return $this->redirect()->toRoute('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true);
     }
@@ -380,8 +382,6 @@ class MissionPrincipaleController extends AbstractActionController
 
         $separateur = '|';
 
-        $form = $this->getImportationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/importer', ['mode' => 'preview', 'path' => null], [], true));
 
         $request = $this->getRequest();
 
@@ -396,14 +396,14 @@ class MissionPrincipaleController extends AbstractActionController
 
         if ($request->isPost()) {
             $data = $request->getPost();
-            $mode = ($data['mode'] === 'import')?'import':'preview';
+            $mode = ($data['mode'] === 'import') ? 'import' : 'preview';
             $files = $request->getFiles()->toArray();
-            $file = !empty($files)?current($files):null;
+            $file = !empty($files) ? current($files) : null;
 
-            $filename = $data['filename']??null;
-            $filepath = $data['filepath']??null;
+            $filename = $data['filename'] ?? null;
+            $filepath = $data['filepath'] ?? null;
 
-            if (($file === null OR $file['tmp_name'] === "") AND $filepath === null) {
+            if (($file === null or $file['tmp_name'] === "") and $filepath === null) {
                 $error[] = "Aucun fichier fourni";
             } else {
                 if ($filepath === null) {
@@ -413,7 +413,6 @@ class MissionPrincipaleController extends AbstractActionController
                 }
             }
 
-            $form->setData($data);
             if ($data['mode'] and $filepath) {
                 $mode = $data['mode'];
                 if (!in_array($mode, ['preview', 'import'])) {
@@ -440,7 +439,7 @@ class MissionPrincipaleController extends AbstractActionController
                 if (!$hasComplement) $warning[] = "La colonne facultative [" . $header_complement . "] est manquante";
 
                 $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
-                if ($referentiel === null)  $error[] = "Le référentiel n'a pas pu être récupéré.";
+                if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
 
 
                 if ($hasIdMission and $hasLibelle and $referentiel !== null) {
@@ -452,13 +451,19 @@ class MissionPrincipaleController extends AbstractActionController
                             [$mission, $debug] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $referentiel, $position);
                             $missions[] = $mission;
                             if (isset($debug['info'])) {
-                                foreach ($debug['info'] as $line) { $info[] = $line; }
+                                foreach ($debug['info'] as $line) {
+                                    $info[] = $line;
+                                }
                             }
                             if (isset($debug['warning'])) {
-                                foreach ($debug['warning'] as $line) { $warning[] = $line; }
+                                foreach ($debug['warning'] as $line) {
+                                    $warning[] = $line;
+                                }
                             }
                             if (isset($debug['error'])) {
-                                foreach ($debug['error'] as $line) { $error[] = $line; }
+                                foreach ($debug['error'] as $line) {
+                                    $error[] = $line;
+                                }
                             }
                         } catch (Exception $e) {
                             if ($error !== '') $error[] = $e->getMessage();
@@ -509,7 +514,6 @@ class MissionPrincipaleController extends AbstractActionController
 
         return new ViewModel([
             'separateur' => $separateur,
-            'form' => $form,
 
             'missions' => $missions,
             'info' => $info,
