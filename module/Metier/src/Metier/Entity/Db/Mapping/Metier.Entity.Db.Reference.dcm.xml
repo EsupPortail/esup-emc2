@@ -9,7 +9,7 @@
         <many-to-one target-entity="Metier\Entity\Db\Metier"  field="metier">
             <join-column name="metier_id" />
         </many-to-one>
-        <many-to-one target-entity="Metier\Entity\Db\Referentiel"  field="referentiel">
+        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel"  field="referentiel">
             <join-column name="referentiel_id" />
         </many-to-one>
         <field name="code"           length="256"      column="code"                 />

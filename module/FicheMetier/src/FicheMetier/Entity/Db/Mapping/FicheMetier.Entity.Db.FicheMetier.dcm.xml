@@ -47,7 +47,7 @@
         <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier" field="thematiques"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\TendanceElement" mapped-by="ficheMetier" field="tendances"/>
 
-        <field name="code" type="text" column="code" nullable="true"/>
+
         <field name="libelle" length="10124" column="libelle" nullable="true"/>
         <many-to-one target-entity="Metier\Entity\Db\FamilleProfessionnelle" field="familleProfessionnelle">
             <join-column name="famille_id" referenced-column-name="id"/>
@@ -60,6 +60,11 @@
 
         <field name="raw" type="text" column="raw" nullable="true"/>
 
+        <!-- HAS REFERENCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel"  field="referentiel">
+            <join-column name="referentiel_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="reference" length="256" column="reference"/>
 
         <!-- Historisation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation" type="datetime" column="histo_creation" nullable="false"/>

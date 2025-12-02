@@ -80,8 +80,8 @@ $metier = $fichemetier->getMetier();
     <?php endif; ?>
     <dt class="col-md-4"> Références</dt>
     <dd class="col-md-8">
-        <?php if ($fichemetier->getCode()): ?>
-            <?php echo $fichemetier->getCode(); ?>
+        <?php if ($fichemetier->getReference()): ?>
+            <?php echo $fichemetier->printReference(); ?>
         <?php endif; ?>
         <?php if ($metier): ?>
             <?php

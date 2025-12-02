@@ -3,7 +3,7 @@
 namespace FicheMetier\Entity\Db;
 
 
-use Metier\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Referentiel;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 

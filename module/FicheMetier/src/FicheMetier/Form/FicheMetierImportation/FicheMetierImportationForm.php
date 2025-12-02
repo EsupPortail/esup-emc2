@@ -8,7 +8,7 @@ use Laminas\Form\Element\File;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class FicheMetierImportationForm extends Form {
 

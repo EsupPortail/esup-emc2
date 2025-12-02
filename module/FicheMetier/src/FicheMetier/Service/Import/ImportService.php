@@ -9,7 +9,7 @@ use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Referentiel;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;

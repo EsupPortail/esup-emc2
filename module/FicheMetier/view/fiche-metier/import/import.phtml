@@ -21,7 +21,7 @@ use Element\Entity\Db\Competence;
 use FicheMetier\Controller\ImportController;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
-use Metier\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Referentiel;
 
 $canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
 
@@ -186,7 +186,7 @@ $formats = [
 
 <?php foreach ($fiches as $fiche) : ?>
 
-    <h3><span class="badge"><?php echo $fiche->getCode(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+    <h3><span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
 
     <?php foreach ($fiche->getMissions() as $mission) : ?>
         <div class="card">

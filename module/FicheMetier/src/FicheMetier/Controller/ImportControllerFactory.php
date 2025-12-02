@@ -6,7 +6,6 @@ use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
@@ -20,10 +19,10 @@ use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Reference\ReferenceService;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
-use Metier\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 
 class ImportControllerFactory
@@ -38,7 +37,6 @@ class ImportControllerFactory
         /**
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
-         * @var CompetenceReferentielService $competenceReferentielService
          * @var CompetenceTypeService $competenceTypeService
          * @var CategorieService $categorieService
          * @var CorrespondanceService $correspondanceService
@@ -57,7 +55,6 @@ class ImportControllerFactory
          */
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
-        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
@@ -81,7 +78,6 @@ class ImportControllerFactory
         $controller = new ImportController();
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);
-        $controller->setCompetenceReferentielService($competenceReferentielService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCorrespondanceService($correspondanceService);
         $controller->setEtatInstanceService($etatInstanceService);

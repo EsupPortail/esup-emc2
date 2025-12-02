@@ -13,6 +13,7 @@
 
         <one-to-many field="missions" target-entity="FicheMetier\Entity\Db\Mission" mapped-by="referentiel"/>
         <one-to-many field="competences" target-entity="Element\Entity\Db\Competence" mapped-by="referentiel"/>
+        <one-to-many field="fichesmetiers" target-entity="FicheMetier\Entity\Db\FicheMetier" mapped-by="referentiel"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     />

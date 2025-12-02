@@ -4,7 +4,7 @@ namespace FicheMetier\Form\Activite;
 
 use FicheMetier\Entity\Db\Activite;
 use Laminas\Hydrator\HydratorInterface;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class ActiviteHydrator implements HydratorInterface
 {

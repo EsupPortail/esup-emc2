@@ -1,11 +1,9 @@
 <?php
 
 use FicheMetier\Entity\Db\Activite;
-use FicheReferentiel\Form\Importation\ImportationForm;
 
 /**
  * @see \FicheMetier\Controller\ActiviteController::importerAction()
- * @var ImportationForm $form
  * @var array $data
  * @var array $file
  * @var Activite[] $activites
@@ -43,7 +41,7 @@ $this->headTitle("Importation d'activité");
             </script>
         <?php endif; ?>
         <div class="fichier"> </div>
-        <?php echo $this->form($form); ?>
+        <?php //echo $this->form($form); ?>
     </div>
     <div class="col-md-6">
         <div class="alert alert-info">

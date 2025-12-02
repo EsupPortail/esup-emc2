@@ -5,12 +5,12 @@ namespace FicheMetier\Service\Import;
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Element\Service\Competence\CompetenceService;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 
 class ImportServiceFactory
 {
@@ -24,14 +24,14 @@ class ImportServiceFactory
         /**
          * @var CategorieService $categorieService
          * @var CompetenceService $competenceService
-         * @var CompetenceReferentielService $competenceReferentielService
+         * @var ReferentielService $competenceReferentielService
          * @var CorrespondanceService $correspondanceService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var MetierService $metierService
          */
         $categorieService = $container->get(CategorieService::class);
         $competenceService = $container->get(CompetenceService::class);
-        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
+        $referentielService = $container->get(ReferentielService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $metierService = $container->get(MetierService::class);
@@ -39,7 +39,7 @@ class ImportServiceFactory
         $service = new ImportService();
         $service->setCategorieService($categorieService);
         $service->setCompetenceService($competenceService);
-        $service->setCompetenceReferentielService($competenceReferentielService);
+        $service->setReferentielService($referentielService);
         $service->setCorrespondanceService($correspondanceService);
         $service->setFamilleProfessionnelleService($familleProfessionnelleService);
         $service->setMetierService($metierService);

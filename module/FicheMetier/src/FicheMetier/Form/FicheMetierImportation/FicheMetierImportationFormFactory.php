@@ -2,7 +2,7 @@
 
 namespace FicheMetier\Form\FicheMetierImportation;
 
-use Metier\Service\Referentiel\ReferentielService;
+use Referentiel\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

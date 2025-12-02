@@ -10,7 +10,7 @@
         <field name="description"   type="text"     column="description"/>
         <field name="raw"           type="text"     column="raw"/>
 
-        <many-to-one target-entity="Metier\Entity\Db\Referentiel" field="referentiel">
+        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel" field="referentiel">
             <join-column name="referentiel_id" referenced-column-name="id"/>
         </many-to-one>
         <field name="idOrig"        length="128" column="id_orig"/>

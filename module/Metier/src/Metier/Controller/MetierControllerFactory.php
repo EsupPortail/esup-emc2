@@ -10,7 +10,7 @@ use Interop\Container\ContainerInterface;
 use Metier\Form\Metier\MetierForm;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
-use Metier\Service\Referentiel\ReferentielService;
+use Referentiel\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

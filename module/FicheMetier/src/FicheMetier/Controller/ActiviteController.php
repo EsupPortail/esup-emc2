@@ -6,25 +6,23 @@ use DateTime;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Form\Activite\ActiviteFormAwareTrait;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
-use FicheReferentiel\Form\Importation\ImportationFormAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class ActiviteController extends AbstractActionController
 {
     use ActiviteServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ActiviteFormAwareTrait;
-    use ImportationFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
         $activites = $this->getActiviteService()->getActivites(true);
 
         return new ViewModel([
-           'activites' => $activites,
+            'activites' => $activites,
         ]);
     }
 
@@ -110,7 +108,8 @@ class ActiviteController extends AbstractActionController
     }
 
     // todo blocage si utilisée
-    public function supprimerAction(): ViewModel {
+    public function supprimerAction(): ViewModel
+    {
 
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $request = $this->getRequest();
@@ -132,19 +131,24 @@ class ActiviteController extends AbstractActionController
         return $vm;
     }
 
-    public function importerAction(): ViewModel {
+    public function importerAction(): ViewModel
+    {
 
-        $form = $this->getImportationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('activite/importer', [ 'path' => null ], [], true));
+//        $form = $this->getImportationForm();
+//        $form->setAttribute('action', $this->url()->fromRoute('activite/importer', ['path' => null], [], true));
 
-        $activites = []; $info = []; $warning = []; $error = [];
+        $activites = [];
+        $info = [];
+        $warning = [];
+        $error = [];
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $continue = true; $referentiel = null;
+            $continue = true;
+            $referentiel = null;
 
             $data = $request->getPost();
-            if (isset($data['referentiel']) AND $data['referentiel'] !== '') {
+            if (isset($data['referentiel']) and $data['referentiel'] !== '') {
                 $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
             }
             if ($referentiel === null) {
@@ -152,29 +156,31 @@ class ActiviteController extends AbstractActionController
                 $continue = false;
             }
             $files = $request->getFiles()->toArray();
-            $file = !empty($files)?current($files):null;
+            $file = !empty($files) ? current($files) : null;
 
-            if ($file['size'] === 0 AND $data['filepath'] === "") {
-                    $error[] = "Fichier non trouvé";
-                    $continue = false;
+            if ($file['size'] === 0 and $data['filepath'] === "") {
+                $error[] = "Fichier non trouvé";
+                $continue = false;
             } else {
                 if ($file['size'] !== 0) {
                     $filepath = '/tmp/import_activites_' . (new DateTime())->getTimestamp() . '.csv';
                     copy($file['tmp_name'], $filepath);
-                    $form->get('filepath')->setValue($filepath);
-                    $form->get('filename')->setValue($file['name']);
+//                    $form->get('filepath')->setValue($filepath);
+//                    $form->get('filename')->setValue($file['name']);
                     $data['filepath'] = $filepath;
                     $data['filename'] = $file['name'];
                 } else {
                     $file['tmp_name'] = $data['filepath'];
-                    $form->get('filepath')->setValue($data['filepath']);
+//                    $form->get('filepath')->setValue($data['filepath']);
                 }
             }
 
             if ($continue) {
 
                 $result = $this->getActiviteService()->readFromCsv($referentiel, $file['tmp_name']);
-                $activites = $result['activités']; $created = $result['created']; $updated = $result['updated'];
+                $activites = $result['activités'];
+                $created = $result['created'];
+                $updated = $result['updated'];
                 $info = array_merge($info, $result['info']);
                 $warning = array_merge($warning, $result['warning']);
                 $error = array_merge($error, $result['error']);
@@ -182,15 +188,16 @@ class ActiviteController extends AbstractActionController
 
 
                 if (isset($data['mode']) and $data['mode'] === 'import') {
-                    $nbCreated = 0; $nbUpdated = 0;
+                    $nbCreated = 0;
+                    $nbUpdated = 0;
                     foreach ($created as $activite) {
                         $this->getActiviteService()->create($activite);
                         $nbCreated++;
                     }
                     if ($nbCreated !== 0) $info[] = $nbCreated . " activité·s crée·s";
                     foreach ($updated as $activite) {
-                            $this->getActiviteService()->update($activite);
-                            $nbUpdated++;
+                        $this->getActiviteService()->update($activite);
+                        $nbUpdated++;
                     }
                     if ($nbUpdated !== 0) $info[] = $nbUpdated . " activité·s mise·s à jour";
                 }
@@ -198,9 +205,8 @@ class ActiviteController extends AbstractActionController
         }
 
         return new ViewModel([
-            'data' => $data??null,
-            'file' => $file??null,
-            'form' => $form,
+            'data' => $data ?? null,
+            'file' => $file ?? null,
             'activites' => $activites,
             'info' => $info,
             'warning' => $warning,

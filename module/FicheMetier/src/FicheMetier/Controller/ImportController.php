@@ -299,7 +299,7 @@ class ImportController extends AbstractActionController
         $warning = [];
 
         /** Préparation pour le traitement des compétences */
-        $rmfp = $this->getReferentielService()->getReferentiel('RMFP');
+        $rmfp = $this->getReferentielService()->getReferentielByLibelleCourt('RMFP'); //todo constante
         $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
         $tsavoiretre = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_COMPORTEMENTALE);
         $tsavoirfaire = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_OPERATIONNELLE);
@@ -360,7 +360,8 @@ class ImportController extends AbstractActionController
                 $fiche = new FicheMetier();
                 $fiche->setRaw(json_encode($raw));
                 $fiche->setLibelle($intitule);
-                $fiche->setCode($code);
+                $fiche->setReference($code);
+                $fiche->setReferentiel($rmfp);
 //                $this->getFicheMetierService()->create($fiche);
 
                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw["Famille"]));

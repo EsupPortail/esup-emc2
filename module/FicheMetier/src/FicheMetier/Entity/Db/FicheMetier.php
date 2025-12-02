@@ -17,6 +17,8 @@ use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
 use Metier\Entity\HasMissionsPrincipalesInterface;
 use Metier\Entity\HasMissionsPrincipalesTrait;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
@@ -24,7 +26,7 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface, HasMissionsPrincipalesInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasReferenceInterface
 {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
@@ -32,9 +34,9 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
     use HasMissionsPrincipalesTrait;
+    use HasReferenceTrait;
 
     private ?int $id = -1;
-    private ?string $code = null;
     private ?string $libelle = null;
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?bool $hasExpertise = false;
@@ -74,16 +76,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setRaw(?string $raw): void
     {
         $this->raw = $raw;
-    }
-
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-
-    public function setCode(?string $code): void
-    {
-        $this->code = $code;
     }
 
     public function getLibelle(): ?string
@@ -129,10 +121,12 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function getCodeEmploiType(): ?CodeEmploiType
     {
         $code = $this->codesEmploiType->toArray();
-        $code = array_filter($code, function(CodeEmploiType $item) { return $item->estNonHistorise();});
+        $code = array_filter($code, function (CodeEmploiType $item) {
+            return $item->estNonHistorise();
+        });
 
         if (count($code) > 1) {
-            throw new RuntimeException("Plusieurs [".CodeEmploiType::class ."] actif simultanément.",-1);
+            throw new RuntimeException("Plusieurs [" . CodeEmploiType::class . "] actif simultanément.", -1);
         }
 
         if (empty($code)) return null;
@@ -147,7 +141,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 
     public function addCodeEmploiType(CodeEmploiType $codeEmploiType): void
     {
-        $code = $this->getCodeEmploiType(); $code->historiser();
+        $code = $this->getCodeEmploiType();
+        $code->historiser();
         $this->codesEmploiType->add($codeEmploiType);
     }
 
@@ -212,30 +207,30 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 EOS;
 
         //metier
-        $html .= "<tr><th>Métier</th><td>".$this->getMetier()->getLibelle()."</td>";
+        $html .= "<tr><th>Métier</th><td>" . $this->getMetier()->getLibelle() . "</td>";
         $html .= "<tr><th>Correspondance</th><td><ul>";
         foreach ($this->getMetier()->getCorrespondances() as $correspondance) {
-            $html .="<li>";
-            $html .= $correspondance->getType()->getLibelleCourt(). " " . $correspondance->getCategorie();
-            $html .="</li>";
+            $html .= "<li>";
+            $html .= $correspondance->getType()->getLibelleCourt() . " " . $correspondance->getCategorie();
+            $html .= "</li>";
         }
-        $html .="</ul></td>";
+        $html .= "</ul></td>";
         $html .= "<tr><th>Famille</th><td><ul>";
         foreach ($this->getMetier()->getFamillesProfessionnelles() as $familleProfessionnelle) {
-            $html .="<li>";
+            $html .= "<li>";
             $html .= $familleProfessionnelle->getLibelle();
-            $html .="</li>";
+            $html .= "</li>";
         }
-        $html .="</ul></td>";
+        $html .= "</ul></td>";
         //$html .= "<tr><th>Code Fonction</th><td>".$this->getMetier()->getLibelle()."</td>";
         $html .= "<tr><th>Référence·s</th><td>";
         foreach ($this->getMetier()->getReferences() as $reference) {
-            $html .="<li>";
-            $html .= $reference->getReferentiel()->getLibelleCourt(). " " . $reference->getCode();
-            $html .="</li>";
+            $html .= "<li>";
+            $html .= $reference->getReferentiel()->getLibelleCourt() . " " . $reference->getCode();
+            $html .= "</li>";
         }
         $html .= "</td>";
-        $html .= "<tr><th>Expertise</th><td>".($this->hasExpertise()?"Oui":"Non")."</td></tr>";
+        $html .= "<tr><th>Expertise</th><td>" . ($this->hasExpertise() ? "Oui" : "Non") . "</td></tr>";
         $html .= "<tr><th>Date de dépôt</th><td>";
         $etat = $this->getEtatActif();
         if ($etat === null) $html .= "État inconnu";
@@ -245,19 +240,19 @@ EOS;
             else {
                 switch ($type->getCode()) {
                     case FicheMetierEtats::ETAT_VALIDE :
-                        $html .= "Validée le ".$etat->getHistoCreation()->format("d/M/Y");
+                        $html .= "Validée le " . $etat->getHistoCreation()->format("d/M/Y");
                         break;
                     case FicheMetierEtats::ETAT_REDACTION :
-                        $html .= "Créée le ".$etat->getHistoCreation()->format("d/M/Y");
+                        $html .= "Créée le " . $etat->getHistoCreation()->format("d/M/Y");
                         break;
                     default :
-                        $html .= "Le ".$etat->getHistoCreation()->format("d/M/Y");
+                        $html .= "Le " . $etat->getHistoCreation()->format("d/M/Y");
                         break;
                 }
             }
         }
         $html .= "</td></tr>";
-        $html .= "<tr><th>Code Fonction</th><td>".($this->getCodeEmploiType()?$this->getCodeEmploiType()->prettyPrint():"N.C.")."</td></tr>";
+        $html .= "<tr><th>Code Fonction</th><td>" . ($this->getCodeEmploiType() ? $this->getCodeEmploiType()->prettyPrint() : "N.C.") . "</td></tr>";
 
 
         $html .= <<<EOS
@@ -266,6 +261,7 @@ EOS;
 
         return $html;
     }
+
     /**
      * Utiliser dans la macro FICHE_METIER#MISSIONS_PRINCIPALES
      * @noinspection PhpUnused
