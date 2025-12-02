@@ -51,11 +51,17 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                             <ul>
                             <?php foreach ($mission->getListeFicheMetier() as $item) : ?>
                                 <li>
-                                    <?php echo $item->getFicheMetier()->getMetier()->getLibelle(); ?>
-                                    <?php $references =  $item->getFicheMetier()->getMetier()->getReferences(); ?>
-                                    <?php foreach ($references as $reference) : ?>
-                                        <?php echo $this->metierReference($reference); ?>
-                                    <?php endforeach; ?>
+                                    <?php if ($item->getFicheMetier()->getLibelle()): ?>
+                                        <?php echo $item->getFicheMetier()->getLibelle(); ?>
+                                    <?php else: ?>
+                                        <?php if ($item->getFicheMetier()->getMetier()): ?>
+                                            <?php echo $item->getFicheMetier()->getMetier()->getLibelle(); ?>
+                                            <?php $references =  $item->getFicheMetier()->getMetier()->getReferences(); ?>
+                                            <?php foreach ($references as $reference) : ?>
+                                                <?php echo $this->metierReference($reference); ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                 </li>
                             <?php endforeach; ?>
                             </ul>

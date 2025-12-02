@@ -59,8 +59,7 @@ $this->headTitle("Référentiels");
                 <?php $nbMissions = count($referentiel->getMissions()); ?>
                 <?php if ($nbMissions > 0) : ?>
                     <a href="<?php echo $this->url('mission-principale', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
-                        <span class="badge mission"> <?php echo $nbMissions; ?> mission·s </span>
-                    </a>
+                        <span class="badge mission"> <?php echo $nbMissions; ?> mission·s </span></a>
                 <?php endif; ?>
                 <?php $nbCompetences = count($referentiel->getCompetences()); ?>
                 <?php if ($nbCompetences > 0) : ?>

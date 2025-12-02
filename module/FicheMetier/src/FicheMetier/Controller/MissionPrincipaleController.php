@@ -510,6 +510,16 @@ class MissionPrincipaleController extends AbstractActionController
                             }
                             $this->getMissionPrincipaleService()->update($mission);
 
+                            // Bricolage pour satisfaire Marseille
+                            $codesFicheMetier = explode('|',$mission->getCodesFicheMetier());
+                            foreach ($codesFicheMetier as $codeFicheMetier) {
+                                $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
+                                if ($fichemetier === null) { $warning[] = "La fiche metier [".$referentiel->getLibelleCourt()."|".$codeFicheMetier."] n'existe pas"; }
+                                else {
+                                    $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                }
+                            }
+
                         }
                     }
                 }

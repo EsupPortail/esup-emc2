@@ -36,6 +36,7 @@ use Metier\Entity\Db\Metier;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
+use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
@@ -272,6 +273,19 @@ class FicheMetierService
         }
 
         return $options;
+    }
+
+    public function getFicheMetierByReferentielAndCode(Referentiel $referentiel, string $code): ?FicheMetier
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ficheMetier.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
+            ->andWhere('ficheMetier.reference = :code')->setParameter('code', $code);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".FicheMetier::class."] partagent la même identification [".$referentiel->getLibelleCourt()."|".$code."]",-1,$e);
+        }
+        return $result;
     }
 
     /** FACADE ********************************************************************************************************/
@@ -614,5 +628,7 @@ class FicheMetierService
         }
         return $results;
     }
+
+
 
 }
