@@ -133,7 +133,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
                     <?php endif; ?>
                     <small>
                         <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getFicheMetier()->getId()], ['force_canonical' => true], true);; ?>"
+                        <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getFicheMetier()->getId()], ['force_canonical' => true], true); ?>"
                            class="action secondary" target="_blank"
                         >
                             <span class="icon icon-voir"></span>
@@ -166,7 +166,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
                     <?php endif; ?>
                     <small>
                         <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getFicheposte()->getId()], ['force_canonical' => true], true);; ?>"
+                        <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getFicheposte()->getId()], ['force_canonical' => true], true); ?>"
                            class="action secondary" target="_blank"
                         >
                             <span class="icon icon-voir"></span>
