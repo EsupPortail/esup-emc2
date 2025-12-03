@@ -26,7 +26,7 @@ use FicheMetier\Entity\Db\Mission;
     <dd class="col-md-8"> <?php echo $competence->getDescription(); ?> </dd>
     <dt class="col-md-4"> Référence </dt>
     <dd class="col-md-8">
-        <?php echo ($competence->getReferentiel())?$this->competenceReference($competence):"Aucun"; ?>
+        <?php echo ($competence->getReferentiel())?$competence->printReference():"Aucun"; ?>
     </dd>
     <dt class="col-md-4"> Fiche·s metier·s </dt>
     <dd class="col-md-8">
