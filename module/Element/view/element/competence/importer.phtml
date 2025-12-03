@@ -2,7 +2,6 @@
 
 /**
  * @see \Element\Controller\CompetenceController::importerAction()
- * @var ImportationForm $form // todo quid de le remplacer par un formulaire sur place ...
  * @var CompetenceReferentiel[] $referentiels
  * @var Competence[] $competences
  * @var array $data
@@ -18,7 +17,6 @@
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceReferentiel;
 use Element\Provider\Privilege\CompetencePrivileges;
-use FicheReferentiel\Form\Importation\ImportationForm;
 
 $this->headTitle("Importation de compétences");
 
@@ -189,6 +187,7 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                 <td> <?php echo $competence->getType() ? $competence->getType()->getLibelle() : "<em>Aucun type</em>"; ?></td>
                 <td> <?php echo $competence->getTheme() ? $competence->getTheme()->getLibelle() : "<em>Aucun theme</em>"; ?></td>
                 <td>
+                    <?php echo $competence->printReference(); ?><br>
                     <?php if ($competence->getDiscipline()) : ?>
                         <strong>Discipline </strong> <?php echo $competence->getDiscipline()->getLibelle(); ?>
                     <?php endif; ?>

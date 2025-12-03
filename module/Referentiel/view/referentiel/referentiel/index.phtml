@@ -63,7 +63,8 @@ $this->headTitle("Référentiels");
                 <?php endif; ?>
                 <?php $nbCompetences = count($referentiel->getCompetences()); ?>
                 <?php if ($nbCompetences > 0) : ?>
-                    <span class="badge competence"> <?php echo $nbCompetences; ?> compétence·s </span>
+                    <a href="<?php echo $this->url('element/competence/listing', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
+                        <span class="badge competence"> <?php echo $nbCompetences; ?> compétence·s </span></a>
                 <?php endif; ?>
                 <?php $nbFichesMetiers = count($referentiel->getFichesMetiers()); ?>
                 <?php if ($nbFichesMetiers > 0) : ?>

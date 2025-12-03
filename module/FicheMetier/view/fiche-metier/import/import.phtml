@@ -219,7 +219,7 @@ $formats = [
                     <?php echo $competence->getLibelle(); ?>
                     <span class="badge"
                           style="background:<?php echo $competence->getReferentiel()->getCouleur(); ?>">
-                        <?php echo $competence->getReferentiel()->getLibelleCourt(); ?><?php echo $competence->getIdSource(); ?>
+                        <?php echo $competence->getReferentiel()->getLibelleCourt(); ?><?php echo $competence->getReference(); ?>
                     </span><br>
                 <?php endforeach; ?>
             </div>

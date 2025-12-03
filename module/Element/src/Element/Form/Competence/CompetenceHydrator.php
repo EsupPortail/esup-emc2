@@ -28,7 +28,7 @@ class CompetenceHydrator implements HydratorInterface
         $data['type'] = ($object->getType()) ? $object->getType()->getId() : null;
         $data['theme'] = ($object->getTheme()) ? $object->getTheme()->getId() : null;
         $data['referentiel'] = ($object->getReferentiel()) ? $object->getReferentiel()->getId() : null;
-        $data['identifiant'] = ($object->getIdSource()) ?? null;
+        $data['identifiant'] = ($object->getReference()) ?? null;
         return $data;
     }
 
@@ -41,7 +41,7 @@ class CompetenceHydrator implements HydratorInterface
     {
         $object->setLibelle($data['libelle']);
         $object->setDescription($data['description']);
-        $object->setIdSource($data['identifiant'] ?? null);
+        $object->setReference($data['identifiant'] ?? null);
 
         $referentiel = null;
         $theme = null;

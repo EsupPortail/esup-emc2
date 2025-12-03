@@ -67,6 +67,7 @@ class CompetenceController extends AbstractActionController
         $types = $this->getCompetenceTypeService()->getCompetencesTypes(false, 'ordre');
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
         $disciplines = $this->getCompetenceDisciplineService()->getCompetencesDisciplines();
+        $referentiels = $this->getReferentielService()->getReferentiels();
 
         $params = $this->params()->fromQuery();
         $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
@@ -81,6 +82,7 @@ class CompetenceController extends AbstractActionController
             'types' => $types,
             'themes' => $themes,
             'disciplines' => $disciplines,
+            'referentiels' => $referentiels,
             'params' => $params,
 
             'type' => $type,
@@ -120,8 +122,7 @@ class CompetenceController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCompetenceService()->create($competence);
-                $competence->setSource("EMC2");
-                $competence->setIdSource($competence->getIdSource() ?? $competence->getId());
+                $competence->setReference($competence->getReference() ?? $competence->getId());
                 $this->getCompetenceService()->update($competence);
             }
         }
@@ -289,7 +290,6 @@ class CompetenceController extends AbstractActionController
                 if (!empty($criteres)) {
                     $agents = $this->getCompetenceElementService()->getAgentsHavingCompetencesWithCriteres($criteres);
                 }
-
                 if ($query['structure']['id']) {
                     $structure = $this->getStructureService()->getStructure($query['structure']['id']);
                     $agents = array_filter($agents, function ($agent) use ($structure) { return $agent->hasAffectationPrincipale($structure); });
@@ -326,7 +326,7 @@ class CompetenceController extends AbstractActionController
             $data = $request->getPost();
             $mode = ($data["mode"] !== "")?$data["mode"]:null;
             if ($mode === null) $error[] = "Aucun mode sélectionné";
-            $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentiel($data["referentiel"]!== ""?$data["referentiel"]:null);
+            $referentiel = $this->getReferentielService()->getReferentiel($data["referentiel"]!== ""?$data["referentiel"]:null);
             if ($referentiel === null) $error[] = "Aucun référentiel sélectionné";
 
             $files = $request->getFiles()->toArray();
@@ -350,8 +350,6 @@ class CompetenceController extends AbstractActionController
             if ($filepath !== null AND $filepath !== "" AND $referentiel !== null AND $mode !== null) {
                 $result = $this->getCompetenceService()->import($filepath, $referentiel, $mode, $info, $warning, $error);
             }
-
-            var_dump(new DateTime());
 
         }
 

@@ -5,7 +5,6 @@ namespace Element\Entity\Db;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
-use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
@@ -22,8 +21,6 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     private ?CompetenceTheme $theme = null;
     private ?string $emploisTypes = null;
     private ?string $raw = null;
-    private ?string $source = null;
-    private ?string $idSource = null;
 
     private Collection $synonymes;
 
@@ -85,28 +82,6 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     public function setTheme(?CompetenceTheme $theme) : void
     {
         $this->theme = $theme;
-    }
-
-    public function getSource(): ?string
-    {
-        return $this->source;
-    }
-
-    public function setSource(string $source): Competence
-    {
-        $this->source = $source;
-        return $this;
-    }
-
-    public function getIdSource(): ?string
-    {
-        return $this->idSource;
-    }
-
-    public function setIdSource(?string $idSource): Competence
-    {
-        $this->idSource = $idSource;
-        return $this;
     }
 
     public function getEmploisTypes(): ?string

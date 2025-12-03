@@ -5,6 +5,7 @@
  * @var CompetenceType[] $types
  * @var CompetenceTheme[] $themes
  * @var CompetenceDiscipline[] $disciplines
+ * @var Referentiel[] $referentiels
  * @var array $params
  * @var ?CompetenceType $type
  * @var Competence[] $competences
@@ -15,6 +16,7 @@ use Element\Entity\Db\CompetenceDiscipline;
 use Element\Entity\Db\CompetenceTheme;
 use Element\Entity\Db\CompetenceType;
 use Element\Provider\Privilege\CompetencePrivileges;
+use Referentiel\Entity\Db\Referentiel;
 
 $canVoir = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
 $canAjouter = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AJOUTER));
@@ -44,7 +46,7 @@ if ($type !== null) {
 </h2>
 
 <?php if ($type === null): ?>
-    <?php echo $this->partial('partial/filtre', ['types' => $types, 'themes' => $themes, 'disciplines' => $disciplines,'params' => $params??null]); ?>
+    <?php echo $this->partial('partial/filtre', ['types' => $types, 'themes' => $themes, 'disciplines' => $disciplines,'referentiels' => $referentiels, 'params' => $params??null]); ?>
 <?php endif; ?>
 
 <table class="table table-condensed table-hover datatable" id="competences-<?php echo $type?->getCode(); ?>">
@@ -72,6 +74,8 @@ if ($type !== null) {
                           data-bs-toggle="tooltip" data-bs-html="true"
                     ></span>
                 <?php endif; ?>
+                <br/>
+                <?php echo $competence->printReference(); ?>
                 <br>
                 <small>
                 <?php $synonymes = $competence->getSynonymes(); ?>

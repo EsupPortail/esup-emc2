@@ -69,7 +69,10 @@ class CompetenceService
         $qb = $this->getObjectManager()->getRepository(Competence::class)->createQueryBuilder('competence')
             ->addSelect('type')->leftJoin('competence.type', 'type')
             ->addSelect('theme')->leftJoin('competence.theme', 'theme')
-            ->addSelect('discipline')->leftJoin('competence.discipline', 'discipline');
+            ->addSelect('discipline')->leftJoin('competence.discipline', 'discipline')
+            ->addSelect('synonyme')->leftJoin('competence.synonymes', 'synonyme')
+            ->addSelect('referentiel')->leftJoin('competence.referentiel', 'referentiel')
+        ;
         return $qb;
     }
 
@@ -103,6 +106,9 @@ class CompetenceService
         }
         if (isset($params['discipline']) and $params['discipline'] !== "") {
             $qb = $qb->andWhere("discipline.id = :discipline")->setParameter('discipline', $params['discipline']);
+        }
+        if (isset($params['referentiel']) and $params['referentiel'] !== "") {
+            $qb = $qb->andWhere("referentiel.id = :referentiel")->setParameter('referentiel', $params['referentiel']);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -220,9 +226,7 @@ class CompetenceService
                     . "&nbsp;" . "<span class='badge'>"
                     . (($type !== null) ? $type->getLibelle() : "Sans type")
                     . "</span>"
-                    . "&nbsp;" . "<span class='badge' style='background: " . (($referentiel !== null) ? $referentiel->getCouleur() : "gray") . "'>"
-                    . (($referentiel !== null) ? $referentiel->getLibelleCourt() : "Sans référentiel") . " - " . $competence->getIdSource()
-                    . "</span>"
+                    . $competence->printReference()
                     . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($competence->getDescription() ?? "Aucune description") . "</span>"
                     . "</span>",
             ],
@@ -263,7 +267,7 @@ class CompetenceService
         /** @var Competence[] $result */
         $competences = [];
         foreach ($result as $item) {
-            $competences[$item->getIdSource()] = $item;
+            $competences[$item->getReference()] = $item;
         }
         return $competences;
     }
@@ -273,7 +277,7 @@ class CompetenceService
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.referentiel = :referentiel')
             ->setParameter('referentiel', $referentiel)
-            ->andWhere('competence.idSource = :id')
+            ->andWhere('competence.reference = :id')
             ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -313,7 +317,7 @@ class CompetenceService
         $competence->setType($type);
         $competence->setTheme($theme);
         $competence->setReferentiel($referentiel);
-        $competence->setIdSource($id);
+        $competence->setReference($id);
         if ($persist) $this->create($competence);
         return $competence;
     }
@@ -413,7 +417,7 @@ class CompetenceService
             $result[] = array(
                 'id' => $competence->getId(),
                 'label' => $competence->getLibelle(),
-                'extra' => ($referentiel === null) ? "<span class='badge' style='background-color: slategray;'>Aucun référentiel</span>" : "<span class='badge' style='background-color: " . $referentiel->getCouleur() . ";'>" . $referentiel->getLibelleCourt() . " #" . $competence->getIdSource() . "</span>",
+                'extra' => ($referentiel === null) ? "<span class='badge' style='background-color: slategray;'>Aucun référentiel</span>" : $competence->printReference(),
             );
         }
         usort($result, function ($a, $b) {
@@ -562,7 +566,7 @@ class CompetenceService
                 }
                 // obligatoire
                 $competence->setReferentiel($referentiel);
-                $competence->setIdSource($id);
+                $competence->setReference($id);
                 $competence->setLibelle(trim($item[$positionLibelle]));
                 $type = $types[$item[$positionType]];
                 $competence->setType($type);
