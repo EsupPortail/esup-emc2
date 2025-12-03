@@ -10,11 +10,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Service\Metier\MetierService;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Metier implements HistoriqueAwareInterface {
+class Metier implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
+    use HasReferenceTrait;
+
 
     private ?int $id = null;
     private ?string $libelle = null;

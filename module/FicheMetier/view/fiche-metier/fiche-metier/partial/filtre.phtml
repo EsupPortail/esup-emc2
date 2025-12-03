@@ -1,10 +1,12 @@
 <?php
 
 /**
+ * @var Referentiel[] $referentiels
  * @var EtatType[] $etatTypes
  * @var array $params
  */
 
+use Referentiel\Entity\Db\Referentiel;
 use UnicaenEtat\Entity\Db\EtatType;
 
 ?>
@@ -19,8 +21,24 @@ use UnicaenEtat\Entity\Db\EtatType;
             <div class="row">
                 <div class="col-md-10">
                     <div class="row">
+                        <!-- REFERENTIEL -->
+                        <div class="col-md-3">
+                            <label for="referentiel">Référentiel :</label>
+                            <select id="referentiel" name="referentiel" class="form-control selectpicker"
+                                    data-live-search="true">
+                                <option value="">Peu importe</option>
+                                <?php foreach ($referentiels as $referentiel) : ?>
+                                    <option value="<?php echo $referentiel->getId(); ?>"
+                                            data-content="<?php echo $referentiel->printLabel(); ?>"
+                                            <?php if ($params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
+                                    >
+                                        <?php echo $referentiel->getLibelleLong(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                         <!-- ETAT -->
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="etat">État de la fiche :</label>
                                 <select id="etat" name="etat" class="selectpicker">
@@ -29,24 +47,11 @@ use UnicaenEtat\Entity\Db\EtatType;
                                         <option
                                                 value="<?php echo $etatType->getId(); ?>"
                                                 data-content='<?php echo $this->etattype($etatType); ?> <?php echo str_replace("'", "", $etatType->getLibelle()); ?>'
-                                            <?php if ($etatType->getId() === $params['etat']) echo " selected "; ?>
+                                                <?php if ($etatType->getId() === $params['etat']) echo " selected "; ?>
                                         >
                                             <?php echo $etatType->getLibelle(); ?>
                                         </option>
                                     <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- EXPERTISE -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="expertise">Sujet à expertise:</label>
-                                <select id="expertise" name="expertise" class="selectpicker">
-                                    <option value="">Pas de sélection</option>
-                                    <option value="1" <?php if ("1" == $params['expertise']) echo " selected "; ?>>Oui
-                                    </option>
-                                    <option value="0" <?php if ("0" == $params['expertise']) echo " selected "; ?>>Non
-                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -70,22 +75,9 @@ use UnicaenEtat\Entity\Db\EtatType;
 
 
 <script>
-    $("form#filtre").on("submit", function (e) {
+    $('button#clear').click(function(e) {
         e.preventDefault();
-    });
-
-    $('button#clear').on("click", function () {
-        window.location.href = 'fiche-metier';
-    });
-
-    $('button#filter').on("click", function () {
-        let etatId = $('select#etat option:selected').val();
-        let expertise = $('select#expertise').val();
-        console.log("etat=" + etatId + " | "  + "expertise=" + expertise);
-
-        let query = "";
-        query += "&etat=" + etatId;
-        query += "&expertise=" + expertise;
-        window.location.href = 'fiche-metier?' + query;
+        console.log("Clicked");
+        window.location.href = '?';
     });
 </script>

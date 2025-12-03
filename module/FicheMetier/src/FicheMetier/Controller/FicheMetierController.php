@@ -30,6 +30,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -47,6 +48,7 @@ class FicheMetierController extends AbstractActionController
     use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
     use TendanceTypeServiceAwareTrait;
     use ThematiqueElementServiceAwareTrait;
@@ -63,11 +65,9 @@ class FicheMetierController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $fromQueries = $this->params()->fromQuery();
-        $etatId = $fromQueries['etat'] ?? null;
-        $expertise = $fromQueries['expertise'] ?? null;
-        $params = ['etat' => $etatId, 'expertise' => $expertise];
+        $params = $this->params()->fromQuery();
 
+        $referentiels = $this->getReferentielService()->getReferentiels();
         $etatTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
@@ -76,6 +76,7 @@ class FicheMetierController extends AbstractActionController
             'params' => $params,
             'etatTypes' => $etatTypes,
             'fiches' => $fichesMetiers,
+            'referentiels' => $referentiels,
         ]);
     }
 

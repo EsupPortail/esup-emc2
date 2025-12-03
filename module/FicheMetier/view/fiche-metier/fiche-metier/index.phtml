@@ -5,11 +5,13 @@ use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Provider\Privilege\ReferentielmetierPrivileges;
+use Referentiel\Entity\Db\Referentiel;
 use UnicaenEtat\Entity\Db\EtatType;
 
 /**
  * @see \FicheMetier\Controller\FicheMetierController::indexAction()
  * @var FicheMetier[] $fiches
+ * @var Referentiel[] $referentiels
  * @var EtatType[] $etatTypes
  * @var array $params
  *
@@ -79,7 +81,7 @@ $this->headTitle('Index des fiches métiers');
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 
-<?php echo $this->partial('partial/filtre.phtml', ['etatTypes' => $etatTypes, 'params' => $params]); ?>
+<?php echo $this->partial('partial/filtre.phtml', ['referentiels' => $referentiels, 'etatTypes' => $etatTypes, 'params' => $params]); ?>
 
 
 <table id="fiches" class="table table-condensed datatable">
@@ -113,6 +115,7 @@ $this->headTitle('Index des fiches métiers');
                 <?php else: ?>
                     <?php echo $fiche->getLibelle(); ?>
                 <?php endif; ?>
+                <br> <?php echo $fiche->printReference(); ?>
                 <?php if ($fiche->hasExpertise() === true) : ?>
                     <span class="badge" style="background: lightskyblue;">Expertise</span>
                 <?php endif; ?>

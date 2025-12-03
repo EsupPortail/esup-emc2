@@ -58,17 +58,21 @@ $this->headTitle("Référentiels");
 
                 <?php $nbMissions = count($referentiel->getMissions()); ?>
                 <?php if ($nbMissions > 0) : ?>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction()  */ ?>
                     <a href="<?php echo $this->url('mission-principale', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
                         <span class="badge mission"> <?php echo $nbMissions; ?> mission·s </span></a>
                 <?php endif; ?>
                 <?php $nbCompetences = count($referentiel->getCompetences()); ?>
                 <?php if ($nbCompetences > 0) : ?>
+                    <?php /** @see \Element\Controller\CompetenceController::listingAction()  */ ?>
                     <a href="<?php echo $this->url('element/competence/listing', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
                         <span class="badge competence"> <?php echo $nbCompetences; ?> compétence·s </span></a>
                 <?php endif; ?>
                 <?php $nbFichesMetiers = count($referentiel->getFichesMetiers()); ?>
                 <?php if ($nbFichesMetiers > 0) : ?>
-                    <span class="badge fichemetier"> <?php echo $nbFichesMetiers; ?> fiche·s métier·s</span>
+                    <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction()  */ ?>
+                    <a href="<?php echo $this->url('fiche-metier', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
+                        <span class="badge fichemetier"> <?php echo $nbFichesMetiers; ?> fiche·s métier·s</span></a>
                 <?php endif; ?>
             </td>
             <td class="action">

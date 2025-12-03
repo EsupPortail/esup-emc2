@@ -120,8 +120,7 @@ class FicheMetierService
             ->addSelect('famille')->leftjoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
-            ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
+            ->addSelect('referentiel')->leftJoin('ficheMetier.referentiel', 'referentiel');
         $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
@@ -156,6 +155,10 @@ class FicheMetierService
         if (isset($filtre['etat']) and $filtre['etat'] != '') {
             $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $filtre['etat']);
         }
+        if (isset($filtre['referentiel']) and $filtre['referentiel'] != '') {
+            $qb = $qb->andWhere('referentiel.id = :referentiel')->setParameter('referentiel', $filtre['referentiel']);
+        }
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }

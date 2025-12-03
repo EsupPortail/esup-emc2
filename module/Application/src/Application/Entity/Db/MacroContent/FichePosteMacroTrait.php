@@ -106,7 +106,7 @@ trait FichePosteMacroTrait {
 
         $dictionnaire = $ficheposte->getDictionnaire('competences');
         if (!$all) $dictionnaire = array_filter($dictionnaire, function ($a) { return $a["conserve"] === true;});
-        $dictionnaire = array_filter($dictionnaire, function ($a) use ($code) { return $a["entite"]->getCompetence()->getType()->getId() === $typeId;});
+        $dictionnaire = array_filter($dictionnaire, function ($a) use ($code) { return $a["entite"]->getCompetence()->getType()->getCode() === $code;});
         usort($dictionnaire, function ($a, $b) { return $a["entite"]->getCompetence()->getLibelle() <=> $b["entite"]->getCompetence()->getLibelle();});
 
         if (empty($dictionnaire)) return "";

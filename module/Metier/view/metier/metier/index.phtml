@@ -23,7 +23,6 @@ $canHistoriser  = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
 $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_SUPPRIMER));
 $canLister      = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_LISTER_AGENTS));
 
-$canReferentiel = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_INDEX));
 
 $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $canEffacer OR $canLister);
 
@@ -33,16 +32,6 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
         <h1 class="page-header">
             Liste des métiers
         </h1>
-    </div>
-    <div class="col-md-4">
-        <?php if ($canReferentiel) : ?>
-            <?php /** @see \Metier\Controller\ReferentielController::indexAction() */ ?>
-            <a href="<?php echo $this->url('metier/referentiel', [], [], true); ?>"
-               class="btn btn-secondary">
-                <span class="icon icon-listing"></span>
-                Accéder aux référentiels des métiers
-            </a>
-        <?php endif; ?>
     </div>
 </div>
 
@@ -81,6 +70,8 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                       data-bs-toggle='tooltip' data-bs-html='true'
                 >
                     <?php echo $metier->getLibelle(); ?>
+                    <br>
+                    <?php echo $metier->printReference(); ?>
                 </span>
             </td>
             <td id="categorie">
@@ -88,7 +79,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
             </td>
             <td>
                 <?php $familles = $metier->getFamillesProfessionnelles(); ?>
-                <?php if ($familles === null OR empty($familles)) : ?>
+                <?php if (empty($familles)) : ?>
                     <em>Aucune famille professionnelle de renseignée</em>
                 <?php else : ?>
                     <ul>

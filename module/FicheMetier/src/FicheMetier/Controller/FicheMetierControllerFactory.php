@@ -24,6 +24,7 @@ use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -49,6 +50,7 @@ class FicheMetierControllerFactory
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var ParametreService $parametreService
+         * @var ReferentielService $referentielService
          * @var TendanceElementService $tendanceElementService
          * @var TendanceTypeService $tendanceTypeService
          * @var ThematiqueElementService $thematiqueElementService
@@ -63,6 +65,7 @@ class FicheMetierControllerFactory
         $metierService = $container->get(metierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $parametreService = $container->get(ParametreService::class);
+        $referentielService = $container->get(ReferentielService::class);
         $tendanceElementService = $container->get(TendanceElementService::class);
         $tendanceTypeService = $container->get(TendanceTypeService::class);
         $thematiqueElementService = $container->get(ThematiqueElementService::class);
@@ -98,6 +101,7 @@ class FicheMetierControllerFactory
         $controller->setMetierService($metierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setParametreService($parametreService);
+        $controller->setReferentielService($referentielService);
         $controller->setTendanceElementService($tendanceElementService);
         $controller->setTendanceTypeService($tendanceTypeService);
         $controller->setThematiqueElementService($thematiqueElementService);
