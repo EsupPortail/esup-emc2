@@ -14,6 +14,7 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Exception;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -25,6 +26,7 @@ use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
 {
@@ -36,6 +38,7 @@ class MissionPrincipaleController extends AbstractActionController
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
 
     use ModifierLibelleFormAwareTrait;
@@ -63,15 +66,14 @@ class MissionPrincipaleController extends AbstractActionController
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
-
         $vm = new ViewModel([
             'title' => "Affichage de la mission principale",
             'modification' => false,
             'mission' => $mission,
             'fichesmetiers' => $mission->getListeFicheMetier(),
             'fichespostes' => $mission->getListeFichePoste(),
+            'codeFonction' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION)
         ]);
-        $vm->setTemplate('fiche-metier/mission-principale/modifier');
         return $vm;
     }
 

@@ -19,6 +19,7 @@ use Referentiel\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class MissionPrincipaleControllerFactory
 {
@@ -40,6 +41,7 @@ class MissionPrincipaleControllerFactory
          * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauEnveloppeService $niveauEnveloppeService
+         * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
          */
         $applicationElementService = $container->get(ApplicationElementService::class);
@@ -50,6 +52,7 @@ class MissionPrincipaleControllerFactory
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
+        $parametreService = $container->get(ParametreService::class);
         $referentielService = $container->get(ReferentielService::class);
 
         /**
@@ -74,6 +77,7 @@ class MissionPrincipaleControllerFactory
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
+        $controller->setParametreService($parametreService);
         $controller->setReferentielService($referentielService);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
