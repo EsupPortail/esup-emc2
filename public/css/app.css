@@ -347,3 +347,22 @@ div.alert-danger .fa-exclamation-triangle {
 .badge.fichemetier {
     background: var(--emc2-fichemetier);
 }
+
+ul.dropdown-menu {
+    max-width:90vh;
+}
+
+ul.dropdown-menu span.libelle_mission {
+    width:75%;
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+ul.dropdown-menu span.description li {
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+div.filter-option-inner-inner span.mission {
+    display:inline !important;
+}

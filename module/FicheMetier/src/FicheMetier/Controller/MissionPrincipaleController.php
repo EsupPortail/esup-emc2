@@ -423,92 +423,95 @@ class MissionPrincipaleController extends AbstractActionController
                     $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
                 }
 
-                $json = $this->getFichierService()->readCSV($filepath, true, $separateur);
-                $array = $json;
+                $array = $this->getFichierService()->readCSV($filepath, true, $separateur);
+                if (empty($array)) {
+                    $warning[] = "Le fichier ne contient pas de données.";
+                } else {
 
-                // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////////
-                $header = [];
-                foreach ($array[0] as $key => $value) {
-                    $header[] = $key;
-                }
-                $hasIdMission = in_array($header_id, $header);
-                if (!$hasIdMission) $error[] = "La colonne obligatoire [" . $header_id . "] est manquante";
-                $hasLibelle = in_array($header_libelle, $header);
-                if (!$hasLibelle) $error[] = "La colonne obligatoire [" . $header_libelle . "] est manquante";
-                $hasFamilles = in_array($header_familles, $header);
-                if (!$hasFamilles) $warning[] = "La colonne facultative [" . $header_familles . "] est manquante";
-                $hasNiveau = in_array($header_niveau, $header);
-                if (!$hasNiveau) $warning[] = "La colonne facultative [" . $header_niveau . "] est manquante";
-                $hasCodesFichesMetiers = in_array($header_codes, $header);
-                if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . $header_codes . "] est manquante";
+                    // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////////
+                    $header = [];
+                    foreach ($array[0] as $key => $value) {
+                        $header[] = $key;
+                    }
+                    $hasIdMission = in_array($header_id, $header);
+                    if (!$hasIdMission) $error[] = "La colonne obligatoire [" . $header_id . "] est manquante";
+                    $hasLibelle = in_array($header_libelle, $header);
+                    if (!$hasLibelle) $error[] = "La colonne obligatoire [" . $header_libelle . "] est manquante";
+                    $hasFamilles = in_array($header_familles, $header);
+                    if (!$hasFamilles) $warning[] = "La colonne facultative [" . $header_familles . "] est manquante";
+                    $hasNiveau = in_array($header_niveau, $header);
+                    if (!$hasNiveau) $warning[] = "La colonne facultative [" . $header_niveau . "] est manquante";
+                    $hasCodesFichesMetiers = in_array($header_codes, $header);
+                    if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . $header_codes . "] est manquante";
 
-                $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
-                if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
+                    $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
+                    if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
 
 
-                if ($hasIdMission and $hasLibelle and $referentiel !== null) {
-                    $position = 1;
+                    if ($hasIdMission and $hasLibelle and $referentiel !== null) {
+                        $position = 1;
 
-                    foreach ($json as $row) {
-                        $position++;
-                        try {
-                            [$mission, $debug] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $referentiel, $position);
-                            $missions[] = $mission;
-                            if (isset($debug['info'])) {
-                                foreach ($debug['info'] as $line) {
-                                    $info[] = $line;
+                        foreach ($array as $row) {
+                            $position++;
+                            try {
+                                [$mission, $debug] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $referentiel, $position);
+                                $missions[] = $mission;
+                                if (isset($debug['info'])) {
+                                    foreach ($debug['info'] as $line) {
+                                        $info[] = $line;
+                                    }
                                 }
-                            }
-                            if (isset($debug['warning'])) {
-                                foreach ($debug['warning'] as $line) {
-                                    $warning[] = $line;
+                                if (isset($debug['warning'])) {
+                                    foreach ($debug['warning'] as $line) {
+                                        $warning[] = $line;
+                                    }
                                 }
-                            }
-                            if (isset($debug['error'])) {
-                                foreach ($debug['error'] as $line) {
-                                    $error[] = $line;
+                                if (isset($debug['error'])) {
+                                    foreach ($debug['error'] as $line) {
+                                        $error[] = $line;
+                                    }
                                 }
+                            } catch (Exception $e) {
+                                if ($error !== '') $error[] = $e->getMessage();
                             }
-                        } catch (Exception $e) {
-                            if ($error !== '') $error[] = $e->getMessage();
                         }
                     }
 
                     if ($mode === 'import') {
                         /** @var Mission $mission */
                         foreach ($missions as $mission) {
-                            //famille professionnelle
-                            foreach ($mission->getFamillesProfessionnelles() as $famille) {
-                                $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
-                                if ($exist) {
-                                    $mission->removeFamilleProfessionnelle($famille);
-                                    $mission->addFamilleProfessionnelle($exist);
-                                } else {
-                                    $this->getFamilleProfessionnelleService()->create($famille);
+                            if ($mission->getId() !== null)
+                            {
+                                $info[] = "La mission [".$mission->getReferentiel()->getLibelleCourt()."|".$mission->getId()."|".$mission->getLibelle()."] existe déjà";
+                            }
+                            else {
+                                //famille professionnelle
+                                foreach ($mission->getFamillesProfessionnelles() as $famille) {
+                                    $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
+                                    if (!$exist) {
+                                        $this->getFamilleProfessionnelleService()->create($famille);
+                                    }
                                 }
-                            }
-                            //niveaux
-                            if ($mission->getNiveau()) {
-                                $this->getNiveauEnveloppeService()->create($mission->getNiveau());
-                            }
-                            //activite
-                            $activites = [];
-                            foreach ($mission->getActivites() as $activite) {
-                                $activites[$activite->getOrdre()] = $activite->getLibelle();
-                            }
-                            $mission->clearActivites();
-                            //mission
-                            $this->getMissionPrincipaleService()->create($mission);
+                                //niveaux
+                                if ($mission->getNiveau()) {
+                                    $this->getNiveauEnveloppeService()->create($mission->getNiveau());
+                                }
+                                //activite
+                                $activites = [];
+                                foreach ($mission->getActivites() as $activite) {
+                                    $activites[$activite->getOrdre()] = $activite;
+                                }
+                                $mission->clearActivites();
+                                //mission
+                                $this->getMissionPrincipaleService()->create($mission);
 
-                            foreach ($activites as $ordre => $libelle) {
-                                $activite = new MissionActivite();
-                                $activite->setLibelle($libelle);
-                                $activite->setMission($mission);
-                                $activite->setOrdre($ordre);
-                                $this->getMissionActiviteService()->create($activite);
-                                $mission->addMissionActivite($activite);
+                                foreach ($activites as $activite) {
+                                    if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
+                                    else $this->getMissionActiviteService()->create($activite);
+                                    $mission->addMissionActivite($activite);
+                                }
+                                $this->getMissionPrincipaleService()->update($mission);
                             }
-                            $this->getMissionPrincipaleService()->update($mission);
 
                             // Bricolage pour satisfaire Marseille
                             $codesFicheMetier = explode('|',$mission->getCodesFicheMetier());
@@ -516,7 +519,7 @@ class MissionPrincipaleController extends AbstractActionController
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                 if ($fichemetier === null) { $warning[] = "La fiche metier [".$referentiel->getLibelleCourt()."|".$codeFicheMetier."] n'existe pas"; }
                                 else {
-                                    $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                    if (!$fichemetier->hasMission($mission)) $this->getFicheMetierService()->addMission($fichemetier, $mission);
                                 }
                             }
 

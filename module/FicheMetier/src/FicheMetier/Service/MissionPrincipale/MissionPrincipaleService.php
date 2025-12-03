@@ -273,7 +273,7 @@ class MissionPrincipaleService
             $activites = explode($separateur, $json['Activités associées']);
             $positionActivite = 0;
             foreach ($activites as $activite) {
-                if (trim($activite) !== '') {
+                if (trim($activite) !== '' AND !$mission->hasActivite($activite)) {
                     $act = new MissionActivite();
                     $act->setLibelle($activite);
                     $act->setMission($mission);
@@ -327,7 +327,7 @@ class MissionPrincipaleService
                     $debugs['warning'][] = "La famille professionnelle [" . trim($familleString) . "] n'existe pas (ligne " . $position . ") et est/sera créée.";
                     $to_create['familles'][] = trim($familleString);
                 }
-                $mission->addFamilleProfessionnelle($famille);
+                if (!$mission->hasFamilleProfessionnelle($famille)) $mission->addFamilleProfessionnelle($famille);
             }
         }
 
@@ -368,7 +368,7 @@ class MissionPrincipaleService
     private function missionOptionify(Mission $mission): array
     {
 //        $texte  = $mission->getLibelle();
-        $texte = "<span class='libelle_mission shorten'>" . MissionPrincipaleService::tronquerTexte($mission->getLibelle(), 180) . "</span>";
+        $texte = "<span class='libelle_mission shorten'>" . MissionPrincipaleService::tronquerTexte($mission->getLibelle(), 100) . "</span>";
         $texte .= "<span class='libelle_mission full' style='display: none'>" . $mission->getLibelle() . "</span>";
         $description = null;
 

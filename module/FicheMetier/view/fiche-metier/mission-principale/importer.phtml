@@ -153,7 +153,11 @@ $this->headTitle('Importation de missions principales');
 <!-- Messages --------------------------------------------------------------------------------------------------------->
 
 <?php if (isset($info) and !empty($info)) : ?>
-    <div class="alert alert-info"><?php echo $info; ?></div>
+    <div class="alert alert-info">
+        <?php foreach ($info as $line): ?>
+            <?php echo $line; ?><br>
+        <?php endforeach; ?>
+    </div>
 <?php endif; ?>
 <?php if (isset($warning) and !empty($warning)) : ?>
     <div class="alert alert-warning">

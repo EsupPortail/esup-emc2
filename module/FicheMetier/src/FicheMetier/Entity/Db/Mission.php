@@ -132,5 +132,14 @@ class Mission implements HistoriqueAwareInterface,
         $this->sourceString = $sourceString;
     }
 
+    public function hasActivite(?string $libelle): bool
+    {
+        true;
+        foreach ($this->activites as $activite) {
+            if ($activite->getLibelle() === $libelle) return true;
+        }
+        return false;
+    }
+
 
 }

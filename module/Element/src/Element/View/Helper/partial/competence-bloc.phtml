@@ -122,7 +122,7 @@ if ($canSupprimer) $nbAction++;
             </td>
             <td>
                 <?php if ($element->getCompetence()->getReferentiel()) : ?>
-                    <?php echo $this->competenceReference($element->getCompetence()); ?>
+                    <?php echo $element->getCompetence()->printReference(); ?>
                 <?php else: ?>
                     <em>Sans référence</em>
                 <?php endif; ?>

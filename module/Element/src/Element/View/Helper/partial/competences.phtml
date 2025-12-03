@@ -92,7 +92,7 @@ if ($mode === 'modification' and $scope !== null) {
             <td data-column-id="Compétence">
                 <?php echo $competence->getLibelle(); ?>
                 <br>
-                <?php echo ($competence->getReferentiel())?$this->competenceReference($competence):"Aucun"; ?>
+                <?php echo ($competence->getReferentiel())?$competence->printReference():"Aucun"; ?>
             </td>
             <td data-column-id="Thème"> <?php echo($competence->getTheme() ? $competence->getTheme()->getLibelle() : "<em>Aucun thème</em>"); ?> </td>
             <td data-column-id="Niveau de maîtrise"

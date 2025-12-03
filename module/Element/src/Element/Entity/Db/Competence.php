@@ -4,13 +4,15 @@ namespace Element\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
 use Referentiel\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Competence implements HistoriqueAwareInterface {
+class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
-
+    use HasReferenceTrait;
 
     private ?int $id = null;
     private ?string $libelle = null;
@@ -18,7 +20,6 @@ class Competence implements HistoriqueAwareInterface {
     private ?CompetenceDiscipline $discipline = null;
     private ?CompetenceType $type = null;
     private ?CompetenceTheme $theme = null;
-    private ?Referentiel $referentiel = null;
     private ?string $emploisTypes = null;
     private ?string $raw = null;
     private ?string $source = null;
@@ -84,16 +85,6 @@ class Competence implements HistoriqueAwareInterface {
     public function setTheme(?CompetenceTheme $theme) : void
     {
         $this->theme = $theme;
-    }
-
-    public function getReferentiel(): ?Referentiel
-    {
-        return $this->referentiel;
-    }
-
-    public function setReferentiel(?Referentiel $referentiel): void
-    {
-        $this->referentiel = $referentiel;
     }
 
     public function getSource(): ?string
