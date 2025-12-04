@@ -82,15 +82,13 @@ trait HasApplicationCollectionTrait
         });
 
         $html = <<<EOS
-<h2>Applications</h2>
-
 <table style='width:100%; border-collapse: collapse;'>
 <thead>
     <tr>
         <th> Application </th>
         <th style="width: 21rem;"> Thème </th>
         <th style="width: 11rem;"> Niveau de maîtrise</th>
-        <th style="width: 2rem;"> Clef </th>
+        <th style="width: 2rem;"> Clé </th>
     </tr>
 </thead>
 <tbody>

@@ -89,7 +89,7 @@ trait HasCompetenceCollectionTrait {
             return $a->getLibelle() <=> $b->getLibelle();
         });
 
-        $html = "<h2> Compétences</h2>";
+        $html = "";
         foreach ($types as $type) {
             if (!empty($dictionnaires[$type->getId()])) {
                 usort($dictionnaires[$type->getId()], function (CompetenceElement $a, CompetenceElement $b) {
@@ -109,7 +109,7 @@ trait HasCompetenceCollectionTrait {
         <th> Compétences </th>
         <th style="width: 21rem;"> Thème </th>
         <th style="width: 11rem;"> Niveau de maîtrise</th>
-        <th style="width: 2rem;"> Clef </th>
+        <th style="width: 2rem;"> Clé </th>
     </tr>
 </thead>
 <tbody>
@@ -153,7 +153,7 @@ EOS;
 
         if (empty($dictionnaires)) return "";
 
-        $html = "<h2> Compétences spécifiques </h2>";
+        $html = "";
 
         foreach ($discplines as $discpline) {
 
@@ -175,7 +175,7 @@ EOS;
         <th> Compétences </th>
         <th style="width: 21rem;"> Thème </th>
         <th style="width: 11rem;"> Niveau de maîtrise</th>
-        <th style="width: 2rem;"> Clef </th>
+        <th style="width: 2rem;"> Clé </th>
     </tr>
 </thead>
 <tbody>

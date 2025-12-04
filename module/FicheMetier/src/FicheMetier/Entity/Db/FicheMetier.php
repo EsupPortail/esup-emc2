@@ -441,4 +441,56 @@ EOS;
         $html .= "</div>";
         return $html;
     }
+
+    /** @noinspection PhpUnused */
+    public function toStringNiveauFonction(): string
+    {
+        if ($this->getCodeEmploiType() AND $this->getCodeEmploiType()->getCodeFonction()) return $this->getCodeEmploiType()->getCodeFonction()->getLibelle();
+        return "Non précisé";
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringCodeFonction(): string
+    {
+        if ($this->getCodeEmploiType()) return $this->getCodeEmploiType()->prettyPrint();
+        return "Non précisé";
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringEtatActif(): string
+    {
+        $etat = $this->getEtatActif();
+        if ($etat === null) return "Aucun état actif";
+        $type = $etat->getType();
+        if ($type === null) return "Aucun type d'état connu";
+        return $type->getLibelle();
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringEtatActifDate(): string
+    {
+        $etat = $this->getEtatActif();
+        if ($etat === null) return "Aucun état actif";
+        return $etat->getDate()??"Aucune date connue";
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringSpecialite(): string
+    {
+        $famille = $this->getFamilleProfessionnelle();
+        if ($famille === null) return "Aucune spécialité connue";
+        $specialite = $famille->getCorrespondance();
+        if ($specialite === null) return "Aucune spécialité connue";
+        return $specialite->getLibelleLong();
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringFamille(): string
+    {
+        $famille = $this->getFamilleProfessionnelle();
+        if ($famille === null) return "Aucune famille professionnelle connue";
+        return $famille->getLibelle();
+    }
+
+
 }

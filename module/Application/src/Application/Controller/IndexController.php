@@ -63,9 +63,11 @@ class IndexController extends AbstractActionController
     {
 
         $campagnes = $this->getCampagneService()->getCampagnesActives();
+        $ficheposte = $this->getFichePosteService()->getFichePoste(1);
+        $agent = $ficheposte->getAgent();
         if (count($campagnes) === 1) $campagne = current($campagnes); else $campagne = $this->getCampagneService()->getLastCampagne();
 
-        $vars = ['UrlService' => $this->getUrlService(), 'MacroService' => $this->getMacroService(), 'campagne' => $campagne];
+        $vars = ['UrlService' => $this->getUrlService(), 'MacroService' => $this->getMacroService(), 'campagne' => $campagne, 'ficheposte' => $ficheposte, 'agent' => $agent];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, $vars, false);
         $texte = $rendu->getCorps();
 

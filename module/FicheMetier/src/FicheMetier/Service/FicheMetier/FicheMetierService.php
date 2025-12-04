@@ -563,6 +563,7 @@ class FicheMetierService
     public function exporter(?FicheMetier $fichemetier): string
     {
         $displayResume = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RESUME);
+        $displayCode = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
         $displayRaison = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RAISON);
         $displayMission = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_MISSION);
         $displayApplications = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_APPLICATION);
@@ -575,7 +576,9 @@ class FicheMetierService
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
             'MacroService' => $this->getMacroService(),
+            'applications' => $fichemetier->getApplicationListe(),
             'DISPLAY_RESUME' => $displayResume,
+            'DISPLAY_CODEFONCTION' => $displayCode,
             'DISPLAY_RAISON' => $displayRaison,
             'DISPLAY_MISSION' => $displayMission,
             'DISPLAY_APPLICATION' => $displayApplications,
