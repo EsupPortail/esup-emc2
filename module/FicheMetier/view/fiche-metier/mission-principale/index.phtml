@@ -29,6 +29,27 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
     Missions principales
 </h1>
 
+<!-- Boutons d'actions ------------------------------------------------------------------------------------------------>
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('mission-principale/ajouter', [], [], true); ?>"
+       class="ajax-modal btn btn-primary"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter une mission principale
+    </a>
+<?php endif; ?>
+<?php if ($canImporter) : ?>
+    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::importerAction() */ ?>
+    <a href="<?php echo $this->url('mission-principale/importer', [], [], true); ?>"
+       class="btn btn-primary"
+    >
+        <span class="icon icon-csv"></span>
+        Importer des missions principales depuis un csv
+    </a>
+<?php endif; ?>
+
 <!-- Filtre ----------------------------------------------------------------------------------------------------------->
 <div class="card">
     <div class="card-header bg-default">
@@ -91,27 +112,6 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
         </form>
     </div>
 </div>
-
-<!-- Boutons d'actions ------------------------------------------------------------------------------------------------>
-
-<?php if ($canAjouter) : ?>
-    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::ajouterAction() */ ?>
-    <a href="<?php echo $this->url('mission-principale/ajouter', [], [], true); ?>"
-       class="ajax-modal btn btn-primary"
-    >
-        <span class="icon icon-ajouter"></span>
-        Ajouter une mission principale
-    </a>
-<?php endif; ?>
-<?php if ($canImporter) : ?>
-    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::importerAction() */ ?>
-    <a href="<?php echo $this->url('mission-principale/importer', [], [], true); ?>"
-       class="btn btn-primary"
-    >
-        <span class="icon icon-csv"></span>
-        Importer des missions principales depuis un csv
-    </a>
-<?php endif; ?>
 
 <!-- Listing ---------------------------------------------------------------------------------------------------------->
 

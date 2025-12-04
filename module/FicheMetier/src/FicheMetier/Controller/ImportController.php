@@ -519,7 +519,7 @@ class ImportController extends AbstractActionController
         return ['fiches' => $fiches, 'warning' => $warning, 'info' => $info];
     }
 
-    /** @return $string */
+    /** @return string[] */
     static public function explodeAndTrim(?string $listing, string $separateur = "\n"): array
     {
         if ($listing === null) { return []; }
