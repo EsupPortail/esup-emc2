@@ -3,7 +3,6 @@
 namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
-use Carriere\Entity\Db\Correspondance;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\CompetenceElement;
@@ -58,6 +57,26 @@ class ImportController extends AbstractActionController
 
     const FORMAT_RMFP = 'FORMAT_RMFP';
     const FORMAT_REFERENS3 = 'FORMAT_REFERENS3';
+
+
+    const HEADER_RMFP_REFERENCE = "Code";
+    const HEADER_RMFP_LIBELLE = "Intitulé";
+    const HEADER_RMFP_MISSION_LIBELLE = "Définition synthétique de l'ER";
+    const HEADER_RMFP_MISSION_ACTIVITE = "Activités de l'ER";
+    const HEADER_RMFP_FAMILLE = "Famille";
+    const HEADER_RMFP_SPECIALITE = "DF";
+    const HEADER_RMFP_COMPETENCE_CONNAISSANCE = "Connaissances";
+    const HEADER_RMFP_COMPETENCE_OPERATIONNELLE = "Savoir-faire";
+    const HEADER_RMFP_COMPETENCE_COMPORTEMENTALE = "Savoir-être";
+    const HEADER_RMFP_TENDANCE = "Tendance / évolution";
+    const HEADER_RMFP_IMPACT = "Impact sur l'ER";
+
+    const HEADERS_RMFP = [
+        self::HEADER_RMFP_REFERENCE, self::HEADER_RMFP_LIBELLE, self::HEADER_RMFP_FAMILLE, self::HEADER_RMFP_SPECIALITE,
+        self::HEADER_RMFP_MISSION_LIBELLE, self::HEADER_RMFP_MISSION_ACTIVITE,
+        self::HEADER_RMFP_COMPETENCE_CONNAISSANCE, self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE, self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE,
+        self::HEADER_RMFP_TENDANCE, self::HEADER_RMFP_IMPACT
+    ];
 
     public function importAction(): ViewModel
     {
@@ -339,11 +358,11 @@ class ImportController extends AbstractActionController
                 var_dump($header);
             }
 
-            $positionCode       = array_search("Code", $header);
-            $positionIntitule   = array_search("Intitulé", $header);
-            $positionDefinition = array_search("Définition synthétique de l'ER", $header);
-            $positionFamille    = array_search("Famille", $header);
-            $positionSpecialite    = array_search("DF", $header);
+            $positionCode       = array_search(self::HEADER_RMFP_REFERENCE, $header);
+            $positionIntitule   = array_search(self::HEADER_RMFP_LIBELLE, $header);
+            $positionDefinition = array_search(self::HEADER_RMFP_MISSION_LIBELLE, $header);
+            $positionFamille    = array_search(self::HEADER_RMFP_FAMILLE, $header);
+            $positionSpecialite    = array_search(self::HEADER_RMFP_SPECIALITE, $header);
 
 
 
@@ -363,8 +382,8 @@ class ImportController extends AbstractActionController
 
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
-                $intitule = $raw["Intitulé"];
-                $code = $raw["Code"];
+                $intitule = $raw[self::HEADER_RMFP_LIBELLE];
+                $code = $raw[self::HEADER_RMFP_REFERENCE];
                 $fiche = new FicheMetier();
                 $fiche->setRaw(json_encode($raw));
                 $fiche->setLibelle($intitule);
@@ -372,17 +391,17 @@ class ImportController extends AbstractActionController
                 $fiche->setReferentiel($rmfp);
 //                $this->getFicheMetierService()->create($fiche);
 
-                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw["Famille"]));
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]));
                 $newFamille = false;
                 if ($famille === null) {
                     $famille = new FamilleProfessionnelle();
-                    $famille->setLibelle(trim($raw["Famille"]));
+                    $famille->setLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]));
                     $newFamille = true;
                 }
                 $fiche->setFamilleProfessionnelle($famille);
-                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw["DF"]));
+                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]));
                 if ($specialite === null) {
-                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw["DF"]), trim($raw["DF"]), false);
+                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]), trim($raw[self::HEADER_RMFP_SPECIALITE]), false);
                     $specialite->setId(null);
                 }
                 if ($newFamille) $famille->setCorrespondance($specialite);
@@ -396,8 +415,8 @@ class ImportController extends AbstractActionController
                 // > revoir un peu la fiche pour avoir une définition + une liste d'activité sans mission ?
                 // > fiche metier devrait pouvoir avoir des activités hors mission ?
 
-                $missionLibelle = $raw["Définition synthétique de l'ER"];
-                $activites = explode("\n",$raw["Activités de l'ER"]);
+                $missionLibelle = $raw[self::HEADER_RMFP_MISSION_LIBELLE];
+                $activites = explode("\n",$raw[self::HEADER_RMFP_MISSION_ACTIVITE]);
 
 
 
@@ -434,7 +453,7 @@ class ImportController extends AbstractActionController
                 //todo ajouter le type pour eviter les homonymies
                 //todo ajouter un boolean pour la recherche parmi les synonymes
 
-                $connaissances = self::explodeAndTrim($raw["Connaissances"], "\n");
+                $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE], "\n");
                 foreach ($connaissances as $item) {
 //                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
                     $connaissance = $dictionnaireConnaissances[$item]??null;
@@ -446,7 +465,7 @@ class ImportController extends AbstractActionController
                         $warning[] = "[".$item."] compétence de type [".$tConnaissance->getLibelle()."] non trouvée.";
                     }
                 }
-                $savoiretres = self::explodeAndTrim($raw["Savoir-être"], "\n");
+                $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE], "\n");
                 foreach ($savoiretres as $item) {
 //                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
                     $savoiretre = $dictionnaireSavoirEtre[$item]??null;
@@ -459,7 +478,7 @@ class ImportController extends AbstractActionController
                         $warning[] = "[".$item."] compétence de type [".$tsavoiretre->getLibelle()."] non trouvée.";
                     }
                 }
-                $savoirfaires = self::explodeAndTrim($raw["Savoir-faire"], "\n");
+                $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE], "\n");
                 foreach ($savoirfaires as $item) {
 //                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
                     $savoirfaire = $dictionnaireSavoirFaire[$item]??null;
@@ -476,16 +495,16 @@ class ImportController extends AbstractActionController
 
                 /** TENDANCE ******************************************************************************************/
 
-                if ($tendanceFacteur AND isset($raw["Tendance / évolution"]) AND trim($raw["Tendance / évolution"]) !== "") {
+                if ($tendanceFacteur AND isset($raw[self::HEADER_RMFP_TENDANCE]) AND trim($raw[self::HEADER_RMFP_TENDANCE]) !== "") {
                     $facteur = new TendanceElement();
                     $facteur->setType($tendanceFacteur);
-                    $facteur->setTexte(trim($raw["Tendance / évolution"]));
+                    $facteur->setTexte(trim($raw[self::HEADER_RMFP_TENDANCE]));
                     $fiche->addTendance($facteur);
                 }
-                if ($tendanceImpact AND isset($raw["Impact sur l'ER"]) AND trim($raw["Impact sur l'ER"]) !== "") {
+                if ($tendanceImpact AND isset($raw[self::HEADER_RMFP_IMPACT]) AND trim($raw[self::HEADER_RMFP_IMPACT]) !== "") {
                     $facteur = new TendanceElement();
                     $facteur->setType($tendanceImpact);
-                    $facteur->setTexte(trim($raw["Impact sur l'ER"]));
+                    $facteur->setTexte(trim($raw[self::HEADER_RMFP_IMPACT]));
                     $fiche->addTendance($facteur);
                 }
                 $fiches[] = $fiche;
