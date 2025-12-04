@@ -111,7 +111,7 @@ class MissionPrincipaleService
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             // todo probablement ajouter la notion de référentiel ...
-            throw new RuntimeException("Plusieurs [" . Mission::class . "] partagent le même libellé [" . $libelle . "]", -1, $e . "]");
+            throw new RuntimeException("Plusieurs [" . Mission::class . "] partagent le même libellé [" . $libelle . "]", -1, $e );
         }
         return $result;
     }

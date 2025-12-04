@@ -128,6 +128,22 @@ class CorrespondanceService {
         return $result;
     }
 
+    public function getCorrespondanceByTypeCodeAndLibelle(string $typeCode, string $libelle): ?Correspondance
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ctype.code = :typeCode')->setParameter('typeCode', $typeCode)
+            ->andWhere('correspondance.libelleLong = :libelle')->setParameter('libelle', $libelle)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Correspondance::class."] partagent le même code [".$typeCode."|".$libelle."]",0,$e);
+        }
+        return $result;
+    }
+
+
+
     public function createWith(string $typeCode, string $correspondanceCode, string $libelle, bool $persist = true): ?Correspondance
     {
         $type = $this->getCorrespondanceTypeService()->getCorrespondanceTypeByCode($typeCode);

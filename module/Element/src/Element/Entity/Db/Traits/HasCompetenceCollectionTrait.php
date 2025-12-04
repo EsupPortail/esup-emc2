@@ -2,7 +2,6 @@
 
 namespace Element\Entity\Db\Traits;
 
-use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Doctrine\Common\Collections\ArrayCollection;

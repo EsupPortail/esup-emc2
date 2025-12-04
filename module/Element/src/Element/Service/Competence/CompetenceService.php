@@ -254,7 +254,6 @@ class CompetenceService
     public function getCompetencesByRefentiel(?Referentiel $referentiel, ?CompetenceType $type = null): array
     {
         $qb = $this->createQueryBuilder()
-            ->leftjoin('competence.synonymes', 'synonyme')->addSelect('synonyme')
             ->andWhere('competence.referentiel = :referentiel')
             ->setParameter('referentiel', $referentiel);
 

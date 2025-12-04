@@ -3,6 +3,7 @@
 namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\Correspondance;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\CompetenceElement;
@@ -106,6 +107,12 @@ class ImportController extends AbstractActionController
 
                 if ($mode === 'import') {
                     // recuperation des nouvelles familles professionnelles
+                    foreach ($fiches as $fiche) {
+                        if ($fiche->getFamilleProfessionnelle() AND $fiche->getFamilleProfessionnelle()->getCorrespondance() AND $fiche->getFamilleProfessionnelle()->getCorrespondance()->getId() === null) {
+                            $fiche->getFamilleProfessionnelle()->getCorrespondance()->setId(100000 + rand(0,100000));
+                            $this->getCorrespondanceService()->create($fiche->getFamilleProfessionnelle()->getCorrespondance());
+                        }
+                    }
                     foreach ($fiches as $fiche) {
                         if ($fiche->getFamilleProfessionnelle() AND $fiche->getFamilleProfessionnelle()->getId() === null) {
                             $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
@@ -336,6 +343,7 @@ class ImportController extends AbstractActionController
             $positionIntitule   = array_search("Intitulé", $header);
             $positionDefinition = array_search("Définition synthétique de l'ER", $header);
             $positionFamille    = array_search("Famille", $header);
+            $positionSpecialite    = array_search("DF", $header);
 
 
 
@@ -365,12 +373,22 @@ class ImportController extends AbstractActionController
 //                $this->getFicheMetierService()->create($fiche);
 
                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw["Famille"]));
+                $newFamille = false;
                 if ($famille === null) {
                     $famille = new FamilleProfessionnelle();
                     $famille->setLibelle(trim($raw["Famille"]));
-
+                    $newFamille = true;
                 }
                 $fiche->setFamilleProfessionnelle($famille);
+                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw["DF"]));
+                if ($specialite === null) {
+                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw["DF"]), trim($raw["DF"]), false);
+                    $specialite->setId(null);
+                }
+                if ($newFamille) $famille->setCorrespondance($specialite);
+                elseif ($famille->getCorrespondance() !== $specialite) {
+                    $warning[] = "La spécialité attaché à la famille professionnelle [".$famille->getLibelle()."] ne correspond pas à la spécialité connue.";
+                }
 
                 /** Partie Mission et activités ***********************************************************************/
 

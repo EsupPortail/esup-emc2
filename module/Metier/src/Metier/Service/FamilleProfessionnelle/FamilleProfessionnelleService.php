@@ -19,6 +19,16 @@ class FamilleProfessionnelleService
     public function create(FamilleProfessionnelle $famille): FamilleProfessionnelle
     {
         $this->getObjectManager()->persist($famille);
+
+        if ($famille->getCorrespondance() and $famille->getPosition() === null) {
+            $familles = $this->getFamillesProfessionnellesByCorrespondance($famille->getCorrespondance());
+            $maximum = 0;
+            foreach ($familles as $famille_) {
+                if ($famille_->getPosition() AND $famille_->getPosition() > $maximum) $maximum = $famille_->getPosition();
+            }
+            $famille->setPosition($maximum + 1);
+
+        }
         $this->getObjectManager()->flush($famille);
         return $famille;
     }
@@ -143,7 +153,6 @@ class FamilleProfessionnelleService
                 $qb = $qb->andWhere('famille.histoDestruction IS NULL');
             }
         }
-        $a=1;
         if (isset($params['correspondance']) AND $params['correspondance'] !== "") {
             if ($params['correspondance'] === "-1") {
                 $qb = $qb->andWhere('famille.correspondance IS NULL');
@@ -154,6 +163,15 @@ class FamilleProfessionnelleService
             }
         }
 
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return FamilleProfessionnelle[] */
+    public function getFamillesProfessionnellesByCorrespondance(Correspondance $correspondance): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('famille.correspondance = :correspondance')->setParameter('correspondance', $correspondance);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
