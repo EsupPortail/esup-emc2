@@ -576,7 +576,6 @@ class FicheMetierService
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
             'MacroService' => $this->getMacroService(),
-            'applications' => $fichemetier->getApplicationListe(),
             'DISPLAY_RESUME' => $displayResume,
             'DISPLAY_CODEFONCTION' => $displayCode,
             'DISPLAY_RAISON' => $displayRaison,

@@ -135,6 +135,32 @@ EOS;
         return $html;
     }
 
+    public function getCompetencesStandard(): array
+    {
+        $competences = $this->getCompetenceListe();
+        $dictionnaires = [];
+        foreach ($competences as $competence) {
+            $type = $competence->getCompetence()->getType();
+            if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) {
+                $dictionnaires[] = $competence;
+            }
+        }
+        return $dictionnaires;
+    }
+
+    public function getCompetencesSpecifiques(): array
+    {
+        $competences = $this->getCompetenceListe();
+        $dictionnaires = [];
+        foreach ($competences as $competence) {
+            $type = $competence->getCompetence()->getType();
+            if ($type->getCode() === CompetenceType::CODE_SPECIFIQUE) {
+                $dictionnaires[] = $competence;
+            }
+        }
+        return $dictionnaires;
+    }
+
     public function toArrayCompetencesSpecifiques(): string
     {
 
