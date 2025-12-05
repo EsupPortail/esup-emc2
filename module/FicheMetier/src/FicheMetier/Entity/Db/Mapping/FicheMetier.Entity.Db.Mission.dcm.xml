@@ -8,6 +8,7 @@
 
         <field name="libelle" type="string" length="1024" column="libelle"/>
         <field name="codesFicheMetier" type="text" column="codes_fiche_metier"/>
+        <field name="codesFonction" type="text" column="codes_fonction"/>
 
         <many-to-one target-entity="Carriere\Entity\Db\NiveauEnveloppe"  field="niveau">
             <join-column name="niveau_id" referenced-column-name="id"/>

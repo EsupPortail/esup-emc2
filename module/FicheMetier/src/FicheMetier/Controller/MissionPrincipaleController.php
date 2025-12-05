@@ -47,6 +47,8 @@ class MissionPrincipaleController extends AbstractActionController
     use SelectionCompetenceFormAwareTrait;
     use SelectionnerFamilleProfessionnelleFormAwareTrait;
 
+
+
     public function indexAction(): ViewModel
     {
         $params = $this->params()->fromQuery();
@@ -380,12 +382,6 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function importerAction(): ViewModel
     {
-        $header_id = 'Id_Mission';
-        $header_libelle = 'Libellé';
-        $header_familles = 'Familles professionnelles';
-        $header_niveau = 'Niveau';
-        $header_codes = 'Codes Fiche Métier';
-
         $separateur = '|';
 
 
@@ -402,7 +398,6 @@ class MissionPrincipaleController extends AbstractActionController
 
         if ($request->isPost()) {
             $data = $request->getPost();
-            $mode = ($data['mode'] === 'import') ? 'import' : 'preview';
             $files = $request->getFiles()->toArray();
             $file = !empty($files) ? current($files) : null;
 
@@ -418,8 +413,11 @@ class MissionPrincipaleController extends AbstractActionController
                     copy($file['tmp_name'], $filepath);
                 }
             }
+            if ($data['referentiel'] === '') {
+                $error[] = "Aucun référentiel sélectionné";
+            }
 
-            if ($data['mode'] and $filepath) {
+            if ($data['mode'] and $data['referentiel'] !== '' and $filepath) {
                 $mode = $data['mode'];
                 if (!in_array($mode, ['preview', 'import'])) {
                     $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
@@ -435,16 +433,20 @@ class MissionPrincipaleController extends AbstractActionController
                     foreach ($array[0] as $key => $value) {
                         $header[] = $key;
                     }
-                    $hasIdMission = in_array($header_id, $header);
-                    if (!$hasIdMission) $error[] = "La colonne obligatoire [" . $header_id . "] est manquante";
-                    $hasLibelle = in_array($header_libelle, $header);
-                    if (!$hasLibelle) $error[] = "La colonne obligatoire [" . $header_libelle . "] est manquante";
-                    $hasFamilles = in_array($header_familles, $header);
-                    if (!$hasFamilles) $warning[] = "La colonne facultative [" . $header_familles . "] est manquante";
-                    $hasNiveau = in_array($header_niveau, $header);
-                    if (!$hasNiveau) $warning[] = "La colonne facultative [" . $header_niveau . "] est manquante";
-                    $hasCodesFichesMetiers = in_array($header_codes, $header);
-                    if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . $header_codes . "] est manquante";
+                    $hasIdMission = in_array(Mission::MISSION_PRINCIPALE_HEADER_ID, $header);
+                    if (!$hasIdMission) $error[] = "La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_ID . "] est manquante";
+                    $hasLibelle = in_array(Mission::MISSION_PRINCIPALE_HEADER_LIBELLE, $header);
+                    if (!$hasLibelle) $error[] = "La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_LIBELLE . "] est manquante";
+                    $hasActivites = in_array(Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES, $header);
+                    if (!$hasActivites) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES . "] est manquante";
+                    $hasFamilles = in_array(Mission::MISSION_PRINCIPALE_HEADER_NIVEAU, $header);
+                    if (!$hasFamilles) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_FAMILLES . "] est manquante";
+                    $hasNiveau = in_array(Mission::MISSION_PRINCIPALE_HEADER_NIVEAU, $header);
+                    if (!$hasNiveau) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_NIVEAU . "] est manquante";
+                    $hasCodesFichesMetiers = in_array(Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE, $header);
+                    if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE . "] est manquante";
+                    $hasCodesFonctions = in_array(Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION, $header);
+                    if (!$hasCodesFonctions) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION . "] est manquante";
 
                     $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
                     if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
@@ -524,7 +526,14 @@ class MissionPrincipaleController extends AbstractActionController
                                     if (!$fichemetier->hasMission($mission)) $this->getFicheMetierService()->addMission($fichemetier, $mission);
                                 }
                             }
-
+                            $codesFonction = explode('|',$mission->getCodesFonction());
+                            foreach ($codesFonction as $codeFonction) {
+                                $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
+                                if (empty($fichesmetiers)) { $warning[] = "Aucune fiche metier utilise le code [".$codeFonction."]"; }
+                                foreach ($fichesmetiers as $fichemetier) {
+                                    if (!$fichemetier->hasMission($mission)) $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                }
+                            }
                         }
                     }
                 }

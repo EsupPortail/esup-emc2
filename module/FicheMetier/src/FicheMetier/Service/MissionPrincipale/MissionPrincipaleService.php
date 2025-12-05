@@ -249,17 +249,17 @@ class MissionPrincipaleService
         ];
 
         /* LIBELLE ****************************************************************************************************/
-        if (!isset($json['Libellé']) or trim($json['Libellé']) === '') {
-            throw new RuntimeException("La colonne obligatoire [Libellé] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $libelle = trim($json['Libellé']);
-        if (!isset($json['Id_Mission']) or trim($json['Id_Mission']) === '') {
-            throw new RuntimeException("La colonne obligatoire [Id_Mission] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $idOrig = trim($json['Id_Mission']);
+        if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) === '') {
+            throw new RuntimeException("La colonne obligatoire [".Mission::MISSION_PRINCIPALE_HEADER_LIBELLE."] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+        } else $libelle = trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]);
+        if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_ID]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_ID]) === '') {
+            throw new RuntimeException("La colonne obligatoire [".Mission::MISSION_PRINCIPALE_HEADER_ID."] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+        } else $idOrig = trim($json[Mission::MISSION_PRINCIPALE_HEADER_ID]);
 
 
         /*Recupération ou creation */
 
-        $mission = $this->getMissionPrincipaleByReference($referentiel, $json['Id_Mission']);
+        $mission = $this->getMissionPrincipaleByReference($referentiel, $json[Mission::MISSION_PRINCIPALE_HEADER_ID]);
         if ($mission === null) {
             $mission = new Mission();
         }
@@ -269,8 +269,8 @@ class MissionPrincipaleService
         $mission->setReference($idOrig);
 
         /* ACTIVITES **************************************************************************************************/
-        if (isset($json['Activités associées'])) {
-            $activites = explode($separateur, $json['Activités associées']);
+        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES])) {
+            $activites = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES]);
             $positionActivite = 0;
             foreach ($activites as $activite) {
                 if (trim($activite) !== '' AND !$mission->hasActivite($activite)) {
@@ -284,8 +284,8 @@ class MissionPrincipaleService
         }
 
         /* NIVEAUX ***************************************************************************************************/
-        if (isset($json['Niveau']) and trim($json['Niveau']) !== '') {
-            $niveau = explode($separateur, $json['Niveau']);
+        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
+            $niveau = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
             if (count($niveau) === 1) {
                 $niv = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
                 if ($niv === null) {
@@ -317,8 +317,8 @@ class MissionPrincipaleService
         }
 
         /* FAMILLE PROFESSIONNELLE ***********************************************************************************/
-        if (isset($json['Familles professionnelles']) and trim($json['Familles professionnelles']) !== '') {
-            $famillesString = explode($separateur, $json['Familles professionnelles']);
+        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) !== '') {
+            $famillesString = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]);
             foreach ($famillesString as $familleString) {
                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($familleString));
                 if ($famille === null) {
@@ -332,18 +332,11 @@ class MissionPrincipaleService
         }
 
         /* COMPLEMENT *************************************************************************************************/
-        if (isset($json['Codes Fiche Métier']) and trim($json['Codes Fiche Métier']) !== '') {
-            $mission->setCodesFicheMetier(trim($json['Codes Fiche Métier']));
-            $codes = explode($separateur, trim($json['Codes Fiche Métier']));
-//            foreach ($codes as $code) {
-//                $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
-//                if ($fichemetier === null) {
-//                    $debugs['warning'][] = "Aucune fiche metier identifiée [".$referentiel->getLibelleCourt()."|".$code."]";
-//
-//                } else {
-//                    $this->getFicheMetierService()->addMission($fichemetier, $mission);
-//                }
-//            }
+        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]) !== '') {
+            $mission->setCodesFicheMetier(trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]));
+        }
+        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]) !== '') {
+            $mission->setCodesFonction(trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]));
         }
 
         /** SOURCE ****************************************************************************************************/

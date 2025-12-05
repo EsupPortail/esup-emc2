@@ -43,7 +43,7 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                 <h4>Compléments</h4>
                 <dl class="row">
                     <?php $listing = $mission->getListeFicheMetier(); ?>
-                    <dt class="col-md-4"> Codes Fiche Métier</dt>
+                    <dt class="col-md-4"> Fiches Métiers</dt>
                     <dd class="col-md-8">
                         <?php if (empty($listing)) : ?>
                             Aucune fiche métier
@@ -65,14 +65,6 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                                 </li>
                             <?php endforeach; ?>
                             </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt class="col-md-4"> Code Fonction</dt>
-                    <dd class="col-md-8">
-                        <?php if (empty($listing)) : ?>
-                            Aucune fiche métier
-                        <?php else : ?>
-                           <span class="todo"> Nouveau code emploi type</span>
                         <?php endif; ?>
                     </dd>
                     <dt class="col-md-4"> Familles professionnelles</dt>
@@ -97,9 +89,20 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                         <?php endif; ?>
                     </dd>
                     <?php if ($mission->getCodesFicheMetier()) : ?>
-                        <dt class="col-md-4"> Codes Fiche Métier </dt>
+                        <dt class="col-md-4"> <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE; ?> </dt>
                         <dd class="col-md-8">
                             <?php $codes = explode('|', $mission->getCodesFicheMetier()); ?>
+                            <ul>
+                                <?php foreach ($codes as $code) : ?>
+                                    <li> <?php echo $code; ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </dd>
+                    <?php endif; ?>
+                    <?php if ($mission->getCodesFonction()) : ?>
+                        <dt class="col-md-4">  <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION; ?> </dt>
+                        <dd class="col-md-8">
+                            <?php $codes = explode('|', $mission->getCodesFonction()); ?>
                             <ul>
                                 <?php foreach ($codes as $code) : ?>
                                     <li> <?php echo $code; ?> </li>

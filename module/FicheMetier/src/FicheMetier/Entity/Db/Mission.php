@@ -20,9 +20,18 @@ class Mission implements HistoriqueAwareInterface,
     use HasFamillesProfessionnellesTrait;
     use HasReferenceTrait;
 
+    const MISSION_PRINCIPALE_HEADER_ID = 'Id_Mission';
+    const MISSION_PRINCIPALE_HEADER_LIBELLE = 'Libellé';
+    const MISSION_PRINCIPALE_HEADER_ACTIVITES = 'Activités associées';
+    const MISSION_PRINCIPALE_HEADER_FAMILLES = 'Familles professionnelles';
+    const MISSION_PRINCIPALE_HEADER_NIVEAU = 'Niveau';
+    const MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE = 'Codes Emploi Type';
+    const MISSION_PRINCIPALE_HEADER_CODES_FONCTION = 'Codes Fonction';
+
     private ?int $id = null;
     private ?string $libelle = null;
     private ?string $codesFicheMetier = null;
+    private ?string $codesFonction = null;
 
     /** Composition de la mission */
     private ?NiveauEnveloppe $niveau = null;
@@ -122,6 +131,16 @@ class Mission implements HistoriqueAwareInterface,
         return $this->codesFicheMetier = $codesFicheMetier;
     }
 
+    public function getCodesFonction(): ?string
+    {
+        return $this->codesFonction;
+    }
+
+    public function setCodesFonction(?string $codesFonction): ?string
+    {
+        return $this->codesFonction = $codesFonction;
+    }
+
     public function getSourceString(): ?string
     {
         return $this->sourceString;
@@ -134,7 +153,6 @@ class Mission implements HistoriqueAwareInterface,
 
     public function hasActivite(?string $libelle): bool
     {
-        true;
         foreach ($this->activites as $activite) {
             if ($activite->getLibelle() === $libelle) return true;
         }

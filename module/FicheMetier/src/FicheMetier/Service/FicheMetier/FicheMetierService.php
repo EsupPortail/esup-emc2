@@ -634,6 +634,15 @@ class FicheMetierService
         return $results;
     }
 
+    /** @return FicheMetier[] */
+    public function getFichesMetiersByCodeFonction(string $codeFonction): array
+    {
+        //todo
+        // decomposer le code pour pouvoir récupérer le ou les codes associées
+
+        // recuperer les listes ayant un de ces codes
+        return [];
+    }
 
 
 }
