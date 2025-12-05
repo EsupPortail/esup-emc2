@@ -1,8 +1,8 @@
 <?php
 
-namespace Carriere\Service\FonctionType;
+namespace Carriere\Service\NiveauFonction;
 
-use Carriere\Entity\Db\FonctionType;
+use Carriere\Entity\Db\NiveauFonction;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -10,36 +10,36 @@ use FicheMetier\Entity\Db\CodeEmploiType;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
-class FonctionTypeService
+class NiveauFonctionService
 {
     use ProvidesObjectManager;
 
     /** GESTION DE L'ENTITE *******************************************************************************************/
 
-    public function create(FonctionType $fonctionType): void
+    public function create(NiveauFonction $fonctionType): void
     {
         $this->getObjectManager()->persist($fonctionType);
         $this->getObjectManager()->flush($fonctionType);
     }
 
-    public function update(FonctionType $fonctionType): void
+    public function update(NiveauFonction $fonctionType): void
     {
         $this->getObjectManager()->flush($fonctionType);
     }
 
-    public function historise(FonctionType $fonctionType): void
+    public function historise(NiveauFonction $fonctionType): void
     {
         $fonctionType->historiser();
         $this->getObjectManager()->flush($fonctionType);
     }
 
-    public function restore(FonctionType $fonctionType): void
+    public function restore(NiveauFonction $fonctionType): void
     {
         $fonctionType->dehistoriser();
         $this->getObjectManager()->flush($fonctionType);
     }
 
-    public function delete(FonctionType $fonctionType): void
+    public function delete(NiveauFonction $fonctionType): void
     {
         $this->getObjectManager()->remove($fonctionType);
         $this->getObjectManager()->flush($fonctionType);
@@ -49,41 +49,41 @@ class FonctionTypeService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getObjectManager()->getRepository(FonctionType::class)->createQueryBuilder('fonctiontype');
+        $qb = $this->getObjectManager()->getRepository(NiveauFonction::class)->createQueryBuilder('niveaufonction');
         return $qb;
     }
 
-    public function getFonctionType(?int $id): ?FonctionType
+    public function getNiveauFonction(?int $id): ?NiveauFonction
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('fonctiontype.id = :id')->setParameter('id', $id);
+            ->andWhere('niveaufonction.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".FonctionType::class."] partagent le même id [".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs [".NiveauFonction::class."] partagent le même id [".$id."]",0,$e);
         }
         return $result;
     }
 
-    public function getRequestedFonctionType(AbstractActionController $controller, string $param='fonction-type'): ?FonctionType
+    public function getRequestedNiveauFonction(AbstractActionController $controller, string $param='niveau-fonction'): ?NiveauFonction
     {
         $id = $controller->params()->fromRoute($param);
-        $resutl = $this->getFonctionType($id);
+        $resutl = $this->getNiveauFonction($id);
         return $resutl;
     }
 
-    /** @return FonctionType[] */
-    public function getFonctionsTypes(bool $withHisto = false): array
+    /** @return NiveauFonction[] */
+    public function getNiveauxFonctions(bool $withHisto = false): array
     {
         $qb = $this->createQueryBuilder();
-        if (!$withHisto) $qb = $qb->andWhere('fonctiontype.histoDestruction IS NULL');
+        if (!$withHisto) $qb = $qb->andWhere('niveaufonction.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getFonctionsTypesAsOptions(bool $withHisto = false): array
+    public function getNiveauxFonctionsAsOptions(bool $withHisto = false): array
     {
-        $result  = $this->getFonctionsTypes($withHisto);
+        $result  = $this->getNiveauxFonctions($withHisto);
         $options = [];
         foreach ($result as $fonctionType) {
             $options[$fonctionType->getId()] = $fonctionType->getLibelle();
@@ -91,32 +91,32 @@ class FonctionTypeService
         return $options;
     }
 
-    public function getFonctionTypeByCode(?string $code): ?FonctionType
+    public function getNiveauFonctionByCode(?string $code): ?NiveauFonction
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('fonctiontype.code = :code')->setParameter('code', $code)
-            ->andWhere('fonctiontype.histoDestruction IS NULL')
+            ->andWhere('niveaufonction.code = :code')->setParameter('code', $code)
+            ->andWhere('niveaufonction.histoDestruction IS NULL')
         ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".FonctionType::class."] partagent le même code [".$code."] (Attention, cela tient compte du caractère historisé)",0,$e);
+            throw new RuntimeException("Plusieurs [".NiveauFonction::class."] partagent le même code [".$code."] (Attention, cela tient compte du caractère historisé)",0,$e);
         }
         return $result;
     }
 
     /** FACADE ********************************************************************************************************/
 
-    public function isCodeDisponible(FonctionType $type, ?string $code = null): bool
+    public function isCodeDisponible(NiveauFonction $type, ?string $code = null): bool
     {
-        $result = $this->getFonctionTypeByCode($type->getCode()??$code);
+        $result = $this->getNiveauFonctionByCode($type->getCode()??$code);
         if ($result === null) return true;
         if ($result === $type) return true;
         return false;
     }
 
     /** @return CodeEmploiType[] */
-    public function getCodesEmploisTypesByCodeFonction(FonctionType $type, bool $withHisto = false): array
+    public function getCodesEmploisTypesByCodeFonction(NiveauFonction $type, bool $withHisto = false): array
     {
         $qb = $this->getObjectManager()->getRepository(CodeEmploiType::class)->createQueryBuilder('codeemploitype')
             ->andWhere('codeemploitype.codefonction = :type')->setParameter('type', $type)

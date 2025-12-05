@@ -5,7 +5,7 @@ namespace Carriere\Entity\Db;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FonctionType implements HistoriqueAwareInterface
+class NiveauFonction implements HistoriqueAwareInterface
 {
     use HistoriqueAwareTrait;
 

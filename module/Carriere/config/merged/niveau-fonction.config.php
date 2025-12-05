@@ -2,15 +2,15 @@
 
 namespace Carriere;
 
-use Carriere\Controller\FonctionTypeController;
-use Carriere\Controller\FonctionTypeControllerFactory;
-use Carriere\Form\FonctionType\FonctionTypeForm;
-use Carriere\Form\FonctionType\FonctionTypeFormFactory;
-use Carriere\Form\FonctionType\FonctionTypeHydrator;
-use Carriere\Form\FonctionType\FonctionTypeHydratorFactory;
-use Carriere\Provider\Privilege\FonctiontypePrivileges;
-use Carriere\Service\FonctionType\FonctionTypeService;
-use Carriere\Service\FonctionType\FonctionTypeServiceFactory;
+use Carriere\Controller\NiveauFonctionController;
+use Carriere\Controller\NiveauFonctionControllerFactory;
+use Carriere\Form\NiveauFonction\NiveauFonctionForm;
+use Carriere\Form\NiveauFonction\NiveauFonctionFormFactory;
+use Carriere\Form\NiveauFonction\NiveauFonctionHydrator;
+use Carriere\Form\NiveauFonction\NiveauFonctionHydratorFactory;
+use Carriere\Provider\Privilege\NiveaufonctionPrivileges;
+use Carriere\Service\NiveauFonction\NiveauFonctionService;
+use Carriere\Service\NiveauFonction\NiveauFonctionServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -20,58 +20,58 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => FonctionTypeController::class,
+                    'controller' => NiveauFonctionController::class,
                     'action' => [
                         'index',
                     ],
                     'privileges' => [
-                        FonctiontypePrivileges::FONCTIONTYPE_INDEX,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_INDEX,
                     ],
                 ],
                 [
-                    'controller' => FonctionTypeController::class,
+                    'controller' => NiveauFonctionController::class,
                     'action' => [
                         'afficher',
                     ],
                     'privileges' => [
-                        FonctiontypePrivileges::FONCTIONTYPE_AFFICHER,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_AFFICHER,
                     ],
                 ],
                 [
-                    'controller' => FonctionTypeController::class,
+                    'controller' => NiveauFonctionController::class,
                     'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
-                        FonctiontypePrivileges::FONCTIONTYPE_AJOUTER,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_AJOUTER,
                     ],
                 ],
                 [
-                    'controller' => FonctionTypeController::class,
+                    'controller' => NiveauFonctionController::class,
                     'action' => [
                         'modifier',
                     ],
                     'privileges' => [
-                        FonctiontypePrivileges::FONCTIONTYPE_MODIFIER,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_MODIFIER,
                     ],
                 ],
                 [
-                    'controller' => FonctionTypeController::class,
+                    'controller' => NiveauFonctionController::class,
                     'action' => [
                         'historiser',
                         'restaurer',
                     ],
                     'privileges' => [
-                        FonctiontypePrivileges::FONCTIONTYPE_HISTORISER,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_HISTORISER,
                     ],
                 ],
                 [
-                    'controller' => FonctionTypeController::class,
+                    'controller' => NiveauFonctionController::class,
                     'action' => [
                         'supprimer',
                     ],
                     'privileges' => [
-                        FonctiontypePrivileges::FONCTIONTYPE_SUPPRIMER,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_SUPPRIMER,
                     ],
                 ],
             ],
@@ -84,10 +84,10 @@ return [
                 'pages' => [
                     'ressource' => [
                         'pages' => [
-                            'fonction-type' => [
-                                'label' => 'Code Fonction',
-                                'route' => 'fonction-type',
-                                'resource' => PrivilegeController::getResourceId(FonctionTypeController::class, 'index'),
+                            'niveau-fonction' => [
+                                'label' => 'Niveau de fonction',
+                                'route' => 'niveau-fonction',
+                                'resource' => PrivilegeController::getResourceId(NiveauFonctionController::class, 'index'),
                                 'order' => 2501,
                                 'pages' => [],
                                 'icon' => 'fas fa-angle-right',
@@ -101,13 +101,13 @@ return [
 
     'router' => [
         'routes' => [
-            'fonction-type' => [
+            'niveau-fonction' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/fonction-type',
+                    'route' => '/niveau-fonction',
                     'defaults' => [
-                        /** @see FonctionTypeController::indexAction() */
-                        'controller' => FonctionTypeController::class,
+                        /** @see NiveauFonctionController::indexAction() */
+                        'controller' => NiveauFonctionController::class,
                         'action' => 'index',
                     ],
                 ],
@@ -116,10 +116,10 @@ return [
                     'afficher' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/afficher/:fonction-type',
+                            'route' => '/afficher/:niveau-fonction',
                             'defaults' => [
-                                /** @see FonctionTypeController::afficherAction() */
-                                'controller' => FonctionTypeController::class,
+                                /** @see NiveauFonctionController::afficherAction() */
+                                'controller' => NiveauFonctionController::class,
                                 'action' => 'afficher',
                             ],
                         ],
@@ -129,8 +129,8 @@ return [
                         'options' => [
                             'route' => '/ajouter',
                             'defaults' => [
-                                /** @see FonctionTypeController::ajouterAction() */
-                                'controller' => FonctionTypeController::class,
+                                /** @see NiveauFonctionController::ajouterAction() */
+                                'controller' => NiveauFonctionController::class,
                                 'action' => 'ajouter',
                             ],
                         ],
@@ -138,10 +138,10 @@ return [
                     'modifier' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/modifier/:fonction-type',
+                            'route' => '/modifier/:niveau-fonction',
                             'defaults' => [
-                                /** @see FonctionTypeController::modifierAction() */
-                                'controller' => FonctionTypeController::class,
+                                /** @see NiveauFonctionController::modifierAction() */
+                                'controller' => NiveauFonctionController::class,
                                 'action' => 'modifier',
                             ],
                         ],
@@ -149,10 +149,10 @@ return [
                     'historiser' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/historiser/:fonction-type',
+                            'route' => '/historiser/:niveau-fonction',
                             'defaults' => [
-                                /** @see FonctionTypeController::historiserAction() */
-                                'controller' => FonctionTypeController::class,
+                                /** @see NiveauFonctionController::historiserAction() */
+                                'controller' => NiveauFonctionController::class,
                                 'action' => 'historiser',
                             ],
                         ],
@@ -160,10 +160,10 @@ return [
                     'restaurer' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/restaurer/:fonction-type',
+                            'route' => '/restaurer/:niveau-fonction',
                             'defaults' => [
-                                /** @see FonctionTypeController::restaurerAction() */
-                                'controller' => FonctionTypeController::class,
+                                /** @see NiveauFonctionController::restaurerAction() */
+                                'controller' => NiveauFonctionController::class,
                                 'action' => 'restaurer',
                             ],
                         ],
@@ -171,10 +171,10 @@ return [
                     'supprimer' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/supprimer/:fonction-type',
+                            'route' => '/supprimer/:niveau-fonction',
                             'defaults' => [
-                                /** @see FonctionTypeController::supprimerAction() */
-                                'controller' => FonctionTypeController::class,
+                                /** @see NiveauFonctionController::supprimerAction() */
+                                'controller' => NiveauFonctionController::class,
                                 'action' => 'supprimer',
                             ],
                         ],
@@ -186,22 +186,22 @@ return [
 
     'service_manager' => [
         'factories' => [
-            FonctionTypeService::class => FonctionTypeServiceFactory::class,
+            NiveauFonctionService::class => NiveauFonctionServiceFactory::class,
         ],
     ],
     'controllers' => [
         'factories' => [
-            FonctionTypeController::class => FonctionTypeControllerFactory::class,
+            NiveauFonctionController::class => NiveauFonctionControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            FonctionTypeForm::class => FonctionTypeFormFactory::class,
+            NiveauFonctionForm::class => NiveauFonctionFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            FonctionTypeHydrator::class => FonctionTypeHydratorFactory::class
+            NiveauFonctionHydrator::class => NiveauFonctionHydratorFactory::class
         ],
     ],
     'view_helpers' => [

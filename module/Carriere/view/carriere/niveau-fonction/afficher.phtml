@@ -1,17 +1,17 @@
 <?php
 
 /**
- * @see \Carriere\Controller\FonctionTypeController::afficherAction()
- * @var FonctionType $fonctionType
+ * @see \Carriere\Controller\NiveauFonctionController::afficherAction()
+ * @var NiveauFonction $niveauFonction
  * @var CodeEmploiType[] $codesEmploisTypes
  */
 
-use Carriere\Entity\Db\FonctionType;
+use Carriere\Entity\Db\NiveauFonction;
 use FicheMetier\Entity\Db\CodeEmploiType;
 
 ?>
 
-<?php if ($fonctionType->estHistorise()) : ?>
+<?php if ($niveauFonction->estHistorise()) : ?>
     <span class="badge" style="background:darkred;"> Historisée </span>
 <?php endif; ?>
 
@@ -19,13 +19,13 @@ use FicheMetier\Entity\Db\CodeEmploiType;
     <div class="col-md-6">
         <dl class="row">
             <dt class="col-md-4">Code</dt>
-            <dd class="col-md-8"><code><?php echo $fonctionType->getCode(); ?> </code></dd>
+            <dd class="col-md-8"><code><?php echo $niveauFonction->getCode(); ?> </code></dd>
             <dt class="col-md-4">Libellé</dt>
-            <dd class="col-md-8"><?php echo $fonctionType->getLibelle(); ?></dd>
-            <?php if ($fonctionType->getDescription()): ?>
+            <dd class="col-md-8"><?php echo $niveauFonction->getLibelle(); ?></dd>
+            <?php if ($niveauFonction->getDescription()): ?>
             <dt> Descritpion</dt>
             <dd>
-                <?php echo $fonctionType->getDescription(); ?>
+                <?php echo $niveauFonction->getDescription(); ?>
             </dd>
             <?php endif; ?>
         </dl>
@@ -33,12 +33,12 @@ use FicheMetier\Entity\Db\CodeEmploiType;
     <div class="col-md-6">
         <dl class="row">
             <dt class="col-md-4">Dernière modification </dt>
-            <dd class="col-md-8">Le <?php echo $fonctionType->getHistoModification()->format("d/m/Y à H:i"); ?> par <?php echo $fonctionType->getHistoModificateur()->getDisplayName(); ?> </dd>
+            <dd class="col-md-8">Le <?php echo $niveauFonction->getHistoModification()->format("d/m/Y à H:i"); ?> par <?php echo $niveauFonction->getHistoModificateur()->getDisplayName(); ?> </dd>
         </dl>
-        <?php if ($fonctionType->estHistorise()) : ?>
+        <?php if ($niveauFonction->estHistorise()) : ?>
             <dl class="row">
                 <dt class="col-md-4">Historisation</dt>
-                <dd class="col-md-8">Le <?php echo $fonctionType->getHistoDestruction()->format("d/m/Y à H:i"); ?> par <?php echo $fonctionType->getHistoDestructeur()->getDisplayName(); ?> </dd>
+                <dd class="col-md-8">Le <?php echo $niveauFonction->getHistoDestruction()->format("d/m/Y à H:i"); ?> par <?php echo $niveauFonction->getHistoDestructeur()->getDisplayName(); ?> </dd>
             </dl>
         <?php endif; ?>
     </div>

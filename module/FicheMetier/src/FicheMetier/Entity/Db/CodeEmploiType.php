@@ -2,7 +2,7 @@
 
 namespace FicheMetier\Entity\Db;
 
-use Carriere\Entity\Db\FonctionType;
+use Carriere\Entity\Db\NiveauFonction;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -12,7 +12,7 @@ class CodeEmploiType implements HistoriqueAwareInterface
 
     private ?int $id = null;
     private ?FicheMetier $fichemetier = null;
-    private ?FonctionType $codefonction = null;
+    private ?NiveauFonction $codefonction = null;
     private ?string $correspondance = null;
     private ?string $niveau = null;
 
@@ -36,12 +36,12 @@ class CodeEmploiType implements HistoriqueAwareInterface
         $this->fichemetier = $fichemetier;
     }
 
-    public function getCodeFonction(): ?FonctionType
+    public function getCodeFonction(): ?NiveauFonction
     {
         return $this->codefonction;
     }
 
-    public function setCodeFonction(?FonctionType $codeFonction): void
+    public function setCodeFonction(?NiveauFonction $codeFonction): void
     {
         $this->codefonction = $codeFonction;
     }

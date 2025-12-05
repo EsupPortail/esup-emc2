@@ -1,8 +1,8 @@
 <?php
 
-namespace Carriere\Form\FonctionType;
+namespace Carriere\Form\NiveauFonction;
 
-use Carriere\Service\FonctionType\FonctionTypeServiceAwareTrait;
+use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Textarea;
@@ -10,9 +10,9 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
 
-class FonctionTypeForm extends Form
+class NiveauFonctionForm extends Form
 {
-    use FonctionTypeServiceAwareTrait;
+    use NiveauFonctionServiceAwareTrait;
 
     public function init(): void
     {
@@ -79,7 +79,7 @@ class FonctionTypeForm extends Form
                             Callback::INVALID_VALUE => "Ce code n'est pas disponible",
                         ],
                         'callback' => function ($value, $context = []) {
-                            return $this->getFonctionTypeService()->isCodeDisponible($this->getObject(), $value);
+                            return $this->getNiveauFonctionService()->isCodeDisponible($this->getObject(), $value);
                         },
                     ],
                 ]],
