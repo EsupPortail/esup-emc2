@@ -56,7 +56,7 @@
         <field name="hasExpertise" type="boolean" column="expertise" nullable="true"/>
         <field name="raison" type="text" column="raison" nullable="true"/>
 
-        <one-to-many target-entity="FicheMetier\Entity\Db\CodeEmploiType" mapped-by="fichemetier" field="codesEmploiType"/>
+<!--        <one-to-many target-entity="FicheMetier\Entity\Db\CodeEmploiType" mapped-by="fichemetier" field="codesEmploiType"/>-->
 
         <field name="raw" type="text" column="raw" nullable="true"/>
 
