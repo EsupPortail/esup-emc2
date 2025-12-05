@@ -3,6 +3,8 @@
 namespace FicheMetier\Entity\Db;
 
 use Carriere\Entity\Db\NiveauFonction;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -11,10 +13,10 @@ class CodeFonction implements HistoriqueAwareInterface
     use HistoriqueAwareTrait;
 
     private ?int $id = null;
-    private ?FicheMetier $fichemetier = null;
-    private ?NiveauFonction $codefonction = null;
-    private ?string $correspondance = null;
-    private ?string $niveau = null;
+    private ?NiveauFonction $niveauFonction = null;
+    private ?FamilleProfessionnelle $familleProfessionnelle = null;
+    private ?string $description = null;
+    private ?string $code = null;
 
     public function getId(): ?int
     {
@@ -26,51 +28,55 @@ class CodeFonction implements HistoriqueAwareInterface
         $this->id = $id;
     }
 
-    public function getFichemetier(): ?FicheMetier
+    public function getNiveauFonction(): ?NiveauFonction
     {
-        return $this->fichemetier;
+        return $this->niveauFonction;
     }
 
-    public function setFichemetier(?FicheMetier $fichemetier): void
+    public function setNiveauFonction(?NiveauFonction $niveauFonction): void
     {
-        $this->fichemetier = $fichemetier;
+        $this->niveauFonction = $niveauFonction;
     }
 
-    public function getCodeFonction(): ?NiveauFonction
+    public function getFamilleProfessionnelle(): ?FamilleProfessionnelle
     {
-        return $this->codefonction;
+        return $this->familleProfessionnelle;
     }
 
-    public function setCodeFonction(?NiveauFonction $codeFonction): void
+    public function setFamilleProfessionnelle(?FamilleProfessionnelle $familleProfessionnelle): void
     {
-        $this->codefonction = $codeFonction;
+        $this->familleProfessionnelle = $familleProfessionnelle;
     }
 
-    public function getCorrespondance(): ?string
+    public function getDescription(): ?string
     {
-        return $this->correspondance;
+        return $this->description;
     }
 
-    public function setCorrespondance(?string $correspondance): void
+    public function setDescription(?string $description): void
     {
-        $this->correspondance = $correspondance;
+        $this->description = $description;
     }
 
-    public function getNiveau(): ?string
+    public function getCode(): ?string
     {
-        return $this->niveau;
+        return $this->code;
     }
 
-    public function setNiveau(?string $niveau): void
+    public function setCode(?string $code): void
     {
-        $this->niveau = $niveau;
+        $this->code = $code;
     }
 
-    public function prettyPrint(): string
+    /** FACADE ********************************************************************************************************/
+
+    public function computeCode(): ?string
     {
-        return
-            ($this->getCodeFonction()?$this->getCodeFonction()->getCode():"nill").
-            ($this->getCorrespondance()??"?").
-            ($this->getNiveau()??"?");
+        if ($this->getNiveauFonction() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
+        if ($this->getFamilleProfessionnelle() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
+        $code = $this->getNiveauFonction()->getCode()??"?fonction";
+        $code .= $this->getFamilleProfessionnelle()->getCorrespondance()->getCategorie()??"specialité";
+        $code .= $this->getFamilleProfessionnelle()->getPosition()??"?position";
+        return $code;
     }
 }
