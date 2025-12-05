@@ -3,7 +3,6 @@
 namespace FicheMetier\Form\CodeEmploiType;
 
 
-use Carriere\Service\FonctionType\FonctionTypeServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
@@ -13,7 +12,6 @@ use Laminas\InputFilter\Factory;
 
 class CodeEmploiTypeForm extends Form
 {
-    use FonctionTypeServiceAwareTrait;
     public function init(): void
     {
         // code fonction
@@ -24,7 +22,7 @@ class CodeEmploiTypeForm extends Form
                 'label' => "Code Fonction <span class='icon icon-obligatoire' title='Obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => 'Sélectionner une fiche métier ...',
-                'value_options' => $this->getFonctionTypeService()->getFonctionsTypesAsOptions(),
+//                'value_options' => $this->getFonctionTypeService()->getFonctionsTypesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'code_fonction',
