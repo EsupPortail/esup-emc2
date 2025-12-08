@@ -50,15 +50,16 @@ $metier = $fichemetier->getMetier();
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-4"> Code Fonction</dt>
         <dd class="col-md-8">
-            <?php $code = $fichemetier->getCodeEmploiType(); ?>
+            <?php $code = $fichemetier->getCodeFonction(); ?>
             <?php if ($code !== null) : ?>
-                <code> <?php echo $code->prettyPrint(); ?> </code>
+                <code> <?php echo $code->computeCode(); ?> </code>
             <?php else : ?>
                 Non renseigné
             <?php endif; ?>
+            <br> <!-- // todo : retirer ce br copium -->
             <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
-                <?php /** @see FicheMetierController::modifierCodeEmploiTypeAction() */ ?>
-                <a href="<?php echo $this->url('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                <?php /** @see FicheMetierController::modifierCodeFonctionAction() */ ?>
+                <a href="<?php echo $this->url('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                    class="ajax-modal action primary" data-event="modification"
                 >
                     <small>
@@ -66,8 +67,8 @@ $metier = $fichemetier->getMetier();
                         Modifier
                     </small>
                 </a>
-                <?php /** @see FicheMetierController::supprimerCodeEmploiTypeAction() */ ?>
-                <a href="<?php echo $this->url('fiche-metier/supprimer-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                <?php /** @see FicheMetierController::supprimerCodeFonctionAction() */ ?>
+                <a href="<?php echo $this->url('fiche-metier/supprimer-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                    class="action danger"
                 >
                     <small>

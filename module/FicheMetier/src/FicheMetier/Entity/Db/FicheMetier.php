@@ -41,6 +41,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
+    public ?CodeFonction $codeFonction = null;
 
     private Collection $codesEmploiType;
 
@@ -144,6 +145,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $code = $this->getCodeEmploiType();
         $code->historiser();
         $this->codesEmploiType->add($codeEmploiType);
+    }
+
+    public function getCodeFonction(): ?CodeFonction
+    {
+        return $this->codeFonction;
+    }
+
+    public function setCodeFonction(?CodeFonction $codeFonction): void
+    {
+        $this->codeFonction = $codeFonction;
     }
 
     /** @return TendanceElement[] */

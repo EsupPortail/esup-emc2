@@ -3,6 +3,7 @@
 namespace Metier\Service\FamilleProfessionnelle;
 
 use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\NiveauFonction;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -86,7 +87,7 @@ class FamilleProfessionnelleService
         $options = [];
         foreach ($familles as $famille) {
             if ($historiser or $famille->estNonHistorise())
-                $options[$famille->getId()] = $famille->getLibelle() . " <code>" . $famille->getCorrespondance()?->getCategorie().$famille->getPosition()."</code>";
+                $options[$famille->getId()] = $this->optionify($famille);
         }
         return $options;
     }
@@ -177,6 +178,32 @@ class FamilleProfessionnelleService
     }
 
     /** FACADE ********************************************************************************************************/
+
+    public function optionify(FamilleProfessionnelle $familleProfessionnelle): array
+    {
+        $label = $familleProfessionnelle->getLibelle();
+        if ($familleProfessionnelle->getCorrespondance()) {
+            $label .= " <code>".$familleProfessionnelle->getCorrespondance()->getCategorie()."</code>";
+        } else {
+            $label .= "  <em style='color:grey'>Aucune spécialité</em> ";
+        }
+        if ($familleProfessionnelle->getPosition()) {
+            $label .= "<code>".$familleProfessionnelle->getPosition()."</code>";
+        } else {
+            $label .= " <em style='color:grey'>Aucune position</em> ";
+        }
+
+        $this_option = [
+            'value' => $familleProfessionnelle->getId(),
+            'attributes' => [
+                'data-content' =>
+                    $label
+            ],
+            'label' => $familleProfessionnelle->getLibelle(),
+        ];
+        return $this_option;
+    }
+
 
     public function createWith(string $familleLibelle, bool $persist = true): ?FamilleProfessionnelle
     {

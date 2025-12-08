@@ -8,6 +8,7 @@ use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
+//todo à décaller dans le module EmploiRepere
 class CodeFonction implements HistoriqueAwareInterface
 {
     use HistoriqueAwareTrait;
@@ -75,7 +76,7 @@ class CodeFonction implements HistoriqueAwareInterface
         if ($this->getNiveauFonction() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
         if ($this->getFamilleProfessionnelle() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
         $code = $this->getNiveauFonction()->getCode()??"?fonction";
-        $code .= $this->getFamilleProfessionnelle()->getCorrespondance()->getCategorie()??"specialité";
+        $code .= $this->getFamilleProfessionnelle()->getCorrespondance()?->getCategorie()??"specialité";
         $code .= $this->getFamilleProfessionnelle()->getPosition()??"?position";
         return $code;
     }

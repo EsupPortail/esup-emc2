@@ -8,10 +8,6 @@ use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormFactory;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydrator;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydratorFactory;
-use FicheMetier\Form\CodeFonction\CodeFonctionForm;
-use FicheMetier\Form\CodeFonction\CodeFonctionFormFactory;
-use FicheMetier\Form\CodeFonction\CodeFonctionHydrator;
-use FicheMetier\Form\CodeFonction\CodeFonctionHydratorFactory;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
 use FicheMetier\Form\FicheMetierImportation\FichierMetierImportationHydrator;
@@ -105,8 +101,9 @@ return [
                         'modifier-expertise',
                         'modifier-metier',
                         'modifier-raison',
-                        'modifier-code-emploi-type',
-                        'supprimer-code-emploi-type',
+
+                        'modifier-code-fonction',
+                        'supprimer-code-fonction',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -321,23 +318,23 @@ return [
                             ],
                         ],
                     ],
-                    'modifier-code-emploi-type' => [
+                    'modifier-code-fonction' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-code-emploi-type/:fiche-metier',
+                            'route'    => '/modifier-code-fonction/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::modifierCodeEmploiTypeAction() */
-                                'action'     => 'modifier-code-emploi-type',
+                                /** @see FicheMetierController::modifierCodeFonctionAction() */
+                                'action'     => 'modifier-code-fonction',
                             ],
                         ],
                     ],
-                    'supprimer-code-emploi-type' => [
+                    'supprimer-code-fonction' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-code-emploi-type/:fiche-metier',
+                            'route'    => '/supprimer-code-fonction/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::supprimerCodeEmploiTypeAction() */
-                                'action'     => 'supprimer-code-emploi-type',
+                                /** @see FicheMetierController::supprimerCodeFonctionAction() */
+                                'action'     => 'supprimer-code-fonction',
                             ],
                         ],
                     ],
@@ -440,7 +437,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            CodeFonctionForm::class => CodeFonctionFormFactory::class,
             CodeEmploiTypeForm::class => CodeEmploiTypeFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
@@ -449,7 +445,6 @@ return [
     ],
     'hydrators' => [
         'factories' => [
-            CodeFonctionHydrator::class => CodeFonctionHydratorFactory::class,
             CodeEmploiTypeHydrator::class => CodeEmploiTypeHydratorFactory::class,
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,

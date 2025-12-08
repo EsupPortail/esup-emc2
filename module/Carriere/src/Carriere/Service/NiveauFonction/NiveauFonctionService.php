@@ -86,7 +86,7 @@ class NiveauFonctionService
         $result  = $this->getNiveauxFonctions($withHisto);
         $options = [];
         foreach ($result as $niveauFonction) {
-            $options[$niveauFonction->getId()] = $niveauFonction->getLibelle(). " <code>".$niveauFonction->getCode()."</code>";
+            $options[$niveauFonction->getId()] = $this->optionify($niveauFonction);
         }
         return $options;
     }
@@ -106,6 +106,25 @@ class NiveauFonctionService
     }
 
     /** FACADE ********************************************************************************************************/
+
+    public function optionify(NiveauFonction $niveauFonction): array
+    {
+        $label = $niveauFonction->getLibelle();
+        if ($niveauFonction->getCode()) {
+            $label .= "  <code>".$niveauFonction->getCode() . "</code>";
+        } else {
+            $label .= "  <em style='color:grey'>Aucun code fonction</em>";
+        }
+        $this_option = [
+            'value' => $niveauFonction->getId(),
+            'attributes' => [
+                'data-content' =>
+                    $label
+            ],
+            'label' => $niveauFonction->getLibelle(),
+        ];
+        return $this_option;
+    }
 
     public function isCodeDisponible(NiveauFonction $type, ?string $code = null): bool
     {

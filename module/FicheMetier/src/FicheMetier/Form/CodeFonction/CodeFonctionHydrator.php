@@ -17,10 +17,10 @@ class CodeFonctionHydrator implements HydratorInterface
 
     public function extract(object $object): array
     {
-        /** @var CodeFonction $codeFonction */
+        /** @var CodeFonction $object */
         $data = [
-            'famille' => $object->getFamille()?->getId(),
-            'niveau' => $object->getNiveau()?->getId(),
+            'famille' => $object->getFamilleProfessionnelle()?->getId(),
+            'niveau_fonction' => $object->getNiveauFonction()?->getId(),
         ];
         return $data;
     }
@@ -28,12 +28,12 @@ class CodeFonctionHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         $famille = (isset($data['famille']))? $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($data['famille']): null;
-        $niveau  = (isset($data['niveau']))? $this->getNiveauFonctionService()->getNiveauFonction($data['niveau']): null;
+        $niveau  = (isset($data['niveau_fonction']))? $this->getNiveauFonctionService()->getNiveauFonction($data['niveau_fonction']): null;
 
 
-        /** @var CodeFonction $codeFonction */
-        $object->setFamille($famille);
-        $object->setNiveau($niveau);
+        /** @var CodeFonction $object */
+        $object->setFamilleProfessionnelle($famille);
+        $object->setNiveauFonction($niveau);
         return $object;
     }
 

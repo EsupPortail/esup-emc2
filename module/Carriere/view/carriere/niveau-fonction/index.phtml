@@ -39,15 +39,14 @@ $canSupprimer = $this->isAllowed(NiveaufonctionPrivileges::getResourceId(Niveauf
 <table class="table table-condensed" id="niveauxfonctions">
     <thead>
     <tr>
-        <th class="col-md-2"> Code</th>
         <th class="col-md-8"> Libellé</th>
+        <th class="col-md-2"> Code</th>
         <th class="col-md-2 action"> Action</th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($niveauxFonctions as $niveauFonction) : ?>
         <tr <?php if ($niveauFonction->estHistorise()) echo ' class="historise" '; ?> >
-            <td data-column-id="Code"> <?php echo $niveauFonction->getCode(); ?> </td>
             <td data-column-id="Libellé">
                 <?php echo $niveauFonction->getLibelle(); ?>
                 <?php if ($niveauFonction->getDescription()) : ?>
@@ -55,6 +54,7 @@ $canSupprimer = $this->isAllowed(NiveaufonctionPrivileges::getResourceId(Niveauf
                           data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php endif; ?>
             </td>
+            <td data-column-id="Code"> <code><?php echo $niveauFonction->getCode(); ?></code> </td>
             <td class="action" data-column-id="Action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Carriere\Controller\NiveauFonctionController::afficherAction() */ ?>

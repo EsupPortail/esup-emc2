@@ -10,12 +10,13 @@ use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
-use FicheMetier\Entity\Db\CodeEmploiType;
+use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -23,7 +24,6 @@ use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementServiceAwareTrait;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
-use Laminas\Form\Form;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -41,6 +41,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 class FicheMetierController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use CodeFonctionServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
@@ -358,47 +359,45 @@ class FicheMetierController extends AbstractActionController
         return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
     }
 
-    public function modifierCodeEmploiTypeAction(): ViewModel
+    public function modifierCodeFonctionAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $code = $fichemetier->getCodeEmploiType();
-        $new = false;
-        if ($code === null) {
-            $code = new CodeEmploiType();
-            $code->setFichemetier($fichemetier);
-            $new = true;
-        }
-        $form = new Form();
-//        $form = $this->getCodeEmploiTypeForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true));
-//        $form->bind($code);
+        $codeFonction = new CodeFonction();
+
+        $form = $this->getCodeFonctionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($codeFonction);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                if ($new) $this->getFicheMetierService()->getObjectManager()->persist($code);
-                $this->getFicheMetierService()->getObjectManager()->flush($code);
+                $existingCode = $this->getCodeFonctionService()->getCodeFonctionByNiveauAndFamille($codeFonction->getNiveauFonction(), $codeFonction->getFamilleProfessionnelle());
+                if ($existingCode) {
+                    $fichemetier->setCodeFonction($existingCode);
+                } else {
+                    $this->getCodeFonctionService()->create($codeFonction);
+                    $fichemetier->setCodeFonction($codeFonction);
+                }
+                $this->getFicheMetierService()->update($fichemetier);
                 exit();
             }
         }
 
         $vm = new ViewModel([
-            'title' => "Modification du code emploi type",
+            'title' => "Modification du code fonction",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function supprimerCodeEmploiTypeAction(): Response
+    public function supprimerCodeFonctionAction(): Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $code = $fichemetier->getCodeEmploiType();
-
-        $code->historiser();
-        $this->getFicheMetierService()->getObjectManager()->flush($code);
+        $fichemetier->setCodeFonction(null);
+        $this->getFicheMetierService()->update($fichemetier);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
