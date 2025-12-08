@@ -86,7 +86,7 @@ class FamilleProfessionnelleService
         $options = [];
         foreach ($familles as $famille) {
             if ($historiser or $famille->estNonHistorise())
-                $options[$famille->getId()] = $famille->getLibelle();
+                $options[$famille->getId()] = $famille->getLibelle() . " <code>" . $famille->getCorrespondance()?->getCategorie().$famille->getPosition()."</code>";
         }
         return $options;
     }

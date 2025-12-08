@@ -65,7 +65,7 @@ span.action a
 span.action,
 a.action {
     text-decoration: none;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     border-radius : 0.25rem;
 }
 a.action.success {

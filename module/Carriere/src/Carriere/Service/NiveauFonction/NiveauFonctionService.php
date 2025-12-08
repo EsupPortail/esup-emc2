@@ -85,8 +85,8 @@ class NiveauFonctionService
     {
         $result  = $this->getNiveauxFonctions($withHisto);
         $options = [];
-        foreach ($result as $fonctionType) {
-            $options[$fonctionType->getId()] = $fonctionType->getLibelle();
+        foreach ($result as $niveauFonction) {
+            $options[$niveauFonction->getId()] = $niveauFonction->getLibelle(). " <code>".$niveauFonction->getCode()."</code>";
         }
         return $options;
     }

@@ -12,7 +12,7 @@ use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use FicheMetier\Entity\Db\CodeEmploiType;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormAwareTrait;
+use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
@@ -23,6 +23,7 @@ use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementServiceAwareTrait;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
+use Laminas\Form\Form;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -54,7 +55,7 @@ class FicheMetierController extends AbstractActionController
     use ThematiqueElementServiceAwareTrait;
     use ThematiqueTypeServiceAwareTrait;
 
-    use CodeEmploiTypeFormAwareTrait;
+    use CodeFonctionFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -367,9 +368,10 @@ class FicheMetierController extends AbstractActionController
             $code->setFichemetier($fichemetier);
             $new = true;
         }
-        $form = $this->getCodeEmploiTypeForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true));
-        $form->bind($code);
+        $form = new Form();
+//        $form = $this->getCodeEmploiTypeForm();
+//        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true));
+//        $form->bind($code);
 
         $request = $this->getRequest();
         if ($request->isPost()) {

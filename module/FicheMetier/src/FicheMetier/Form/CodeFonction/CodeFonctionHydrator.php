@@ -3,26 +3,37 @@
 namespace FicheMetier\Form\CodeFonction;
 
 use Application\Entity\Db\FichePoste;
+use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
+use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use Laminas\Hydrator\HydratorInterface;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
 class CodeFonctionHydrator implements HydratorInterface
 {
+    use FamilleProfessionnelleServiceAwareTrait;
+    use NiveauFonctionServiceAwareTrait;
+
     public function extract(object $object): array
     {
-        /** @var FichePoste $object */
+        /** @var CodeFonction $codeFonction */
         $data = [
-            'code-fonction' => $object->getCodeFonction(),
+            'famille' => $object->getFamille()?->getId(),
+            'niveau' => $object->getNiveau()?->getId(),
         ];
         return $data;
     }
 
     public function hydrate(array $data, object $object): object
     {
-        $code = (isset($data['code-fonction']) AND trim($data['code-fonction']) !=='') ? trim ($data['code-fonction']) : null;
+        $famille = (isset($data['famille']))? $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($data['famille']): null;
+        $niveau  = (isset($data['niveau']))? $this->getNiveauFonctionService()->getNiveauFonction($data['niveau']): null;
 
-        /** @var FichePoste $object */
-        $object->setCodeFonction($code);
+
+        /** @var CodeFonction $codeFonction */
+        $object->setFamille($famille);
+        $object->setNiveau($niveau);
         return $object;
     }
 

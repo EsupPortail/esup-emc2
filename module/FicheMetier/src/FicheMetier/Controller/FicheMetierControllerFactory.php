@@ -79,7 +79,6 @@ class FicheMetierControllerFactory
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
-         * @var CodeEmploiTypeForm $codeEmploiTypeForm
          */
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
@@ -88,12 +87,10 @@ class FicheMetierControllerFactory
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
-        $codeEmploiTypeForm = $container->get('FormElementManager')->get(CodeEmploiTypeForm::class);
 
         $controller = new FicheMetierController();
         $controller->setAgentService($agentService);
         $controller->setCompetenceTypeService($competenceTypeService);
-        $controller->setCodeEmploiTypeForm($codeEmploiTypeForm);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierMissionService($ficheMetierMissionService);
