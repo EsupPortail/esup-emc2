@@ -1,6 +1,7 @@
 <?php
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
@@ -13,7 +14,10 @@ use UnicaenEtat\Entity\Db\EtatType;
  * @var FicheMetier[] $fiches
  * @var Referentiel[] $referentiels
  * @var EtatType[] $etatTypes
+ * @var CodeFonction[] $codesFonctions
  * @var array $params
+ *
+ * @var bool $displayCodeFonction
  *
  */
 
@@ -81,7 +85,7 @@ $this->headTitle('Index des fiches métiers');
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 
-<?php echo $this->partial('partial/filtre.phtml', ['referentiels' => $referentiels, 'etatTypes' => $etatTypes, 'params' => $params]); ?>
+<?php echo $this->partial('partial/filtre.phtml', ['referentiels' => $referentiels, 'etatTypes' => $etatTypes, 'codesFonctions' => $codesFonctions, 'displayCodeFonction' => $displayCodeFonction, 'params' => $params]); ?>
 
 
 <table id="fiches" class="table table-condensed datatable">
@@ -114,6 +118,16 @@ $this->headTitle('Index des fiches métiers');
                     </span>
                 <?php else: ?>
                     <?php echo $fiche->getLibelle(); ?>
+                <?php endif; ?>
+                <?php if ($displayCodeFonction) : ?>
+                    <br>
+                    <?php if ($fiche->getCodeFonction()) : ?>
+                        <code><?php echo $fiche->getCodeFonction()->computeCode(); ?></code>
+                    <?php else : ?>
+                        <span style='color: var(--bs-warning);'>
+                            <span class="icon icon-attention"></span> Aucun code fonction
+                        </span>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <br> <?php echo $fiche->printReference(); ?>
                 <?php if ($fiche->hasExpertise() === true) : ?>

@@ -79,6 +79,20 @@ class CodeFonctionService
         return $result;
     }
 
+    public function getCodeFonctionByNiveauAndFamille(?NiveauFonction $niveauFonction, ?FamilleProfessionnelle $familleProfessionnelle): ?CodeFonction
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('codeFonction.niveauFonction = :niveauFonction')->setParameter('niveauFonction', $niveauFonction)
+            ->andWhere('codeFonction.familleProfessionnelle = :familleProfessionnelle')->setParameter('familleProfessionnelle', $familleProfessionnelle)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".CodeFonction::class."] partagent les mêmes [Niveau:".$niveauFonction->getLibelle()."|Famille".$familleProfessionnelle->getLibelle()."]",-1,$e);
+        }
+        return $result;
+    }
+
     /** @return CodeFonction[] */
     public function getCodesFonctions(bool $withHisto = false): array
     {
@@ -91,17 +105,25 @@ class CodeFonctionService
         return $result;
     }
 
-    public function getCodeFonctionByNiveauAndFamille(?NiveauFonction $niveauFonction, ?FamilleProfessionnelle $familleProfessionnelle): ?CodeFonction
+    /** @return CodeFonction[] */
+    public function getCodesFonctionsByNiveauFonction(?NiveauFonction $niveauFonction, bool $withHisto = false): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('codeFonction.niveauFonction = :niveauFonction')->setParameter('niveauFonction', $niveauFonction)
-            ->andWhere('codeFonction.familleProfessionnelle = :familleProfessionnelle')->setParameter('familleProfessionnelle', $familleProfessionnelle)
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".CodeFonction::class."] partagent les mêmes [Niveau:".$niveauFonction->getLibelle()."|Famille".$familleProfessionnelle->getLibelle()."]",-1,$e);
-        }
+            ->andWhere('codeFonction.niveauFonction = :niveauFonction')->setParameter('niveauFonction', $niveauFonction);
+        if (!$withHisto) $qb = $qb->andWhere('codeFonction.histoDestruction IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return CodeFonction[] */
+    public function getCodesFonctionsByFamilleProfessionnelle(?FamilleProfessionnelle $familleProfessionnelle, bool $withHisto = false): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('codeFonction.familleProfessionnelle = :familleProfessionnelle')->setParameter('familleProfessionnelle', $familleProfessionnelle);
+        if (!$withHisto) $qb = $qb->andWhere('codeFonction.histoDestruction IS NULL');
+
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 }

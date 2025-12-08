@@ -3,11 +3,11 @@
 /**
  * @see \Carriere\Controller\NiveauFonctionController::afficherAction()
  * @var NiveauFonction $niveauFonction
- * @var CodeEmploiType[] $codesEmploisTypes
+ * @var CodeFonction[] $codesFonctions
  */
 
 use Carriere\Entity\Db\NiveauFonction;
-use FicheMetier\Entity\Db\CodeEmploiType;
+use FicheMetier\Entity\Db\CodeFonction;
 
 ?>
 
@@ -45,12 +45,12 @@ use FicheMetier\Entity\Db\CodeEmploiType;
 </div>
 
 <h2>
-    Codes Emplois Types associés
-    <span class="badge"><?php echo count($codesEmploisTypes); ?></span>
+    Codes fonctions associés
+    <span class="badge"><?php echo count($codesFonctions); ?></span>
 </h2>
 
 <ul>
-    <?php foreach ($codesEmploisTypes as $codeEmploiType) : ?>
-        <li> <code><?php echo $codeEmploiType->prettyPrint(); ?></code></li>
+    <?php foreach ($codesFonctions as $codeFonction) : ?>
+        <li> <code><?php echo $codeFonction->computeCode(); ?></code></li>
     <?php endforeach; ?>
 </ul>

@@ -3,6 +3,8 @@
 namespace FicheMetier\Entity\Db;
 
 use Carriere\Entity\Db\NiveauFonction;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -18,6 +20,13 @@ class CodeFonction implements HistoriqueAwareInterface
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?string $description = null;
     private ?string $code = null;
+
+    private Collection $fichesmetiers;
+
+    public function __construct()
+    {
+        $this->fichesmetiers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,15 +78,21 @@ class CodeFonction implements HistoriqueAwareInterface
         $this->code = $code;
     }
 
+    /** @return FicheMetier[] */
+    public function getFichesMetiers(): array
+    {
+        return $this->fichesmetiers->toArray();
+    }
+
     /** FACADE ********************************************************************************************************/
 
     public function computeCode(): ?string
     {
         if ($this->getNiveauFonction() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
         if ($this->getFamilleProfessionnelle() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
-        $code = $this->getNiveauFonction()->getCode()??"?fonction";
-        $code .= $this->getFamilleProfessionnelle()->getCorrespondance()?->getCategorie()??"specialité";
-        $code .= $this->getFamilleProfessionnelle()->getPosition()??"?position";
+        $code = $this->getNiveauFonction()->getCode()??"????";
+        $code .= $this->getFamilleProfessionnelle()->getCorrespondance()?->getCategorie()??"?";
+        $code .= $this->getFamilleProfessionnelle()->getPosition()??"?";
         return $code;
     }
 }

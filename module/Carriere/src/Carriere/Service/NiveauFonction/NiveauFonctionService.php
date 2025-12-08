@@ -134,14 +134,4 @@ class NiveauFonctionService
         return false;
     }
 
-    /** @return CodeEmploiType[] */
-    public function getCodesEmploisTypesByCodeFonction(NiveauFonction $type, bool $withHisto = false): array
-    {
-        $qb = $this->getObjectManager()->getRepository(CodeEmploiType::class)->createQueryBuilder('codeemploitype')
-            ->andWhere('codeemploitype.codefonction = :type')->setParameter('type', $type)
-        ;
-        if (!$withHisto) $qb = $qb->andWhere('codeemploitype.histoDestruction IS NULL');
-        $result  = $qb->getQuery()->getResult();
-        return $result;
-    }
 }

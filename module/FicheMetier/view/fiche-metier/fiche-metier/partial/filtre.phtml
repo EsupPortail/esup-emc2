@@ -3,9 +3,12 @@
 /**
  * @var Referentiel[] $referentiels
  * @var EtatType[] $etatTypes
+ * @var CodeFonction[] $codesFonctions
  * @var array $params
+ * @var bool $displayCodeFonction
  */
 
+use FicheMetier\Entity\Db\CodeFonction;
 use Referentiel\Entity\Db\Referentiel;
 use UnicaenEtat\Entity\Db\EtatType;
 
@@ -22,7 +25,7 @@ use UnicaenEtat\Entity\Db\EtatType;
                 <div class="col-md-10">
                     <div class="row">
                         <!-- REFERENTIEL -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="referentiel">Référentiel :</label>
                             <select id="referentiel" name="referentiel" class="form-control selectpicker"
                                     data-live-search="true">
@@ -38,9 +41,10 @@ use UnicaenEtat\Entity\Db\EtatType;
                             </select>
                         </div>
                         <!-- ETAT -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="etat">État de la fiche :</label>
+                                <br>
                                 <select id="etat" name="etat" class="selectpicker">
                                     <option value=""> Tous les états</option>
                                     <?php foreach ($etatTypes as $etatType) : ?>
@@ -55,6 +59,27 @@ use UnicaenEtat\Entity\Db\EtatType;
                                 </select>
                             </div>
                         </div>
+                        <!-- CODE FONCTION -->
+                        <?php if ($displayCodeFonction) : ?>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="codefonction">Code fonction :</label>
+                                    <br>
+                                    <select id="codefonction" name="codefonction" class="selectpicker">
+                                        <option value=""> Tous les codes fonctions</option>
+                                        <?php foreach ($codesFonctions as $codefonction) : ?>
+                                            <option
+                                                    value="<?php echo $codefonction->getId(); ?>"
+                                                    data-content='<code><?php echo $codefonction->computeCode(); ?></code>'
+                                                    <?php if ($codefonction->getId() == $params['codefonction']) echo " selected "; ?>
+                                            >
+                                                <?php echo $codefonction->computeCode(); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <!-- BOUTON -->

@@ -10,7 +10,7 @@ use Carriere\Entity\Db\NiveauFonction;
 use Carriere\Provider\Privilege\NiveaufonctionPrivileges;
 use Carriere\Service\NiveauFonction\NiveauFonctionService;
 
-$this->headTitle("Niveau de fonction");
+$this->headTitle("Niveaux de fonctions");
 
 $canAfficher = $this->isAllowed(NiveaufonctionPrivileges::getResourceId(NiveaufonctionPrivileges::NIVEAUFONCTION_AFFICHER));
 $canAjouter = $this->isAllowed(NiveaufonctionPrivileges::getResourceId(NiveaufonctionPrivileges::NIVEAUFONCTION_AJOUTER));
@@ -21,7 +21,7 @@ $canSupprimer = $this->isAllowed(NiveaufonctionPrivileges::getResourceId(Niveauf
 ?>
 
 <h1 class="page-header">
-    Codes Fonctions
+    Niveaux de fonctions
 </h1>
 
 <?php if ($canAjouter) : ?>

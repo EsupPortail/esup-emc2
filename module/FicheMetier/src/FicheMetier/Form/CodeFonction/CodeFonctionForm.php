@@ -37,7 +37,7 @@ class CodeFonctionForm extends Form
             'type' => Select::class,
             'name' => 'famille',
             'options' => [
-                'label' => "Niveau de fonction <span title='Champ obligatoire'></span>:",
+                'label' => "Famille professionnelle <span title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => 'Sélectionner une famille professionnelle ...',
                 'value_options' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesAsOptions(),

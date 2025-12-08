@@ -5,6 +5,7 @@ namespace Carriere\Controller;
 use Carriere\Entity\Db\NiveauFonction;
 use Carriere\Form\NiveauFonction\NiveauFonctionFormAwareTrait;
 use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -14,6 +15,7 @@ use Laminas\View\Model\ViewModel;
 
 class NiveauFonctionController extends AbstractActionController
 {
+    use CodeFonctionServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
     use NiveauFonctionFormAwareTrait;
 
@@ -30,12 +32,12 @@ class NiveauFonctionController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $niveauFonction = $this->getNiveauFonctionService()->getRequestedNiveauFonction($this);
-        $codesEmploisTypes = $this->getNiveauFonctionService()->getCodesEmploisTypesByCodeFonction($niveauFonction);
+        $codesFonctions = $this->getCodeFonctionService()->getCodesFonctionsByNiveauFonction($niveauFonction);
 
         return new ViewModel([
             'title' => "Affichage du niveau de fonction",
             'niveauFonction' => $niveauFonction,
-            'codesEmploisTypes' => $codesEmploisTypes,
+            'codesFonctions' => $codesFonctions,
         ]);
     }
 

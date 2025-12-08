@@ -1,0 +1,68 @@
+<?php
+
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Entity\Db\CodeFonction;
+
+/**
+ * @see \FicheMetier\Service\CodeFonction\CodeFonctionController::indexAction()
+ * @var CodeFonction[] $codesFonctions
+ */
+
+$this->headTitle("Codes fonctions");
+
+$canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
+
+?>
+
+<h1 class="page-header">
+    Codes fonctions
+</h1>
+
+<table class="table table-condensed" id="codesfonctions">
+    <thead>
+    <tr>
+        <th class="col-md-3"> Code fonction </th>
+        <th class="col-md-3"> Niveau de fonction </th>
+        <th class="col-md-4"> Famille professionnelle </th>
+        <th class="col-md-2"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($codesFonctions as $codeFonction): ?>
+        <tr class="<?php if ($codeFonction->estHistorise()) echo "historise "; ?>">
+            <td data-column-id="Code fonction">
+                <?php echo $codeFonction->computeCode(); ?>
+                <br>
+                <?php $fichesmetiers = $codeFonction->getFichesMetiers(); ?>
+                <?php if (!empty($fichesmetiers)): ?>
+                    <?php if ($canFicheMetierIndex): ?>
+                        <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier', [], ['query' => ['codefonction' => $codeFonction->getId()]], true) ?>">
+                            <span class="badge fichemetier"><?php echo count($fichesmetiers) ?> fiches métiers</span></a>
+                    <?php else:  ?>
+                        <span class="badge fichemetier"><?php echo count($fichesmetiers) ?> fiches métiers</span>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+            </td>
+            <td data-column-id="Niveau de fonction">
+                <?php if ($codeFonction->getNiveauFonction()) : ?>
+                    <?php echo $codeFonction->getNiveauFonction()->getLibelle(); ?>
+                <?php else : ?>
+                    <em style="color: gray;">Aucun niveau de fonction</em>
+                <?php endif; ?>
+            </td>
+            <td data-column-id="Famille professionnelle">
+                <?php if ($codeFonction->getFamilleProfessionnelle()) : ?>
+                    <?php echo $codeFonction->getFamilleProfessionnelle()->getLibelle(); ?>
+                <?php else : ?>
+                    <em style="color: gray;">Aucune famille professionnelle</em>
+                <?php endif; ?>
+            </td>
+            <td data-column-id="Action">
+                <span class="todo"> lister les actions possibles</span>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

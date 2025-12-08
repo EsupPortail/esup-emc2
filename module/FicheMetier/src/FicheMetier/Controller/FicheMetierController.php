@@ -68,9 +68,12 @@ class FicheMetierController extends AbstractActionController
     public function indexAction(): ViewModel
     {
         $params = $this->params()->fromQuery();
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
 
         $referentiels = $this->getReferentielService()->getReferentiels();
         $etatTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
+
+        $codesFonctions = $displayCodeFonction?$this->getCodeFonctionService()->getCodesFonctions():null;
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
 
@@ -79,6 +82,8 @@ class FicheMetierController extends AbstractActionController
             'etatTypes' => $etatTypes,
             'fiches' => $fichesMetiers,
             'referentiels' => $referentiels,
+            'displayCodeFonction' => $displayCodeFonction,
+            'codesFonctions' => $codesFonctions,
         ]);
     }
 
@@ -362,7 +367,11 @@ class FicheMetierController extends AbstractActionController
     public function modifierCodeFonctionAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $codeFonction = new CodeFonction();
+
+        $codeFonction = $fichemetier->getCodeFonction();
+        if ($codeFonction === null) {
+            $codeFonction = new CodeFonction();
+        }
 
         $form = $this->getCodeFonctionForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true));
