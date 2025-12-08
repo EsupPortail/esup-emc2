@@ -60,7 +60,6 @@
             <join-column name="code_fonction_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many target-entity="FicheMetier\Entity\Db\CodeEmploiType" mapped-by="fichemetier" field="codesEmploiType"/>
 
         <field name="raw" type="text" column="raw" nullable="true"/>
 

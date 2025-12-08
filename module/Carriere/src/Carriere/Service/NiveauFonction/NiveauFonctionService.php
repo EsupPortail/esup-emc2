@@ -6,7 +6,6 @@ use Carriere\Entity\Db\NiveauFonction;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use FicheMetier\Entity\Db\CodeEmploiType;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 

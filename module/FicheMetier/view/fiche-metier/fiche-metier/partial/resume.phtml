@@ -21,8 +21,8 @@ $metier = $fichemetier->getMetier();
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-4"> Niveau  </dt>
         <dd class="col-md-8">
-            <?php if ($fichemetier->getCodeEmploiType()): ?>
-                <?php echo $fichemetier->getCodeEmploiType()->getCodeFonction()->getLibelle(); ?>
+            <?php if ($fichemetier->getCodeFonction()): ?>
+                <?php echo $fichemetier->getCodeFonction()->getNiveauFonction()?->getLibelle(); ?>
             <?php else : ?>
                 Aucun niveau associé
             <?php endif; ?>

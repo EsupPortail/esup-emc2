@@ -4,10 +4,6 @@ namespace FichePoste;
 
 use FicheMetier\Controller\FicheMetierController;
 use FicheMetier\Controller\FicheMetierControllerFactory;
-use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
-use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormFactory;
-use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydrator;
-use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydratorFactory;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
 use FicheMetier\Form\FicheMetierImportation\FichierMetierImportationHydrator;
@@ -437,7 +433,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            CodeEmploiTypeForm::class => CodeEmploiTypeFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
@@ -445,7 +440,6 @@ return [
     ],
     'hydrators' => [
         'factories' => [
-            CodeEmploiTypeHydrator::class => CodeEmploiTypeHydratorFactory::class,
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],

@@ -43,8 +43,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?string $raison = null;
     public ?CodeFonction $codeFonction = null;
 
-    private Collection $codesEmploiType;
-
     private Collection $activites;
     private Collection $tendances;
     private Collection $thematiques;
@@ -58,7 +56,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
-        $this->codesEmploiType = new ArrayCollection();
 
         $this->tendances = new ArrayCollection();
         $this->thematiques = new ArrayCollection();
@@ -117,34 +114,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setRaison(?string $raison): void
     {
         $this->raison = $raison;
-    }
-
-    public function getCodeEmploiType(): ?CodeEmploiType
-    {
-        $code = $this->codesEmploiType->toArray();
-        $code = array_filter($code, function (CodeEmploiType $item) {
-            return $item->estNonHistorise();
-        });
-
-        if (count($code) > 1) {
-            throw new RuntimeException("Plusieurs [" . CodeEmploiType::class . "] actif simultanément.", -1);
-        }
-
-        if (empty($code)) return null;
-        return current($code);
-    }
-
-    /** @return CodeEmploiType[] */
-    public function getCodesEmploiType(): array
-    {
-        return $this->codesEmploiType->toArray();
-    }
-
-    public function addCodeEmploiType(CodeEmploiType $codeEmploiType): void
-    {
-        $code = $this->getCodeEmploiType();
-        $code->historiser();
-        $this->codesEmploiType->add($codeEmploiType);
     }
 
     public function getCodeFonction(): ?CodeFonction
@@ -263,7 +232,7 @@ EOS;
             }
         }
         $html .= "</td></tr>";
-        $html .= "<tr><th>Code Fonction</th><td>" . ($this->getCodeEmploiType() ? $this->getCodeEmploiType()->prettyPrint() : "N.C.") . "</td></tr>";
+        $html .= "<tr><th>Code Fonction</th><td>" . ($this->getCodeFonction() ? $this->getCodeFonction()->computeCode() : "N.C.") . "</td></tr>";
 
 
         $html .= <<<EOS
@@ -456,14 +425,14 @@ EOS;
     /** @noinspection PhpUnused */
     public function toStringNiveauFonction(): string
     {
-        if ($this->getCodeEmploiType() AND $this->getCodeEmploiType()->getCodeFonction()) return $this->getCodeEmploiType()->getCodeFonction()->getLibelle();
+        if ($this->getCodeFonction() AND $this->getCodeFonction()->getNiveauFonction()) return $this->getCodeFonction()->getNiveauFonction()->getLibelle();
         return "Non précisé";
     }
 
     /** @noinspection PhpUnused */
     public function toStringCodeFonction(): string
     {
-        if ($this->getCodeEmploiType()) return $this->getCodeEmploiType()->prettyPrint();
+        if ($this->getCodeFonction()) return $this->getCodeFonction()->computeCode();
         return "Non précisé";
     }
 

@@ -126,7 +126,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
                     <?php if ($libelle !== null) : ?>
                         <?php echo $libelle; ?>
                         <?php if ($codeFonction === true): ?>
-                            - <?php echo $fichemetier->getFicheMetier()->getCodeEmploiType()?$fichemetier->getFicheMetier()->getCodeEmploiType()->prettyPrint():"<em style='color:gray;'>Aucun code fonction</em>"; ?>
+                            - <?php echo $fichemetier->getFicheMetier()->getCodeFonction()?$fichemetier->getFicheMetier()->getCodeFonction()->computeCode():"<em style='color:gray;'>Aucun code fonction</em>"; ?>
                         <?php endif; ?>
                     <?php else : ?>
                         <span class="text-danger"> Aucun libellé ou métier d'associé à la fiche métier #<?php echo $ficheId; ?></span>
