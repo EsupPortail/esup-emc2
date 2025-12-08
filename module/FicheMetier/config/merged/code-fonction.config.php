@@ -2,6 +2,8 @@
 
 namespace FicheMetier;
 
+use FicheMetier\Assertion\CodeFonctionAssertion;
+use FicheMetier\Assertion\CodeFonctionAssertionFactory;
 use FicheMetier\Controller\CodeFonctionController;
 use FicheMetier\Controller\CodeFonctionControllerFactory;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
@@ -14,9 +16,28 @@ use FicheMetier\Service\CodeFonction\CodeFonctionServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'CodeFonction' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            CodeFonctionPrivileges::CODEFONCTION_INDEX,
+                        ],
+                        'resources' => ['CodeFonction'],
+                        'assertion' => CodeFonctionAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -27,6 +48,7 @@ return [
                     'privileges' => [
                         CodeFonctionPrivileges::CODEFONCTION_INDEX,
                     ],
+                    'assertion' => CodeFonctionAssertion::class,
                 ],
                 [
                     'controller' => CodeFonctionController::class,
@@ -180,6 +202,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            CodeFonctionAssertion::class => CodeFonctionAssertionFactory::class,
             CodeFonctionService::class => CodeFonctionServiceFactory::class,
         ],
     ],

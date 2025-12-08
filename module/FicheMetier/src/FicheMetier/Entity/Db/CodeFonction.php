@@ -5,13 +5,14 @@ namespace FicheMetier\Entity\Db;
 use Carriere\Entity\Db\NiveauFonction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 //todo à décaller dans le module EmploiRepere
-class CodeFonction implements HistoriqueAwareInterface
+class CodeFonction implements HistoriqueAwareInterface, ResourceInterface
 {
     use HistoriqueAwareTrait;
 
@@ -27,6 +28,12 @@ class CodeFonction implements HistoriqueAwareInterface
     {
         $this->fichesmetiers = new ArrayCollection();
     }
+
+    public function getResourceId(): string
+    {
+        return 'CodeFonction';
+    }
+
 
     public function getId(): ?int
     {

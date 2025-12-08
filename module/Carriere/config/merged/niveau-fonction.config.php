@@ -2,6 +2,8 @@
 
 namespace Carriere;
 
+use Carriere\Assertion\NiveauFonctionAssertion;
+use Carriere\Assertion\NiveauFonctionAssertionFactory;
 use Carriere\Controller\NiveauFonctionController;
 use Carriere\Controller\NiveauFonctionControllerFactory;
 use Carriere\Form\NiveauFonction\NiveauFonctionForm;
@@ -14,9 +16,28 @@ use Carriere\Service\NiveauFonction\NiveauFonctionServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'NiveauFonction' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            NiveaufonctionPrivileges::NIVEAUFONCTION_INDEX,
+                        ],
+                        'resources' => ['NiveauFonction'],
+                        'assertion' => NiveauFonctionAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -27,6 +48,7 @@ return [
                     'privileges' => [
                         NiveaufonctionPrivileges::NIVEAUFONCTION_INDEX,
                     ],
+                    'assertion' => NiveauFonctionAssertion::class
                 ],
                 [
                     'controller' => NiveauFonctionController::class,
@@ -186,6 +208,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            NiveauFonctionAssertion::class => NiveauFonctionAssertionFactory::class,
             NiveauFonctionService::class => NiveauFonctionServiceFactory::class,
         ],
     ],

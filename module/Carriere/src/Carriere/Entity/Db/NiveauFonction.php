@@ -2,10 +2,11 @@
 
 namespace Carriere\Entity\Db;
 
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class NiveauFonction implements HistoriqueAwareInterface
+class NiveauFonction implements HistoriqueAwareInterface, ResourceInterface
 {
     use HistoriqueAwareTrait;
 
@@ -13,6 +14,11 @@ class NiveauFonction implements HistoriqueAwareInterface
     private ?string $code = null;
     private ?string $libelle = null;
     private ?string $description = null;
+
+    public function getResourceId(): string
+    {
+        return 'NiveauFonction';
+    }
 
     public function getId(): ?int
     {
