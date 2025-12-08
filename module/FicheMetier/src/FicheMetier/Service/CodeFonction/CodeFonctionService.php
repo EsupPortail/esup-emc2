@@ -97,7 +97,7 @@ class CodeFonctionService
     public function getCodesFonctions(bool $withHisto = false): array
     {
         $qb = $this->createQueryBuilder();
-        if ($withHisto) {
+        if (!$withHisto) {
             $qb = $qb->andWhere('codeFonction.histoDestruction IS NULL');
         }
 
