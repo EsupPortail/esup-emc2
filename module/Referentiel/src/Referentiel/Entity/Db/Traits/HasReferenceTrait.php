@@ -29,13 +29,15 @@ trait HasReferenceTrait
         $this->reference = $reference;
     }
 
-    public function printReference(): string
+    public function printReference(bool $withHTML = true): string
     {
         $referentiel = $this->getReferentiel();
+        $label  = ($referentiel?$referentiel->getLibelleCourt():"Aucun référentiel");
+        $label .= " - ";
+        $label .= ($this->getReference()??"Aucune référence");
+        if (!$withHTML) return $label;
         $texte  = "<span class='badge' style='background:".($referentiel?$referentiel->getCouleur():"grey")."'>";
-        $texte .= ($referentiel?$referentiel->getLibelleCourt():"Aucun référentiel");
-        $texte .= " - ";
-        $texte .= ($this->getReference()??"Aucune référence");
+        $texte .= $label;
         $texte .= "</span>";
         return $texte;
     }

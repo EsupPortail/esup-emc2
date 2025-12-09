@@ -370,11 +370,11 @@ EOS;
         $html = <<<EOS
 <h2>Environnement et contexte de travail</h2>
 
-<table style='width:100%; border-collapse: collapse;'>
+<table style='width:100%; border-collapse: collapse;' id="environnement">
 <thead>
     <tr>
-        <th> Libellé </th>
-        <th style="width: 11rem;"> Niveau</th>
+        <th id="libelle"> Libellé </th>
+        <th id="niveau"> Niveau</th>
     </tr>
 </thead>
 <tbody>
