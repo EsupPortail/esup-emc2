@@ -366,3 +366,8 @@ ul.dropdown-menu span.description li {
 div.filter-option-inner-inner span.mission {
     display:inline !important;
 }
+
+/** Cela permet de conserver l'icone et le libellé sur la même ligne pour les actions (communes) **/
+table th.action {
+    min-width: 8rem;
+}
