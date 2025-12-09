@@ -7,6 +7,7 @@ use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
+use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -27,6 +28,7 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -48,6 +50,7 @@ class FicheMetierService
 {
     use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
+    use CodeFonctionServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use ReferentielServiceAwareTrait;
@@ -59,6 +62,7 @@ class FicheMetierService
     use MacroServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use NiveauFonctionServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
 
@@ -639,13 +643,28 @@ class FicheMetierService
     }
 
     /** @return FicheMetier[] */
-    public function getFichesMetiersByCodeFonction(string $codeFonction): array
+    public function getFichesMetiersByCodeFonction(string $strCodeFonction, bool $withHisto = false): array
     {
-        //todo
-        // decomposer le code pour pouvoir récupérer le ou les codes associées
+        //NB ici on décompose le code fonction ce qui suppose qu'il est correctement construit sinon cela va échouer
+        // niveau de fonction 4 premieres lettres
+        $codeNiveauFonction = substr($strCodeFonction, 0, 4);
+        $niveauFonction = $this->getNiveauFonctionService()->getNiveauFonctionByCode($codeNiveauFonction);
+        if ($niveauFonction === null) return [];
 
-        // recuperer les listes ayant un de ces codes
-        return [];
+        // le reste correspond au code de la famille professionnelle
+        $codeFamilleProfessionnelle = substr($strCodeFonction,4);
+        $familleProfessionnelle = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByCode($codeFamilleProfessionnelle);
+        if ($familleProfessionnelle === null) return [];
+
+        $codeFonction = $this->getCodeFonctionService()->getCodeFonctionByNiveauAndFamille($niveauFonction, $familleProfessionnelle);
+        if ($codeFonction === null) return [];
+
+        $qb= $this->createQueryBuilder()
+            ->andWhere('ficheMetier.codeFonction = :codeFonction')->setParameter('codeFonction', $codeFonction);
+        if (!$withHisto) $qb = $qb->andWhere('ficheMetier.histoDestruction IS NULL');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
     }
 
 

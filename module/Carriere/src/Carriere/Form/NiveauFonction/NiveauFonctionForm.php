@@ -72,17 +72,30 @@ class NiveauFonctionForm extends Form
             'description'           => [ 'required' => false,  ],
             'libelle'               => [ 'required' => true,  ],
             'code'                  => [ 'required' => true,
-                'validators' => [[
-                    'name' => Callback::class,
-                    'options' => [
-                        'messages' => [
-                            Callback::INVALID_VALUE => "Ce code n'est pas disponible",
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "Ce code n'est pas disponible",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                return $this->getNiveauFonctionService()->isCodeDisponible($this->getObject(), $value);
+                            },
                         ],
-                        'callback' => function ($value, $context = []) {
-                            return $this->getNiveauFonctionService()->isCodeDisponible($this->getObject(), $value);
-                        },
                     ],
-                ]],
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "Le code associé au niveau doit être composé de 4 caractères",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                return strlen($value) === 4;
+                            },
+                        ],
+                    ],
+                ],
             ],
         ]));
     }

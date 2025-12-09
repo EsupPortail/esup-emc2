@@ -518,7 +518,7 @@ class MissionPrincipaleController extends AbstractActionController
                             }
 
                             // Bricolage pour satisfaire Marseille
-                            $codesFicheMetier = explode('|',$mission->getCodesFicheMetier());
+                            $codesFicheMetier = explode('|',$mission->getCodesFicheMetier()??"");
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                 if ($fichemetier === null) { $warning[] = "La fiche metier [".$referentiel->getLibelleCourt()."|".$codeFicheMetier."] n'existe pas"; }
@@ -526,7 +526,7 @@ class MissionPrincipaleController extends AbstractActionController
                                     if (!$fichemetier->hasMission($mission)) $this->getFicheMetierService()->addMission($fichemetier, $mission);
                                 }
                             }
-                            $codesFonction = explode('|',$mission->getCodesFonction());
+                            $codesFonction = explode('|',$mission->getCodesFonction()??"");
                             foreach ($codesFonction as $codeFonction) {
                                 $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                 if (empty($fichesmetiers)) { $warning[] = "Aucune fiche metier utilise le code [".$codeFonction."]"; }

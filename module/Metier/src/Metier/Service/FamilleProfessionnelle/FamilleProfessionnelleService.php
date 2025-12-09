@@ -66,7 +66,9 @@ class FamilleProfessionnelleService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
-            ->addSelect('metier')->leftJoin('famille.metiers', 'metier');
+            ->addSelect('metier')->leftJoin('famille.metiers', 'metier')
+            ->addSelect('correspondance')->leftJoin('famille.correspondance', 'correspondance')
+        ;
         return $qb;
     }
 
@@ -174,6 +176,19 @@ class FamilleProfessionnelleService
         $qb = $this->createQueryBuilder()
             ->andWhere('famille.correspondance = :correspondance')->setParameter('correspondance', $correspondance);
         $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getFamilleProfessionnelleByCode(string $strFamilleProfessionnelle): ?FamilleProfessionnelle
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('concat(correspondance.categorie, famille.position) = :code')->setParameter('code', $strFamilleProfessionnelle);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".FamilleProfessionnelle::class."] partagent le même code (calculé) [".$strFamilleProfessionnelle."]",-1,$e);
+        }
         return $result;
     }
 
