@@ -731,20 +731,13 @@ EOS;
         if ($metier === null) {
             throw new RuntimeException("Aucun métier pour la fiche métier #".$fichemetier->getId(),-1);
         }
-
-        $array = $this->getMetierService()->getInfosAgentsByMetier($metier);
-        $agentIds = [];
-        foreach ($array as $item) {
-            $agentIds[$item['c_individu']] = $item['c_individu'];
-        }
-        $agents = $this->getAgentService()->getAgentsByIds($agentIds);
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
         return new ViewModel([
             'title' => "Liste des agents ayant la fiche métier <strong>".$metier->getLibelle()."</strong>",
-            'fiche' => $fichemetier,
+            'fichemetier' => $fichemetier,
             'metier' => $metier,
-            'agents' => $agents,
-            'array' => $array,
+            'fichespostes' => $fichespostes,
         ]);
     }
 }

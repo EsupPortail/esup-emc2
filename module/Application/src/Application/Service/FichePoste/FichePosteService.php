@@ -691,10 +691,12 @@ EOS;
 
     }
 
-    public function getFichesPostesByFicheMetier(?FicheMetier $fichemetier)
+    public function getFichesPostesByFicheMetier(?FicheMetier $fichemetier, bool $withFini = false, bool $withHisto = false)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('fichemetier.id = :id')->setParameter('id', $fichemetier->getId());
+        if (!$withFini) $qb = $qb->andWhere('fiche.finValidite IS NULL or fiche.finValidite > :now')->setParameter('now', new DateTime());
+        if (!$withHisto) $qb = $qb->andWhere('fiche.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }

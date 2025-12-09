@@ -401,6 +401,14 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return 'FICHEPOSTE_' . $this->getId();
     }
 
+    public function getQuotiteComposition(?FicheMetier $fichemetier) : ?int
+    {
+        foreach ($this->fichesMetiers as $ficheMetier) {
+            if ($ficheMetier->getFicheType() === $fichemetier) return $ficheMetier->getQuotite();
+        }
+        return null;
+    }
+
     /** INTERFACE POUR LES COLLECTIONS DE COMPETENCES */
 //    public function getCompetenceCollection() {
 //        $collection = new ArrayCollection();
