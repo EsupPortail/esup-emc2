@@ -107,7 +107,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             'niveau-fonction' => [
-                                'label' => 'Niveau de fonction',
+                                'label' => 'Niveaux de fonction',
                                 'route' => 'niveau-fonction',
                                 'resource' => PrivilegeController::getResourceId(NiveauFonctionController::class, 'index'),
                                 'order' => 2501,

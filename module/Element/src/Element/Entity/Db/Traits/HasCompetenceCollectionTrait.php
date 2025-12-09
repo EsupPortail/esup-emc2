@@ -118,7 +118,7 @@ EOS;
                     $app = $competence->getCompetence();
                     $html .= "<tr>";
                     $html .= "<td>" . $app->getLibelle() . "</td>";
-                    $html .= "<td>" . ($app->getTheme()?$app->getTheme()->getLibelle():"Sans thème") . "</td>";
+                    $html .= "<td>" . ($app->getTheme()?$app->getTheme()->getLibelle():"Aucun thème") . "</td>";
                     $html .= "<td>" . ($competence->getNiveauMaitrise()?$competence->getNiveauMaitrise()->getLibelle():"Non précisé") . "</td>";
                     $html .= "<td>" . ($competence->isClef()?"Oui":"") . "</td>";
                     $html .= "</tr>";

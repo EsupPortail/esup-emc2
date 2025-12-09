@@ -119,13 +119,13 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
             Pour construire votre fichier, respectez les colonnes suivantes.
             L'importation ne tient pas compte de l'ordre des colonnes, mais du libellé exact (avec accent et majuscule) de celles-ci :
             <ul>
-                <li><code>Id_compétence</code> <span class="icon icon-obligatoire"></span> l'identifiant unique de la compétence,</li>
-                <li><code>Compétence</code> <span class="icon icon-obligatoire"></span> le libellé de la compétence,</li>
-                <li><code>Registre</code> <span class="icon icon-obligatoire"></span> le type de la compétence (mettre Connaissance ou Compétence comportementale ou Compétence opérationnelle ou Compétence spécifique),</li>
-                <li><code>Domaine</code> le ou les thèmes associés à la compétence,</li>
-                <li><code>Définition</code> la définition associée à la compétence,</li>
-                <li><code>Discipline</code> colonne pour les compétences spécifiques uniquement - laisser vide pour les compétences "normales",</li>
-                <li><code>Synonymes</code> la liste des libellés synonymes.
+                <li><code><?php echo Competence::COMPETENCE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> l'identifiant unique de la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> le libellé de la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_TYPE; ?></code> <span class="icon icon-obligatoire"></span> le type de la compétence (mettre Connaissance ou Compétence comportementale ou Compétence opérationnelle ou Compétence spécifique),</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_THEME; ?></code> le ou les thèmes associés à la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_DEFINITION; ?></code> la définition associée à la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_DISCIPLINE; ?></code> colonne pour les compétences spécifiques uniquement - laisser vide pour les compétences "normales",</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_SYNONYMES; ?></code> la liste des libellés synonymes.
             </ul>
 
             <u><strong>Remarques :</strong></u>

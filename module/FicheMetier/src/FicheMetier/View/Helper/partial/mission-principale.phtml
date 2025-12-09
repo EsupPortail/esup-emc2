@@ -43,8 +43,8 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                 <h4>Compléments</h4>
                 <dl class="row">
                     <?php $listing = $mission->getListeFicheMetier(); ?>
-                    <dt class="col-md-4"> Fiches Métiers</dt>
-                    <dd class="col-md-8">
+                    <dt class="col-md-5"> Fiches Métiers</dt>
+                    <dd class="col-md-7">
                         <?php if (empty($listing)) : ?>
                             Aucune fiche métier
                         <?php else : ?>
@@ -67,8 +67,8 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                             </ul>
                         <?php endif; ?>
                     </dd>
-                    <dt class="col-md-4"> Familles professionnelles</dt>
-                    <dd class="col-md-8">
+                    <dt class="col-md-5"> FAP </dt>
+                    <dd class="col-md-7">
                         <?php $familles = $mission->getFamillesProfessionnelles(); ?>
                         <?php if (empty($familles)) : ?>
                             Aucune famille professionnelle
@@ -80,8 +80,8 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                             </ul>
                         <?php endif; ?>
                     </dd>
-                    <dt class="col-md-4"> Niveaux</dt>
-                    <dd class="col-md-8">
+                    <dt class="col-md-5"> Niveaux</dt>
+                    <dd class="col-md-7">
                         <?php if ($mission->getNiveau()) : ?>
                             <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
                         <?php else : ?>
@@ -89,8 +89,8 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                         <?php endif; ?>
                     </dd>
                     <?php if ($mission->getCodesFicheMetier()) : ?>
-                        <dt class="col-md-4"> <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE; ?> </dt>
-                        <dd class="col-md-8">
+                        <dt class="col-md-5"> <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE; ?> </dt>
+                        <dd class="col-md-7">
                             <?php $codes = explode('|', $mission->getCodesFicheMetier()); ?>
                             <ul>
                                 <?php foreach ($codes as $code) : ?>
@@ -100,8 +100,8 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                         </dd>
                     <?php endif; ?>
                     <?php if ($mission->getCodesFonction()) : ?>
-                        <dt class="col-md-4">  <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION; ?> </dt>
-                        <dd class="col-md-8">
+                        <dt class="col-md-5">  <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION; ?> </dt>
+                        <dd class="col-md-7">
                             <?php $codes = explode('|', $mission->getCodesFonction()); ?>
                             <ul>
                                 <?php foreach ($codes as $code) : ?>

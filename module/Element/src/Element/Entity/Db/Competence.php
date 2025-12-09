@@ -13,6 +13,15 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
     use HasReferenceTrait;
 
+    const COMPETENCE_HEADER_ID = "Id_compétence";
+    const COMPETENCE_HEADER_LIBELLE = "Compétence";
+    const COMPETENCE_HEADER_TYPE = "Type";
+    const COMPETENCE_HEADER_THEME = "Thème";
+    const COMPETENCE_HEADER_DEFINITION = "Définition";
+    const COMPETENCE_HEADER_DISCIPLINE = "Discipline";
+    const COMPETENCE_HEADER_SYNONYMES = "Synonymes";
+
+
     private ?int $id = null;
     private ?string $libelle = null;
     private ?string $description = null;

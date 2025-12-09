@@ -451,6 +451,21 @@ class CompetenceService
 
     public function import(string $filepath, Referentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
     {
+        // Note : ceci est un dictionnaire pour rattraper les variations dans les écritures des types.
+        // Attention : il ne faut pas oublier de mettre le libellé lu du CSV en minuscules.
+        $dictionnairesTypes = [
+            'connaissances' => 'CONN',
+            'connaissance' => 'CONN',
+            'compétences opérationnelles' => 'OPER',
+            'compétence opérationnelle' => 'OPER',
+            'compétences comportementales' => 'COMP',
+            'compétence comportementale' => 'COMP',
+            'compétences socles' => 'SOCL',
+            'compétence socle' => 'SOCL',
+            'compétences spécifiques' => 'SPEC',
+            'compétence spécifique' => 'SPEC',
+        ];
+
         $handle = fopen($filepath, "r");
 
         /** Fetching the header ***************************************************************************************/
@@ -458,28 +473,34 @@ class CompetenceService
         // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
         $header[0] = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header[0]);
 
-        // Note il y a une typo dans le csv de Referens3 ...
-        $positionId = array_search("Id_compérence", $header);
+        // Note il y a une typo dans le csv de Referens3 + colonnes renommées par nous ...
+        $positionId = array_search(Competence::COMPETENCE_HEADER_ID, $header);
         if ($positionId === false) {
-            $positionId = array_search("Id_compétence", $header);
+            $positionId = array_search("Id_compérence", $header);
         }
-        $positionLibelle = array_search("Compétence", $header);
-        $positionType = array_search("Registre", $header);
-        $positionTheme = array_search("Domaine", $header);
-        $positionDiscipline = array_search("Discipline", $header);
-        $positionDefinition = array_search("Définition", $header);
+        $positionLibelle = array_search(Competence::COMPETENCE_HEADER_LIBELLE, $header);
+        $positionType = array_search(Competence::COMPETENCE_HEADER_TYPE, $header);
+        if ($positionType === false) {
+            $positionType = array_search("Registre", $header);
+        }
+        $positionTheme = array_search(Competence::COMPETENCE_HEADER_THEME, $header);
+        if ($positionTheme === false) {
+            $positionTheme = array_search("Domaine", $header);
+        }
+        $positionDiscipline = array_search(Competence::COMPETENCE_HEADER_DISCIPLINE, $header);
+        $positionDefinition = array_search(Competence::COMPETENCE_HEADER_DEFINITION, $header);
         $positionEmploiType = array_search("id_Emplois_types_RéFérens", $header);
-        $positionSynonyme = array_search("Synonymes", $header);
+        $positionSynonyme = array_search(Competence::COMPETENCE_HEADER_SYNONYMES, $header);
 
         $positions = ['id' => $positionId, 'libelle' => $positionLibelle, 'theme' => $positionTheme, 'type' => $positionType, 'discipline' => $positionDiscipline, 'definition' => $positionDefinition, 'emploi_type' => $positionEmploiType];
 
-        if ($positionId === false) $error[] = "La colonne <code>Id_compétence</code> obligatoire est manquante !";
-        if ($positionLibelle === false) $error[] = "La colonne <code>Compétence</code> obligatoire est manquante !";
-        if ($positionType === false) $error[] = "La colonne <code>Registre</code> obligatoire est manquante !";
-        if ($positionTheme === false) $warning[] = "La colonne <code>Domaine</code> facultative est manquante !";
-        if ($positionDefinition === false) $warning[] = "La colonne <code>Définition</code> facultative est manquante !";
-        if ($positionDiscipline === false) $warning[] = "La colonne <code>Discipline</code> facultative est manquante !";
-        if ($positionSynonyme === false) $warning[] = "La colonne <code>Synonymes</code> facultative est manquante !";
+        if ($positionId === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_ID."</code> obligatoire est manquante !";
+        if ($positionLibelle === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_LIBELLE."</code> obligatoire est manquante !";
+        if ($positionType === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_TYPE."</code> obligatoire est manquante !";
+        if ($positionTheme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_THEME."</code> facultative est manquante !";
+        if ($positionDefinition === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DEFINITION."</code> facultative est manquante !";
+        if ($positionDiscipline === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DISCIPLINE."</code> facultative est manquante !";
+        if ($positionSynonyme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_SYNONYMES."</code> facultative est manquante !";
 
         /** Reading the data ******************************************************************************************/
 
@@ -528,15 +549,16 @@ class CompetenceService
         $types = [];
         if ($positionType !== false) {
             foreach ($data as $item) {
-                $libelle = trim($item[$positionType]);
-                if (!isset($types[$libelle])) {
-                    $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($libelle);
+                $oldLibelle = trim($item[$positionType]);
+                if (!isset($types[$oldLibelle])) {
+                    $libelle = strtolower($oldLibelle);
+                    $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($dictionnairesTypes[$libelle]);
                     if ($type === null and $libelle !== "") {
                         $type = new CompetenceType();
                         $type->setLibelle($libelle);
                         $info[] = "Nouveau type : " . $libelle;
                     }
-                    $types[$libelle] = $type;
+                    $types[$oldLibelle] = $type;
                 }
             }
         }

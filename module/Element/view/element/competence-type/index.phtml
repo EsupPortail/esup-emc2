@@ -8,7 +8,6 @@
 use Element\Entity\Db\CompetenceType;
 use Element\Provider\Privilege\CompetencedisciplinePrivileges;
 use Element\Provider\Privilege\CompetencePrivileges;
-use Element\Provider\Privilege\CompetencereferentielPrivileges;
 use Element\Provider\Privilege\CompetencethemePrivileges;
 use Element\Provider\Privilege\CompetencetypePrivileges;
 
@@ -17,7 +16,6 @@ $this->headTitle("Types de compétences");
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
 $canCompetenceDisciplineIndex = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_INDEX));
 $canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
-$canCompetenceReferentielIndex = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_INDEX));
 
 $canAfficher = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_AFFICHER));
 $canAjouter  = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_AJOUTER));
@@ -66,14 +64,6 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
             <a href="<?php echo $this->url('element/competence-theme', [], [], true); ?>" class="btn btn-secondary">
                 <span class="icon icon-lister"></span>
                 Accéder aux thèmes</a>
-        <?php endif; ?>
-
-        <?php if ($canCompetenceReferentielIndex) : ?>
-            <?php /** @see \Element\Controller\CompetenceReferentielController::indexAction() */ ?>
-            <a href="<?php echo $this->url('element/competence-referentiel', [], [], true); ?>"
-               class="btn btn-secondary">
-                <span class="icon icon-lister"></span>
-                Accéder aux référentiels</a>
         <?php endif; ?>
     </div>
 </div>
