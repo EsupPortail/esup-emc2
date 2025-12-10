@@ -32,15 +32,15 @@ $retour = $this->url('fiche-metier/configuration/application', [], [], true);
 </div>
 
 <?php /** @see \FicheMetier\Controller\ConfigurationController::ajouterAction() */ ?>
-<a href="<?php echo $this->url('fiche-metier/configuration/ajouter', ['type' => 'competence'], [], true); ?>"
+<a href="<?php echo $this->url('fiche-metier/configuration/ajouter', ['type' => 'application'], [], true); ?>"
    class="btn btn-primary ajax-modal" data-event="modification"
 >
     <span class="icon icon-ajouter"></span>
     Ajouter une application
 </a>
 <?php /** @see \FicheMetier\Controller\ConfigurationController::reappliquerAction() */ ?>
-<a href="<?php echo $this->url("fiche-metier/configuration/reappliquer", ['type' => Application::class], [], true); ?>"
-   class="btn btn-primary"
+<a href="<?php echo $this->url("fiche-metier/configuration/reappliquer", ['type' => 'application'], [], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification"
 >
     <span class="icon icon-gerer"></span>
     Réappliquer les applications

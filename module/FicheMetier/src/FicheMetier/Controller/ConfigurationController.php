@@ -111,28 +111,52 @@ class ConfigurationController extends AbstractActionController
         return $this->redirect()->toRoute('fiche-metier/configuration', [], [],true);
     }
 
-    public function reappliquerAction(): Response
+    public function reappliquerAction(): ViewModel
     {
         $entity = $this->params()->fromRoute('type');
-        $type = null;
 
-        switch ($entity) {
-            case  'application' :
-                $type = Application::class;
-                break;
-            case 'competence' :
-                $type = Competence::class;
-                break;
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $type = null;
+                switch ($entity) {
+                    case  'application' :
+                        $type = Application::class;
+                        break;
+                    case 'competence' :
+                        $type = Competence::class;
+                        break;
+                }
+
+                $fiches = $this->getFicheMetierService()->getFichesMetiers();
+                foreach ($fiches as $fiche) {
+                    $fiche = $this->getConfigurationService()->addDefaultToFicheMetier($fiche, $type);
+                    $this->getFicheMetierService()->update($fiche);
+                }
+                $this->flashMessenger()->addSuccessMessage("Ré-application terminée");
+
+//                if ($entity === 'application') return $this->redirect()->toRoute('fiche-metier/configuration/application', [], [],true);
+//                if ($entity === 'competence') return $this->redirect()->toRoute('fiche-metier/configuration/competence', [], [],true);
+//
+//                /** @see ConfigurationController::indexAction() */
+//                return $this->redirect()->toRoute('fiche-metier/configuration', [], [],true);
+                exit();
+            }
         }
 
-        $fiches = $this->getFicheMetierService()->getFichesMetiers();
-        foreach ($fiches as $fiche) {
-            $fiche = $this->getConfigurationService()->addDefaultToFicheMetier($fiche, $type);
-            $this->getFicheMetierService()->update($fiche);
+        $vm = new ViewModel();
+        if ($entity !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Réapplication des ".$entity."s par défaut sur les fiches métiers",
+                'text' => "La réapplication modifiera toutes les fiches métiers. Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier/configuration/reappliquer', ["type" => $entity], [], true),
+            ]);
         }
-        $this->flashMessenger()->addSuccessMessage("Ré-application terminée");
-        /** @see ConfigurationController::indexAction() */
-        return $this->redirect()->toRoute('fiche-metier/configuration', [], [],true);
+        return $vm;
+
     }
 
 }

@@ -132,7 +132,7 @@ if ($mode === 'modification' and $scope !== null) {
                     <br>
                     <?php /** @see ElementController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_APPLICATION, 'id' => $applicationElement->getId()], [], true); ?>"
-                       class="action danger">
+                       class="action danger ajax-modal" data-event="refresh-applications">
                         <span class="icon icon-unchecked"></span>
                         Supprimer
                     </a>

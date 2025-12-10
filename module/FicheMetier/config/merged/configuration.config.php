@@ -85,9 +85,9 @@ return [
                                 ],
                             ],
                             'reappliquer' => [
-                                'type' => Literal::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/reappliquer',
+                                    'route' => '/reappliquer/:type',
                                     'defaults' => [
                                         /** @see ConfigurationController::reappliquerAction() */
                                         'action' => 'reappliquer',

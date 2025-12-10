@@ -38,8 +38,8 @@ $retour = $this->url('fiche-metier/configuration/competence', [], [], true);
     Ajouter une compétence
 </a>
 <?php /** @see \FicheMetier\Controller\ConfigurationController::reappliquerAction() */ ?>
-<a href="<?php echo $this->url("fiche-metier/configuration/reappliquer", ['type' => Competence::class], [], true); ?>"
-   class="btn btn-primary"
+<a href="<?php echo $this->url("fiche-metier/configuration/reappliquer", ['type' => 'competence'], [], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification"
 >
     <span class="icon icon-gerer"></span>
     Réappliquer les compétences
