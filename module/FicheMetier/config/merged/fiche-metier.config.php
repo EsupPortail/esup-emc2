@@ -94,7 +94,6 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'modifier-etat',
-                        'modifier-expertise',
                         'modifier-metier',
                         'modifier-raison',
 

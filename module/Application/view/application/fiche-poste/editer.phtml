@@ -28,7 +28,6 @@ use UnicaenParametre\Entity\Db\Parametre;
 
 $canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
-$canEditerExpertise = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 
 $canAssocierAgent = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_ASSOCIERAGENT));
 $canAssocierMetierType = $canEditer;

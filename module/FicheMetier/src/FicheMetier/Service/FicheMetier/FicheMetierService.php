@@ -151,12 +151,6 @@ class FicheMetierService
         $qb = $this->createQueryBuilder()
             ->orderBy('ficheMetier.' . $champ, $ordre);
 
-        if (isset($filtre['expertise']) and $filtre['expertise'] != '') {
-            $expertise = null;
-            if ($filtre['expertise'] == "1") $expertise = true;
-            if ($filtre['expertise'] == "0") $expertise = false;
-            if ($expertise !== null) $qb = $qb->andWhere('ficheMetier.hasExpertise = :expertise')->setParameter('expertise', $expertise);
-        }
         if (isset($filtre['etat']) and $filtre['etat'] != '') {
             $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $filtre['etat']);
         }
