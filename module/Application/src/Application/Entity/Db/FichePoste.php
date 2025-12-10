@@ -11,7 +11,6 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
-use FichePoste\Entity\Db\Expertise;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
@@ -46,7 +45,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     private ?int $nbi = null;
     private ?DateTime $finValidite = null;
 
-    private Collection $expertises;
     private Collection $fichesMetiers;
     private Collection $descriptionsRetirees;
     private Collection $applicationsRetirees;
@@ -289,29 +287,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         $this->applicationsRetirees->clear();
     }
 
-    /** EXPERTISE *****************************************************************************************************/
-
-    /** @return Expertise[] */
-    public function getExpertises(): array
-    {
-        return $this->expertises->toArray();
-    }
-
-    /* @return Expertise[] */
-    public function getCurrentExpertises($date = null): array
-    {
-        if ($date === null) $date = (new DateTime());
-
-        $expertises = [];
-        /** @var Expertise $expertise */
-        foreach ($this->expertises as $expertise) {
-            if ($expertise->estNonHistorise($date)) {
-                $expertises[] = $expertise;
-            }
-        }
-        return $expertises;
-    }
-
     /** Fonctions pour simplifier  */
 
     /* @return MissionActivite[] */
@@ -353,12 +328,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 //        if ( $this->getPoste()) return false;
         if ($this->getFicheTypeExternePrincipale()) return false;
         return true;
-    }
-
-    //todo traquer usage !!!
-    public function hasExpertise(): bool
-    {
-        return false;
     }
 
     /** Fonction pour les affichages dans les documents ***************************************************************/

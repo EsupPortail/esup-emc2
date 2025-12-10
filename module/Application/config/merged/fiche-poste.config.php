@@ -133,12 +133,6 @@ return [
                         'selectionner-formations-retirees',
                         'selectionner-descriptions-retirees',
 
-                        'ajouter-expertise',
-                        'modifier-expertise',
-                        'historiser-expertise',
-                        'restaurer-expertise',
-                        'supprimer-expertise',
-
                         'modifier-code-fonction',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER,
@@ -533,61 +527,6 @@ return [
                                 /** @see FichePosteController::selectionnerDescriptionsRetireesAction() */
                                 'controller' => FichePosteController::class,
                                 'action' => 'selectionner-descriptions-retirees',
-                            ],
-                        ],
-                    ],
-                    'ajouter-expertise' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/ajouter-expertise/:fiche-poste',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action' => 'ajouter-expertise',
-                            ],
-                        ],
-                    ],
-                    'modifier-expertise' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/modifier-expertise/:expertise',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action' => 'modifier-expertise',
-                            ],
-                        ],
-                    ],
-                    'historiser-expertise' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/historiser-expertise/:expertise',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action' => 'historiser-expertise',
-                            ],
-                        ],
-                    ],
-                    'restaurer-expertise' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/restaurer-expertise/:expertise',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action' => 'restaurer-expertise',
-                            ],
-                        ],
-                    ],
-                    'supprimer-expertise' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/supprimer-expertise/:expertise',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action' => 'supprimer-expertise',
                             ],
                         ],
                     ],

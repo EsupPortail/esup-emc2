@@ -25,13 +25,10 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
-use FichePoste\Entity\Db\Expertise;
-use FichePoste\Form\Expertise\ExpertiseFormAwareTrait;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use FichePoste\Provider\Parametre\FichePosteParametres;
 use FichePoste\Provider\Template\PdfTemplate;
 use FichePoste\Provider\Validation\FichePosteValidations;
-use FichePoste\Service\Expertise\ExpertiseServiceAwareTrait;
 use FichePoste\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -62,7 +59,6 @@ class FichePosteController extends AbstractActionController
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
-    use ExpertiseServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
@@ -77,7 +73,6 @@ class FichePosteController extends AbstractActionController
     use AjouterFicheMetierFormAwareTrait;
     use AssocierTitreFormAwareTrait;
     use CodeFonctionFormAwareTrait;
-    use ExpertiseFormAwareTrait;
     use RifseepFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
@@ -734,103 +729,6 @@ class FichePosteController extends AbstractActionController
             'activites' => $activites,
             'retirees' => $retirees,
         ]);
-    }
-
-    /** EXPERTISE *****************************************************************************************************/
-
-    public function ajouterExpertiseAction(): ViewModel
-    {
-        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
-        $expertise = new Expertise();
-        $expertise->setFicheposte($ficheposte);
-
-        $form = $this->getExpertiseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/ajouter-expertise', ['fiche-poste' => $ficheposte->getId()], [], true));
-        $form->bind($expertise);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getExpertiseService()->create($expertise);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une expertise",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierExpertiseAction(): ViewModel
-    {
-        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
-
-        $form = $this->getExpertiseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/modifier-expertise', ['expertise' => $expertise->getId()], [], true));
-        $form->bind($expertise);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getExpertiseService()->update($expertise);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'une expertise",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserExpertiseAction(): Response
-    {
-        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
-        $this->getExpertiseService()->historise($expertise);
-        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
-    }
-
-    public function restaurerExpertiseAction(): Response
-    {
-        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
-        $this->getExpertiseService()->restore($expertise);
-        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
-    }
-
-    public function supprimerExpertiseAction(): ViewModel
-    {
-        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getExpertiseService()->delete($expertise);
-            //return $this->redirect()->toRoute('role', [], [], true);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($expertise !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de l'expertise " . $expertise->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('fiche-poste/supprimer-expertise', ["expertise" => $expertise->getId()], [], true),
-            ]);
-        }
-        return $vm;
     }
 
     /** RIFSEEP ET NBI  ***********************************************************************************************/
