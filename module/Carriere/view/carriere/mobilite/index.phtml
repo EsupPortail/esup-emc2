@@ -14,13 +14,12 @@ $canModifier    = $this->isAllowed(MobilitePrivileges::getResourceId(MobilitePri
 $canHistoriser  = $this->isAllowed(MobilitePrivileges::getResourceId(MobilitePrivileges::MOBILITE_HISTORISER));
 $canDetruire    = $this->isAllowed(MobilitePrivileges::getResourceId(MobilitePrivileges::MOBILITE_SUPPRIMER));
 
-$canAction = ($canAfficher OR $canAjouter OR $canModifier OR $canHistoriser OR $canDetruire);
 
 $this->headTitle("Liste des mobilités");
 ?>
 
 <h1 class="page-header">
-    Liste des types de mobilité
+    Types de mobilité
 </h1>
 
 <?php if ($canAjouter) : ?>
@@ -34,36 +33,34 @@ $this->headTitle("Liste des mobilités");
     </a>
 <?php endif; ?>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed table-hover" id="types_mobilité">
     <thead>
         <tr>
-            <th> Code </th>
             <th> Libelle </th>
-            <?php if ($canAction) : ?>
-                <th class="action"> Action </th>
-            <?php endif; ?>
+            <th> Code </th>
+            <th class="action"> Action </th>
         </tr>
     </thead>
     <tbody>
     <?php foreach ($mobilites as $mobilite) : ?>
         <tr <?php if ($mobilite->estHistorise()) echo " class='historise'"; ?>>
-            <td>
-                <?php echo $mobilite->getCode(); ?>
-            </td>
-            <td>
+
+            <td data-column-id="Libellé">
                 <?php echo $mobilite->getLibelle(); ?>
                 <?php if ($mobilite->getDescription()) : ?>
                     <span class="icon icon-information" title="<?php echo $mobilite->getDescription(); ?>" data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php endif; ?>
             </td>
-            <?php if ($canAction) : ?>
-                <td class="action">
+            <td data-column-id="Code">
+                <code><?php echo $mobilite->getCode(); ?></code>
+            </td>
+                <td class="action" data-column-id="Action">
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\MobiliteController::afficherAction() */ ?>
                             href="<?php echo $this->url('mobilite/afficher', ['mobilite' => $mobilite->getId()], [], true); ?>"
                             title="Afficher" data-bs-toggle="tooltip" data-bs-html="true"
-                            class="ajax-modal"
+                            class="action secondary ajax-modal"
                     >
                         <span class="icon icon-voir"></span>
                         Afficher
@@ -75,7 +72,7 @@ $this->headTitle("Liste des mobilités");
                             <?php /** @see \Carriere\Controller\MobiliteController::modifierAction() */ ?>
                             href="<?php echo $this->url('mobilite/modifier', ['mobilite' => $mobilite->getId()], [], true); ?>"
                             title="Modification" data-bs-toggle="tooltip" data-bs-html="true"
-                            class="ajax-modal" data-event="modification"
+                            class="action primary ajax-modal" data-event="modification"
                         >
                         <span class="icon icon-editer"></span>
                         Modifier
@@ -88,6 +85,7 @@ $this->headTitle("Liste des mobilités");
                             <?php /** @see \Carriere\Controller\MobiliteController::restaurerAction() */ ?>
                                 href="<?php echo $this->url('mobilite/restaurer', ['mobilite' => $mobilite->getId()], [], true); ?>"
                                 title="Restauration" data-bs-toggle="tooltip" data-bs-html="true"
+                                class="action warning"
                         >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
@@ -97,6 +95,7 @@ $this->headTitle("Liste des mobilités");
                             <?php /** @see \Carriere\Controller\MobiliteController::historiserAction() */ ?>
                                 href="<?php echo $this->url('mobilite/historiser', ['mobilite' => $mobilite->getId()], [], true); ?>"
                                 title="Historisation" data-bs-toggle="tooltip" data-bs-html="true"
+                                class="action warning"
                         >
                             <span class="icon icon-historiser"></span>
                             Historiser
@@ -109,16 +108,13 @@ $this->headTitle("Liste des mobilités");
                         <?php /** @see \Carriere\Controller\MobiliteController::supprimerAction() */ ?>
                             href="<?php echo $this->url('mobilite/supprimer', ['mobilite' => $mobilite->getId()], [], true); ?>"
                             title="Destruction" data-bs-toggle="tooltip" data-bs-html="true"
-                            class="ajax-modal" data-event="modification"
+                            class="action danger ajax-modal" data-event="modification"
                     >
-                        <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Supprimer
-                        </span>
                     </a>
                 <?php endif; ?>
             </td>
-            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>
@@ -131,5 +127,16 @@ $this->headTitle("Liste des mobilités");
             event.div.modal('hide');
             window.location.reload();
         });
+        $("#types_mobilité").DataTable({
+            info: true,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [2], orderable: false }
+            ]
+        });
+
     });
 </script>
