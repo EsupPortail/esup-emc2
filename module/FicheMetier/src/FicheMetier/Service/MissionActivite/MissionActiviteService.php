@@ -5,6 +5,7 @@ namespace FicheMetier\Service\MissionActivite;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
@@ -71,6 +72,42 @@ class MissionActiviteService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
     /** Facade ********************************************************************************************************/
 
+    /** @return MissionActivite[] */
+    public function transforms(Mission $mission, string $activitesAsList): array
+    {
+        // quid ne prendre que ce qui est compris entre les balises ul ?
+        $missionsActivites = [];
+        if (str_starts_with($activitesAsList,"<ul>") AND str_ends_with($activitesAsList,"</ul>")) {
+            // transforme la liste à puce HTML en un tableau de libellé
+            $activitesAsList = substr($activitesAsList, 4, -5);
+            $activitesAsList = str_replace("<li>", "", $activitesAsList);
+            $activitesAsList = str_replace("\n", "", $activitesAsList);
+            $activitesAsList = str_replace("\t", "", $activitesAsList);
+            $activitesAsList = str_replace("\r", "", $activitesAsList);
+            $activitesAsList = str_replace("&nbsp;", " ", $activitesAsList);
+            $activitesAsList = explode("</li>", $activitesAsList);
+            $activitesAsList = array_filter($activitesAsList, function ($item) { return trim($item) !== ''; });
+
+            // check si il existe et crée au besoin
+            foreach ($activitesAsList as $activite) {
+                $missionActivite = $mission->getActivite($activite);
+                if ($missionActivite !== null) $missionsActivites[] = $missionActivite;
+                else {
+                    $missionActivite = new MissionActivite();
+                    $missionActivite->setMission($mission);
+                    $missionActivite->setLibelle($activite);
+                    $missionsActivites[] = $missionActivite;
+                }
+            }
+            // met à jour les positions
+            $position = 1;
+            foreach ($missionsActivites as $missionActivite) {
+                $missionActivite->setOrdre($position++);
+            }
+        }
+        return $missionsActivites;
+    }
 }

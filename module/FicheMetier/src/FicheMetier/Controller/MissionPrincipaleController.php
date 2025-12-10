@@ -14,7 +14,9 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Exception;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Form\MissionPrincipale\MissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Provider\Template\TexteTemplates;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -27,6 +29,7 @@ use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfession
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
 {
@@ -40,7 +43,9 @@ class MissionPrincipaleController extends AbstractActionController
     use NiveauEnveloppeServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
+    use RenduServiceAwareTrait;
 
+    use MissionPrincipaleFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -79,41 +84,96 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterAction(): Response
+    public function ajouterAction(): ViewModel
     {
         $mission = new Mission();
         $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
         $mission->setReferentiel($referentiel);
-        $this->getMissionPrincipaleService()->create($mission);
-        $mission->setReference($mission->getId());
-        $this->getMissionPrincipaleService()->update($mission);
 
-        return $this->redirect()->toRoute('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true);
+        $form = $this->getMissionPrincipaleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/ajouter', [], [], true));
+        $form->bind($mission);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $niveau = $mission->getNiveau();
+                if ($niveau !== null) {
+                    if ($niveau->getId() === null) {
+                        $this->getNiveauEnveloppeService()->create($niveau);
+                    } else {
+                        $this->getNiveauEnveloppeService()->update($niveau);
+                    }
+                }
+                $missionsActivites = $mission->getActivites();
+                $mission->clearActivites();
+                $this->getMissionPrincipaleService()->create($mission);
+                $mission->setReference($mission->getId());
+                $this->getMissionPrincipaleService()->update($mission);
+                foreach ($missionsActivites as $activite) {
+                    $mission->addMissionActivite($activite);
+                    if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
+                    else $this->getMissionActiviteService()->create($activite);
+                }
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Ajout d'une mission principale",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('fiche-metier/mission-principale/modifier');
+        return $vm;
+
     }
 
     public function modifierAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
-        $retour = $this->params()->fromQuery('retour') ?? null;
 
-        $ficheMetier = null;
-        if ($retour) {
-            $split = explode("/", $retour);
-            $ficheId = end($split);
-            if ($ficheId) {
-                $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheId);
+        $form = $this->getMissionPrincipaleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/modifier', ['mission-principale' => $mission?->getId()], [], true));
+        $form->bind($mission);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            $previousActivites = $mission->getActivites();
+
+            if ($form->isValid()) {
+                $niveau = $mission->getNiveau();
+                if ($niveau !== null) {
+                    if ($niveau->getId() === null) {
+                        $this->getNiveauEnveloppeService()->create($niveau);
+                    } else {
+                        $this->getNiveauEnveloppeService()->update($niveau);
+                    }
+                }
+                $missionsActivites = $mission->getActivites();
+                $mission->clearActivites();
+                $this->getMissionPrincipaleService()->update($mission);
+                foreach ($missionsActivites as $activite) {
+                    $mission->addMissionActivite($activite);
+                    if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
+                    else $this->getMissionActiviteService()->create($activite);
+                }
+                foreach ($previousActivites as $activite) {
+                    if (!$mission->hasActivite($activite->getLibelle())) $this->getMissionActiviteService()->delete($activite);
+                }
+                exit();
             }
         }
 
-
-        return new ViewModel([
-            'mission' => $mission,
-            'modification' => true,
-            'ficheMetier' => $ficheMetier ?? null,
-            'fichesmetiers' => $mission->getListeFicheMetier(),
-            'fichespostes' => $mission->getListeFichePoste(),
-            'retour' => $retour,
+        $vm = new ViewModel([
+            'title' => "Modification de la mission principale",
+            'form' => $form,
         ]);
+        $vm->setTemplate('fiche-metier/mission-principale/modifier');
+        return $vm;
     }
 
     public function historiserAction(): Response

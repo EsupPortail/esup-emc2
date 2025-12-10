@@ -19,6 +19,15 @@ trait HasFamillesProfessionnellesTrait
         return $familles;
     }
 
+    /** @return int[] */
+    public function getFamillesProfessionnellesIds(bool $withHisto = false): array
+    {
+        $familles =  $this->famillesProfessionnelles->toArray();
+        if ($withHisto) $familles = array_filter($familles, function (FamilleProfessionnelle $famille) { return $famille->estNonHistorise();});
+        $ids = array_map(function (FamilleProfessionnelle $famille) { return $famille->getId();}, $familles);
+        return $ids;
+    }
+
     public function hasFamilleProfessionnelle(FamilleProfessionnelle $famille, bool $withHisto = false) : bool
     {
         $familles =  $this->famillesProfessionnelles->toArray();

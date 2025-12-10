@@ -159,5 +159,25 @@ class Mission implements HistoriqueAwareInterface,
         return false;
     }
 
+    public function getActivite(?string $libelle): ?MissionActivite
+    {
+        foreach ($this->activites as $activite) {
+            if ($activite->getLibelle() === $libelle) return $activite;
+        }
+        return null;
+    }
+
+    public function getActivitesAsList(): string
+    {
+        $activites = $this->activites->toArray();
+        if (!empty($activites)) {
+            $listing = array_map(function (MissionActivite $activite) {
+                return "<li>" . $activite->getLibelle() . "</li>";
+            }, $this->activites->toArray());
+            return "<ul>" . implode("", $listing) . "</ul>";
+        }
+        return "<ul><li></li></ul>";
+    }
+
 
 }

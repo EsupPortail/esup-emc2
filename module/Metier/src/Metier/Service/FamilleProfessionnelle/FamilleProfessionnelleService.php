@@ -87,10 +87,43 @@ class FamilleProfessionnelleService
     {
         $familles = $this->getFamillesProfessionnelles();
         $options = [];
+
+        $sans = new Correspondance();
+        $sans->setId(PHP_INT_MAX);
+        $sans->setLibelleCourt("Sans");
+        $sans->setLibelleLong("Sans correspondance");
+        $sans->setCategorie("");
+
+        $correspondances = [];
+        $dictionnaires = [];
         foreach ($familles as $famille) {
-            if ($historiser or $famille->estNonHistorise())
-                $options[$famille->getId()] = $this->optionify($famille);
+            if ($historiser or $famille->estNonHistorise()) {
+                $correspondance = $famille->getCorrespondance();
+                if ($correspondance) {
+                    $correspondances[$correspondance->getId()] = $correspondance;
+                    $dictionnaires[$correspondance->getId()][] = $famille;
+                } else {
+                    $correspondances[$sans->getId()] = $sans;
+                    $dictionnaires[$sans->getId()][] = $famille;
+                }
+            }
         }
+        ksort($dictionnaires);
+
+        foreach ($dictionnaires as $correspondanceId => $familles) {
+            $optionsoptions = [];
+            usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getPosition() <=> $b->getPosition();});
+            foreach ($familles as $famille) {
+                $optionsoptions[$famille->getId()] = $this->optionify($famille);
+            }
+            asort($optionsoptions);
+            $array = [
+                'label' => $correspondances[$correspondanceId]->getLibelleLong(),
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
         return $options;
     }
 

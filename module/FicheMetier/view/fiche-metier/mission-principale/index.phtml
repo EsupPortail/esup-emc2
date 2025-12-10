@@ -34,7 +34,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
 <?php if ($canAjouter) : ?>
     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::ajouterAction() */ ?>
     <a href="<?php echo $this->url('mission-principale/ajouter', [], [], true); ?>"
-       class="ajax-modal btn btn-primary"
+       class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
         Ajouter une mission principale
@@ -92,8 +92,8 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
                         <label for="histo">Historisation :</label>
                         <select id="histo" name="histo" class="form-control selectpicker">
                             <option value="">Peu importe</option>
-                            <option value="0" <?php if ($params['histo'] == 0) echo 'selected'; ?>>Non historisée</option>
-                            <option value="1" <?php if ($params['histo'] == 1) echo 'selected'; ?>>Historisée</option>
+                            <option value="0" <?php if (isset($params['histo']) AND $params['histo'] == 0) echo 'selected'; ?>>Non historisée</option>
+                            <option value="1" <?php if (isset($params['histo']) AND $params['histo'] == 1) echo 'selected'; ?>>Historisée</option>
                         </select>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
                     <br/>
                     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true); ?>"
-                       class="action primary"
+                       class="action primary ajax-modal" data-event="modification"
                     >
                         <span class="icon icon-editer"></span>
                         Modifier
