@@ -355,12 +355,9 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return true;
     }
 
+    //todo traquer usage !!!
     public function hasExpertise(): bool
     {
-        /** @var FicheTypeExterne $fichesMetier */
-        foreach ($this->fichesMetiers as $fichesMetier) {
-            if ($fichesMetier->getFicheType()->hasExpertise()) return true;
-        }
         return false;
     }
 

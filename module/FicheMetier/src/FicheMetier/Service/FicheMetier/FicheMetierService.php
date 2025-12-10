@@ -469,7 +469,6 @@ class FicheMetierService
         $duplicata = new FicheMetier();
         //base
         $duplicata->setMetier($fiche->getMetier());
-        $duplicata->setExpertise($fiche->hasExpertise());
         $this->create($duplicata);
 
         //missions principales

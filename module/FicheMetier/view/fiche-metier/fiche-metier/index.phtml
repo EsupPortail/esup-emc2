@@ -130,9 +130,6 @@ $this->headTitle('Index des fiches métiers');
                     <?php endif; ?>
                 <?php endif; ?>
                 <br> <?php echo $fiche->printReference(); ?>
-                <?php if ($fiche->hasExpertise() === true) : ?>
-                    <span class="badge" style="background: lightskyblue;">Expertise</span>
-                <?php endif; ?>
             </td>
             <td>
                 <?php if ($fiche->getFamilleProfessionnelle()) : ?>

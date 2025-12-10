@@ -39,7 +39,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?int $id = -1;
     private ?string $libelle = null;
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
-    private ?bool $hasExpertise = false;
     private ?string $raison = null;
     public ?CodeFonction $codeFonction = null;
 
@@ -94,16 +93,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function setFamilleProfessionnelle(?FamilleProfessionnelle $familleProfessionnelle): void
     {
         $this->familleProfessionnelle = $familleProfessionnelle;
-    }
-
-    public function hasExpertise(): bool
-    {
-        return ($this->hasExpertise === true);
-    }
-
-    public function setExpertise(?bool $has): void
-    {
-        $this->hasExpertise = $has;
     }
 
     public function getRaison(): ?string
@@ -210,7 +199,6 @@ EOS;
             $html .= "</li>";
         }
         $html .= "</td>";
-        $html .= "<tr><th>Expertise</th><td>" . ($this->hasExpertise() ? "Oui" : "Non") . "</td></tr>";
         $html .= "<tr><th>Date de dépôt</th><td>";
         $etat = $this->getEtatActif();
         if ($etat === null) $html .= "État inconnu";

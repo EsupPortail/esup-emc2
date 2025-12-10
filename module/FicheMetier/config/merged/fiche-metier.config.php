@@ -284,16 +284,6 @@ return [
                             ],
                         ],
                     ],
-                    'modifier-expertise' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-expertise/:fiche-metier',
-                            'defaults' => [
-                                /** @see FicheMetierController::modifierExpertiseAction() */
-                                'action'     => 'modifier-expertise',
-                            ],
-                        ],
-                    ],
                     'modifier-metier' => [
                         'type'  => Segment::class,
                         'options' => [

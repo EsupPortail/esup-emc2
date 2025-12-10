@@ -53,7 +53,6 @@
             <join-column name="famille_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <field name="hasExpertise" type="boolean" column="expertise" nullable="true"/>
         <field name="raison" type="text" column="raison" nullable="true"/>
 
         <many-to-one target-entity="FicheMetier\Entity\Db\CodeFonction" field="codeFonction">
