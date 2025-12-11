@@ -59,6 +59,7 @@ class ImportController extends AbstractActionController
     const FORMAT_RMFP = 'FORMAT_RMFP';
     const FORMAT_REFERENS3 = 'FORMAT_REFERENS3';
 
+    // RMFP ///////////////////////////////////////////////////////////////////////////////////////
     const HEADER_RMFP_REFERENCE = "Code";
     const HEADER_RMFP_LIBELLE = "Intitulé";
     const HEADER_RMFP_MISSION_LIBELLE = "Définition synthétique de l'ER";
@@ -73,13 +74,7 @@ class ImportController extends AbstractActionController
     const HEADER_RMFP_MANAGEMENT = "Libellé compétence managériale";
     const HEADER_RMFP_CONDITION = "Conditions particulières d'exercice / d'accès";
 
-    const HEADERS_RMFP = [
-        self::HEADER_RMFP_REFERENCE, self::HEADER_RMFP_LIBELLE, self::HEADER_RMFP_FAMILLE, self::HEADER_RMFP_SPECIALITE,
-        self::HEADER_RMFP_MISSION_LIBELLE, self::HEADER_RMFP_MISSION_ACTIVITE,
-        self::HEADER_RMFP_COMPETENCE_CONNAISSANCE, self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE, self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE,
-        self::HEADER_RMFP_TENDANCE, self::HEADER_RMFP_IMPACT
-    ];
-
+    // REFERENS 3 /////////////////////////////////////////////////////////////////////////////////
     const HEADER_REFERENS3_REFERENCE = "Code emploi type";
     const HEADER_REFERENS3_LIBELLE = "Intitulé de l’emploi type";
     const HEADER_REFERENS3_MISSION_LIBELLE = "Mission";
