@@ -20,17 +20,19 @@ $historisationParams = $params['historisation']??null;
     <div class="card-body">
         <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <div class="row">
                         <!-- CORRESPONDANCE -->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="correspondance">Correspondance :</label>
+                                <label for="correspondance">Correspondance :</label><br>
                                 <select id="correspondance" name="correspondance" class="selectpicker">
                                     <option value=""> Toutes les correspondances</option>
                                     <option value="-1" <?php if ($correspondanceParams == -1) echo " selected "; ?> > Aucune correspondance</option>
                                     <?php foreach ($correspondances as $correspondance) : ?>
-                                        <option value="<?php echo $correspondance->getId(); ?>" <?php if ($correspondanceParams == $correspondance->getId()) echo " selected "; ?> >
+                                        <option value="<?php echo $correspondance->getId(); ?>" <?php if ($correspondanceParams == $correspondance->getId()) echo " selected "; ?>
+                                                data-content="<?php echo $correspondance->getLibelleLong(); ?> <code><?php echo $correspondance->getType()->getCode(); ?> <?php echo $correspondance->getCategorie(); ?></code>"
+                                        >
                                             <?php echo $correspondance->getLibelleLong(); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -40,7 +42,7 @@ $historisationParams = $params['historisation']??null;
                         <!-- HISTORISATION -->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="historisation">Historisation :</label>
+                                <label for="historisation">Historisation :</label><br>
                                 <select id="historisation" name="historisation" class="selectpicker">
                                     <option value="">Peu importe</option>
                                     <option value="1" <?php if ($historisationParams === "1") echo " selected "; ?> >
@@ -55,7 +57,7 @@ $historisationParams = $params['historisation']??null;
                     </div>
                 </div>
                 <!-- BOUTON -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <button class="btn btn-primary" id="filter">
                         <span class="icon icon-filtrer"></span>
                         Filtrer

@@ -194,8 +194,7 @@ class FamilleProfessionnelleService
                 $qb = $qb->andWhere('famille.correspondance IS NULL');
             } else {
                 $qb = $qb
-                        ->join('famille.correspondance', 'correspondance')
-                        ->andWhere('correspondance = :correspondance')->setParameter('correspondance', $params['correspondance']);
+                    ->andWhere('correspondance = :correspondance')->setParameter('correspondance', $params['correspondance']);
             }
         }
 
