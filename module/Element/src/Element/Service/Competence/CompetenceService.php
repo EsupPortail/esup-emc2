@@ -434,15 +434,17 @@ class CompetenceService
     // Quid de la consommation mémoire qui pourrait être bottleneck
 
     /** @return array<string, Competence> */
-    public function generateDictionnaire(Referentiel $referentiel, CompetenceType $type): array
+    public function generateDictionnaire(Referentiel $referentiel, string $id, ?CompetenceType $type = null): array
     {
         $dictionnaire = [];
 
         $competences = $this->getCompetencesByRefentiel($referentiel, $type);
         foreach ($competences as $competence) {
-            $dictionnaire[$competence->getLibelle()] = $competence;
+            if ($id === 'libelle') $dictionnaire[$competence->getLibelle()] = $competence;
+            if ($id === 'id') $dictionnaire[$competence->getId()] = $competence;
+            if ($id === 'reference') $dictionnaire[$competence->getReference()] = $competence;
             foreach ($competence->getSynonymes() as $synonyme) {
-                $dictionnaire[$synonyme->getLibelle()] = $synonyme->getCompetence();
+                if ($id === 'libelle') $dictionnaire[$synonyme->getLibelle()] = $synonyme->getCompetence();
             }
         }
         return $dictionnaire;

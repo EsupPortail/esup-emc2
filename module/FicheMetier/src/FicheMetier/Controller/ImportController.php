@@ -30,6 +30,7 @@ use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
+use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 
@@ -58,7 +59,6 @@ class ImportController extends AbstractActionController
     const FORMAT_RMFP = 'FORMAT_RMFP';
     const FORMAT_REFERENS3 = 'FORMAT_REFERENS3';
 
-
     const HEADER_RMFP_REFERENCE = "Code";
     const HEADER_RMFP_LIBELLE = "Intitulé";
     const HEADER_RMFP_MISSION_LIBELLE = "Définition synthétique de l'ER";
@@ -70,6 +70,8 @@ class ImportController extends AbstractActionController
     const HEADER_RMFP_COMPETENCE_COMPORTEMENTALE = "Savoir-être";
     const HEADER_RMFP_TENDANCE = "Tendance / évolution";
     const HEADER_RMFP_IMPACT = "Impact sur l'ER";
+    const HEADER_RMFP_MANAGEMENT = "Libellé compétence managériale";
+    const HEADER_RMFP_CONDITION = "Conditions particulières d'exercice / d'accès";
 
     const HEADERS_RMFP = [
         self::HEADER_RMFP_REFERENCE, self::HEADER_RMFP_LIBELLE, self::HEADER_RMFP_FAMILLE, self::HEADER_RMFP_SPECIALITE,
@@ -77,6 +79,28 @@ class ImportController extends AbstractActionController
         self::HEADER_RMFP_COMPETENCE_CONNAISSANCE, self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE, self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE,
         self::HEADER_RMFP_TENDANCE, self::HEADER_RMFP_IMPACT
     ];
+
+    const HEADER_REFERENS3_REFERENCE = "Code emploi type";
+    const HEADER_REFERENS3_LIBELLE = "Intitulé de l’emploi type";
+    const HEADER_REFERENS3_MISSION_LIBELLE = "Mission";
+    const HEADER_REFERENS3_MISSION_ACTIVITE = "Activités principales";
+    const HEADER_REFERENS3_FAMILLE_LIBELLE = "Famille d’activité professionnelle";
+    const HEADER_REFERENS3_FAMILLE_POSITION = "TriFAP";
+    const HEADER_REFERENS3_SPECIALITE_LIBELLE = "Branche d’activité professionnelle";
+    const HEADER_REFERENS3_SPECIALITE_CODE = "Code de la branche d’activité professionnelle";
+    const HEADER_REFERENS3_COMPETENCE = "COMPETENCES_ID";
+    const HEADER_REFERENS3_FORMATION_DEMANDE = "Domaine de formation souhaité/exigé";
+    const HEADER_REFERENS3_FORMATION_DIPLOME = "Diplôme réglementaire exigé - Formation professionnelle si souhaitable";
+    const HEADER_REFERENS3_CONDITION = "Conditions particulières d’exercices";
+    const HEADER_REFERENS3_TENDANCE = "Facteurs d’évolution à moyen terme";
+    const HEADER_REFERENS3_IMPACT = "Impacts sur l’emploi-type";
+    const HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_LIBELLE = "Correspondance statutaire";
+    const HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE = "Code de la correspondance statutaire";
+    const HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU = "Id de la correspondance statutaire";
+    const HEADER_REFERENS3_METIERS = "Métiers";
+    const HEADER_REFERENS3_CATEGORIE = "REFERENS_CATEGORIE_EMPLOI";
+    const HEADER_REFERENS3_URL = "FICHE_URL";
+    const HEADER_REFERENS3_PDF = "Fiche au format pdf";
 
     public function importAction(): ViewModel
     {
@@ -116,15 +140,33 @@ class ImportController extends AbstractActionController
                 }
             }
 
+            if ($data['referentiel'] === "") {
+                $error[] = "Aucun référentiel selectionné";
+            } else {
+                $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
+            }
+
             if ($data['format'] === ImportController::FORMAT_RMFP) {
-                $result = $this->readAsRmfp($data, $filepath,0);
+                $result = $this->readAsRmfp($data, $filepath,$referentiel, 0);
                 /** @var FicheMetier[] $fiches */
                 $fiches = $result["fiches"];
+                foreach ($result['warning'] as $item) { $warning[] = $item; }
+                foreach ($result['error'] as $item) { $error[] = $item; }
+                foreach ($result['info'] as $item) { $info[] = $item; }
+            }
 
-                $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
-                $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
+            if ($data['format'] === ImportController::FORMAT_REFERENS3) {
+                $result = $this->readAsReferens($data, $filepath,$referentiel, 100);
+                /** @var FicheMetier[] $fiches */
+                $fiches = $result['fiches'];
+                foreach ($result['warning'] as $item) { $warning[] = $item; }
+                foreach ($result['error'] as $item) { $error[] = $item; }
+                foreach ($result['info'] as $item) { $info[] = $item; }
+            }
 
-                if ($mode === 'import') {
+            $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
+            $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
+            if ($mode === 'import') {
                     // recuperation des nouvelles familles professionnelles
                     foreach ($fiches as $fiche) {
                         if ($fiche->getFamilleProfessionnelle() AND $fiche->getFamilleProfessionnelle()->getCorrespondance() AND $fiche->getFamilleProfessionnelle()->getCorrespondance()->getId() === null) {
@@ -179,116 +221,6 @@ class ImportController extends AbstractActionController
                         $this->getFicheMetierService()->update($fiche);
                     }
                 }
-            }
-
-            if ($data['format'] === ImportController::FORMAT_REFERENS3) {
-
-                $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
-                $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
-                $mode = (isset($data["mode"]) AND $data["mode"] !== "") ? $data["mode"] : null;
-
-                if ($referentiel !== null AND $mode !== null AND $filepath !== "") {
-                    $header = [];
-                    $raw = [];
-                    // Lecture du fichier de REFERENS3
-                    $csvFile = fopen($filepath, "r");
-                    if ($csvFile !== false) {
-                        $header = fgetcsv($csvFile, null, ";");
-                        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
-                        $header = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header);
-                        $nbElements = count($header);
-
-                        while (($row = fgetcsv($csvFile, null, ';')) !== false) {
-                            $item = [];
-                            for ($position = 0; $position < $nbElements; ++$position) {
-                                $item[$header[$position]] = $row[$position];
-                            }
-                            $raw[] = $item;
-                        }
-                        fclose($csvFile);
-                    }
-
-                    $ok = true;
-                    if (!in_array("Code emploi type", $header)) {
-                        $ok = false;
-                        $error[] = "La colonne obligatoire <code>Code emploi type</code> est absente";
-                    }
-                    if (!in_array("Intitulé de l’emploi type", $header)) {
-                        $ok = false;
-                        $error[] = "La colonne obligatoire <code>Intitulé de l’emploi type</code> est absente";
-                    }
-
-                    if ($ok) {
-                        $categories = $this->getImportService()->readCategorie($header, $raw, $mode, $info, $warning, $error);
-                        $competences = $this->getImportService()->readCompetence($header, $raw, $mode, $info, $warning, $error);
-                        $correspondances = $this->getImportService()->readCorrespondance($header, $raw, $mode, $info, $warning, $error);
-                        $famillesProfessionnelles = $this->getImportService()->readFamilleProfessionnelle($header, $raw, $mode, $info, $warning, $error);
-                        $metiers = $this->getImportService()->readMetier($header, $raw, $mode, $famillesProfessionnelles, $correspondances, $categories, $referentiel, $info, $warning, $error);
-
-
-                        /** @var FicheMetier[] $fiches */
-                        foreach ($raw as $item) {
-                            $raw_ = json_encode($item);
-                            $existingFiches = ($mode === 'import') ? $this->getFicheMetierService()->getFichesMetiersByMetier($metiers[$item["Code emploi type"]], $raw) : [];
-                            if (!empty($existingFiches)) {
-                                $warning[] = "Une fiche de métier pour métier [" . $item["Code emploi type"] . "|" . $item["Intitulé de l’emploi type"] . "] existe déjà avec les mêmes données sources.";
-                            } else {
-                                $fiche = new FicheMetier();
-                                $fiche->setRaw($raw_);
-                                $fiche->setMetier($metiers[$item["Code emploi type"]]);
-                                if ($mode === 'import') $this->getFicheMetierService()->create($fiche);
-                                if (isset($item["COMPETENCES_ID"]) and $item["COMPETENCES_ID"] !== '') {
-                                    $ids = explode('|', $item["COMPETENCES_ID"]);
-                                    foreach ($ids as $id) {
-                                        if (isset($competences[$id])) {
-                                            $element = new CompetenceElement();
-                                            $element->setCompetence($competences[$id]);
-                                            $fiche->addCompetenceElement($element);
-                                            if ($mode === 'import') {
-                                                $this->getCompetenceElementService()->create($element);
-                                            }
-                                        }
-                                    }
-                                }
-                                //Mission et activité
-                                if (isset($item["Mission"]) and $item["Mission"] !== '') {
-                                    $intitule = $item["Mission"];
-                                    $activites = [];
-                                    if (isset($item["Activités principales"])) {
-                                        $activites = explode("|", $item["Activités principales"]);
-                                    }
-                                    $mission = $this->getMissionPrincipaleService()->createWith($intitule, $activites, $mode === 'import');
-
-
-                                    $ficheMetierMission = new FicheMetierMission();
-                                    $ficheMetierMission->setMission($mission);
-                                    $ficheMetierMission->setFicheMetier($fiche);
-                                    $ficheMetierMission->setOrdre(1);
-
-                                    if ($mode === 'import') {
-                                        $this->getFicheMetierMissionService()->create($ficheMetierMission);
-                                        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
-                                    } else {
-                                        $fiche->addMission($ficheMetierMission);
-                                    }
-
-
-                                }
-
-                                if ($mode === 'import') {
-                                    $this->getFicheMetierService()->update($fiche);
-                                }
-
-                                //if ($mode === 'import') {
-                                //print((++$position) . "/" . count($data) . $fiche->getMetier()->getLibelle() . "<br>");
-                                //flush();
-                                //}
-                                $fiches[] = $fiche;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         if ($referentiel === null) $error[] = "Aucun référentiel de sélectionné";
@@ -315,24 +247,156 @@ class ImportController extends AbstractActionController
         ]);
     }
 
-    public function readAsReferens($data, array $file, int $verbosity = 0) : array
+    public function readAsReferens($data, string $filepath, Referentiel $referentiel, int $verbosity = 0) : array
     {
-        return ['error' => ["Not yep re-implemented"]];
-    }
-
-    public function readAsRmfp($data, string $filepath, int $verbosity = 0) : array
-    {
-        $warning = [];
+        $error = []; $warning = []; $info = []; $fiches = [];
 
         /** Préparation pour le traitement des compétences */
-        $rmfp = $this->getReferentielService()->getReferentielByLibelleCourt('RMFP'); //todo constante
+        $dictionnaireCompetence = $this->getCompetenceService()->generateDictionnaire($referentiel,'reference');
+        $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
+        $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
+        if ($tendanceImpact === null) { $warning[] = "Aucune type de tendance [".TendanceType::IMPACT."] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte"; }
+        if ($tendanceFacteur === null) { $warning[] = "Aucune type de tendance [".TendanceType::FACTEUR."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
+
+        $debut = (new DateTime())->getTimestamp();
+
+        $csvFile = fopen($filepath, "r");
+        // lecture du header + position colonne
+        if ($csvFile !== false) {
+            $header = fgetcsv($csvFile, null, ";");
+            // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+            $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $nbElements = count($header);
+
+            if ($verbosity > 10000) {
+                var_dump($nbElements . " colonnes dans le header");
+                var_dump($header);
+            }
+
+            $raws = [];
+            while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                $item = [];
+                for ($position = 0; $position < $nbElements; ++$position) {
+                    $item[$header[$position]] = $row[$position];
+                }
+                $raws[] = $item;
+            }
+            $nbFiches = count($raws);
+            if ($verbosity > 0) {
+                var_dump($nbFiches . " fiches dans le csv");
+            }
+
+            foreach ($raws as $raw) {
+                // Intitulé + (domaine ...)
+                $intitule = $raw[self::HEADER_REFERENS3_LIBELLE];
+                $code = $raw[self::HEADER_REFERENS3_REFERENCE];
+                $fiche = new FicheMetier();
+                $fiche->setRaw(json_encode($raw));
+                $fiche->setLibelle($intitule);
+                $fiche->setReference($code);
+                $fiche->setReferentiel($referentiel);
+
+                //specialité
+                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]));
+                if ($specialite === null) {
+                    $specialite = $this->getCorrespondanceService()->createWith('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]), trim($raw[self::HEADER_REFERENS3_SPECIALITE_LIBELLE]), false);
+                    $specialite->setId(null);
+                }
+                //famille
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]);
+                if ($famille === null) {
+                    $famille = new FamilleProfessionnelle();
+                    $famille->setLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]);
+                    $famille->setPosition($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]);
+                    $famille->setCorrespondance($specialite);
+                } else {
+                    if ($famille->getCorrespondance() !== $specialite) $warning[] = "La famille professionnelle [".$raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]."] n'a pas la spécialité connue par EMC2 [".$famille->getCorrespondance()?->getCategorie()."!=".$raw[self::HEADER_REFERENS3_SPECIALITE_CODE]."]";
+                    if ($famille->getPosition() != $raw[self::HEADER_REFERENS3_FAMILLE_POSITION]) $warning[] = "La famille professionnelle [".$raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]."] n'a pas la position connue par EMC2 [".$famille->getPosition()."!=".$raw[self::HEADER_REFERENS3_FAMILLE_POSITION]."]";
+                }
+                $fiche->setFamilleProfessionnelle($famille);
+
+                /** Partie Mission et activités ***********************************************************************/
+
+                // !! quid !!
+                // > revoir un peu la fiche pour avoir une définition + une liste d'activité sans mission ?
+                // > fiche metier devrait pouvoir avoir des activités hors mission ?
+
+                $missionLibelle = $raw[self::HEADER_REFERENS3_MISSION_LIBELLE];
+                $activites = explode("|",$raw[self::HEADER_REFERENS3_MISSION_ACTIVITE]);
+
+                $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($missionLibelle);
+                if ($mission === null) {
+                    $mission = new Mission();
+                    $mission->setLibelle($missionLibelle);
+
+                    $position = 1;
+                    foreach ($activites as $activiteLibelle) {
+                        $activite = new MissionActivite();
+                        $activite->setLibelle($activiteLibelle);
+                        $activite->setOrdre($position++);
+                        $activite->setMission($mission);
+                        $mission->addMissionActivite($activite);
+                    }
+                }
+
+                $ficheMission = new FicheMetierMission();
+                $ficheMission->setMission($mission);
+                $ficheMission->setFicheMetier($fiche);
+                $ficheMission->setOrdre(1);
+                $fiche->addMission($ficheMission);
+
+                /** COMPETENCES ***************************************************************************************/
+
+                $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE]);
+                foreach ($comptenceIds as $comptenceId) {
+                    $competence = $dictionnaireCompetence[ $comptenceId ]??null;
+                    if ($competence !== null) {
+                        $element = new CompetenceElement();
+                        $element->setCompetence($competence);
+                        $fiche->addCompetenceElement($element);
+                    } else {
+                        $warning[] = "[". $comptenceId ."] compétence non trouvée.";
+                    }
+                }
+
+                /** TENDANCE ******************************************************************************************/
+
+                if ($tendanceFacteur AND isset($raw[self::HEADER_REFERENS3_TENDANCE]) AND trim($raw[self::HEADER_REFERENS3_TENDANCE]) !== "") {
+                    $facteur = new TendanceElement();
+                    $facteur->setType($tendanceFacteur);
+                    $facteur->setTexte(str_replace("|","<br>",trim($raw[self::HEADER_REFERENS3_TENDANCE])));
+                    $fiche->addTendance($facteur);
+                }
+                if ($tendanceImpact AND isset($raw[self::HEADER_REFERENS3_IMPACT]) AND trim($raw[self::HEADER_REFERENS3_IMPACT]) !== "") {
+                    $facteur = new TendanceElement();
+                    $facteur->setType($tendanceImpact);
+                    $facteur->setTexte(str_replace("|","<br>",trim($raw[self::HEADER_REFERENS3_IMPACT])));
+                    $fiche->addTendance($facteur);
+                }
+
+                $fiches[] = $fiche;
+            }
+        }
+
+        fclose($csvFile);
+        $fin = (new DateTime())->getTimestamp();
+        $info[] = "Temps de traitement : " . max(1,($fin-$debut)) . " seconde·s";
+
+        return ['fiches' => $fiches, 'warning' => $warning, 'info' => $info, 'error' => $error];
+    }
+
+    public function readAsRmfp($data, string $filepath, Referentiel $referentiel, int $verbosity = 0) : array
+    {
+        $warning = []; $error = []; $info = []; $fiches = [];
+
+        /** Préparation pour le traitement des compétences */
         $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
         $tsavoiretre = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_COMPORTEMENTALE);
         $tsavoirfaire = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_OPERATIONNELLE);
 
-        $dictionnaireConnaissances = $this->getCompetenceService()->generateDictionnaire($rmfp, $tConnaissance);
-        $dictionnaireSavoirFaire = $this->getCompetenceService()->generateDictionnaire($rmfp, $tsavoirfaire);
-        $dictionnaireSavoirEtre = $this->getCompetenceService()->generateDictionnaire($rmfp, $tsavoiretre);
+        $dictionnaireConnaissances = $this->getCompetenceService()->generateDictionnaire($referentiel, 'libelle', $tConnaissance);
+        $dictionnaireSavoirFaire = $this->getCompetenceService()->generateDictionnaire($referentiel, 'libelle', $tsavoirfaire);
+        $dictionnaireSavoirEtre = $this->getCompetenceService()->generateDictionnaire($referentiel, 'libelle', $tsavoiretre);
         $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
         $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
         if ($tendanceImpact === null) { $warning[] = "Aucune type de tendance [".TendanceType::IMPACT."] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte"; }
@@ -358,14 +422,6 @@ class ImportController extends AbstractActionController
                 var_dump($header);
             }
 
-            $positionCode       = array_search(self::HEADER_RMFP_REFERENCE, $header);
-            $positionIntitule   = array_search(self::HEADER_RMFP_LIBELLE, $header);
-            $positionDefinition = array_search(self::HEADER_RMFP_MISSION_LIBELLE, $header);
-            $positionFamille    = array_search(self::HEADER_RMFP_FAMILLE, $header);
-            $positionSpecialite    = array_search(self::HEADER_RMFP_SPECIALITE, $header);
-
-
-
             //lecture des fiches
             $raws = [];
             while (($row = fgetcsv($csvFile, null, ';')) !== false) {
@@ -388,7 +444,7 @@ class ImportController extends AbstractActionController
                 $fiche->setRaw(json_encode($raw));
                 $fiche->setLibelle($intitule);
                 $fiche->setReference($code);
-                $fiche->setReferentiel($rmfp);
+                $fiche->setReferentiel($referentiel);
 //                $this->getFicheMetierService()->create($fiche);
 
                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]));
@@ -418,16 +474,10 @@ class ImportController extends AbstractActionController
                 $missionLibelle = $raw[self::HEADER_RMFP_MISSION_LIBELLE];
                 $activites = explode("\n",$raw[self::HEADER_RMFP_MISSION_ACTIVITE]);
 
-
-
-
-
                 $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($missionLibelle);
                 if ($mission === null) {
                     $mission = new Mission();
                     $mission->setLibelle($missionLibelle);
-//                    $this->getMissionPrincipaleService()->create($mission);
-                    // todo set code
 
                     $position = 1;
                     foreach ($activites as $activiteLibelle) {
@@ -435,7 +485,6 @@ class ImportController extends AbstractActionController
                         $activite->setLibelle($activiteLibelle);
                         $activite->setOrdre($position++);
                         $activite->setMission($mission);
-//                        $this->getMissionActiviteService()->create($activite);
                         $mission->addMissionActivite($activite);
                     }
                 }
@@ -444,7 +493,6 @@ class ImportController extends AbstractActionController
                 $ficheMission->setMission($mission);
                 $ficheMission->setFicheMetier($fiche);
                 $ficheMission->setOrdre(1);
-//                    $this->getFicheMetierMissionService()->create($ficheMission);
                 $fiche->addMission($ficheMission);
 
 
@@ -516,7 +564,7 @@ class ImportController extends AbstractActionController
         $fin = (new DateTime())->getTimestamp();
         $info[] = "Temps de traitement : " . max(1,($fin-$debut)) . " seconde·s";
 
-        return ['fiches' => $fiches, 'warning' => $warning, 'info' => $info];
+        return ['fiches' => $fiches, 'error' => $error, 'warning' => $warning, 'info' => $info];
     }
 
     /** @return string[] */
