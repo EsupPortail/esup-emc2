@@ -48,8 +48,6 @@ class CodeFonctionController extends AbstractActionController
                 $exist = $this->getCodeFonctionService()->getCodeFonctionByNiveauAndFamille($codeFonction->getNiveauFonction(), $codeFonction->getFamilleProfessionnelle());
                 if (!$exist) {
                     $this->getCodeFonctionService()->create($codeFonction);
-                } else {
-                    $this->getCodeFonctionService()->update($codeFonction);
                 }
                 exit();
             }
