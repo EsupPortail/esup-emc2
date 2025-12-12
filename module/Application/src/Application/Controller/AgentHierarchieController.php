@@ -103,10 +103,10 @@ class AgentHierarchieController extends AbstractActionController
                     if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
                     $date_debut_st = $line[2] ?? null;
                     $dateDebut = ($date_debut_st) ? DateTime::createFromFormat('d/m/Y', $date_debut_st) : null;
-                    if ($dateDebut === false) $warning[] = "Impossibilité de calculé la date de début à partir de [" . $date_debut_st . "]";
+                    if ($dateDebut === false) $warning[] = "Impossibilité de calculer la date de début à partir de [" . $date_debut_st . "]";
                     $date_fin_st = $line[3] ?? null;
                     $dateFin = ($date_fin_st) ? DateTime::createFromFormat('d/m/Y', $date_fin_st) : null;
-                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculé la date de fin à partir de [" . $date_fin_st . "]";
+                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculer la date de fin à partir de [" . $date_fin_st . "]";
 
                     $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
                     if ($agent) $agents[$agent->getId()] = $agent;
