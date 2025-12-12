@@ -42,31 +42,6 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
             <div class="col-md-4 complements">
                 <h4>Compléments</h4>
                 <dl class="row">
-                    <?php $listing = $mission->getListeFicheMetier(); ?>
-                    <dt class="col-md-5"> Fiches Métiers</dt>
-                    <dd class="col-md-7">
-                        <?php if (empty($listing)) : ?>
-                            Aucune fiche métier
-                        <?php else : ?>
-                            <ul>
-                            <?php foreach ($mission->getListeFicheMetier() as $item) : ?>
-                                <li>
-                                    <?php if ($item->getFicheMetier()->getLibelle()): ?>
-                                        <?php echo $item->getFicheMetier()->getLibelle(); ?>
-                                    <?php else: ?>
-                                        <?php if ($item->getFicheMetier()->getMetier()): ?>
-                                            <?php echo $item->getFicheMetier()->getMetier()->getLibelle(); ?>
-                                            <?php $references =  $item->getFicheMetier()->getMetier()->getReferences(); ?>
-                                            <?php foreach ($references as $reference) : ?>
-                                                <?php echo $this->metierReference($reference); ?>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
                     <dt class="col-md-5"> FAP </dt>
                     <dd class="col-md-7">
                         <?php $familles = $mission->getFamillesProfessionnelles(); ?>
