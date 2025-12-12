@@ -481,9 +481,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringCREP_Champ($motsClefs): string
     {
-//        $mots = explode(";", $motsClefs);
-//        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
-        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($motsClefs);
+        $mots = explode(";", $motsClefs);
+        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
         return str_replace("_"," ",$texte);
     }
 
@@ -492,15 +491,15 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringCREF_Champ($motsClefs) : ?string
     {
-//        $mots = explode(";", $motsClefs);
-        return $this->formationInstance->fetchChampReponseByMotsClefs($motsClefs);
+        $mots = explode(";", $motsClefs);
+        return $this->formationInstance->fetchChampReponseByMotsClefs($mots);
     }
 
     /** @noinspection PhpUnused */
     public function toStringCREF_Champs($motsClefs) : ?string
     {
-//        $mots = explode(";", $motsClefs);
-        return $this->formationInstance->fetchChampsReponseByMotsClefs($motsClefs);
+        $mots = explode(";", $motsClefs);
+        return $this->formationInstance->fetchChampsReponseByMotsClefs($mots);
     }
 
     /** @noinspection PhpUnused */

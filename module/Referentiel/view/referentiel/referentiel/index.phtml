@@ -76,16 +76,16 @@ $this->headTitle("Référentiels");
                 <?php endif; ?>
             </td>
             <td class="action">
-                <?php if ($canAfficher): ?>
-                    <?php /** @see \Referentiel\Controller\ReferentielController::afficherAction() */ ?>
-                    <a href="<?php echo $this->url('referentiel/afficher', ['referentiel' => $referentiel->getId()], [], true); ?>"
-                       class="action secondary ajax-modal" >
-                        <span class="icon icon-voir"></span>
-                        Afficher
-                    </a>
-                <?php endif; ?>
+<!--                --><?php //if ($canAfficher): ?>
+<!--                    --><?php ///** @see \Referentiel\Controller\ReferentielController::afficherAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('referentiel/afficher', ['referentiel' => $referentiel->getId()], [], true); ?><!--"-->
+<!--                       class="action secondary ajax-modal" >-->
+<!--                        <span class="icon icon-voir"></span>-->
+<!--                        Afficher-->
+<!--                    </a>-->
+<!--                --><?php //endif; ?>
                 <?php if ($canModifier): ?>
-                    <br/>
+<!--                    <br/>-->
                     <?php /** @see \Referentiel\Controller\ReferentielController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('referentiel/modifier', ['referentiel' => $referentiel->getId()], [], true); ?>"
                        class="action primary ajax-modal" data-event="modification">

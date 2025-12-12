@@ -583,7 +583,10 @@ class MissionPrincipaleController extends AbstractActionController
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                 if ($fichemetier === null) { $warning[] = "La fiche metier [".$referentiel->getLibelleCourt()."|".$codeFicheMetier."] n'existe pas"; }
                                 else {
-                                    if (!$fichemetier->hasMission($mission)) $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                    if (!$fichemetier->hasMission($mission)) {
+                                        $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                        $info[] = "Ajout de la mission [".$mission->getReference()."] a été ajouté à la fiche metier [".$fichemetier->getReference()."]";
+                                    }
                                 }
                             }
                             $codesFonction = explode('|',$mission->getCodesFonction()??"");
@@ -591,7 +594,10 @@ class MissionPrincipaleController extends AbstractActionController
                                 $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                 if (empty($fichesmetiers)) { $warning[] = "Aucune fiche metier utilise le code [".$codeFonction."]"; }
                                 foreach ($fichesmetiers as $fichemetier) {
-                                    if (!$fichemetier->hasMission($mission)) $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                    if (!$fichemetier->hasMission($mission)) {
+                                        $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                        $info[] = "Ajout de la mission [".$mission->getReference()."] a été ajouté à la fiche metier [".($fichemetier->getReference()??("Fiche #".$fichemetier->getId()))."]";
+                                    }
                                 }
                             }
                         }
