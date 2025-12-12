@@ -300,6 +300,7 @@ return [
                         'options' => [
                             'route'    => '/editer-description/:structure',
                             'defaults' => [
+                                /** @see StructureController::editerDescriptionAction() */
                                 'controller' => StructureController::class,
                                 'action'     => 'editer-description',
                             ],

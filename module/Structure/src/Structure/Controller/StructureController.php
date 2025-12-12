@@ -308,7 +308,7 @@ class StructureController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Édition de la description de la structure',
             'form' => $form,
