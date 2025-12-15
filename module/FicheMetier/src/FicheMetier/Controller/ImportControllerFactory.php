@@ -4,6 +4,7 @@ namespace FicheMetier\Controller;
 
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Correspondance\CorrespondanceService;
+use Carriere\Service\Niveau\NiveauService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceType\CompetenceTypeService;
@@ -48,6 +49,7 @@ class ImportControllerFactory
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var MissionActiviteService $missionActiviteService
+         * @var NiveauService $niveauService
          * @var ReferenceServiceAwareTrait $referenceService
          * @var ReferentielService $referentielService
          * @var TendanceElementService $tendanceElementService
@@ -65,6 +67,7 @@ class ImportControllerFactory
         $metierService = $container->get(MetierService::class);
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $niveauService = $container->get(NiveauService::class);
         $referenceService = $container->get(ReferenceService::class);
         $referentielService = $container->get(ReferentielService::class);
         $tendanceElementService = $container->get(TendanceElementService::class);
@@ -88,6 +91,7 @@ class ImportControllerFactory
         $controller->setMetierService($metierService);
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
+        $controller->setNiveauService($niveauService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);
         $controller->setTendanceElementService($tendanceElementService);

@@ -97,6 +97,8 @@ return [
                         'modifier-metier',
                         'modifier-raison',
 
+                        'modifier-niveau-carriere',
+                        'supprimer-niveau-carriere',
                         'modifier-code-fonction',
                         'supprimer-code-fonction',
                     ],
@@ -320,6 +322,26 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerCodeFonctionAction() */
                                 'action'     => 'supprimer-code-fonction',
+                            ],
+                        ],
+                    ],
+                    'modifier-niveau-carriere' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-niveau-carriere/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierNiveauCarriereAction() */
+                                'action'     => 'modifier-niveau-carriere',
+                            ],
+                        ],
+                    ],
+                    'supprimer-niveau-carriere' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-niveau-carriere/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::supprimerNiveauCarriereAction() */
+                                'action'     => 'supprimer-niveau-carriere',
                             ],
                         ],
                     ],

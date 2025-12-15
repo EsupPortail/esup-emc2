@@ -19,12 +19,12 @@ $metier = $fichemetier->getMetier();
 
 <dl class="row">
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Niveau  </dt>
+        <dt class="col-md-4"> Niveau de fonction </dt>
         <dd class="col-md-8">
             <?php if ($fichemetier->getCodeFonction()): ?>
                 <?php echo $fichemetier->getCodeFonction()->getNiveauFonction()?->getLibelle(); ?>
             <?php else : ?>
-                Aucun niveau associé
+                <em style="color:gray;">Aucun niveau associé</em>
             <?php endif; ?>
         </dd>
     <?php endif; ?>
@@ -34,7 +34,7 @@ $metier = $fichemetier->getMetier();
         <?php if ($famille === null) : ?>
             <em>Aucune spécialité</em> <span class="icon icon-info" title="L'absence de famille empêche de déterminer la spécialité"></span>
         <?php elseif ($famille->getCorrespondance() === null) : ?>
-            <em>Aucune spécialité </em><span class="icon icon-info" title="Aucune spécialité liée à la famille professionnelle"></span>
+            <em style="color:gray;">Aucune spécialité </em><span class="icon icon-info" title="Aucune spécialité liée à la famille professionnelle"></span>
         <?php else : ?>
             <?php echo $famille->getCorrespondance()->getLibelleLong(); ?>
         <?php endif; ?>
@@ -47,6 +47,38 @@ $metier = $fichemetier->getMetier();
             <?php echo $famille->getLibelle(); ?>
         <?php endif; ?>
     </dd>
+    <dt class="col-md-4"> Niveau de carrière </dt>
+    <dd class="col-md-8">
+        <?php if ($fichemetier->getNiveauCarriere() === null) : ?>
+            <em style="color:gray;">Aucun niveau associé</em>
+        <?php else : ?>
+            <?php echo $fichemetier->getNiveauCarriere()->getLibelle(); ?>
+<!--            --><?php //if ($fichemetier->getNiveauCarriere()->getCategorie()): ?>
+<!--                (--><?php //echo $fichemetier->getNiveauCarriere()->getCategorie()->getLibelle(); ?><!--)-->
+<!--            --><?php //endif; ?>
+        <?php endif; ?>
+        <br> <!-- // todo : retirer ce br copium -->
+        <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
+            <?php /** @see FicheMetierController::modifierNiveauCarriereAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/modifier-niveau-carriere', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="ajax-modal action primary" data-event="modification"
+            >
+                <small>
+                    <span class="icon icon-editer"></span>
+                    Modifier
+                </small>
+            </a>
+            <?php /** @see FicheMetierController::supprimerNiveauCarriereAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/supprimer-niveau-carriere', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="action danger"
+            >
+                <small>
+                    <span class="icon icon-unchecked"></span>
+                    Supprimer
+                </small>
+            </a>
+        <?php endif; ?>
+    </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-4"> Code Fonction</dt>
         <dd class="col-md-8">
@@ -54,7 +86,7 @@ $metier = $fichemetier->getMetier();
             <?php if ($code !== null) : ?>
                 <code> <?php echo $code->computeCode(); ?> </code>
             <?php else : ?>
-                Non renseigné
+                <em style="color:gray;">Non renseigné</em>
             <?php endif; ?>
             <br> <!-- // todo : retirer ce br copium -->
             <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>

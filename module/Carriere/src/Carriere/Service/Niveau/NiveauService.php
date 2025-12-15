@@ -123,5 +123,16 @@ class NiveauService
         }
         return $result;
     }
+
+    /** @return Niveau[] */
+    public function generateDictionnaire(): array
+    {
+        $dictionnaire = [];
+        $niveaux = $this->getNiveaux();
+        foreach ($niveaux as $niveau) {
+            $dictionnaire[$niveau->getNiveau()] = $niveau;
+        }
+        return $dictionnaire;
+    }
 }
 

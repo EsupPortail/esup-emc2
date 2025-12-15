@@ -12,6 +12,10 @@ use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormFactory;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeHydrator;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeHydratorFactory;
+use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereForm;
+use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormFactory;
+use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereHydrator;
+use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereHydratorFactory;
 use Carriere\Provider\Privilege\NiveaucarrierePrivileges;
 use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\Niveau\NiveauServiceFactory;
@@ -186,12 +190,14 @@ return [
         'factories' => [
             NiveauForm::class => NiveauFormFactory::class,
             NiveauEnveloppeForm::class => NiveauEnveloppeFormFactory::class,
+            SelectionnerNiveauCarriereForm::class => SelectionnerNiveauCarriereFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             NiveauHydrator::class => NiveauHydratorFactory::class,
             NiveauEnveloppeHydrator::class => NiveauEnveloppeHydratorFactory::class,
+            SelectionnerNiveauCarriereHydrator::class => SelectionnerNiveauCarriereHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

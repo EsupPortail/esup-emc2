@@ -5,6 +5,7 @@ namespace FicheMetier\Controller;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
+use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereForm;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\CompetenceType\CompetenceTypeService;
@@ -82,6 +83,7 @@ class FicheMetierControllerFactory
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
+         * @var SelectionnerNiveauCarriereForm $selectionnerNiveauCarriereForm
          */
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
@@ -90,6 +92,7 @@ class FicheMetierControllerFactory
         $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
+        $selectionnerNiveauCarriereForm = $container->get('FormElementManager')->get(SelectionnerNiveauCarriereForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
         $controller = new FicheMetierController();
@@ -116,6 +119,7 @@ class FicheMetierControllerFactory
         $controller->setSelectionEtatForm($selectionnerEtatForm);
         $controller->setSelectionnerMetierForm($selectionnerMetierForm);
         $controller->setSelectionnerMissionPrincipaleForm($selectionnerMissionPrincipaleForm);
+        $controller->setSelectionnerNiveauCarriereForm($selectionnerNiveauCarriereForm);
         return $controller;
     }
 }

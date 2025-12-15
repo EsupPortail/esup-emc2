@@ -51,6 +51,21 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 
 <div class="row">
 <div class="float-end">
+    <?php if ($fiche->hasLink()) : ?>
+        <div class="dropdown" style="display:inline-block">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Fiche de référence
+            </button>
+            <ul class="dropdown-menu">
+                <?php if ($fiche->getLienWeb() !== null): ?>
+                    <li><a class="dropdown-item" href="<?php echo $fiche->getLienWeb(); ?>">Version WEB</a></li>
+                <?php endif; ?>
+                <?php if ($fiche->getLienPdf() !== null): ?>
+                    <li><a class="dropdown-item" href="<?php echo $fiche->getLienWeb(); ?>">Version PDF</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
     <?php if ($canExporterFicheMetier): ?>
         <?php /** @see \FicheMetier\Controller\FicheMetierController::exporterAction() */ ?>
         <a href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"

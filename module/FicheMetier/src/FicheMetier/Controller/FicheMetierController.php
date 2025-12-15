@@ -6,6 +6,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormAwareTrait;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
@@ -62,6 +63,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
+    use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMetierFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
 
@@ -455,6 +457,45 @@ class FicheMetierController extends AbstractActionController
         $vm->setTemplate('default/default-form');
         return $vm;
     }
+
+    public function modifierNiveauCarriereAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerNiveauCarriereForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-niveau-carriere', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner le niveau de carrière associé",
+            'fichemetier' => $fichemetier,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function supprimerNiveauCarriereAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fichemetier->setNiveauCarriere(null);
+        $this->getFicheMetierService()->update($fichemetier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
 
     /** GESTIONS DES BLOCS ********************************************************************************************/
 

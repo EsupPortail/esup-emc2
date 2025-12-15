@@ -4,6 +4,7 @@ namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
@@ -49,6 +50,7 @@ class ImportController extends AbstractActionController
     use MetierServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use NiveauServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
@@ -255,6 +257,9 @@ class ImportController extends AbstractActionController
         if ($tendanceFacteur === null) { $warning[] = "Aucune type de tendance [".TendanceType::FACTEUR."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
         if ($tendanceCondition === null) { $warning[] = "Aucune type de tendance [".TendanceType::CONDITIONS."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
 
+        /** Préparation pour les niveaus de carrière */
+        $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
+
         $debut = (new DateTime())->getTimestamp();
 
         $csvFile = fopen($filepath, "r");
@@ -279,9 +284,6 @@ class ImportController extends AbstractActionController
                 $raws[] = $item;
             }
             $nbFiches = count($raws);
-            if ($verbosity > 0) {
-                var_dump($nbFiches . " fiches dans le csv");
-            }
 
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
@@ -311,6 +313,23 @@ class ImportController extends AbstractActionController
                     if ($famille->getPosition() != $raw[self::HEADER_REFERENS3_FAMILLE_POSITION]) $warning[] = "La famille professionnelle [".$raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]."] n'a pas la position connue par EMC2 [".$famille->getPosition()."!=".$raw[self::HEADER_REFERENS3_FAMILLE_POSITION]."]";
                 }
                 $fiche->setFamilleProfessionnelle($famille);
+                //Niveau de carriere
+                $niveauCarriereId = (isset($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) AND trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) !== '')?trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]):null;
+                if ($niveauCarriereId !== null) {
+                    if (isset($dictionnaireNiveauCarriere[$niveauCarriereId])) {
+                        $fiche->setNiveauCarriere($dictionnaireNiveauCarriere[$niveauCarriereId]);
+                    } else {
+                        $warning[] = "Aucun niveau de carrière de connue pour le niveau ".$niveauCarriereId." ".($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE])??"Colonne manquante [".self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE."]";
+                    }
+                }
+
+                /** Liens *********************************************************************************************/
+
+                $lienWeb = isset($raw[self::HEADER_REFERENS3_URL])?trim($raw[self::HEADER_REFERENS3_URL]):null;
+                if ($lienWeb !== null and $lienWeb !== '') $fiche->setLienWeb($lienWeb);
+
+                $lienPdf = isset($raw[self::HEADER_REFERENS3_PDF])?trim($raw[self::HEADER_REFERENS3_PDF]):null;
+                if ($lienPdf !== null and $lienPdf !== '') $fiche->setLienPdf($lienPdf);
 
                 /** Partie Mission et activités ***********************************************************************/
 

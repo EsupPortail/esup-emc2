@@ -3,6 +3,9 @@
 namespace FicheMetier\Entity\Db;
 
 use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\Interface\HasNiveauCarriereInterface;
+use Carriere\Entity\Db\Niveau;
+use Carriere\Entity\Db\Trait\HasNiveauCarriereTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Competence;
@@ -26,11 +29,13 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface, HasMissionsPrincipalesInterface,
+    HasNiveauCarriereInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasReferenceInterface
 {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
     use HasEtatsTrait;
+    use HasNiveauCarriereTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
     use HasMissionsPrincipalesTrait;
@@ -40,7 +45,10 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?string $libelle = null;
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?string $raison = null;
-    public ?CodeFonction $codeFonction = null;
+    private ?CodeFonction $codeFonction = null;
+
+    public ?string $lienWeb = null;
+    public ?string $lienPdf = null;
 
     private Collection $activites;
     private Collection $tendances;
@@ -115,6 +123,31 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->codeFonction = $codeFonction;
     }
 
+    public function hasLink(): bool
+    {
+        return $this->lienWeb !== null || $this->lienPdf !== null;
+    }
+
+    public function getLienWeb(): ?string
+    {
+        return $this->lienWeb;
+    }
+
+    public function setLienWeb(?string $lienWeb): void
+    {
+        $this->lienWeb = $lienWeb;
+    }
+
+    public function getLienPdf(): ?string
+    {
+        return $this->lienPdf;
+    }
+
+    public function setLienPdf(?string $lienPdf): void
+    {
+        $this->lienPdf = $lienPdf;
+    }
+
     /** @return TendanceElement[] */
     public function getTendances(): array
     {
@@ -136,7 +169,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     {
         $this->tendances->clear();
     }
-
 
     /** FONCTION POUR MACRO *******************************************************************************************/
 
