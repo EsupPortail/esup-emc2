@@ -139,7 +139,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
             </td>
             <td class="col-md-2" data-column-id="Familles professionnelles">
                 <?php if (empty($mission->getFamillesProfessionnelles())) : ?>
-                    Aucune famille
+                    <span class="missing-data">Aucune famille</span>
                 <?php else : ?>
                     <?php foreach ($mission->getFamillesProfessionnelles() as $famille) : ?>
                         <li> <?php echo $famille->getLibelle(); ?> </li>
@@ -149,7 +149,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
             </td>
             <td class="col-md-1" data-column-id="Niveau">
                 <?php if ($mission->getNiveau() === null) : ?>
-                    <p><em>Non précisé</em></p>
+                    <p><span class="missing-data">Non précisé</span></p>
                 <?php else : ?>
                     <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
                 <?php endif; ?>

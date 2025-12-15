@@ -100,7 +100,7 @@ $this->headTitle("Importation d'activité");
                     <?php if($activite->getDescription()): ?>
                         <?php echo $activite->getDescription(); ?>
                     <?php else : ?>
-                        <em style="color:gray"> Aucune description </em>
+                        <span class="missing-data"> Aucune description </span>
                     <?php endif ?>
                 </td>
                 <td>

@@ -40,7 +40,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
                     });
                 ?>
                 <?php if (empty($activites)): ?>
-                    <em style="color:gray;">Aucune activité</em>
+                    <span class="missing-data">Aucune activité</span>
                 <?php else: ?>
                     <ul>
                         <?php foreach ($activites as $activite) : ?>
@@ -67,7 +67,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
     <dt class="col-md-4"> Niveau </dt>
     <dd class="col-md-8">
         <?php if ($mission->getNiveau() === null) : ?>
-            <em style="color:gray;">Aucun niveau </em>
+            <span class="missing-data">Aucun niveau </span>
         <?php else : ?>
             <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
         <?php endif; ?>
@@ -75,7 +75,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
     <dt class="col-md-4"> Référence </dt>
     <dd class="col-md-8">
         <?php if ($mission->getReferentiel() === null AND $mission->getReference() === null) : ?>
-            <em style="color:gray;">Aucune référence </em>
+            <span class="missing-data">Aucune référence </span>
         <?php else : ?>
             <?php echo $mission->printReference(); ?>
         <?php endif; ?>

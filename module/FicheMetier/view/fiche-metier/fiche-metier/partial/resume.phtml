@@ -24,7 +24,7 @@ $metier = $fichemetier->getMetier();
             <?php if ($fichemetier->getCodeFonction()): ?>
                 <?php echo $fichemetier->getCodeFonction()->getNiveauFonction()?->getLibelle(); ?>
             <?php else : ?>
-                <em style="color:gray;">Aucun niveau associé</em>
+                <span class="missing-data">Aucun niveau associé</span>
             <?php endif; ?>
         </dd>
     <?php endif; ?>
@@ -50,7 +50,7 @@ $metier = $fichemetier->getMetier();
     <dt class="col-md-4"> Niveau de carrière </dt>
     <dd class="col-md-8">
         <?php if ($fichemetier->getNiveauCarriere() === null) : ?>
-            <em style="color:gray;">Aucun niveau associé</em>
+            <span class="missing-data">Aucun niveau associé</span>
         <?php else : ?>
             <?php echo $fichemetier->getNiveauCarriere()->getLibelle(); ?>
 <!--            --><?php //if ($fichemetier->getNiveauCarriere()->getCategorie()): ?>

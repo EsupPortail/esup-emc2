@@ -80,7 +80,7 @@ if ($type !== null) {
                 <small>
                 <?php $synonymes = $competence->getSynonymes(); ?>
                 <?php if (empty($synonymes)) : ?>
-                    <em style="color:grey;"> Aucun synonyme </em>
+                    <span class="missing-data"> Aucun synonyme </span>
                 <?php else : ?>
                     <?php echo count($synonymes); ?> synonymes
                 <?php endif; ?>
