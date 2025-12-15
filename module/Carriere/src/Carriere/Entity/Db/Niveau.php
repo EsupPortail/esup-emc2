@@ -15,6 +15,7 @@ class Niveau implements HistoriqueAwareInterface, HasDescriptionInterface {
     private ?int $niveau = null;
     private ?string $etiquette = null;
     private ?string $libelle = null;
+    private ?Categorie $categorie = null;
 
     public function getId(): int
     {
@@ -50,4 +51,16 @@ class Niveau implements HistoriqueAwareInterface, HasDescriptionInterface {
     {
         $this->libelle = $libelle;
     }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): void
+    {
+        $this->categorie = $categorie;
+    }
+
+
 }

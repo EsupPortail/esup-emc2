@@ -371,3 +371,8 @@ div.filter-option-inner-inner span.mission {
 table th.action {
     min-width: 8rem;
 }
+
+span.missing-data {
+    color:gray;
+    font-style: italic;
+}

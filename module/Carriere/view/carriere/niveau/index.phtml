@@ -33,12 +33,13 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
     </a>
 <?php endif; ?>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed table-hover" id="niveaux">
     <thead>
         <tr>
             <th> Niveau </th>
             <th> Étiquette </th>
             <th> Libelle </th>
+            <th> Catégorie </th>
             <?php if ($canAction) : ?>
                 <th> Action </th>
             <?php endif; ?>
@@ -47,9 +48,9 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
     <tbody>
         <?php foreach ($niveaux as $niveau) : ?>
             <tr class=" <?php if ($niveau->estHistorise()) echo " historise "; ?>">
-                <td> <?php echo $niveau->getNiveau(); ?> </td>
-                <td> <?php echo $niveau->getEtiquette(); ?> </td>
-                <td>
+                <td class="col-md-1" data-column-id="Niveau"> <?php echo $niveau->getNiveau(); ?> </td>
+                <td class="col-md-2" data-column-id="Étiquette"> <?php echo $niveau->getEtiquette(); ?> </td>
+                <td class="col-md-5" data-column-id="Libellé">
                     <?php echo $niveau->getLibelle(); ?>
                     <?php if ($niveau->getDescription()) : ?>
                         <span class="icon icon-information" title="<?php echo $niveau->getDescription(); ?> "
@@ -57,17 +58,24 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
                         ></span>
                     <?php endif; ?>
                 </td>
-                <?php if ($canAction) : ?>
-                    <td class="action">
-                    <?php if ($canAfficherNiveau) : ?>
-                            <span class="icon icon-voir"></span>
-                            Afficher
+                <td  class="col-md-2" data-column-id="Catégorie">
+                    <?php if ($niveau->getCategorie()) : ?>
+                        <?php echo $niveau->getCategorie()->getLibelle(); ?>
+                    <?php else : ?>
+                        <span class="missing-data">Aucune catégorie</span>
                     <?php endif; ?>
+                </td>
+                <?php if ($canAction) : ?>
+                    <td class="col-md-2 action" data-column-id="Action">
+<!--                    --><?php //if ($canAfficherNiveau) : ?>
+<!--                            <span class="icon icon-voir"></span>-->
+<!--                            Afficher-->
+<!--                    --><?php //endif; ?>
                     <?php if ($canModifierNiveau) : ?>
-                        <br/>
+<!--                        <br/>-->
                         <?php /** @see \Carriere\Controller\NiveauController::modifierAction() */?>
                         <a href="<?php echo $this->url('niveau/modifier', ['niveau' => $niveau->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification"
+                           class="action primary ajax-modal" data-event="modification"
                            data-toogle="tooltip" data-bs-html="true" title="Modifier le niveau <?php echo $niveau->getEtiquette(); ?>"
                         >
                             <span class="icon icon-editer"></span>
@@ -79,6 +87,7 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
                         <?php if($niveau->estNonHistorise()) : ?>
                             <?php /** @see \Carriere\Controller\NiveauController::historiserAction() */?>
                             <a href="<?php echo $this->url('niveau/historiser', ['niveau' => $niveau->getId()], [], true); ?>"
+                               class="action warning"
                                data-toogle="tooltip" data-bs-html="true" title="Historiser le niveau <?php echo $niveau->getEtiquette(); ?>"
                             >
                                 <span class="icon icon-historiser"></span>
@@ -87,6 +96,7 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
                         <?php else : ?>
                             <?php /** @see \Element\Controller\NiveauController::restaurerAction() */?>
                             <a href="<?php echo $this->url('niveau/restaurer', ['niveau' => $niveau->getId()], [], true); ?>"
+                               class="action warning"
                                data-toogle="tooltip" data-bs-html="true" title="Rstaurer le niveau <?php echo $niveau->getEtiquette(); ?>"
                             >
                                 <span class="icon icon-restaurer"></span>
@@ -98,13 +108,11 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
                         <br/>
                         <?php /** @see \Carriere\Controller\NiveauController::supprimerAction() */?>
                         <a href="<?php echo $this->url('niveau/supprimer', ['niveau' => $niveau->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification"
+                           class="action danger ajax-modal" data-event="modification"
                            data-toogle="tooltip" data-bs-html="true" title="Supprimer le niveau <?php echo $niveau->getEtiquette(); ?>"
                         >
-                            <span class="text-danger">
-                                <span class="icon icon-unchecked"></span>
-                                Supprimer
-                            </span>
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
                         </a>
                     <?php endif; ?>
                 </td>
@@ -119,6 +127,15 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+        $("table#niveaux").DataTable({
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [4], orderable: false }
+            ]
         });
     });
 </script>
