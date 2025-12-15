@@ -33,7 +33,7 @@ $formats = [
 ];
 ?>
 
-<script>
+<script xmlns="http://www.w3.org/1999/html">
     function reset() {
         console.log('click');
         window.location.href="../fiche-metier/import";
@@ -144,14 +144,27 @@ $formats = [
     </div>
     <div class="col-md-6">
         <div class="alert alert-info">
-            <span class="icon icon-info"></span> <strong>À propos du format des imports de fiches
-                métiers.</strong>
-
             Deux formats sont reconnus :
             <ul>
-                <li> le format <code>REFERENS3</code> (exemple: XXXX)</li>
-                <li> le format <code>RMFP</code> (exemple: XXXX)</li>
+                <li> le format <code>REFERENS3</code></li>
+                <li> le format <code>RMFP</code></li>
             </ul>
+
+            <strong><span class="icon icon-attention"></span> Remarques :</strong>
+            <ul>
+                <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
+                <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
+                <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong>.</li>
+                <li>Pour <code>REFERENS3</code> le séparateur est <code>|</code>. </li>
+                <li>Pour <code>RMFP</code> le séparateur est le <em>saut de ligne</em>. </li>
+
+
+            </ul>
+
+            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3.csv">
+                <span class="icon icon-csv"></span> Télécharger la trame aux formats REFERENS3</a><br>
+            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp.csv">
+                <span class="icon icon-csv"></span> Télécharger la trame aux formats RMFP</a>
         </div>
     </div>
 </div>
