@@ -93,7 +93,7 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                             <?php endif; ?>
                         >Prévisualisation</option>
                         <option value="import"
-                            <?php if (isset($data["mode"]) AND $data["mode"] === "preview") : ?>
+                            <?php if (isset($data["mode"]) AND $data["mode"] === "import") : ?>
                                 selected
                             <?php endif; ?>
                         >Importation</option>
@@ -130,7 +130,7 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
 
             <u><strong>Remarques :</strong></u>
                 <ul>
-                    <li>Les colonnes obligatoires sont désignées par l'icone <span class="icon icon-obligatoire"></span>.</li>
+                    <li>Les colonnes obligatoires sont désignées par l'icone<span class="icon icon-obligatoire"></span>.</li>
                     <li>Le séparateur dans les listes est <code>|</code>. Par exemple la liste "Rigueur", "Rigoureux" et "Faire preuve de rigueur" sera représentée par <code>Rigueur|Rigoureux|Faire preuve de rigueur</code>.</li>
                     <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong></li>
                 </ul>

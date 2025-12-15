@@ -250,8 +250,10 @@ class ImportController extends AbstractActionController
         $dictionnaireCompetence = $this->getCompetenceService()->generateDictionnaire($referentiel,'reference');
         $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
         $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
+        $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
         if ($tendanceImpact === null) { $warning[] = "Aucune type de tendance [".TendanceType::IMPACT."] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte"; }
         if ($tendanceFacteur === null) { $warning[] = "Aucune type de tendance [".TendanceType::FACTEUR."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
+        if ($tendanceCondition === null) { $warning[] = "Aucune type de tendance [".TendanceType::CONDITIONS."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
 
         $debut = (new DateTime())->getTimestamp();
 
@@ -368,6 +370,12 @@ class ImportController extends AbstractActionController
                     $facteur->setTexte(str_replace("|","<br>",trim($raw[self::HEADER_REFERENS3_IMPACT])));
                     $fiche->addTendance($facteur);
                 }
+                if ($tendanceCondition AND isset($raw[self::HEADER_REFERENS3_CONDITION]) AND trim($raw[self::HEADER_REFERENS3_CONDITION]) !== "") {
+                    $facteur = new TendanceElement();
+                    $facteur->setType($tendanceCondition);
+                    $facteur->setTexte(str_replace("|","<br>",trim($raw[self::HEADER_REFERENS3_CONDITION])));
+                    $fiche->addTendance($facteur);
+                }
 
                 $fiches[] = $fiche;
             }
@@ -394,8 +402,10 @@ class ImportController extends AbstractActionController
         $dictionnaireSavoirEtre = $this->getCompetenceService()->generateDictionnaire($referentiel, 'libelle', $tsavoiretre);
         $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
         $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
+        $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
         if ($tendanceImpact === null) { $warning[] = "Aucune type de tendance [".TendanceType::IMPACT."] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte"; }
         if ($tendanceFacteur === null) { $warning[] = "Aucune type de tendance [".TendanceType::FACTEUR."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
+        if ($tendanceCondition === null) { $warning[] = "Aucune type de tendance [".TendanceType::CONDITIONS."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
 
         $mode = ($data['mode'] === 'import')?'import':'preview';
         $info[] = "Mode activé [".$mode."]";
@@ -550,6 +560,13 @@ class ImportController extends AbstractActionController
                     $facteur->setTexte(trim($raw[self::HEADER_RMFP_IMPACT]));
                     $fiche->addTendance($facteur);
                 }
+                if ($tendanceCondition AND isset($raw[self::HEADER_RMFP_CONDITION]) AND trim($raw[self::HEADER_RMFP_CONDITION]) !== "") {
+                    $facteur = new TendanceElement();
+                    $facteur->setType($tendanceCondition);
+                    $facteur->setTexte(trim($raw[self::HEADER_RMFP_CONDITION]));
+                    $fiche->addTendance($facteur);
+                }
+
                 $fiches[] = $fiche;
 
             }

@@ -10,6 +10,7 @@ class TendanceType implements HistoriqueAwareInterface {
 
     const IMPACT = 'impact';
     const FACTEUR = 'facteur';
+    const CONDITIONS = 'condition';
 
     private ?int $id = null;
     private ?string $code = null;

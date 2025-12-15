@@ -33,7 +33,6 @@ $formats = [
 ];
 ?>
 
-
 <script>
     function reset() {
         console.log('click');
@@ -127,7 +126,7 @@ $formats = [
                         >Prévisualisation
                         </option>
                         <option value="import"
-                                <?php if (isset($data["mode"]) and $data["mode"] === "preview") : ?>
+                                <?php if (isset($data["mode"]) and $data["mode"] === "import") : ?>
                                     selected
                                 <?php endif; ?>
                         >Importation
