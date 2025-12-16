@@ -6,6 +6,7 @@
  * @var Competence $competence
  * @var FicheMetier[] $fiches
  * @var Agent[] $agents
+ * @var bool $displayCodeFonction
  */
 
 use Application\Entity\Db\Agent;
@@ -28,13 +29,37 @@ use FicheMetier\Entity\Db\Mission;
     <dd class="col-md-8">
         <?php echo ($competence->getReferentiel())?$competence->printReference():"Aucun"; ?>
     </dd>
+    <dt class="col-md-4"> Codes Emploi Types</dt>
+    <dd class="col-md-8">
+        <?php if ($competence->getCodesEmploiType()) : ?>
+            <?php echo implode("|", $competence->getCodesEmploiType()); ?>
+        <?php else : ?>
+            <span class="missing-data">Aucun code emploi type</span>
+        <?php endif; ?>
+    </dd>
+    <?php if ($displayCodeFonction === true) : ?>
+        <dt class="col-md-4"> Codes Fonction</dt>
+        <dd class="col-md-8">
+            <?php if ($competence->getCodesFonction()) : ?>
+                <?php echo implode("|", $competence->getCodesFonction()); ?>
+            <?php else : ?>
+                <span class="missing-data">Aucun code fonction</span>
+            <?php endif; ?>
+        </dd>
+    <?php endif; ?>
     <dt class="col-md-4"> Fiche·s metier·s </dt>
     <dd class="col-md-8">
         <!-- Nombre de fiches metiers : -->
         <?php echo count($fiches); ?> fiche·s métier·s
         <ul>
             <?php foreach ($fiches as $fiche) : ?>
-                <li> <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)</li>
+                <li>
+                    <?php if ($fiche->getLibelle()): ?>
+                        <?php echo $fiche->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
+                    <?php elseif ($fiche->getMetier()) : ?>
+                        <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
+                    <?php endif; ?>
+                </li>
             <?php endforeach; ?>
         </ul>
     </dd>

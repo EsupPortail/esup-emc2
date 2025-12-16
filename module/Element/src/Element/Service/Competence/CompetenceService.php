@@ -493,10 +493,15 @@ class CompetenceService
         }
         $positionDiscipline = array_search(Competence::COMPETENCE_HEADER_DISCIPLINE, $header);
         $positionDefinition = array_search(Competence::COMPETENCE_HEADER_DEFINITION, $header);
-        $positionEmploiType = array_search("id_Emplois_types_RéFérens", $header);
         $positionSynonyme = array_search(Competence::COMPETENCE_HEADER_SYNONYMES, $header);
 
-        $positions = ['id' => $positionId, 'libelle' => $positionLibelle, 'theme' => $positionTheme, 'type' => $positionType, 'discipline' => $positionDiscipline, 'definition' => $positionDefinition, 'emploi_type' => $positionEmploiType];
+        $positionCodesEmploiType = array_search(Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE, $header);
+        if ($positionCodesEmploiType === false) {
+            $positionCodesEmploiType = array_search("id_Emplois_types_RéFérens", $header);
+        }
+        $positionCodesFonction = array_search(Competence::COMPETENCE_HEADER_CODES_FONCTION, $header);
+
+        $positions = ['id' => $positionId, 'libelle' => $positionLibelle, 'theme' => $positionTheme, 'type' => $positionType, 'discipline' => $positionDiscipline, 'definition' => $positionDefinition, 'emploi_type' => $positionCodesEmploiType];
 
         if ($positionId === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_ID."</code> obligatoire est manquante !";
         if ($positionLibelle === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_LIBELLE."</code> obligatoire est manquante !";
@@ -505,6 +510,8 @@ class CompetenceService
         if ($positionDefinition === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DEFINITION."</code> facultative est manquante !";
         if ($positionDiscipline === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DISCIPLINE."</code> facultative est manquante !";
         if ($positionSynonyme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_SYNONYMES."</code> facultative est manquante !";
+        if ($positionCodesEmploiType === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE."</code> facultative est manquante !";
+        if ($positionCodesFonction === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_FONCTION."</code> facultative est manquante !";
 
         /** Reading the data ******************************************************************************************/
 
@@ -607,9 +614,6 @@ class CompetenceService
                     $discipline = $disciplines[$item[$positionDiscipline]];
                     $competence->setDiscipline($discipline);
                 }
-                if ($positionEmploiType !== false) {
-                    $competence->setEmploisTypes($item[$positionEmploiType]);
-                }
                 if ($positionSynonyme !== false) {
                     if ($item[$positionSynonyme] !== "") {
                         $liste = explode(";", $item[$positionSynonyme]);
@@ -621,6 +625,17 @@ class CompetenceService
                         }
                     }
                 }
+                if ($positionCodesFonction !== false) {
+                    if ($item[$positionCodesFonction] !== "") {
+                        $competence->setCodesFonction($item[$positionCodesFonction]);
+                    }
+                }
+                if ($positionCodesEmploiType !== false) {
+                    if ($item[$positionCodesEmploiType] !== "") {
+                        $competence->setCodesEmploiType($item[$positionCodesEmploiType]);
+                    }
+                }
+
                 $raw = [];
                 foreach ($header as $position => $element) {
                     $raw[$element] = $item[$position];

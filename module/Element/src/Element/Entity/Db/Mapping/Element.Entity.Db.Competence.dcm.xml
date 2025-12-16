@@ -21,6 +21,8 @@
 
         <one-to-many field="synonymes" target-entity="Element\Entity\Db\CompetenceSynonyme" mapped-by="competence" />
 
+        <field name="codesEmploiType"   type="text"      column="codes_emploi_type"/>
+        <field name="codesFonction"     type="text"      column="codes_fonction"/>
         <field name="raw"               type="text"      column="raw"/>
 
         <!-- HAS REFERENCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

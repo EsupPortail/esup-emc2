@@ -200,6 +200,24 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                                 <?php echo $synonyme->getLibelle(); ?>;&nbsp;
                             <?php endforeach; ?>
                     <?php endif; ?>
+                    <?php if ($competence->getCodesEmploiType()): ?>
+                        <?php $code = explode("|", $competence->getCodesEmploiType()); ?>
+                        <strong>Codes Emploi Type</strong>
+                        <ul>
+                            <?php foreach ($code as $item) : ?>
+                                <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                    <?php if ($competence->getCodesFonction()) : ?>
+                        <?php $code = explode("|", $competence->getCodesFonction()); ?>
+                        <strong>Codes Fonction</strong>
+                        <ul>
+                            <?php foreach ($code as $item) : ?>
+                                <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>

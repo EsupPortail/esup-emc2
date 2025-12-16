@@ -20,6 +20,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Referentiel\ReferentielService;
 use Structure\Service\Structure\StructureService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class CompetenceControllerFactory
 {
@@ -42,6 +43,7 @@ class CompetenceControllerFactory
          * @var GradeService $gradeService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauService $maitriseNiveauService
+         * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
          * @var StructureService $structureService
          */
@@ -55,6 +57,7 @@ class CompetenceControllerFactory
         $ficherMetierService = $container->get(FicheMetierService::class);
         $gradeService = $container->get(GradeService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $parametreService = $container->get(ParametreService::class);
         $referentielService = $container->get(ReferentielService::class);
         $structureService = $container->get(StructureService::class);
 
@@ -76,6 +79,7 @@ class CompetenceControllerFactory
         $controller->setGradeService($gradeService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauService($maitriseNiveauService);
+        $controller->setParametreService($parametreService);
         $controller->setStructureService($structureService);
         $controller->setCompetenceForm($competenceForm);
         $controller->setReferentielService($referentielService);

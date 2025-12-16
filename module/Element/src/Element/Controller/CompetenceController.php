@@ -7,6 +7,7 @@ use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\Competence\CompetenceFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
@@ -16,6 +17,7 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Request;
@@ -25,6 +27,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class CompetenceController extends AbstractActionController
 {
@@ -38,6 +41,7 @@ class CompetenceController extends AbstractActionController
     use GradeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use StructureServiceAwareTrait;
 
@@ -98,11 +102,14 @@ class CompetenceController extends AbstractActionController
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
         $agents = $this->getCompetenceElementService()->getAgentsHavinCompetenceFromAgent($competence);
         $fiches = $this->getFicheMetierService()->getFichesMetiersByCompetence($competence);
+
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
         return new ViewModel([
             'title' => "Affichage d'une compétence",
             'competence' => $competence,
             'agents' => $agents,
             'fiches' => $fiches,
+            'displayCodeFonction' => $displayCodeFonction,
         ]);
     }
 
@@ -274,7 +281,7 @@ class CompetenceController extends AbstractActionController
                     $operateur = $query['operateur_' . $group];
                     $niveau = $query['niveau_' . $group];
 
-                    $competence = $this->getCompetenceService()->getCompetence($competenceId !== ''?$competenceId:null);
+                    $competence = $this->getCompetenceService()->getCompetence($competenceId !== '' ? $competenceId : null);
                     if ($competence) {
                         $criteres[] = [
                             'id' => $group,
@@ -292,11 +299,15 @@ class CompetenceController extends AbstractActionController
                 }
                 if ($query['structure']['id']) {
                     $structure = $this->getStructureService()->getStructure($query['structure']['id']);
-                    $agents = array_filter($agents, function ($agent) use ($structure) { return $agent->hasAffectationPrincipale($structure); });
+                    $agents = array_filter($agents, function ($agent) use ($structure) {
+                        return $agent->hasAffectationPrincipale($structure);
+                    });
                 }
                 if ($query['corps']['id']) {
                     $corps = $this->getCorpsService()->getCorp($query['corps']['id']);
-                    $agents = array_filter($agents, function (Agent $agent) use ($corps) { return $agent->hasCorps($corps); });
+                    $agents = array_filter($agents, function (Agent $agent) use ($corps) {
+                        return $agent->hasCorps($corps);
+                    });
                 }
             }
         }
@@ -313,7 +324,7 @@ class CompetenceController extends AbstractActionController
         ]);
     }
 
-    public function importerAction() : ViewModel
+    public function importerAction(): ViewModel
     {
         $error = [];
         $warning = [];
@@ -324,18 +335,18 @@ class CompetenceController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $mode = ($data["mode"] !== "")?$data["mode"]:null;
+            $mode = ($data["mode"] !== "") ? $data["mode"] : null;
             if ($mode === null) $error[] = "Aucun mode sélectionné";
-            $referentiel = $this->getReferentielService()->getReferentiel($data["referentiel"]!== ""?$data["referentiel"]:null);
+            $referentiel = $this->getReferentielService()->getReferentiel($data["referentiel"] !== "" ? $data["referentiel"] : null);
             if ($referentiel === null) $error[] = "Aucun référentiel sélectionné";
 
             $files = $request->getFiles()->toArray();
-            $file = !empty($files)?current($files):null;
+            $file = !empty($files) ? current($files) : null;
 
-            $filename = $data['filename']??null;
-            $filepath = $data['filepath']??null;
+            $filename = $data['filename'] ?? null;
+            $filepath = $data['filepath'] ?? null;
 
-            if (($file === null OR $file['tmp_name'] === "") AND $filepath === null) {
+            if (($file === null or $file['tmp_name'] === "") and $filepath === null) {
                 $error[] = "Aucun fichier fourni";
             } else {
                 if ($filepath === null) {
@@ -347,23 +358,69 @@ class CompetenceController extends AbstractActionController
             $result = [];
 
 
-            if ($filepath !== null AND $filepath !== "" AND $referentiel !== null AND $mode !== null) {
+            if ($filepath !== null and $filepath !== "" and $referentiel !== null and $mode !== null) {
                 $result = $this->getCompetenceService()->import($filepath, $referentiel, $mode, $info, $warning, $error);
             }
 
+            if ($mode === 'import') {
+                foreach ($result['competences']??[] as $competence) {
+                // Bricolage pour satisfaire Marseille
+                    $codesFicheMetier = explode('|', $competence->getCodesEmploiType() ?? "");
+                    $codesFicheMetier = array_map('trim', $codesFicheMetier);
+                    $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) {
+                        return $a !== '';
+                    });
+                    foreach ($codesFicheMetier as $codeFicheMetier) {
+                        $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
+                        if ($fichemetier === null) {
+                            $warning[] = "La fiche metier [" . $referentiel->getLibelleCourt() . "|" . $codeFicheMetier . "] n'existe pas";
+                        } else {
+                            if (!$fichemetier->hasCompetence($competence)) {
+                                $element = new CompetenceElement();
+                                $element->setCompetence($competence);
+                                $this->getCompetenceElementService()->create($element);
+                                $fichemetier->addCompetenceElement($element);
+                                $this->getFicheMetierService()->update($fichemetier);
+                                $info[] = "Ajout de la compétence [" . $competence->getReference() ."|". $competence->getLibelle() ."] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                            }
+                        }
+                    }
+                    $codesFonction = explode('|', $competence->getCodesFonction() ?? "");
+                    $codesFonction = array_map('trim', $codesFonction);
+                    $codesFonction = array_filter($codesFonction, function (string $a) {
+                        return $a !== '';
+                    });
+                    foreach ($codesFonction as $codeFonction) {
+                        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
+                        if (empty($fichesmetiers)) {
+                            $warning[] = "Aucune fiche metier utilise le code [" . $codeFonction . "]";
+                        }
+                        foreach ($fichesmetiers as $fichemetier) {
+                            if (!$fichemetier->hasCompetence($competence)) {
+                                $element = new CompetenceElement();
+                                $element->setCompetence($competence);
+                                $this->getCompetenceElementService()->create($element);
+                                $fichemetier->addCompetenceElement($element);
+                                $this->getFicheMetierService()->update($fichemetier);
+                                $info[] = "Ajout de la compétence [" . $competence->getReference() ."|". $competence->getLibelle() ."] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return new ViewModel([
             'referentiels' => $this->getReferentielService()->getReferentiels(),
-            'competences' => $result['competences']??[],
+            'competences' => $result['competences'] ?? [],
             'info' => $info,
             'warning' => $warning,
             'error' => $error,
 
             'data' => $data,
             'file' => $file,
-            'filepath' => $filepath??null,
-            'filename' => $filename??null,
+            'filepath' => $filepath ?? null,
+            'filename' => $filename ?? null,
         ]);
     }
 

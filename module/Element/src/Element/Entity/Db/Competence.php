@@ -20,6 +20,8 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     const COMPETENCE_HEADER_DEFINITION = "Définition";
     const COMPETENCE_HEADER_DISCIPLINE = "Discipline";
     const COMPETENCE_HEADER_SYNONYMES = "Synonymes";
+    const COMPETENCE_HEADER_CODES_EMPLOI_TYPE = "Codes Emploi Type";
+    const COMPETENCE_HEADER_CODES_FONCTION = "Codes Fonction";
 
 
     private ?int $id = null;
@@ -28,7 +30,8 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     private ?CompetenceDiscipline $discipline = null;
     private ?CompetenceType $type = null;
     private ?CompetenceTheme $theme = null;
-    private ?string $emploisTypes = null;
+    private ?string $codesEmploiType = null;
+    private ?string $codesFonction = null;
     private ?string $raw = null;
 
     private Collection $synonymes;
@@ -93,15 +96,26 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
         $this->theme = $theme;
     }
 
-    public function getEmploisTypes(): ?string
+    public function getCodesFonction(): ?string
     {
-        return $this->emploisTypes;
+        return $this->codesFonction;
     }
 
-    public function setEmploisTypes(?string $emploisTypes): void
+    public function setCodesFonction(?string $codesFonction): void
     {
-        $this->emploisTypes = $emploisTypes;
+        $this->codesFonction = $codesFonction;
     }
+
+    public function getCodesEmploiType(): ?string
+    {
+        return $this->codesEmploiType;
+    }
+
+    public function setCodesEmploiType(?string $codesEmploiType): void
+    {
+        $this->codesEmploiType = $codesEmploiType;
+    }
+
 
     /** Gestion des synonymes *****************************************************************************************/
 
