@@ -99,6 +99,9 @@ class ImportController extends AbstractActionController
     const HEADER_REFERENS3_URL = "FICHE_URL";
     const HEADER_REFERENS3_PDF = "Fiche au format pdf";
 
+    // HEADER SUPPLEMENTAIRE ///////////////////////////////////////////////////////////////////////////////////////////
+
+
     public function importAction(): ViewModel
     {
         $form = $this->getFicheMetierImportationForm();
@@ -213,13 +216,11 @@ class ImportController extends AbstractActionController
                             $fiche->addTendance($tendance);
                         }
                         //$this->getFicheMetierService()->update($fiche);
-
                         $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
                         $this->getFicheMetierService()->update($fiche);
                     }
                 }
         }
-
         if ($referentiel === null) $error[] = "Aucun référentiel de sélectionné";
         else $form->get('referentiel')->setValue($referentiel->getId());
         if ($mode === null) $error[] = "Aucun mode d'importation de sélectionné";
@@ -427,8 +428,6 @@ class ImportController extends AbstractActionController
         if ($tendanceCondition === null) { $warning[] = "Aucune type de tendance [".TendanceType::CONDITIONS."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
 
         $mode = ($data['mode'] === 'import')?'import':'preview';
-        $info[] = "Mode activé [".$mode."]";
-
         $debut = (new DateTime())->getTimestamp();
 
 
@@ -593,7 +592,12 @@ class ImportController extends AbstractActionController
         }
         fclose($csvFile);
         $fin = (new DateTime())->getTimestamp();
-        $info[] = "Temps de traitement : " . max(1,($fin-$debut)) . " seconde·s";
+        $temps = "";
+        if ($mode === 'preview') $temps .= "Prévisualisation réalisée en ";
+        if ($mode === 'import') $temps .= "Importation réalisée en ";
+        if ($temps === "") $temps .= "Traitement réalisée en ";
+        $temps .= max(1,($fin-$debut)) . " seconde·s";
+        $info[] = $temps;
 
         return ['fiches' => $fiches, 'error' => $error, 'warning' => $warning, 'info' => $info];
     }
