@@ -754,17 +754,11 @@ EOS;
     public function listerAgentsAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $metier = $fichemetier->getMetier();
-
-        if ($metier === null) {
-            throw new RuntimeException("Aucun métier pour la fiche métier #".$fichemetier->getId(),-1);
-        }
         $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
         return new ViewModel([
-            'title' => "Liste des agents ayant la fiche métier <strong>".$metier->getLibelle()."</strong>",
+            'title' => "Liste des agents ayant la fiche métier <strong>".$fichemetier->getLibelle()."</strong>",
             'fichemetier' => $fichemetier,
-            'metier' => $metier,
             'fichespostes' => $fichespostes,
         ]);
     }

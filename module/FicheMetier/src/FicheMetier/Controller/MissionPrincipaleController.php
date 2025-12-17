@@ -499,7 +499,7 @@ class MissionPrincipaleController extends AbstractActionController
                     if (!$hasLibelle) $error[] = "La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_LIBELLE . "] est manquante";
                     $hasActivites = in_array(Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES, $header);
                     if (!$hasActivites) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES . "] est manquante";
-                    $hasFamilles = in_array(Mission::MISSION_PRINCIPALE_HEADER_NIVEAU, $header);
+                    $hasFamilles = in_array(Mission::MISSION_PRINCIPALE_HEADER_FAMILLES, $header);
                     if (!$hasFamilles) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_FAMILLES . "] est manquante";
                     $hasNiveau = in_array(Mission::MISSION_PRINCIPALE_HEADER_NIVEAU, $header);
                     if (!$hasNiveau) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_NIVEAU . "] est manquante";

@@ -212,6 +212,15 @@ class ImportController extends AbstractActionController
 
                         foreach ($missions as $mission) {
                             $this->getFicheMetierMissionService()->deepCreate($mission);
+
+                            // Note
+                            // On a une seule mission par fiche dans les deux référentiels RMFP et REFERENS3
+                            // On peut alors utiliser le code de la fiche metier comme code de la mission nouvellement créé.
+                            if ($mission->getMission()->getReference() === null) {
+                                $mission->getMission()->setReference($fiche->getReference());
+                                $mission->getMission()->setReferentiel($fiche->getReferentiel());
+                                $this->getMissionPrincipaleService()->update($mission->getMission());
+                            }
                             $fiche->addMission($mission);
                         }
                         //$this->getFicheMetierService()->update($fiche);
