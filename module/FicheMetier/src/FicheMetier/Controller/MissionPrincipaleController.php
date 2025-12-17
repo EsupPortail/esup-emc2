@@ -444,6 +444,8 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function importerAction(): ViewModel
     {
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE,FicheMetierParametres::CODE_FONCTION);
+
         $separateur = '|';
 
 
@@ -508,7 +510,7 @@ class MissionPrincipaleController extends AbstractActionController
                     $hasCodesFichesMetiers = in_array(Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE, $header);
                     if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE . "] est manquante";
                     $hasCodesFonctions = in_array(Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION, $header);
-                    if (!$hasCodesFonctions) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION . "] est manquante";
+                    if (!$hasCodesFonctions and $displayCodeFonction) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION . "] est manquante";
 
                     $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
                     if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
@@ -631,6 +633,7 @@ class MissionPrincipaleController extends AbstractActionController
 
         return new ViewModel([
             'separateur' => $separateur,
+            'displayCodeFonction' => $displayCodeFonction,
 
             'missions' => $missions,
             'info' => $info,

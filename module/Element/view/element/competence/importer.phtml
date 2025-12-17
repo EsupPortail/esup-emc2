@@ -9,6 +9,7 @@
  * @var string[] $info
  * @var string[] $warning
  * @var string[] $error
+ * @var bool $displayCodeFonction
  *
  * @var ?string $filepath
  * @var ?string $filename
@@ -126,16 +127,25 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                 <li><code><?php echo Competence::COMPETENCE_HEADER_DEFINITION; ?></code> la définition associée à la compétence,</li>
                 <li><code><?php echo Competence::COMPETENCE_HEADER_DISCIPLINE; ?></code> colonne pour les compétences spécifiques uniquement - laisser vide pour les compétences "normales",</li>
                 <li><code><?php echo Competence::COMPETENCE_HEADER_SYNONYMES; ?></code> la liste des libellés synonymes.
+                <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE; ?></code> la liste des codes emploi-types devant avoir la compétence.
+                <?php if ($displayCodeFonction) : ?>
+                    <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_FONCTION; ?></code> la liste des codes fonctions devant avoir la compétence.
+                <?php endif; ?>
+
             </ul>
 
             <u><strong>Remarques :</strong></u>
                 <ul>
-                    <li>Les colonnes obligatoires sont désignées par l'icone<span class="icon icon-obligatoire"></span>.</li>
+                    <li>Les colonnes obligatoires sont désignées par l'icone&nbsp;<span class="icon icon-obligatoire"></span>.</li>
                     <li>Le séparateur dans les listes est <code>|</code>. Par exemple la liste "Rigueur", "Rigoureux" et "Faire preuve de rigueur" sera représentée par <code>Rigueur|Rigoureux|Faire preuve de rigueur</code>.</li>
                     <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong></li>
                 </ul>
 
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_competences.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de compétences</a>
+            <?php if ($displayCodeFonction) : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_competences_codefonction.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de compétences</a>
+            <?php else : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_competences.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de compétences</a>
+            <?php endif; ?>
         </div>
     </div>
 </div>

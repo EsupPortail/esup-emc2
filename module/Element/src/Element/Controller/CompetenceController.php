@@ -423,6 +423,7 @@ class CompetenceController extends AbstractActionController
             'info' => $info,
             'warning' => $warning,
             'error' => $error,
+            'displayCodeFonction' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION),
 
             'data' => $data,
             'file' => $file,

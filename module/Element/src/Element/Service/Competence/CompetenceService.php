@@ -15,9 +15,11 @@ use Element\Entity\Db\CompetenceType;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class CompetenceService
 {
@@ -25,6 +27,7 @@ class CompetenceService
     use CompetenceDisciplineServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     /** COMPETENCES : ENTITY ******************************************************************************************/
 
@@ -455,6 +458,7 @@ class CompetenceService
 
     public function import(string $filepath, Referentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
     {
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
         // Note : ceci est un dictionnaire pour rattraper les variations dans les écritures des types.
         // Attention : il ne faut pas oublier de mettre le libellé lu du CSV en minuscules.
         $dictionnairesTypes = [
@@ -506,12 +510,12 @@ class CompetenceService
         if ($positionId === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_ID."</code> obligatoire est manquante !";
         if ($positionLibelle === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_LIBELLE."</code> obligatoire est manquante !";
         if ($positionType === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_TYPE."</code> obligatoire est manquante !";
-        if ($positionTheme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_THEME."</code> facultative est manquante !";
-        if ($positionDefinition === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DEFINITION."</code> facultative est manquante !";
-        if ($positionDiscipline === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DISCIPLINE."</code> facultative est manquante !";
-        if ($positionSynonyme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_SYNONYMES."</code> facultative est manquante !";
-        if ($positionCodesEmploiType === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE."</code> facultative est manquante !";
-        if ($positionCodesFonction === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_FONCTION."</code> facultative est manquante !";
+        if ($positionTheme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_THEME."</code> facultative est manquante.";
+        if ($positionDefinition === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DEFINITION."</code> facultative est manquante.";
+        if ($positionDiscipline === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DISCIPLINE."</code> facultative est manquante.";
+        if ($positionSynonyme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_SYNONYMES."</code> facultative est manquante.";
+        if ($positionCodesEmploiType === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE."</code> facultative est manquante.";
+        if ($displayCodeFonction AND $positionCodesFonction === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_FONCTION."</code> facultative est manquante.";
 
         /** Reading the data ******************************************************************************************/
 
@@ -586,7 +590,7 @@ class CompetenceService
                 if ($competence === null and $libelle !== "") {
                     $competence = new Competence();
                 } else {
-                    $oldSynonymes = $competence->getSynonymes();
+                    $old = $competence->getSynonymes(); foreach ($old as $synonyme) $oldSynonymes[] = $synonyme;
                     $competence->clearSynonymes();
 
                     if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
