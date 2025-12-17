@@ -4,6 +4,8 @@ namespace Metier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Carriere\Service\Correspondance\CorrespondanceService;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
 use Metier\Form\FamilleProfessionnelle\FamilleProfessionnelleForm;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
@@ -23,9 +25,13 @@ class FamilleProfessionnelleControllerFactory {
         /**
          * @var CorrespondanceService $correspondanceService
          * @var FamilleProfessionnelleService $familleService
+         * @var FicheMetierService $ficheMetierService
+         * @var MissionPrincipaleService $missionPrincipaleService
          */
         $correspondanceService = $container->get(CorrespondanceService::class);
         $familleService = $container->get(FamilleProfessionnelleService::class);
+        $ficheMetierService = $container->get(FicheMetierService::class);
+        $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
 
         /**
          * @var FamilleProfessionnelleForm $familleProfessionnelleForm
@@ -35,6 +41,8 @@ class FamilleProfessionnelleControllerFactory {
         $controller = new FamilleProfessionnelleController();
         $controller->setCorrespondanceService($correspondanceService);
         $controller->setFamilleProfessionnelleService($familleService);
+        $controller->setFicheMetierService($ficheMetierService);
+        $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setFamilleProfessionnelleForm($familleProfessionnelleForm);
         return $controller;
     }

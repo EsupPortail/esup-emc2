@@ -160,6 +160,9 @@ class FicheMetierService
         if (isset($filtre['codefonction']) and $filtre['codefonction'] != '') {
             $qb = $qb->andWhere('codeFonction.id = :codefonction')->setParameter('codefonction', $filtre['codefonction']);
         }
+        if (isset($filtre['famille']) and $filtre['famille'] != '') {
+            $qb = $qb->andWhere('famille.id = :famille')->setParameter('famille', $filtre['famille']);
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;

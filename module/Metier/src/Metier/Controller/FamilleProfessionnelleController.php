@@ -3,6 +3,8 @@
 namespace Metier\Controller;
 
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Metier\Form\FamilleProfessionnelle\FamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
@@ -14,7 +16,9 @@ use Laminas\View\Model\ViewModel;
 class FamilleProfessionnelleController extends AbstractActionController {
     use CorrespondanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
+    use MissionPrincipaleServiceAwareTrait;
     use FamilleProfessionnelleFormAwareTrait;
+    use FicheMetierServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -32,12 +36,14 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
-        $metiers = $famille->getMetiers();
+        $missions = $this->getMissionPrincipaleService()->getMissionsPrincipalesWithFiltre(['famille' => $famille->getId()]);
+        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre(['famille' => $famille->getId()]);
 
         return new ViewModel([
             'title' => "Affichage de la famille professionnelle",
             'famille' => $famille,
-            'metiers' => $metiers,
+            'missions' => $missions,
+            'fichesmetiers' => $fichesmetiers,
         ]);
     }
 

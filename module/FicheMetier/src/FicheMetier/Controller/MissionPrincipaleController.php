@@ -546,36 +546,34 @@ class MissionPrincipaleController extends AbstractActionController
                         foreach ($missions as $mission) {
                             if ($mission->getId() !== null)
                             {
-                                $info[] = "La mission [".$mission->getReferentiel()->getLibelleCourt()."|".$mission->getId()."|".$mission->getLibelle()."] existe déjà";
+                                $info[] = "La mission [".$mission->getReferentiel()->getLibelleCourt()."|".$mission->getId()."|".$mission->getLibelle()."] existe déjà et sera mise à jour";
                             }
-                            else {
-                                //famille professionnelle
-                                foreach ($mission->getFamillesProfessionnelles() as $famille) {
-                                    $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
-                                    if (!$exist) {
-                                        $this->getFamilleProfessionnelleService()->create($famille);
-                                    }
+                            //famille professionnelle
+                            foreach ($mission->getFamillesProfessionnelles() as $famille) {
+                                $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
+                                if (!$exist) {
+                                    $this->getFamilleProfessionnelleService()->create($famille);
                                 }
-                                //niveaux
-                                if ($mission->getNiveau()) {
-                                    $this->getNiveauEnveloppeService()->create($mission->getNiveau());
-                                }
-                                //activite
-                                $activites = [];
-                                foreach ($mission->getActivites() as $activite) {
-                                    $activites[$activite->getOrdre()] = $activite;
-                                }
-                                $mission->clearActivites();
-                                //mission
-                                $this->getMissionPrincipaleService()->create($mission);
+                            }
+                            //niveaux
+                            if ($mission->getNiveau()) {
+                                $this->getNiveauEnveloppeService()->create($mission->getNiveau());
+                            }
+                            //activite
+                            $activites = [];
+                            foreach ($mission->getActivites() as $activite) {
+                                $activites[$activite->getOrdre()] = $activite;
+                            }
+                            $mission->clearActivites();
+                            //mission
+                            $this->getMissionPrincipaleService()->create($mission);
 
-                                foreach ($activites as $activite) {
-                                    if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
-                                    else $this->getMissionActiviteService()->create($activite);
-                                    $mission->addMissionActivite($activite);
-                                }
-                                $this->getMissionPrincipaleService()->update($mission);
+                            foreach ($activites as $activite) {
+                                if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
+                                else $this->getMissionActiviteService()->create($activite);
+                                $mission->addMissionActivite($activite);
                             }
+                            $this->getMissionPrincipaleService()->update($mission);
 
                             // Bricolage pour satisfaire Marseille
                             $codesFicheMetier = explode('|',$mission->getCodesFicheMetier()??"");

@@ -272,6 +272,7 @@ class MissionPrincipaleService
         if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES])) {
             $activites = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES]);
             $positionActivite = 0;
+            $mission->clearActivites();
             foreach ($activites as $activite) {
                 if (trim($activite) !== '' AND !$mission->hasActivite($activite)) {
                     $act = new MissionActivite();
@@ -313,11 +314,11 @@ class MissionPrincipaleService
                     $mission->setNiveau($niveau_);
                 }
             }
-
         }
 
         /* FAMILLE PROFESSIONNELLE ***********************************************************************************/
         if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) !== '') {
+            $mission->clearFamillesProfessionnelles();
             $famillesString = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]);
             foreach ($famillesString as $familleString) {
                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($familleString));
