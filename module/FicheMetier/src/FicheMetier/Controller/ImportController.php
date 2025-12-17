@@ -639,9 +639,9 @@ class ImportController extends AbstractActionController
         fclose($csvFile);
         $fin = (new DateTime())->getTimestamp();
         $temps = "";
-        if ($mode === 'preview') $temps .= "Prévisualisation réalisée en ";
-        if ($mode === 'import') $temps .= "Importation réalisée en ";
-        if ($temps === "") $temps .= "Traitement réalisée en ";
+        if ($mode === 'preview') $temps .= "<span class='icon icon-checked'></span> Prévisualisation réalisée en ";
+        if ($mode === 'import') $temps .= "<span class='icon icon-checked'></span> Importation réalisée en ";
+        if ($temps === "") $temps .= "<span class='icon icon-checked'></span> Traitement réalisée en ";
         $temps .= max(1,($fin-$debut)) . " seconde·s";
         $info[] = $temps;
 
@@ -661,10 +661,10 @@ class ImportController extends AbstractActionController
     {
         $codeNiveauFonction = substr($codeFonction,0,4);
         $fonction_ = $this->getNiveauFonctionService()->getNiveauFonctionByCode($codeNiveauFonction);
-        if ($fonction_ === null) { $warning[] = "Aucun niveau de fonction connu pour le code ".$codeNiveauFonction." le code fonction [$codeFonction] n'a pu être créé"; }
+        if ($fonction_ === null) { $warning[] = "Aucun niveau de fonction connu pour le code ".$codeNiveauFonction." le code fonction [$codeFonction] n'a pu être créé."; }
         $codeFamilleProfessionnelle = substr($codeFonction,4);
         $famille_ = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByCode($codeFamilleProfessionnelle);
-        if ($famille_ === null) { $warning[] = "Aucune famille professionnelle connue pour le code ".$codeFamilleProfessionnelle." le code fonction [$codeFonction] n'a pu être créé"; }
+        if ($famille_ === null) { $warning[] = "Aucune famille professionnelle connue pour le code ".$codeFamilleProfessionnelle." le code fonction [$codeFonction] n'a pu être créé."; }
 
         if ($fonction_ AND $famille_) {
             $code = new CodeFonction();

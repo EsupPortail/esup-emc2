@@ -532,7 +532,7 @@ class CompetenceService
                     if ($discipline === null) {
                         $discipline = new CompetenceDiscipline();
                         $discipline->setLibelle($libelle);
-                        $info[] = "Nouvelle Discipline : [" . $libelle . "]";
+                        $info[] = "Nouvelle discipline : " . $libelle;
                     }
                     $disciplines[$libelle] = $discipline;
                 }

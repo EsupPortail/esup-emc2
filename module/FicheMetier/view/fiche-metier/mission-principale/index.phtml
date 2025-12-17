@@ -68,7 +68,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
                             <option value="">Peu importe</option>
                             <?php foreach ($referentiels as $referentiel) : ?>
                                 <option value="<?php echo $referentiel->getId(); ?>" data-content="<?php echo $referentiel->printLabel(); ?>"
-                                        <?php if ($params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
+                                        <?php if (isset($params['referentiel']) AND $params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
                                 >
                                     <?php echo $referentiel->getLibelleLong(); ?>
                                 </option>
@@ -81,7 +81,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
                             <option value="">Peu importe</option>
                             <?php foreach ($familles as $famille) : ?>
                                 <option value="<?php echo $famille->getId(); ?>"
-                                        <?php if ($params['famille'] == $famille->getId()) echo 'selected'; ?>
+                                        <?php if (isset($params['famille']) AND $params['famille'] == $famille->getId()) echo 'selected'; ?>
                                 >
                                     <?php echo $famille->getLibelle(); ?>
                                 </option>

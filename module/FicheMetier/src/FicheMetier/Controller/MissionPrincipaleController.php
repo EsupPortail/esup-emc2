@@ -17,6 +17,7 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Provider\Template\TexteTemplates;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -34,6 +35,7 @@ use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 class MissionPrincipaleController extends AbstractActionController
 {
     use ApplicationElementServiceAwareTrait;
+    use CodeFonctionServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
@@ -548,8 +550,10 @@ class MissionPrincipaleController extends AbstractActionController
                     }
 
                     if ($mode === 'import') {
-                        foreach ($to_delete['activites'] as $activite) {
-                            $this->getMissionActiviteService()->delete($activite);
+                        if (isset($to_delete['activites'])) {
+                            foreach ($to_delete['activites'] as $activite) {
+                                $this->getMissionActiviteService()->delete($activite);
+                            }
                         }
 
                         /** @var Mission $mission */
@@ -603,12 +607,19 @@ class MissionPrincipaleController extends AbstractActionController
                             $codesFonction = array_map('trim', $codesFonction);
                             $codesFonction = array_filter($codesFonction, function (string $a) { return $a !== ''; });
                             foreach ($codesFonction as $codeFonction) {
-                                $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
-                                if (empty($fichesmetiers)) { $warning[] = "Aucune fiche metier utilise le code [".$codeFonction."]"; }
-                                foreach ($fichesmetiers as $fichemetier) {
-                                    if (!$fichemetier->hasMission($mission)) {
-                                        $this->getFicheMetierService()->addMission($fichemetier, $mission);
-                                        $info[] = "Ajout de la mission [".$mission->getReference()."] a été ajouté à la fiche metier [".($fichemetier->getReference()??("Fiche #".$fichemetier->getId()))."]";
+                                $codeFonction_ = true; //$this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
+                                if ($codeFonction_ === null) {
+                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la compétence ne sera ajoutée à aucune fiche métier.";
+                                } else {
+                                    $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
+                                    if (empty($fichesmetiers)) {
+                                        $warning[] = "Aucune fiche métier utilise le code fonction <code>" . $codeFonction . "</code> ; la compétence ne sera ajoutée à aucune fiche métier.";
+                                    }
+                                    foreach ($fichesmetiers as $fichemetier) {
+                                        if (!$fichemetier->hasMission($mission)) {
+                                            $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                            $info[] = "Ajout de la mission [" . $mission->getReference() . "] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                        }
                                     }
                                 }
                             }

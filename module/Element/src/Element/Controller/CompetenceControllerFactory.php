@@ -9,7 +9,6 @@ use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceDiscipline\CompetenceDisciplineService;
 use Element\Service\CompetenceElement\CompetenceElementService;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use Element\Service\Niveau\NiveauService;

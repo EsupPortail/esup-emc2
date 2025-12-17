@@ -10,6 +10,7 @@ use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleForm;
+use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
@@ -36,6 +37,7 @@ class MissionPrincipaleControllerFactory
     {
         /**
          * @var ApplicationElementService $applicationElementService
+         * @var CodeFonctionService $codeFonctionService
          * @var CompetenceElementService $competenceElementService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var FicheMetierService $ficheMetierService
@@ -48,6 +50,7 @@ class MissionPrincipaleControllerFactory
          * @var RenduService $renduService
          */
         $applicationElementService = $container->get(ApplicationElementService::class);
+        $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -76,6 +79,7 @@ class MissionPrincipaleControllerFactory
 
         $controller = new MissionPrincipaleController();
         $controller->setApplicationElementService($applicationElementService);
+        $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelleService);
         $controller->setFicheMetierService($ficheMetierService);

@@ -189,18 +189,22 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                 <td>
                     <?php echo $competence->printReference(); ?><br>
                     <?php if ($competence->getDiscipline()) : ?>
+                        <br>
                         <strong>Discipline </strong> <?php echo $competence->getDiscipline()->getLibelle(); ?>
                     <?php endif; ?>
                     <?php if ($competence->getDescription()) : ?>
+                        <br>
                         <strong>Définition </strong> <?php echo $competence->getDescription(); ?>
                     <?php endif; ?>
                     <?php if ($competence->getSynonymes()) : ?>
+                        <br>
                         <strong>Synonymes </strong>
                             <?php foreach ($competence->getSynonymes() as $synonyme) : ?>
                                 <?php echo $synonyme->getLibelle(); ?>;&nbsp;
                             <?php endforeach; ?>
                     <?php endif; ?>
                     <?php if ($competence->getCodesEmploiType()): ?>
+                        <br>
                         <?php $code = explode("|", $competence->getCodesEmploiType()); ?>
                         <strong>Codes Emploi Type</strong>
                         <ul>
@@ -210,6 +214,7 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
                         </ul>
                     <?php endif; ?>
                     <?php if ($competence->getCodesFonction()) : ?>
+                        <br>
                         <?php $code = explode("|", $competence->getCodesFonction()); ?>
                         <strong>Codes Fonction</strong>
                         <ul>

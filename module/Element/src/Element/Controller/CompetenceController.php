@@ -391,9 +391,14 @@ class CompetenceController extends AbstractActionController
                         return $a !== '';
                     });
                     foreach ($codesFonction as $codeFonction) {
-                        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
-                        if (empty($fichesmetiers)) {
-                            $warning[] = "Aucune fiche metier utilise le code [" . $codeFonction . "]";
+                        $codeFonction_ = true; //$this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
+                        if ($codeFonction_ === null) {
+                            $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas.";
+                        } else {
+                            $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
+                            if (empty($fichesmetiers)) {
+                                $warning[] = "Aucune fiche métier utilise le code fonction <code>" . $codeFonction . "</code> ; la compétence ne sera donc pas ajoutée aux fiches métiers portant ce code fonction.";
+                            }
                         }
                         foreach ($fichesmetiers as $fichemetier) {
                             if (!$fichemetier->hasCompetence($competence)) {
