@@ -18,6 +18,7 @@ use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Request;
@@ -31,6 +32,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class CompetenceController extends AbstractActionController
 {
+    use CodeFonctionServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceDisciplineServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
@@ -391,7 +393,7 @@ class CompetenceController extends AbstractActionController
                         return $a !== '';
                     });
                     foreach ($codesFonction as $codeFonction) {
-                        $codeFonction_ = true; //$this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
+                        $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                         if ($codeFonction_ === null) {
                             $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas.";
                         } else {

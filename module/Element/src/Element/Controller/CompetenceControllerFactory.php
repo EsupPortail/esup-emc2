@@ -12,6 +12,7 @@ use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use Element\Service\Niveau\NiveauService;
+use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
@@ -32,6 +33,7 @@ class CompetenceControllerFactory
     public function __invoke(ContainerInterface $container): CompetenceController
     {
         /**
+         * @var CodeFonctionService $codeFonctionService
          * @var CompetenceService $competenceService
          * @var CompetenceDisciplineService $competenceDisciplineService
          * @var CompetenceThemeService $competenceThemeService
@@ -46,6 +48,7 @@ class CompetenceControllerFactory
          * @var ReferentielService $referentielService
          * @var StructureService $structureService
          */
+        $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceDisciplineService = $container->get(CompetenceDisciplineService::class);
         $maitriseNiveauService = $container->get(NiveauService::class);
@@ -68,6 +71,7 @@ class CompetenceControllerFactory
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
 
         $controller = new CompetenceController();
+        $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceDisciplineService($competenceDisciplineService);
         $controller->setCompetenceThemeService($competenceThemeService);

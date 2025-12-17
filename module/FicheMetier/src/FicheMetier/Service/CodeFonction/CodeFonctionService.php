@@ -55,6 +55,7 @@ class CodeFonctionService
         $qb = $this->getObjectManager()->getRepository(CodeFonction::class)->createQueryBuilder('codeFonction')
             ->leftjoin('codeFonction.niveauFonction', 'niveauFonction')->addSelect('niveauFonction')
             ->leftJoin('codeFonction.familleProfessionnelle', 'familleProfessionnelle')->addSelect('familleProfessionnelle')
+            ->leftJoin('familleProfessionnelle.correspondance', 'correspondance')->addSelect('correspondance')
         ;
         return $qb;
     }
@@ -124,6 +125,20 @@ class CodeFonctionService
         if (!$withHisto) $qb = $qb->andWhere('codeFonction.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getCodeFonctionByCode(?string $code): ?CodeFonction
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('concat(niveauFonction.code, correspondance.categorie, familleProfessionnelle.position) = :code')
+            ->setParameter('code', $code)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".CodeFonction::class."] partagent le même code fonction [".$code."]",-1,$e);
+        }
         return $result;
     }
 

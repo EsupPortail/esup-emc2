@@ -560,7 +560,7 @@ class MissionPrincipaleController extends AbstractActionController
                         foreach ($missions as $mission) {
                             if ($mission->getId() !== null)
                             {
-                                $info[] = "La mission [".$mission->getReferentiel()->getLibelleCourt()."|".$mission->getId()."|".$mission->getLibelle()."] existe déjà et sera mise à jour";
+                                $info[] = "La mission ".$mission->printReference()." existe déjà et sera mise à jour";
                             }
                             //famille professionnelle
                             foreach ($mission->getFamillesProfessionnelles() as $famille) {
@@ -595,11 +595,11 @@ class MissionPrincipaleController extends AbstractActionController
                             $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) { return $a !== ''; });
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
-                                if ($fichemetier === null) { $warning[] = "La fiche metier [".$referentiel->getLibelleCourt()."|".$codeFicheMetier."] n'existe pas"; }
+                                if ($fichemetier === null) { $warning[] = "La fiche metier ".$mission->printReference()." n'existe pas"; }
                                 else {
                                     if (!$fichemetier->hasMission($mission)) {
                                         $this->getFicheMetierService()->addMission($fichemetier, $mission);
-                                        $info[] = "Ajout de la mission [".$mission->getReference()."] a été ajouté à la fiche metier [".$fichemetier->getReference()."]";
+                                        $info[] = "Ajout de la mission ".$mission->printReference()." a été ajouté à la fiche metier [".$fichemetier->getReference()."]";
                                     }
                                 }
                             }
@@ -607,9 +607,9 @@ class MissionPrincipaleController extends AbstractActionController
                             $codesFonction = array_map('trim', $codesFonction);
                             $codesFonction = array_filter($codesFonction, function (string $a) { return $a !== ''; });
                             foreach ($codesFonction as $codeFonction) {
-                                $codeFonction_ = true; //$this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
+                                $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                 if ($codeFonction_ === null) {
-                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la compétence ne sera ajoutée à aucune fiche métier.";
+                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale ".$mission->printReference()." ne sera ajoutée à aucune fiche métier.";
                                 } else {
                                     $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                     if (empty($fichesmetiers)) {
