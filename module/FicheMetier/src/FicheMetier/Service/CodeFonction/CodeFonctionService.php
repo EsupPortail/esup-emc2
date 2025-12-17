@@ -126,4 +126,15 @@ class CodeFonctionService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /** @return CodeFonction[] */
+    public function generateDictionnaire(): array
+    {
+        $dictionnaire = [];
+        $codesFonctions = $this->getCodesFonctions();
+        foreach ($codesFonctions as $codeFonction) {
+            $dictionnaire[$codeFonction->getCode()] = $codeFonction;
+        }
+        return $dictionnaire;
+    }
 }

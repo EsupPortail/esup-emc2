@@ -5,12 +5,14 @@ namespace FicheMetier\Controller;
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
+use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
@@ -18,6 +20,7 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
@@ -39,6 +42,7 @@ class ImportController extends AbstractActionController
 {
     use ImportServiceAwareTrait;
 
+    use CodeFonctionServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
@@ -51,6 +55,7 @@ class ImportController extends AbstractActionController
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use NiveauFonctionServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
@@ -100,7 +105,7 @@ class ImportController extends AbstractActionController
     const HEADER_REFERENS3_PDF = "Fiche au format pdf";
 
     // HEADER SUPPLEMENTAIRE ///////////////////////////////////////////////////////////////////////////////////////////
-
+    const HEADER_CODE_FONCTION = "Code Fonction";
 
     public function importAction(): ViewModel
     {
@@ -179,6 +184,11 @@ class ImportController extends AbstractActionController
                             $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
                         }
                     }
+                foreach ($fiches as $fiche) {
+                    if ($fiche->getCodeFonction() AND $fiche->getCodeFonction()->getId() === null) {
+                        $this->getCodeFonctionService()->create($fiche->getCodeFonction());
+                    }
+                }
                     $missions = [];
                     $elements = [];
                     $tendances = [];
@@ -260,6 +270,9 @@ class ImportController extends AbstractActionController
 
         /** Préparation pour les niveaus de carrière */
         $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
+        /** Préparation pour les codes fonctions  */
+        $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
+
 
         $debut = (new DateTime())->getTimestamp();
 
@@ -321,6 +334,17 @@ class ImportController extends AbstractActionController
                         $fiche->setNiveauCarriere($dictionnaireNiveauCarriere[$niveauCarriereId]);
                     } else {
                         $warning[] = "Aucun niveau de carrière de connue pour le niveau ".$niveauCarriereId." ".($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE])??"Colonne manquante [".self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE."]";
+                    }
+                }
+
+                //code fonction
+                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) AND trim($raw[self::HEADER_CODE_FONCTION]) !== '')?trim($raw[self::HEADER_CODE_FONCTION]):null;
+                if ($codeFonction !== null) {
+                    if (isset($dictionnaireCodeFonction[$codeFonction])) {
+                        $fiche->setCodeFonction($dictionnaireCodeFonction[$codeFonction]);
+                    } else {
+                        $code = $this->createCodeFonction($codeFonction, $warning);
+                        $fiche->setCodeFonction($code);
                     }
                 }
 
@@ -431,6 +455,8 @@ class ImportController extends AbstractActionController
         $debut = (new DateTime())->getTimestamp();
 
 
+        /** Préparation pour les codes fonctions  */
+        $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
 
         $csvFile = fopen($filepath, "r");
         // lecture du header + position colonne
@@ -486,6 +512,17 @@ class ImportController extends AbstractActionController
                 if ($newFamille) $famille->setCorrespondance($specialite);
                 elseif ($famille->getCorrespondance() !== $specialite) {
                     $warning[] = "La spécialité attaché à la famille professionnelle [".$famille->getLibelle()."] ne correspond pas à la spécialité connue.";
+                }
+
+                //code fonction
+                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) AND trim($raw[self::HEADER_CODE_FONCTION]) !== '')?trim($raw[self::HEADER_CODE_FONCTION]):null;
+                if ($codeFonction !== null) {
+                    if (isset($dictionnaireCodeFonction[$codeFonction])) {
+                        $fiche->setCodeFonction($dictionnaireCodeFonction[$codeFonction]);
+                    } else {
+                        $code = $this->createCodeFonction($codeFonction, $warning);
+                        $fiche->setCodeFonction($code);
+                    }
                 }
 
                 /** Partie Mission et activités ***********************************************************************/
@@ -609,5 +646,24 @@ class ImportController extends AbstractActionController
         $result = explode($separateur, $listing);
         $result = array_map(function(string $s) { return trim($s); }, $result);
         return $result;
+    }
+
+    public function createCodeFonction(string $codeFonction, array& $warning) : ?CodeFonction
+    {
+        $codeNiveauFonction = substr($codeFonction,0,4);
+        $fonction_ = $this->getNiveauFonctionService()->getNiveauFonctionByCode($codeNiveauFonction);
+        if ($fonction_ === null) { $warning[] = "Aucun niveau de fonction connu pour le code ".$codeNiveauFonction." le code fonction [$codeFonction] n'a pu être créé"; }
+        $codeFamilleProfessionnelle = substr($codeFonction,4);
+        $famille_ = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByCode($codeFamilleProfessionnelle);
+        if ($famille_ === null) { $warning[] = "Aucune famille professionnelle connue pour le code ".$codeFamilleProfessionnelle." le code fonction [$codeFonction] n'a pu être créé"; }
+
+        if ($fonction_ AND $famille_) {
+            $code = new CodeFonction();
+            $code->setNiveauFonction($fonction_);
+            $code->setFamilleProfessionnelle($famille_);
+            $code->setCode($code->computeCode());
+            return $code;
+        }
+        return null;
     }
 }

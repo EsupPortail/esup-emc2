@@ -5,10 +5,12 @@ namespace FicheMetier\Controller;
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Carriere\Service\Niveau\NiveauService;
+use Carriere\Service\NiveauFonction\NiveauFonctionService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
+use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
@@ -36,6 +38,7 @@ class ImportControllerFactory
     public function __invoke(ContainerInterface $container): ImportController
     {
         /**
+         * @var CodeFonctionService $codeFonctionService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
          * @var CompetenceTypeService $competenceTypeService
@@ -50,11 +53,13 @@ class ImportControllerFactory
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var MissionActiviteService $missionActiviteService
          * @var NiveauService $niveauService
+         * @var NiveauFonctionService $niveauFonctionService
          * @var ReferenceServiceAwareTrait $referenceService
          * @var ReferentielService $referentielService
          * @var TendanceElementService $tendanceElementService
          * @var TendanceTypeService $tendanceTypeService
          */
+        $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
@@ -68,6 +73,7 @@ class ImportControllerFactory
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauService = $container->get(NiveauService::class);
+        $niveauFonctionService = $container->get(NiveauFonctionService::class);
         $referenceService = $container->get(ReferenceService::class);
         $referentielService = $container->get(ReferentielService::class);
         $tendanceElementService = $container->get(TendanceElementService::class);
@@ -79,6 +85,7 @@ class ImportControllerFactory
         $ficheMetierImportationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
 
         $controller = new ImportController();
+        $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setCompetenceTypeService($competenceTypeService);
@@ -92,6 +99,7 @@ class ImportControllerFactory
         $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauService($niveauService);
+        $controller->setNiveauFonctionService($niveauFonctionService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);
         $controller->setTendanceElementService($tendanceElementService);
