@@ -247,6 +247,9 @@ class MissionPrincipaleService
         $to_create = [
             'familles' => [],
         ];
+        $to_delete = [
+            'activites' => [],
+        ];
 
         /* LIBELLE ****************************************************************************************************/
         if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) === '') {
@@ -272,6 +275,7 @@ class MissionPrincipaleService
         if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES])) {
             $activites = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES]);
             $positionActivite = 0;
+            $to_delete['activites'] = $mission->getActivites();
             $mission->clearActivites();
             foreach ($activites as $activite) {
                 if (trim($activite) !== '' AND !$mission->hasActivite($activite)) {
@@ -344,7 +348,7 @@ class MissionPrincipaleService
         $source_string = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $mission->setSourceString($source_string);
 
-        return [$mission, $debugs, $to_create];
+        return [$mission, $debugs, $to_create, $to_delete];
 
     }
 

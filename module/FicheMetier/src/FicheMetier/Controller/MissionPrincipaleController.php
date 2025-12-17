@@ -512,14 +512,20 @@ class MissionPrincipaleController extends AbstractActionController
                     if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
 
 
+                    $to_delete = [];
                     if ($hasIdMission and $hasLibelle and $referentiel !== null) {
                         $position = 1;
 
                         foreach ($array as $row) {
                             $position++;
                             try {
-                                [$mission, $debug] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $referentiel, $position);
+                                [$mission, $debug, $to_create_, $to_delete_] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $referentiel, $position);
                                 $missions[] = $mission;
+
+                                foreach ($to_delete_['activites'] as $activite) {
+                                    $to_delete['activites'][] = $activite;
+                                }
+
                                 if (isset($debug['info'])) {
                                     foreach ($debug['info'] as $line) {
                                         $info[] = $line;
@@ -542,6 +548,10 @@ class MissionPrincipaleController extends AbstractActionController
                     }
 
                     if ($mode === 'import') {
+                        foreach ($to_delete['activites'] as $activite) {
+                            $this->getMissionActiviteService()->delete($activite);
+                        }
+
                         /** @var Mission $mission */
                         foreach ($missions as $mission) {
                             if ($mission->getId() !== null)
