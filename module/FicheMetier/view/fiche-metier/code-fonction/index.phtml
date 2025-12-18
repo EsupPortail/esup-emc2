@@ -111,7 +111,7 @@ $canSupprimer = $this->isAllowed(CodeFonctionPrivileges::getResourceId(CodeFonct
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
-                <?php if ($canModifier) : ?>
+                <?php if ($canSupprimer) : ?>
                     <br>
                     <?php /** @see \FicheMetier\Controller\CodeFonctionController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('code-fonction/supprimer', ['code-fonction' => $codeFonction->getId()], [], true) ?>"
