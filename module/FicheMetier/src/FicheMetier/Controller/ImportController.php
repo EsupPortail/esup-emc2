@@ -15,8 +15,6 @@ use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
-use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
@@ -188,6 +186,7 @@ class ImportController extends AbstractActionController
                             $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
                         }
                     }
+                    $a=1;
                     foreach ($fiches as $fiche) {
                         if ($fiche->getCodeFonction() AND $fiche->getCodeFonction()->getId() === null) {
                             $this->getCodeFonctionService()->create($fiche->getCodeFonction());

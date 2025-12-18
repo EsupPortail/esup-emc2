@@ -148,7 +148,7 @@ class CodeFonctionService
         $dictionnaire = [];
         $codesFonctions = $this->getCodesFonctions();
         foreach ($codesFonctions as $codeFonction) {
-            $dictionnaire[$codeFonction->getCode()] = $codeFonction;
+            $dictionnaire[$codeFonction->computeCode()] = $codeFonction;
         }
         return $dictionnaire;
     }
