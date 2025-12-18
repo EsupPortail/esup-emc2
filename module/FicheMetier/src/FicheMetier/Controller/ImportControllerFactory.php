@@ -27,6 +27,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Referentiel\ReferentielService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class ImportControllerFactory
 {
@@ -54,6 +55,7 @@ class ImportControllerFactory
          * @var MissionActiviteService $missionActiviteService
          * @var NiveauService $niveauService
          * @var NiveauFonctionService $niveauFonctionService
+         * @var ParametreService $parametreService
          * @var ReferenceServiceAwareTrait $referenceService
          * @var ReferentielService $referentielService
          * @var TendanceElementService $tendanceElementService
@@ -74,6 +76,7 @@ class ImportControllerFactory
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauService = $container->get(NiveauService::class);
         $niveauFonctionService = $container->get(NiveauFonctionService::class);
+        $parametreService = $container->get(ParametreService::class);
         $referenceService = $container->get(ReferenceService::class);
         $referentielService = $container->get(ReferentielService::class);
         $tendanceElementService = $container->get(TendanceElementService::class);
@@ -100,6 +103,7 @@ class ImportControllerFactory
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauService($niveauService);
         $controller->setNiveauFonctionService($niveauFonctionService);
+        $controller->setParametreService($parametreService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);
         $controller->setTendanceElementService($tendanceElementService);

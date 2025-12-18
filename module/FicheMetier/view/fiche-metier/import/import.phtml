@@ -12,6 +12,7 @@
  * @var string $filename
  * @var string $filepath
  * @var Referentiel[] $referentiels
+ * @var bool $displayCodeFonction
  *
  * @var FicheMetier[] $fiches
  */
@@ -159,13 +160,22 @@ $formats = [
                 <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong>.</li>
                 <li>Pour <code>REFERENS3</code> le séparateur est <code>|</code>. </li>
                 <li>Pour <code>RMFP</code> le séparateur est le <em>saut de ligne</em>. </li>
-                <li>La colonne <code>Code Fonction</code> peut être ajoutée aux deux trames vierges pour les renseigner lors de l'import.</li>
+                <?php if ($displayCodeFonction) : ?>
+                    <li>La colonne <code>Code Fonction</code> peut être ajoutée aux deux trames vierges pour les renseigner lors de l'import.</li>
+                <?php endif; ?>
             </ul>
 
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3.csv">
-                <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp.csv">
-                <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
+            <?php if ($displayCodeFonction) : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3_codefonction.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp_codefonction.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
+            <?php else : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
+            <?php endif; ?>
             <br><br>
             <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
                 <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>

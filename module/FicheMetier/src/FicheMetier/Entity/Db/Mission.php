@@ -98,6 +98,16 @@ class Mission implements HistoriqueAwareInterface,
         return $result;
     }
 
+    public function removeFicheMetier(FicheMetierMission $ficheMetier): void
+    {
+        $this->listeFicheMetierMission->removeElement($ficheMetier);
+    }
+
+    public function clearListeFicheMetier(): void
+    {
+        $this->listeFicheMetierMission->clear();
+    }
+
     /** @return MissionAdditionnelle[] */
     public function getListeFichePoste(bool $historise = false): array
     {
@@ -109,6 +119,11 @@ class Mission implements HistoriqueAwareInterface,
             }
         }
         return $result;
+    }
+
+    public function clearListeFichePoste(): void
+    {
+        $this->listeFichePosteMission->clear();
     }
 
     public function addMissionActivite(MissionActivite $activite): void

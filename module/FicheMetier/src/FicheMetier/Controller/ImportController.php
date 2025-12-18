@@ -20,6 +20,7 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
@@ -37,6 +38,7 @@ use Metier\Service\Reference\ReferenceServiceAwareTrait;
 use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class ImportController extends AbstractActionController
 {
@@ -56,6 +58,7 @@ class ImportController extends AbstractActionController
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferenceServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
@@ -171,6 +174,7 @@ class ImportController extends AbstractActionController
 
             $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
             $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
+
             if ($mode === 'import') {
                     // recuperation des nouvelles familles professionnelles
                     foreach ($fiches as $fiche) {
@@ -193,22 +197,31 @@ class ImportController extends AbstractActionController
                     $elements = [];
                     $tendances = [];
                     foreach ($fiches as $fiche) {
+                        /** @var FicheMetierMission $mission */
                         foreach ($fiche->getMissions() as $mission) {
                             $missions[] = $mission;
                         }
-                        $fiche->clearMissions();
                         foreach ($fiche->getCompetenceCollection() as $competence) {
                             $elements[] = $competence;
                         }
                         $fiche->clearCompetences();
+                        foreach ($elements as $element) {
+                            if ($element->getId() !== null) $this->getCompetenceElementService()->delete($element);
+                        }
 
+                        if ($fiche->getId() !== null) {
+                            $oldTendances = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fiche);
+                            foreach ($oldTendances as $tendance) {
+                                $this->getTendanceElementService()->delete($tendance);
+                            }
+                        }
                         foreach ($fiche->getTendances() as $tendance) {
                             $tendances[] = $tendance;
                         }
                         $fiche->clearTendances();
 
                         //todo attention au update
-                        $this->getFicheMetierService()->create($fiche);
+                        if ($fiche->getId() === null) $this->getFicheMetierService()->create($fiche);
 
                         foreach ($missions as $mission) {
                             $this->getFicheMetierMissionService()->deepCreate($mission);
@@ -221,7 +234,7 @@ class ImportController extends AbstractActionController
                                 $mission->getMission()->setReferentiel($fiche->getReferentiel());
                                 $this->getMissionPrincipaleService()->update($mission->getMission());
                             }
-                            $fiche->addMission($mission);
+                            if (!$fiche->hasMission($mission->getMission())) $fiche->addMission($mission);
                         }
                         //$this->getFicheMetierService()->update($fiche);
                         foreach ($elements as $element) {
@@ -256,6 +269,7 @@ class ImportController extends AbstractActionController
             'error' => $error,
             'fiches' => $fiches,
 
+            'displayCodeFonction' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION),
             'referentiels' => $this->getReferentielService()->getReferentiels(),
             'data' => $data,
             'file' => $file,
@@ -306,34 +320,37 @@ class ImportController extends AbstractActionController
                 }
                 $raws[] = $item;
             }
-            $nbFiches = count($raws);
 
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
-                $intitule = $raw[self::HEADER_REFERENS3_LIBELLE];
-                $code = $raw[self::HEADER_REFERENS3_REFERENCE];
-                $fiche = new FicheMetier();
+                $intitule = $raw[self::HEADER_REFERENS3_LIBELLE]??"";
+                $code = $raw[self::HEADER_REFERENS3_REFERENCE]??"";
+
+                $fiche = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
+                if ($fiche === null) {
+                    $fiche = new FicheMetier();
+                }
                 $fiche->setRaw(json_encode($raw));
                 $fiche->setLibelle($intitule);
                 $fiche->setReference($code);
                 $fiche->setReferentiel($referentiel);
 
                 //specialité
-                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]));
+                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]??""));
                 if ($specialite === null) {
-                    $specialite = $this->getCorrespondanceService()->createWith('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]), trim($raw[self::HEADER_REFERENS3_SPECIALITE_LIBELLE]), false);
+                    $specialite = $this->getCorrespondanceService()->createWith('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]??""), trim($raw[self::HEADER_REFERENS3_SPECIALITE_LIBELLE]??""), false);
                     $specialite->setId(null);
                 }
                 //famille
-                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]);
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"");
                 if ($famille === null) {
                     $famille = new FamilleProfessionnelle();
-                    $famille->setLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]);
-                    $famille->setPosition($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]);
+                    $famille->setLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"");
+                    $famille->setPosition($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]??"");
                     $famille->setCorrespondance($specialite);
                 } else {
-                    if ($famille->getCorrespondance() !== $specialite) $warning[] = "La famille professionnelle [".$raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]."] n'a pas la spécialité connue par EMC2 [".$famille->getCorrespondance()?->getCategorie()."!=".$raw[self::HEADER_REFERENS3_SPECIALITE_CODE]."]";
-                    if ($famille->getPosition() != $raw[self::HEADER_REFERENS3_FAMILLE_POSITION]) $warning[] = "La famille professionnelle [".$raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]."] n'a pas la position connue par EMC2 [".$famille->getPosition()."!=".$raw[self::HEADER_REFERENS3_FAMILLE_POSITION]."]";
+                    if ($famille->getCorrespondance() !== $specialite) $warning[] = "La famille professionnelle [".($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"")."] n'a pas la spécialité connue par EMC2 [".$famille->getCorrespondance()?->getCategorie()."!=".($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]??"")."]";
+                    if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]??"")) $warning[] = "La famille professionnelle [".($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"")."] n'a pas la position connue par EMC2 [".$famille->getPosition()."!=".($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]??"")."]";
                 }
                 $fiche->setFamilleProfessionnelle($famille);
                 //Niveau de carriere
@@ -371,8 +388,8 @@ class ImportController extends AbstractActionController
                 // > revoir un peu la fiche pour avoir une définition + une liste d'activité sans mission ?
                 // > fiche metier devrait pouvoir avoir des activités hors mission ?
 
-                $missionLibelle = $raw[self::HEADER_REFERENS3_MISSION_LIBELLE];
-                $activites = explode("|",$raw[self::HEADER_REFERENS3_MISSION_ACTIVITE]);
+                $missionLibelle = $raw[self::HEADER_REFERENS3_MISSION_LIBELLE]??"";
+                $activites = explode("|",$raw[self::HEADER_REFERENS3_MISSION_ACTIVITE]??"");
 
                 $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($missionLibelle);
                 if ($mission === null) {
@@ -397,7 +414,7 @@ class ImportController extends AbstractActionController
 
                 /** COMPETENCES ***************************************************************************************/
 
-                $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE]);
+                $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE]??"");
                 foreach ($comptenceIds as $comptenceId) {
                     $competence = $dictionnaireCompetence[ $comptenceId ]??null;
                     if ($competence !== null) {
@@ -496,8 +513,8 @@ class ImportController extends AbstractActionController
 
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
-                $intitule = $raw[self::HEADER_RMFP_LIBELLE];
-                $code = $raw[self::HEADER_RMFP_REFERENCE];
+                $intitule = $raw[self::HEADER_RMFP_LIBELLE]??"";
+                $code = $raw[self::HEADER_RMFP_REFERENCE]??"";
                 $fiche = new FicheMetier();
                 $fiche->setRaw(json_encode($raw));
                 $fiche->setLibelle($intitule);
@@ -505,17 +522,17 @@ class ImportController extends AbstractActionController
                 $fiche->setReferentiel($referentiel);
 //                $this->getFicheMetierService()->create($fiche);
 
-                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]));
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]??""));
                 $newFamille = false;
                 if ($famille === null) {
                     $famille = new FamilleProfessionnelle();
-                    $famille->setLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]));
+                    $famille->setLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]??""));
                     $newFamille = true;
                 }
                 $fiche->setFamilleProfessionnelle($famille);
-                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]));
+                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]??""));
                 if ($specialite === null) {
-                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]), trim($raw[self::HEADER_RMFP_SPECIALITE]), false);
+                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]??""), trim($raw[self::HEADER_RMFP_SPECIALITE]??""), false);
                     $specialite->setId(null);
                 }
                 if ($newFamille) $famille->setCorrespondance($specialite);
@@ -570,7 +587,7 @@ class ImportController extends AbstractActionController
                 //todo ajouter le type pour eviter les homonymies
                 //todo ajouter un boolean pour la recherche parmi les synonymes
 
-                $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE], "\n");
+                $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE]??"", "\n");
                 foreach ($connaissances as $item) {
 //                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
                     $connaissance = $dictionnaireConnaissances[$item]??null;
@@ -582,7 +599,7 @@ class ImportController extends AbstractActionController
                         $warning[] = "[".$item."] compétence de type [".$tConnaissance->getLibelle()."] non trouvée.";
                     }
                 }
-                $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE], "\n");
+                $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE]??"", "\n");
                 foreach ($savoiretres as $item) {
 //                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
                     $savoiretre = $dictionnaireSavoirEtre[$item]??null;
@@ -595,7 +612,7 @@ class ImportController extends AbstractActionController
                         $warning[] = "[".$item."] compétence de type [".$tsavoiretre->getLibelle()."] non trouvée.";
                     }
                 }
-                $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE], "\n");
+                $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE]??"", "\n");
                 foreach ($savoirfaires as $item) {
 //                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
                     $savoirfaire = $dictionnaireSavoirFaire[$item]??null;

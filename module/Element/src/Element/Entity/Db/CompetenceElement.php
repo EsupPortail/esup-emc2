@@ -23,7 +23,7 @@ class CompetenceElement implements HistoriqueAwareInterface, HasValidationsInter
         $this->validations = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
