@@ -188,66 +188,50 @@ class ImportController extends AbstractActionController
                             $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
                         }
                     }
-                foreach ($fiches as $fiche) {
-                    if ($fiche->getCodeFonction() AND $fiche->getCodeFonction()->getId() === null) {
-                        $this->getCodeFonctionService()->create($fiche->getCodeFonction());
-                    }
-                }
-                    $missions = [];
-                    $elements = [];
-                    $tendances = [];
                     foreach ($fiches as $fiche) {
-                        /** @var FicheMetierMission $mission */
-                        foreach ($fiche->getMissions() as $mission) {
-                            $missions[] = $mission;
+                        if ($fiche->getCodeFonction() AND $fiche->getCodeFonction()->getId() === null) {
+                            $this->getCodeFonctionService()->create($fiche->getCodeFonction());
                         }
-                        foreach ($fiche->getCompetenceCollection() as $competence) {
-                            $elements[] = $competence;
-                        }
-                        $fiche->clearCompetences();
-                        foreach ($elements as $element) {
-                            if ($element->getId() !== null) $this->getCompetenceElementService()->delete($element);
-                        }
+                    }
 
-                        if ($fiche->getId() !== null) {
-                            $oldTendances = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fiche);
-                            foreach ($oldTendances as $tendance) {
-                                $this->getTendanceElementService()->delete($tendance);
-                            }
-                        }
-                        foreach ($fiche->getTendances() as $tendance) {
-                            $tendances[] = $tendance;
-                        }
-                        $fiche->clearTendances();
 
-                        //todo attention au update
+                    /** @var FicheMetier $fiche */
+                    foreach ($fiches as $fiche) {
+                        $elements = $fiche->getCompetenceCollection()->toArray(); $fiche->clearCompetences();
+                        $tendances = $fiche->getTendances(); $fiche->clearTendances();
+                        $missions = $fiche->getMissions(); $fiche->clearMissions();
+
                         if ($fiche->getId() === null) $this->getFicheMetierService()->create($fiche);
 
-                        foreach ($missions as $mission) {
-                            $this->getFicheMetierMissionService()->deepCreate($mission);
-
-                            // Note
-                            // On a une seule mission par fiche dans les deux référentiels RMFP et REFERENS3
-                            // On peut alors utiliser le code de la fiche metier comme code de la mission nouvellement créé.
-                            if ($mission->getMission()->getReference() === null) {
-                                $mission->getMission()->setReference($fiche->getReference());
-                                $mission->getMission()->setReferentiel($fiche->getReferentiel());
-                                $this->getMissionPrincipaleService()->update($mission->getMission());
-                            }
-                            if (!$fiche->hasMission($mission->getMission())) $fiche->addMission($mission);
-                        }
-                        //$this->getFicheMetierService()->update($fiche);
                         foreach ($elements as $element) {
-                            $this->getCompetenceElementService()->create($element);
+                            if ($element->getId() === null) $this->getCompetenceElementService()->create($element);
+                            else $this->getCompetenceElementService()->update($element);
+
                             $fiche->addCompetenceElement($element);
                         }
-                        //$this->getFicheMetierService()->update($fiche);
+
                         foreach ($tendances as $tendance) {
                             $tendance->setFicheMetier($fiche);
-                            $this->getTendanceElementService()->create($tendance);
+                            if ($tendance->getId() === null) $this->getTendanceElementService()->create($tendance);
+                            else $this->getTendanceElementService()->update($tendance);
+
                             $fiche->addTendance($tendance);
                         }
-                        //$this->getFicheMetierService()->update($fiche);
+
+                        foreach ($missions as $mission) {
+                            if ($mission->getId() === null) $this->getFicheMetierMissionService()->deepCreate($mission);
+                            else {
+                                foreach ($mission->getMission()->getActivites() as $activite) {
+                                    if ($activite->getId() === null) $this->getMissionActiviteService()->create($activite);
+                                    else {
+                                        if ($activite->getOrdre() === -1) $this->getMissionActiviteService()->delete($activite);
+                                        else $this->getMissionActiviteService()->update($activite);
+                                    }
+                                }
+                            }
+                            $fiche->addMission($mission);
+                        }
+
                         $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
                         $this->getFicheMetierService()->update($fiche);
                     }
@@ -384,69 +368,78 @@ class ImportController extends AbstractActionController
 
                 /** Partie Mission et activités ***********************************************************************/
 
-                // !! quid !!
-                // > revoir un peu la fiche pour avoir une définition + une liste d'activité sans mission ?
-                // > fiche metier devrait pouvoir avoir des activités hors mission ?
-
                 $missionLibelle = $raw[self::HEADER_REFERENS3_MISSION_LIBELLE]??"";
                 $activites = explode("|",$raw[self::HEADER_REFERENS3_MISSION_ACTIVITE]??"");
 
-                $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($missionLibelle);
-                if ($mission === null) {
-                    $mission = new Mission();
-                    $mission->setLibelle($missionLibelle);
+                $ficheMission = $fiche->getMissionByReference($fiche->getReferentiel(), $fiche->getReference());
+                if ($ficheMission === null) {
+                    $mission = $this->getMissionPrincipaleService()->createWith($missionLibelle, $activites, false);
+                    $mission->setReferentiel($referentiel);
+                    $mission->setReference($fiche->getReference());
 
-                    $position = 1;
-                    foreach ($activites as $activiteLibelle) {
-                        $activite = new MissionActivite();
-                        $activite->setLibelle($activiteLibelle);
-                        $activite->setOrdre($position++);
-                        $activite->setMission($mission);
-                        $mission->addMissionActivite($activite);
-                    }
+                    $ficheMission = new FicheMetierMission();
+                    $ficheMission->setMission($mission);
+                    $ficheMission->setFicheMetier($fiche);
+                    $ficheMission->setOrdre(1);
+
+                    $fiche->addMission($ficheMission);
+                } else {
+                    $mission = $ficheMission->getMission();
+                    $mission->setReferentiel($referentiel);
+                    $mission->setReference($fiche->getReference());
+
+                    $this->getMissionPrincipaleService()->updateWith($missionLibelle, $activites, $mission);
                 }
 
-                $ficheMission = new FicheMetierMission();
-                $ficheMission->setMission($mission);
-                $ficheMission->setFicheMetier($fiche);
-                $ficheMission->setOrdre(1);
-                $fiche->addMission($ficheMission);
-
                 /** COMPETENCES ***************************************************************************************/
-
                 $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE]??"");
+                $dictionnaireFicheMetierCompetence = [];
+                $competences = $fiche->getCompetenceListe();
+                foreach ($competences as $competence) {
+                    $dictionnaireFicheMetierCompetence[$competence->getCompetence()->getId()] = $competence;
+                }
+                $fiche->clearCompetences();
                 foreach ($comptenceIds as $comptenceId) {
-                    $competence = $dictionnaireCompetence[ $comptenceId ]??null;
-                    if ($competence !== null) {
-                        $element = new CompetenceElement();
-                        $element->setCompetence($competence);
-                        $fiche->addCompetenceElement($element);
+                    if (isset($dictionnaireFicheMetierCompetence[ $comptenceId ])) {
+                        $fiche->addCompetenceElement($dictionnaireFicheMetierCompetence[$comptenceId]);
                     } else {
-                        $warning[] = "[". $comptenceId ."] compétence non trouvée.";
+                        $competence = $dictionnaireCompetence[$comptenceId] ?? null;
+                        if ($competence !== null) {
+                            $element = new CompetenceElement();
+                            $element->setCompetence($competence);
+                            $fiche->addCompetenceElement($element);
+                        } else {
+                            $warning[] = "[" . $comptenceId . "] compétence non trouvée.";
+                        }
                     }
                 }
 
                 /** TENDANCE ******************************************************************************************/
 
-                if ($tendanceFacteur AND isset($raw[self::HEADER_REFERENS3_TENDANCE]) AND trim($raw[self::HEADER_REFERENS3_TENDANCE]) !== "") {
-                    $facteur = new TendanceElement();
-                    $facteur->setType($tendanceFacteur);
-                    $facteur->setTexte(str_replace("|","<br>",trim($raw[self::HEADER_REFERENS3_TENDANCE])));
-                    $fiche->addTendance($facteur);
+                $tendances = $fiche->getTendances();
+                $tendancesListing = [
+                    [ 'type' => $tendanceFacteur,   'colonne' => self::HEADER_REFERENS3_TENDANCE ],
+                    [ 'type' => $tendanceImpact,    'colonne' => self::HEADER_REFERENS3_IMPACT ],
+                    [ 'type' => $tendanceCondition, 'colonne' => self::HEADER_REFERENS3_CONDITION ],
+                ];
+                foreach ($tendancesListing as $tendanceType) {
+                    $type = $tendanceType['type'];
+                    $colonne = $tendanceType['colonne'];
+                    if ($type AND isset($raw[$colonne]) AND trim($raw[$colonne]) !== "") {
+                        $tendance = null;
+                        if (isset($tendances[$type->getCode()]))
+                        {
+                            $tendance = $tendances[$type->getCode()];
+                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
+                        }
+                        else {
+                            $tendance = new TendanceElement();
+                            $tendance->setType($type);
+                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
+                            $fiche->addTendance($tendance);
+                        }
+                    }
                 }
-                if ($tendanceImpact AND isset($raw[self::HEADER_REFERENS3_IMPACT]) AND trim($raw[self::HEADER_REFERENS3_IMPACT]) !== "") {
-                    $facteur = new TendanceElement();
-                    $facteur->setType($tendanceImpact);
-                    $facteur->setTexte(str_replace("|","<br>",trim($raw[self::HEADER_REFERENS3_IMPACT])));
-                    $fiche->addTendance($facteur);
-                }
-                if ($tendanceCondition AND isset($raw[self::HEADER_REFERENS3_CONDITION]) AND trim($raw[self::HEADER_REFERENS3_CONDITION]) !== "") {
-                    $facteur = new TendanceElement();
-                    $facteur->setType($tendanceCondition);
-                    $facteur->setTexte(str_replace("|","<br>",trim($raw[self::HEADER_REFERENS3_CONDITION])));
-                    $fiche->addTendance($facteur);
-                }
-
                 $fiches[] = $fiche;
             }
         }
@@ -515,7 +508,11 @@ class ImportController extends AbstractActionController
                 // Intitulé + (domaine ...)
                 $intitule = $raw[self::HEADER_RMFP_LIBELLE]??"";
                 $code = $raw[self::HEADER_RMFP_REFERENCE]??"";
-                $fiche = new FicheMetier();
+                $fiche = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
+
+                if ($fiche === null) {
+                    $fiche = new FicheMetier();
+                }
                 $fiche->setRaw(json_encode($raw));
                 $fiche->setLibelle($intitule);
                 $fiche->setReference($code);
@@ -560,26 +557,25 @@ class ImportController extends AbstractActionController
                 $missionLibelle = $raw[self::HEADER_RMFP_MISSION_LIBELLE];
                 $activites = explode("\n",$raw[self::HEADER_RMFP_MISSION_ACTIVITE]);
 
-                $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($missionLibelle);
-                if ($mission === null) {
-                    $mission = new Mission();
-                    $mission->setLibelle($missionLibelle);
+                $ficheMission = $fiche->getMissionByReference($fiche->getReferentiel(), $fiche->getReference());
+                if ($ficheMission === null) {
+                    $mission = $this->getMissionPrincipaleService()->createWith($missionLibelle, $activites, false);
+                    $mission->setReferentiel($referentiel);
+                    $mission->setReference($fiche->getReference());
 
-                    $position = 1;
-                    foreach ($activites as $activiteLibelle) {
-                        $activite = new MissionActivite();
-                        $activite->setLibelle($activiteLibelle);
-                        $activite->setOrdre($position++);
-                        $activite->setMission($mission);
-                        $mission->addMissionActivite($activite);
-                    }
+                    $ficheMission = new FicheMetierMission();
+                    $ficheMission->setMission($mission);
+                    $ficheMission->setFicheMetier($fiche);
+                    $ficheMission->setOrdre(1);
+
+                    $fiche->addMission($ficheMission);
+                } else {
+                    $mission = $ficheMission->getMission();
+                    $mission->setReferentiel($referentiel);
+                    $mission->setReference($fiche->getReference());
+
+                    $this->getMissionPrincipaleService()->updateWith($missionLibelle, $activites, $mission);
                 }
-
-                $ficheMission = new FicheMetierMission();
-                $ficheMission->setMission($mission);
-                $ficheMission->setFicheMetier($fiche);
-                $ficheMission->setOrdre(1);
-                $fiche->addMission($ficheMission);
 
 
                 /** COMPETENCES ***************************************************************************************/
@@ -629,25 +625,30 @@ class ImportController extends AbstractActionController
 
                 /** TENDANCE ******************************************************************************************/
 
-                if ($tendanceFacteur AND isset($raw[self::HEADER_RMFP_TENDANCE]) AND trim($raw[self::HEADER_RMFP_TENDANCE]) !== "") {
-                    $facteur = new TendanceElement();
-                    $facteur->setType($tendanceFacteur);
-                    $facteur->setTexte(trim($raw[self::HEADER_RMFP_TENDANCE]));
-                    $fiche->addTendance($facteur);
+                $tendances = $fiche->getTendances();
+                $tendancesListing = [
+                    [ 'type' => $tendanceFacteur,   'colonne' => self::HEADER_RMFP_TENDANCE ],
+                    [ 'type' => $tendanceImpact,    'colonne' => self::HEADER_RMFP_IMPACT ],
+                    [ 'type' => $tendanceCondition, 'colonne' => self::HEADER_RMFP_CONDITION ],
+                ];
+                foreach ($tendancesListing as $tendanceType) {
+                    $type = $tendanceType['type'];
+                    $colonne = $tendanceType['colonne'];
+                    if ($type AND isset($raw[$colonne]) AND trim($raw[$colonne]) !== "") {
+                        $tendance = null;
+                        if (isset($tendances[$type->getCode()]))
+                        {
+                            $tendance = $tendances[$type->getCode()];
+                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
+                        }
+                        else {
+                            $tendance = new TendanceElement();
+                            $tendance->setType($type);
+                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
+                            $fiche->addTendance($tendance);
+                        }
+                    }
                 }
-                if ($tendanceImpact AND isset($raw[self::HEADER_RMFP_IMPACT]) AND trim($raw[self::HEADER_RMFP_IMPACT]) !== "") {
-                    $facteur = new TendanceElement();
-                    $facteur->setType($tendanceImpact);
-                    $facteur->setTexte(trim($raw[self::HEADER_RMFP_IMPACT]));
-                    $fiche->addTendance($facteur);
-                }
-                if ($tendanceCondition AND isset($raw[self::HEADER_RMFP_CONDITION]) AND trim($raw[self::HEADER_RMFP_CONDITION]) !== "") {
-                    $facteur = new TendanceElement();
-                    $facteur->setType($tendanceCondition);
-                    $facteur->setTexte(trim($raw[self::HEADER_RMFP_CONDITION]));
-                    $fiche->addTendance($facteur);
-                }
-
                 $fiches[] = $fiche;
 
             }

@@ -4,7 +4,6 @@ namespace FicheMetier\Entity\Db;
 
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Entity\Db\Interface\HasNiveauCarriereInterface;
-use Carriere\Entity\Db\Niveau;
 use Carriere\Entity\Db\Trait\HasNiveauCarriereTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,8 +20,8 @@ use Metier\Entity\HasMetierTrait;
 use Metier\Entity\HasMissionsPrincipalesInterface;
 use Metier\Entity\HasMissionsPrincipalesTrait;
 use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Entity\Db\Traits\HasReferenceTrait;
-use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -41,7 +40,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     use HasMissionsPrincipalesTrait;
     use HasReferenceTrait;
 
-    private ?int $id = -1;
+    private ?int $id = null;
     private ?string $libelle = null;
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?string $raison = null;
@@ -152,9 +151,10 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function getTendances(): array
     {
         $tendances = [];
+        /** @var TendanceElement $tendance */
         foreach ($this->tendances as $tendance) {
             if ($tendance->estNonHistorise()) {
-                $tendances[] = $tendance;
+                $tendances[$tendance->getType()->getCode()] = $tendance;
             }
         }
         return $tendances;
@@ -490,6 +490,14 @@ EOS;
         $famille = $this->getFamilleProfessionnelle();
         if ($famille === null) return "Aucune famille professionnelle connue";
         return $famille->getLibelle();
+    }
+
+    public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?FicheMetierMission
+    {
+        foreach ($this->missions as $mission) {
+            if ($mission->getMission()->getReferentiel() === $referentiel && $mission->getMission()->getReference() === $reference) return $mission;
+        }
+        return null;
     }
 
 

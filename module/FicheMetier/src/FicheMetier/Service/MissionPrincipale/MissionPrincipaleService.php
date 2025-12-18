@@ -419,5 +419,25 @@ class MissionPrincipaleService
         return rtrim($texteTronque) . ' ...';
     }
 
+    public function updateWith(string $intitule, array $activites, Mission $mission): Mission
+    {
+        $mission->setLibelle($intitule);
+        foreach($mission->getActivites() as $activite) {
+            $activite->setOrdre(-1);
+        }
+
+        $position = 1;
+        foreach ($activites as $activite_) {
+            $activite = new MissionActivite();
+            $activite->setMission($mission);
+            $activite->setLibelle($activite_);
+            $activite->setOrdre($position);
+            $position++;
+            $mission->addMissionActivite($activite);
+        }
+
+        return $mission;
+    }
+
 
 }

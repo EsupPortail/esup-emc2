@@ -2,6 +2,7 @@
 
 namespace Element\Entity\Db\Traits;
 
+use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,9 +11,9 @@ use Element\Entity\Db\CompetenceType;
 trait HasCompetenceCollectionTrait {
 
     /** @var ArrayCollection */
-    private $competences;
+    private Collection $competences;
 
-    public function getCompetenceCollection()
+    public function getCompetenceCollection(): Collection
     {
         return $this->competences;
     }
