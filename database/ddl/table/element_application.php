@@ -34,18 +34,6 @@ return [
             'position'    => 3,
             'commentaire' => NULL,
         ],
-        'groupe_id'             => [
-            'name'        => 'groupe_id',
-            'type'        => 'int',
-            'bdd-type'    => 'integer',
-            'length'      => 0,
-            'scale'       => NULL,
-            'precision'   => 4,
-            'nullable'    => TRUE,
-            'default'     => NULL,
-            'position'    => 6,
-            'commentaire' => NULL,
-        ],
         'histo_createur_id'     => [
             'name'        => 'histo_createur_id',
             'type'        => 'int',
@@ -55,7 +43,7 @@ return [
             'precision'   => 4,
             'nullable'    => FALSE,
             'default'     => '0',
-            'position'    => 8,
+            'position'    => 7,
             'commentaire' => NULL,
         ],
         'histo_creation'        => [
@@ -67,7 +55,7 @@ return [
             'precision'   => 6,
             'nullable'    => FALSE,
             'default'     => '(\'now\'::text)::date',
-            'position'    => 7,
+            'position'    => 6,
             'commentaire' => NULL,
         ],
         'histo_destructeur_id'  => [
@@ -79,7 +67,7 @@ return [
             'precision'   => 4,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 12,
+            'position'    => 11,
             'commentaire' => NULL,
         ],
         'histo_destruction'     => [
@@ -91,7 +79,7 @@ return [
             'precision'   => 6,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 11,
+            'position'    => 10,
             'commentaire' => NULL,
         ],
         'histo_modificateur_id' => [
@@ -103,7 +91,7 @@ return [
             'precision'   => 4,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 10,
+            'position'    => 9,
             'commentaire' => NULL,
         ],
         'histo_modification'    => [
@@ -115,7 +103,7 @@ return [
             'precision'   => 6,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 9,
+            'position'    => 8,
             'commentaire' => NULL,
         ],
         'id'                    => [
@@ -140,6 +128,18 @@ return [
             'nullable'    => FALSE,
             'default'     => NULL,
             'position'    => 2,
+            'commentaire' => NULL,
+        ],
+        'theme_id'              => [
+            'name'        => 'theme_id',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 12,
             'commentaire' => NULL,
         ],
         'url'                   => [

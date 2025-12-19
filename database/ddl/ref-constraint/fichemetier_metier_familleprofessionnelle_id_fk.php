@@ -1,0 +1,18 @@
+<?php
+
+//@formatter:off
+
+return [
+    'schema'      => 'public',
+    'name'        => 'fichemetier_metier_familleprofessionnelle_id_fk',
+    'table'       => 'fichemetier',
+    'rtable'      => 'metier_familleprofessionnelle',
+    'update_rule' => 'NO ACTION',
+    'delete_rule' => 'NO ACTION',
+    'index'       => 'metier_famille_pk',
+    'columns'     => [
+        'famille_id' => 'id',
+    ],
+];
+
+//@formatter:on

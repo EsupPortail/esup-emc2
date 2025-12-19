@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Structure\Entity\Db\Structure" table="structure">
 
-        <id name="id" column="id" type="integer">
+        <id name="id" column="id" type="string">
         </id>
 
         <field name="code" column="code" length="40"/>

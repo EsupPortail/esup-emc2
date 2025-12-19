@@ -9,12 +9,12 @@
 
 $data = [
     ["EMC2","Emploi Mobilité Compétence Carrière",null,"local","false", 0],
-    ["admin","Local Adminstrateur","local-admin@univ-demo.fr","\$2y$14\$D.o5.K1hKlL2ZbhVL3M2su9RnscuxgsA01fkPowTcs0vpulcJE1o2","t"],
-    ["metivier","Jean-Philippe METIVIER","jean-philippe.metivier@unicaen.fr","ldap","t"],
-    ["houillier","Fanny HOUILLIER","fanny.houillier@unicaen.fr","ldap","t"],
-    ["cauchon251","Marine CAUCHON","marine.cauchon@unicaen.fr","ldap","t"],
-    ["rocher202","Fabien ROCHER","fabien.rocher@unicaen.fr","ldap","t"],
-    ["grimpar221","Aurelien GRIMPARD","marine.cauchon@unicaen.fr","ldap","t"],
+//    ["admin","Local Adminstrateur","local-admin@univ-demo.fr","\$2y$14\$D.o5.K1hKlL2ZbhVL3M2su9RnscuxgsA01fkPowTcs0vpulcJE1o2","t"],
+//    ["metivier","Jean-Philippe METIVIER","jean-philippe.metivier@unicaen.fr","ldap","t"],
+//    ["houillier","Fanny HOUILLIER","fanny.houillier@unicaen.fr","ldap","t"],
+//    ["cauchon251","Marine CAUCHON","marine.cauchon@unicaen.fr","ldap","t"],
+//    ["rocher202","Fabien ROCHER","fabien.rocher@unicaen.fr","ldap","t"],
+//    ["grimpar221","Aurelien GRIMPARD","marine.cauchon@unicaen.fr","ldap","t"],
 ];
 
 

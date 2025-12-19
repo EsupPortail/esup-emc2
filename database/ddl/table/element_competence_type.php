@@ -10,6 +10,18 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'element_competence_type_id_seq',
     'columns'     => [
+        'code'                  => [
+            'name'        => 'code',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 64,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => FALSE,
+            'default'     => '\'TYPE\'',
+            'position'    => 10,
+            'commentaire' => NULL,
+        ],
         'histo_createur_id'     => [
             'name'        => 'histo_createur_id',
             'type'        => 'int',

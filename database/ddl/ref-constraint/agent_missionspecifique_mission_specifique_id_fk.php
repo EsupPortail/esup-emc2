@@ -9,7 +9,7 @@ return [
     'rtable'      => 'mission_specifique',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'mission_specifique_pk',
+    'index'       => 'mission_specifique_id_uindex',
     'columns'     => [
         'mission_id' => 'id',
     ],
