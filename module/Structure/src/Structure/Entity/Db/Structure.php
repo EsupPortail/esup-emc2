@@ -130,7 +130,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, HasContac
     {
         $text = "";
         if ($this->getRepriseResumeMere() and $this->parent !== null) {
-            $text .= $this->parent->getDescriptionComplete() . "<br/>";
+            if ($this->parent !== $this) { $text .= $this->parent->getDescriptionComplete() . "<br/>"; }
         }
         return $text . $this->description;
     }
