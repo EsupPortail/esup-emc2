@@ -131,7 +131,8 @@ class CompetenceController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCompetenceService()->create($competence);
-                $competence->setReference($competence->getReference() ?? $competence->getId());
+                if ($competence->getReferentiel() === null) $competence->setReferentiel($this->getReferentielService()->getReferentielByLibelleCourt('EMC2'));
+                if ($competence->getReference() === null) $competence->setReference($competence->getId());
                 $this->getCompetenceService()->update($competence);
             }
         }
@@ -160,6 +161,10 @@ class CompetenceController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                if ($competence->getReferentiel() === null) {
+                    $competence->setReferentiel($this->getReferentielService()->getReferentielByLibelleCourt('EMC2'));
+                }
+                if ($competence->getReference() === null) $competence->setReference($competence->getId());
                 $this->getCompetenceService()->update($competence);
             }
         }

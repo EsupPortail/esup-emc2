@@ -30,7 +30,7 @@ class CompetenceForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Libellé <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
@@ -85,7 +85,8 @@ class CompetenceForm extends Form {
             'type' => Select::class,
             'name' => 'referentiel',
             'options' => [
-                'label' => "Référentiel de compétence :",
+                'label' => "Référentiel de compétence <span class='icon icon-info' title='Si aucun identifiant de renseigné, EMC2 ajoutera la compétence dans le référentiel interne (si il est bien déclarée).' data-bs-togle='tooltip' data-bs-html='true'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner un référentiel pour la compétence ...",
                 'value_options' => $this->getReferentielService()->getReferentielsAsOptions(),
             ],
@@ -100,7 +101,7 @@ class CompetenceForm extends Form {
             'type' => Text::class,
             'name' => 'identifiant',
             'options' => [
-                'label' => "Identifiant dans le référentiel source:",
+                'label' => "Identifiant dans le référentiel source <span class='icon icon-info' title='Si aucun identifiant de renseigné, EMC2 donnera une valeur numérique à la compétence' data-bs-togle='tooltip' data-bs-html='true'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
