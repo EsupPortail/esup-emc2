@@ -788,10 +788,12 @@ class FichePosteController extends AbstractActionController
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel([
             'title' => 'Modifier spécificité du poste',
             'form' => $form,
         ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
     }
 
     public function validerAction(): ViewModel

@@ -14,7 +14,7 @@
     "unicaen/autoform": "^6.2",
     "unicaen/utilisateur": "^7.0",
     "unicaen/privilege": "6.2.1",
-    "unicaen/renderer": "^8",
+    "unicaen/renderer": "^7",
     "unicaen/pdf": "^6",
     "unicaen/mail": "^7.2",
     "unicaen/parametre": "^6.2",
@@ -25,7 +25,7 @@
     "ext-json": "*",
     "ext-gettext": "*",
     "unicaen/indicateur": "^6.4",
-    "unicaen/synchro": "^6.1",
+    "unicaen/synchro": "^7",
     "unicaen/ics": "^0",
 
     "unicaen/utilisateur-ldap-adapter" : "^2.0",
