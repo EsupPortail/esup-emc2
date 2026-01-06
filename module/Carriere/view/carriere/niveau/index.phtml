@@ -49,7 +49,7 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
         <?php foreach ($niveaux as $niveau) : ?>
             <tr class=" <?php if ($niveau->estHistorise()) echo " historise "; ?>">
                 <td class="col-md-1" data-column-id="Niveau"> <?php echo $niveau->getNiveau(); ?> </td>
-                <td class="col-md-2" data-column-id="Étiquette"> <?php echo $niveau->getEtiquette(); ?> </td>
+                <td class="col-md-2" data-column-id="Étiquette"> <code><?php echo $niveau->getEtiquette(); ?></code> </td>
                 <td class="col-md-5" data-column-id="Libellé">
                     <?php echo $niveau->getLibelle(); ?>
                     <?php if ($niveau->getDescription()) : ?>

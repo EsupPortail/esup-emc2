@@ -50,12 +50,12 @@ $this->headTitle('Cartographie des métiers');
 
 
             <tr>
-                <td> <?php echo $result['metier']; ?> </td>
-                <td> <?php echo $result['niveau']; ?> </td>
-                <td> <?php echo $result['références']; ?> </td>
-                <td> <?php echo $result['fonction']; ?> </td>
-                <td> <?php echo $result['famille']; ?> </td>
-                <td> <?php echo $result['nbFiche']; ?> </td>
+                <td> <?php echo $result['metier']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['niveau']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['références']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['fonction']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['famille']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['nbFiche']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
