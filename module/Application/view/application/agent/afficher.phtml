@@ -93,7 +93,14 @@ if ($agent !== null) {
             <button class="nav-link" id="fiches-tab"
                     data-bs-toggle="tab" data-bs-target="#fiches"
                     type="button" role="tab" aria-controls="fiches" aria-selected="true">
-                Fiches de poste et <br/> missions spécifiques
+                Fiches de poste
+            </button>
+        <?php endif; ?>
+        <?php if (!isset($parametres[AgentParametres::ONGLET_MISSIONS]) || $parametres[AgentParametres::ONGLET_MISSIONS]->getValeur() !== "false") : ?>
+            <button class="nav-link" id="missions-tab"
+                    data-bs-toggle="tab" data-bs-target="#missions"
+                    type="button" role="tab" aria-controls="missions" aria-selected="true">
+                Missions spécifiques
             </button>
         <?php endif; ?>
         <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>
@@ -138,9 +145,14 @@ if ($agent !== null) {
                 <div id="fiches" class="tab-pane " role="tabpanel">
                     <?php echo $this->partial('partial/fiche-poste',
                         ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
-                    <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
                 </div>
 
+            <?php endif; ?>
+            <?php if (!isset($parametres[AgentParametres::ONGLET_MISSIONS]) || $parametres[AgentParametres::ONGLET_MISSIONS]->getValeur() !== "false") : ?>
+
+                <div id="missions" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
+                </div>
 
             <?php endif; ?>
             <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>

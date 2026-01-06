@@ -4,8 +4,8 @@
 
 return [
     'schema'      => 'public',
-    'name'        => 'structure_observateur_structure_id_fk',
-    'table'       => 'structure_observateur',
+    'name'        => 'poste_structure_id_fk',
+    'table'       => 'poste',
     'rtable'      => 'structure',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',

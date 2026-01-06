@@ -8,7 +8,7 @@ return [
     'table'       => 'structure_contact',
     'rtable'      => 'structure',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'CASCADE',
+    'delete_rule' => 'NO ACTION',
     'index'       => 'structure_pk',
     'columns'     => [
         'structure_id' => 'id',

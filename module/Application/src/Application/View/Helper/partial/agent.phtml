@@ -8,7 +8,9 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Provider\Parametre\AgentParametres;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
 
 $canVoirMission         = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
 $canLettre              = $canVoirMission;
@@ -58,7 +60,13 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     </div>
 </div>
 
-<?php if (!empty($agent->getMissionsSpecifiques()) OR $mode==='edition') : ?>
+<?php if (isset($options['parametres'][AgentParametres::ONGLET_MISSIONS])) : ?>
+    <?php
+        /** @var Parametre $missionParametre  */
+        $missionParametre = $options['parametres'][AgentParametres::ONGLET_MISSIONS];
+    ?>
+<?php endif; ?>
+<?php if ((isset($missionParametre) AND $missionParametre->getValeur() !== 'false') AND !empty($agent->getMissionsSpecifiques()) OR $mode==='edition') : ?>
     <div class="row">
         <div class="col-md-7">
             <h2>
