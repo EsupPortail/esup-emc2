@@ -306,10 +306,10 @@ class AgentController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $file = current($request->getFiles());
+            $files = $request->getFiles();
+            $file = $files['fichier'];
 
             if ($file['name'] != '') {
-
                 $nature = $this->getNatureService()->getNature($data['nature']);
                 $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
                 $agent->addFichier($fichier);
