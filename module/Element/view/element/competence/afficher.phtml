@@ -59,6 +59,16 @@ use FicheMetier\Entity\Db\Mission;
                     <?php elseif ($fiche->getMetier()) : ?>
                         <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
                     <?php endif; ?>
+                    <?php if ($displayCodeFonction === true) : ?>
+                        <?php if ($fiche->getCodeFonction()) : ?>
+                            <code>
+                                <?php echo $fiche->getCodeFonction()->computeCode(); ?>
+                            </code>
+                        <?php else : ?>
+                            <span class="missing-data">Aucun code fonction</span>
+                        <?php endif; ?>
+                    <?php endif ?>
+
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -67,8 +77,12 @@ use FicheMetier\Entity\Db\Mission;
 
 <h2>  Agents ayant en acquis la compétence </h2>
 
-<ul>
-    <?php foreach($agents as $agent): ?>
-        <li> <?php echo $agent->getDenomination(true); ?> </li>
-    <?php endforeach; ?>
-</ul>
+<?php if (!empty($agents)) : ?>
+    <ul>
+        <?php foreach($agents as $agent): ?>
+            <li> <?php echo $agent->getDenomination(true); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else : ?>
+    Aucun·e agent·e ne possède cette compétence
+<?php endif; ?>
