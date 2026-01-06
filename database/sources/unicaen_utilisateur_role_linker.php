@@ -9,11 +9,11 @@
 //where (u.password = 'application' OR u.username = 'admin')
 
 $data = [
-    ["admin", "Administrateur·trice technique"],
-    ["metivier", "Administrateur·trice technique"],
-    ["rocher202", "Administrateur·trice technique"],
-    ["grimpar221", "Administrateur·trice technique"],
-    ["cauchon251", "Administrateur·trice technique"],
+//    ["admin", "Administrateur·trice technique"],
+//    ["metivier", "Administrateur·trice technique"],
+//    ["rocher202", "Administrateur·trice technique"],
+//    ["grimpar221", "Administrateur·trice technique"],
+//    ["cauchon251", "Administrateur·trice technique"],
 ];
 
 
