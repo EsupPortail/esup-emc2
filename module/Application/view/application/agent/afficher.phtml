@@ -93,14 +93,14 @@ if ($agent !== null) {
             <button class="nav-link" id="fiches-tab"
                     data-bs-toggle="tab" data-bs-target="#fiches"
                     type="button" role="tab" aria-controls="fiches" aria-selected="true">
-                Fiches de poste
+                Fiches de poste <br/> &nbsp;
             </button>
         <?php endif; ?>
         <?php if (!isset($parametres[AgentParametres::ONGLET_MISSIONS]) || $parametres[AgentParametres::ONGLET_MISSIONS]->getValeur() !== "false") : ?>
             <button class="nav-link" id="missions-tab"
                     data-bs-toggle="tab" data-bs-target="#missions"
                     type="button" role="tab" aria-controls="missions" aria-selected="true">
-                Missions spécifiques
+                Missions spécifiques <br/> &nbsp;
             </button>
         <?php endif; ?>
         <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>
