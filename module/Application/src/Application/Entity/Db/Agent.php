@@ -26,7 +26,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
 use FichePoste\Provider\Etat\FichePosteEtats;
-use Fichier\Entity\Db\Fichier;
+use UnicaenFichier\Entity\Db\Fichier;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use Structure\Entity\Db\Structure;

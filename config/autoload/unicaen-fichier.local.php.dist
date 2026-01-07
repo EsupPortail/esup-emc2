@@ -1,7 +1,23 @@
 <?php
 
+use UnicaenFichier\Filter\FileName\NatureBasedFileNameFormatter;
+use UnicaenStorage\Adapter\FilesystemStorageAdapter;
+
 return [
-    'unicaen-fichier' => [
-        'upload-path' => '/var/www/html/upload/',
-    ]
+    'fichier' => [
+        //Permet de fournir une configuration spécifique pour les formulaires d'upload de fichier
+        'uplpoad' => [
+            'max-size' => '10MB',
+            'extentions' => ['pdf', 'csv'], // Extention des fichiers autorisée
+            //Pour les csv typeMine = text/plain
+            'type-mine' => ['application/pdf', 'text/plain'],
+            'validators' => [],
+        ],
+
+        'file-name-formatter' => NatureBasedFileNameFormatter::class,
+
+        'storage' => [
+            'adapter' => FilesystemStorageAdapter::class,
+        ],
+    ],
 ];

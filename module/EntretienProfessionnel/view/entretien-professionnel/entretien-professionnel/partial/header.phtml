@@ -19,7 +19,7 @@ use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
-use Fichier\Entity\Db\Fichier;
+use UnicaenFichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 
@@ -75,8 +75,8 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                             <?php else : ?>
                                 <?php if ($ficheposteFichier !== null) : ?>
                                     <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
-                                        <?php /** @see \Fichier\Controller\FichierController::downloadAction() */ ?>
-                                        <a href="<?php echo $this->url('download-fichier', ['fichier' => $ficheposteFichier->getId()] ,[], true); ?>">
+                                        <?php /** @see \UnicaenFichier\Controller\FichierController::downloadAction() */ ?>
+                                        <a href="<?php echo $this->url('fichier/download', ['fichier' => $ficheposteFichier->getId()] ,[], true); ?>">
                                             Fiche de poste (fichier)
                                         </a>
                                     <?php else: ?>

@@ -487,7 +487,7 @@ class MissionPrincipaleController extends AbstractActionController
                     $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
                 }
 
-                $array = $this->getFichierService()->readCSV($filepath, true, $separateur);
+                $array = $this->readCSV($filepath, true, $separateur);
                 if (empty($array)) {
                     $warning[] = "Le fichier ne contient pas de données.";
                 } else {
@@ -645,5 +645,47 @@ class MissionPrincipaleController extends AbstractActionController
             'filepath' => $filepath,
             'filename' => $filename,
         ]);
+    }
+
+    public function readCSV(string $fichier_path, bool $explodeMultiline = false, string $separator = '|'): array
+    {
+        $handle = fopen($fichier_path, "r");
+
+        $header = fgetcsv($handle, null, ";");
+        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+        $header[0] = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header[0]);
+        $header = array_map('trim', $header);
+
+        $array = [];
+        while ($content = fgetcsv($handle, 0, ";")) {
+            $all = implode($separator, $content);
+            $encoding = mb_detect_encoding($all, 'UTF-8, ISO-8859-1');
+            $content = array_map(function (string $st) use ($encoding) {
+                $st = str_replace(chr(63), '\'', $st);
+                $st = mb_convert_encoding($st, 'UTF-8', $encoding);
+                return $st;
+            }, $content);
+            $array[] = $content;
+        }
+
+        $jsonData = [];
+        foreach ($array as $item) {
+            $jsonItem = [];
+            for ($position = 0; $position < count($header); $position++) {
+                $key = $header[$position];
+                if ($explodeMultiline) {
+                    if (strstr($item[$position], PHP_EOL)) {
+                        $jsonItem[$key] = explode(PHP_EOL, $item[$position]);
+                    } else {
+                        $jsonItem[$key] = $item[$position];
+                    }
+                } else {
+                    $jsonItem[$key] = $item[$position];
+                }
+            }
+            $jsonData[] = $jsonItem;
+        }
+
+        return $jsonData;
     }
 }

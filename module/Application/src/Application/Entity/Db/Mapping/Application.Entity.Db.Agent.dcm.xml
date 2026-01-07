@@ -53,7 +53,7 @@
         <one-to-many target-entity="Structure\Entity\Db\StructureAgentForce" mapped-by="agent" field="structuresForcees"/>
         <one-to-many target-entity="EntretienProfessionnel\Entity\Db\AgentForceSansObligation" mapped-by="agent" field="forcesSansObligation"/>
 
-        <many-to-many field="fichiers" target-entity="Fichier\Entity\Db\Fichier" inversed-by="fichier">
+        <many-to-many field="fichiers" target-entity="UnicaenFichier\Entity\Db\Fichier" inversed-by="fichier">
             <join-table name="agent_fichier">
                 <join-columns>
                     <join-column name="agent" referenced-column-name="c_individu"/>

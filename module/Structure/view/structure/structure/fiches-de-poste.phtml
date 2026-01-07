@@ -18,7 +18,7 @@ use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use Fichier\Entity\Db\Fichier;
+use UnicaenFichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use UnicaenEtat\Entity\Db\EtatType;
@@ -112,8 +112,8 @@ $date = new DateTime();
                                     <span class="icon icon-voir nope"></span>
                                     <?php if ($canVoirFichier) : ?>
                                         <a
-                                            <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
-                                                href="<?php echo $this->url('download-fichier', ['fichier' => $fichier->getId()], [], true); ?>">
+                                            <?php /** @see  \UnicaenFichier\Controller\FichierController::downloadAction()*/ ?>
+                                                href="<?php echo $this->url('fichier/download', ['fichier' => $fichier->getId()], [], true); ?>">
                                             <span class="icon icon-pdf" title="voir le fichier"></span>
                                         </a>
                                     <?php else : ?>
@@ -123,8 +123,9 @@ $date = new DateTime();
                                     <span class="icon icon-historiser nope"></span>
                                     <?php if ($canDetruireFichier) : ?>
                                         <a
-                                            <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
-                                                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()], true)]], true); ?>"
+                                            <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>
+                                                href="<?php echo $this->url('fichier/supprimer', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()], true)]], true); ?>"
+                                                class="ajax-modal" data-event="modification"
                                         >
                                             <span class="icon icon-unchecked" title="supprimer le fichier"></span></a>
                                     <?php else : ?>

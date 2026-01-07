@@ -41,6 +41,8 @@ $modules = [
     'UnicaenSynchro',
     'UnicaenObservation',
     'UnicaenContact',
+    'UnicaenFichier',
+    'UnicaenStorage',
 
     'Referentiel',
     'Agent',
@@ -52,7 +54,6 @@ $modules = [
     'FicheMetier',
     'FichePoste',
 
-    'Fichier',
     'Element',
 
     'Application',
