@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Entity\Db\AgentAffectation;
 use Agent\Service\AgentRef\AgentRefServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
@@ -616,17 +617,24 @@ class AgentHierarchieController extends AbstractActionController
             };
         if ($chaines === null) throw new RuntimeException("Le type [" . $type . "] est inconnu.");
 
-        $header = ["agent", $type, "debut", "fin"];
+        $header = ["agent", "agent_id", $type, $type."_id", "structure·s d'affectation", "debut", "fin"];
         $data = [];
         foreach ($chaines as $chaine) {
             $data[] =
                 [
                     $chaine->getAgent()->getDenomination(),
+                    $chaine->getAgent()->getId(),
                     match ($type) {
                         'superieur' => $chaine->getSuperieur()->getDenomination(),
                         'autorite' => $chaine->getAutorite()->getDenomination(),
                         default => null,
                     },
+                    match ($type) {
+                        'superieur' => $chaine->getSuperieur()->getId(),
+                        'autorite' => $chaine->getAutorite()->getId(),
+                        default => null,
+                    },
+                    implode ("|", array_map(function (AgentAffectation $a) { return $a->getStructure()->getLibelleCourt(); }, $chaine->getAgent()->getAffectationsActifs())),
                     ($chaine->getDateDebut())?->format('d/m/Y'),
                     ($chaine->getDateFin())?->format('d/m/Y'),
                 ];
