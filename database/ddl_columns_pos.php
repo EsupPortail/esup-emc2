@@ -2495,6 +2495,27 @@ return [
         'source_id',
         'id_orig',
     ],
+    'unicaen_fichier_fichier'                           => [
+        'id',
+        'nom_original',
+        'nom_stockage',
+        'nature',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+        'type_mime',
+        'taille',
+    ],
+    'unicaen_fichier_nature'                            => [
+        'id',
+        'code',
+        'libelle',
+        'description',
+        'ordre',
+    ],
 ];
 
 //@formatter:on

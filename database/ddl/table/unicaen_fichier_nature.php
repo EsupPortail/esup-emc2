@@ -4,11 +4,11 @@
 
 return [
     'schema'      => 'public',
-    'name'        => 'fichier_nature',
+    'name'        => 'unicaen_fichier_nature',
     'temporary'   => FALSE,
     'logging'     => TRUE,
     'commentaire' => NULL,
-    'sequence'    => 'fichier_nature_id_seq',
+    'sequence'    => 'unicaen_fichier_nature_id_seq',
     'columns'     => [
         'code'        => [
             'name'        => 'code',
@@ -42,7 +42,7 @@ return [
             'scale'       => NULL,
             'precision'   => 4,
             'nullable'    => FALSE,
-            'default'     => 'nextval(\'fichier_nature_id_seq\'::regclass)',
+            'default'     => 'nextval(\'unicaen_fichier_nature_id_seq\'::regclass)',
             'position'    => 1,
             'commentaire' => NULL,
         ],
@@ -56,6 +56,18 @@ return [
             'nullable'    => FALSE,
             'default'     => NULL,
             'position'    => 3,
+            'commentaire' => NULL,
+        ],
+        'ordre'       => [
+            'name'        => 'ordre',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => '9999',
+            'position'    => 5,
             'commentaire' => NULL,
         ],
     ],

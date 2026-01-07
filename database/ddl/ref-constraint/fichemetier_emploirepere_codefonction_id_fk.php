@@ -8,7 +8,7 @@ return [
     'table'       => 'fichemetier',
     'rtable'      => 'emploirepere_codefonction',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'SET NULL',
+    'delete_rule' => 'CASCADE',
     'index'       => 'emploirepere_codefonction_pk',
     'columns'     => [
         'code_fonction_id' => 'id',

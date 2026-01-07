@@ -3,13 +3,13 @@
 //@formatter:off
 
 return [
-    'name'    => 'entretienprofessionnel_observation_id_uindex',
+    'name'    => 'unicaen_fichier_nature_code_uindex',
     'unique'  => TRUE,
     'type'    => 'btree',
-    'table'   => 'entretienprofessionnel_observation_old',
+    'table'   => 'unicaen_fichier_nature',
     'schema'  => 'public',
     'columns' => [
-        'id',
+        'code',
     ],
 ];
 

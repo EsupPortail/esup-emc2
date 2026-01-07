@@ -3,10 +3,10 @@
 //@formatter:off
 
 return [
-    'name'    => 'fichier_nature_id_uindex',
+    'name'    => 'unicaen_fichier_nature_id_uindex',
     'unique'  => TRUE,
     'type'    => 'btree',
-    'table'   => 'fichier_nature',
+    'table'   => 'unicaen_fichier_nature',
     'schema'  => 'public',
     'columns' => [
         'id',
