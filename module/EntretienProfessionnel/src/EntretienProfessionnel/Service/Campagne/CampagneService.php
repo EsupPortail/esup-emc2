@@ -83,10 +83,11 @@ class CampagneService
     }
 
     /** @return Campagne[] */
-    public function getCampagnes(string $champ = 'annee', string $ordre = 'DESC'): array
+    public function getCampagnes(bool $withhisto = false, string $champ = 'annee', string $ordre = 'DESC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.' . $champ, $ordre);
+        if (!$withhisto) $qb = $qb->andWhere('campagne.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -95,7 +96,7 @@ class CampagneService
     /** @return array (id => string) */
     public function getCampagnesAsOptions(string $champ = 'annee', string $ordre = 'DESC'): array
     {
-        $campagnes = $this->getCampagnes($champ, $ordre);
+        $campagnes = $this->getCampagnes(false, $champ, $ordre);
 
         $array = [];
         foreach ($campagnes as $campagne) {

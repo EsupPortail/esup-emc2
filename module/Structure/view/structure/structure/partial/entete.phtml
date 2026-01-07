@@ -83,8 +83,8 @@ $canCampagneAfficher = $this->isAllowed(CampagnePrivileges::getResourceId(Campag
     <?php if (true OR $canCampagneAfficher) : ?>
         <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
         <button class="nav-link" id="campagne-tab"
-                data-bs-toggle="tab" data-bs-target="#mission-specifique"
-                type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
+                data-bs-toggle="tab" data-bs-target="#campagne"
+                type="button" role="tab" aria-controls="campagne" aria-selected="true"
                 onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId()],[],true); ?>'"
         >
             Entretiens professionnels
