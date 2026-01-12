@@ -81,7 +81,7 @@ class CompetenceController extends AbstractActionController
         if ($type === null) {
             $competences = $this->getCompetenceService()->getCompetencesWithFiltre($params);
         } else {
-            $competences = $this->getCompetenceService()->getCompetencesByType($type);
+            $competences = $this->getCompetenceService()->getCompetencesByType($type, true);
         }
 
         return new ViewModel([

@@ -6,6 +6,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieFormAwareTrait;
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormAwareTrait;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -63,6 +64,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
+    use SelectionnerCategorieFormAwareTrait;
     use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMetierFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
@@ -457,6 +459,45 @@ class FicheMetierController extends AbstractActionController
         $vm->setTemplate('default/default-form');
         return $vm;
     }
+
+    public function modifierCategorieAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerCategorieForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-categorie', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner la catégorie statutaire",
+            'fichemetier' => $fichemetier,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function supprimerCategorieAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fichemetier->setCategorie(null);
+        $this->getFicheMetierService()->update($fichemetier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
 
     public function modifierNiveauCarriereAction(): ViewModel
     {

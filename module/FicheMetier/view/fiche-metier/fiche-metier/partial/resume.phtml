@@ -47,6 +47,35 @@ $metier = $fichemetier->getMetier();
             <?php echo $famille->getLibelle(); ?>
         <?php endif; ?>
     </dd>
+    <dt class="col-md-4"> Catégorie  </dt>
+    <dd class="col-md-8">
+        <?php if ($fichemetier->getCategorie() === null) : ?>
+            <span class="missing-data">Aucune catégorie associé</span>
+        <?php else : ?>
+            <?php echo $fichemetier->getCategorie()->getLibelle(); ?>
+        <?php endif; ?>
+        <br> <!-- // todo : retirer ce br copium -->
+        <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
+            <?php /** @see FicheMetierController::modifierCategorieAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/modifier-categorie', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="ajax-modal action primary" data-event="modification"
+            >
+                <small>
+                    <span class="icon icon-editer"></span>
+                    Modifier
+                </small>
+            </a>
+            <?php /** @see FicheMetierController::supprimerCategorieAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/supprimer-categorie', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="action danger"
+            >
+                <small>
+                    <span class="icon icon-unchecked"></span>
+                    Supprimer
+                </small>
+            </a>
+        <?php endif; ?>
+    </dd>
     <dt class="col-md-4"> Niveau de carrière </dt>
     <dd class="col-md-8">
         <?php if ($fichemetier->getNiveauCarriere() === null) : ?>

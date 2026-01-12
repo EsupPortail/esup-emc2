@@ -4,6 +4,7 @@ namespace FicheMetier\Entity\Db;
 
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Entity\Db\Interface\HasNiveauCarriereInterface;
+use Carriere\Entity\Db\Trait\HasCategorieTrait;
 use Carriere\Entity\Db\Trait\HasNiveauCarriereTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,6 +34,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
+    use HasCategorieTrait;
     use HasEtatsTrait;
     use HasNiveauCarriereTrait;
     use HasApplicationCollectionTrait;
@@ -440,6 +442,13 @@ EOS;
         }
         $html .= "</div>";
         return $html;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringCategorie(): string
+    {
+        if ($this->getCategorie()) return $this->getCategorie()->getLibelle();
+        return "Non précisée";
     }
 
     /** @noinspection PhpUnused */
