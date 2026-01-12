@@ -2,8 +2,6 @@
 
 namespace Application\Entity\Db;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
 
 /**
@@ -24,11 +22,9 @@ class FicheTypeExterne {
     private ?int $quotite = null;
     private bool $estPrincipale = false;
     private ?string $activites = null;
-    private Collection $domaineRepartitions;
 
     public function __construct()
     {
-        $this->domaineRepartitions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,21 +80,6 @@ class FicheTypeExterne {
     public function setActivites(?string $activites): void
     {
         $this->activites = $activites;
-    }
-
-    public function getDomaineRepartitions(): Collection
-    {
-        return $this->domaineRepartitions;
-    }
-
-    public function getDomaineRepartitionsAsArray(): array
-    {
-        $array = [];
-        /** @var DomaineRepartition $repartition */
-        foreach($this->domaineRepartitions as $repartition) {
-            $array[$repartition->getDomaine()->getId()] = $repartition->getQuotite();
-        }
-        return $array;
     }
 
     /**

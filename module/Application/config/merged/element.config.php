@@ -41,6 +41,7 @@ return [
                     'controller' => ElementController::class,
                     'action' => [
                         'changer-niveau',
+                        'toggle-clef',
                         'ajouter-application-element',
                         'modifier-application-element',
                         'ajouter-competence-element',
@@ -97,6 +98,17 @@ return [
                             'defaults' => [
                                 'controller' => ElementController::class,
                                 'action'     => 'changer-niveau',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'toggle-clef' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/toggle-clef/:type[/:id]',
+                            'defaults' => [
+                                /** @see ElementController::toggleClefAction() */
+                                'action'     => 'toggle-clef',
                             ],
                         ],
                         'may_terminate' => true,

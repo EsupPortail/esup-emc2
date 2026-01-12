@@ -8,7 +8,7 @@
 
         <field name="libelle"       column="libelle"               length="256"   />
         <field name="ordre"         column="ordre"          type="integer"   />
-       <one-to-many target-entity="Element\Entity\Db\Application" mapped-by="groupe" field="applications"/>
+       <one-to-many target-entity="Element\Entity\Db\Application" mapped-by="theme" field="applications"/>
 
         <!-- Historisation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     />

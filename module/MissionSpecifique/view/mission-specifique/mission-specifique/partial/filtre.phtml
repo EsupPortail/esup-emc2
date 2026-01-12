@@ -86,7 +86,7 @@ use MissionSpecifique\Entity\Db\MissionSpecifiqueType;
     $('button#filter').click(function() {
         let typeId = $('select#type option:selected').val();
         let themeId = $('select#theme option:selected').val();
-        console.log( "etat=" + typeId + " | " + "domaine=" + themeId);
+        console.log( "etat=" + typeId + " | " + "themeId=" + themeId);
 
         let query = "";
         query += "&type=" + typeId;

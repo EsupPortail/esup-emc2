@@ -31,8 +31,11 @@ class SelectionNiveauHydrator implements HydratorInterface {
     {
         $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau'] ?? null);
         $object->setNiveauMaitrise($niveau);
-        $clef = (isset($data['clef']))? ($data['clef'] == 1) : null;
-        $object->setClef($clef);
+
+        if (isset($data['clef'])) {
+            $clef = (isset($data['clef'])) ? ($data['clef'] == 1) : null;
+            $object->setClef($clef);
+        }
         return $object;
     }
 }

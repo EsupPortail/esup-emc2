@@ -3,7 +3,6 @@
 namespace Metier\Form\Metier;
 
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
@@ -14,7 +13,6 @@ use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrai
 class MetierForm extends Form {
     use CategorieServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
-    use DomaineServiceAwareTrait;
 
     public function init(): void
     {
@@ -35,29 +33,12 @@ class MetierForm extends Form {
                 'multiple'          => 'multiple',
             ],
         ]);
-        //domaines
-        $this->add([
-            'type' => Select::class,
-            'name' => 'domaines',
-            'options' => [
-                'label' => "Domaines professionnels <span class='icon icon-info  text-info' title='Sélection multiple possible'></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
-                'empty_option' => "Sélectionner des domaines ...",
-                'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
-            ],
-            'attributes' => [
-                'id' => 'domaines',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                //'data-live-search'  => 'true',
-                'multiple'          => 'multiple',
-            ],
-        ]);
         // libelle
         $this->add([
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle par défaut <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Libellé par défaut <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
@@ -119,7 +100,6 @@ class MetierForm extends Form {
 
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'domaines'          => [ 'required' => false,  ],
             'familles'          => [ 'required' => false,  ],
             'libelle'           => [ 'required' => true,  ],
             'libelle_feminin'   => [ 'required' => false, ],

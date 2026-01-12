@@ -4,15 +4,22 @@ namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormAwareTrait;
+use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
+use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
@@ -21,10 +28,12 @@ use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
+use RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -32,13 +41,17 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 /** @method FlashMessenger flashMessenger() */
 class FicheMetierController extends AbstractActionController
 {
-    use DomaineServiceAwareTrait;
+    use AgentServiceAwareTrait;
+    use CodeFonctionServiceAwareTrait;
+    use CompetenceTypeServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FicheMetierMissionServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
     use TendanceTypeServiceAwareTrait;
     use ThematiqueElementServiceAwareTrait;
@@ -50,26 +63,29 @@ class FicheMetierController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
+    use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMetierFormAwareTrait;
+    use SelectionnerMissionPrincipaleFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
-        $fromQueries = $this->params()->fromQuery();
-        $etatId = $fromQueries['etat'] ?? null;
-        $domaineId = $fromQueries['domaine'] ?? null;
-        $expertise = $fromQueries['expertise'] ?? null;
-        $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
+        $params = $this->params()->fromQuery();
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
 
+        $referentiels = $this->getReferentielService()->getReferentiels();
         $etatTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
-        $domaines = $this->getDomaineService()->getDomaines();
+
+        $codesFonctions = $displayCodeFonction?$this->getCodeFonctionService()->getCodesFonctions():null;
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
 
         return new ViewModel([
             'params' => $params,
-            'domaines' => $domaines,
             'etatTypes' => $etatTypes,
             'fiches' => $fichesMetiers,
+            'referentiels' => $referentiels,
+            'displayCodeFonction' => $displayCodeFonction,
+            'codesFonctions' => $codesFonctions,
         ]);
     }
 
@@ -96,6 +112,7 @@ class FicheMetierController extends AbstractActionController
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'missions' => $missions,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
@@ -164,6 +181,7 @@ class FicheMetierController extends AbstractActionController
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'missions' => $missions,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
@@ -256,6 +274,57 @@ class FicheMetierController extends AbstractActionController
 
     /** COMPOSITION FICHE *********************************************************************************************/
 
+    public function modifierLibelleAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $form = $this->getModifierLibelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-libelle', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier la libellé de la fiche métier",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function reinitialiserLibelleAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $fichemetier->setLibelle(null);
+                $this->getFicheMetierService()->update($fichemetier);
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($fichemetier !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Réinitialisation du libellé associé à la fiche métier",
+                'text' =>  "La réinitialisation forcera le libelle de la fiche à celui du métier associé (".($fichemetier->getMetier()?$fichemetier->getMetier()->getLibelle():"Aucun métier").")",
+                'action' => $this->url()->fromRoute('fiche-metier/reinitialiser-libelle', ["fiche-metier" => $fichemetier->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     public function modifierEtatAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -284,31 +353,31 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierExpertiseAction(): Response
-    {
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        if ($fichemetier->hasExpertise()) {
-            $fichemetier->setExpertise(false);
-        } else {
-            $fichemetier->setExpertise(true);
-        }
-        $this->getFicheMetierService()->update($fichemetier);
-
-        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
-    }
-
     public function modifierCodeFonctionAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $codeFonction = $fichemetier->getCodeFonction();
+        if ($codeFonction === null) {
+            $codeFonction = new CodeFonction();
+        }
+
         $form = $this->getCodeFonctionForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true));
-        $form->bind($fichemetier);
+        $form->bind($codeFonction);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                $existingCode = $this->getCodeFonctionService()->getCodeFonctionByNiveauAndFamille($codeFonction->getNiveauFonction(), $codeFonction->getFamilleProfessionnelle());
+                if ($existingCode) {
+                    $fichemetier->setCodeFonction($existingCode);
+                } else {
+                    $this->getCodeFonctionService()->create($codeFonction);
+                    $fichemetier->setCodeFonction($codeFonction);
+                }
                 $this->getFicheMetierService()->update($fichemetier);
                 exit();
             }
@@ -320,6 +389,17 @@ class FicheMetierController extends AbstractActionController
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
+    }
+
+    public function supprimerCodeFonctionAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fichemetier->setCodeFonction(null);
+        $this->getFicheMetierService()->update($fichemetier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
     }
 
     public function modifierMetierAction(): ViewModel
@@ -378,50 +458,98 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    /** GESTION DES MISSIONS ******************************************************************************************/
-
-    public function ajouterMissionAction(): ViewModel
+    public function modifierNiveauCarriereAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        $mission = new Mission();
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter-mission', ['fiche-metier' => $fichemetier->getId()], [], true));
-        $form->bind($mission);
+        $form = $this->getSelectionnerNiveauCarriereForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-niveau-carriere', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getMissionPrincipaleService()->create($mission);
-                $this->getFicheMetierService()->addMission($fichemetier, $mission);
-                $this->getFicheMetierService()->compressMission($fichemetier);
+                $this->getFicheMetierService()->update($fichemetier);
                 exit();
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter une mission',
+        $vm = new ViewModel([
+            'title' => "Sélectionner le niveau de carrière associé",
+            'fichemetier' => $fichemetier,
             'form' => $form,
         ]);
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function supprimerMissionAction(): Response
+    public function supprimerNiveauCarriereAction(): Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+        $fichemetier->setNiveauCarriere(null);
+        $this->getFicheMetierService()->update($fichemetier);
 
-        $this->getFicheMetierService()->removeMission($fichemetier, $mission);
-        $this->getFicheMetierService()->compressMission($fichemetier);
-
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
     }
 
-    public function deplacerMissionAction(): Response
+
+    /** GESTIONS DES BLOCS ********************************************************************************************/
+
+    public function gererMissionsPrincipalesAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerMissionPrincipaleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-missions-principales', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if (!isset($data['missions'])) $data['missions'] = [];
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+            }
+        }
+
+        $css=<<<EOS
+.dropdown-item:hover span.text span.mission span.description { 
+    display: block !important; font-style: italic; 
+}    
+
+.dropdown-item:hover span.text span.mission span.full { 
+    display: block !important;  
+}
+.dropdown-item:hover span.text span.mission span.shorten { 
+    display: none !important;  
+}
+
+
+span.mission {    
+    display: inline-block;
+}
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+EOS;
+
+        $vm = new ViewModel([
+            'title' => "Gestion des missions principales associées à la fiche métier",
+            'form' => $form,
+            'css' => $css,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function deplacerMissionAction(): JsonModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
@@ -430,10 +558,9 @@ class FicheMetierController extends AbstractActionController
         $this->getFicheMetierService()->compressMission($fichemetier);
         $this->getFicheMetierService()->moveMission($fichemetier, $mission, $direction);
 
-        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+        return new JsonModel([]);
     }
 
-    /** GESTION DES APPLICATIONS ET DES COMPETENTES *******************************************************************/
 
     public function gererApplicationsAction(): ViewModel
     {
@@ -483,6 +610,8 @@ EOS;
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-competences', ['fiche-metier' => $fichemetier->getId()], [], true));
         $form->bind($fichemetier);
 
+
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -522,13 +651,14 @@ EOS;
     public function gererCompetencesSpecifiquesAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_SPECIFIQUE);
+
         $form = $this->getSelectionCompetenceForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fichemetier->getId()], [], true));
-        $form->getHydrator()->setCollection($fichemetier->getCompetencesSpecifiquesCollection());
         $form->bind($fichemetier);
 
+        $form->reinit($type);
 
-        //todo modifier hydrator
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -540,11 +670,11 @@ EOS;
         }
 
         $css=<<<EOS
-.dropdown-item:hover span.text span.competence span.description { 
-    display: block !important; font-style: italic; 
-}    
+.dropdown-item:hover span.text span.competence span.description {
+    display: block !important; font-style: italic;
+}
 
-span.competence {    
+span.competence {
     display: inline-block;
 }
 
@@ -563,92 +693,73 @@ EOS;
         return $vm;
     }
 
+    /** ACTIONS POUR LE RAFRAICHISSEMENT SUR PLACE ********************************************************************/
 
-    /** LEFT OVER *****************************************************************************************************/
+    public function refreshMissionsAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $missions = $this->getFicheMetierMissionService()->getFichesMetiersMissionsByFicheMetier($fichemetier);
+        $mode = $this->params()->fromRoute('mode');
 
-//    public function clonerApplicationsAction(): ViewModel
-//    {
-//        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-//
-//        $form = $this->getSelectionFicheMetierForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/cloner-applications', ['fiche-metier' => $ficheMetier->getId()], [], true));
-//
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $ficheClone = $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']);
-//
-//            if ($ficheClone !== null) {
-//                try {
-//                    /** @var CompetenceElement[] $oldCollection */
-//                    $oldCollection = $ficheMetier->getApplicationCollection();
-//                    foreach ($oldCollection as $element) $element->historiser();
-//
-//                    $newCollection = $ficheClone->getApplicationListe();
-//                    foreach ($newCollection as $element) {
-//                        $newElement = new ApplicationElement();
-//                        $newElement->setApplication($element->getApplication());
-//                        $newElement->setCommentaire("Clonée depuis la fiche #" . $ficheClone->getId());
-//                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
-//                        $this->getFicheMetierService()->getObjectManager()->persist($newElement);
-//                        $ficheMetier->addApplicationElement($newElement);
-//                    }
-//                    $this->getFicheMetierService()->getObjectManager()->flush();
-//                } catch (ORMException $e) {
-//                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-//                }
-//            }
-//
-//        }
-//
-//        $vm = new ViewModel();
-//        $vm->setVariables([
-//            'title' => "Cloner les applications d'une autre fiche métier",
-//            'form' => $form,
-//        ]);
-//        return $vm;
-//    }
-//
-//    public function clonerCompetencesAction(): ViewModel
-//    {
-//        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-//
-//        $form = $this->getSelectionFicheMetierForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/cloner-competences', ['fiche-metier' => $ficheMetier->getId()], [], true));
-//
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $ficheClone = $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']);
-//
-//            if ($ficheClone !== null) {
-//                try {
-//                    /** @var CompetenceElement[] $oldCollection */
-//                    $oldCollection = $ficheMetier->getCompetenceCollection();
-//                    foreach ($oldCollection as $element) $element->historiser();
-//
-//                    $newCollection = $ficheClone->getCompetenceListe();
-//                    foreach ($newCollection as $element) {
-//                        $newElement = new CompetenceElement();
-//                        $newElement->setCompetence($element->getCompetence());
-//                        $newElement->setCommentaire("Clonée depuis la fiche #" . $ficheClone->getId());
-//                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
-//                        $this->getFicheMetierService()->getObjectManager()->persist($newElement);
-//                        $ficheMetier->addCompetenceElement($newElement);
-//                    }
-//                    $this->getFicheMetierService()->getObjectManager()->flush();
-//                } catch (ORMException $e) {
-//                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-//                }
-//            }
-//
-//        }
-//
-//        $vm = new ViewModel();
-//        $vm->setVariables([
-//            'title' => "Cloner les compétences d'une autre fiche métier",
-//            'form' => $form,
-//        ]);
-//        return $vm;
-//    }
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'missions' => $missions,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/refresh-missions');
+        return $vm;
+    }
+
+
+    public function refreshApplicationsAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
+        $mode = $this->params()->fromRoute('mode');
+
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'applications' => $applications,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/refresh-applications');
+        return $vm;
+    }
+
+    public function refreshCompetencesAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+//        $typeLibelle = str_replace("_"," ", $this->params()->fromRoute('type'));
+//        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($typeLibelle);
+        $typeCode = str_replace("_"," ", $this->params()->fromRoute('type'));
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($typeCode);
+
+        if ($type == null) {
+            throw new RuntimeException("Aucun type de compétences avec le code [".$typeCode."]",-1);
+        }
+
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $type, true);
+
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'competences' => $competences,
+            'type' => $type,
+            'mode' => $this->params()->fromRoute('mode'),
+        ]);
+        $vm->setTemplate('fiche-metier/refresh-competences');
+        return $vm;
+    }
+
+    public function listerAgentsAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
+
+        return new ViewModel([
+            'title' => "Liste des agents ayant la fiche métier <strong>".$fichemetier->getLibelle()."</strong>",
+            'fichemetier' => $fichemetier,
+            'fichespostes' => $fichespostes,
+        ]);
+    }
 }

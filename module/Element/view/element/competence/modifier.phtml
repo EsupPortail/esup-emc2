@@ -1,0 +1,68 @@
+<?php
+
+use Element\Entity\Db\CompetenceType;
+use Element\Form\Competence\CompetenceForm;
+
+/**
+ * @see \Element\Controller\CompetenceController::ajouterAction()
+ * @see \Element\Controller\CompetenceController::modifierAction()
+ * @var CompetenceForm $form
+ * @var CompetenceType $spec
+ */
+
+?>
+
+<div id="form_modification">
+<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->formControlGroup($form->get('libelle')); ?>
+<?php echo $this->formControlGroup($form->get('type')); ?>
+    <div id="discipline">
+        <?php echo $this->formControlGroup($form->get('discipline')); ?>
+    </div>
+<?php echo $this->formControlGroup($form->get('theme')); ?>
+<?php echo $this->formControlGroup($form->get('referentiel')); ?>
+<?php echo $this->formControlGroup($form->get('identifiant')); ?>
+<?php echo $this->formControlGroup($form->get('description')); ?>
+<?php echo $this->formControlGroup($form->get('creer')); ?>
+<?php echo $this->form()->closeTag();?>
+</div>
+
+<script>
+    function spe() {
+        if ($('div#form_modification select#type option:selected').val() === '<?php echo $spec->getId(); ?>') {
+            console.log('specifique');
+            $('div#discipline').show();
+        } else{
+            console.log('pas specifique');
+            $('div#discipline').hide();
+        }
+    }
+
+    $(function() {
+        // $('select').selectpicker();
+        spe();
+        tinymce.remove();
+        tinymce.init({
+            selector: '.tinymce',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            menubar: false,
+            height: 200,
+            // body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    // console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+
+        $('select#type').on("change", spe);
+    });
+</script>

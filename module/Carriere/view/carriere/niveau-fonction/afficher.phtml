@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @see \Carriere\Controller\NiveauFonctionController::afficherAction()
+ * @var NiveauFonction $niveauFonction
+ * @var CodeFonction[] $codesFonctions
+ */
+
+use Carriere\Entity\Db\NiveauFonction;
+use FicheMetier\Entity\Db\CodeFonction;
+
+?>
+
+<?php if ($niveauFonction->estHistorise()) : ?>
+    <span class="badge" style="background:darkred;"> Historisée </span>
+<?php endif; ?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-4">Code</dt>
+            <dd class="col-md-8"><code><?php echo $niveauFonction->getCode(); ?> </code></dd>
+            <dt class="col-md-4">Libellé</dt>
+            <dd class="col-md-8"><?php echo $niveauFonction->getLibelle(); ?></dd>
+            <?php if ($niveauFonction->getDescription()): ?>
+            <dt> Descritpion</dt>
+            <dd>
+                <?php echo $niveauFonction->getDescription(); ?>
+            </dd>
+            <?php endif; ?>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-4">Dernière modification </dt>
+            <dd class="col-md-8">Le <?php echo $niveauFonction->getHistoModification()->format("d/m/Y à H:i"); ?> par <?php echo $niveauFonction->getHistoModificateur()->getDisplayName(); ?> </dd>
+        </dl>
+        <?php if ($niveauFonction->estHistorise()) : ?>
+            <dl class="row">
+                <dt class="col-md-4">Historisation</dt>
+                <dd class="col-md-8">Le <?php echo $niveauFonction->getHistoDestruction()->format("d/m/Y à H:i"); ?> par <?php echo $niveauFonction->getHistoDestructeur()->getDisplayName(); ?> </dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
+
+<h2>
+    Codes fonctions associés
+    <span class="badge"><?php echo count($codesFonctions); ?></span>
+</h2>
+
+<ul>
+    <?php foreach ($codesFonctions as $codeFonction) : ?>
+        <li> <code><?php echo $codeFonction->computeCode(); ?></code></li>
+    <?php endforeach; ?>
+</ul>

@@ -16,7 +16,7 @@ class CompetenceThemeController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
+        $themes = $this->getCompetenceThemeService()->getCompetencesThemes(true);
         return new ViewModel([
             'themes' => $themes,
         ]);

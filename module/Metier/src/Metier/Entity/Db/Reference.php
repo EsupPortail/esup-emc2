@@ -6,6 +6,7 @@ use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use Referentiel\Entity\Db\Referentiel;
 
 class Reference implements HistoriqueAwareInterface, HasMetierInterface {
     use HistoriqueAwareTrait;
@@ -34,7 +35,7 @@ class Reference implements HistoriqueAwareInterface, HasMetierInterface {
 
     public function getCode() : ?string
     {
-        if ($this->getReferentiel() !== null AND $this->getReferentiel()->getType() === Referentiel::VIDE) return $this->getReferentiel()->getLibelleCourt() ." - ". $this->code;
+        if ($this->getReferentiel() !== null) return $this->getReferentiel()->getLibelleCourt() ." - ". $this->code;
         return $this->code;
     }
 
@@ -60,19 +61,22 @@ class Reference implements HistoriqueAwareInterface, HasMetierInterface {
 
     public function getUrl() : string
     {
-        switch($this->getReferentiel()->getType()) {
-            case Referentiel::WEB :
-                if ($this->getLien())                       return $this->getLien();
-                if ($this->getReferentiel()->getPrefix())   return $this->referentiel->getPrefix() . $this->getCode();
-                return "";
-            case Referentiel::PDF :
-                $url = "";
-                if ($this->getReferentiel()->getPrefix())   $url = $this->getReferentiel()->getPrefix();
-                if ($this->getLien())                       $url = $this->getLien();
-                if ($this->getPage()) {
-                    $url = $url . "#page=" . $this->getPage();
-                }
-                return $url;
+//        switch($this->getReferentiel()->getType()) {
+//            case Referentiel::WEB :
+//                if ($this->getLien())                       return $this->getLien();
+//                if ($this->getReferentiel()->getPrefix())   return $this->referentiel->getPrefix() . $this->getCode();
+//                return "";
+//            case Referentiel::PDF :
+//                $url = "";
+//                if ($this->getReferentiel()->getPrefix())   $url = $this->getReferentiel()->getPrefix();
+//                if ($this->getLien())                       $url = $this->getLien();
+//                if ($this->getPage()) {
+//                    $url = $url . "#page=" . $this->getPage();
+//                }
+//                return $url;
+//        }
+        if ($this->getReferentiel()->getLibelleCourt() === "REFERENS3") {
+            return "https://data.enseignementsup-recherche.gouv.fr/pages/fiche_emploi_type_referens_iii_itrf/?refine.referens_id=".$this->getReference();
         }
         return "";
     }

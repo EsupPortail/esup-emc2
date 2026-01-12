@@ -19,6 +19,33 @@ class ConfigurationController extends AbstractActionController
     use ConfigurationRecopieFormAwareTrait;
     use FormulaireServiceAwareTrait;
 
+    public function indexAction(): ViewModel
+    {
+        $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
+        $formulaire_crep = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREP);
+        $champs_crep = [];
+        foreach ($formulaire_crep->getCategories() as $categorie) {
+            foreach ($categorie->getChamps() as $champ) {
+                $champs_crep[$champ->getId()] = $champ;
+            }
+        }
+
+        $formulaire_cref = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREF);
+        $champs_cref = [];
+        foreach ($formulaire_cref->getCategories() as $categorie) {
+            foreach ($categorie->getChamps() as $champ) {
+                $champs_cref[$champ->getId()] = $champ;
+            }
+        }
+
+        return new ViewModel([
+
+            'recopies' => $recopies,
+            'champsCREP' => $champs_crep,
+            'champsCREF' => $champs_cref,
+        ]);
+    }
+
     public function ajouterRecopieAction() : ViewModel
     {
         $code = $this->params()->fromRoute('formulaire');

@@ -10,7 +10,7 @@
 
         <field name="libelle" length="128" column="libelle"/>
 
-        <many-to-many field="metiers" inversed-by="domaines" target-entity="Metier\Entity\Db\Metier">
+        <many-to-many field="metiers" inversed-by="famillesProfessionnelles" target-entity="Metier\Entity\Db\Metier">
             <join-table name="metier_metier_famille">
                 <join-columns>
                     <join-column name="famille_id"  />
@@ -20,6 +20,11 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+
+        <many-to-one target-entity="Carriere\Entity\Db\Correspondance" field="correspondance">
+            <join-column name="correspondance_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="position" type="integer" column="position"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation" type="datetime" column="histo_creation"/>

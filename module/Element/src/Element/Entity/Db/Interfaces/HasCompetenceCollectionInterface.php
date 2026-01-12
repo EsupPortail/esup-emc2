@@ -12,5 +12,5 @@ interface HasCompetenceCollectionInterface {
     public function hasCompetence(Competence $competence) : bool;
     public function addCompetenceElement(CompetenceElement $competenceElement) : void;
     public function removeCompetenceElement(CompetenceElement $competenceElement) : void;
-
+    public function clearCompetences() : void;
 }

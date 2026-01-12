@@ -2,22 +2,45 @@
 
 namespace Element\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Competence implements HistoriqueAwareInterface {
+class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
+    use HasReferenceTrait;
+
+    const COMPETENCE_HEADER_ID = "Id_compétence";
+    const COMPETENCE_HEADER_LIBELLE = "Compétence";
+    const COMPETENCE_HEADER_TYPE = "Type";
+    const COMPETENCE_HEADER_THEME = "Thème";
+    const COMPETENCE_HEADER_DEFINITION = "Définition";
+    const COMPETENCE_HEADER_DISCIPLINE = "Discipline";
+    const COMPETENCE_HEADER_SYNONYMES = "Synonymes";
+    const COMPETENCE_HEADER_CODES_EMPLOI_TYPE = "Codes Emploi Type";
+    const COMPETENCE_HEADER_CODES_FONCTION = "Codes Fonction";
 
 
     private ?int $id = null;
     private ?string $libelle = null;
     private ?string $description = null;
+    private ?CompetenceDiscipline $discipline = null;
     private ?CompetenceType $type = null;
     private ?CompetenceTheme $theme = null;
-    private ?CompetenceReferentiel $referentiel = null;
-    private ?string $source = null;
-    private ?string $idSource = null;
+    private ?string $codesEmploiType = null;
+    private ?string $codesFonction = null;
+    private ?string $raw = null;
 
+    private Collection $synonymes;
+
+
+    public function __construct()
+    {
+        $this->synonymes = new ArrayCollection();
+    }
     public function getId() : ?int
     {
         return $this->id;
@@ -43,6 +66,16 @@ class Competence implements HistoriqueAwareInterface {
         $this->description = $description;
     }
 
+    public function getDiscipline(): ?CompetenceDiscipline
+    {
+        return $this->discipline;
+    }
+
+    public function setDiscipline(?CompetenceDiscipline $discipline): void
+    {
+        $this->discipline = $discipline;
+    }
+
     public function getType() : ?CompetenceType
     {
         return $this->type;
@@ -63,37 +96,68 @@ class Competence implements HistoriqueAwareInterface {
         $this->theme = $theme;
     }
 
-    public function getReferentiel(): ?CompetenceReferentiel
+    public function getCodesFonction(): ?string
     {
-        return $this->referentiel;
+        return $this->codesFonction;
     }
 
-    public function setReferentiel(?CompetenceReferentiel $referentiel): void
+    public function setCodesFonction(?string $codesFonction): void
     {
-        $this->referentiel = $referentiel;
+        $this->codesFonction = $codesFonction;
     }
 
-    public function getSource(): ?string
+    public function getCodesEmploiType(): ?string
     {
-        return $this->source;
+        return $this->codesEmploiType;
     }
 
-    public function setSource(string $source): Competence
+    public function setCodesEmploiType(?string $codesEmploiType): void
     {
-        $this->source = $source;
-        return $this;
+        $this->codesEmploiType = $codesEmploiType;
     }
 
-    public function getIdSource(): ?string
+
+    /** Gestion des synonymes *****************************************************************************************/
+
+    /** @return CompetenceSynonyme[] */
+    public function getSynonymes(): array
     {
-        return $this->idSource;
+        return $this->synonymes->toArray();
     }
 
-    public function setIdSource(?string $idSource): Competence
+    public function isSynonyme(string $libelle) : bool
     {
-        $this->idSource = $idSource;
-        return $this;
+        foreach ($this->getSynonymes() as $synonyme) {
+            if ($synonyme->getLibelle() === $libelle) return true;
+        }
+        return false;
     }
 
+    public function addSynonyme(CompetenceSynonyme $synonyme): void
+    {
+        $this->synonymes->add($synonyme);
+    }
+
+    public function removeSynonyme(CompetenceSynonyme $synonyme): void
+    {
+        $this->synonymes->removeElement($synonyme);
+    }
+
+    public function clearSynonymes(): void
+    {
+        $this->synonymes->clear();
+    }
+
+    /** Gestion de texte brut associé à une compétence importée *******************************************************/
+
+    public function getRaw(): ?string
+    {
+        return $this->raw;
+    }
+
+    public function setRaw(?string $raw): void
+    {
+        $this->raw = $raw;
+    }
 
 }

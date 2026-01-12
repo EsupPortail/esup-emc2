@@ -33,10 +33,7 @@ use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
-use Fichier\Entity\Db\Fichier;
-use Fichier\Form\Upload\UploadFormAwareTrait;
-use Fichier\Service\Fichier\FichierServiceAwareTrait;
-use Fichier\Service\Nature\NatureServiceAwareTrait;
+use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -45,6 +42,10 @@ use Laminas\View\Model\ViewModel;
 use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenFichier\Entity\Db\Fichier;
+use UnicaenFichier\Form\Upload\UploadFormAwareTrait;
+use UnicaenFichier\Service\Fichier\FichierServiceAwareTrait;
+use UnicaenFichier\Service\Nature\NatureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -105,7 +106,6 @@ class AgentController extends AbstractActionController
                 $agentLabel = $params['agent-sas']['label'] ?? null;
                 $agents = $this->getAgentService()->getAgentsLargeByTerm($agentLabel);
                 if (count($agents) === 1) return $this->redirect()->toRoute('agent/afficher', ['agent' => current($agents)->getId()], [], true);
-
             }
             if (empty($agents) and isset($params['type']) and $params['type'] === 'filtrer') {
                 $agents = $this->getAgentService()->getAgentsWithFiltre($params);
@@ -306,15 +306,22 @@ class AgentController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $file = current($request->getFiles());
+            $files = $request->getFiles();
+            $file = $files['fichier'];
 
             if ($file['name'] != '') {
-
-                $nature = $this->getNatureService()->getNature($data['nature']);
-                $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                try {
+                    $nature = $this->getNatureService()->getNature($data['nature']);
+                    $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                } catch (Exception $e) {
+                    throw new RuntimeException("Un problème est survenu lors du téléversement", 0, $e);
+                }
                 $agent->addFichier($fichier);
                 $this->getAgentService()->update($agent);
             }
+
+            $retour = $this->params()->fromQuery('retour');
+            if ($retour) return $this->redirect()->toUrl($retour);
             return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()]);
         }
 
@@ -490,7 +497,9 @@ class AgentController extends AbstractActionController
         $role = $this->getUserService()->getConnectedRole();
         $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
 
-        $agents = []; $entretiensS = []; $entretiensR = [];
+        $agents = [];
+        $entretiensS = [];
+        $entretiensR = [];
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
             $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateDebut(), $campagne->getDateFin());
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
@@ -559,11 +568,15 @@ class AgentController extends AbstractActionController
         $agents = [];
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
             $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($connectedAgent);
-            $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); }, $chaines);
+            $agents = array_map(function (AgentSuperieur $a) {
+                return $a->getAgent();
+            }, $chaines);
         }
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
             $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($connectedAgent);
-            $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); }, $chaines);
+            $agents = array_map(function (AgentAutorite $a) {
+                return $a->getAgent();
+            }, $chaines);
         }
 
         return $agents;

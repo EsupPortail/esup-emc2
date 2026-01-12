@@ -84,31 +84,38 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
             <a
                 <?php /** @see \Structure\Controller\StructureController::editerDescriptionAction() */ ?>
                 href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
-                class="ajax-modal"
+                class="btn btn-primary ajax-modal"
                 data-event="modification"
             >
                     <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true"
-                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span></a>
+                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
+                    Modifier le résumé de la structure
+            </a>
             <a
                 <?php /** @see \Structure\Controller\StructureController::toggleResumeMereAction() */ ?>
                 href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
+                class="btn btn-<?php echo $structure->getRepriseResumeMere()?'danger':'success'; ?>"
             >
             <?php if ($structure->getRepriseResumeMere()) : ?>
                 <span class="icon icon-unchecked" data-bs-toggle="tooltip" data-bs-html="true"
                       title="Ne plus réutiliser le résumé de la structure mère"></span>
+                Ne plus utiliser le résumé de la structure mère
             <?php else : ?>
                 <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"
                       title="Réutiliser le résumé de la structure mère"></span>
+                Utiliser le résumé de la structure mère
             <?php endif; ?>
             </a>
 
         <?php endif; ?>
 
+        <br>
+
         <?php if ($structure->getRepriseResumeMere()) : ?>
-            <div class="alert alert-info">
-                <span class="icon icon-information"></span>
-                Reprise du résumé de la structure mère.
-            </div>
+<!--            <div class="alert alert-info">-->
+<!--                <span class="icon icon-information"></span>-->
+<!--                Reprise du résumé de la structure mère.-->
+<!--            </div>-->
         <?php endif; ?>
         <?php if ($structure->getDescriptionComplete()) : ?>
             <?php echo $structure->getDescriptionComplete(); ?>

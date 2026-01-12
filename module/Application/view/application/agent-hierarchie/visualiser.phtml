@@ -3,12 +3,15 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Provider\Parametre\GlobalParametres;
 
 /** @see \Application\Controller\AgentHierarchieController::visualiserAction()
  * @var Agent $agent
  * @var string $type
  * @var AgentSuperieur[]|AgentAutorite[] $chaines
  **/
+
+$appName = $this->parametreValue(GlobalParametres::TYPE, GlobalParametres::APP_NAME);
 
 $revoques = [];
 $historises = [];
@@ -25,15 +28,7 @@ foreach ($chaines as $chaine) {
     }
 }
 
-$a=1;
 ?>
-
-<dl class="row">
-    <dt>Agent</dt>
-    <dd><?php echo $agent->getDenomination(); ?></dd>
-    <dt>Type</dt>
-    <dd><?php echo $type; ?></dd>
-</dl>
 
 <div class="row">
     <div class="col-md-6">
@@ -106,7 +101,7 @@ $a=1;
     </div>
     <div class="col-md-6">
 
-        <h2> Chaînes revoquées</h2>
+        <h2> Chaînes revoquées</h2><span class="icon icon-info" title="Chaînes importées depuis le SIRH qui ont été manuellement révoquées depuis <?php echo $appName; ?>" style="cursor: help"> À propos de chaînes révoquées</span>
         <?php usort($revoques, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
             if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
                 return $a->getDateDebut() <=> $b->getDateDebut();

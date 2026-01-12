@@ -26,7 +26,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
 use FichePoste\Provider\Etat\FichePosteEtats;
-use Fichier\Entity\Db\Fichier;
+use UnicaenFichier\Entity\Db\Fichier;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
@@ -383,26 +383,33 @@ class Agent implements
 
         $valeurs = explode(";", $valeurs);
 
-        $count = [];
+
         $affectations = $this->getAffectations($date);
         if ($structures !== null) $affectations = array_filter($affectations, function (AgentAffectation $a) use ($structures) { return in_array($a->getStructure(), $structures);});
         if (empty($affectations)) return [$emptyResult, ["Aucune affectation"]];
 
-        $match = [];
+        /** NOTE À PROPOS DU CODE CI-DESSOUS
+         * Attention certains établissements découpent leurs affectations de façon atomique et ne regroupent pas les
+         * temoins d'affectation comme hiérarchique et fonctionnelle cela afin d'exprimer des quotités d'affectation
+         * fonctionnelle et hiérarchique.
+         * Par conséquent, il est nécessaire de regrouper les témoins avant de calculer l'application des règles de tri.
+         */
+        $count = [];
         foreach ($affectations as $affectation) {
             foreach (AgentAffectation::TEMOINS as $temoin) {
                 if ($affectation->getTemoin($temoin)) {
                     $count[$temoin] = true;
                 }
             }
-
-            foreach ($valeurs as $valeur) {
-                if ($this->isCompatible($count, $valeur)) {
-                    $match[] = $valeur;
-                }
+        }
+        $match = [];
+        foreach ($valeurs as $valeur) {
+            if ($this->isCompatible($count, $valeur)) {
+                $match[] = $valeur;
             }
         }
         if (!empty($match)) return [true, $match];
+
         return [false, []];
     }
 

@@ -83,10 +83,11 @@ class CampagneService
     }
 
     /** @return Campagne[] */
-    public function getCampagnes(string $champ = 'annee', string $ordre = 'DESC'): array
+    public function getCampagnes(bool $withhisto = false, string $champ = 'annee', string $ordre = 'DESC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.' . $champ, $ordre);
+        if (!$withhisto) $qb = $qb->andWhere('campagne.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -95,7 +96,7 @@ class CampagneService
     /** @return array (id => string) */
     public function getCampagnesAsOptions(string $champ = 'annee', string $ordre = 'DESC'): array
     {
-        $campagnes = $this->getCampagnes($champ, $ordre);
+        $campagnes = $this->getCampagnes(false, $champ, $ordre);
 
         $array = [];
         foreach ($campagnes as $campagne) {
@@ -322,21 +323,26 @@ class CampagneService
                 continue;
             }
 
-            // Exclusion CORPS //
-            $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS],$campagne->getDateEnPoste());
-            if ($result[0] === true) continue;
+            /** NOTE À PROPOS DU FORCAGE ET DES REGLES D'EXCLUSION
+             * On priorise ici le forçage ; on shinte les exclusions si il y a forçage.
+             */
+            if (!$agent->isForceAvecObligation($campagne)) {
+                // Exclusion CORPS //
+                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateEnPoste());
+                if ($result[0] === true) continue;
 
-            // Exclusion AFFECTATIONS //
-            $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS],$campagne->getDateEnPoste(), $structures);
-            if ($result[0] === true) continue;
+                // Exclusion AFFECTATIONS //
+                $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateEnPoste(), $structures);
+                if ($result[0] === true) continue;
 
-            // Exclusion STATUTS //
-            $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS],$campagne->getDateEnPoste());
-            if ($result[0] === true) continue;
+                // Exclusion STATUTS //
+                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateEnPoste());
+                if ($result[0] === true) continue;
 
-            // Exclusion EMPLOI-TYPE //
-            $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS],$campagne->getDateEnPoste());
-            if ($result[0] === true) continue;
+                // Exclusion EMPLOI-TYPE //
+                $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS], $campagne->getDateEnPoste());
+                if ($result[0] === true) continue;
+            }
 
             $kept = true;
 

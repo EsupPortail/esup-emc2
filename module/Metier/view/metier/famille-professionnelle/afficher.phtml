@@ -1,29 +1,44 @@
 <?php
 
-use Metier\Entity\Db\Domaine;
+use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Entity\Db\Metier;
 
 /**
  * @see \Metier\Controller\FamilleProfessionnelleController::afficherAction()
  * @var FamilleProfessionnelle $famille
- * @var Metier[] $metiers
+ * @var FicheMetier[] $fichesmetiers
  */
-
-usort($metiers, function (Metier $a, Metier $b) { return $a->getLibelle() <=> $b->getLibelle();});
 ?>
 
 <dl class="row">
     <dt class="col-md-4"> Famille professionnelle</dt>
     <dd class="col-md-8"> <?php echo $famille->getLibelle(); ?> </dd>
-    <dt class="col-md-4"> Métier·s</dt>
+    <dt class="col-md-4"> Mission·s principale·s</dt>
     <dd class="col-md-8">
-        <?php if (empty($metiers)) : ?>
-            <em> Aucun métier d'associé à cette famille professionnelle </em>
+        <?php if (empty($missions)) : ?>
+            <em> Aucune mission principale d'associée à cette famille professionnelle </em>
         <?php else : ?>
+            <?php echo count($missions); ?> mission·s
             <ul>
-                <?php foreach ($metiers as $metier) : ?>
-                    <li> <?php echo $metier->getLibelle(); ?> </li>
+                <?php foreach ($missions as $mission) : ?>
+                    <li>
+                        <?php echo $mission->printReference(); ?>
+                        <?php echo $mission->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Fiche·s métier·s</dt>
+    <dd class="col-md-8">
+        <?php if (empty($fichesmetiers)) : ?>
+            <em> Aucune fiche métier d'associée à cette famille professionnelle </em>
+        <?php else : ?>
+            <?php echo count($fichesmetiers); ?> fiche·s métier·s
+            <ul>
+                <?php foreach ($fichesmetiers as $fichemetier) : ?>
+                    <li>
+                        <?php echo $fichemetier->printReference(); ?>
+                        <?php echo $fichemetier->getLibelle(); ?> </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>

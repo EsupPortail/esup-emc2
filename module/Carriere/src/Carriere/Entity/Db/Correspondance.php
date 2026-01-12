@@ -8,6 +8,7 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
@@ -23,11 +24,15 @@ class Correspondance implements HasPeriodeInterface, IsSynchronisableInterface
     private ?DateTime $histo = null;
     private Collection $agentGrades;
     private ?CorrespondanceType $type = null;
+
+    private Collection $familles;
     private ?DateTime $dateFermeture = null;
 
     public function __construct()
     {
         $this->agentGrades = new ArrayCollection();
+        $this->familles = new ArrayCollection();
+
     }
 
     public function setId(?int $id): void
@@ -105,9 +110,9 @@ class Correspondance implements HasPeriodeInterface, IsSynchronisableInterface
 
     public function generateTooltip(): string
     {
-        $text = "Libelle court : <strong>" . $this->getLibelleCourt() . "</strong>";
+        $text = "Libellé court : <strong>" . $this->getLibelleCourt() . "</strong>";
         $text .= "<br/>";
-        $text .= "Libelle long : <strong>" . $this->getLibelleLong() . "</strong>";
+        $text .= "Libellé long : <strong>" . $this->getLibelleLong() . "</strong>";
         return $text;
     }
 
@@ -115,6 +120,12 @@ class Correspondance implements HasPeriodeInterface, IsSynchronisableInterface
     {
         if ($date === null) $date = new DateTime();
         return ($this->histo !== null and $date < $this->histo);
+    }
+
+    /** @return FamilleProfessionnelle[] */
+    public function getFamilles(): array
+    {
+        return $this->familles->toArray();
     }
 
 }

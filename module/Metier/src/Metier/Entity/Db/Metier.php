@@ -10,11 +10,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Service\Metier\MetierService;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Metier implements HistoriqueAwareInterface {
+class Metier implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
+    use HasReferenceTrait;
+
 
     private ?int $id = null;
     private ?string $libelle = null;
@@ -25,7 +29,6 @@ class Metier implements HistoriqueAwareInterface {
     private ?NiveauEnveloppe $niveaux = null;
 
     private Collection $correspondances;
-    private Collection $domaines;
     private Collection $famillesProfessionnelles;
     private Collection $references;
     private Collection $fichesMetiers;
@@ -35,7 +38,6 @@ class Metier implements HistoriqueAwareInterface {
         $this->references = new ArrayCollection();
         $this->fichesMetiers = new ArrayCollection();
         $this->correspondances = new ArrayCollection();
-        $this->domaines = new ArrayCollection();
         $this->famillesProfessionnelles = new ArrayCollection();
     }
 
@@ -141,29 +143,6 @@ class Metier implements HistoriqueAwareInterface {
         return $this->correspondances->contains($correspondance);
     }
 
-    /** @return Domaine[] */
-    public function getDomaines() : array
-    {
-        $domaines =  $this->domaines->toArray();
-        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle();});
-        return $domaines;
-    }
-
-    public function clearDomaines() : void
-    {
-        $this->domaines->clear();
-    }
-
-    public function addDomaine(Domaine $domaine): void
-    {
-        $this->domaines->add($domaine);
-    }
-
-    public function hasDomaine(Domaine $domaine) : bool
-    {
-        return $this->domaines->contains($domaine);
-    }
-
     /** @return FamilleProfessionnelle[] */
     public function getFamillesProfessionnelles() : array
     {
@@ -201,15 +180,15 @@ class Metier implements HistoriqueAwareInterface {
         $html .= htmlentities($this->getLibelle(), ENT_QUOTES);
         $html .= '</span><br/>';
 
-//        /** Lignes sur les domaines du metier **/
-//        $html .= '<strong>Famille </strong> :';
-//        $html .= '<ul>';
-//        foreach ($this->getDomaines() as $domaine) {
-//            $html .= '<li>';
-//            $html .= htmlentities($domaine->getLibelle(), ENT_QUOTES);
-//            $html .= '</li>';
-//        }
-//        $html .= '</ul>';
+        /** Lignes sur les Familles du metier **/
+        $html .= '<strong>Famille </strong> :';
+        $html .= '<ul>';
+        foreach ($this->getFamillesProfessionnelles() as $familleProfessionnelle) {
+            $html .= '<li>';
+            $html .= htmlentities($familleProfessionnelle->getLibelle(), ENT_QUOTES);
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
         /** Ligne sur les refs */
         $html .= '<strong>Références</strong> :';
         foreach ($this->getReferences() as $reference) {
@@ -236,39 +215,6 @@ class Metier implements HistoriqueAwareInterface {
             $texte .= "</li>";
         }
         $texte .= "</ul>";
-        return $texte;
-    }
-
-    /** @noinspection PhpUnused */
-    public function getDomainesAffichage() : string
-    {
-        $domaines = $this->getDomaines();
-        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle(); });
-
-        $texte = "Domaine" . ((count($domaines) > 1)?"s":"") . " : ";
-        $texte .= "<ul id='domaine'>";
-        foreach ($domaines as $domaine) $texte .= "<li>".$domaine->getLibelle()."</li>";
-        $texte .= "</ul>";
-        return $texte;
-    }
-
-    /** @noinspection PhpUnused */
-    public function toStringDomaines() : string
-    {
-        $texte  = "<table style='width: 25rem;'>";
-        $texte .= "    <thead style='border:2px solid black; background: lightyellow;'><tr>";
-        $texte .= "        <th style='padding: 1rem;'>Domaine(s) </th>";
-        $texte .= "    </tr></thead>";
-
-        /** @var Domaine $domaine */
-        $domaines = $this->domaines->toArray();
-        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle(); });
-        $texte .= "<tbody style='border:2px solid black;'>";
-        foreach ($domaines as $domaine) {
-            $texte .= "<tr><td style='padding:0.25rem 1rem;'>" . $domaine->getLibelle() . "</td></tr>";
-        }
-        $texte .= "</tbody>";
-        $texte .= "</table>";
         return $texte;
     }
 

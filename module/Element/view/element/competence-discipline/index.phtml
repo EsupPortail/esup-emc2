@@ -1,0 +1,161 @@
+<?php
+
+/**
+ * @see \Element\Controller\CompetenceDisciplineController::indexAction()
+ * @var CompetenceDiscipline[] $disciplines ;
+ * @var array<int, array>  $dictionnaire (int => array)
+ */
+
+use Element\Entity\Db\CompetenceDiscipline;
+use Element\Provider\Privilege\CompetencedisciplinePrivileges;
+use Element\Provider\Privilege\CompetencePrivileges;
+use Element\Provider\Privilege\CompetencethemePrivileges;
+use Element\Provider\Privilege\CompetencetypePrivileges;
+
+$this->headTitle("Disciplines associées aux compétences");
+
+$canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
+
+$canCompetenceTypeIndex = $this->isAllowed(CompetencetypePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_INDEX));
+$canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
+
+$canAfficher = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_AFFICHER));
+$canAjouter = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_AJOUTER));
+$canModifier = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_MODIFIER));
+$canHistoriser = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_HISTORISER));
+$canDetruire = $this->isAllowed(CompetencedisciplinePrivileges::getResourceId(CompetencedisciplinePrivileges::COMPETENCEDISCIPLINE_SUPPRIMER));
+
+$canAction = ($canAfficher or $canModifier or $canHistoriser or $canDetruire);
+?>
+
+<h1 class="page-header">
+    Disciplines associées aux compétences
+</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <?php if ($canAjouter) : ?>
+            <?php /** @see \Element\Controller\CompetenceDisciplineController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-discipline/ajouter', [], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon icon-ajouter"></span>
+                Ajouter un discipline
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="col-md-6">
+        <?php if ($canCompetenceIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/listing', [], [], true); ?>" class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux compétences</a>
+        <?php endif; ?>
+
+        <?php if ($canCompetenceThemeIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceThemeController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-theme', [], [], true); ?>" class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux thèmes</a>
+        <?php endif; ?>
+
+
+        <?php if ($canCompetenceTypeIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceTypeController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-type', [], [], true); ?>" class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux types</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-6"> Libellé</th>
+        <th class="col-md-2"> #Compétence</th>
+        <th class="col-md-2"> #Fiche Métier</th>
+        <th class="col-md-2 action"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($disciplines as $discipline) : ?>
+        <tr class="<?php if ($discipline->estHistorise()) echo " historise "; ?>">
+            <td>
+                <?php echo $discipline->getLibelle(); ?>
+                <?php if ($discipline->getDescription()) : ?>
+                    <br>
+                    <span class="description">
+                        <?php echo $discipline->getDescription(); ?>
+                    </span>
+                <?php endif; ?>
+            </td>
+            <td> <?php echo count($discipline->getCompetences()); ?> </td>
+            <td> <?php echo count($dictionnaire[$discipline->getId()]); ?> </td>
+            <?php if ($canAction) : ?>
+                <td class="action">
+                    <?php if ($canAfficher) : ?>
+                        <?php /** @see \Element\Controller\CompetenceDisciplineController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('element/competence-discipline/afficher', ['competence-discipline' => $discipline->getId()], [], true); ?>"
+                           class="ajax-modal action secondary">
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canModifier) : ?>
+                        <br>
+                        <?php /** @see \Element\Controller\CompetenceDisciplineController::modifierAction() */ ?>
+                        <a href="<?php echo $this->url('element/competence-discipline/modifier', ['competence-discipline' => $discipline->getId()], [], true); ?>"
+                           class="ajax-modal  action primary" data-event="modification">
+                            <span class="icon icon-editer"></span>
+                            Modifier
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser): ?>
+                        <br>
+                        <?php if ($discipline->estNonHistorise()) : ?>
+                            <?php /** @see \Element\Controller\CompetenceDisciplineController::historiserAction() */ ?>
+                            <a href="<?php echo $this->url('element/competence-discipline/historiser', ['competence-discipline' => $discipline->getId()], [], true); ?>"
+                               class="action warning">
+                                <span class="icon icon-historiser"></span>
+                                Historiser
+                            </a>
+                        <?php else : ?>
+                            <?php /** @see \Element\Controller\CompetenceDisciplineController::restaurerAction() */ ?>
+                            <a href="<?php echo $this->url('element/competence-discipline/restaurer', ['competence-discipline' => $discipline->getId()], [], true); ?>"
+                               class="action warning">
+                                <span class="icon icon-restaurer"></span>
+                                Restaurer
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruire) : ?>
+                        <br>
+                        <?php /** @see \Element\Controller\CompetenceDisciplineController::detruireAction() */ ?>
+                        <a href="<?php echo $this->url('element/competence-discipline/detruire', ['competence-discipline' => $discipline->getId()], [], true); ?>"
+                           class="ajax-modal action danger" data-event="modification">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
+                </td>
+            <?php endif; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+
+<style>
+    span.description {
+        color: gray;
+        font-style: italic;
+    }
+</style>

@@ -1,25 +1,45 @@
 <?php
 
 /**
- * @see \FicheMetier\Controller\ImportController::importAction()
- * @var ImportationForm $form
+ * @see ImportController::importAction()
+ * @var FicheMetierImportationForm $form
  *
  * @var array $info
  * @var array $warning
  * @var array $error
+ * @var array $data
+ * @var array $file
+ * @var string $filename
+ * @var string $filepath
+ * @var Referentiel[] $referentiels
+ * @var bool $displayCodeFonction
  *
  * @var FicheMetier[] $fiches
  */
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Element\Entity\Db\Competence;
+use FicheMetier\Controller\ImportController;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheReferentiel\Form\Importation\ImportationForm;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
+use Referentiel\Entity\Db\Referentiel;
 
 $canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
 
 $this->headTitle("Importation des fiches métiers");
 
+$formats = [
+        ImportController::FORMAT_REFERENS3 => 'Referens 3',
+        ImportController::FORMAT_RMFP => 'RMFP',
+];
 ?>
+
+<script xmlns="http://www.w3.org/1999/html">
+    function reset() {
+        console.log('click');
+        window.location.href="../fiche-metier/import";
+    }
+</script>
 
 <div class="row">
     <div class="col-md-8">
@@ -39,8 +59,134 @@ $this->headTitle("Importation des fiches métiers");
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Importation de fiche métier depuis un CSV</div>
+            <div class="card-body">
+                <form enctype="multipart/form-data"
+                      action="<?php echo $this->url("fiche-metier/import", ['path' => null], [], true); ?>"
+                      method="post">
+                    <?php if ($filepath !== null) : ?>
+                        <span class="form-label">Fichier téléversé : </span><br>
+                        <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
+                            <div class='row'>
+                                <div class='col-md-9'> <?php echo $filename; ?> </div>
+                                <div class='col-md-3'>
+                                    <div class='float-end'>
+                            <span class="action text-danger" style="cursor: pointer;" onclick="reset()">
+                                <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span> Retirer
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="filepath" id="filepath" value="<?php echo $filepath; ?>">
+                        <input type="hidden" name="filename" id="filename" value="<?php echo $filename; ?>">
+                    <?php else : ?>
+                        <label for="file">Fichier à importer <span class="icon icon-obligatoire"
+                                                                   title="Champ obligatoire"></span></label>
+                        <input type="file" name="file" id="file" class="form-control" accept=".csv"/>
+                    <?php endif; ?>
+                    <label for="referentiel"> Référentiel <span class="icon icon-obligatoire"
+                                                                title="Champ obligatoire"></span> </label>
+                    <select class="selectpicker show-tick form-control" id="referentiel" name="referentiel">
+                        <option value="">Sélectionnez un référentiel</option>
+                        <?php foreach ($referentiels as $referentiel): ?>
+                            <option value="<?php echo $referentiel->getId(); ?>"
+                                    <?php if (isset($data["referentiel"]) and $data["referentiel"] == $referentiel->getId()) : ?>
+                                        selected
+                                    <?php endif; ?>
+                            >
+                                <?php echo $referentiel->getLibelleCourt(); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <label for="format"> Format <span class="icon icon-obligatoire" title="Champ obligatoire"></span>
+                    </label>
+                    <select class="selectpicker show-tick form-control" id="format" name="format">
+                        <option value="">Sélectionnez un format</option>
+                        <?php foreach ($formats as $key => $libelle): ?>
+                            <option value="<?php echo $key; ?>"
+                                    <?php if (isset($data["format"]) and $data["format"] == $key) : ?>
+                                        selected
+                                    <?php endif; ?>
+                            >
+                                <?php echo $libelle; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <br>
+                    <label for="mode"> Mode de traitement <span class="icon icon-obligatoire"
+                                                                title="Champ obligatoire"></span></label>
+                    <select class="selectpicker show-tick form-control" id="mode" name="mode">
+                        <option value="preview"
+                                <?php if (isset($data["mode"]) and $data["mode"] === "preview") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >Prévisualisation
+                        </option>
+                        <option value="import"
+                                <?php if (isset($data["mode"]) and $data["mode"] === "import") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >Importation
+                        </option>
+                    </select>
+                    <br>
+                    <button type='submit' class="btn btn-success">
+                        <span class="icon icon-csv"></span>
+                        Traiter le fichier
+                    </button>
 
-<?php echo $this->form($form); ?>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            Deux formats sont reconnus :
+            <ul>
+                <li> le format <code>REFERENS3</code></li>
+                <li> le format <code>RMFP</code></li>
+            </ul>
+            Pour les établissements avec un référentiel maison qui souhaiteraient importer les fiches métiers, choisir l’une des 2 trames proposées.
+            <br><br>
+
+            <strong><span class="icon icon-attention"></span> Remarques :</strong>
+            <ul>
+                <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
+                <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
+                <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong>.</li>
+                <li>Pour <code>REFERENS3</code> le séparateur est <code>|</code>. </li>
+                <li>Pour <code>RMFP</code> le séparateur est le <em>saut de ligne</em>. </li>
+                <?php if ($displayCodeFonction) : ?>
+                    <li>La colonne <code>Code Fonction</code> peut être ajoutée aux deux trames vierges pour les renseigner lors de l'import.</li>
+                <?php endif; ?>
+            </ul>
+
+            <?php if ($displayCodeFonction) : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3_codefonction.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp_codefonction.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
+            <?php else : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp.csv">
+                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
+            <?php endif; ?>
+            <br><br>
+            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
+                <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>
+            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv">
+                <span class="icon icon-csv"></span> Le référentiel des fiches métiers RMFP</a><br>
+
+
+
+        </div>
+    </div>
+</div>
 
 <?php if (!empty($error)) : ?>
     <div class="alert alert-danger">
@@ -70,52 +216,54 @@ $this->headTitle("Importation des fiches métiers");
 <?php endif; ?>
 
 <?php foreach ($fiches as $fiche) : ?>
-    <?php $metier = $fiche->getMetier(); ?>
-    <hr>
-    <?php echo $metier->getLibelle(); ?>
-    <br>
-    Catégorie :
-    <ul>
-        <li>
-            <?php if ($metier->getCategorie()) :?>
-                <?php echo ($fiche->getMetier()->getCategorie())?->getLibelle(); ?>
-            <?php else : ?>
-                <span class="text-warning">
-                    <span class="icon icon-warning"></span>
-                    Aucune catégorie de connue pour le métier
-                </span>
-            <?php endif; ?>
-         </li>
-    </ul>
-    Correspondances :
-    <ul>
-    <?php foreach ($fiche->getMetier()->getCorrespondances() as $correspondance) : ?>
-        <li> <?php echo $correspondance->getCategorie(); ?> - <?php echo $correspondance->getLibelleLong(); ?> </li>
-    <?php endforeach; ?>
-    </ul>
-    Familles professionnelles :
-    <ul>
-        <?php foreach ($fiche->getMetier()->getFamillesProfessionnelles() as $famille) : ?>
-            <li> <?php echo $famille->getLibelle(); ?> </li>
-        <?php endforeach; ?>
-    </ul>
-    <br>
-    Missions : <br>
+
+    <h3><span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+    <?php if ($fiche->getFamilleProfessionnelle()) echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
+    <?php if ($fiche->getFamilleProfessionnelle()?->getCorrespondance()) echo $fiche->getFamilleProfessionnelle()->getCorrespondance()->getLibelleLong(); ?>
+
     <?php foreach ($fiche->getMissions() as $mission) : ?>
-        <strong><?php echo $mission->getMission()->getLibelle(); ?></strong>
-        <ul>
-            <?php foreach ($mission->getMission()->getActivites() as $activite) : ?>
-                <li>
-                    <?php echo $activite->getLibelle(); ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <div class="card">
+            <div class="card-header bg-default"> <?php echo $mission->getMission()->getLibelle(); ?> </div>
+            <div class="card-body">
+                <ul>
+                    <?php foreach ($mission->getMission()->getActivites() as $activite) : ?>
+                        <?php if ($activite->getOrdre() !== -1) : ?>
+                            <li> <?php echo $activite->getLibelle(); ?> </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
     <?php endforeach; ?>
-    <br>
-    Compétences :
-    <ul>
-        <?php foreach ($fiche->getCompetenceListe() as $element) : ?>
-            <li> <?php echo $element->getCompetence()->getLibelle(); ?> </li>
+
+    <?php
+    $competences = $fiche->getCompetenceCollection();
+    $dictionnaires = [];
+    foreach ($competences as $competence) {
+        $type = $competence->getCompetence()->getType();
+        $dictionnaires[$type->getLibelle()][$competence->getCompetence()->getReference()] = $competence->getCompetence();
+    }
+    ?>
+
+    <div class="row">
+        <?php foreach ($dictionnaires as $type => $competences_) : ?>
+            <div class="col-md-4">
+                <strong><?php echo $type; ?></strong><br>
+                <?php /** @var Competence $competence */ ?>
+                <?php foreach ($competences_ as $competence) : ?>
+                    <?php echo $competence->getLibelle(); ?>
+                    <span class="badge"
+                          style="background:<?php echo $competence->getReferentiel()->getCouleur(); ?>">
+                        <?php echo $competence->getReferentiel()->getLibelleCourt(); ?><?php echo $competence->getReference(); ?>
+                    </span><br>
+                <?php endforeach; ?>
+            </div>
         <?php endforeach; ?>
-    </ul>
+    </div>
+
+    <?php foreach ($fiche->getTendances() as $tendance) : ?>
+        <strong><?php echo $tendance->getType()->getLibelle(); ?></strong>
+        <?php echo $tendance->getTexte(); ?>
+        <br>
+    <?php endforeach; ?>
 <?php endforeach; ?>

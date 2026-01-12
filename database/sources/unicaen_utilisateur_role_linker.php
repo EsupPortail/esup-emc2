@@ -18,11 +18,11 @@ $data = [
 
 
 $array = [];
-foreach ($data as $item) {
-    $instance = [
-        'user_id' => $item[0],
-        'role_id' => $item[1],
-    ];
-    $array["unicaen_utilisateur_role_linker"][] = $instance;
-}
+//foreach ($data as $item) {
+//    $instance = [
+//        'user_id' => $item[0],
+//        'role_id' => $item[1],
+//    ];
+//    $array["unicaen_utilisateur_role_linker"][] = $instance;
+//}
 return $array;

@@ -27,7 +27,7 @@ $this->headTitle('Cartographie des métiers');
 
         <div class="col-md-5 pull-right">
         <div class="alert alert-warning">
-            <strong>Attention :</strong> La cartographie se base sur les métiers. Par conséquent, une fonction (resp. un domaine ou une famille) vide ne sera pas cartographié.
+            <strong>Attention :</strong> La cartographie se base sur les métiers. Par conséquent, une fonction (resp. une famille) vide ne sera pas cartographié.
         </div>
         </div>
 
@@ -39,7 +39,6 @@ $this->headTitle('Cartographie des métiers');
                 <th> Métier </th>
                 <th> Niveau </th>
                 <th> Références </th>
-                <th> Domaine </th>
                 <th> Fonction </th>
                 <th> Famille professionnelle </th>
                 <th> #Fiche métier</th>
@@ -51,13 +50,12 @@ $this->headTitle('Cartographie des métiers');
 
 
             <tr>
-                <td> <?php echo $result['metier']; ?> </td>
-                <td> <?php echo $result['niveau']; ?> </td>
-                <td> <?php echo $result['références']; ?> </td>
-                <td> <?php echo $result['domaine']; ?> </td>
-                <td> <?php echo $result['fonction']; ?> </td>
-                <td> <?php echo $result['famille']; ?> </td>
-                <td> <?php echo $result['nbFiche']; ?> </td>
+                <td> <?php echo $result['metier']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['niveau']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['références']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['fonction']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['famille']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
+                <td> <?php echo $result['nbFiche']??"<span class='missing-data'>Donnée manquante</span>"; ?> </td>
             </tr>
             <?php endforeach; ?>
         </tbody>

@@ -8,10 +8,10 @@ use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieForm;
 use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieFormFactory;
 use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieHydrator;
 use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieHydratorFactory;
-use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
-use UnicaenPrivilege\Guard\PrivilegeController;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -20,61 +20,62 @@ return [
                 [
                     'controller' => ConfigurationController::class,
                     'action' => [
+                        'index',
                         'ajouter-recopie',
                         'modifier-recopie',
                         'supprimer-recopie',
                     ],
                     'privileges' => [
-                        EntretienproPrivileges::ENTRETIENPRO_DETRUIRE
+                        CampagnePrivileges::CAMPAGNE_MODIFIER
                     ],
                 ],
             ],
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'configuration' => [
-//                'type'  => Literal::class,
-//                'options' => [
-//                    'route'    => '/configuration',
-//                    'defaults' => [
-//                        'controller' => ConfigurationController::class,
-//                        'action'     => 'index',
-//                    ],
-//                ],
-//                'may_terminate' => true,
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/configuration',
+                    'defaults' => [
+                        'controller' => ConfigurationController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
                 'child_routes' => [
                     /** configuration des entretien pro ***************************************************************/
                     'ajouter-recopie' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-recopie/:formulaire',
+                            'route' => '/ajouter-recopie/:formulaire',
                             'defaults' => [
                                 /** @see ConfigurationController::ajouterRecopieAction() */
                                 'controller' => ConfigurationController::class,
-                                'action'     => 'ajouter-recopie',
+                                'action' => 'ajouter-recopie',
                             ],
                         ],
                     ],
                     'modifier-recopie' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-recopie/:recopie/:formulaire',
+                            'route' => '/modifier-recopie/:recopie/:formulaire',
                             'defaults' => [
                                 /** @see ConfigurationController::modifierRecopieAction() */
                                 'controller' => ConfigurationController::class,
-                                'action'     => 'modifier-recopie',
+                                'action' => 'modifier-recopie',
                             ],
                         ],
                     ],
                     'supprimer-recopie' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-recopie/:recopie',
+                            'route' => '/supprimer-recopie/:recopie',
                             'defaults' => [
                                 'controller' => ConfigurationController::class,
-                                'action'     => 'supprimer-recopie',
+                                'action' => 'supprimer-recopie',
                             ],
                         ],
                     ],
@@ -85,7 +86,7 @@ return [
     'service_manager' => [
         'factories' => [],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             ConfigurationController::class => ConfigurationControllerFactory::class,
         ],

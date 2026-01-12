@@ -8,14 +8,14 @@ use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Interop\Container\ContainerInterface;
 use Metier\Form\Metier\MetierForm;
-use Metier\Service\Domaine\DomaineService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
-use Metier\Service\Referentiel\ReferentielService;
+use Referentiel\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class MetierControllerFactory {
+class MetierControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -23,11 +23,10 @@ class MetierControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : MetierController
+    public function __invoke(ContainerInterface $container): MetierController
     {
         /**
          * @var AgentService $agentService
-         * @var DomaineService $domaineService
          * @var FamilleProfessionnelleService $familleService
          * @var MetierService $metierService
          * @var NiveauService $niveauService
@@ -35,7 +34,6 @@ class MetierControllerFactory {
          * @var ReferentielService $referentielService
          */
         $agentService = $container->get(AgentService::class);
-        $domaineService = $container->get(DomaineService::class);
         $familleService = $container->get(FamilleProfessionnelleService::class);
         $metierService = $container->get(MetierService::class);
         $niveauService = $container->get(NiveauService::class);
@@ -51,7 +49,6 @@ class MetierControllerFactory {
 
         $controller = new MetierController();
         $controller->setAgentService($agentService);
-        $controller->setDomaineService($domaineService);
         $controller->setFamilleProfessionnelleService($familleService);
         $controller->setMetierService($metierService);
         $controller->setNiveauService($niveauService);

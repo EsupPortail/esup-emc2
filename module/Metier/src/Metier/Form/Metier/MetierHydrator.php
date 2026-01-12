@@ -4,24 +4,16 @@ namespace Metier\Form\Metier;
 
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Metier\Entity\Db\Metier;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
 class MetierHydrator implements HydratorInterface {
     use CategorieServiceAwareTrait;
-    use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
 
     public function extract(object $object): array
     {
         /** @var  Metier $object */
-
-        $domaineIds = [];
-        $domaines = $object->getDomaines();
-        if ($domaines) {
-            foreach ($domaines as $domaine) $domaineIds[] = $domaine->getId();
-        }
         $familleIds = [];
         $familles = $object->getFamillesProfessionnelles();
         if ($familles) {
@@ -30,7 +22,6 @@ class MetierHydrator implements HydratorInterface {
 
         $data = [
             'categorie' => ($object->getCategorie())?$object->getCategorie()->getId():null,
-            'domaines' => $domaineIds,
             'familles' => $familleIds,
             'libelle' => $object->getLibelle(false),
             'libelle_feminin' => $object->getLibelleFeminin(),
@@ -48,13 +39,6 @@ class MetierHydrator implements HydratorInterface {
 
         /** @var  Metier $object */
 
-        $object->clearDomaines();
-        if (isset($data['domaines'])) {
-            foreach ($data['domaines'] as $id) {
-                $domaine = $this->getDomaineService()->getDomaine($id);
-                if ($domaine) $object->addDomaine($domaine);
-            }
-        }
         $object->clearFamillesProfessionnelles();
         if (isset($data['familles'])) {
             foreach ($data['familles'] as $id) {

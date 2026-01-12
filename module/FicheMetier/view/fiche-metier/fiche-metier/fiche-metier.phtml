@@ -1,5 +1,7 @@
 <?php
 
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Element\Entity\Db\CompetenceType;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -7,6 +9,7 @@ use UnicaenParametre\Entity\Db\Parametre;
 /**
  * @see \FicheMetier\Controller\FicheMetierController::afficherAction()
  * @var FicheMetier $fiche
+ * @var CompetenceType[] $types
  * @var array $competences
  * @var array $competencesSpecifiques
  * @var array $applications
@@ -25,9 +28,12 @@ $titre = " de la fiche métier #" . $fiche->getId(). " : " . $libelle;
 if ($mode === 'affichage') $titre = "Affichage".$titre;
 if ($mode === 'edition-fiche-metier') $titre = "Modification".$titre;
 
-
-
 $this->headTitle($titre);
+
+$canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+$canAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+$canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+
 ?>
 
 <div class="row">
@@ -43,6 +49,50 @@ $this->headTitle($titre);
     </div>
 </div>
 
+<div class="row">
+<div class="float-end">
+    <?php if ($fiche->hasLink()) : ?>
+        <div class="dropdown" style="display:inline-block">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Fiche de référence
+            </button>
+            <ul class="dropdown-menu">
+                <?php if ($fiche->getLienWeb() !== null): ?>
+                    <li><a class="dropdown-item" href="<?php echo $fiche->getLienWeb(); ?>">Version WEB</a></li>
+                <?php endif; ?>
+                <?php if ($fiche->getLienPdf() !== null): ?>
+                    <li><a class="dropdown-item" href="<?php echo $fiche->getLienWeb(); ?>">Version PDF</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+    <?php if ($canExporterFicheMetier): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::exporterAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+           class="btn btn-secondary" target="_blank">
+            <span class="icon icon-pdf"></span>
+            Exporter la fiche métier
+        </a>
+    <?php endif; ?>
+    <?php if ($canModifier AND $mode === "affichage"): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::modifierAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-editer"></span>
+            Basculer en mode Édition
+        </a>
+    <?php endif; ?>
+    <?php if ($canModifier AND $mode === "edition-fiche-metier"): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-voir"></span>
+            Basculer en mode Visualisation
+        </a>
+    <?php endif; ?>
+</div>
+</div>
+
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/raison',   ['fichemetier' => $fiche, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
@@ -51,16 +101,57 @@ $this->headTitle($titre);
    <?php echo $this->partial('partial/missions-principales',   ['fichemetier' => $fiche, 'missionsprincipales' => $missions, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
 
+<!-- COMPETENCES STANDARDS -------------------------------------------------------------------------------------------->
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/competences',            ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode ],       [], true); ?>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-5">
+                    <h2> Compétences </h2>
+                </div>
+                <div class="col-md-7">
+                    <div class="float-end">
+                        <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
+                        <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
+                        >
+                            <span class="icon icon-diagramme"></span>
+                            Afficher les compétences
+                        </a>
+
+                        <?php if ($mode === 'edition-fiche-metier'): ?>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                               class="btn btn-primary ajax-modal" data-event="refresh-competences">
+                                <span class="icon icon-lister"></span>
+                                Gérer les compétences
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <?php foreach($types as $type): ?>
+                <?php if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE): ?>
+                    <div id="competence_<?php echo str_replace(" ","_",$type->getCode()); ?>">
+                        <h3><?php echo $type->getLibelle(); ?> </h3>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
 <?php endif; ?>
+
+
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/competences-specifiques',            ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode ],       [], true); ?>
 <?php endif; ?>
 
-<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICAITON]) || $parametres[FicheMetierParametres::DISPLAY_APPLICAITON]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/applications',           ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode ],     [], true); ?>
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) || $parametres[FicheMetierParametres::DISPLAY_APPLICATION]->getValeur() !== "false") : ?>
+    <div id="neue_applications">
+    </div>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_CONTEXTE]) || $parametres[FicheMetierParametres::DISPLAY_CONTEXTE]->getValeur() !== "false") : ?>
@@ -71,11 +162,95 @@ $this->headTitle($titre);
     <?php echo $this->partial('partial/tendances', ['fichemetier' => $fiche, 'tendancesTypes' => $tendancesTypes, 'tendancesElements' => $tendancesElements, 'mode' => $mode], [], true); ?>
 <?php endif; ?>
 
+
+
 <script>
+    function refreshApplications() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshApplicationsAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-applications", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
+        console.log("refreshing applications");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("#neue_applications div.card-body").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("#neue_applications").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
+    function refreshMissions() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshMissionsAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-missions", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
+        console.log("refreshing missions principales");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("#missions_view").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("#missions_view").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
+    function refreshCompetences(type) {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-competences", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
+        if (type !== undefined) url += "/"+type;
+        console.log("refreshing competences " + type);
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("div#competence_" + type).addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("div#competence_" + type)
+                        .html(retour)
+                        .removeClass('refreshing');
+                }
+        });
+    }
+
     $(function() {
-        $("body").on("modification", function (event) {
+        let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getCode())."'"; }, $types)); ?>];
+
+        $("body")
+            .on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        }).on("refresh-missions", function (event) {
+            event.div.modal('hide');
+            refreshMissions();
+        })            .on("refresh-applications", function (event) {
+            event.div.modal('hide');
+            refreshApplications();
+        }).on("refresh-competences", function (event) {
+            event.div.modal('hide');
+            let type = event.a.data('competence-type');
+            if (type !== undefined) {
+                refreshCompetences(type);
+            } else {
+                types.forEach(function (type) {
+                    refreshCompetences(type);
+                });
+            }
+        });
+
+        refreshMissions();
+        refreshApplications();
+        types.forEach(function (type) {
+            refreshCompetences(type);
         });
     });
 </script>

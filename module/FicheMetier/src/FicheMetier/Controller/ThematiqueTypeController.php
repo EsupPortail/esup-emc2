@@ -4,21 +4,26 @@ namespace FicheMetier\Controller;
 
 use FicheMetier\Entity\Db\ThematiqueType;
 use FicheMetier\Form\ThematiqueType\ThematiqueTypeFormAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class ThematiqueTypeController extends AbstractActionController {
     use ThematiqueTypeServiceAwareTrait;
     use ThematiqueTypeFormAwareTrait;
+    use ParametreServiceAwareTrait;
 
     public function indexAction(): ViewModel
     {
         $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('ordre','ASC', true);
+        $parametres = $this->getParametreService()->getParametresByCategorieCode(FicheMetierParametres::TYPE);
 
         return new ViewModel([
             'thematiquesTypes' => $thematiquesTypes,
+            'parametres' => $parametres
         ]);
     }
 
@@ -27,7 +32,7 @@ class ThematiqueTypeController extends AbstractActionController {
         $thematiqueType = $this->getThematiqueTypeService()->getRequestedThematiqueType($this);
 
         return new ViewModel([
-            'title' => "Affichage du type de thématique",
+            'title' => "Affichage du type de \"Contexte et environnement de travail\"",
             'thematiqueType' => $thematiqueType,
         ]);
     }
@@ -51,7 +56,7 @@ class ThematiqueTypeController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout d'un type de thématique",
+            'title' => "Ajout d'un type de \"Contexte et environnement de travail\"",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -79,7 +84,7 @@ class ThematiqueTypeController extends AbstractActionController {
         }
 
         $vm = new ViewModel([
-            'title' => "Modificaiton d'un type de thématique",
+            'title' => "Modification d'un type de \"Contexte et environnement de travail\"",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');

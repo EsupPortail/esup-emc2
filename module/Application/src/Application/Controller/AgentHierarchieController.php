@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Entity\Db\AgentAffectation;
 use Agent\Service\AgentRef\AgentRefServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
@@ -103,10 +104,10 @@ class AgentHierarchieController extends AbstractActionController
                     if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
                     $date_debut_st = $line[2] ?? null;
                     $dateDebut = ($date_debut_st) ? DateTime::createFromFormat('d/m/Y', $date_debut_st) : null;
-                    if ($dateDebut === false) $warning[] = "Impossibilité de calculé la date de début à partir de [" . $date_debut_st . "]";
+                    if ($dateDebut === false) $warning[] = "Impossibilité de calculer la date de début à partir de [" . $date_debut_st . "]";
                     $date_fin_st = $line[3] ?? null;
                     $dateFin = ($date_fin_st) ? DateTime::createFromFormat('d/m/Y', $date_fin_st) : null;
-                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculé la date de fin à partir de [" . $date_fin_st . "]";
+                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculer la date de fin à partir de [" . $date_fin_st . "]";
 
                     $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
                     if ($agent) $agents[$agent->getId()] = $agent;
@@ -591,8 +592,13 @@ class AgentHierarchieController extends AbstractActionController
                 break;
         }
 
+        $title = "Historique des ";
+        if ($type === 'autorite') $title .= "autorité·s hiérarchiques";
+        if ($type === 'superieur') $title .= "supérieur·es hiérarchiques direct·es";
+        $title .= " de " . $agent->getDenomination();
+
         $vm = new ViewModel([
-            'title' => "Historisque des chaines hiérarchiques [" . $type . "]",
+            'title' => $title,
             'agent' => $agent,
             'type' => $type,
             'chaines' => $chaines,
@@ -611,17 +617,24 @@ class AgentHierarchieController extends AbstractActionController
             };
         if ($chaines === null) throw new RuntimeException("Le type [" . $type . "] est inconnu.");
 
-        $header = ["agent", $type, "debut", "fin"];
+        $header = ["agent", "agent_id", $type, $type."_id", "structure·s d'affectation", "debut", "fin"];
         $data = [];
         foreach ($chaines as $chaine) {
             $data[] =
                 [
                     $chaine->getAgent()->getDenomination(),
+                    $chaine->getAgent()->getId(),
                     match ($type) {
                         'superieur' => $chaine->getSuperieur()->getDenomination(),
                         'autorite' => $chaine->getAutorite()->getDenomination(),
                         default => null,
                     },
+                    match ($type) {
+                        'superieur' => $chaine->getSuperieur()->getId(),
+                        'autorite' => $chaine->getAutorite()->getId(),
+                        default => null,
+                    },
+                    implode ("|", array_map(function (AgentAffectation $a) { return $a->getStructure()->getLibelleCourt(); }, $chaine->getAgent()->getAffectationsActifs())),
                     ($chaine->getDateDebut())?->format('d/m/Y'),
                     ($chaine->getDateFin())?->format('d/m/Y'),
                 ];

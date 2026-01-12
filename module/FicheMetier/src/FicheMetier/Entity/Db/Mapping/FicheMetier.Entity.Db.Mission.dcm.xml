@@ -7,47 +7,35 @@
         </id>
 
         <field name="libelle" type="string" length="1024" column="libelle"/>
+        <field name="codesFicheMetier" type="text" column="codes_fiche_metier"/>
+        <field name="codesFonction" type="text" column="codes_fonction"/>
 
         <many-to-one target-entity="Carriere\Entity\Db\NiveauEnveloppe"  field="niveau">
             <join-column name="niveau_id" referenced-column-name="id"/>
         </many-to-one>
-        
-        <many-to-many field="domaines" target-entity="Metier\Entity\Db\Domaine">
-            <join-table name="missionprincipale_domaine">
+
+        <many-to-many field="famillesProfessionnelles" target-entity="Metier\Entity\Db\FamilleProfessionnelle">
+            <join-table name="missionprincipale_familleprofessionnelle">
                 <join-columns>
                     <join-column name="mission_id" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="domaine_id" referenced-column-name="id" />
+                    <join-column name="famille_id" referenced-column-name="id" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
 
         <one-to-many target-entity="FicheMetier\Entity\Db\MissionActivite" mapped-by="mission" field="activites"/>
-
-        <many-to-many field="applications" target-entity="Element\Entity\Db\ApplicationElement">
-            <join-table name="missionprincipale_application">
-                <join-columns>
-                    <join-column name="mission_id" referenced-column-name="id" />
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="application_element_id" referenced-column-name="id" />
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-        <many-to-many field="competences" target-entity="Element\Entity\Db\CompetenceElement">
-            <join-table name="missionprincipale_competence">
-                <join-columns>
-                    <join-column name="mission_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="competence_element_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="mission" field="listeFicheMetierMission"/>
         <one-to-many target-entity="FichePoste\Entity\Db\MissionAdditionnelle" mapped-by="mission" field="listeFichePosteMission"/>
+
+        <field name="sourceString" type="text" column="source_string"/>
+
+        <!-- HAS REFERENCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel"  field="referentiel">
+            <join-column name="referentiel_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="reference" length="256" column="reference"/>
 
         <!-- HISTO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

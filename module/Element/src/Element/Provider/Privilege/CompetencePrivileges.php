@@ -13,4 +13,6 @@ class CompetencePrivileges extends Privileges
     const COMPETENCE_HISTORISER = 'competence-competence_historiser';
     const COMPETENCE_EFFACER = 'competence-competence_effacer';
     const COMPETENCE_SUBSTITUER = 'competence-competence_substituer';
+
+    const COMPETENCE_IMPORTER = 'competence-competence_importer';
 }

@@ -83,4 +83,34 @@ class FicheMetierMissionService
         }
         return $result;
     }
+
+    public function getFichesMetiersMissionsByFicheMetier(?FicheMetier $fichemetier)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fichemetiermission.ficheMetier = :ficheMetier')->setParameter('ficheMetier', $fichemetier)
+            ->orderBy('fichemetiermission.ordre, mission.libelle', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+    }
+
+    /** FACADE ********************************************************************************************************/
+
+    // NOTE : cette mission sauve tous les éléments d'une mission */
+    public function deepCreate(FicheMetierMission $fichemetierMission): void
+    {
+        $mission = $fichemetierMission->getMission();
+        $activites = $mission->getActivites();
+        $mission->clearActivites();
+        $this->getObjectManager()->persist($mission);
+        $this->getObjectManager()->flush($mission);
+        foreach ($activites as $activite) {
+            $this->getObjectManager()->persist($activite);
+            $this->getObjectManager()->flush($activite);
+            $mission->addMissionActivite($activite);
+        }
+        $this->getObjectManager()->flush($mission);
+        $this->create($fichemetierMission);
+    }
 }

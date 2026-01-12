@@ -8,6 +8,10 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class TendanceType implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+    const IMPACT = 'impact';
+    const FACTEUR = 'facteur';
+    const CONDITIONS = 'condition';
+
     private ?int $id = null;
     private ?string $code = null;
     private ?string $libelle = null;

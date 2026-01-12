@@ -3,10 +3,10 @@
 /**
  * @see CompetenceController::afficherAction()
  *
- * @var Mission[] $missions
  * @var Competence $competence
  * @var FicheMetier[] $fiches
  * @var Agent[] $agents
+ * @var bool $displayCodeFonction
  */
 
 use Application\Entity\Db\Agent;
@@ -27,25 +27,49 @@ use FicheMetier\Entity\Db\Mission;
     <dd class="col-md-8"> <?php echo $competence->getDescription(); ?> </dd>
     <dt class="col-md-4"> Référence </dt>
     <dd class="col-md-8">
-        <?php echo ($competence->getReferentiel())?$this->competenceReference($competence):"Aucun"; ?>
+        <?php echo ($competence->getReferentiel())?$competence->printReference():"Aucun"; ?>
     </dd>
+    <dt class="col-md-4"> Codes Emploi Types</dt>
+    <dd class="col-md-8">
+        <?php if ($competence->getCodesEmploiType()) : ?>
+            <?php echo implode("|", $competence->getCodesEmploiType()); ?>
+        <?php else : ?>
+            <span class="missing-data">Aucun code emploi type</span>
+        <?php endif; ?>
+    </dd>
+    <?php if ($displayCodeFonction === true) : ?>
+        <dt class="col-md-4"> Codes Fonction</dt>
+        <dd class="col-md-8">
+            <?php if ($competence->getCodesFonction()) : ?>
+                <?php echo implode("|", $competence->getCodesFonction()); ?>
+            <?php else : ?>
+                <span class="missing-data">Aucun code fonction</span>
+            <?php endif; ?>
+        </dd>
+    <?php endif; ?>
     <dt class="col-md-4"> Fiche·s metier·s </dt>
     <dd class="col-md-8">
         <!-- Nombre de fiches metiers : -->
         <?php echo count($fiches); ?> fiche·s métier·s
         <ul>
             <?php foreach ($fiches as $fiche) : ?>
-                <li> <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)</li>
-            <?php endforeach; ?>
-        </ul>
-    </dd>
-    <dt class="col-md-4"> Mission·s principale·s </dt>
-    <dd class="col-md-8">
-        <!-- Nombre de fiches metiers : -->
-        <?php echo count($missions); ?> mission·s principale·s
-        <ul>
-            <?php foreach ($missions as $mission) : ?>
-                <li> <?php echo $mission->getLibelle(); ?> (#<?php echo $mission->getId(); ?>)</li>
+                <li>
+                    <?php if ($fiche->getLibelle()): ?>
+                        <?php echo $fiche->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
+                    <?php elseif ($fiche->getMetier()) : ?>
+                        <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
+                    <?php endif; ?>
+                    <?php if ($displayCodeFonction === true) : ?>
+                        <?php if ($fiche->getCodeFonction()) : ?>
+                            <code>
+                                <?php echo $fiche->getCodeFonction()->computeCode(); ?>
+                            </code>
+                        <?php else : ?>
+                            <span class="missing-data">Aucun code fonction</span>
+                        <?php endif; ?>
+                    <?php endif ?>
+
+                </li>
             <?php endforeach; ?>
         </ul>
     </dd>
@@ -53,8 +77,12 @@ use FicheMetier\Entity\Db\Mission;
 
 <h2>  Agents ayant en acquis la compétence </h2>
 
-<ul>
-    <?php foreach($agents as $agent): ?>
-        <li> <?php echo $agent->getDenomination(true); ?> </li>
-    <?php endforeach; ?>
-</ul>
+<?php if (!empty($agents)) : ?>
+    <ul>
+        <?php foreach($agents as $agent): ?>
+            <li> <?php echo $agent->getDenomination(true); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else : ?>
+    Aucun·e agent·e ne possède cette compétence
+<?php endif; ?>

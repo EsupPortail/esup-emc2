@@ -1,12 +1,15 @@
 <?php
 
 /**
+ * @var Referentiel[] $referentiels
  * @var EtatType[] $etatTypes
- * @var Domaine[] $domaines
+ * @var CodeFonction[] $codesFonctions
  * @var array $params
+ * @var bool $displayCodeFonction
  */
 
-use Metier\Entity\Db\Domaine;
+use FicheMetier\Entity\Db\CodeFonction;
+use Referentiel\Entity\Db\Referentiel;
 use UnicaenEtat\Entity\Db\EtatType;
 
 ?>
@@ -21,34 +24,34 @@ use UnicaenEtat\Entity\Db\EtatType;
             <div class="row">
                 <div class="col-md-10">
                     <div class="row">
-                        <!-- DOMAINE -->
+                        <!-- REFERENTIEL -->
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="domaine">Domaine du métier :</label>
-                                <select id="domaine" name="domaine" class="selectpicker">
-                                    <option value=""> Tous les domaines</option>
-                                    <?php foreach ($domaines as $domaine) : ?>
-                                        <option
-                                                value="<?php echo $domaine->getId(); ?>"
-                                            <?php if ($domaine->getId() == $params['domaine']) echo " selected "; ?>
-                                        >
-                                            <?php echo $domaine->getLibelle(); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
+                            <label for="referentiel">Référentiel :</label>
+                            <select id="referentiel" name="referentiel" class="form-control selectpicker"
+                                    data-live-search="true">
+                                <option value="">Peu importe</option>
+                                <?php foreach ($referentiels as $referentiel) : ?>
+                                    <option value="<?php echo $referentiel->getId(); ?>"
+                                            data-content="<?php echo $referentiel->printLabel(); ?>"
+                                            <?php if ($params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
+                                    >
+                                        <?php echo $referentiel->getLibelleLong(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <!-- ETAT -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="etat">État de la fiche :</label>
+                                <br>
                                 <select id="etat" name="etat" class="selectpicker">
                                     <option value=""> Tous les états</option>
                                     <?php foreach ($etatTypes as $etatType) : ?>
                                         <option
                                                 value="<?php echo $etatType->getId(); ?>"
                                                 data-content='<?php echo $this->etattype($etatType); ?> <?php echo str_replace("'", "", $etatType->getLibelle()); ?>'
-                                            <?php if ($etatType->getId() === $params['etat']) echo " selected "; ?>
+                                                <?php if ($etatType->getId() === $params['etat']) echo " selected "; ?>
                                         >
                                             <?php echo $etatType->getLibelle(); ?>
                                         </option>
@@ -56,19 +59,27 @@ use UnicaenEtat\Entity\Db\EtatType;
                                 </select>
                             </div>
                         </div>
-                        <!-- EXPERTISE -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="expertise">Sujet à expertise:</label>
-                                <select id="expertise" name="expertise" class="selectpicker">
-                                    <option value="">Pas de sélection</option>
-                                    <option value="1" <?php if ("1" == $params['expertise']) echo " selected "; ?>>Oui
-                                    </option>
-                                    <option value="0" <?php if ("0" == $params['expertise']) echo " selected "; ?>>Non
-                                    </option>
-                                </select>
+                        <!-- CODE FONCTION -->
+                        <?php if ($displayCodeFonction) : ?>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="codefonction">Code fonction :</label>
+                                    <br>
+                                    <select id="codefonction" name="codefonction" class="selectpicker">
+                                        <option value=""> Tous les codes fonctions</option>
+                                        <?php foreach ($codesFonctions as $codefonction) : ?>
+                                            <option
+                                                    value="<?php echo $codefonction->getId(); ?>"
+                                                    data-content='<code><?php echo $codefonction->computeCode(); ?></code>'
+                                                    <?php if ($codefonction->getId() == $params['codefonction']) echo " selected "; ?>
+                                            >
+                                                <?php echo $codefonction->computeCode(); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <!-- BOUTON -->
@@ -89,24 +100,9 @@ use UnicaenEtat\Entity\Db\EtatType;
 
 
 <script>
-    $("form#filtre").on("submit", function (e) {
+    $('button#clear').click(function(e) {
         e.preventDefault();
-    });
-
-    $('button#clear').on("click", function () {
-        window.location.href = 'fiche-metier';
-    });
-
-    $('button#filter').on("click", function () {
-        let etatId = $('select#etat option:selected').val();
-        let domaineId = $('select#domaine option:selected').val();
-        let expertise = $('select#expertise').val();
-        console.log("etat=" + etatId + " | " + "domaine=" + domaineId + " | " + "expertise=" + expertise);
-
-        let query = "";
-        query += "&etat=" + etatId;
-        query += "&domaine=" + domaineId;
-        query += "&expertise=" + expertise;
-        window.location.href = 'fiche-metier?' + query;
+        console.log("Clicked");
+        window.location.href = '?';
     });
 </script>

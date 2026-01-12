@@ -5,36 +5,44 @@ namespace FicheMetier\Service\FicheMetier;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Application\Service\Macro\MacroServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
+use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceDiscipline;
 use Element\Entity\Db\CompetenceElement;
+use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationHydratorAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceHydratorAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
-use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
+use Referentiel\Entity\Db\Referentiel;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
@@ -42,16 +50,20 @@ class FicheMetierService
 {
     use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
+    use CodeFonctionServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
-    use CompetenceReferentielServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
-    use DomaineServiceAwareTrait;
     use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;
+    use MacroServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use NiveauFonctionServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
 
     use HasApplicationCollectionServiceAwareTrait;
@@ -108,13 +120,12 @@ class FicheMetierService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
-            ->addSelect('metier')->join('ficheMetier.metier', 'metier')
-            ->addSelect('domaine')->leftjoin('metier.domaines', 'domaine')
+            ->addSelect('metier')->leftJoin('ficheMetier.metier', 'metier')
             ->addSelect('famille')->leftjoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
-            ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
+            ->addSelect('referentiel')->leftJoin('ficheMetier.referentiel', 'referentiel')
+            ->addSelect('codeFonction')->leftJoin('ficheMetier.codeFonction', 'codeFonction');
         $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
@@ -140,17 +151,17 @@ class FicheMetierService
         $qb = $this->createQueryBuilder()
             ->orderBy('ficheMetier.' . $champ, $ordre);
 
-        if (isset($filtre['expertise']) and $filtre['expertise'] != '') {
-            $expertise = null;
-            if ($filtre['expertise'] == "1") $expertise = true;
-            if ($filtre['expertise'] == "0") $expertise = false;
-            if ($expertise !== null) $qb = $qb->andWhere('ficheMetier.hasExpertise = :expertise')->setParameter('expertise', $expertise);
-        }
         if (isset($filtre['etat']) and $filtre['etat'] != '') {
             $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $filtre['etat']);
         }
-        if (isset($filtre['domaine']) and $filtre['domaine'] != '') {
-            $qb = $qb->andWhere('domaine.id = :domaine')->setParameter('domaine', $filtre['domaine']);
+        if (isset($filtre['referentiel']) and $filtre['referentiel'] != '') {
+            $qb = $qb->andWhere('referentiel.id = :referentiel')->setParameter('referentiel', $filtre['referentiel']);
+        }
+        if (isset($filtre['codefonction']) and $filtre['codefonction'] != '') {
+            $qb = $qb->andWhere('codeFonction.id = :codefonction')->setParameter('codefonction', $filtre['codefonction']);
+        }
+        if (isset($filtre['famille']) and $filtre['famille'] != '') {
+            $qb = $qb->andWhere('famille.id = :famille')->setParameter('famille', $filtre['famille']);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -221,8 +232,7 @@ class FicheMetierService
 
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -242,11 +252,10 @@ class FicheMetierService
     }
 
     /** @return FicheMetier[] */
-    public function getFicheByDomaine(Domaine $domaine): array
+    public function getFicheByFamilleProfessionnelle(FamilleProfessionnelle $famille): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('domaine = :domaine')
-            ->setParameter('domaine', $domaine)
+            ->andWhere('famille = :famille')->setParameter('famille', $famille)
             ->orderBy('metier.libelle');
 
         $result = $qb->getQuery()->getResult();
@@ -255,23 +264,36 @@ class FicheMetierService
 
     public function getFichesMetiersAsOptionGroup(): array
     {
-        $domaines = $this->getDomaineService()->getDomaines();
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
         $options = [];
 
-        foreach ($domaines as $domaine) {
+        foreach ($familles as $famille) {
             $optionsoptions = [];
-            foreach ($this->getFicheByDomaine($domaine) as $fiche) {
+            foreach ($this->getFicheByFamilleProfessionnelle($famille) as $fiche) {
                 if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . " (dernière modification " . $fiche->getHistoModification()->format("d/m/Y") . ")";
             }
             asort($optionsoptions);
             $array = [
-                'label' => $domaine->getLibelle(),
+                'label' => $famille->getLibelle(),
                 'options' => $optionsoptions,
             ];
             $options[] = $array;
         }
 
         return $options;
+    }
+
+    public function getFicheMetierByReferentielAndCode(Referentiel $referentiel, string $code): ?FicheMetier
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ficheMetier.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
+            ->andWhere('ficheMetier.reference = :code')->setParameter('code', $code);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".FicheMetier::class."] partagent la même identification [".$referentiel->getLibelleCourt()."|".$code."]",-1,$e);
+        }
+        return $result;
     }
 
     /** FACADE ********************************************************************************************************/
@@ -368,6 +390,32 @@ class FicheMetierService
      * @param bool $asElement
      * @return array
      */
+    public function getCompetencesDictionnairesByType(FicheMetier $fiche, CompetenceType $type, bool $asElement = false): array
+    {
+        //todo faire mieux en requetant correctement
+        $listing = $fiche->getCompetenceListe();
+        $listing = array_filter($listing, function (CompetenceElement $element) use ($type) {
+            $competence = $element->getCompetence();
+            return $competence->getType() === $type;
+        });
+
+        $dictionnaire = [];
+
+        foreach ($listing as $competenceElement) {
+            $competence = ($asElement) ? $competenceElement : $competenceElement->getCompetence();
+            $dictionnaire[$competence->getId()]["entite"] = $competence;
+            $dictionnaire[$competence->getId()]["raison"][] = $fiche;
+            $dictionnaire[$competence->getId()]["conserve"] = true;
+        }
+
+        return $dictionnaire;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param bool $asElement
+     * @return array
+     */
     public function getCompetencesDictionnaires(FicheMetier $fiche, bool $asElement = false): array
     {
         $dictionnaire = [];
@@ -389,16 +437,7 @@ class FicheMetierService
      */
     public function getCompetencesSpecifiquesDictionnaires(FicheMetier $fiche, bool $asElement = false): array
     {
-        $dictionnaire = [];
-
-        foreach ($fiche->getCompetenceSpecifiqueListe() as $competenceElement) {
-            $competence = ($asElement) ? $competenceElement : $competenceElement->getCompetence();
-            $dictionnaire[$competence->getId()]["entite"] = $competence;
-            $dictionnaire[$competence->getId()]["raison"][] = $fiche;
-            $dictionnaire[$competence->getId()]["conserve"] = true;
-        }
-
-        return $dictionnaire;
+        return [];
     }
 
     /**
@@ -427,7 +466,6 @@ class FicheMetierService
         $duplicata = new FicheMetier();
         //base
         $duplicata->setMetier($fiche->getMetier());
-        $duplicata->setExpertise($fiche->hasExpertise());
         $this->create($duplicata);
 
         //missions principales
@@ -497,7 +535,7 @@ class FicheMetierService
         $competences_index = array_search('COMPETENCES_ID', $array[0]);
         $competences_ids = explode(FicheMetierService::REFERENS_SEP, $array[1][$competences_index]);
 
-        $referens = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('REFERENS');
+        $referens = $this->getReferentielService()->getReferentielByLibelleCourt('REFERENS3');
         if ($referens === null) {
             throw new RuntimeException("<strong>Aucun référentiel de compétence [REFERENS].</strong><br>Celui-ci est nécessaire pour l'import de fiche CSV ReferensIII.");
         }
@@ -528,9 +566,29 @@ class FicheMetierService
 
     public function exporter(?FicheMetier $fichemetier): string
     {
+        $displayResume = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RESUME);
+        $displayCode = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
+        $displayRaison = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_RAISON);
+        $displayMission = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_MISSION);
+        $displayApplications = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_APPLICATION);
+        $displayCompetences = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_COMPETENCE);
+        $displayCompetencesSpecifiques = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE);
+        $displayContexte = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_CONTEXTE);
+        $displayTendance = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_TENDANCE);
+
         $vars = [
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
+            'MacroService' => $this->getMacroService(),
+            'DISPLAY_RESUME' => $displayResume,
+            'DISPLAY_CODEFONCTION' => $displayCode,
+            'DISPLAY_RAISON' => $displayRaison,
+            'DISPLAY_MISSION' => $displayMission,
+            'DISPLAY_APPLICATION' => $displayApplications,
+            'DISPLAY_COMPETENCE' => $displayCompetences,
+            'DISPLAY_COMPETENCE_SPECIFIQUE' => $displayCompetencesSpecifiques,
+            'DISPLAY_CONTEXTE' => $displayContexte,
+            'DISPLAY_TENDANCE' => $displayTendance,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_METIER, $vars);
 
@@ -550,11 +608,60 @@ class FicheMetierService
     public function getFichesMetiersByMetier(Metier $metier, ?string $raw = null): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('ficheMetier.metier = :metier')->setParameter('metier', $metier)
-        ;
+            ->andWhere('ficheMetier.metier = :metier')->setParameter('metier', $metier);
         if ($raw !== null) $qb->andWhere('ficheMetier.raw = :raw')->setParameter('raw', $raw);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    public function getFichesMetiersByDiscipline(?CompetenceDiscipline $discipline): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->join('ficheMetier.competences', 'competenceElement')->addSelect('competenceElement')
+            ->join('competenceElement.competence', 'competence')->addSelect('competence')
+            ->leftjoin('competence.discipline', 'discipline')->addSelect('discipline')
+            ->andWhere('ficheMetier.histoDestruction IS NULL')
+            ->orderby('metier.libelle');
+        $qb = $qb->andWhere('competence.discipline = :discipline')->setParameter('discipline', $discipline);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getFichesMetiersByDisciplines(array $disciplines): array
+    {
+        //note : si trop lent faire en dql ...
+        $results = [];
+        foreach ($disciplines as $discipline) {
+            $results[$discipline->getId()] = $this->getFichesMetiersByDiscipline($discipline);
+        }
+        return $results;
+    }
+
+    /** @return FicheMetier[] */
+    public function getFichesMetiersByCodeFonction(string $strCodeFonction, bool $withHisto = false): array
+    {
+        //NB ici on décompose le code fonction ce qui suppose qu'il est correctement construit sinon cela va échouer
+        // niveau de fonction 4 premieres lettres
+        $codeNiveauFonction = substr($strCodeFonction, 0, 4);
+        $niveauFonction = $this->getNiveauFonctionService()->getNiveauFonctionByCode($codeNiveauFonction);
+        if ($niveauFonction === null) return [];
+
+        // le reste correspond au code de la famille professionnelle
+        $codeFamilleProfessionnelle = substr($strCodeFonction,4);
+        $familleProfessionnelle = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByCode($codeFamilleProfessionnelle);
+        if ($familleProfessionnelle === null) return [];
+
+        $codeFonction = $this->getCodeFonctionService()->getCodeFonctionByNiveauAndFamille($niveauFonction, $familleProfessionnelle);
+        if ($codeFonction === null) return [];
+
+        $qb= $this->createQueryBuilder()
+            ->andWhere('ficheMetier.codeFonction = :codeFonction')->setParameter('codeFonction', $codeFonction);
+        if (!$withHisto) $qb = $qb->andWhere('ficheMetier.histoDestruction IS NULL');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+    }
+
 
 }

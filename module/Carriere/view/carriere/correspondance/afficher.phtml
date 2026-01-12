@@ -1,0 +1,46 @@
+<?php
+
+use Carriere\Entity\Db\Correspondance;
+use Metier\Entity\Db\FamilleProfessionnelle;
+
+/**
+ * @see \Carriere\Controller\CorrespondanceController::afficherAction()
+ * @var Correspondance $correspondance
+ */
+
+?>
+
+<h2> Description de la correspondance </h2>
+<div class="row">
+    <div class="col-md-6">
+
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</div>
+
+<h2> Familles d'activités professionnelles associées </h2>
+
+<?php $familles = $correspondance->getFamilles(); ?>
+
+<?php if(empty($familles)): ?>
+    Aucune famille d'activité professionnelle associée
+<?php else: ?>
+    <?php usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) {
+        if ($a->getPosition() !== $b->getPosition()) {
+            return $a->getPosition() <=> $b->getPosition();
+        }
+        return $a->getLibelle() <=> $b->getLibelle();
+    }); ?>
+    <ul>
+    <?php foreach($familles as $famille): ?>
+        <li>
+            <?php echo $famille->getLibelle(); ?>
+            <?php if ($famille->getPosition()) : ?>
+                (Position dans la correspondance: <?php echo $famille->getPosition(); ?>)
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

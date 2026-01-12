@@ -1,0 +1,262 @@
+<?php
+
+/**
+ * @see \Element\Controller\CompetenceController::importerAction()
+ * @var CompetenceReferentiel[] $referentiels
+ * @var Competence[] $competences
+ * @var array $data
+ * @var array $file
+ * @var string[] $info
+ * @var string[] $warning
+ * @var string[] $error
+ * @var bool $displayCodeFonction
+ *
+ * @var ?string $filepath
+ * @var ?string $filename
+ */
+
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceReferentiel;
+use Element\Provider\Privilege\CompetencePrivileges;
+
+$this->headTitle("Importation de compétences");
+
+$canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
+?>
+
+<script>
+    function reset() {
+        console.log('click');
+        window.location.href="../competence/importer";
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="page-header"> Importation de compétences</h1>
+    </div>
+    <div class="col-md-6">
+        <?php if ($canCompetenceIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
+            <a href="<?php echo $this->url('element/competence/listing', [], [], true); ?>" class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux compétences</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Importation de compétences depuis un CSV</div>
+            <div class="card-body">
+                <form enctype="multipart/form-data"
+                      action="<?php echo $this->url('element/competence/importer', ['path' => null], [], true); ?>"
+                      method="post">
+                    <?php if ($filepath !== null) : ?>
+                        <span class="form-label">Fichier téléversé : </span><br>
+                        <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
+                            <div class='row'>
+                                <div class='col-md-9'> <?php echo $filename; ?> </div>
+                                <div class='col-md-3'>
+                                    <div class='float-end'>
+                                        <span class="action text-danger" style="cursor: pointer;" onclick="reset()">
+                                            <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span> Retirer
+                                        </span>
+                                </div></div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="filepath" id="filepath" value="<?php echo $filepath; ?>">
+                        <input type="hidden" name="filename" id="filename" value="<?php echo $filename; ?>">
+                    <?php else : ?>
+                        <label for="file">Fichier à importer <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
+                        <input type="file" name="file" id="file" class="form-control" accept=".csv"/>
+                    <?php endif; ?>
+                    <label for="referentiel"> Référentiel <span class="icon icon-obligatoire" title="Champ obligatoire"></span> </label>
+                    <select class="selectpicker show-tick form-control" id="referentiel" name="referentiel">
+                        <option value="">Sélectionnez un référentiel</option>
+                        <?php foreach ($referentiels as $referentiel): ?>
+                            <option value="<?php echo $referentiel->getId(); ?>"
+                                    <?php if (isset($data["referentiel"]) AND $data["referentiel"] == $referentiel->getId()) : ?>
+                                        selected
+                                    <?php endif; ?>
+                            >
+                                <?php echo $referentiel->getLibelleCourt(); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <br>
+                    <label for="mode"> Mode de traitement <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
+                    <select class="selectpicker show-tick form-control" id="mode" name="mode">
+                        <option value="preview"
+                            <?php if (isset($data["mode"]) AND $data["mode"] === "preview") : ?>
+                                selected
+                            <?php endif; ?>
+                        >Prévisualisation</option>
+                        <option value="import"
+                            <?php if (isset($data["mode"]) AND $data["mode"] === "import") : ?>
+                                selected
+                            <?php endif; ?>
+                        >Importation</option>
+                    </select>
+                    <br>
+                    <button type='submit' class="btn btn-success">
+                        <span class="icon icon-csv"></span>
+                        Traiter le fichier
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            <span class="icon icon-info"></span> <strong>À propos du format des imports de compétences.</strong>
+            <br>
+            Vous pouvez importer vos compétences "normales" en même temps que vos compétences spécifiques si ces dernières peuvent être affectées au même référentiel.
+            En revanche, si vous souhaitez qu'elles soient étiquetées "Référentiel Compétences Spécifiques" par exemple, vous devrez construire et importer deux fichiers différents en choisissant à chaque fois le bon référentiel.
+            <br>
+            Pour construire votre fichier, respectez les colonnes suivantes.
+            L'importation ne tient pas compte de l'ordre des colonnes, mais du libellé exact (avec accent et majuscule) de celles-ci :
+            <ul>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> l'identifiant unique de la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> le libellé de la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_TYPE; ?></code> <span class="icon icon-obligatoire"></span> le type de la compétence (mettre Connaissance ou Compétence comportementale ou Compétence opérationnelle ou Compétence spécifique),</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_THEME; ?></code> le thème associé à la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_DEFINITION; ?></code> la définition associée à la compétence,</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_DISCIPLINE; ?></code> colonne pour les compétences spécifiques uniquement - laisser vide pour les compétences "normales",</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_SYNONYMES; ?></code> la liste des libellés synonymes.
+                <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE; ?></code> la liste des codes emploi-types devant avoir la compétence.
+                <?php if ($displayCodeFonction) : ?>
+                    <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_FONCTION; ?></code> la liste des codes fonctions devant avoir la compétence.
+                <?php endif; ?>
+
+            </ul>
+
+            <u><strong>Remarques :</strong></u>
+                <ul>
+                    <li>Les colonnes obligatoires sont désignées par l'icone&nbsp;<span class="icon icon-obligatoire"></span>.</li>
+                    <li>Le séparateur dans les listes est <code>|</code>. Par exemple la liste "Rigueur", "Rigoureux" et "Faire preuve de rigueur" sera représentée par <code>Rigueur|Rigoureux|Faire preuve de rigueur</code>.</li>
+                    <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong></li>
+                </ul>
+
+            <?php if ($displayCodeFonction) : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_competences_codefonction.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de compétences</a>
+            <?php else : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_competences.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de compétences</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<?php if (!empty($error)) : ?>
+    <div class="alert alert-danger">
+        <ul>
+            <?php foreach ($error as $item) : ?>
+                <li><?php echo $item; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+<?php if (!empty($warning)) : ?>
+    <div class="alert alert-warning">
+        <ul>
+            <?php foreach ($warning as $item) : ?>
+                <li><?php echo $item; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+<?php if (!empty($info)) : ?>
+    <div class="alert alert-info">
+        <ul>
+            <?php foreach ($info as $item) : ?>
+                <li><?php echo $item; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($competences)) : ?>
+    <table class="table table-condensed" id="competences">
+        <thead>
+        <tr>
+            <th class="col-md-1">Id</th>
+            <th class="col-md-3">Libellé</th>
+            <th class="col-md-2">Type</th>
+            <th class="col-md-2">Thème</th>
+            <th class="col-md-4">Autres</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($competences as $competence) : ?>
+            <tr>
+                <td> <?php echo $competence->getId(); ?></td>
+                <td> <?php echo $competence->getLibelle(); ?></td>
+                <td> <?php echo $competence->getType() ? $competence->getType()->getLibelle() : "<em>Aucun type</em>"; ?></td>
+                <td> <?php echo $competence->getTheme() ? $competence->getTheme()->getLibelle() : "<em>Aucun theme</em>"; ?></td>
+                <td>
+                    <?php echo $competence->printReference(); ?><br>
+                    <?php if ($competence->getDiscipline()) : ?>
+                        <br>
+                        <strong>Discipline </strong> <?php echo $competence->getDiscipline()->getLibelle(); ?>
+                    <?php endif; ?>
+                    <?php if ($competence->getDescription()) : ?>
+                        <br>
+                        <strong>Définition </strong> <?php echo $competence->getDescription(); ?>
+                    <?php endif; ?>
+                    <?php if ($competence->getSynonymes()) : ?>
+                        <br>
+                        <strong>Synonymes </strong>
+                            <?php foreach ($competence->getSynonymes() as $synonyme) : ?>
+                                <?php echo $synonyme->getLibelle(); ?>;&nbsp;
+                            <?php endforeach; ?>
+                    <?php endif; ?>
+                    <?php if ($competence->getCodesEmploiType()): ?>
+                        <br>
+                        <?php $code = explode("|", $competence->getCodesEmploiType()); ?>
+                        <strong>Codes Emploi Type</strong>
+                        <ul>
+                            <?php foreach ($code as $item) : ?>
+                                <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                    <?php if ($competence->getCodesFonction()) : ?>
+                        <br>
+                        <?php $code = explode("|", $competence->getCodesFonction()); ?>
+                        <strong>Codes Fonction</strong>
+                        <ul>
+                            <?php foreach ($code as $item) : ?>
+                                <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <script>
+        $(function () {
+            $('table#competences').DataTable({
+                autoWidth: false,
+                language: {
+                    "url": "/js/datatables_fr.json",
+                },
+            });
+        });
+    </script>
+
+<?php endif; ?>
+
+
+<script>
+    $(function () {
+        $('select').selectpicker({});
+    });
+
+
+</script>

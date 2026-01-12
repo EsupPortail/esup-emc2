@@ -1,0 +1,89 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\AgentPrivileges;
+use FicheMetier\Entity\Db\FicheMetier;
+use FichePoste\Provider\Privilege\FichePostePrivileges;
+use Metier\Entity\Db\Metier;
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::listerAgentsAction()
+ * @var FicheMetier $fichemetier
+ * @var Metier $metier
+ * @var FichePoste[] $fichespostes
+ */
+
+?>
+
+
+<table class="table table-condensed table-hover" id="listing">
+    <thead>
+    <tr>
+        <th> Agent </th>
+        <th colspan="2"> Fiche de poste</th>
+        <th> Affectation </th>
+        <th> Quotité </th>
+        <th data-type="num"> État </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($fichespostes as $ficheposte) : ?>
+        <tr>
+            <td data-column-id="agent">
+                <?php $agent = $ficheposte->getAgent(); ?>
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                    <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent?->getId()], [], true); ?>" target="_blank">
+                        <?php echo $agent->getDenomination(); ?>
+                    </a>
+                <?php else : ?>
+                    <?php echo $agent->getDenomination(); ?>
+                <?php endif; ?>
+            </td>
+            <td data-column-id="Fiche de poste">
+                <?php if ($this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_AFFICHER)) : ?>
+                    <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte?->getId()], [], true); ?>" target="_blank">
+                        Fiche #<?php echo $ficheposte->getId(); ?>
+                    </a>
+                <?php else : ?>
+                    <?php echo $ficheposte->getId(); ?>
+                <?php endif; ?>
+            </td>
+            <td data-column-id="Fiche de poste">
+                <?php echo $ficheposte->getLibelle()??$ficheposte->getLibelleMetierPrincipal(); ?>
+            </td>
+            <td>
+                <?php $affectations = $agent->getAffectationsActifs(); ?>
+                <?php foreach ($affectations as $affectation) : ?>
+                    <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                    <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format("d/m/Y"):"---"; ?>
+                    &rightarrow;
+                    <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format("d/m/Y"):"---"; ?>
+                <br>
+                <?php endforeach; ?>
+            </td>
+            <td>
+                <?php echo $ficheposte->getQuotiteComposition($fichemetier); ?> %
+            </td>
+            <?php $etat = $ficheposte->getEtatActif(); ?>
+            <td data-order="<?php echo $etat->getType()?->getOrdre(); ?>"> <?php echo $this->etatinstance($etat); ?></td>
+
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<script>
+    $(function() {
+        $("#listing").DataTable({
+            info: true,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+        });
+    });
+</script>

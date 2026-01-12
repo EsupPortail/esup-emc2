@@ -43,26 +43,38 @@
             </join-table>
         </many-to-many>
 
-        <many-to-many field="competencesSpecifiques" target-entity="Element\Entity\Db\CompetenceElement">
-            <join-table name="fichemetier_competence_specifique">
-                <join-columns>
-                    <join-column name="fichemetier_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="competence_element_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="ficheMetier" field="missions"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier" field="thematiques"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\TendanceElement" mapped-by="ficheMetier" field="tendances"/>
 
-        <field name="hasExpertise" type="boolean" column="expertise" nullable="true"/>
-        <field name="raison" type="string" length="9999" column="raison" nullable="true"/>
-        <field name="codeFonction" type="string" length="256" column="code_fonction" nullable="true"/>
 
-        <field name="raw" type="text" column="raw" nullable="true"/>
+        <field name="libelle" length="10124" column="libelle" nullable="true"/>
+        <many-to-one target-entity="Metier\Entity\Db\FamilleProfessionnelle" field="familleProfessionnelle">
+            <join-column name="famille_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <field name="raison" type="text" column="raison" nullable="true"/>
+
+
+
+        <many-to-one target-entity="FicheMetier\Entity\Db\CodeFonction" field="codeFonction">
+            <join-column name="code_fonction_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <field name="raw"     type="text"    column="raw"      nullable="true"/>
+        <field name="lienWeb" length="2048"  column="lien_web" nullable="true"/>
+        <field name="lienPdf" length="2048"  column="lien_pdf" nullable="true"/>
+
+        <!-- HAS NIVEAU CARRIERE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <many-to-one target-entity="Carriere\Entity\Db\Niveau" field="niveauCarriere">
+            <join-column name="niveau_carriere_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <!-- HAS REFERENCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel"  field="referentiel">
+            <join-column name="referentiel_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="reference" length="256" column="reference"/>
 
         <!-- Historisation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation" type="datetime" column="histo_creation" nullable="false"/>

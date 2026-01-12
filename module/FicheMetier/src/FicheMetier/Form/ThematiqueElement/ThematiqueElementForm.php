@@ -22,7 +22,7 @@ class ThematiqueElementForm extends Form
                 'label' => "Niveau <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => 'Sélectionner un niveau ...',
-                'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions('Thematique'),
+                'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions('Contexte et environnement de travail'),
             ],
             'attributes' => [
                 'id' => 'niveau',

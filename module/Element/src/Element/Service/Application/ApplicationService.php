@@ -56,7 +56,7 @@ class ApplicationService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Application::class)->createQueryBuilder('application')
-            ->addSelect('groupe')->leftJoin('application.groupe', 'groupe');
+            ->addSelect('theme')->leftJoin('application.theme', 'theme');
         return $qb;
     }
 
@@ -82,15 +82,15 @@ class ApplicationService
     }
 
     /**  @return Application[] */
-    public function getApplicationsGyGroupe(?ApplicationTheme $groupe): array
+    public function getApplicationsGyGroupe(?ApplicationTheme $theme): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('application.libelle');
-        if ($groupe) {
-            $qb = $qb->andWhere('groupe.id = :groupeId')
-                ->setParameter('groupeId', $groupe->getId());
+        if ($theme) {
+            $qb = $qb->andWhere('theme.id = :themeId')
+                ->setParameter('themeId', $theme->getId());
         } else {
-            $qb = $qb->andWhere('groupe IS NULL');
+            $qb = $qb->andWhere('theme IS NULL');
         }
 
         $result = $qb->getQuery()->getResult();
@@ -117,16 +117,32 @@ class ApplicationService
         return $this->getApplication($id);
     }
 
+
+    public function getApplicationByLibelle(string $libelle): ?Application
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('LOWER(application.libelle) LIKE :trim')
+            ->setParameter('trim', '%' . strtolower($libelle) . '%');
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Application::class."] partage le même libellé [".$libelle."]", 0, $e);
+        }
+        return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
+
     private function applicationOptionify(Application $application): array
     {
-        $groupe = $application->getGroupe();
+        $theme = $application->getTheme();
         $texte = $application->getLibelle();
         $this_option = [
             'value' => $application->getId(),
             'attributes' => [
                 'data-content' => "<span class='application' title='".($application->getDescription()??"Aucune description")."' class='badge btn-danger'>" . $texte
                     . "&nbsp;" . "<span class='badge'>"
-                    . (($groupe !== null) ? $groupe->getLibelle() : "Sans groupe")
+                    . (($theme !== null) ? $theme->getLibelle() : "Sans thème")
                     . "</span>"
                     . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>".($application->getDescription()??"Aucune description")."</span>"
                     ."</span>",
@@ -135,4 +151,5 @@ class ApplicationService
         ];
         return $this_option;
     }
+
 }

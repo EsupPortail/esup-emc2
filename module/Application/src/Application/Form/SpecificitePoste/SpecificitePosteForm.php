@@ -20,7 +20,7 @@ class SpecificitePosteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control specificite',
+                'class' => 'tinymce form-control specificite',
             ]
         ]);
         // encadrement
@@ -34,7 +34,7 @@ class SpecificitePosteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control encadrement',
+                'class' => 'tinymce form-control encadrement',
             ]
         ]);
         // relations internes
@@ -48,7 +48,7 @@ class SpecificitePosteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control relations_internes',
+                'class' => 'tinymce form-control relations_internes',
             ]
         ]);
         // relation externes
@@ -62,7 +62,7 @@ class SpecificitePosteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control relations_externes',
+                'class' => 'tinymce form-control relations_externes',
             ]
         ]);
         // contraintes
@@ -76,7 +76,7 @@ class SpecificitePosteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control contraintes',
+                'class' => 'tinymce form-control contraintes',
             ]
         ]);
         // moyens
@@ -90,7 +90,7 @@ class SpecificitePosteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control moyens',
+                'class' => 'tinymce form-control moyens',
             ]
         ]);
         // moyens
@@ -104,7 +104,7 @@ class SpecificitePosteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control formations',
+                'class' => 'tinymce form-control formations',
             ]
         ]);
         // button

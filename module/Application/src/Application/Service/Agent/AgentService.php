@@ -12,7 +12,7 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Fichier\Entity\Db\Fichier;
+use UnicaenFichier\Entity\Db\Fichier;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 use Structure\Entity\Db\Structure;

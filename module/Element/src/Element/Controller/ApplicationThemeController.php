@@ -16,7 +16,7 @@ class ApplicationThemeController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $themes = $this->getApplicationThemeService()->getApplicationsGroupes();
+        $themes = $this->getApplicationThemeService()->getApplicationsThemes();
 
         return new ViewModel([
             'themes' => $themes,

@@ -2,24 +2,38 @@
 
 namespace FicheMetier\Service\MissionPrincipale;
 
+use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\EntityManager;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class MissionPrincipaleServiceFactory {
+class MissionPrincipaleServiceFactory
+{
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : MissionPrincipaleService
+    public function __invoke(ContainerInterface $container): MissionPrincipaleService
     {
-        /** @var EntityManager $entityManager */
+        /**
+         * @var EntityManager $entityManager
+         * @var FamilleProfessionnelleService $familleProfessionnelleService
+         * @var FicheMetierService $ficheMetierService
+         * @var NiveauService $niveauService
+         */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
+//        $ficheMetierService = $container->get(FicheMetierService::class);
+        $niveauService = $container->get(NiveauService::class);
 
         $service = new MissionPrincipaleService();
         $service->setObjectManager($entityManager);
+        $service->setFamilleProfessionnelleService($familleProfessionnelleService);
+//        $service->setFicheMetierService($ficheMetierService);
+        $service->setNiveauService($niveauService);
         return $service;
     }
 }

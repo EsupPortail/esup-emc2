@@ -21,7 +21,7 @@ class CompetenceBlocViewHelperFactory {
          * @var CompetenceTypeService $competenceTypeService
          */
         $competenceTypeService = $container->get(CompetenceTypeService::class);
-        $types = $competenceTypeService->getCompetencesTypes('ordre');
+        $types = $competenceTypeService->getCompetencesTypes(true,'ordre');
 
         $helper = new CompetenceBlocViewHelper();
         $helper->setCompetencesTypes($types);

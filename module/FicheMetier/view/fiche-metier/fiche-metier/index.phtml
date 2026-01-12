@@ -1,19 +1,22 @@
 <?php
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
-use Metier\Entity\Db\Domaine;
 use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
-use Metier\Provider\Privilege\ReferentielmetierPrivileges;
+use Referentiel\Entity\Db\Referentiel;
 use UnicaenEtat\Entity\Db\EtatType;
 
 /**
  * @see \FicheMetier\Controller\FicheMetierController::indexAction()
- * @var Domaine[] $domaines
  * @var FicheMetier[] $fiches
+ * @var Referentiel[] $referentiels
  * @var EtatType[] $etatTypes
+ * @var CodeFonction[] $codesFonctions
  * @var array $params
+ *
+ * @var bool $displayCodeFonction
  *
  */
 
@@ -26,24 +29,27 @@ $canDetruire = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 $canAfficherFamille = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AFFICHER));
 $canAfficherMetier = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AFFICHER));
 
-$canReferentiel = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_INDEX));
+$canConfigurer = true; //todo
+
 $this->headTitle('Index des fiches métiers');
 
 ?>
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-8">
         <h1 class="page-header">
             Fiches métiers
         </h1>
     </div>
-    <div class="col-md-5">
-        <?php if ($canReferentiel) : ?>
-            <?php /** @see \Metier\Controller\ReferentielController::indexAction() */ ?>
-            <a href="<?php echo $this->url('metier/referentiel', [], [], true); ?>"
-               class="btn btn-secondary">
-                <span class="icon icon-listing"></span>
-                Accéder aux référentiels des métiers
+    <div class="col-md-4">
+        <?php if ($canConfigurer) : ?>
+            <br>
+            <?php /** @see \FicheMetier\Controller\ConfigurationController::competenceAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/configuration/competence', [], [], true); ?>"
+               class="btn btn-secondary"
+            >
+                <span class="icon icon-gerer"></span>
+                Configuration
             </a>
         <?php endif; ?>
     </div>
@@ -69,62 +75,93 @@ $this->headTitle('Index des fiches métiers');
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 
-<?php echo $this->partial('partial/filtre.phtml', ['etatTypes' => $etatTypes, 'domaines' => $domaines, 'params' => $params]); ?>
+<?php echo $this->partial('partial/filtre.phtml', ['referentiels' => $referentiels, 'etatTypes' => $etatTypes, 'codesFonctions' => $codesFonctions, 'displayCodeFonction' => $displayCodeFonction, 'params' => $params]); ?>
 
 
 <table id="fiches" class="table table-condensed datatable">
     <thead>
     <tr>
-        <th> Libellé</th>
-        <th> Famille professionnelle d'activité</th>
-        <th style="width:8rem;"> État</th>
-        <th class="action"> Action</th>
+        <th class="col-md-4"> Libellé</th>
+        <th class="col-md-4"> Famille professionnelle d'activité</th>
+        <th class="col-md-2"> État</th>
+        <th class="col-md-2 action"> Action</th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($fiches as $fiche): ?>
         <tr <?php if ($fiche->estHistorise()) echo "class='historise'"; ?> >
             <td>
-                <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
-                      data-bs-toggle='tooltip' data-bs-html='true'
-                >
-                    <?php if ($canAfficherMetier): ?>
-                        <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('metier/afficher', ['metier' => $fiche->getMetier()->getId()], [], true); ?>"
-                           class="ajax-modal"
-                        >
-                            <?php echo $fiche->getMetier()->getLibelle(); ?>
-                        </a>
-                    <?php else : ?>
-                        <?php echo $fiche->getMetier()->getLibelle(); ?>
-                    <?php endif; ?>
-                </span>
-                <?php if ($fiche->hasExpertise() === true) : ?>
-                    <span class="badge" style="background: lightskyblue;">Expertise</span>
+                <?php if ($fiche->getMetier()) : ?>
+                    <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
+                          data-bs-toggle='tooltip' data-bs-html='true'
+                    >
+                        <?php if ($canAfficherMetier): ?>
+                            <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('metier/afficher', ['metier' => $fiche->getMetier()->getId()], [], true); ?>"
+                               class="ajax-modal"
+                            >
+                                <?php echo $fiche->getLibelle() ?? $fiche->getMetier()->getLibelle(); ?>
+                            </a>
+                        <?php else : ?>
+                            <?php echo $fiche->getLibelle() ?? $fiche->getMetier()->getLibelle(); ?>
+                        <?php endif; ?>
+                    </span>
+                <?php else: ?>
+                    <?php echo $fiche->getLibelle(); ?>
                 <?php endif; ?>
+                <?php if ($displayCodeFonction) : ?>
+                    <br>
+                    <?php if ($fiche->getCodeFonction()) : ?>
+                        <code><?php echo $fiche->getCodeFonction()->computeCode(); ?></code>
+                    <?php else : ?>
+                        <span style='color: var(--bs-warning);'>
+                            <span class="icon icon-attention"></span> Aucun code fonction
+                        </span>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <br> <?php echo $fiche->printReference(); ?>
             </td>
             <td>
-                <ul>
-                    <?php foreach ($fiche->getMetier()->getFamillesProfessionnelles() as $fap) : ?>
+                <?php if ($fiche->getFamilleProfessionnelle()) : ?>
+                    <ul>
                         <li>
                             <?php if ($canAfficherFamille) : ?>
+
                                 <?php /** @see \Metier\Controller\FamilleProfessionnelleController::afficherAction() */ ?>
-                                <a href="<?php echo $this->url('famille-professionnelle/afficher', ['famille-professionnelle' => $fap->getId()], [], true); ?>"
+                                <a href="<?php echo $this->url('famille-professionnelle/afficher', ['famille-professionnelle' => $fiche->getFamilleProfessionnelle()->getId()], [], true); ?>"
                                    class="ajax-modal"
                                 >
-                                    <?php echo $fap->getLibelle(); ?>
+                                    <?php echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
                                 </a>
                             <?php else : ?>
-                                <?php echo $fap->getLibelle(); ?>
+                                <?php echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
                             <?php endif; ?>
                         </li>
-                    <?php endforeach; ?>
-                </ul>
+                    </ul>
+                <?php endif; ?>
+                <?php if ($fiche->getMetier()) : ?>
+                    <ul>
+                        <?php foreach ($fiche->getMetier()->getFamillesProfessionnelles() as $fap) : ?>
+                            <li>
+                                <?php if ($canAfficherFamille) : ?>
+                                    <?php /** @see \Metier\Controller\FamilleProfessionnelleController::afficherAction() */ ?>
+                                    <a href="<?php echo $this->url('famille-professionnelle/afficher', ['famille-professionnelle' => $fap->getId()], [], true); ?>"
+                                       class="ajax-modal"
+                                    >
+                                        <?php echo $fap->getLibelle(); ?>
+                                    </a>
+                                <?php else : ?>
+                                    <?php echo $fap->getLibelle(); ?>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </td>
             <td class="cell-etat">
                 <?php if ($canEditer) : ?>
                 <a
-                    <?php /** @see FicheMetierController::modifierEtatAction() */ ?>
+                        <?php /** @see FicheMetierController::modifierEtatAction() */ ?>
                         href="<?php echo $this->url('fiche-metier/modifier-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                         title="Changer l'état de la fiche métier"
                         class="ajax-modal" data-event="changer-etat"
@@ -139,7 +176,7 @@ $this->headTitle('Index des fiches métiers');
             <td class="action">
                 <?php if ($canVoir) : ?>
                     <a
-                        <?php /** @see FicheMetierController::afficherAction() */ ?>
+                            <?php /** @see FicheMetierController::afficherAction() */ ?>
                             href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                             class="action secondary"
                     >
@@ -150,13 +187,22 @@ $this->headTitle('Index des fiches métiers');
                 <?php if ($canVoir) : ?>
                     <br/>
                     <a
-                        <?php /** @see FicheMetierController::exporterAction() */ ?>
+                            <?php /** @see FicheMetierController::exporterAction() */ ?>
                             href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                             title="Exporter en PDF la fiche métier"
                             class="action secondary"
                     >
                         <span class="icon icon-pdf"></span>
                         Exporter
+                    </a>
+                <?php endif; ?>
+                <?php if ($canAjouter) : ?>
+                    <br/>
+                    <?php /** @see FicheMetierController::listerAgentsAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/lister-agents', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                       class="action secondary ajax-modal">
+                        <span class="icon icon-users"></span>
+                        Lister les agents
                     </a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
@@ -167,8 +213,6 @@ $this->headTitle('Index des fiches métiers');
                         <span class="icon icon-editer"></span>
                         Modifier
                     </a>
-                <?php endif; ?>
-                <?php if ($canEditer) : ?>
                     <br/>
                     <?php /** @see FicheMetierController::dupliquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
@@ -202,7 +246,7 @@ $this->headTitle('Index des fiches métiers');
                 <?php if ($canDetruire) : ?>
                     <br>
                     <a
-                        <?php /** @see FicheMetierController::supprimerAction() */ ?>
+                            <?php /** @see FicheMetierController::supprimerAction() */ ?>
                             href="<?php echo $this->url('fiche-metier/supprimer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                             title="Détruire la fiche metier"
                             class="action danger ajax-modal" data-event="modification"

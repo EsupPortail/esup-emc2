@@ -2,7 +2,7 @@
 
 /** @see application/view/agent/afficher.phtml */
 use Application\Entity\Db\Agent;
-use Fichier\Entity\Db\Fichier;
+use UnicaenFichier\Entity\Db\Fichier;
 
 /**
  * @var Fichier[] $fichiers
@@ -26,7 +26,7 @@ $canDetruireFichier     = $droits['detruire'];
         <?php if ($canAjouterFichier) : ?>
             <a
                 <?php /** @see  \Application\Controller\AgentController::uploadFichierAction() */ ?>
-                href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], [], true); ?>"
+                href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'portfolio'], true)]], true); ?>"
                 class="btn btn-primary ajax-modal" data-event="modification"
             >
                 <span class="icon icon-televerser"></span>
@@ -42,8 +42,8 @@ $canDetruireFichier     = $droits['detruire'];
             <?php echo $fichier->getNature()->getLibelle(); ?> -
             <?php if ($canVoirFichier) : ?>
                 <a
-                    <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
-                    href="<?php echo $this->url('download-fichier', ['fichier' => $fichier->getId()], [], true); ?>">
+                    <?php /** @see  \UnicaenFichier\Controller\FichierController::downloadAction() */ ?>
+                    href="<?php echo $this->url('fichier/download', ['fichier' => $fichier->getId()], [], true); ?>">
             <?php endif; ?>
                 <?php echo $fichier->getNomOriginal(); ?>
             <?php if ($canVoirFichier) : ?>
@@ -54,15 +54,15 @@ $canDetruireFichier     = $droits['detruire'];
             <?php if ($canHistoriserFichier) : ?>
                 <?php if ($fichier->estNonHistorise()) : ?>
                     <a
-                        <?php /** @see \Fichier\Controller\FichierController::historiserAction() */?>
-                        href="<?php echo $this->url('historiser-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]] ,true); ?>"
+                        <?php /** @see \UnicaenFichier\Controller\FichierController::historiserAction() */?>
+                        href="<?php echo $this->url('fichier/historiser', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'portfolio'], true)]] ,true); ?>"
                         data-event="modification"
                         >
                         <span class="icon icon-historiser" title="Historiser le fichier"></span></a>
                 <?php else : ?>
                     <a
-                        <?php /** @see \Fichier\Controller\FichierController::restaurerAction() */?>
-                        href="<?php echo $this->url('restaurer-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]] ,true); ?>"
+                        <?php /** @see \UnicaenFichier\Controller\FichierController::restaurerAction() */?>
+                        href="<?php echo $this->url('fichier/restaurer', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'portfolio'], true)]] ,true); ?>"
                         data-event="modification"
                     >
                         <span class="icon icon-restaurer" title="Restaurer le fichier"></span></a>
@@ -71,10 +71,11 @@ $canDetruireFichier     = $droits['detruire'];
 
             <?php if ($canDetruireFichier) : ?>
             <a
-                <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
-                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
+                <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>
+                href="<?php echo $this->url('fichier/supprimer', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'portfolio'], true)]], true); ?>"
+                class="ajax-modal" data-event="modification"
             >
-                <span class="icon icon-unchecked" title="supprimer le fichier"></span></a>
+                <span class="icon icon-unchecked text-danger" title="supprimer le fichier"></span></a>
             <?php endif; ?>
         </li>
     <?php endforeach; ?>

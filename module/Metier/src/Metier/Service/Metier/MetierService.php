@@ -9,19 +9,16 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
 use Metier\Entity\Db\Reference;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 
 class MetierService
 {
     use ProvidesObjectManager;
-    use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use ReferenceServiceAwareTrait;
     use ReferentielServiceAwareTrait;
@@ -67,7 +64,6 @@ class MetierService
     private function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->addSelect('domaine')->leftJoin('metier.domaines', 'domaine')
             ->addSelect('famille')->leftJoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
@@ -116,9 +112,9 @@ class MetierService
         $result = [];
         foreach ($metiers as $metier) {
             if ($historiser or $metier->estNonHistorise())
-                if ($metier->getDomaines()) {
-                    foreach ($metier->getDomaines() as $domaine) {
-                        $result[$domaine->getLibelle()][] = $metier;
+                if ($metier->getFamillesProfessionnelles()) {
+                    foreach ($metier->getFamillesProfessionnelles() as $famille) {
+                        $result[$famille->getLibelle()][] = $metier;
                     }
                 } else {
                     $vide[] = $metier;
@@ -138,7 +134,7 @@ class MetierService
         foreach ($vide as $metier) {
             $options[$metier->getId()] = $metier->getLibelle();
         }
-        $multi[] = ['label' => 'Sans domaine rattaché', 'options' => $options];
+        $multi[] = ['label' => 'Sans famille professionnelle', 'options' => $options];
         return $multi;
     }
 
@@ -183,33 +179,21 @@ class MetierService
                 $references[] = $reference->getTitre();
             }
 
-            $domaines = $metier->getDomaines();
-            if (empty($domaines)) $domaines[] = null;
-
-            foreach ($domaines as $domaine) {
-                $fonction = ($domaine) ? $domaine->getTypeFonction() : null;
-                $familles = [];
-                $fTexte = implode(', ', array_map(function (FamilleProfessionnelle $a) {
-                    return $a->getLibelle();
-                }, $familles));
+            $familles = $metier->getFamillesProfessionnelles();
+            if (empty($familles)) $familles[] = null;
 
                 $entry = [
                     'metier' => $metier->__toString(),
 
                     'niveau' => ($metier->getNiveaux()) ? "[" . $metier->getNiveaux()->getBorneInferieure()->getEtiquette() . ":" . $metier->getNiveaux()->getBorneSuperieure()->getEtiquette() . "]" : "---",
                     'références' => implode("<br/>", $references),
-                    'domaine' => ($domaine) ? $domaine->__toString() : "---",
-                    'fonction' => ($fonction) ?: "---",
-                    'famille' => ($fTexte) ?: "---",
                     'nbFiche' => count($metier->getFichesMetiers()),
                 ];
                 $results[] = $entry;
-            }
         }
 
         usort($results, function ($a, $b) {
-            if ($a['metier'] !== $b['metier']) return $a['metier'] > $b['metier'];
-            return $a['domaine'] <=> $b['domaine'];
+            return $a['metier'] <=> $b['metier'];
         });
 
         return $results;
@@ -286,8 +270,6 @@ select m.id, m.libelle_default,
        cp.categorie as categorie,
        s.id as s_id, s.libelle_court, aa.date_debut as s_debut, aa.date_fin as s_fin
 from metier_metier m
-left join metier_metier_domaine md on m.id = md.metier_id
-left join metier_domaine d on md.domaine_id = d.id
 left join fichemetier f on m.id = f.metier_id
 left join ficheposte_fichemetier fte on f.id = fte.fiche_type
 left join ficheposte fp on fte.fiche_poste = fp.id
@@ -325,15 +307,8 @@ EOS;
         return $tmp;
     }
 
-    public function createWith(string $libelle, string $referentielCode, string $metierCode, ?string $domaineLibelle = null, ?string $familleLibelle = null, bool $persist = true): ?Metier
+    public function createWith(string $libelle, string $referentielCode, string $metierCode, ?string $familleLibelle = null, bool $persist = true): ?Metier
     {
-        $domaine = null;
-        if ($domaineLibelle) {
-            $domaine = $this->getDomaineService()->getDomaineByLibelle($domaineLibelle);
-            if ($domaine === null) {
-                $domaine = $this->getDomaineService()->createWith($domaineLibelle);
-            }
-        }
         $famille = null;
         if ($familleLibelle) {
             $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($familleLibelle);
@@ -356,11 +331,6 @@ EOS;
         $reference->setMetier($metier);
         if ($persist) $this->getReferenceService()->create($reference);
 
-        // domaine et autre
-        if ($domaine) {
-            $metier->addDomaine($domaine);
-            if ($persist) $this->getDomaineService()->update($domaine);
-        }
         if ($famille) {
             $metier->addFamillesProfessionnelles($famille);
             if ($persist) $this->getFamilleProfessionnelleService()->update($famille);

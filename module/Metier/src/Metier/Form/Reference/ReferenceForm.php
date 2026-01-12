@@ -3,7 +3,7 @@
 namespace Metier\Form\Reference;
 
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;

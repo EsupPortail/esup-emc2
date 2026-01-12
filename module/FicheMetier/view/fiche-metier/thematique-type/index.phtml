@@ -2,10 +2,12 @@
 
 use FicheMetier\Entity\Db\ThematiqueType;
 use FicheMetier\Provider\Privilege\ThematiquetypePrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \FicheMetier\Controller\ThematiqueTypeController::indexAction()
  * @var ThematiqueType[] $thematiquesTypes
+ * @var Parametre[] $parametres
  */
 
 $this->headTitle("Type de thématiques");
@@ -18,9 +20,8 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
 
 ?>
 
-<h1 class="page-header">
-    Type de thèmatiques
-</h1>
+<?php echo $this->partial('fiche-metier/configuration/header', ['selected' => "thematique", 'parametres' => $parametres]); ?>
+
 
 <div>
     <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::ajouterAction() */ ?>
@@ -28,25 +29,25 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
        class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
-        Ajouter un type de thématique
+        Ajouter un type de "Contexte et environnement de travail"
     </a>
 </div>
 
 <table class="table table-condensed datatable" id="thematiques">
     <thead>
     <tr>
-        <th> Libellé </th>
-        <th> Code </th>
-        <th> Obligatoire </th>
-        <th> Ordre </th>
-        <th class="action"> Action </th>
+        <th class="col-md-6"> Libellé </th>
+        <th class="col-md-2"> Code </th>
+        <th class="col-md-1"> Obligatoire </th>
+        <th class="col-md-1"> Ordre </th>
+        <th class="col-md-2 action"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($thematiquesTypes as $thematiqueType) : ?>
         <tr>
             <td> <?php echo $thematiqueType->getLibelle(); ?> </td>
-            <td> <?php echo $thematiqueType->getCode(); ?> </td>
+            <td> <code><?php echo $thematiqueType->getCode(); ?></code> </td>
             <td> <?php echo ($thematiqueType->isObligatoire())?"<span class='text-success'>Oui</span>":"<span class='text-danger'>Non</span>"; ?> </td>
             <td> <?php echo $thematiqueType->getOrdre(); ?></td>
             <td class="action">

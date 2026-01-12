@@ -1,0 +1,218 @@
+<?php
+
+/**
+ * @see \Element\Controller\CompetenceController::listingAction()
+ * @var CompetenceType[] $types
+ * @var CompetenceTheme[] $themes
+ * @var CompetenceDiscipline[] $disciplines
+ * @var Referentiel[] $referentiels
+ * @var array $params
+ * @var ?CompetenceType $type
+ * @var Competence[] $competences
+ */
+
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceDiscipline;
+use Element\Entity\Db\CompetenceTheme;
+use Element\Entity\Db\CompetenceType;
+use Element\Provider\Privilege\CompetencePrivileges;
+use Referentiel\Entity\Db\Referentiel;
+
+$canVoir = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+$canAjouter = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AJOUTER));
+$canModifier = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_MODIFIER));
+$canHistoriser = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_HISTORISER));
+$canDetruire = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EFFACER));
+$canSubstituer = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_SUBSTITUER));
+
+
+$positionAction = 5;
+if ($type !== null) {
+    $positionAction--;
+    if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) $positionAction--;
+}
+?>
+
+
+<?php echo $this->partial('partial/header', ['types' => $types, 'type' => $type??null]); ?>
+
+
+<h2>
+    <?php if ($type === null): ?>
+        Toutes les compétences
+    <?php else : ?>
+        <?php echo $type->getLibelle(); ?>
+    <?php endif; ?>
+</h2>
+
+<?php if ($type === null): ?>
+    <?php echo $this->partial('partial/filtre', ['types' => $types, 'themes' => $themes, 'disciplines' => $disciplines,'referentiels' => $referentiels, 'params' => $params??null]); ?>
+<?php endif; ?>
+
+<table class="table table-condensed table-hover datatable" id="competences-<?php echo $type?->getCode(); ?>">
+    <thead>
+    <tr>
+        <th> Libellé</th>
+        <?php if ($type ===null) : ?>
+            <th> Type </th>
+        <?php endif; ?>
+        <?php if ($type === null || $type->getCode() === CompetenceType::CODE_SPECIFIQUE) : ?>
+            <th> Discipline</th>
+        <?php endif; ?>
+        <th> Thème</th>
+        <th> Référence</th>
+        <th class="action"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($competences as $competence) : ?>
+        <tr class="<?php if ($competence->estHistorise()) echo " historise "; ?>">
+            <td>
+                <?php echo $competence->getLibelle(); ?>
+                <?php if ($competence->getDescription() !== null and trim($competence->getDescription() !== '')) : ?>
+                    <span class="icon icon-information" title="<?php echo $competence->getDescription(); ?>"
+                          data-bs-toggle="tooltip" data-bs-html="true"
+                    ></span>
+                <?php endif; ?>
+                <br/>
+                <?php echo $competence->printReference(); ?>
+                <br>
+                <small>
+                <?php $synonymes = $competence->getSynonymes(); ?>
+                <?php if (empty($synonymes)) : ?>
+                    <span class="missing-data"> Aucun synonyme </span>
+                <?php else : ?>
+                    <?php echo count($synonymes); ?> synonymes
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \Element\Controller\CompetenceSynonymeController::ajouterAction() */ ?>
+                    <a href="<?php echo $this->url("element/competence-synonyme/ajouter", ['competence' => $competence->getId()], [], true); ?>" class="action primary ajax-modal" data-event="modification">
+                        <span class="icon icon-ajouter" title="Ajouter un synonyme" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                        Ajouter un synonyme
+                    </a>
+                    <?php if (!empty($synonymes)) : ?>
+                        <?php /** @see \Element\Controller\CompetenceSynonymeController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url("element/competence-synonyme/vider", ['competence' => $competence->getId()], [], true); ?>"
+                           class="action danger ajax-modal" data-event="modification">
+                            <span class="icon icon-clear"></span>
+                            Vider
+                        </a>
+
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <ul>
+                <?php foreach ($synonymes as $synonyme) : ?>
+                    <li>
+                        <?php echo $synonyme->getLibelle(); ?>
+                        <?php if ($canModifier) : ?>
+                            <?php /** @see \Element\Controller\CompetenceSynonymeController::modifierAction() */ ?>
+                            <a href="<?php echo $this->url("element/competence-synonyme/modifier", ['competence-synonyme' => $synonyme->getId()], [], true); ?>"
+                               class="action primary ajax-modal" data-event="modification">
+                                <span class="icon icon-modifier" title="Modifier le synonyme" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                                Modifier
+                            </a>
+                            <?php /** @see \Element\Controller\CompetenceSynonymeController::supprimerAction() */ ?>
+                            <a href="<?php echo $this->url("element/competence-synonyme/supprimer", ['competence-synonyme' => $synonyme->getId()], [], true); ?>"
+                               class="action danger ajax-modal" data-event="modification">
+                                <span class="icon icon-unchecked" title="Modifier le synonyme" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                                Supprimer
+                            </a>
+                        <?php endif; ?>
+
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+                </small>
+
+
+            </td>
+            <?php if ($type === null) : ?>
+                <td> <?php echo $competence->getType()?->getLibelle(); ?> </td>
+            <?php endif; ?>
+            <?php if ($type === null || $type->getCode() === CompetenceType::CODE_SPECIFIQUE) : ?>
+                <td> <?php echo ($competence->getDiscipline()) ? $competence->getDiscipline()->getLibelle() : "Aucune"; ?> </td>
+            <?php endif; ?>
+            <td> <?php echo ($competence->getTheme()) ? $competence->getTheme()->getLibelle() : "Aucun"; ?> </td>
+            <td>
+                <?php echo ($competence->getReferentiel()) ? $competence->getReferentiel()->getLibelleCourt() : "Aucun"; ?>
+            </td>
+            <td class="action">
+                <?php if ($canVoir): ?>
+                    <?php /** @see CompetenceController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('element/competence/afficher', ['competence' => $competence->getId()], [], true); ?>"
+                       class="ajax-modal action secondary">
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
+                <?php if ($canModifier): ?>
+                    <br>
+                    <?php /** @see CompetenceController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('element/competence/modifier', ['competence' => $competence->getId()], [], true); ?>"
+                       class="ajax-modal action primary" data-event="modification">
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
+                <?php endif; ?>
+                <?php if ($canSubstituer): ?>
+                    <br>
+                    <?php /** @see CompetenceController::substituerAction() */ ?>
+                    <a href="<?php echo $this->url('element/competence/substituer', ['competence' => $competence->getId()], [], true); ?>"
+                       class="ajax-modal action primary" data-event="modification">
+                        <span class="icon icon-cloner"></span>
+                        Fusionner
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistoriser): ?>
+                    <br/>
+                    <?php if ($competence->estNonHistorise()) : ?>
+                        <?php /** @see CompetenceController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('element/competence/historiser', ['competence' => $competence->getId()], ['query' => ['retour' => $this->url('element/competence/listing',['type' => $type?->getId()], ["query" => $params], true)]], true); ?>"
+                           class="action warning"
+                        >
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
+                    <?php else : ?>
+                        <?php /** @see CompetenceController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('element/competence/restaurer', ['competence' => $competence->getId()], ['query' => ['retour' => $this->url('element/competence/listing',['type' => $type?->getId()], ["query" => $params], true)]], true); ?>"
+                           class="action warning"
+                        >
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruire): ?>
+                    <br/>
+                    <?php /** @see CompetenceController::detruireAction() */ ?>
+                    <a href="<?php echo $this->url('element/competence/detruire', ['competence' => $competence->getId()], [], true); ?>"
+                       class="ajax-modal action danger" data-event="modification">
+                                <span class="icon icon-unchecked"></span>
+                                Supprimer
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $("table#competences-<?php echo $type?$type->getCode():''; ?>").DataTable({
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [<?php echo $positionAction; ?>], orderable: false }
+            ]
+        });
+    });
+</script>

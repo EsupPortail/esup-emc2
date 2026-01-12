@@ -94,9 +94,10 @@ foreach ($applications as $application) {
     <table id="<?php echo $options['id'] ?? 'applications'; ?>" class="table table-condensed datatable">
         <thead>
         <tr>
-            <th class="col-md-<?php echo (!isset($options['mode']) or $options['mode'] !== 'affichage')?"4":"5"; ?>" style="width:40%;"> Libellé</th>
-            <th class="col-md-4" style="width:30%;"> Groupe</th>
-            <th class="col-md-2" data-type="num"> Niveau</th>
+            <th class="col-md-<?php echo (!isset($options['mode']) or $options['mode'] !== 'affichage')?"4":"5"; ?>"> Libellé</th>
+            <th class="col-md-4" style="width:30%;"> Thème</th>
+            <th class="col-md-2" data-type="num"> Niveau </th>
+            <th class="col-md-2" data-type="num"> Clef </th>
             <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
                 <th class="col-md-2"> Action</th>
             <?php endif; ?>
@@ -107,11 +108,13 @@ foreach ($applications as $application) {
         <?php foreach ($elements as $element) : ?>
             <tr>
                 <td> <?php echo $element->getApplication()->getLibelle(); ?> </td>
-                <td> <?php echo ($element->getApplication()->getGroupe())?->getLibelle(); ?> </td>
+                <td> <?php echo ($element->getApplication()->getTheme())?->getLibelle(); ?> </td>
                 <td data-order="<?php echo ($element->getNiveauMaitrise())?->getNiveau(); ?>">
                     <?php echo ($element->getNiveauMaitrise())?->getLibelle(); ?>
+                </td>
+                <td>
                     <?php if ($element->isClef()) : ?>
-                        <span class="icon icon-star" title="Est une application clef"></span>
+                        <span class="icon icon-clef" title="Est une application clef"></span>
                     <?php endif; ?>
                 </td>
                 <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
@@ -161,7 +164,7 @@ foreach ($applications as $application) {
             order: [[1, 'asc'], [0, 'asc']],
             <?php if (!isset($options['mode']) or $options['mode'] !== 'affichage'): ?>
                 columnDefs: [{
-                    "targets": 3,
+                    "targets": 4,
                     "orderable": false
                 }],
             <?php endif; ?>

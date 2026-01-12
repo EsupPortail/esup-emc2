@@ -21,7 +21,9 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
         <h1 class="page-header">
             Campagnes d'entretien professionnel
         </h1>
+    </div>
 
+    <div class="col-md-3">
         <?php if ($canAjouter) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::ajouterAction() */?>
@@ -30,6 +32,15 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
             >
                 <span class="icon icon-ajouter"></span>
                 Ajouter une campagne
+            </a>
+        <br>
+            <a
+                    <?php /** @see \Application\Controller\ConfigurationController::indexAction() */ ?>
+                    href="<?php echo $this->url('configuration', [], [], true); ?>"
+                    class="btn btn-secondary"
+            >
+                <span class="icon icon-gerer"></span>
+                Configuration
             </a>
         <?php endif; ?>
     </div>

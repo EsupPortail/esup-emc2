@@ -5,7 +5,10 @@
  * @var Campagne|null $campagne
  */
 
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+
+$canMissionSpecifiqueOnglet = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_ONGLET));
 
 ?>
 
@@ -27,14 +30,16 @@ use EntretienProfessionnel\Entity\Db\Campagne;
     >
         Fiches de poste
     </button>
-    <?php /** @see \Structure\Controller\StructureController::mesMissionsSpecifiquesAction() */ ?>
-    <button class="nav-link" id="mission-specifique-tab"
-            data-bs-toggle="tab" data-bs-target="#mission-specifique"
-            type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
-            onclick="location.href='<?php echo $this->url('mes-missions-specifiques', [],[], true); ?>'"
-    >
-        Missions spécifiques
-    </button>
+    <?php if ($canMissionSpecifiqueOnglet) : ?>
+        <?php /** @see \Structure\Controller\StructureController::mesMissionsSpecifiquesAction() */ ?>
+        <button class="nav-link" id="mission-specifique-tab"
+                data-bs-toggle="tab" data-bs-target="#mission-specifique"
+                type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
+                onclick="location.href='<?php echo $this->url('mes-missions-specifiques', [],[], true); ?>'"
+        >
+            Missions spécifiques
+        </button>
+    <?php endif; ?>
     <?php if ($campagne !== null) : ?>
         <?php /** @see \Application\Controller\AgentController::mesEntretiensProfessionnelsAction() */ ?>
         <button class="nav-link" id="campagne-tab"

@@ -3,7 +3,6 @@
 namespace Application\Service\FichePoste;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\DomaineRepartition;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
@@ -21,7 +20,6 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Metier\Entity\Db\Domaine;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -274,16 +272,6 @@ EOS;
         $this->getObjectManager()->persist($ficheTypeExterne);
         $this->getObjectManager()->flush($ficheTypeExterne);
 
-        $domaines = $ficheTypeExterne->getFicheType()->getMetier()->getDomaines();
-        foreach ($domaines as $domaine) {
-            $repartition = new DomaineRepartition();
-            $repartition->setFicheMetierExterne($ficheTypeExterne);
-            $repartition->setDomaine($domaine);
-            $repartition->setQuotite(100);
-            $this->getObjectManager()->persist($repartition);
-            $this->getObjectManager()->flush($repartition);
-        }
-
         return $ficheTypeExterne;
     }
 
@@ -436,23 +424,6 @@ EOS;
 
                 //provenant des activités
                 $keptActivites = explode(";", $fichemetiertype->getActivites());
-                foreach ($fichemetier->getMissions() as $mission) {
-                    if (in_array($mission->getId(), $keptActivites)) {
-                        foreach ($mission->getMission()->getApplicationListe() as $applicationElement) {
-                            $application = $applicationElement->getApplication();
-                            if (!isset($applications[$application->getId()])) {
-                                $applications[$application->getId()] = [
-                                    'entity' => $application,
-                                    'display' => true,
-                                    'raisons' => [['Activité', $mission->getMission()]]
-                                ];
-                            } else {
-                                $applications[$application->getId()]['raisons'][] = ['Activité', $mission->getMission()];
-                            }
-                        }
-                    }
-                }
-
             }
         }
 
@@ -571,15 +542,6 @@ EOS;
             }
         }
 
-        foreach ($missions as $mission) {
-            foreach ($mission->getApplicationListe() as $applicationElement) {
-                $application = $applicationElement->getApplication();
-                $dictionnaire[$application->getId()]["entite"] = $applicationElement;
-                $dictionnaire[$application->getId()]["raison"][] = $mission;
-                $dictionnaire[$application->getId()]["conserve"] = true;
-            }
-        }
-
         $retirees = $fiche->getApplicationsRetirees();
         foreach ($retirees as $retiree) {
             $dictionnaire[$retiree->getApplication()->getId()]["conserve"] = false;
@@ -627,15 +589,6 @@ EOS;
             }
         }
 
-        foreach ($missions as $mission) {
-            foreach ($mission->getCompetenceListe() as $competenceElement) {
-                $competence = $competenceElement->getCompetence();
-                $dictionnaire[$competence->getId()]["entite"] = $competenceElement;
-                $dictionnaire[$competence->getId()]["raison"][] = $mission;
-                $dictionnaire[$competence->getId()]["conserve"] = true;
-            }
-        }
-
         $retirees = $fiche->getCompetencesRetirees();
         foreach ($retirees as $retiree) {
             $dictionnaire[$retiree->getCompetence()->getId()]["entite"] = $retiree->getCompetence();
@@ -643,34 +596,6 @@ EOS;
         }
 
         return $dictionnaire;
-    }
-
-    public function updateRepatitions(FicheTypeExterne $fichetype, $data): void
-    {
-        /** @var DomaineRepartition[] $repartitions */
-        $repartitions = $fichetype->getDomaineRepartitions()->toArray();
-
-        foreach ($data as $domaineId => $value) {
-            $found = null;
-            /** @var Domaine $domaine */
-            $domaine = $this->getObjectManager()->getRepository(Domaine::class)->find($domaineId);
-            foreach ($repartitions as $repartition) {
-                if ($repartition->getDomaine()->getId() == $domaineId) {
-                    $found = $repartition;
-                    break;
-                }
-            }
-            if ($found === null) {
-                $found = new DomaineRepartition();
-                $found->setFicheMetierExterne($fichetype);
-                $found->setDomaine($domaine);
-                $found->setQuotite(0);
-                $this->getObjectManager()->persist($found);
-            }
-            $value = $data[$domaineId]??0;
-            $found->setQuotite($value);
-            $this->getObjectManager()->flush($found);
-        }
     }
 
     /**
@@ -766,10 +691,12 @@ EOS;
 
     }
 
-    public function getFichesPostesByFicheMetier(?FicheMetier $fichemetier)
+    public function getFichesPostesByFicheMetier(?FicheMetier $fichemetier, bool $withFini = false, bool $withHisto = false)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('fichemetier.id = :id')->setParameter('id', $fichemetier->getId());
+        if (!$withFini) $qb = $qb->andWhere('fiche.finValidite IS NULL or fiche.finValidite > :now')->setParameter('now', new DateTime());
+        if (!$withHisto) $qb = $qb->andWhere('fiche.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }

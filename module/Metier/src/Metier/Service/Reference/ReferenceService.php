@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\Reference;
-use Metier\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
 
 class ReferenceService

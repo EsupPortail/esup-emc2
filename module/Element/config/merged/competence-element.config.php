@@ -8,6 +8,12 @@ use Element\Form\CompetenceElement\CompetenceElementHydrator;
 use Element\Form\CompetenceElement\CompetenceElementHydratorFactory;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceElement\CompetenceElementServiceFactory;
+use Element\View\Helper\CompetenceDisciplineArrayViewHelper;
+use Element\View\Helper\CompetenceDisciplineArrayViewHelperFactory;
+use Element\View\Helper\CompetencesViewHelper;
+use Element\View\Helper\CompetencesViewHelperFactory;
+use Element\View\Helper\CompetenceTypeArrayViewHelper;
+use Element\View\Helper\CompetenceTypeArrayViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -43,6 +49,17 @@ return [
         'factories' => [
             CompetenceElementHydrator::class => CompetenceElementHydratorFactory::class,
         ],
-    ]
-
+    ],
+    'view_helpers' => [
+        'factories' => [
+            CompetencesViewHelper::class => CompetencesViewHelperFactory::class,
+            CompetenceTypeArrayViewHelper::class => CompetenceTypeArrayViewHelperFactory::class,
+            CompetenceDisciplineArrayViewHelper::class => CompetenceDisciplineArrayViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'competences' => CompetencesViewHelper::class,
+            'competenceDisciplineArray' => CompetenceDisciplineArrayViewHelper::class,
+            'competenceTypeArray' => CompetenceTypeArrayViewHelper::class,
+        ],
+    ],
 ];

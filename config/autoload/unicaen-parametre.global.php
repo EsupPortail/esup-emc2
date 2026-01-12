@@ -15,8 +15,8 @@ return [
                         'pages' => [
                             'parametre' => [
                                 'label' => 'Paramètres',
-                                'route' => 'parametre/index',
-                                'resource' => PrivilegeController::getResourceId(CategorieController::class, 'index'),
+                                'route' => 'parametre/index2',
+                                'resource' => PrivilegeController::getResourceId(CategorieController::class, 'index2'),
                                 'order' => 7020,
                                 'pages' => [],
                                 'icon' => 'fas fa-angle-right',

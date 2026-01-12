@@ -4,24 +4,30 @@ namespace FicheMetier\Controller;
 
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Correspondance\CorrespondanceService;
+use Carriere\Service\Niveau\NiveauService;
+use Carriere\Service\NiveauFonction\NiveauFonctionService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
+use Element\Service\CompetenceType\CompetenceTypeService;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
+use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
+use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
-use FicheReferentiel\Form\Importation\ImportationForm;
-use Metier\Service\Domaine\DomaineService;
+use FicheMetier\Service\TendanceElement\TendanceElementService;
+use FicheMetier\Service\TendanceType\TendanceTypeService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Reference\ReferenceService;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
-use Metier\Service\Referentiel\ReferentielService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class ImportControllerFactory
 {
@@ -33,12 +39,12 @@ class ImportControllerFactory
     public function __invoke(ContainerInterface $container): ImportController
     {
         /**
+         * @var CodeFonctionService $codeFonctionService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
-         * @var CompetenceReferentielService $competenceReferentielService
+         * @var CompetenceTypeService $competenceTypeService
          * @var CategorieService $categorieService
          * @var CorrespondanceService $correspondanceService
-         * @var DomaineService $domaineService
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelService
          * @var FicheMetierService $ficheMetierService
@@ -46,45 +52,63 @@ class ImportControllerFactory
          * @var ImportService $importService
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var MissionActiviteService $missionActiviteService
+         * @var NiveauService $niveauService
+         * @var NiveauFonctionService $niveauFonctionService
+         * @var ParametreService $parametreService
          * @var ReferenceServiceAwareTrait $referenceService
          * @var ReferentielService $referentielService
+         * @var TendanceElementService $tendanceElementService
+         * @var TendanceTypeService $tendanceTypeService
          */
+        $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
-        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
+        $competenceTypeService = $container->get(CompetenceTypeService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
-        $domaineService = $container->get(DomaineService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $importService = $container->get(ImportService::class);
         $metierService = $container->get(MetierService::class);
+        $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $niveauService = $container->get(NiveauService::class);
+        $niveauFonctionService = $container->get(NiveauFonctionService::class);
+        $parametreService = $container->get(ParametreService::class);
         $referenceService = $container->get(ReferenceService::class);
         $referentielService = $container->get(ReferentielService::class);
+        $tendanceElementService = $container->get(TendanceElementService::class);
+        $tendanceTypeService = $container->get(TendanceTypeService::class);
 
         /**
-         * @var ImportationForm $importationForm
+         * @var FicheMetierImportationForm $ficheMetierImportationForm
          */
-        $importationForm = $container->get('FormElementManager')->get(ImportationForm::class);
+        $ficheMetierImportationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
 
         $controller = new ImportController();
+        $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);
-        $controller->setCompetenceReferentielService($competenceReferentielService);
+        $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCorrespondanceService($correspondanceService);
-        $controller->setDomaineService($domaineService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierMissionService($ficheMetierMissionService);
         $controller->setImportService($importService);
         $controller->setMetierService($metierService);
+        $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
+        $controller->setNiveauService($niveauService);
+        $controller->setNiveauFonctionService($niveauFonctionService);
+        $controller->setParametreService($parametreService);
         $controller->setReferenceService($referenceService);
         $controller->setReferentielService($referentielService);
-        $controller->setImportationForm($importationForm);
+        $controller->setTendanceElementService($tendanceElementService);
+        $controller->setTendanceTypeService($tendanceTypeService);
+        $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
 
         return $controller;
     }

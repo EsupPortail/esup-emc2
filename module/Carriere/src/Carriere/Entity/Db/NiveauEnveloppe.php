@@ -17,7 +17,7 @@ class NiveauEnveloppe implements HistoriqueAwareInterface, HasDescriptionInterfa
     private ?Niveau $borneSuperieure = null;
     private ?niveau $valeurRecommandee = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

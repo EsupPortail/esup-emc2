@@ -1,0 +1,105 @@
+<?php
+
+
+/**
+ * @var CompetenceType[] $types
+ * @var CompetenceTheme[] $themes
+ * @var CompetenceDiscipline[] $disciplines
+ * @var Referentiel[] $referentiels
+ * @var array $params
+ */
+
+use Element\Entity\Db\CompetenceDiscipline;
+use Element\Entity\Db\CompetenceTheme;
+use Element\Entity\Db\CompetenceType;
+use Referentiel\Entity\Db\Referentiel;
+
+?>
+
+<div class="card">
+    <div class="card-header bg-default">
+        <span class="icon icon-filtrer"></span>
+        Filtre de recherches
+    </div>
+    <div class="card-body">
+
+        <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="type">Type : </label>
+                            <br>
+                            <select id="type" name="type" class="selectpicker" data-live-search="true">
+                                <option value=""> Tous les types </option>
+                                <?php foreach ($types as $type_) : ?>
+                                    <option value="<?php echo $type_->getId(); ?>" <?php if (isset($params['type']) AND $type_->getId() == $params['type']) echo " selected "; ?>>
+                                        <?php echo $type_->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="theme">Thème : </label>
+                            <br>
+                            <select id="theme" name="theme" class="selectpicker" data-live-search="true">
+                                <option value=""> Tous les thèmes </option>
+                                <?php foreach ($themes as $theme_) : ?>
+                                    <option value="<?php echo $theme_->getId(); ?>" <?php if (isset($params['theme']) AND $theme_->getId() == $params['theme']) echo " selected "; ?>>
+                                        <?php echo $theme_->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="discipline">Discipline : </label>
+                            <br>
+                            <select id="discipline" name="discipline" class="selectpicker" data-live-search="true">
+                                <option value=""> Toutes les disciplines </option>
+                                <?php foreach ($disciplines as $discipline_) : ?>
+                                    <option value="<?php echo $discipline_->getId(); ?>" <?php if (isset($params['discipline']) AND $discipline_->getId() == $params['discipline']) echo " selected "; ?>>
+                                        <?php echo $discipline_->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="referentiel">Référentiel :</label>
+                            <br>
+                            <select id="referentiel" name="referentiel" class="form-control selectpicker" data-live-search="true">
+                                <option value="">Peu importe</option>
+                                <?php foreach ($referentiels as $referentiel) : ?>
+                                    <option value="<?php echo $referentiel->getId(); ?>" data-content="<?php echo $referentiel->printLabel(); ?>"
+                                            <?php if ($params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
+                                    >
+                                        <?php echo $referentiel->getLibelleLong(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- BOUTON -->
+                <div class="col-md-2">
+                    <button class="btn btn-primary action" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary action" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        Remise à zéro
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+
+<script>
+    $('button#clear').click(function(e) {
+        let url = "<?php echo $this->url('element/competence/listing', ['competence-type' => null], [], true); ?>";
+        e.preventDefault();
+        window.location.href = url;
+    });
+</script>

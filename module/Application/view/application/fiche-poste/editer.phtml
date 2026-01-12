@@ -28,7 +28,6 @@ use UnicaenParametre\Entity\Db\Parametre;
 
 $canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
-$canEditerExpertise = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 
 $canAssocierAgent = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_ASSOCIERAGENT));
 $canAssocierMetierType = $canEditer;
@@ -217,9 +216,6 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
 //                'bar', $date); ?>
 <!--        </div>-->
 <!--    </div>-->
-
-    <!-- EXPERTISES LIEES A LA FICHE DE POSTE ----------------------------------------------------------------------------->
-    <?php echo $this->partial('partial/expertise', ['fiche' => $fiche, 'mode' => 'edition'], [], true); ?>
 
     <!-- RIFSEEP et NBI ----------------------------------------------------------------------------------------------->
     <?php echo $this->partial('partial/rifseep', ['fiche' => $fiche, 'mode' => 'edition'], [], true); ?>

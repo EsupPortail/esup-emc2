@@ -50,9 +50,9 @@ class MacroService {
     }
 
     /** @noinspection PhpUnused [Macro: Macro#Parametre] */
-    public function getValeurParametre(string $params): string
+    public function getValeurParametre(array $params): string
     {
-        [$categorie,$code] = explode(";", $params);
+        [$categorie,$code] = $params;
         try {
             $valeur = $this->getParametreService()->getValeurForParametre($categorie, $code);
             if ($valeur === null) {

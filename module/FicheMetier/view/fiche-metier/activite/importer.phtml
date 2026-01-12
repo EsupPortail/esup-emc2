@@ -1,0 +1,139 @@
+<?php
+
+use FicheMetier\Entity\Db\Activite;
+
+/**
+ * @see \FicheMetier\Controller\ActiviteController::importerAction()
+ * @var array $data
+ * @var array $file
+ * @var Activite[] $activites
+ * @var string[] $info
+ * @var string[] $warning
+ * @var string[] $error
+ */
+
+$this->headTitle("Importation d'activité");
+
+?>
+
+<h1 class="page-header">
+    Importation d'activité
+</h1>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <?php if (!empty($file)) : ?>
+            <script>
+                $(function() {
+                    $("input[name='fichier']").parent().hide();
+                    let html  = `
+                            <span class="form-label">Fichier téléversé : </span><br>
+                        <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
+                            <div class='row'>
+                                <div class='col-md-9'> <?php echo $data['filename']; ?> </div>
+                                <div class='col-md-3 float-end'><span class='remove_file icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span></div>
+                            </div>
+                        </div>
+                    `;
+                    $("div.fichier").html(html);
+                });
+            </script>
+        <?php endif; ?>
+        <div class="fichier"> </div>
+        <?php //echo $this->form($form); ?>
+    </div>
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            Le fichier csv doit être constitué des colonnes suivantes :
+            <ul>
+                <li> <code>identifiant</code> <span class="icon icon-obligatoire"></span> Identifiant de l'activité dans le réféntiel</li>
+                <li> <code>libellé</code> <span class="icon icon-obligatoire"></span> le libellé de l'activité</li>
+                <li> <code>description</code> la description de l'activité</li>
+            </ul>
+
+            <u>Remarques :</u>
+            <ul>
+                <li>Les entêtes des colonnes doivent respecter strictement les libellés ci-dessous.</li>
+                <li>Les colonnes obligatoires sont désignées par <span class="icon icon-obligatoire"></span>.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<?php if (!empty($error)) : ?>
+    <div class="alert alert-danger">
+        <?php foreach ($error as $line) : ?>
+            <?php echo $line ?> <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<?php if (!empty($info)) : ?>
+    <div class="alert alert-info">
+        <?php foreach ($info as $line) : ?>
+            <?php echo $line ?> <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<?php if (!empty($warning)) : ?>
+    <div class="alert alert-warning">
+        <?php foreach ($warning as $line) : ?>
+            <?php echo $line ?> <br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($activites)): ?>
+    <table class="table table-condensed" id="activites">
+        <thead>
+            <tr>
+                <th class="col-md-5"> Libellé </th>
+                <th class="col-md-5"> Description </th>
+                <th class="col-md-2"> Référence </th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($activites as $activite) : ?>
+            <tr>
+                <td> <?php echo $activite->getLibelle(); ?> </td>
+                <td>
+                    <?php if($activite->getDescription()): ?>
+                        <?php echo $activite->getDescription(); ?>
+                    <?php else : ?>
+                        <span class="missing-data"> Aucune description </span>
+                    <?php endif ?>
+                </td>
+                <td>
+                    <span class="badge">
+                        <?php echo $activite->getReferentiel()->getLibelleCourt(); ?>
+                        -
+                        <?php echo $activite->getIdOrig(); ?>
+                    </span>
+                </td>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<script>
+    <?php if (isset($data['referentiel'])): ?>
+        let valueReferentiel = '<?php echo $data['referentiel']; ?>';
+        $('select[name="referentiel"]').val(valueReferentiel);
+    <?php endif; ?>
+    <?php if (isset($data['mode'])): ?>
+        let valueMode = '<?php echo $data['mode']; ?>';
+        $('select[name="mode"]').val(valueMode);
+    <?php endif; ?>
+
+    $(function() {
+        $('#remove_file').on('click', function() {
+            window.location.href="../activite/importer";
+        });
+    })
+</script>
+
+<style>
+    span#remove_file {
+        color: var(--bs-danger);
+    }
+</style>

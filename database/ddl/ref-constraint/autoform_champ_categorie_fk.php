@@ -8,8 +8,8 @@ return [
     'table'       => 'unicaen_autoform_champ',
     'rtable'      => 'unicaen_autoform_categorie',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'CASCADE',
-    'index'       => 'autoform_categorie_pk',
+    'delete_rule' => 'NO ACTION',
+    'index'       => 'autoform_categorie_id_uindex',
     'columns'     => [
         'categorie' => 'id',
     ],

@@ -1,0 +1,121 @@
+<?php
+
+use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\CompetenceElement;
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionActivite;
+
+/**
+ * @see \FicheMetier\View\Helper\MissionPrincipaleViewHelper
+ * @var ?Mission $mission
+ * @var array $options
+ */
+
+$displaySource = isset($options['display-source']) ? $options['display-source'] : false;
+
+?>
+
+<?php if ($mission === null) : ?>
+    <p>Aucune mission</p>
+<?php else: ?>
+    <div>
+        <h3 class="mission-libelle"> <?php echo $mission->getLibelle(); ?> </h3>
+        <?php echo $mission->printReference(); ?>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12 activites">
+                        <?php
+                            $activites = $mission->getActivites();
+                            usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
+                        ?>
+                        <ul>
+                            <?php foreach ($activites as $activite) : ?>
+                                <li> <?php echo $activite->getLibelle(); ?> </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 complements">
+                <h4>Compléments</h4>
+                <dl class="row">
+                    <dt class="col-md-5"> FAP </dt>
+                    <dd class="col-md-7">
+                        <?php $familles = $mission->getFamillesProfessionnelles(); ?>
+                        <?php if (empty($familles)) : ?>
+                            Aucune famille professionnelle
+                        <?php else : ?>
+                            <ul>
+                                <?php foreach ($familles as $famille) : ?>
+                                    <li> <?php echo $famille->getLibelle(); ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </dd>
+                    <dt class="col-md-5"> Niveaux</dt>
+                    <dd class="col-md-7">
+                        <?php if ($mission->getNiveau()) : ?>
+                            <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
+                        <?php else : ?>
+                            Aucun niveau indiqué
+                        <?php endif; ?>
+                    </dd>
+                    <?php if ($mission->getCodesFicheMetier()) : ?>
+                        <dt class="col-md-5"> <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE; ?> </dt>
+                        <dd class="col-md-7">
+                            <?php $codes = explode('|', $mission->getCodesFicheMetier()); ?>
+                            <ul>
+                                <?php foreach ($codes as $code) : ?>
+                                    <li> <?php echo $code; ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </dd>
+                    <?php endif; ?>
+                    <?php if ($mission->getCodesFonction()) : ?>
+                        <dt class="col-md-5">  <?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION; ?> </dt>
+                        <dd class="col-md-7">
+                            <?php $codes = explode('|', $mission->getCodesFonction()); ?>
+                            <ul>
+                                <?php foreach ($codes as $code) : ?>
+                                    <li> <?php echo $code; ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </dd>
+                    <?php endif; ?>
+                </dl>
+            </div>
+        </div>
+
+        <?php if ($displaySource) : ?>
+            <div>
+                <h4> Données sources </h4>
+                <?php if ($mission->getSourceString() === null) : ?> : ?>
+                    Aucune donnée source
+                <?php else: ?>
+<pre>
+<?php echo $mission->getSourceString(); ?>
+</pre>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
+<style>
+    div.bloc {
+        border: 1px solid lightgrey;
+        margin: 0.25rem;
+        padding: 0.5rem;
+    }
+
+    /* pour le debug *********************************/
+    /**
+        .activites { background: lightblue; }
+        .competences { background: lightpink; }
+        .applications { background: lightyellow; }
+        .complements { background: lightgray; }
+     */
+</style>

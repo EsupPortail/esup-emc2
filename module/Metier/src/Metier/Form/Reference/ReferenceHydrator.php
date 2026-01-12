@@ -4,7 +4,7 @@ namespace Metier\Form\Reference;
 
 use Metier\Entity\Db\Reference;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class ReferenceHydrator implements HydratorInterface {

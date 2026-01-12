@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\ConfigurationController::competenceAction()
+ * @var ConfigurationFicheMetier[] $defaultCompetence
+ * @var Parametre[] $parametres
+ */
+
+use Application\Entity\Db\ConfigurationFicheMetier;
+use Element\Entity\Db\Competence;
+use Element\Provider\Privilege\CompetencePrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
+
+$this->headTitle("Configuration des fiches métiers");
+
+$canConfigurer = true; //todo
+$canVoirCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+
+/** @see \FicheMetier\Controller\ConfigurationController::competenceAction() */
+$retour = $this->url('fiche-metier/configuration/competence', [], [], true);
+?>
+
+<!-- inclusion du header -->
+<?php echo $this->partial('header', ['selected' => 'competence', 'parametres' => $parametres]); ?>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<div class="alert alert-info">
+    <span class="icon icon-info"></span>
+    Les compétences ci-dessous sont ajoutées automatiquement aux fiches métiers lors de leur création.
+</div>
+
+<?php /** @see \FicheMetier\Controller\ConfigurationController::ajouterAction() */ ?>
+<a href="<?php echo $this->url('fiche-metier/configuration/ajouter', ['type' => 'competence'], [], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification"
+>
+    <span class="icon icon-ajouter"></span>
+    Ajouter une compétence
+</a>
+<?php /** @see \FicheMetier\Controller\ConfigurationController::reappliquerAction() */ ?>
+<a href="<?php echo $this->url("fiche-metier/configuration/reappliquer", ['type' => 'competence'], [], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification"
+>
+    <span class="icon icon-gerer"></span>
+    Réappliquer les compétences
+</a>
+
+<table class="table table-condensed" id="default_competence">
+    <thead>
+    <tr>
+        <th class="col-md-10"> Libellé</th>
+        <th class="col-md-2 action"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($defaultCompetence as $competence): ?>
+        <tr>
+            <td> <?php echo $competence->getEntity()->getLibelle(); ?> </td>
+            <td class="action">
+                <?php if ($canVoirCompetence): ?>
+                    <a href="<?php echo $this->url('element/competence/afficher', ['competence' => $competence->getEntity()->getId()], [], true); ?>"
+                       class="action secondary ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
+                <?php if ($canConfigurer): ?>
+                    <br>
+                    <?php /** @see \FicheMetier\Controller\ConfigurationController::retirerAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/configuration/retirer', ['id' => $competence->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                       class="action danger"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

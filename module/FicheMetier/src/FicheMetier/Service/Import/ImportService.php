@@ -8,17 +8,18 @@ use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
+use Referentiel\Entity\Db\Referentiel;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class ImportService
 {
 
     use CategorieServiceAwareTrait;
     use CompetenceServiceAwareTrait;
-    use CompetenceReferentielServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
@@ -53,7 +54,7 @@ class ImportService
     public function readCompetence(array $header, array $data, string $mode, array &$info, array &$warning, array &$error): array
     {
         $competences = [];
-        $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode("REFERENS3");
+        $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt("REFERENS3");
         $allCompetences = $this->getCompetenceService()->getCompetencesByRefentiel($referentiel);
         if ($referentiel === null) $error[] = "Le référentiel [REFERENS3] n'existe pas.";
         if (in_array("COMPETENCES_ID", $header)) {
@@ -117,10 +118,10 @@ class ImportService
         return $famillesProfessionnelles;
     }
 
-    public function readMetier(array $header, array $data, string $mode, array $famillesProfessionnelles, array $correspondances, array $categories, array &$info, array &$warning, array&$error): array
+    public function readMetier(array $header, array $data, string $mode, array $famillesProfessionnelles, array $correspondances, array $categories, Referentiel $referentiel, array &$info, array &$warning, array&$error): array
     {
-        $codeReferentiel = "REFERENS3";
         $metiers = [];
+        $codeReferentiel = $referentiel->getLibelleCourt();
         if (in_array("Code emploi type", $header)) {
             foreach ($data as $item) {
                 $code = $item["Code emploi type"] ?? null;
@@ -128,16 +129,16 @@ class ImportService
                 if ($metier === null)
                 {
                     $intitule = $item["Intitulé de l’emploi type"] ?? null;
-                    $metier = $this->getMetierService()->createWith($intitule, "REFERENS3", $code, null, null, $mode === 'import');
+                    $metier = $this->getMetierService()->createWith($intitule, $codeReferentiel, $code, null, $mode === 'import');
 
-                    if ($item["Famille d’activité professionnelle"]) {
+                    if (isset($item["Famille d’activité professionnelle"])) {
                         $elements = explode("|", $item["Famille d’activité professionnelle"]);
                         foreach ($elements as $element) {
                             $metier->addFamillesProfessionnelles($famillesProfessionnelles[$element]);
                         }
                     }
-                    if ($item["Code de la branche d’activité professionnelle"] and $correspondances[$item["Code de la branche d’activité professionnelle"]]) $metier->addCorrespondance($correspondances[$item["Code de la branche d’activité professionnelle"]]);
-                    if ($item["REFERENS_CATEGORIE_EMPLOI"] and $categories[$item["REFERENS_CATEGORIE_EMPLOI"]]) $metier->setCategorie($categories[$item["REFERENS_CATEGORIE_EMPLOI"]]);
+                    if (isset($item["Code de la branche d’activité professionnelle"]) and $item["Code de la branche d’activité professionnelle"] !== '' and $correspondances[$item["Code de la branche d’activité professionnelle"]]) $metier->addCorrespondance($correspondances[$item["Code de la branche d’activité professionnelle"]]);
+                    if (isset($item["REFERENS_CATEGORIE_EMPLOI"]) AND $item["REFERENS_CATEGORIE_EMPLOI"] !== '' and $categories[$item["REFERENS_CATEGORIE_EMPLOI"]]) $metier->setCategorie($categories[$item["REFERENS_CATEGORIE_EMPLOI"]]);
                     if ($mode === 'import') $this->getMetierService()->update($metier);
                 }
                 $metiers[$code] = $metier;

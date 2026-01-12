@@ -32,6 +32,7 @@ use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
+use Application\View\Helper\AgentViewHelperFactory;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -470,12 +471,13 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'agent' => AgentViewHelper::class,
+
             'agentAffectation' => AgentAffectationViewHelper::class,
             'agentStatut' => AgentStatutViewHelper::class,
             'agentGrade' => AgentGradeViewHelper::class,
-
-
+        ],
+        'factories' => [
+            'agent' => AgentViewHelperFactory::class,
         ],
     ],
 

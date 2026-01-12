@@ -34,14 +34,14 @@ $this->headTitle("Liste des catégories");
     </a>
 <?php endif; ?>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed table-hover" id="categories">
     <thead>
         <tr>
-            <th> Code </th>
-            <th> Libelle </th>
-            <th> #Métier </th>
+            <th class="col-md-6"> Libelle </th>
+            <th class="col-md-2"> Code </th>
+            <th class="col-md-2"> #Métier </th>
             <?php if ($canAction) : ?>
-                <th class="action"> Action </th>
+                <th class="col-md-2 action"> Action </th>
             <?php endif; ?>
         </tr>
     </thead>
@@ -49,10 +49,10 @@ $this->headTitle("Liste des catégories");
     <?php foreach ($categories as $categorie) : ?>
         <tr <?php if ($categorie->estHistorise()) echo " class='historise'"; ?>>
             <td>
-                <?php echo $categorie->getCode(); ?>
+                <?php echo $categorie->getLibelle(); ?>
             </td>
             <td>
-                <?php echo $categorie->getLibelle(); ?>
+                <code><?php echo $categorie->getCode(); ?></code>
             </td>
             <td>
                 <?php echo count($categorie->getMetiers()); ?>
@@ -131,6 +131,16 @@ $this->headTitle("Liste des catégories");
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+        $("#categories").DataTable({
+            info: true,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [3], orderable: false }
+            ]
         });
     });
 </script>

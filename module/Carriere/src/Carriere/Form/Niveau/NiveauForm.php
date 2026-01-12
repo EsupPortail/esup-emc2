@@ -3,13 +3,17 @@
 namespace Carriere\Form\Niveau;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
 class NiveauForm extends Form {
+
+    use CategorieServiceAwareTrait;
 
     public function init(): void
     {
@@ -52,6 +56,23 @@ class NiveauForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
+        // categorie
+        $this->add([
+            'type' => Select::class,
+            'name' => 'categorie',
+            'options' => [
+                'label' => "Catégorie :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'empty_option' => 'Sélectionner une catégorie ...',
+                'value_options' => $this->getCategorieService()->getCategorieAsOption(),
+            ],
+            'attributes' => [
+                'id' => 'famille',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
+
         // description
         $this->add([
             'name' => 'HasDescription',
@@ -80,6 +101,7 @@ class NiveauForm extends Form {
             'niveau'                => [ 'required' => true,  ],
             'etiquette'             => [ 'required' => true,  ],
             'libelle'               => [ 'required' => true,  ],
+            'categorie'             => [ 'required' => false,  ],
             'description'           => [ 'required' => false,  ],
         ]));
     }

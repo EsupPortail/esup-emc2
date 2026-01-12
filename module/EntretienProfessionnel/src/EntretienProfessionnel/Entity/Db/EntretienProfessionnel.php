@@ -4,14 +4,12 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
-use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
-use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEvenement\Entity\HasEvenementsInterface;
@@ -66,6 +64,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     private ?string $token = null;
     private ?DateTime $acceptation = null;
+
+    /** Pour la mention facultatif */
+    private ?string $statut = null;
 
     public function __construct()
     {
@@ -141,6 +142,16 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function setDureeEstimee(?float $dureeEstimee): void
     {
         $this->dureeEstimee = $dureeEstimee;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): void
+    {
+        $this->statut = $statut;
     }
 
     /** FONCTIONS ***********************/
@@ -652,6 +663,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function isDepasse(): bool
     {
         return ($this->getDateEntretien() < (new DateTime()));
+    }
+
+    /** @noinspection PhpUnused ENTRETIEN#Facultatif */
+    public function mentionFacultatif(): string
+    {
+        if ($this->statut === "facultatif") return "L'entretien professionnel pour cet·te agent·e n'est pas obligatoire pour cette campagne";
+        return "";
     }
 
     public function prettyPrint(): string

@@ -2,9 +2,11 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\Interface\HasNiveauCarriereInterface;
+use Carriere\Entity\Db\Trait\HasNiveauCarriereTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
@@ -12,31 +14,42 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
+use Metier\Entity\HasMissionsPrincipalesInterface;
+use Metier\Entity\HasMissionsPrincipalesTrait;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface, HasMissionsPrincipalesInterface,
+    HasNiveauCarriereInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasReferenceInterface
 {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
     use HasEtatsTrait;
+    use HasNiveauCarriereTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
+    use HasMissionsPrincipalesTrait;
+    use HasReferenceTrait;
 
-    private ?int $id = -1;
-    private ?bool $hasExpertise = false;
+    private ?int $id = null;
+    private ?string $libelle = null;
+    private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?string $raison = null;
-    private ?string $codeFonction = null;
+    private ?CodeFonction $codeFonction = null;
 
-    public Collection $competencesSpecifiques;
+    public ?string $lienWeb = null;
+    public ?string $lienPdf = null;
 
     private Collection $activites;
-    private Collection $missions;
     private Collection $tendances;
     private Collection $thematiques;
 
@@ -49,7 +62,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
-        $this->competencesSpecifiques = new ArrayCollection();
 
         $this->tendances = new ArrayCollection();
         $this->thematiques = new ArrayCollection();
@@ -70,14 +82,24 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->raw = $raw;
     }
 
-    public function hasExpertise(): bool
+    public function getLibelle(): ?string
     {
-        return ($this->hasExpertise === true);
+        return $this->libelle;
     }
 
-    public function setExpertise(?bool $has): void
+    public function setLibelle(?string $libelle): void
     {
-        $this->hasExpertise = $has;
+        $this->libelle = $libelle;
+    }
+
+    public function getFamilleProfessionnelle(): ?FamilleProfessionnelle
+    {
+        return $this->familleProfessionnelle;
+    }
+
+    public function setFamilleProfessionnelle(?FamilleProfessionnelle $familleProfessionnelle): void
+    {
+        $this->familleProfessionnelle = $familleProfessionnelle;
     }
 
     public function getRaison(): ?string
@@ -90,80 +112,62 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->raison = $raison;
     }
 
-    public function getCodeFonction(): ?string
+    public function getCodeFonction(): ?CodeFonction
     {
         return $this->codeFonction;
     }
 
-    public function setCodeFonction(?string $codeFonction): void
+    public function setCodeFonction(?CodeFonction $codeFonction): void
     {
         $this->codeFonction = $codeFonction;
     }
 
-    /** @return FicheMetierMission[] */
-    public function getMissions(): array
+    public function hasLink(): bool
     {
-        $missions = $this->missions->toArray();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
-            return $a->getOrdre() <=> $b->getOrdre();
-        });
-        return $missions;
+        return $this->lienWeb !== null || $this->lienPdf !== null;
     }
 
-    public function addMission(FicheMetierMission $ficheMetierMission): void
+    public function getLienWeb(): ?string
     {
-        $this->missions->add($ficheMetierMission);
+        return $this->lienWeb;
     }
 
-    /** Compétences ***************************************************************************************************/
-
-    /** Les compétences "standards" sont gérées dans le trait HasCompetenceCollection */
-
-    public function getCompetencesSpecifiquesCollection(): Collection
+    public function setLienWeb(?string $lienWeb): void
     {
-        return $this->competencesSpecifiques;
+        $this->lienWeb = $lienWeb;
     }
 
-
-    /** @return CompetenceElement[] */
-    public function getCompetencesSpecifiques(bool $histo = false): array
+    public function getLienPdf(): ?string
     {
-        $competences = $this->competencesSpecifiques->toArray();
-        if (!$histo) $competences = array_filter($competences, function (CompetenceElement $element) {
-            return $element->estNonHistorise();
-        });
-        return $competences;
+        return $this->lienPdf;
     }
 
-    /** @return CompetenceElement[] */
-    public function getCompetenceSpecifiqueListe(bool $avecHisto = false) : array
+    public function setLienPdf(?string $lienPdf): void
     {
-        $competences = [];
-        /** @var CompetenceElement $competenceElement */
-        foreach ($this->competencesSpecifiques as $competenceElement) {
-            if ($avecHisto OR $competenceElement->estNonHistorise()) $competences[$competenceElement->getCompetence()->getId()] = $competenceElement;
+        $this->lienPdf = $lienPdf;
+    }
+
+    /** @return TendanceElement[] */
+    public function getTendances(): array
+    {
+        $tendances = [];
+        /** @var TendanceElement $tendance */
+        foreach ($this->tendances as $tendance) {
+            if ($tendance->estNonHistorise()) {
+                $tendances[$tendance->getType()->getCode()] = $tendance;
+            }
         }
-        return $competences;
+        return $tendances;
     }
 
-    public function hasCompetenceSpecifique(CompetenceElement $element): bool
+    public function addTendance(TendanceElement $tendance): void
     {
-        return $this->competencesSpecifiques->contains($element);
+        $this->tendances->add($tendance);
     }
 
-    public function addCompetenceSpecifique(CompetenceElement $element): void
+    public function clearTendances(): void
     {
-        if ($this->hasCompetenceSpecifique($element)) $this->competencesSpecifiques->add($element);
-    }
-
-    public function removeCompetenceSpecifique(CompetenceElement $element): void
-    {
-        if ($this->hasCompetenceSpecifique($element)) $this->competencesSpecifiques->removeElement($element);
-    }
-
-    public function clearCompetencesSpecifiques(): void
-    {
-        $this->competencesSpecifiques->clear();
+        $this->tendances->clear();
     }
 
     /** FONCTION POUR MACRO *******************************************************************************************/
@@ -188,9 +192,74 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     /** @noinspection PhpUnused */
     public function getIntitule(): string
     {
+        if ($this->getLibelle()) return $this->getLibelle();
         $metier = $this->getMetier();
         if ($metier === null) return "Aucun métier est associé.";
         return $metier->getLibelle();
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringResume(): string
+    {
+        $html = <<<EOS
+<h2>Résumé</h2>
+
+<table style='width:100%; border-collapse: collapse;'>
+EOS;
+
+        //metier
+        $html .= "<tr><th>Métier</th><td>" . $this->getMetier()->getLibelle() . "</td>";
+        $html .= "<tr><th>Correspondance</th><td><ul>";
+        foreach ($this->getMetier()->getCorrespondances() as $correspondance) {
+            $html .= "<li>";
+            $html .= $correspondance->getType()->getLibelleCourt() . " " . $correspondance->getCategorie();
+            $html .= "</li>";
+        }
+        $html .= "</ul></td>";
+        $html .= "<tr><th>Famille</th><td><ul>";
+        foreach ($this->getMetier()->getFamillesProfessionnelles() as $familleProfessionnelle) {
+            $html .= "<li>";
+            $html .= $familleProfessionnelle->getLibelle();
+            $html .= "</li>";
+        }
+        $html .= "</ul></td>";
+        //$html .= "<tr><th>Code Fonction</th><td>".$this->getMetier()->getLibelle()."</td>";
+        $html .= "<tr><th>Référence·s</th><td>";
+        foreach ($this->getMetier()->getReferences() as $reference) {
+            $html .= "<li>";
+            $html .= $reference->getReferentiel()->getLibelleCourt() . " " . $reference->getCode();
+            $html .= "</li>";
+        }
+        $html .= "</td>";
+        $html .= "<tr><th>Date de dépôt</th><td>";
+        $etat = $this->getEtatActif();
+        if ($etat === null) $html .= "État inconnu";
+        else {
+            $type = $etat->getType();
+            if ($type === null) $html .= "Type de l'état inconnu";
+            else {
+                switch ($type->getCode()) {
+                    case FicheMetierEtats::ETAT_VALIDE :
+                        $html .= "Validée le " . $etat->getHistoCreation()->format("d/M/Y");
+                        break;
+                    case FicheMetierEtats::ETAT_REDACTION :
+                        $html .= "Créée le " . $etat->getHistoCreation()->format("d/M/Y");
+                        break;
+                    default :
+                        $html .= "Le " . $etat->getHistoCreation()->format("d/M/Y");
+                        break;
+                }
+            }
+        }
+        $html .= "</td></tr>";
+        $html .= "<tr><th>Code Fonction</th><td>" . ($this->getCodeFonction() ? $this->getCodeFonction()->computeCode() : "N.C.") . "</td></tr>";
+
+
+        $html .= <<<EOS
+</table>
+EOS;
+
+        return $html;
     }
 
     /**
@@ -199,7 +268,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
      */
     public function getMissionsAsList(): string
     {
-        $texte = "";
+        $texte = "<h2> Mission·s principale·s</h2>";
         foreach ($this->getMissions() as $mission) {
             $texte .= "<h3 class='mission-principale'>" . $mission->getMission()->getLibelle() . "</h3>";
             $activites = $mission->getMission()->getActivites();
@@ -230,14 +299,15 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @noinspection PhpUnused */
-    public function getComptencesByType(int $typeId): string
+    public function getComptencesByType(string $code): string
     {
         $competences = $this->getCompetenceListe();
         $competences = array_map(function (CompetenceElement $c) {
             return $c->getCompetence();
         }, $competences);
-        $competences = array_filter($competences, function (Competence $c) use ($typeId) {
-            return $c->getType()->getId() === $typeId;
+        /** @var Competence[] $competences */
+        $competences = array_filter($competences, function (Competence $c) use ($code) {
+            return $c->getType()->getId() === $code;
         });
         usort($competences, function (Competence $a, Competence $b) {
             return $a->getLibelle() <=> $b->getLibelle();
@@ -247,7 +317,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 
         $competence = $competences[0];
         $competenceType = "";
-        switch ($competence->getCompetence()->getType()->getId()) {
+        switch ($competence->getType()->getId()) {
             case 1 :
                 $competenceType = "Compétences comportementales";
                 break;
@@ -289,18 +359,19 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     }
 
     /** @noinspection PhpUnused */
-    public function getApplicationsAffichage(): string
+    public function getCompetencesSpecifique(): string
     {
-        $applications = $this->getApplicationListe();
+        return $this->getComptencesByType(CompetenceType::CODE_SPECIFIQUE);
+    }
 
-        $texte = "<ul>";
-        /** @var ApplicationElement $applicationElement */
-        foreach ($applications as $applicationElement) {
-            $application = $applicationElement->getApplication();
-            $texte .= "<li>" . $application->getLibelle() . "</li>";
+
+    /** @noinspection PhpUnused */
+    public function toStringRaison(): string
+    {
+        if ($this->raison === null) {
+            return "Aucune raison communiquée";
         }
-        $texte .= "</ul>";
-        return $texte;
+        return $this->raison;
     }
 
     /** @noinspection PhpUnused */
@@ -314,19 +385,33 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) {
             return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
         });
+        if (empty($thematiques)) return "";
 
-        $texte = "<table style='width:100%; border-collapse: collapse;'>";
-        $texte .= "<thead><tr><th style='border-bottom: 1px solid black; text-align: left;'>Libelle</th><th style='border-bottom: 1px solid black; text-align: left;'>Niveau</th></tr></thead>";
-        $texte .= "<tbody>";
+        $html = <<<EOS
+<h2>Environnement et contexte de travail</h2>
+
+<table style='width:100%; border-collapse: collapse;' id="environnement">
+<thead>
+    <tr>
+        <th id="libelle"> Libellé </th>
+        <th id="niveau"> Niveau</th>
+    </tr>
+</thead>
+<tbody>
+EOS;
+
         foreach ($thematiques as $thematique) {
-            $texte .= "<tr>";
-            $texte .= "<td>" . $thematique->getType()->getLibelle() . "</td>";
-            $texte .= "<td>" . $thematique->getNiveauMaitrise()->getLibelle() . "</td>";
-            $texte .= "</tr>";
+            $html .= "<tr>";
+            $html .= "<td>" . $thematique->getType()->getLibelle() . "</td>";
+            $html .= "<td>" . $thematique->getNiveauMaitrise()->getLibelle() . "</td>";
+            $html .= "</tr>";
         }
-        $texte .= "</tbody>";
-        $texte .= "</table>";
-        return $texte;
+        $html .= <<<EOS
+</tbody>
+</table>
+EOS;
+
+        return $html;
     }
 
     /** @noinspection PhpUnused */
@@ -340,18 +425,80 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         usort($tendances, function (TendanceElement $a, TendanceElement $b) {
             return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
         });
+        if (empty($tendances)) return "";
 
-        $texte = "<div class='tendances'>";
+        $html = <<<EOS
+<h2>Tendances d'évolution </h2>
+EOS;
+
+        $html .= "<div class='tendances'>";
         foreach ($tendances as $tendance) {
-            $texte .= "<div class='tendance'>";
-            $texte .= "<div class='tendance-libelle'>" . $tendance->getType()->getLibelle() . "</div>";
-            $texte .= "<div class='tendance-texte'>" . $tendance->getTexte() . "</div>";
-            $texte .= "</div>";
+            $html .= "<div class='tendance'>";
+            $html .= "<div class='tendance-libelle'>" . $tendance->getType()->getLibelle() . "</div>";
+            $html .= "<div class='tendance-texte'>" . $tendance->getTexte() . "</div>";
+            $html .= "</div>";
         }
-        $texte .= "</div>";
-        return $texte;
+        $html .= "</div>";
+        return $html;
     }
 
+    /** @noinspection PhpUnused */
+    public function toStringNiveauFonction(): string
+    {
+        if ($this->getCodeFonction() AND $this->getCodeFonction()->getNiveauFonction()) return $this->getCodeFonction()->getNiveauFonction()->getLibelle();
+        return "Non précisé";
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringCodeFonction(): string
+    {
+        if ($this->getCodeFonction()) return $this->getCodeFonction()->computeCode();
+        return "Non précisé";
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringEtatActif(): string
+    {
+        $etat = $this->getEtatActif();
+        if ($etat === null) return "Aucun état actif";
+        $type = $etat->getType();
+        if ($type === null) return "Aucun type d'état connu";
+        return $type->getLibelle();
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringEtatActifDate(): string
+    {
+        $etat = $this->getEtatActif();
+        if ($etat === null) return "Aucun état actif";
+        return $etat->getDate()??"Aucune date connue";
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringSpecialite(): string
+    {
+        $famille = $this->getFamilleProfessionnelle();
+        if ($famille === null) return "Aucune spécialité connue";
+        $specialite = $famille->getCorrespondance();
+        if ($specialite === null) return "Aucune spécialité connue";
+        return $specialite->getLibelleLong();
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringFamille(): string
+    {
+        $famille = $this->getFamilleProfessionnelle();
+        if ($famille === null) return "Aucune famille professionnelle connue";
+        return $famille->getLibelle();
+    }
+
+    public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?FicheMetierMission
+    {
+        foreach ($this->missions as $mission) {
+            if ($mission->getMission()->getReferentiel() === $referentiel && $mission->getMission()->getReference() === $reference) return $mission;
+        }
+        return null;
+    }
 
 
 }

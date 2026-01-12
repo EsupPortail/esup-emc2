@@ -5,10 +5,8 @@ namespace Metier;
 use Laminas\Router\Http\Literal;
 use Metier\Controller\IndexController;
 use Metier\Controller\IndexControllerFactory;
-use Metier\Provider\Privilege\DomainePrivileges;
 use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
-use Metier\Provider\Privilege\ReferentielmetierPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -22,9 +20,7 @@ return [
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_INDEX,
-                        DomainePrivileges::DOMAINE_INDEX,
                         FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_INDEX,
-                        ReferentielmetierPrivileges::REFERENTIEL_INDEX,
                         MetierPrivileges::METIER_CARTOGRAPHIE,
                     ],
                 ],

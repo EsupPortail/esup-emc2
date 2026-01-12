@@ -3,6 +3,8 @@
 namespace FicheMetier\Service\FicheMetier;
 
 use Application\Service\Configuration\ConfigurationService;
+use Application\Service\Macro\MacroService;
+use Carriere\Service\NiveauFonction\NiveauFonctionService;
 use Doctrine\ORM\EntityManager;
 use Element\Form\SelectionApplication\SelectionApplicationHydrator;
 use Element\Form\SelectionCompetence\SelectionCompetenceHydrator;
@@ -10,18 +12,20 @@ use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
-use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
+use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\Domaine\DomaineService;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FicheMetierServiceFactory {
@@ -39,13 +43,17 @@ class FicheMetierServiceFactory {
          * @var ApplicationElementService $applicationElementService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
-         * @var CompetenceReferentielService $competenceReferentielService
+         * @var CodeFonctionService $codeFonctionService
          * @var ConfigurationService $configurationService
-         * @var DomaineService $domaineService
          * @var EtatInstanceService $etatInstanceService
+         * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var FicheMetierMissionService $ficheMetierMissionService
+         * @var MacroService $macroService
          * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var NiveauFonctionService $niveauFonctionService
+         * @var ParametreService $parametreService
+         * @var ReferentielService $referentielService
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
@@ -55,19 +63,23 @@ class FicheMetierServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $applicationService = $container->get(ApplicationService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
+        $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
-        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $configurationService = $container->get(ConfigurationService::class);
-        $domaineService = $container->get(DomaineService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
+        $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
+        $macroService = $container->get(MacroService::class);
         $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $niveauFonctionService = $container->get(NiveauFonctionService::class);
+        $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $metierService = $container->get(MetierService::class);
+        $referentielService = $container->get(ReferentielService::class);
 
         /**
          * @var SelectionApplicationHydrator $selectionApplicationHydrator
@@ -80,15 +92,19 @@ class FicheMetierServiceFactory {
         $service->setObjectManager($entityManager);
         $service->setApplicationService($applicationService);
         $service->setApplicationElementService($applicationElementService);
+        $service->setCodeFonctionService($codeFonctionService);
         $service->setCompetenceService($competenceService);
         $service->setCompetenceElementService($competenceElementService);
-        $service->setCompetenceReferentielService($competenceReferentielService);
         $service->setConfigurationService($configurationService);
-        $service->setDomaineService($domaineService);
         $service->setEtatInstanceService($etatInstanceService);
+        $service->setFamilleProfessionnelleService($familleProfessionnelleService);
         $service->setFicheMetierMissionService($ficheMetierMissionService);
+        $service->setMacroService($macroService);
         $service->setMissionActiviteService($missionActiviteService);
         $service->setMissionPrincipaleService($missionPrincipaleService);
+        $service->setNiveauFonctionService($niveauFonctionService);
+        $service->setParametreService($parametreService);
+        $service->setReferentielService($referentielService);
         $service->setRenduService($renduService);
 
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);

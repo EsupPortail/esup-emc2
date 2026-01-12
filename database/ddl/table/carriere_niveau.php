@@ -10,6 +10,18 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'carriere_niveau_id_seq',
     'columns'     => [
+        'categorie_id'          => [
+            'name'        => 'categorie_id',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 12,
+            'commentaire' => NULL,
+        ],
         'description'           => [
             'name'        => 'description',
             'type'        => 'clob',

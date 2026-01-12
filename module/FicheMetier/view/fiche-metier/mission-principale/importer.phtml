@@ -1,0 +1,197 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\MissionPrincipaleController::importerAction()
+ * @var string $separateur
+ * @var bool $displayCodeFonction
+ * @var Mission[] $missions
+ *
+ * @var Referentiel[] $referentiels
+ * @var string $filename
+ * @var string $filepath
+ *
+ * @var string[] $info
+ * @var string[] $warning
+ * @var string[] $error
+ */
+
+use FicheMetier\Entity\Db\Mission;
+use Referentiel\Entity\Db\Referentiel;
+
+$this->headTitle('Importation de missions principales');
+
+?>
+
+<script>
+    function reset() {
+        console.log('click');
+        window.location.href = "../mission-principale/importer";
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Importation de missions principales
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction() */ ?>
+        <a href="<?php echo $this->url('mission-principale') ?>"
+           class="btn btn-secondary">
+            <span class="icon icon-listing"></span>
+            Accéder aux missions principales
+        </a>
+    </div>
+</div>
+
+<!-- Explications ----------------------------------------------------------------------------------------------------->
+
+<!-- Formulaire ------------------------------------------------------------------------------------------------------->
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Importation de missions principales depuis un CSV</div>
+            <div class="card-body">
+                <form enctype="multipart/form-data"
+                      action="<?php echo $this->url("mission-principale/importer", ['path' => null], [], true); ?>"
+                      method="post">
+                    <?php if ($filepath !== null) : ?>
+                        <span class="form-label">Fichier téléversé : </span><br>
+                        <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
+                            <div class='row'>
+                                <div class='col-md-9'> <?php echo $filename; ?> </div>
+                                <div class='col-md-3'>
+                                    <div class='float-end'>
+                            <span class="action text-danger" style="cursor: pointer;" onclick="reset()">
+                                <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span> Retirer
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="filepath" id="filepath" value="<?php echo $filepath; ?>">
+                        <input type="hidden" name="filename" id="filename" value="<?php echo $filename; ?>">
+                    <?php else : ?>
+                        <label for="file">Fichier à importer <span class="icon icon-obligatoire"
+                                                                   title="Champ obligatoire"></span></label>
+                        <input type="file" name="file" id="file" class="form-control" accept=".csv"/>
+                    <?php endif; ?>
+                    <label for="referentiel"> Référentiel <span class="icon icon-obligatoire"
+                                                                title="Champ obligatoire"></span> </label>
+                    <select class="selectpicker show-tick form-control" id="referentiel" name="referentiel">
+                        <option value="">Sélectionnez un référentiel</option>
+                        <?php foreach ($referentiels as $referentiel): ?>
+                            <option value="<?php echo $referentiel->getId(); ?>"
+                                    <?php if (isset($data["referentiel"]) and $data["referentiel"] == $referentiel->getId()) : ?>
+                                        selected
+                                    <?php endif; ?>
+                            >
+                                <?php echo $referentiel->getLibelleCourt(); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <br>
+                    <label for="mode"> Mode de traitement <span class="icon icon-obligatoire"
+                                                                title="Champ obligatoire"></span></label>
+                    <select class="selectpicker show-tick form-control" id="mode" name="mode">
+                        <option value="preview"
+                                <?php if (isset($data["mode"]) and $data["mode"] === "preview") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >Prévisualisation
+                        </option>
+                        <option value="import"
+                                <?php if (isset($data["mode"]) and $data["mode"] === "import") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >Importation
+                        </option>
+                    </select>
+                    <br>
+                    <button type='submit' class="btn btn-success">
+                        <span class="icon icon-csv"></span>
+                        Traiter le fichier
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+        <div class="alert alert-info">
+            <span class="icon icon-info"></span>
+            Le fichier importé doit contenir les colonnes suivantes :
+            <ul>
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_ID; ?></code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> :
+                    l'identifiant unique de la mission dans le référentiel,
+                </li>
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> : le
+                    libellé de la mission principale,
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES; ?></code> : les différentes activités composant la mission,</li>
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_FAMILLES; ?></code> : la liste des familles professionnelles rattachées à la mission, </li>
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_NIVEAU; ?></code> : le niveau doit correspondre à un niveau de carrière déclaré,
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE; ?></code> : la liste des codes des fiches métiers incluant la mission,
+                <?php if ($displayCodeFonction) : ?>
+                    <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION; ?></code> : la liste des codes des "fonctions" incluant la mission.</li>
+                <?php endif; ?>
+            </ul>
+            <span class="icon icon-attention"></span>
+            <strong>Remarques :</strong>
+            <ul>
+                <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
+                <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
+                <li>Le séparateur dans les listes est <code><?php echo $separateur; ?></code>.</li>
+                <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong>.</li>
+            </ul>
+
+            <?php if ($displayCodeFonction) : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_missions_codefonction.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de missions</a>
+            <?php else: ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_missions.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import de missions</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+
+<!-- Messages --------------------------------------------------------------------------------------------------------->
+
+<?php if (isset($info) and !empty($info)) : ?>
+    <div class="alert alert-info">
+        <?php foreach ($info as $line): ?>
+            <?php echo $line; ?><br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<?php if (isset($warning) and !empty($warning)) : ?>
+    <div class="alert alert-warning">
+        <strong>
+            <span class="icon icon-attention"></span> <?php echo count($warning); ?> avertissement·s
+        </strong>
+        <br>
+        <?php foreach ($warning as $line): ?>
+            <?php echo $line; ?><br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<?php if (isset($error) and !empty($error)) : ?>
+    <div class="alert alert-danger">
+        <strong>
+            <span class="icon icon-attention"></span> <?php echo count($error); ?> erreur·s
+        </strong>
+        <br>
+        <?php foreach ($error as $line): ?>
+            <?php echo $line; ?><br>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<!-- Résultats -------------------------------------------------------------------------------------------------------->
+
+<?php foreach ($missions as $mission) : ?>
+    <?php /** @see \FicheMetier\View\Helper\MissionPrincipaleViewHelper */ ?>
+    <?php echo $this->missionPrincipale($mission, ['display-source' => false]); ?>
+<?php endforeach; ?>

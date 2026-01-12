@@ -87,8 +87,8 @@ $structure = ($affectation)?$affectation->getStructure():null;
                 <td class="action">
                     <?php if ($canVoirFichier) : ?>
                         <a
-                            <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
-                                href="<?php echo $this->url('download-fichier', ['fichier' => $fiche->getId()], [], true); ?>"
+                            <?php /** @see  \UnicaenFichier\Controller\FichierController::downloadAction()*/ ?>
+                                href="<?php echo $this->url('fichier/download', ['fichier' => $fiche->getId()], [], true); ?>"
                                 class="action secondary"
                             >
                             <span class="icon icon-voir" title="voir le fichier"></span>
@@ -98,9 +98,9 @@ $structure = ($affectation)?$affectation->getStructure():null;
                     <?php if ($canDetruireFichier) : ?>
                         <br>
                         <a
-                            <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
-                                href="<?php echo $this->url('delete-fichier', ['fichier' => $fiche->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
-                                class="action danger"
+                            <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>
+                                href="<?php echo $this->url('fichier/supprimer', ['fichier' => $fiche->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
+                                class="action danger ajax-modal" data-event="modification"
                         >
                             <span class="icon icon-unchecked" title="supprimer le fichier"></span>
                             Supprimer

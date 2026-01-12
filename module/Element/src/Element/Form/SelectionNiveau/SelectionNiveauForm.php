@@ -31,8 +31,9 @@ class SelectionNiveauForm extends Form {
             'type' => Select::class,
             'name' => 'niveau',
             'options' => [
-                'label' => "Niveau de maîtrise * :",
-                'empty_option' => "Sélectionner un niveau de maîtrise ...",
+                'label' => "Niveau de maîtrise <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'empty_option' => "Sélectionner un niveau de maîtrise",
                 'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions(($this->type)??""),
             ],
             'attributes' => [
@@ -63,7 +64,7 @@ class SelectionNiveauForm extends Form {
             ],
             'attributes' => [
                 'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-success',
             ],
         ]);
         //inputfilter

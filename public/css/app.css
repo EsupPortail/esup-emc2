@@ -62,9 +62,10 @@ span.action a
     text-decoration: none;
 }
 
+span.action,
 a.action {
     text-decoration: none;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     border-radius : 0.25rem;
 }
 a.action.success {
@@ -76,6 +77,9 @@ a.action.danger {
 a.action.warning {
     color: var(--bs-warning);
 }
+
+
+span.action.primary,
 a.action.primary {
     color: var(--bs-primary);
 }
@@ -95,8 +99,10 @@ a.action.danger:hover {
 a.action.warning:hover {
     background: #ffd2b9;
 }
+span.action.primary:hover,
 a.action.primary:hover {
     background: lightblue;
+    cursor: pointer;
 }
 
 a.action.secondary:hover {
@@ -114,8 +120,12 @@ div.tab-content {
 }
 /** HISTORISER ****************************************************************************************************************/
 
-tr.historise td:not(.action) {
-    text-decoration: line-through darkred 2px;
+/*tr.historise td:not(.action) {*/
+/*    text-decoration: line-through darkred 2px;*/
+/*}*/
+
+tr.historise td {
+    background: #fdc2c2;
 }
 
 li.historise,
@@ -303,4 +313,66 @@ div.alert-danger .fa-exclamation-triangle {
 
 .bg-success.ui-menu-item{
     background-color: #e9ffe9 !important;
+}
+
+.refreshing::before {
+    content: "Rafraîchissement";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* au-dessus du contenu */
+    background-color: rgba(128, 128, 128, 0.6); /* gris semi-transparent */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.refreshing {
+    position: relative;
+    /*background: Green;*/
+}
+
+.badge.mission {
+    background: var(--emc2-mission);
+}
+.badge.competence {
+    background: var(--emc2-competence);
+}
+
+.badge.fichemetier {
+    background: var(--emc2-fichemetier);
+}
+
+ul.dropdown-menu {
+    max-width:90vh;
+}
+
+ul.dropdown-menu span.libelle_mission {
+    width:75%;
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+ul.dropdown-menu span.description li {
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+div.filter-option-inner-inner span.mission {
+    display:inline !important;
+}
+
+/** Cela permet de conserver l'icone et le libellé sur la même ligne pour les actions (communes) **/
+table th.action {
+    min-width: 8rem;
+}
+
+span.missing-data {
+    color:gray;
+    font-style: italic;
 }

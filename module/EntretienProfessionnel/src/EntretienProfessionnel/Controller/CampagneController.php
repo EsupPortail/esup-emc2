@@ -65,7 +65,7 @@ class CampagneController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $campagnes = $this->getCampagneService()->getCampagnes();
+        $campagnes = $this->getCampagneService()->getCampagnes(true);
 
         return new ViewModel([
             'campagnes' => $campagnes,
@@ -171,14 +171,20 @@ class CampagneController extends AbstractActionController
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getCampagneService()->historise($campagne);
-        return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('entretien-professionnel/campagne',[],[], true);
     }
 
     public function restaurerAction(): Response
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getCampagneService()->restore($campagne);
-        return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('entretien-professionnel/campagne', [], [], true);
     }
 
     public function detruireAction(): ViewModel

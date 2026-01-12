@@ -11,7 +11,6 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
-use FichePoste\Entity\Db\Expertise;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
@@ -46,7 +45,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     private ?int $nbi = null;
     private ?DateTime $finValidite = null;
 
-    private Collection $expertises;
     private Collection $fichesMetiers;
     private Collection $descriptionsRetirees;
     private Collection $applicationsRetirees;
@@ -289,29 +287,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         $this->applicationsRetirees->clear();
     }
 
-    /** EXPERTISE *****************************************************************************************************/
-
-    /** @return Expertise[] */
-    public function getExpertises(): array
-    {
-        return $this->expertises->toArray();
-    }
-
-    /* @return Expertise[] */
-    public function getCurrentExpertises($date = null): array
-    {
-        if ($date === null) $date = (new DateTime());
-
-        $expertises = [];
-        /** @var Expertise $expertise */
-        foreach ($this->expertises as $expertise) {
-            if ($expertise->estNonHistorise($date)) {
-                $expertises[] = $expertise;
-            }
-        }
-        return $expertises;
-    }
-
     /** Fonctions pour simplifier  */
 
     /* @return MissionActivite[] */
@@ -355,15 +330,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return true;
     }
 
-    public function hasExpertise(): bool
-    {
-        /** @var FicheTypeExterne $fichesMetier */
-        foreach ($this->fichesMetiers as $fichesMetier) {
-            if ($fichesMetier->getFicheType()->hasExpertise()) return true;
-        }
-        return false;
-    }
-
     /** Fonction pour les affichages dans les documents ***************************************************************/
 
     public function addDictionnaire(string $clef, $valeur): void
@@ -399,6 +365,14 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function generateTag(): string
     {
         return 'FICHEPOSTE_' . $this->getId();
+    }
+
+    public function getQuotiteComposition(?FicheMetier $fichemetier) : ?int
+    {
+        foreach ($this->fichesMetiers as $ficheMetier) {
+            if ($ficheMetier->getFicheType() === $fichemetier) return $ficheMetier->getQuotite();
+        }
+        return null;
     }
 
     /** INTERFACE POUR LES COLLECTIONS DE COMPETENCES */

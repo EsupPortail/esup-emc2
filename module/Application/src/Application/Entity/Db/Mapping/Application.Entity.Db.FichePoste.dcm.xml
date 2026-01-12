@@ -15,8 +15,6 @@
         <field name="codeFonction" length="256" column="code_fonction" nullable="true" />
         <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste" mapped-by="fiche"/>
 
-        <one-to-many target-entity="FichePoste\Entity\Db\Expertise"                mapped-by="ficheposte" field="expertises"/>
-
         <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="fichePoste" field="fichesMetiers"/>
         <one-to-many target-entity="Application\Entity\Db\FicheposteApplicationRetiree" mapped-by="fichePoste" field="applicationsRetirees"/>
         <one-to-many target-entity="Application\Entity\Db\FicheposteCompetenceRetiree" mapped-by="fichePoste" field="competencesRetirees"/>

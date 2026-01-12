@@ -17,8 +17,6 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
-use FichePoste\Form\Expertise\ExpertiseForm;
-use FichePoste\Service\Expertise\ExpertiseService;
 use FichePoste\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -51,7 +49,6 @@ class FichePosteControllerFactory
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
          * @var EtatInstanceService $etatInstanceService
-         * @var ExpertiseService $expertiseService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
@@ -69,7 +66,6 @@ class FichePosteControllerFactory
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
         $activitesDescriptionsRetireesService = $container->get(ActivitesDescriptionsRetireesService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
-        $expertiseService = $container->get(ExpertiseService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -80,7 +76,6 @@ class FichePosteControllerFactory
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
          * @var AssocierTitreForm $associerTitreForm
          * @var CodeFonctionForm $codeFonctionForm
-         * @var ExpertiseForm $expertiseForm
          * @var RifseepForm $rifseepForm
          * @var SelectionEtatForm $selectionEtatForm
          * @var SpecificitePosteForm $specificiftePosteForm
@@ -88,7 +83,6 @@ class FichePosteControllerFactory
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
-        $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
         $rifseepForm = $container->get('FormElementManager')->get(RifseepForm::class);
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
@@ -107,7 +101,6 @@ class FichePosteControllerFactory
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
         $controller->setEtatInstanceService($etatInstanceService);
-        $controller->setExpertiseService($expertiseService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
@@ -117,7 +110,6 @@ class FichePosteControllerFactory
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierTitreForm($associerTitreForm);
         $controller->setCodeFonctionForm($codeFonctionForm);
-        $controller->setExpertiseForm($expertiseForm);
         $controller->setRifseepForm($rifseepForm);
         $controller->setSelectionEtatForm($selectionEtatForm);
         $controller->setSpecificitePosteForm($specificiftePosteForm);

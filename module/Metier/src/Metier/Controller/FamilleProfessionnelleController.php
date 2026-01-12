@@ -2,8 +2,10 @@
 
 namespace Metier\Controller;
 
-use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
+use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use Metier\Form\FamilleProfessionnelle\FamilleProfessionnelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Laminas\Http\Request;
@@ -12,15 +14,21 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
 class FamilleProfessionnelleController extends AbstractActionController {
+    use CorrespondanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
-    use ModifierLibelleFormAwareTrait;
+    use MissionPrincipaleServiceAwareTrait;
+    use FamilleProfessionnelleFormAwareTrait;
+    use FicheMetierServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
-        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
+        $params = $this->params()->fromQuery();
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesWithFilter($params);
 
         return new ViewModel([
             'familles' => $familles,
+            'correspondances' => $this->getCorrespondanceService()->getCorrespondances(),
+            'params' => $params
         ]);
     }
 
@@ -28,12 +36,14 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
-        $metiers = $famille->getMetiers();
+        $missions = $this->getMissionPrincipaleService()->getMissionsPrincipalesWithFiltre(['famille' => $famille->getId()]);
+        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre(['famille' => $famille->getId()]);
 
         return new ViewModel([
             'title' => "Affichage de la famille professionnelle",
             'famille' => $famille,
-            'metiers' => $metiers,
+            'missions' => $missions,
+            'fichesmetiers' => $fichesmetiers,
         ]);
     }
 
@@ -41,7 +51,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = new FamilleProfessionnelle();
 
-        $form = $this->getModifierLibelleForm();
+        $form = $this->getFamilleProfessionnelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('famille-professionnelle/ajouter', [], [], true));
         $form->bind($famille);
 
@@ -58,7 +68,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
-            'title' => 'Ajouter une nouvelle famille de métiers',
+            'title' => 'Ajouter une nouvelle famille professionnelle',
             'form' => $form,
         ]);
         return $vm;
@@ -68,7 +78,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
-        $form = $this->getModifierLibelleForm();
+        $form = $this->getFamilleProfessionnelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('famille-professionnelle/modifier', ['famille-professionnelle' => $famille->getId()], [], true));
         $form->bind($famille);
 
@@ -85,7 +95,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
-            'title' => 'Modifier une famille de métiers',
+            'title' => 'Modifier une famille professionnelle',
             'form' => $form,
         ]);
         return $vm;

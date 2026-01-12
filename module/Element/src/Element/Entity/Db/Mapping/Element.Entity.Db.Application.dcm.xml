@@ -11,8 +11,8 @@
         <field name="url"               length="128"      column="url"                      />
         <field name="actif"             type="boolean"                    column="actif"                    />
 
-        <many-to-one target-entity="Element\Entity\Db\ApplicationTheme"  field="groupe">
-            <join-column name="groupe_id" />
+        <many-to-one target-entity="Element\Entity\Db\ApplicationTheme"  field="theme">
+            <join-column name="theme_id" />
         </many-to-one>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

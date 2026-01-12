@@ -41,18 +41,19 @@ $modules = [
     'UnicaenSynchro',
     'UnicaenObservation',
     'UnicaenContact',
+    'UnicaenFichier',
+    'UnicaenStorage',
 
+    'Referentiel',
     'Agent',
     'MissionSpecifique',
     'Structure',
     'EntretienProfessionnel',
     'Carriere',
     'Metier',
-    'FicheReferentiel',
     'FicheMetier',
     'FichePoste',
 
-    'Fichier',
     'Element',
 
     'Application',

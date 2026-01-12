@@ -2,6 +2,7 @@
 
 namespace Metier\Entity\Db;
 
+use Carriere\Entity\Db\Correspondance;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -12,6 +13,8 @@ class FamilleProfessionnelle implements HistoriqueAwareInterface {
 
     private ?int $id = null;
     private ?string $libelle = null;
+    private ?Correspondance $correspondance = null;
+    private ?int $position = null;
 
     private Collection $metiers;
 
@@ -39,6 +42,26 @@ class FamilleProfessionnelle implements HistoriqueAwareInterface {
     public function getMetiers() : array
     {
         return $this->metiers->toArray();
+    }
+
+    public function getCorrespondance(): ?Correspondance
+    {
+        return $this->correspondance;
+    }
+
+    public function setCorrespondance(?Correspondance $correspondance): void
+    {
+        $this->correspondance = $correspondance;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): void
+    {
+        $this->position = $position;
     }
 
     public function __toString() : string

@@ -18,8 +18,5 @@
         <field name="estPrincipale"     type="boolean"                  column="principale"         />
         <field name="activites"         length="128"      column="activites"          />
 
-        <one-to-many field="domaineRepartitions" mapped-by="ficheMetierExterne" target-entity="Application\Entity\Db\DomaineRepartition" />
-
-
     </entity>
 </doctrine-mapping>

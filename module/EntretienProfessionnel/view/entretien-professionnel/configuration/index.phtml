@@ -1,0 +1,160 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\ConfigurationController::indexAction()
+ * @var ConfigurationEntretienProfessionnel[] $recopies
+ * @var Champ[] $champsCREP
+ * @var Champ[] $champsCREF
+ */
+
+use Application\Entity\Db\ConfigurationEntretienProfessionnel;
+use Application\Provider\Privilege\ConfigurationPrivileges;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+use UnicaenAutoform\Entity\Db\Champ;
+
+$canAjouter     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
+$canModifier     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
+$canDetruire    = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_DETRUIRE));
+$canReappliquer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_REAPPLIQUER));
+
+$canGererRecopie = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
+
+$this->headTitle("Configuration des entretiens professionnels");
+?>
+
+<h1 class="page-header">
+    Configuration des entretiens professionnels
+</h1>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+
+                    <h3> Champs transferables d'un entretien professionnel à un autre </h3>
+
+<div class="alert alert-info">
+    Cette fonctionnalité vous permettra de sélectionner les champs et leur contenu à recopier d'une campagne à une autre.
+    <br>
+    Exemple : le champ A, remplit par le supérieur hiérarchique lors de la campagne 2024, sera repris pour la campagne 2025 et pré-rempli avec les données 2024.
+</div>
+
+
+<?php if ($canGererRecopie): ?>
+                        <a
+                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
+                                href="<?php echo $this->url("configuration/ajouter-recopie", ['formulaire' => EntretienProfessionnel::FORMULAIRE_CREP], [], true); ?>"
+                                class="btn btn-primary ajax-modal"
+                                data-event="modification"
+                        >
+                            <span class="icon icon-ajouter"></span> Ajouter une recopie pour la partie CREP
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ($canGererRecopie): ?>
+                        <a
+                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
+                                href="<?php echo $this->url("configuration/ajouter-recopie", ['formulaire' => EntretienProfessionnel::FORMULAIRE_CREF], [], true); ?>"
+                                class="btn btn-primary ajax-modal"
+                                data-event="modification"
+                        >
+                            <span class="icon icon-ajouter"></span> Ajouter une recopie pour la partie CREF
+                        </a>
+                    <?php endif; ?>
+
+                    <table class="table table-condensed datatable" id="recopies">
+                        <thead>
+                        <tr>
+                            <th> Formulaire </th>
+                            <th> Précédent entretien </th>
+                            <th> Entretien courant </th>
+                            <th> Action </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($recopies as $recopie) : ?>
+                            <?php
+                            [$form, $ids] = explode("|",$recopie->getValeur());
+                            $champs = [];
+                            switch($form) {
+                                case 'CREP': $champs = $champsCREP; break;
+                                case 'CREF': $champs = $champsCREF; break;
+                            }
+                            [$previousId, $currentId] = explode(";", $ids);
+                            $previous = null;
+
+                            if (isset($champs[$previousId])) $previous = $champs[$previousId];
+                            $current = null;
+                            if (isset($champs[$currentId])) $current = $champs[$currentId];
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php echo $form; ?>
+                                </td>
+                                <td>
+                                    <?php if ($previous !== null) : ?>
+                                        <?php echo $previous->getCategorie()->getLibelle()." > ".$previous->getLibelle() ; ?>
+                                    <?php else : ?>
+                                        Id: <?php echo $previousId; ?> non connu;
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($current !== null) : ?>
+                                        <?php echo $current->getCategorie()->getLibelle()." > ".$current->getLibelle() ; ?>
+                                    <?php else : ?>
+                                        Id: <?php echo $currentId; ?> non connu;
+                                    <?php endif; ?>
+                                </td>
+                                <td class="action">
+                                    <?php if ($canGererRecopie): ?>
+                                        <a
+                                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::modifierRecopieAction() */ ?>
+                                                href="<?php echo $this->url("configuration/modifier-recopie", ['recopie' => $recopie->getId(), 'formulaire' => $form], [], true); ?>"
+                                                title="Modifier la recopie"
+                                                class="ajax-modal action primary" data-event="modification"
+                                        >
+                                            <span class="icon icon-editer"></span>
+                                            Modifier
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if ($canGererRecopie): ?>
+                                        <br>
+                                        <a
+                                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::supprimerRecopieAction() */ ?>
+                                                href="<?php echo $this->url("configuration/supprimer-recopie", ['recopie' => $recopie->getId()], [], true); ?>"
+                                                class="action danger"
+                                                title="Supprimer la recopie"
+                                        >
+                                            <span class="icon icon-unchecked"></span>
+                                            Supprimer
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
+        $("table#recopies").dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [3], orderable: false }
+            ]
+        });
+    });
+
+</script>

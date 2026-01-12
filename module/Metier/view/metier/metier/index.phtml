@@ -2,20 +2,16 @@
 
 /**
  * @see \Metier\Controller\MetierController::indexAction()
- * @var Domaine[] $domaines
  * @var FamilleProfessionnelle[] $familles
  * @var Metier[] $metiers
  *
- * @var string $domaine
  * @var string $famille
  * @var string $historise
  */
 
-use Metier\Entity\Db\Domaine;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
 use Metier\Provider\Privilege\MetierPrivileges;
-use Metier\Provider\Privilege\ReferentielmetierPrivileges;
 
 $this->headTitle('Liste des métiers');
 
@@ -26,7 +22,6 @@ $canHistoriser  = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
 $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_SUPPRIMER));
 $canLister      = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_LISTER_AGENTS));
 
-$canReferentiel = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_INDEX));
 
 $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $canEffacer OR $canLister);
 
@@ -36,16 +31,6 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
         <h1 class="page-header">
             Liste des métiers
         </h1>
-    </div>
-    <div class="col-md-4">
-        <?php if ($canReferentiel) : ?>
-            <?php /** @see \Metier\Controller\ReferentielController::indexAction() */ ?>
-            <a href="<?php echo $this->url('metier/referentiel', [], [], true); ?>"
-               class="btn btn-secondary">
-                <span class="icon icon-listing"></span>
-                Accéder aux référentiels des métiers
-            </a>
-        <?php endif; ?>
     </div>
 </div>
 
@@ -61,9 +46,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
     </a>
 <?php endif;?>
 
-<?php echo $this->partial('partial/filtre', ['domaines' => $domaines, 'familles' => $familles, 'domaine' => $domaine, 'famille' => $famille,'historise' => $historise]); ?>
-
-
+<?php echo $this->partial('partial/filtre', ['familles' => $familles, 'famille' => $famille,'historise' => $historise]); ?>
 
 <table id="metiers" class="datatable table table-condensed table-hover">
     <thead>
@@ -71,7 +54,6 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
         <th> Libelle </th>
         <th> Catégorie </th>
         <th> Familles professionnelles </th>
-        <th> Domaines </th>
         <th> Références </th>
         <th> Niveaux </th>
         <?php if ($canAction) :?>
@@ -87,6 +69,8 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                       data-bs-toggle='tooltip' data-bs-html='true'
                 >
                     <?php echo $metier->getLibelle(); ?>
+                    <br>
+                    <?php echo $metier->printReference(); ?>
                 </span>
             </td>
             <td id="categorie">
@@ -94,25 +78,16 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
             </td>
             <td>
                 <?php $familles = $metier->getFamillesProfessionnelles(); ?>
-                <?php if ($familles === null OR empty($familles)) : ?>
+                <?php if (empty($familles)) : ?>
                     <em>Aucune famille professionnelle de renseignée</em>
                 <?php else : ?>
                     <ul>
+                        <?php /** @var FamilleProfessionnelle $famille */ ?>
                         <?php foreach ($metier->getFamillesProfessionnelles() as $famille) : ?>
                             <li> <?php echo $famille->getLibelle(); ?> </li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-            </td>
-            <td>
-                <ul>
-                    <?php foreach ($metier->getDomaines() as $domaine) : ?>
-                        <li>
-                            <?php echo $domaine; ?>
-                            <?php echo $this->typefonction($domaine); ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
             </td>
             <td class="action" id="references">
                 <?php $references =  $metier->getReferences(); ?>

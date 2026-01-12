@@ -78,15 +78,12 @@ class CompetenceTypeService
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $order
-     * @return CompetenceType[]
-     */
-    public function getCompetencesTypes(string $champ = 'libelle', string $order = 'ASC'): array
+    /** @return CompetenceType[] */
+    public function getCompetencesTypes(bool $withHisto = false, string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('type.' . $champ, $order);
+        if ($withHisto === false) $qb = $qb->andWhere('type.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -98,7 +95,7 @@ class CompetenceTypeService
      */
     public function getCompetencesTypesAsOptions(string $champ = 'libelle', string $order = 'ASC'): array
     {
-        $types = $this->getCompetencesTypes($champ, $order);
+        $types = $this->getCompetencesTypes(false, $champ, $order);
         $options = [];
         foreach ($types as $type) {
             $options[$type->getId()] = $type->getLibelle();
@@ -126,15 +123,26 @@ class CompetenceTypeService
         return $type;
     }
 
-    public function getCompetenceTypeByLibelle(string $libelle)
+    public function getCompetenceTypeByLibelle(string $libelle): ?CompetenceType
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('type.libelle = :libelle')
-            ->setParameter('libelle', $libelle);
+            ->andWhere('lower(type.libelle) = :libelle')->setParameter('libelle', strtolower($libelle));
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs CompetenceType partagent le même id [" . $libelle . "]", 0, $e);
+        }
+        return $result;
+    }
+
+    public function getCompetenceTypeByCode(?string $code): ?CompetenceType
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('type.code = :code')->setParameter('code', $code);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs CompetenceType partagent le même code [" . $code . "]", 0, $e);
         }
         return $result;
     }

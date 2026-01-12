@@ -120,7 +120,6 @@ class FichePosteAssertion extends AbstractAssertion {
             'editer', 'associer-agent', 'associer-titre', 'editer-rifseep', 'editer-specificite',
             'ajouter-fiche-metier', 'retirer-fiche-metier', 'modifier-fiche-metier', 'modifier-repartition',
             'selectionner-activite', 'selectionner-applications-retirees', 'selectionner-competences-retirees', 'selectionner-formations-retirees', 'selectionner-descriptions-retirees',
-            'ajouter-expertise', 'modifier-expertise', 'historiser-expertise', 'restaurer-expertise', 'supprimer-expertise', => $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER),
             'changer-etat' => $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_ETAT),
             'valider', 'revoquer'=> ($this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT) || $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE)),
             'historiser', 'restaurer' => $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_HISTORISER),

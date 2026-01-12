@@ -3,13 +3,11 @@
 /**
  * @see \Element\Controller\ApplicationController::cartographieAction()
  * @var Application[]   $applications
- * @var Domaine[]       $domaines
  * @var Metier[]        $metiers
  * @var array           $link
  */
 
 use Element\Entity\Db\Application;
-use Metier\Entity\Db\Domaine;
 use Metier\Entity\Db\Metier;
 
 $this->headTitle('Cartographie Metier/Application');
@@ -52,36 +50,6 @@ $nbApplications = count($applications);
             </th>
         <?php endforeach; ?>
     </tr>
-    <?php foreach ($domaines as $domaine): ?>
-        <tr>
-            <td class="domaine" colspan="<?php echo 1 + $nbApplications; ?>">
-                <?php echo $domaine->getLibelle(); ?>
-            </td>
-        </tr>
-        <?php
-            $metiers4domaine = $domaine->getMetiers();
-            usort($metiers4domaine, function (Metier $a, Metier $b) { return $a->getLibelle() <=> $b->getLibelle(); });
-        ?>
-        <?php foreach ($metiers4domaine as $metier) : ?>
-            <?php $libelle = $metier->getLibelle(); ?>
-            <tr>
-                <th class="metier">
-                    <br/>
-                    <?php echo $libelle; ?>
-                    <br/>
-                    <br/>
-                </th>
-                <?php foreach ($applications as $application) : ?>
-                    <td>
-                        <?php if (isset($link[$libelle][$application->getLibelle()])) : ?>
-                            <span class="icon icon-checked" style="color: darkgreen;"></span>
-                        <?php else : ?>
-                        <?php endif;?>
-                    </td>
-                <?php endforeach; ?>
-            </tr>
-        <?php endforeach; ?>
-    <?php endforeach; ?>
 </table>
 
 <style>
@@ -102,13 +70,6 @@ $nbApplications = count($applications);
     }
 
     th.metier {
-    }
-
-    td.domaine {
-        background: var(--warning-background-back);
-        text-align: left;
-        font-weight: bold;
-        border: 1px solid var(--header-background-hover);
     }
 
     th.application {
