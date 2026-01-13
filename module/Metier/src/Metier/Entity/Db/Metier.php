@@ -5,7 +5,9 @@ namespace Metier\Entity\Db;
 use Application\Entity\Db\Agent;
 use Carriere\Entity\Db\Categorie;
 use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\Interface\HasCategorieInterface;
 use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Entity\Db\Trait\HasCategorieTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
@@ -15,9 +17,10 @@ use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Metier implements HistoriqueAwareInterface, HasReferenceInterface {
+class Metier implements HistoriqueAwareInterface, HasReferenceInterface, HasCategorieInterface {
     use HistoriqueAwareTrait;
     use HasReferenceTrait;
+    use HasCategorieTrait;
 
 
     private ?int $id = null;
@@ -25,7 +28,6 @@ class Metier implements HistoriqueAwareInterface, HasReferenceInterface {
     private ?string $libelleFeminin = null;
     private ?string $libelleMasculin = null;
 
-    private ?Categorie $categorie = null;
     private ?NiveauEnveloppe $niveaux = null;
 
     private Collection $correspondances;
@@ -83,16 +85,6 @@ class Metier implements HistoriqueAwareInterface, HasReferenceInterface {
     }
 
     /** Catégorie et Niveaux ***************************************************************************************/
-
-    public function getCategorie() : ?Categorie
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(?Categorie $categorie) : void
-    {
-        $this->categorie = $categorie;
-    }
 
     public function getNiveaux(): ?NiveauEnveloppe
     {

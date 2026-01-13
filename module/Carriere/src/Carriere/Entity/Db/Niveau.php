@@ -4,18 +4,20 @@ namespace Carriere\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
+use Carriere\Entity\Db\Interface\HasCategorieInterface;
+use Carriere\Entity\Db\Trait\HasCategorieTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Niveau implements HistoriqueAwareInterface, HasDescriptionInterface {
+class Niveau implements HistoriqueAwareInterface, HasDescriptionInterface, HasCategorieInterface {
     use HistoriqueAwareTrait;
     use HasDescriptionTrait;
+    use HasCategorieTrait;
 
     private ?int $id = null;
     private ?int $niveau = null;
     private ?string $etiquette = null;
     private ?string $libelle = null;
-    private ?Categorie $categorie = null;
 
     public function getId(): int
     {
@@ -51,16 +53,4 @@ class Niveau implements HistoriqueAwareInterface, HasDescriptionInterface {
     {
         $this->libelle = $libelle;
     }
-
-    public function getCategorie(): ?Categorie
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(?Categorie $categorie): void
-    {
-        $this->categorie = $categorie;
-    }
-
-
 }
