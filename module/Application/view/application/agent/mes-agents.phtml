@@ -37,7 +37,8 @@ use EntretienProfessionnel\Entity\Db\Campagne;
                 <?php echo $agent->getDenomination(true); ?>
             </td>
             <td data-column-id="Affectations courrantes" >
-                <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
+                <?php if (isset($affectations[$agent->getId()])) : ?>
+                    <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
                     <?php $structure = $affectation->getStructure(); ?>
                     <?php if ($structure) : ?>
                         <?php echo $affectation->getStructure()->getLibelleLong(); ?>
@@ -58,12 +59,19 @@ use EntretienProfessionnel\Entity\Db\Campagne;
                     <?php endif; ?>
                     <br/>
                 <?php endforeach; ?>
+                <?php else : ?>
+                    <span class="missing-data">Aucune affectation connue </span>
+                <?php endif; ?>
             </td>
             <td data-column-id="Grades courrants" >
-                <?php foreach ($grades[$agent->getId()] as $grade) : ?>
+                <?php if (isset($grades[$agent->getId()])) : ?>
+                    <?php foreach ($grades[$agent->getId()] as $grade) : ?>
                     <?php echo $grade->getGrade()->getLibelleLong(); ?>
                     <br>
                 <?php endforeach; ?>
+                <?php else : ?>
+                    <span class="missing-data">Aucun grade connu</span>
+                <?php endif; ?>
             </td>
             <td class="action" data-column-id="Actions">
                 <!-- Si on fait jouer l'assertion, on augmente le nombre de requètes -->
