@@ -117,9 +117,13 @@ $raison = (isset($options['raison']))?$options['raison']:[];
 <script>
     $(document).ready(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
+            'autoWidth' : false,
             'paging' : false,
-            'searching' : false,
+            'searching' : true,
             'info' : false,
+            language: {
+                url: '/js/datatables_fr.json'
+            },
         });
     });
 </script>
