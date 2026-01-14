@@ -75,9 +75,9 @@ class Reference implements HistoriqueAwareInterface, HasMetierInterface {
 //                }
 //                return $url;
 //        }
-        if ($this->getReferentiel()->getLibelleCourt() === "REFERENS3") {
-            return "https://data.enseignementsup-recherche.gouv.fr/pages/fiche_emploi_type_referens_iii_itrf/?refine.referens_id=".$this->getReference();
-        }
+//        if ($this->getReferentiel()->getLibelleCourt() === "REFERENS3") {
+//            return "https://data.enseignementsup-recherche.gouv.fr/pages/fiche_emploi_type_referens_iii_itrf/?refine.referens_id=".$this->getReference();
+//        }
         return "";
     }
 
