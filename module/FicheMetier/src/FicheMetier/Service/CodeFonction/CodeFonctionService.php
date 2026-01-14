@@ -152,4 +152,15 @@ class CodeFonctionService
         }
         return $dictionnaire;
     }
+
+    public function getCodesFonctionsAsOptions(): array
+    {
+        $codesFonctions = $this->getCodesFonctions();
+
+        $options = [];
+        foreach ($codesFonctions as $codeFonction) {
+            $options[$codeFonction->getId()] = $codeFonction->getCode();
+        }
+        return $options;
+    }
 }
