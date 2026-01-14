@@ -53,19 +53,22 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
             </td>
             <td data-column-id="Code"> <code><?php echo $emploiRepere->getCode(); ?></code> </td>
             <td data-column-id="Codes fonctions associés">
-                <?php $associtions = $emploiRepere->getCodesFonctionsFichesMetiers(); ?>
+                <?php $associations = $emploiRepere->getCodesFonctionsFichesMetiers(); ?>
                 <?php if (empty($associations)) : ?>
                     <span class="missing-data"> Aucune association </span>
                 <?php else : ?>
                     <?php /** @var EmploiRepereCodeFonctionFicheMetier $association */ ?>
                     <?php foreach ($associations as $association) : ?>
-                        <code><?php echo $association->getCodeFonction()->getCode(); ?></code>
+                        <code><?php echo $association->getCodeFonction()->computeCode(); ?></code>
                         <?php echo $association->getFicheMetier()->getLibelle(); ?><br>
                         <?php if ($canModifier) : ?>
-                            <a href="" class="action primary">
-                                <span class="icon icon-modifier"></span> Ajouter
+                            <?php /** @see \EmploiRepere\Controller\EmploiRepereCodeFonctionFicheMetierController::modifierAction() */ ?>
+                            <a href="<?php echo $this->url('emploi-repere/emploi-repere-code-fonction-fiche-metier/modifier', ['emploi-repere-code-fonction-fiche-metier' => $association->getId()], [], true); ?>"
+                               class="action primary ajax-modal" data-event="modification">
+                                <span class="icon icon-modifier"></span> Modifier
                             </a>
-                            <a href="" class="action danger">
+                            <?php /** @see \EmploiRepere\Controller\EmploiRepereCodeFonctionFicheMetierController::retirerAction() */ ?>
+                            <a href="<?php echo $this->url('emploi-repere/emploi-repere-code-fonction-fiche-metier/retirer', ['emploi-repere-code-fonction-fiche-metier' => $association->getId()], [], true); ?>" class="action danger">
                                 <span class="icon icon-unchecked"></span> Supprimer
                             </a>
                         <?php endif; ?>

@@ -42,11 +42,11 @@ return [
                 'type' => Literal::class,
                 'options' => [
                     'route' => '/emploi-repere',
-                    'defaults' => [
-                        /** @see EmploiRepereController::indexAction() */
-                        'controller' => EmploiRepereController::class,
-                        'action' => 'index',
-                    ],
+//                    'defaults' => [
+//                        /** @see EmploiRepereController::indexAction() */
+//                        'controller' => EmploiRepereController::class,
+//                        'action' => 'index',
+//                    ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
@@ -76,6 +76,7 @@ return [
                                     'route' => '/modifier/:emploi-repere-code-fonction-fiche-metier',
                                     'defaults' => [
                                         /** @see EmploiRepereCodeFonctionFicheMetierController::modifierAction() */
+                                        'controller' => EmploiRepereCodeFonctionFicheMetierController::class,
                                         'action' => 'modifier',
                                     ],
                                 ],
@@ -86,6 +87,7 @@ return [
                                     'route' => '/retirer/:emploi-repere-code-fonction-fiche-metier',
                                     'defaults' => [
                                         /** @see EmploiRepereCodeFonctionFicheMetierController::retirerAction() */
+                                        'controller' => EmploiRepereCodeFonctionFicheMetierController::class,
                                         'action' => 'retirer',
                                     ],
                                 ],

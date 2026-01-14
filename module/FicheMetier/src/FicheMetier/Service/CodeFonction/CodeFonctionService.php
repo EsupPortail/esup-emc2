@@ -159,7 +159,7 @@ class CodeFonctionService
 
         $options = [];
         foreach ($codesFonctions as $codeFonction) {
-            $options[$codeFonction->getId()] = $codeFonction->getCode();
+            $options[$codeFonction->getId()] = $codeFonction->computeCode();
         }
         return $options;
     }
