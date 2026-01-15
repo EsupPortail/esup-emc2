@@ -6,6 +6,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use EmploiRepere\Entity\Db\EmploiRepere;
+use FicheMetier\Entity\Db\FicheMetier;
 use http\Exception\RuntimeException;
 use Laminas\Mvc\Controller\AbstractActionController;
 
@@ -103,6 +104,21 @@ class EmploiRepereService {
         return $options;
     }
 
+    /** @return EmploiRepere[] */
+    public function getEmploiRepereByFicheMetier(FicheMetier $fichemetier): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('codeFonctionFicheMetier.ficheMetier = :ficheMetier')->setParameter('ficheMetier', $fichemetier)
+            ->andWhere('emploirepere.histoDestruction IS NULL')
+            ->orderBy('emploirepere.libelle', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
+    /** FACADE  *******************************************************************************/
+
     public function optionify(EmploiRepere $emploiRepere): array
     {
         $value = $emploiRepere->getId();
@@ -117,5 +133,7 @@ class EmploiRepereService {
         ];
         return $this_option;
     }
+
+
 
 }

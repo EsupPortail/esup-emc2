@@ -12,6 +12,7 @@ use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use EmploiRepere\Service\EmploiRepere\EmploiRepereServiceAwareTrait;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
@@ -45,6 +46,7 @@ class FicheMetierController extends AbstractActionController
     use AgentServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
+    use EmploiRepereServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;
@@ -110,11 +112,12 @@ class FicheMetierController extends AbstractActionController
         $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
-
+        $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
             'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
+            'emplois' => $emplois,
             'missions' => $missions,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
@@ -180,11 +183,13 @@ class FicheMetierController extends AbstractActionController
         $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
+        $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
             'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'missions' => $missions,
+            'emplois' => $emplois,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,

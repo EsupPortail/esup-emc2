@@ -2,6 +2,7 @@
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\CompetenceType;
+use EmploiRepere\Entity\Db\EmploiRepere;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -10,6 +11,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @see \FicheMetier\Controller\FicheMetierController::afficherAction()
  * @var FicheMetier $fiche
  * @var CompetenceType[] $types
+ * @var EmploiRepere[] $emplois
  * @var array $competences
  * @var array $competencesSpecifiques
  * @var array $applications
@@ -92,6 +94,10 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     <?php endif; ?>
 </div>
 </div>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]) || $parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/emploi-repere',   ['emplois' => $emplois, 'mode' => $mode ],  [], true); ?>
+<?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/raison',   ['fichemetier' => $fiche, 'mode' => $mode ],  [], true); ?>

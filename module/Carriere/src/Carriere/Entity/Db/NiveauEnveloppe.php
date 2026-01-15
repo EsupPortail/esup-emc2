@@ -27,7 +27,7 @@ class NiveauEnveloppe implements HistoriqueAwareInterface, HasDescriptionInterfa
         return $this->borneInferieure;
     }
 
-    public function setBorneInferieure(Niveau $borneInferieure): void
+    public function setBorneInferieure(?Niveau $borneInferieure): void
     {
         $this->borneInferieure = $borneInferieure;
     }
@@ -37,7 +37,7 @@ class NiveauEnveloppe implements HistoriqueAwareInterface, HasDescriptionInterfa
         return $this->borneSuperieure;
     }
 
-    public function setBorneSuperieure(Niveau $borneSuperieure): void
+    public function setBorneSuperieure(?Niveau $borneSuperieure): void
     {
         $this->borneSuperieure = $borneSuperieure;
     }

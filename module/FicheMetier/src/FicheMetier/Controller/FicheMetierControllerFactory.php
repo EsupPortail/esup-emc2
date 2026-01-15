@@ -10,6 +10,7 @@ use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereForm;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\CompetenceType\CompetenceTypeService;
+use EmploiRepere\Service\EmploiRepere\EmploiRepereService;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
@@ -46,6 +47,7 @@ class FicheMetierControllerFactory
          * @var AgentService $agentService
          * @var CodeFonctionService $codeFonctionService
          * @var CompetenceTypeService $competenceTypeService
+         * @var EmploiRepereService $emploiRepereService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var FicheMetierMissionService $ficheMetierMissionService
@@ -62,6 +64,7 @@ class FicheMetierControllerFactory
         $agentService = $container->get(AgentService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
+        $emploiRepereService = $container->get(EmploiRepereService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
@@ -102,6 +105,7 @@ class FicheMetierControllerFactory
         $controller->setAgentService($agentService);
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceTypeService($competenceTypeService);
+        $controller->setEmploiRepereService($emploiRepereService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierMissionService($ficheMetierMissionService);

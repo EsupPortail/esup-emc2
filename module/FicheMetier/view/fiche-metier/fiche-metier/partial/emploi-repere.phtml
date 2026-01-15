@@ -1,0 +1,29 @@
+<?php
+
+use EmploiRepere\Entity\Db\EmploiRepere;
+
+/**
+ * @var EmploiRepere[] $emplois
+ */
+
+?>
+
+
+<div class="card">
+    <div class="card-header bg-default">
+        <h2> Emploi-repères </h2>
+    </div>
+    <div class="card-body">
+        <?php if (empty($emplois)) : ?>
+            Aucun emploi-repère lié à cette fiche métier
+        <?php else : ?>
+            <ul>
+                <?php foreach ($emplois as $emploi) : ?>
+                    <li> <?php echo $emploi->getLibelle(); ?> <code><?php echo $emploi->getCode(); ?> </code></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+</div>
+
+

@@ -52,14 +52,16 @@ class MissionPrincipaleHydrator implements HydratorInterface {
             if ($famille) $object->addFamilleProfessionnelle($famille);
         }
         //traitement de l'enveloppe de niveau
-        if ($object->getNiveau()) {
-            $object->getNiveau()->setBorneInferieure($borneInferieure);
-            $object->getNiveau()->setBorneSuperieure($borneSuperieure);
-        } else {
-            $niveau = new NiveauEnveloppe();
-            $niveau->setBorneInferieure($borneInferieure);
-            $niveau->setBorneSuperieure($borneSuperieure);
-            $object->setNiveau($niveau);
+        if ($borneInferieure AND $borneSuperieure) {
+            if ($object->getNiveau()) {
+                $object->getNiveau()->setBorneInferieure($borneInferieure);
+                $object->getNiveau()->setBorneSuperieure($borneSuperieure);
+            } else {
+                $niveau = new NiveauEnveloppe();
+                $niveau->setBorneInferieure($borneInferieure);
+                $niveau->setBorneSuperieure($borneSuperieure);
+                $object->setNiveau($niveau);
+            }
         }
 
         $object->setLibelle($libelle);
