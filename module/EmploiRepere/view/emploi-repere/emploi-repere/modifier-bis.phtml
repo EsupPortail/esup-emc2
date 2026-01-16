@@ -1,0 +1,32 @@
+<?php
+
+use EmploiRepere\Entity\Db\EmploiRepere;
+
+/** @see \EmploiRepere\Controller\EmploiRepereController::modifierBisAction()
+ *  @var EmploiRepere $emploi
+ * */
+
+?>
+
+
+<label for="libelle">Libellé <span class="icon icon-obligatoire" title="Champ obligatoire"> : </label>
+<input type="text" id="libelle" name="libelle"/>
+<span id="maj_libelle" class="action primary">Mise à jour </span>
+
+
+<script>
+    $('#maj_libelle').on("click", function () {
+        let value = document.getElementById('libelle').value;
+        console.log(value);
+        let url = "<?php echo $this->url('emploi-repere/update-libelle', [], [], true); ?>" + "/" + <?php echo $emploi->getId(); ?> + "/" + value;
+        console.log(url);
+        $.ajax({
+            type: "POST",
+            url:  url,
+            success:
+                function () {
+                    alert("MAJ DONE");
+                }
+        });
+    });
+</script>

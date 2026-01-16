@@ -50,6 +50,8 @@ return [
                     'controller' => EmploiRepereController::class,
                     'action' => [
                         'modifier',
+                        'modifier-bis',
+                        'update-libelle'
                     ],
                     'privileges' => [
                         EmploireperePrivileges::EMPLOIREPERE_MODIFIER,
@@ -169,6 +171,26 @@ return [
                             'defaults' => [
                                 /** @see EmploiRepereController::supprimerAction() */
                                 'action' => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'modifier-bis' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/modifier-bis/:emploi-repere',
+                            'defaults' => [
+                                /** @see EmploiRepereController::modifierBisAction() */
+                                'action' => 'modifier-bis',
+                            ],
+                        ],
+                    ],
+                    'update-libelle' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/update-libelle[/:emploi-repere/:libelle]',
+                            'defaults' => [
+                                /** @see EmploiRepereController::updateLibelleAction() */
+                                'action' => 'update-libelle',
                             ],
                         ],
                     ],

@@ -7,6 +7,7 @@ use EmploiRepere\Form\EmploiRepere\EmploiRepereFormAwareTrait;
 use EmploiRepere\Service\EmploiRepere\EmploiRepereServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
 class EmploiRepereController extends  AbstractActionController {
@@ -123,6 +124,26 @@ class EmploiRepereController extends  AbstractActionController {
             ]);
         }
         return $vm;
+    }
+
+    public function modifierBisAction() : ViewModel
+    {
+        $emploi = $this->getEmploiRepereService()->getRequestedEmploiRepere($this);
+
+        return new ViewModel([
+            'emploi' => $emploi,
+        ]);
+    }
+
+    public function updateLibelleAction(): JsonModel
+    {
+        $emploi = $this->getEmploiRepereService()->getRequestedEmploiRepere($this);
+        $libelle = $this->params()->fromRoute('libelle');
+
+        $emploi->setLibelle($libelle);
+        $this->getEmploiRepereService()->update($emploi);
+
+        return new JsonModel(['libelle' => $emploi->getLibelle()]);
     }
 
 
