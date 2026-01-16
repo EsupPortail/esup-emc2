@@ -15,7 +15,7 @@ class FamilleProfessionnelleHydrator implements HydratorInterface
         /** @var FamilleProfessionnelle $object */
         $data = [
             'libelle' => $object->getLibelle(),
-            'correspondance' => $object->getCorrespondance()?->getId(),
+            'specialite' => $object->getCorrespondance()?->getId(),
             'position' => $object->getPosition(),
         ];
         return $data;
@@ -24,12 +24,12 @@ class FamilleProfessionnelleHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== null) ? trim($data['libelle']) : null;
-        $correspondance = (isset($data['correspondance']) AND $data['correspondance'] !== '')?$this->getCorrespondanceService()->getCorrespondance($data['correspondance']):null;
+        $specialite = (isset($data['specialite']) AND $data['specialite'] !== '')?$this->getCorrespondanceService()->getCorrespondance($data['specialite']):null;
         $position = (isset($data['position']) AND $data['position'] !== '')?$data['position']:null;
 
         /** @var FamilleProfessionnelle $object */
         $object->setLibelle($libelle);
-        $object->setCorrespondance($correspondance);
+        $object->setCorrespondance($specialite);
         $object->setPosition($position);
         return $object;
     }

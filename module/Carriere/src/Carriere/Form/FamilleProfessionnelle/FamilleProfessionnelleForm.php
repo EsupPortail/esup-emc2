@@ -34,15 +34,15 @@ class FamilleProfessionnelleForm extends Form
         // correspondance
         $this->add([
             'type' => Select::class,
-            'name' => 'correspondance',
+            'name' => 'specialite',
             'options' => [
-                'label' => "Correspondance :",
+                'label' => "Spécialité <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => ['disable_html_escape' => true,],
-                'empty_option' => 'Sélectionner une fiche métier ...',
+                'empty_option' => 'Sélectionner une spécialité',
                 'value_options' => $this->getCorrespondanceService()->getCorrespondancesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'correspondance',
+                'id' => 'specialite',
                 'class' => 'bootstrap-selectpicker show-tick',
                 'data-live-search' => 'true',
             ],
@@ -52,7 +52,7 @@ class FamilleProfessionnelleForm extends Form
             'type' => Number::class,
             'name' => 'position',
             'options' => [
-                'label' => "Position dans la correspondance <span class='icon icon-info' title=\"Le positionnement doit être unique au sein d'une correspondance\"></span> :",
+                'label' => "Position dans la spécialité <span class='icon icon-info' data-bs-toggle='tooltip' data-bs-html='true' title='Le positionnement dans la correspondance sert uniquement pour la fonctionnalité \"code fonction\" quand elle est activée. Attention, le positionnement doit être unique dans la spécialité'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -79,17 +79,17 @@ class FamilleProfessionnelleForm extends Form
         //filter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
-            'correspondance' => ['required' => false,],
+            'specialite' => ['required' => true,],
             'position' => ['required' => false,
                 'validators' => [
                     [
                         'name' => Callback::class,
                         'options' => [
                             'messages' => [
-                                Callback::INVALID_VALUE => "La position n'est pas disponible dans la correspondance",
+                                Callback::INVALID_VALUE => "La position n'est pas disponible dans la specialite",
                             ],
                             'callback' => function ($value, $context = []) {
-                                $idCorrespondance = ($context['correspondance'] !== '') ? $context['correspondance'] : null;
+                                $idCorrespondance = ($context['specialite'] !== '') ? $context['specialite'] : null;
                                 $correspondance = $this->getCorrespondanceService()->getCorrespondance($idCorrespondance, false);
                                 $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByPositionnement($correspondance, $value);
                                 if ($famille === null) return true;

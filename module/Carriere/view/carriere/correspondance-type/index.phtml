@@ -8,7 +8,7 @@ use Carriere\Provider\Privilege\CorrespondancePrivileges;
  * @var CorrespondanceType[] $types
  */
 
-$this->headTitle("Types de correspondance");
+$this->headTitle("Types de spécialité");
 
 
 $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
@@ -19,7 +19,7 @@ $canAction = ($canAfficher)
 <div class="row">
     <div class="col-md-9">
         <h1 class="page-header">
-            Types de correspondance
+            Types de spécialité
         </h1>
     </div>
     <div class="col-md-3">
@@ -27,7 +27,7 @@ $canAction = ($canAfficher)
            class="btn btn-secondary"
         >
             <span class="icon icon-lister"></span>
-            Accéder aux correspondances
+            Accéder aux spécialités
         </a>
     </div>
 </div>
@@ -54,7 +54,7 @@ $canAction = ($canAfficher)
         <?php foreach ($types as $type) : ?>
         <tr>
             <td>
-                <?php echo $type->getCode(); ?>
+                <code><?php echo $type->getCode(); ?></code>
                 <?php if ($type->getDescription() !== null AND trim($type->getDescription()) !== '') : ?>
                     <span class="icon icon-information" title="<?php echo $type->getDescription(); ?>"></span>
                 <?php endif; ?>
@@ -65,7 +65,7 @@ $canAction = ($canAfficher)
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a href="<?php echo $this->url('carriere/correspondance-type/afficher', ['type' => $type->getId()], [], true); ?>"
-                       class="ajax-modal">
+                       class="ajax-modal action secondary">
                             <span class="icon icon-voir"></span>
                         Afficher
                     </a>

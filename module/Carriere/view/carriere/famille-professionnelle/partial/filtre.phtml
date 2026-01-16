@@ -22,13 +22,13 @@ $historisationParams = $params['historisation']??null;
             <div class="row">
                 <div class="col-md-10">
                     <div class="row">
-                        <!-- CORRESPONDANCE -->
+                        <!-- SPECIALITE -->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="correspondance">Correspondance :</label><br>
+                                <label for="correspondance">Spécialité :</label><br>
                                 <select id="correspondance" name="correspondance" class="selectpicker">
-                                    <option value=""> Toutes les correspondances</option>
-                                    <option value="-1" <?php if ($correspondanceParams == -1) echo " selected "; ?> > Aucune correspondance</option>
+                                    <option value=""> Toutes les spécialités</option>
+                                    <option value="-1" <?php if ($correspondanceParams == -1) echo " selected "; ?> > Aucune spécialité</option>
                                     <?php foreach ($correspondances as $correspondance) : ?>
                                         <option value="<?php echo $correspondance->getId(); ?>" <?php if ($correspondanceParams == $correspondance->getId()) echo " selected "; ?>
                                                 data-content="<?php echo $correspondance->getLibelleLong(); ?> <code><?php echo $correspondance->getType()->getCode(); ?> <?php echo $correspondance->getCategorie(); ?></code>"

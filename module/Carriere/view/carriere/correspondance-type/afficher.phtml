@@ -28,7 +28,7 @@ use Carriere\Entity\Db\CorrespondanceType;
     <dd class="col-md-8"> <?php echo $type->getDateFermeture()?$type->getDateFermeture()->format('d/m/Y'):"Aucune"; ?> </dd>
 </dl>
 
-<h2> Correspondances </h2>
+<h2> Spécialité </h2>
 
 <table class="table table-condensed table-hover">
     <thead>
@@ -41,7 +41,7 @@ use Carriere\Entity\Db\CorrespondanceType;
     <tbody>
     <?php foreach ($correspondances as $correspondance) : ?>
         <tr class="<?php if ($correspondance->isHisto()) echo " historise ";?>">
-            <td> <?php echo $correspondance->getCategorie() ;?></td>
+            <td> <code><?php echo $correspondance->getCategorie() ;?></code></td>
             <td> <?php echo $correspondance->getLibelleCourt() ;?></td>
             <td> <?php echo $correspondance->getLibelleLong() ;?></td>
         </tr>

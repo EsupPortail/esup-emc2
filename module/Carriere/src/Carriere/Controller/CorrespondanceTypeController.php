@@ -26,7 +26,7 @@ class CorrespondanceTypeController extends AbstractActionController {
         $correspondances = $this->getCorrespondanceService()->getCorrespondancesByType($type);
 
         return new ViewModel([
-            'title' => "Affichage du type de correspondance [".$type->getCode()."]",
+            'title' => "Affichage du type de spécialité [".$type->getCode()."]",
             'type' => $type,
             'correspondances' => $correspondances,
         ]);
