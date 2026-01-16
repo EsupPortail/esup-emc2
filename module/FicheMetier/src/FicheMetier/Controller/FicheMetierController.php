@@ -30,7 +30,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Metier\Service\Metier\MetierServiceAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
@@ -47,7 +46,6 @@ class FicheMetierController extends AbstractActionController
     use FicheMetierServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;
     use FichePosteServiceAwareTrait;
-    use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
@@ -233,7 +231,7 @@ class FicheMetierController extends AbstractActionController
         if ($fichemetier !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la fiche métier " . (($fichemetier and $fichemetier->getMetier()) ? $fichemetier->getMetier()->getLibelle() : "[Aucun métier]"),
+                'title' => "Suppression de la fiche métier " . $fichemetier->getLibelle(),
                 'warning' => !empty($fiches) ? "Attention : " . count($fiches) . " fiche·s de poste dépende·nt de cette fiche métier" : null,
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/supprimer', ["fiche-metier" => $fichemetier->getId()], [], true),

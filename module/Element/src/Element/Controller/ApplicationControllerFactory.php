@@ -11,7 +11,6 @@ use Element\Service\ApplicationTheme\ApplicationThemeService;
 use Element\Service\Niveau\NiveauService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

@@ -20,7 +20,6 @@ use FicheMetier\Service\TendanceElement\TendanceElementService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementService;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
-use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -48,7 +47,6 @@ class FicheMetierControllerFactory
          * @var FicheMetierService $ficheMetierService
          * @var FicheMetierMissionService $ficheMetierMissionService
          * @var FichePosteService $fichePosteService
-         * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
@@ -64,7 +62,6 @@ class FicheMetierControllerFactory
         $ficheMetierService = $container->get(FicheMetierService::class);
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $fichePosteService = $container->get(FichePosteService::class);
-        $metierService = $container->get(metierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $parametreService = $container->get(ParametreService::class);
         $referentielService = $container->get(ReferentielService::class);
@@ -100,7 +97,6 @@ class FicheMetierControllerFactory
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierMissionService($ficheMetierMissionService);
         $controller->setFichePosteService($fichePosteService);
-        $controller->setMetierService($metierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setParametreService($parametreService);
         $controller->setReferentielService($referentielService);

@@ -18,7 +18,6 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 
 class ApplicationController extends AbstractActionController
@@ -29,7 +28,6 @@ class ApplicationController extends AbstractActionController
     use AgentServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use NiveauServiceAwareTrait;
-    use MetierServiceAwareTrait;
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
 

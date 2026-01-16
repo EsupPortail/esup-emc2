@@ -117,8 +117,8 @@ class FicheMetierService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
-            ->addSelect('famille')->leftjoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
+            ->addSelect('famille')->leftjoin('ficheMetier.familleProfessionnelle', 'famille')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
             ->addSelect('referentiel')->leftJoin('ficheMetier.referentiel', 'referentiel')
             ->addSelect('codeFonction')->leftJoin('ficheMetier.codeFonction', 'codeFonction');
@@ -224,8 +224,6 @@ class FicheMetierService
 //            ->addSelect('fiche_competence_niveau')->leftJoin('fiche_competenceelement.niveau', 'fiche_competence_niveau')
 //            ->addSelect('fiche_competence_theme')->leftJoin('fiche_competence.theme', 'fiche_competence_theme')
 //            ->addSelect('fiche_competence_type')->leftJoin('fiche_competence.type', 'fiche_competence_type')
-
-            ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
             ->setParameter('id', $id);
 

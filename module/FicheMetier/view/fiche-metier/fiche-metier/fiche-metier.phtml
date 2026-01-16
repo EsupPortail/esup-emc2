@@ -23,7 +23,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var string $mode ('affichage', 'edition-fiche-metier')
  */
 
-$libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
+$libelle = $fiche->getLibelle();
 $titre = " de la fiche métier #" . $fiche->getId(). " : " . $libelle;
 if ($mode === 'affichage') $titre = "Affichage".$titre;
 if ($mode === 'edition-fiche-metier') $titre = "Modification".$titre;

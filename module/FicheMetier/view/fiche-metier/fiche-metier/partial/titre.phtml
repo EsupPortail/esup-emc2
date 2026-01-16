@@ -18,13 +18,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     <?php echo ($mode === 'affichage')?'Affichage':'Modification'; ?> de la fiche métier
     <br>
     <span style="font-weight:bold; color: var(--unistrap-color-main);">
-        <?php if ($fichemetier->getLibelle()): ?>
             <?php echo $fichemetier->getLibelle(); ?>
-        <?php elseif ($fichemetier->getMetier()) : ?>
-            <?php echo $fichemetier->getMetier()->getLibelle(); ?>
-        <?php else : ?>
-            Aucun métier ou libellé alternatif
-        <?php endif; ?>
     </span>
     <?php if ($fichemetier->getLibelle() AND $fichemetier->getMetier()): ?>
         <span class="icon icon-info" title="Remplace le libellé du métier <strong><?php echo $fichemetier->getMetier()->getLibelle(); ?></strong>" data-bs-toggle="tooltip" data-bs-html="true"></span>

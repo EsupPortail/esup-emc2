@@ -13,7 +13,6 @@ use UnicaenParametre\Entity\Db\Parametre;
 
 $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 
-$metier = $fichemetier->getMetier();
 
 ?>
 
@@ -115,26 +114,6 @@ $metier = $fichemetier->getMetier();
     <dd class="col-md-8">
         <?php if ($fichemetier->getReference()): ?>
             <?php echo $fichemetier->printReference(); ?>
-        <?php endif; ?>
-        <?php if ($metier): ?>
-            <?php
-            $references = $metier->getReferences();
-            $first = true;
-            ?>
-            <?php if (!empty($references)) : ?>
-                <?php foreach ($references as $reference) : ?>
-                    <?php if ($first) : ?>
-                        <?php $first = false; ?>
-                    <?php else : ?>
-                        <br/>
-                    <?php endif; ?>
-                    <a href="<?php echo $reference->getUrl(); ?>">
-                        <?php echo $reference->getTitre(); ?>
-                    </a>
-                <?php endforeach; ?>
-            <?php else : ?>
-                Aucune référence
-            <?php endif; ?>
         <?php endif; ?>
     </dd>
     <dt class="col-md-4"> Date de dépôt</dt>
