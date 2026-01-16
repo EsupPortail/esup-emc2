@@ -15,8 +15,6 @@ use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Entity\HasMetierInterface;
-use Metier\Entity\HasMetierTrait;
 use Metier\Entity\HasMissionsPrincipalesInterface;
 use Metier\Entity\HasMissionsPrincipalesTrait;
 use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
@@ -27,12 +25,11 @@ use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface, HasMissionsPrincipalesInterface,
-    HasNiveauCarriereInterface,
+class FicheMetier implements
+    HistoriqueAwareInterface, HasEtatsInterface, HasMissionsPrincipalesInterface, HasNiveauCarriereInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasReferenceInterface
 {
     use HistoriqueAwareTrait;
-    use HasMetierTrait;
     use HasEtatsTrait;
     use HasNiveauCarriereTrait;
     use HasApplicationCollectionTrait;

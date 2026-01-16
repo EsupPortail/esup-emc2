@@ -20,7 +20,6 @@ use FicheMetier\Service\TendanceElement\TendanceElementService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementService;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
-use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -81,7 +80,6 @@ class FicheMetierControllerFactory
          * @var SelectionApplicationForm $selectionnerApplicationForm
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
          * @var SelectionEtatForm $selectionnerEtatForm
-         * @var SelectionnerMetierForm $selectionnerMetierForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
          * @var SelectionnerNiveauCarriereForm $selectionnerNiveauCarriereForm
          */
@@ -90,7 +88,6 @@ class FicheMetierControllerFactory
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
-        $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
         $selectionnerNiveauCarriereForm = $container->get('FormElementManager')->get(SelectionnerNiveauCarriereForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
@@ -117,7 +114,6 @@ class FicheMetierControllerFactory
         $controller->setSelectionApplicationForm($selectionnerApplicationForm);
         $controller->setSelectionCompetenceForm($selectionnerCompetenceForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);
-        $controller->setSelectionnerMetierForm($selectionnerMetierForm);
         $controller->setSelectionnerMissionPrincipaleForm($selectionnerMissionPrincipaleForm);
         $controller->setSelectionnerNiveauCarriereForm($selectionnerNiveauCarriereForm);
         return $controller;

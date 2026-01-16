@@ -30,7 +30,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
@@ -64,7 +63,6 @@ class FicheMetierController extends AbstractActionController
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SelectionnerNiveauCarriereFormAwareTrait;
-    use SelectionnerMetierFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
 
     public function indexAction(): ViewModel
@@ -133,7 +131,7 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = new FicheMetier();
 
-        $form = $this->getSelectionnerMetierForm();
+        $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter', [], [], true));
         $form->bind($fiche);
 
@@ -146,9 +144,8 @@ class FicheMetierController extends AbstractActionController
                 $this->getFicheMetierService()->setDefaultValues($fiche);
                 $this->getFicheMetierService()->update($fiche);
 
-                $libelle = $this->getMetierService()->computeEcritureInclusive($fiche->getMetier()->getLibelleFeminin(), $fiche->getMetier()->getLibelleMasculin());
                 $this->flashMessenger()->addSuccessMessage(
-                    "Une nouvelle fiche métier vient d'être ajoutée pour le métier <strong>" . $libelle . "</strong>.<br/> " .
+                    "Une nouvelle fiche métier vient d'être ajoutée pour le métier <strong>" . $fiche->getLibelle() . "</strong>.<br/> " .
                     "Vous pouvez modifier celle-ci en utilisant le lien suivant : <a href='" . $this->url()->fromRoute('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true) . "'>Modification de la fiche métier #" . $fiche->getId() . "</a>");
             }
         }

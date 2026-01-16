@@ -6,10 +6,6 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Metier\Entity\Db\Metier" field="metier">
-            <join-column name="metier_id" referenced-column-name="id"/>
-        </many-to-one>
-
         <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
             <join-table name="fichemetier_etat">
                 <join-columns>
