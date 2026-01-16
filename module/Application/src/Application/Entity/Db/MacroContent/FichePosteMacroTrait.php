@@ -52,7 +52,7 @@ trait FichePosteMacroTrait {
         $texte .= "<ul>";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $texte .= "<li>";
-            $texte .= $ficheTypeExterne->getFicheType()->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $texte .= $ficheTypeExterne->getFicheType()->getLibelle();
 //            foreach ($ficheTypeExterne->getFicheType()->getMetier()->getReferences() as $reference) {
 //                $texte .= $reference->getUrl();
 //            }
@@ -190,7 +190,7 @@ trait FichePosteMacroTrait {
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $texte .= "<h3>";
-            $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $texte .= $ficheMetier->getLibelle();
             $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
             $texte .= " (".$supplement.")";
             $texte .= "</h3>";
@@ -230,7 +230,7 @@ trait FichePosteMacroTrait {
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $texte .= "<h3>";
-            $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $texte .= $ficheMetier->getLibelle();
             $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
             $texte .= " (".$supplement.")";
             $texte .= "</h3>";
@@ -265,18 +265,7 @@ trait FichePosteMacroTrait {
 
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
-
-        foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
-            $tmp = $ficheTypeExterne->getFicheType()->getMetier();
-            if ($metier === null OR $metier->getNiveaux()->getBorneInferieure()->getNiveau() < $tmp->getNiveaux()->getBorneInferieure()->getNiveau()) $metier = $tmp;
-        }
-
-        $texte = "";
-        if ($metier === null) return $texte;
-        if ($metier->getCategorie())            $texte .= "Catégorie : " . $metier->getCategorie()->getCode() . "<br/>";
-        if (true /**$metier->getNiveau()**/)    $texte .= "Corps : " . "Lien manquant" . "<br/>";
-        if (true /**$metier->getBap()**/)       $texte .= "Correspondance : " . "Lien manquant" . "<br/>";
-        return $texte;
+        return "Missing !";
     }
 
     //Specificite ------------------------------------------------------------------------------------------------------

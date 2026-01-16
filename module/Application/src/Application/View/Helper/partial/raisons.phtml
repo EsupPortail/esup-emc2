@@ -18,7 +18,7 @@ use FicheMetier\Entity\Db\Mission;
         <?php $text = "";
         switch ($raison) {
             case $raison instanceof FicheMetier :
-                $text = "Obtenue grâce à la fiche métier [".$raison->getMetier()->getLibelle()."]";
+                $text = "Obtenue grâce à la fiche métier [".$raison->getLibelle()."]";
                 $label = "FicheMétier";
                 $class = 'fiche-metier';
                 break;

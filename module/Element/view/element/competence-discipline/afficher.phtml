@@ -54,7 +54,7 @@ usort($competences, function (Competence $a, Competence $b) {
         <ul>
             <?php foreach ($fichesMetiers as $ficheMetier) : ?>
             <li>
-                <?php echo $this->etatinstance($ficheMetier->getEtatActif()); ?> <?php echo $ficheMetier->getMetier()->getLibelle(); ?>
+                <?php echo $this->etatinstance($ficheMetier->getEtatActif()); ?> <?php echo $ficheMetier->getLibelle(); ?>
                 <?php if ($canAfficherFicheMetier) : ?>
                     <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
                     <span class="action">

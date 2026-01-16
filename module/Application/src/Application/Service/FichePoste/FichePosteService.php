@@ -119,9 +119,7 @@ class FichePosteService
             //            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
             ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
             ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
-            ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
-
+;
         return $qb;
     }
 

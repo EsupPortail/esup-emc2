@@ -31,7 +31,6 @@ class ApplicationControllerFactory {
          * @var AgentService $agentService
          * @var FicheMetierService $ficheMetierService
          * @var NiveauService $maitriseNiveauService
-         * @var MetierService $metierService
          */
         $applicationService = $container->get(ApplicationService::class);
         $applicationGroupeService = $container->get(ApplicationThemeService::class);
@@ -39,7 +38,6 @@ class ApplicationControllerFactory {
         $agentService = $container->get(AgentService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $maitriseNiveauService = $container->get(NiveauService::class);
-        $metierService = $container->get(MetierService::class);
 
         /**
          * @var ApplicationForm $applicationForm
@@ -55,7 +53,6 @@ class ApplicationControllerFactory {
         $controller->setAgentService($agentService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setNiveauService($maitriseNiveauService);
-        $controller->setMetierService($metierService);
         $controller->setApplicationForm($applicationForm);
         $controller->setApplicationElementForm($applicationElementForm);
         return $controller;

@@ -263,7 +263,7 @@ class FicheMetierService
         foreach ($familles as $famille) {
             $optionsoptions = [];
             foreach ($this->getFicheByFamilleProfessionnelle($famille) as $fiche) {
-                if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . " (dernière modification " . $fiche->getHistoModification()->format("d/m/Y") . ")";
+                if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getLibelle() . " (dernière modification " . $fiche->getHistoModification()->format("d/m/Y") . ")";
             }
             asort($optionsoptions);
             $array = [
@@ -444,7 +444,7 @@ class FicheMetierService
             ->addSelect('fiche_competence')->leftJoin('fiche_competenceelement.competence', 'fiche_competence')
             ->andWhere('fiche_competenceelement.competence = :competence')
             ->setParameter('competence', $competence)
-            ->orderBy('metier.libelle', 'ASC');
+            ->orderBy('ficheMetier.libelle', 'ASC');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -458,7 +458,6 @@ class FicheMetierService
     {
         $duplicata = new FicheMetier();
         //base
-        $duplicata->setMetier($fiche->getMetier());
         $this->create($duplicata);
 
         //missions principales
@@ -569,7 +568,6 @@ class FicheMetierService
 
         $vars = [
             'fichemetier' => $fichemetier,
-            'metier' => $fichemetier->getMetier(),
             'MacroService' => $this->getMacroService(),
             'DISPLAY_RESUME' => $displayResume,
             'DISPLAY_CODEFONCTION' => $displayCode,

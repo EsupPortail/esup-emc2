@@ -144,7 +144,7 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
                 <ul>
                     <?php if ($principal) : ?>
                         <li>
-                            <strong> <?php echo $principal->getFicheType()->getMetier()->getLibelleGenre($agent) ?> à <?php echo $principal->getQuotite(); ?>%</strong>
+                            <strong> <?php echo $principal->getFicheType()->getLibelle(); ?> à <?php echo $principal->getQuotite(); ?>%</strong>
                             (principale)
                             <?php if ($canEditer) : ?>
                                 <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $principal->getId()], [], true); ?>"
@@ -158,7 +158,7 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
                     <?php endif; ?>
                     <?php foreach ($fichesMetiers as $ficheType) : ?>
                         <li>
-                            <?php echo $ficheType->getFicheType()->getMetier()->getLibelleGenre($agent); ?> à <?php echo $ficheType->getQuotite(); ?>%
+                            <?php echo $ficheType->getFicheType()->getLibelle(); ?> à <?php echo $ficheType->getQuotite(); ?>%
                             <?php if ($canEditer) : ?>
                                 <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $ficheType->getId()], [], true); ?>"
                                    class="ajax-modal" data-event="modification"

@@ -37,9 +37,8 @@ $this->headTitle("Liste des catégories");
 <table class="table table-condensed table-hover" id="categories">
     <thead>
         <tr>
-            <th class="col-md-6"> Libelle </th>
+            <th class="col-md-8"> Libelle </th>
             <th class="col-md-2"> Code </th>
-            <th class="col-md-2"> #Métier </th>
             <?php if ($canAction) : ?>
                 <th class="col-md-2 action"> Action </th>
             <?php endif; ?>
@@ -53,9 +52,6 @@ $this->headTitle("Liste des catégories");
             </td>
             <td>
                 <code><?php echo $categorie->getCode(); ?></code>
-            </td>
-            <td>
-                <?php echo count($categorie->getMetiers()); ?>
             </td>
             <?php if ($canAction) : ?>
                 <td class="action">
@@ -139,7 +135,7 @@ $this->headTitle("Liste des catégories");
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                { targets: [3], orderable: false }
+                { targets: [2], orderable: false }
             ]
         });
     });

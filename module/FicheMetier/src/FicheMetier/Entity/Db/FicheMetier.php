@@ -189,10 +189,7 @@ class FicheMetier implements
     /** @noinspection PhpUnused */
     public function getIntitule(): string
     {
-        if ($this->getLibelle()) return $this->getLibelle();
-        $metier = $this->getMetier();
-        if ($metier === null) return "Aucun métier est associé.";
-        return $metier->getLibelle();
+        return $this->getLibelle();
     }
 
     /** @noinspection PhpUnused */
@@ -205,29 +202,14 @@ class FicheMetier implements
 EOS;
 
         //metier
-        $html .= "<tr><th>Métier</th><td>" . $this->getMetier()->getLibelle() . "</td>";
-        $html .= "<tr><th>Correspondance</th><td><ul>";
-        foreach ($this->getMetier()->getCorrespondances() as $correspondance) {
-            $html .= "<li>";
-            $html .= $correspondance->getType()->getLibelleCourt() . " " . $correspondance->getCategorie();
-            $html .= "</li>";
-        }
-        $html .= "</ul></td>";
-        $html .= "<tr><th>Famille</th><td><ul>";
-        foreach ($this->getMetier()->getFamillesProfessionnelles() as $familleProfessionnelle) {
-            $html .= "<li>";
-            $html .= $familleProfessionnelle->getLibelle();
-            $html .= "</li>";
-        }
-        $html .= "</ul></td>";
+        $html .= "<tr><th>Spécialité</th>";
+        $html .= "<td>" . $this->getFamilleProfessionnelle()?->getCorrespondance()?->getLibelleLong() . "</td>";
+
+        $html .= "<tr><th>Famille professionnelle</th>";
+        $html .= "<td>" . $this->getFamilleProfessionnelle()?->getLibelle() . "</td>";
         //$html .= "<tr><th>Code Fonction</th><td>".$this->getMetier()->getLibelle()."</td>";
-        $html .= "<tr><th>Référence·s</th><td>";
-        foreach ($this->getMetier()->getReferences() as $reference) {
-            $html .= "<li>";
-            $html .= $reference->getReferentiel()->getLibelleCourt() . " " . $reference->getCode();
-            $html .= "</li>";
-        }
-        $html .= "</td>";
+        $html .= "<tr><th>Référence·s</th>";
+        $html .= "<td>". $this->printReference()."</td>";
         $html .= "<tr><th>Date de dépôt</th><td>";
         $etat = $this->getEtatActif();
         if ($etat === null) $html .= "État inconnu";

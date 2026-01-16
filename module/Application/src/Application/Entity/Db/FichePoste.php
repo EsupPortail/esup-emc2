@@ -345,21 +345,8 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function getLibelleMetierPrincipal(string $type = FichePoste::TYPE_INCLUSIF): ?string
     {
         if ($this->getFicheTypeExternePrincipale() === null) return null;
-        $metier = $this->getFicheTypeExternePrincipale()->getFicheType()->getMetier();
+        return  $this->getFicheTypeExternePrincipale()->getFicheType()->getLibelle();
 
-        switch ($type) {
-            case FichePoste::TYPE_INCLUSIF :
-                return $metier->getLibelle();
-            case FichePoste::TYPE_GENRE :
-                if ($this->agent === null) return $metier->getLibelle();
-                if ($this->agent->getSexe() === 'M' and $metier->getLibelleMasculin()) return $metier->getLibelleMasculin();
-                if ($this->agent->getSexe() === 'F' and $metier->getLibelleFeminin()) return $metier->getLibelleFeminin();
-                return $metier->getLibelle();
-            case FichePoste::TYPE_DEFAULT :
-                return $metier->getLibelle(false);
-        }
-
-        return $metier->getLibelle();
     }
 
     public function generateTag(): string

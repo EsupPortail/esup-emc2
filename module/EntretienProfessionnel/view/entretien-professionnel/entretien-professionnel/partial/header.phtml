@@ -99,8 +99,7 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                                         target="_blank"
                                     >
                                         <?php
-                                            $libelle = "Fiche metier #".$fichemetier->getId();
-                                            if ($fichemetier->getMetier()) $libelle = $fichemetier->getMetier()->getLibelle();
+                                            $libelle = "Fiche metier #".$fichemetier->getId() . " " . $fichemetier->getLibelle();
                                         ?>
                                         <?php echo $libelle; ?>
                                     </a>

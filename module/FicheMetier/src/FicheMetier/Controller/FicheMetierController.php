@@ -313,7 +313,7 @@ class FicheMetierController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Réinitialisation du libellé associé à la fiche métier",
-                'text' =>  "La réinitialisation forcera le libelle de la fiche à celui du métier associé (".($fichemetier->getMetier()?$fichemetier->getMetier()->getLibelle():"Aucun métier").")",
+                'text' =>  "La réinitialisation forcera le libelle de la fiche à celui du métier associé ",
                 'action' => $this->url()->fromRoute('fiche-metier/reinitialiser-libelle', ["fiche-metier" => $fichemetier->getId()], [], true),
             ]);
         }

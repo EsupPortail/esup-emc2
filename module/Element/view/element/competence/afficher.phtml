@@ -56,8 +56,6 @@ use FicheMetier\Entity\Db\Mission;
                 <li>
                     <?php if ($fiche->getLibelle()): ?>
                         <?php echo $fiche->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
-                    <?php elseif ($fiche->getMetier()) : ?>
-                        <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
                     <?php endif; ?>
                     <?php if ($displayCodeFonction === true) : ?>
                         <?php if ($fiche->getCodeFonction()) : ?>

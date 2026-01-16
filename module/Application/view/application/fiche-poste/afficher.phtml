@@ -106,11 +106,11 @@ $canExport   = $canAfficher;
                 <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
                 <ul>
                     <?php if ($principal) : ?>
-                            <li> <strong> <?php echo $principal->getFicheType()->getMetier()->getLibelleGenre($agent) ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
+                            <li> <strong> <?php echo $principal->getFicheType()->getLibelle() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
                     <?php endif; ?>
 
                     <?php foreach ($fichesMetiers as $ficheType) : ?>
-                        <li> <?php echo $ficheType->getFicheType()->getMetier()->getLibelleGenre($agent); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
+                        <li> <?php echo $ficheType->getFicheType()->getLibelle(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
                     <?php endforeach; ?>
                 </ul>
             </div>

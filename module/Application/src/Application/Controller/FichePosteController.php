@@ -85,7 +85,7 @@ class FichePosteController extends AbstractActionController
         $fichesIncompletes = [];
         $ficheVides = [];
         foreach ($fiches as $fiche) {
-            if ($fiche['agent_id'] !== null and $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
+            if (isset($fiche['fiche_principale']) AND $fiche['agent_id'] !== null and $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
             else {
                 if ($fiche['agent_id'] === null and $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
                 else $fichesIncompletes[] = $fiche;
@@ -175,7 +175,7 @@ class FichePosteController extends AbstractActionController
         $titre = 'Fiche de poste <br/>';
         $titre .= '<strong>';
         if ($fiche->getFicheTypeExternePrincipale()) {
-            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getLibelle();
         } else {
             $titre .= "<span class='icon icon-attention' style='color:darkred;'></span> Aucun fiche principale";
         }
@@ -588,7 +588,7 @@ class FichePosteController extends AbstractActionController
         }
 
         return new ViewModel([
-            'title' => 'Liste des activités de la fiche métier <br/> <strong>' . $ficheTypeExterne->getFicheType()->getMetier() . '</strong>',
+            'title' => 'Liste des activités de la fiche métier <br/> <strong>' . $ficheTypeExterne->getFicheType()->getLibelle() . '</strong>',
             'fichePoste' => $fichePoste,
             'ficheTypeExterne' => $ficheTypeExterne,
         ]);

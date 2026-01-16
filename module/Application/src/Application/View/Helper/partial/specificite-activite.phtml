@@ -85,11 +85,11 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
         <div class="col-md-4" style="margin-top: 0.5rem;">
 
             <?php
-                $metiers = [];
-                foreach ($mission->getListeFicheMetier() as $ficheMetier) {
-                    $metier = $ficheMetier->getFicheMetier()->getMetier();
-                    $metiers[$metier->getId()] = $metier;
-                }
+//                $metiers = [];
+//                foreach ($mission->getListeFicheMetier() as $ficheMetier) {
+//                    $metier = $ficheMetier->getFicheMetier()->getMetier();
+//                    $metiers[$metier->getId()] = $metier;
+//                }
             ?>
             <div class="card panel-default">
                 <div class="card-header">
@@ -98,16 +98,16 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
                 <div class="card-body">
                     <?php $count = 0; ?>
                     <ul>
-                        <?php foreach ($metiers as $metier) : ?>
-                            <li>
-                                <?php $count++; ?>
-                                <?php echo $metier->getLibelle(); ?>
-                                <?php foreach ($metier->getReferences() as $reference) : ?>
-                                    <span class="badge" style="background-color: #dfc4b2"><a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a></span>
-                                <?php endforeach; ?>
-                            </li>
-                        <?php endforeach; ?>
-                        <?php if ($count === 0) echo "Aucun"; ?>
+<!--                        --><?php //foreach ($metiers as $metier) : ?>
+<!--                            <li>-->
+<!--                                --><?php //$count++; ?>
+<!--                                --><?php //echo $metier->getLibelle(); ?>
+<!--                                --><?php //foreach ($metier->getReferences() as $reference) : ?>
+<!--                                    <span class="badge" style="background-color: #dfc4b2"><a href="--><?php //echo $reference->getUrl(); ?><!--"> --><?php //echo $reference->getTitre(); ?><!-- </a></span>-->
+<!--                                --><?php //endforeach; ?>
+<!--                            </li>-->
+<!--                        --><?php //endforeach; ?>
+<!--                        --><?php //if ($count === 0) echo "Aucun"; ?>
                     </ul>
                 </div>
             </div>

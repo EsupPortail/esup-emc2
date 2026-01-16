@@ -20,9 +20,6 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     <span style="font-weight:bold; color: var(--unistrap-color-main);">
             <?php echo $fichemetier->getLibelle(); ?>
     </span>
-    <?php if ($fichemetier->getLibelle() AND $fichemetier->getMetier()): ?>
-        <span class="icon icon-info" title="Remplace le libellé du métier <strong><?php echo $fichemetier->getMetier()->getLibelle(); ?></strong>" data-bs-toggle="tooltip" data-bs-html="true"></span>
-    <?php endif; ?>
 </h1>
 <?php if ($mode !== 'affichage' AND $canModifier): ?>
     <?php /** @see \FicheMetier\Controller\FicheMetierController::modifierLibelleAction() */ ?>
@@ -32,7 +29,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         <span class="icon icon-editer"></span>
         Modifier le libellé
     </a>
-    <?php if ($fichemetier->getLibelle() !== null And $fichemetier->getMetier()) : ?>
+    <?php if ($fichemetier->getLibelle() !== null) : ?>
         <?php /** @see \FicheMetier\Controller\FicheMetierController::reinitialiserLibelleAction() */ ?>
         <a href="<?php echo $this->url('fiche-metier/reinitialiser-libelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
            class="action warning ajax-modal"  data-event="modification"

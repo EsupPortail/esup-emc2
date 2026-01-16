@@ -116,7 +116,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
         <?php echo count($fichesmetiers); ?> fiche·s métier·s
         <ul>
             <?php foreach ($fichesmetiers as $fichemetier) : ?>
-                <?php $libelle = $fichemetier->getFicheMetier()->getLibelle()??$fichemetier->getFicheMetier()->getMetier()->getLibelle(); ?>
+                <?php $libelle = $fichemetier->getFicheMetier()->getLibelle(); ?>
                 <li>
                     <?php
                     $ficheId = $fichemetier->getFicheMetier()->getId();
