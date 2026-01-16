@@ -1,0 +1,43 @@
+<?php
+
+namespace FicheMetier\Entity\Db\Trait;
+
+use Doctrine\Common\Collections\Collection;
+use FicheMetier\Entity\Db\FicheMetierMission;
+use FicheMetier\Entity\Db\Mission;
+
+trait HasMissionsPrincipalesTrait
+{
+    private Collection $missions;
+
+    /** @return FicheMetierMission[] */
+    public function getMissions(): array
+    {
+        return $this->missions->toArray();
+    }
+
+    public function addMission(FicheMetierMission $ficheMetierMission): void
+    {
+        $this->missions->add($ficheMetierMission);
+    }
+
+    public function removeMission(FicheMetierMission $ficheMetierMission): void
+    {
+        $this->missions->removeElement($ficheMetierMission);
+    }
+
+    public function clearMissions(): void
+    {
+        $this->missions->clear();
+    }
+
+    public function hasMission(Mission $mission): bool
+    {
+        /** @var FicheMetierMission[] $missions */
+        $missions = $this->missions->toArray();
+        foreach ($missions as $fmMission) {
+            if ($fmMission->getMission() === $mission) return true;
+        }
+        return false;
+    }
+}

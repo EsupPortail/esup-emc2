@@ -14,7 +14,7 @@
             <join-column name="niveau_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-many field="famillesProfessionnelles" target-entity="Metier\Entity\Db\FamilleProfessionnelle">
+        <many-to-many field="famillesProfessionnelles" target-entity="Carriere\Entity\Db\FamilleProfessionnelle">
             <join-table name="missionprincipale_familleprofessionnelle">
                 <join-columns>
                     <join-column name="mission_id" referenced-column-name="id" />

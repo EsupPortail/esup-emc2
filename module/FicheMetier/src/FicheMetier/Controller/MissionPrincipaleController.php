@@ -5,6 +5,7 @@ namespace FicheMetier\Controller;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use DateTime;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -24,8 +25,7 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -50,7 +50,6 @@ class MissionPrincipaleController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionnerFamilleProfessionnelleFormAwareTrait;
-
 
 
     public function indexAction(): ViewModel
@@ -441,7 +440,7 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function importerAction(): ViewModel
     {
-        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE,FicheMetierParametres::CODE_FONCTION);
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
 
         $separateur = '|';
 
@@ -557,9 +556,8 @@ class MissionPrincipaleController extends AbstractActionController
 
                         /** @var Mission $mission */
                         foreach ($missions as $mission) {
-                            if ($mission->getId() !== null)
-                            {
-                                $info[] = "La mission ".$mission->printReference()." existe déjà et sera mise à jour";
+                            if ($mission->getId() !== null) {
+                                $info[] = "La mission " . $mission->printReference() . " existe déjà et sera mise à jour";
                             }
                             //famille professionnelle
                             foreach ($mission->getFamillesProfessionnelles() as $famille) {
@@ -589,26 +587,31 @@ class MissionPrincipaleController extends AbstractActionController
                             $this->getMissionPrincipaleService()->update($mission);
 
                             // Bricolage pour satisfaire Marseille
-                            $codesFicheMetier = explode('|',$mission->getCodesFicheMetier()??"");
+                            $codesFicheMetier = explode('|', $mission->getCodesFicheMetier() ?? "");
                             $codesFicheMetier = array_map('trim', $codesFicheMetier);
-                            $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) { return $a !== ''; });
+                            $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) {
+                                return $a !== '';
+                            });
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
-                                if ($fichemetier === null) { $warning[] = "La fiche metier ".$mission->printReference()." n'existe pas"; }
-                                else {
+                                if ($fichemetier === null) {
+                                    $warning[] = "La fiche metier " . $mission->printReference() . " n'existe pas";
+                                } else {
                                     if (!$fichemetier->hasMission($mission)) {
                                         $this->getFicheMetierService()->addMission($fichemetier, $mission);
-                                        $info[] = "Ajout de la mission ".$mission->printReference()." a été ajouté à la fiche metier [".$fichemetier->getReference()."]";
+                                        $info[] = "Ajout de la mission " . $mission->printReference() . " a été ajouté à la fiche metier [" . $fichemetier->getReference() . "]";
                                     }
                                 }
                             }
-                            $codesFonction = explode('|',$mission->getCodesFonction()??"");
+                            $codesFonction = explode('|', $mission->getCodesFonction() ?? "");
                             $codesFonction = array_map('trim', $codesFonction);
-                            $codesFonction = array_filter($codesFonction, function (string $a) { return $a !== ''; });
+                            $codesFonction = array_filter($codesFonction, function (string $a) {
+                                return $a !== '';
+                            });
                             foreach ($codesFonction as $codeFonction) {
                                 $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                 if ($codeFonction_ === null) {
-                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale ".$mission->printReference()." ne sera ajoutée à aucune fiche métier.";
+                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale " . $mission->printReference() . " ne sera ajoutée à aucune fiche métier.";
                                 } else {
                                     $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                     if (empty($fichesmetiers)) {

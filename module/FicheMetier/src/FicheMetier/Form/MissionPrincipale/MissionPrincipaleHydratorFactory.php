@@ -4,7 +4,7 @@ namespace FicheMetier\Form\MissionPrincipale;
 
 use Carriere\Service\Niveau\NiveauService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

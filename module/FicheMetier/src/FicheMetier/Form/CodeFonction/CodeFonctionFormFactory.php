@@ -3,7 +3,7 @@
 namespace FicheMetier\Form\CodeFonction;
 
 use Carriere\Service\NiveauFonction\NiveauFonctionService;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

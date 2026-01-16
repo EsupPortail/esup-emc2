@@ -19,8 +19,7 @@ use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
-use Metier\Service\Metier\MetierService;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Referentiel\ReferentielService;
@@ -57,7 +56,6 @@ class FicheMetierServiceFactory {
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
-         * @var MetierService $metierService
          * @var RenduService $renduService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
@@ -78,7 +76,6 @@ class FicheMetierServiceFactory {
         $renduService = $container->get(RenduService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
-        $metierService = $container->get(MetierService::class);
         $referentielService = $container->get(ReferentielService::class);
 
         /**
@@ -109,7 +106,6 @@ class FicheMetierServiceFactory {
 
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);
         $service->setHasCompetenceCollectionService($hasCompetenceCollectionService);
-        $service->setMetierService($metierService);
 
         $service->setSelectionApplicationHydrator($selectionApplicationHydrator);
         $service->setSelectionCompetenceHydrator($selectionCompetenceHydrator);

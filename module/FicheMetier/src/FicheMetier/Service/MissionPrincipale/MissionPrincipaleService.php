@@ -2,7 +2,9 @@
 
 namespace FicheMetier\Service\MissionPrincipale;
 
+use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -10,8 +12,6 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
 
@@ -19,6 +19,7 @@ class MissionPrincipaleService
 {
     use ProvidesObjectManager;
     use FamilleProfessionnelleServiceAwareTrait;
+
 //    use FicheMetierServiceAwareTrait;
     use NiveauServiceAwareTrait;
 
@@ -67,8 +68,7 @@ class MissionPrincipaleService
             ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
             ->leftJoin('mission.activites', 'activite')->addSelect('activite')
             ->leftJoin('mission.famillesProfessionnelles', 'famille')->addSelect('famille')
-            ->leftJoin('mission.referentiel', 'referentiel')->addSelect('referentiel')
-        ;
+            ->leftJoin('mission.referentiel', 'referentiel')->addSelect('referentiel');
         return $qb;
     }
 
@@ -111,7 +111,7 @@ class MissionPrincipaleService
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             // todo probablement ajouter la notion de référentiel ...
-            throw new RuntimeException("Plusieurs [" . Mission::class . "] partagent le même libellé [" . $libelle . "]", -1, $e );
+            throw new RuntimeException("Plusieurs [" . Mission::class . "] partagent le même libellé [" . $libelle . "]", -1, $e);
         }
         return $result;
     }
@@ -129,19 +129,19 @@ class MissionPrincipaleService
         return $result;
     }
 
-    /** @return Mission[]*/
+    /** @return Mission[] */
     public function getMissionsPrincipalesWithFiltre(array $params = []): array
     {
         $qb = $this->createQueryBuilder();
-        if (isset($params['referentiel']) AND $params['referentiel'] !== '') {
+        if (isset($params['referentiel']) and $params['referentiel'] !== '') {
             $referentielId = $params['referentiel'];
             $qb = $qb->andWhere('referentiel.id = :referentiel')->setParameter('referentiel', $referentielId);
         }
-        if (isset($params['famille']) AND $params['famille'] !== '') {
+        if (isset($params['famille']) and $params['famille'] !== '') {
             $familleId = $params['famille'];
             $qb = $qb->andWhere('famille.id = :famille')->setParameter('famille', $familleId);
         }
-        if (isset($params['histo']) AND $params['histo'] !== '') {
+        if (isset($params['histo']) and $params['histo'] !== '') {
             if ($params['histo'] == 0) $qb = $qb->andWhere('mission.histoDestruction IS NULL');
             if ($params['histo'] == 1) $qb = $qb->andWhere('mission.histoDestruction IS NOT NULL');
         }
@@ -253,10 +253,10 @@ class MissionPrincipaleService
 
         /* LIBELLE ****************************************************************************************************/
         if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) === '') {
-            throw new RuntimeException("La colonne obligatoire [".Mission::MISSION_PRINCIPALE_HEADER_LIBELLE."] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+            throw new RuntimeException("La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_LIBELLE . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
         } else $libelle = trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]);
         if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_ID]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_ID]) === '') {
-            throw new RuntimeException("La colonne obligatoire [".Mission::MISSION_PRINCIPALE_HEADER_ID."] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+            throw new RuntimeException("La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_ID . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
         } else $idOrig = trim($json[Mission::MISSION_PRINCIPALE_HEADER_ID]);
 
 
@@ -278,7 +278,7 @@ class MissionPrincipaleService
             $to_delete['activites'] = $mission->getActivites();
             $mission->clearActivites();
             foreach ($activites as $activite) {
-                if (trim($activite) !== '' AND !$mission->hasActivite($activite)) {
+                if (trim($activite) !== '' and !$mission->hasActivite($activite)) {
                     $act = new MissionActivite();
                     $act->setLibelle($activite);
                     $act->setMission($mission);
@@ -381,7 +381,7 @@ class MissionPrincipaleService
         $texte = "<span class='mission' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
 
         if ($mission->getCodesFicheMetier() !== null) {
-            $texte .= "&nbsp;" . "<span class='badge'>".
+            $texte .= "&nbsp;" . "<span class='badge'>" .
                 $mission->getCodesFicheMetier()
                 . "</span>";
         }
@@ -422,7 +422,7 @@ class MissionPrincipaleService
     public function updateWith(string $intitule, array $activites, Mission $mission): Mission
     {
         $mission->setLibelle($intitule);
-        foreach($mission->getActivites() as $activite) {
+        foreach ($mission->getActivites() as $activite) {
             $activite->setOrdre(-1);
         }
 

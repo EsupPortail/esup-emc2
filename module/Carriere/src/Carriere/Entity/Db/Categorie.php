@@ -4,7 +4,6 @@ namespace Carriere\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Metier\Entity\Db\Metier;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -44,14 +43,6 @@ class Categorie implements HistoriqueAwareInterface {
     public function setLibelle(string $libelle) : void
     {
         $this->libelle = $libelle;
-    }
-
-    /**
-     * @return Metier[]
-     */
-    public function getMetiers(): array
-    {
-        return $this->metiers->toArray();
     }
 
 }

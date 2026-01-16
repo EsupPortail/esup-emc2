@@ -1,10 +1,9 @@
 <?php
 
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Carriere\Provider\Privilege\FamilleprofessionnellePrivileges;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
-use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
-use Metier\Provider\Privilege\MetierPrivileges;
 use Referentiel\Entity\Db\Referentiel;
 use UnicaenEtat\Entity\Db\EtatType;
 
@@ -27,7 +26,6 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 $canDetruire = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_DETRUIRE));
 
 $canAfficherFamille = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AFFICHER));
-$canAfficherMetier = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AFFICHER));
 
 $canConfigurer = true; //todo
 
@@ -91,24 +89,7 @@ $this->headTitle('Index des fiches métiers');
     <?php foreach ($fiches as $fiche): ?>
         <tr <?php if ($fiche->estHistorise()) echo "class='historise'"; ?> >
             <td>
-                <?php if ($fiche->getMetier()) : ?>
-                    <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
-                          data-bs-toggle='tooltip' data-bs-html='true'
-                    >
-                        <?php if ($canAfficherMetier): ?>
-                            <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
-                            <a href="<?php echo $this->url('metier/afficher', ['metier' => $fiche->getMetier()->getId()], [], true); ?>"
-                               class="ajax-modal"
-                            >
-                                <?php echo $fiche->getLibelle() ?? $fiche->getMetier()->getLibelle(); ?>
-                            </a>
-                        <?php else : ?>
-                            <?php echo $fiche->getLibelle() ?? $fiche->getMetier()->getLibelle(); ?>
-                        <?php endif; ?>
-                    </span>
-                <?php else: ?>
-                    <?php echo $fiche->getLibelle(); ?>
-                <?php endif; ?>
+                <?php echo $fiche->getLibelle(); ?>
                 <?php if ($displayCodeFonction) : ?>
                     <br>
                     <?php if ($fiche->getCodeFonction()) : ?>
@@ -127,7 +108,7 @@ $this->headTitle('Index des fiches métiers');
                         <li>
                             <?php if ($canAfficherFamille) : ?>
 
-                                <?php /** @see \Metier\Controller\FamilleProfessionnelleController::afficherAction() */ ?>
+                                <?php /** @see \Carriere\Controller\FamilleProfessionnelleController::afficherAction() */ ?>
                                 <a href="<?php echo $this->url('famille-professionnelle/afficher', ['famille-professionnelle' => $fiche->getFamilleProfessionnelle()->getId()], [], true); ?>"
                                    class="ajax-modal"
                                 >
@@ -137,24 +118,6 @@ $this->headTitle('Index des fiches métiers');
                                 <?php echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
                             <?php endif; ?>
                         </li>
-                    </ul>
-                <?php endif; ?>
-                <?php if ($fiche->getMetier()) : ?>
-                    <ul>
-                        <?php foreach ($fiche->getMetier()->getFamillesProfessionnelles() as $fap) : ?>
-                            <li>
-                                <?php if ($canAfficherFamille) : ?>
-                                    <?php /** @see \Metier\Controller\FamilleProfessionnelleController::afficherAction() */ ?>
-                                    <a href="<?php echo $this->url('famille-professionnelle/afficher', ['famille-professionnelle' => $fap->getId()], [], true); ?>"
-                                       class="ajax-modal"
-                                    >
-                                        <?php echo $fap->getLibelle(); ?>
-                                    </a>
-                                <?php else : ?>
-                                    <?php echo $fap->getLibelle(); ?>
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
             </td>

@@ -3,13 +3,14 @@
 namespace FicheMetier\Form\MissionPrincipale;
 
 use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
-class MissionPrincipaleHydrator implements HydratorInterface {
+class MissionPrincipaleHydrator implements HydratorInterface
+{
 
     use FamilleProfessionnelleServiceAwareTrait;
     use MissionActiviteServiceAwareTrait;
@@ -31,14 +32,14 @@ class MissionPrincipaleHydrator implements HydratorInterface {
 
     public function hydrate(array $data, object $object): object
     {
-        $libelle = (isset($data['libelle']) AND trim($data['libelle']) != '') ? trim($data['libelle']) : null;
+        $libelle = (isset($data['libelle']) and trim($data['libelle']) != '') ? trim($data['libelle']) : null;
         $activitesAsList = (isset($data['activites'])) ? $data['activites'] : [];
         $familleProfessionnelleIds = (isset($data['familleprofessionnelle'])) ? $data['familleprofessionnelle'] : [];
-        $borneInferieure = (isset($data['borne_inferieure']) AND $data['borne_inferieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_inferieure']) : null;
-        $borneSuperieure = (isset($data['borne_superieure']) AND $data['borne_superieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_superieure']) : null;
+        $borneInferieure = (isset($data['borne_inferieure']) and $data['borne_inferieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_inferieure']) : null;
+        $borneSuperieure = (isset($data['borne_superieure']) and $data['borne_superieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_superieure']) : null;
 
 
-        /** @var Mission $object **/
+        /** @var Mission $object * */
         //traitement des activites
         $missions = $this->getMissionActiviteService()->transforms($object, $activitesAsList);
         $object->clearActivites();

@@ -7,7 +7,7 @@ use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
-use Metier\Entity\HasMissionsPrincipalesInterface;
+use FicheMetier\Entity\Db\Interface\HasMissionsPrincipalesInterface;
 
 class SelectionnerMissionPrincipaleHydrator implements HydratorInterface
 {

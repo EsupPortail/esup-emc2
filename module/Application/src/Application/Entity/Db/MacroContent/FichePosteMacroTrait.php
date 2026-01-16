@@ -6,7 +6,6 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceType;
-use Metier\Entity\Db\Reference;
 
 trait FichePosteMacroTrait {
 
@@ -194,16 +193,6 @@ trait FichePosteMacroTrait {
             $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
             $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
             $texte .= " (".$supplement.")";
-            $references = $ficheMetier->getMetier()->getReferences();
-
-            if ($references !== null AND !empty($references)) {
-                $texte .= "<br/><small>";
-                /** @var Reference $reference */
-                foreach ($references as $reference) {
-                    $texte .= " <a href='".$reference->getUrl()."'>".$reference->getReferentiel()->getLibelleCourt() . "-" . $reference->getCode()."</a>";
-                }
-                $texte.="</small>";
-            }
             $texte .= "</h3>";
 
             $ids = explode(";",$ficheTypeExterne->getActivites());
@@ -244,16 +233,6 @@ trait FichePosteMacroTrait {
             $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
             $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
             $texte .= " (".$supplement.")";
-            $references = $ficheMetier->getMetier()->getReferences();
-
-            if ($references !== null AND !empty($references)) {
-                $texte .= "<br/><small>";
-                /** @var Reference $reference */
-                foreach ($references as $reference) {
-                    $texte .= " <a href='".$reference->getUrl()."'>".$reference->getReferentiel()->getLibelleCourt() . "-" . $reference->getCode()."</a>";
-                }
-                $texte.="</small>";
-            }
             $texte .= "</h3>";
 
             $ids = explode(";",$ficheTypeExterne->getActivites());

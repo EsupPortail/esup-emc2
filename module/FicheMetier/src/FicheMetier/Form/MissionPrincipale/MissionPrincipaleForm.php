@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Form\MissionPrincipale;
 
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
@@ -10,7 +11,6 @@ use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
 class MissionPrincipaleForm extends Form
 {
@@ -27,7 +27,7 @@ class MissionPrincipaleForm extends Form
             'name' => 'libelle',
             'options' => [
                 'label' => "Libellé <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -69,14 +69,14 @@ class MissionPrincipaleForm extends Form
             'name' => 'borne_inferieure',
             'options' => [
                 'label' => "Niveau le plus élevé :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => 'Sélectionner le niveau le plus élevé ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
                 'id' => 'borne_inferieure',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ],
         ]);
         $this->add([
@@ -84,14 +84,14 @@ class MissionPrincipaleForm extends Form
             'name' => 'borne_superieure',
             'options' => [
                 'label' => "Niveau le plus bas :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => 'Sélectionner le niveau le plus bas ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
                 'id' => 'borne_superieure',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ],
         ]);
         $this->add([
@@ -111,10 +111,10 @@ class MissionPrincipaleForm extends Form
 
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle'                   => [ 'required' => true,  ],
-            'activites'                 => [ 'required' => false,  ],
-            'familleprofessionnelle'    => [ 'required' => false,  ],
-            'borne_inferieure'      => [
+            'libelle' => ['required' => true,],
+            'activites' => ['required' => false,],
+            'familleprofessionnelle' => ['required' => false,],
+            'borne_inferieure' => [
                 'required' => false,
 //                'validators' => [[
 //                    'name' => Callback::class,
@@ -130,7 +130,7 @@ class MissionPrincipaleForm extends Form
 //                    ],
 //                ]],
             ],
-            'borne_superieure'      => [
+            'borne_superieure' => [
                 'required' => false,
                 'validators' => [[
                     'name' => Callback::class,
@@ -139,9 +139,9 @@ class MissionPrincipaleForm extends Form
                             Callback::INVALID_VALUE => "La borne inférieure est incompatible avec la borne supérieure",
                         ],
                         'callback' => function ($value, $context = []) {
-                            $niveau_bas = (isset($context["borne_inferieure"]) AND $context["borne_inferieure"] !== '')?$this->niveaux[((int) $context["borne_inferieure"])]->getNiveau():null;
+                            $niveau_bas = (isset($context["borne_inferieure"]) and $context["borne_inferieure"] !== '') ? $this->niveaux[((int)$context["borne_inferieure"])]->getNiveau() : null;
                             if ($niveau_bas === null) return true;
-                            $niveau_haut = (isset($context["borne_superieure"]) AND $context["borne_superieure"] !== '')?$this->niveaux[((int) $context["borne_superieure"])]->getNiveau():null;
+                            $niveau_haut = (isset($context["borne_superieure"]) and $context["borne_superieure"] !== '') ? $this->niveaux[((int)$context["borne_superieure"])]->getNiveau() : null;
                             if ($niveau_haut === null) return true;
                             return ($niveau_bas <= $niveau_haut);
                         },

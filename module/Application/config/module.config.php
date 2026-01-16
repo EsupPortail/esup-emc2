@@ -31,7 +31,6 @@ use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Laminas\Router\Http\Literal;
-use Metier\Provider\Privilege\MetierPrivileges;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
@@ -67,7 +66,6 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
-                        MetierPrivileges::METIER_INDEX,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         StructurePrivileges::STRUCTURE_INDEX,
                     ],
