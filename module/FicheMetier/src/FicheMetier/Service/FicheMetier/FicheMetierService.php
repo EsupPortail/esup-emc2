@@ -600,7 +600,7 @@ class FicheMetierService
             ->join('competenceElement.competence', 'competence')->addSelect('competence')
             ->leftjoin('competence.discipline', 'discipline')->addSelect('discipline')
             ->andWhere('ficheMetier.histoDestruction IS NULL')
-            ->orderby('metier.libelle');
+            ->orderby('ficheMetier.libelle');
         $qb = $qb->andWhere('competence.discipline = :discipline')->setParameter('discipline', $discipline);
 
         $result = $qb->getQuery()->getResult();
