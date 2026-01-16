@@ -51,7 +51,8 @@ class MissionPrincipaleForm extends Form
             'type' => Select::class,
             'name' => 'familleprofessionnelle',
             'options' => [
-                'label' => "Famille·s professionnelle·s :",
+                'label' => "Famille·s professionnelle·s <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner une famille professionnelle",
                 'value_options' =>
                     $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesAsOptions(),
@@ -99,9 +100,7 @@ class MissionPrincipaleForm extends Form
             'name' => 'submit',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -113,7 +112,7 @@ class MissionPrincipaleForm extends Form
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
             'activites' => ['required' => false,],
-            'familleprofessionnelle' => ['required' => false,],
+            'familleprofessionnelle' => ['required' => true,],
             'borne_inferieure' => [
                 'required' => false,
 //                'validators' => [[

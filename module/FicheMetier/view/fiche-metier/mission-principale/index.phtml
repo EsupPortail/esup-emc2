@@ -221,14 +221,12 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
             window.location.reload();
         });
         $('table#missions').DataTable({
-            paging: false,
-            info: false,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                {targets: [4], orderable: false}
+                {targets: [3], orderable: false}
             ]
         });
     });
