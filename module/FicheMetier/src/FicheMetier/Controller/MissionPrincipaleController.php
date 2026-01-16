@@ -595,7 +595,7 @@ class MissionPrincipaleController extends AbstractActionController
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                 if ($fichemetier === null) {
-                                    $warning[] = "La fiche metier " . $mission->getCodesFicheMetier() . " n'existe pas";
+                                    $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$mission->getCodesFicheMetier() . "</span> n'existe pas";
                                 } else {
                                     if (!$fichemetier->hasMission($mission)) {
                                         $this->getFicheMetierService()->addMission($fichemetier, $mission);
