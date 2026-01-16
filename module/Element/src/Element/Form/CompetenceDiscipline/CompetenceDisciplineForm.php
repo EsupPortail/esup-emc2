@@ -20,7 +20,7 @@ class CompetenceDisciplineForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle   <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Libellé   <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
