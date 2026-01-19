@@ -148,13 +148,17 @@ class ActiviteService
             $description = trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]);
             $activite->setDescription($description);
         }
-        if (isset($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) and trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) !== '') {
-            $codesFicheMetier = trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]);
-            $activite->setCodesFicheMetier($codesFicheMetier);
+        if (isset($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE])) {
+            if (trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) !== '') {
+                $codesFicheMetier = trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]);
+                $activite->setCodesFicheMetier($codesFicheMetier);
+            } else $activite->setCodesFicheMetier(null);
         }
-        if (isset($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) and trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) !== '') {
-            $codesCodeFonction = trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]);
-            $activite->setCodesFonction($codesCodeFonction);
+        if (isset($json[Activite::ACTIVITE_HEADER_CODES_FONCTION])) {
+            if (trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) !== '') {
+                $codesCodeFonction = trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]);
+                $activite->setCodesFonction($codesCodeFonction);
+            } else $activite->setCodesFonction(null);
         }
 
         $activite->setRaw(json_encode($json));

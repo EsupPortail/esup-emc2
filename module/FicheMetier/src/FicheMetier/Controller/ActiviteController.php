@@ -280,7 +280,7 @@ class ActiviteController extends AbstractActionController
                                         foreach ($fichesmetiers as $fichemetier) {
                                             if (!$fichemetier->hasActivite($activite)) {
                                                 $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                                $info[] = "Ajout de la mission [" . $activite->getReference() . "] à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                                $info[] = "Ajout de la activité ".$activite->printReference()." à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
                                             }
                                         }
                                     }

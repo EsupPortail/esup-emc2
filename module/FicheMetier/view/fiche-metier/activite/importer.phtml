@@ -6,6 +6,7 @@ use Referentiel\Entity\Db\Referentiel;
 /**
  * @see \FicheMetier\Controller\ActiviteController::importerAction()
  * @var bool $displayCodeFonction
+ * @var string $separateur
  * @var array $data
  * @var array $file
  * @var Activite[] $activites
@@ -43,9 +44,9 @@ $this->headTitle("Importation d'activité");
                                 <div class='col-md-9'> <?php echo $filename; ?> </div>
                                 <div class='col-md-3'>
                                     <div class='float-end'>
-                            <span class="action text-danger" style="cursor: pointer;" onclick="reset()">
-                                <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span> Retirer
-                            </span>
+                                        <span class="action text-danger" style="cursor: pointer;" onclick="reset()">
+                                            <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span> Retirer
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -146,9 +147,10 @@ $this->headTitle("Importation d'activité");
     <table class="table table-condensed" id="activites">
         <thead>
             <tr>
-                <th class="col-md-5"> Libellé </th>
-                <th class="col-md-5"> Description </th>
+                <th class="col-md-4"> Libellé </th>
+                <th class="col-md-4"> Description </th>
                 <th class="col-md-2"> Référence </th>
+                <th class="col-md-2"> Codes </th>
             </tr>
         </thead>
         <tbody>
@@ -168,6 +170,26 @@ $this->headTitle("Importation d'activité");
                         -
                         <?php echo $activite->getReference(); ?>
                     </span>
+                </td>
+                <td>
+                    <?php if ($activite->getCodesFicheMetier()) : ?>
+                        <?php $codes = explode($separateur, $activite->getCodesFicheMetier()); ?>
+                        Codes Emploi-Types :
+                        <ul>
+                            <?php foreach ($codes as $code) : ?>
+                                <li> <?php echo $code; ?> </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                    <?php if ($displayCodeFonction AND $activite->getCodesFonction()) : ?>
+                        <?php $codes = explode($separateur, $activite->getCodesFonction()); ?>
+                        Codes Fonctions :
+                        <ul>
+                            <?php foreach ($codes as $code) : ?>
+                                <li> <?php echo $code; ?> </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </td>
         <?php endforeach; ?>
         </tbody>
