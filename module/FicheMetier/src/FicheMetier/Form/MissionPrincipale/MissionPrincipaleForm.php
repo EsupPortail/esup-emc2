@@ -33,19 +33,6 @@ class MissionPrincipaleForm extends Form
                 'id' => 'libelle',
             ],
         ]);
-        //activites
-        //todo tinymce dédiée
-        $this->add([
-            'type' => Textarea::class,
-            'name' => 'activites',
-            'options' => [
-                'label' => "Activité·s :",
-            ],
-            'attributes' => [
-                'id' => 'activites',
-                'class' => "tinymce",
-            ],
-        ]);
         //famille professionnelle
         $this->add([
             'type' => Select::class,
@@ -111,7 +98,6 @@ class MissionPrincipaleForm extends Form
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
-            'activites' => ['required' => false,],
             'familleprofessionnelle' => ['required' => true,],
             'borne_inferieure' => [
                 'required' => false,

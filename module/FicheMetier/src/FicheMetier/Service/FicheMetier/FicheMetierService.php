@@ -642,5 +642,4 @@ class FicheMetierService
 
     }
 
-
 }

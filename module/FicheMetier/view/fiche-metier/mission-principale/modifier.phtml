@@ -17,22 +17,9 @@ $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceI
 
 <?php echo $this->form()->openTag($form); ?>
 
+<h3> Description </h3>
+
 <?php echo $this->formControlGroup($form->get('libelle')); ?>
-
-<div class="form-group" style="padding-bottom: 0.5rem;">
-<?php echo $this->formLabel($form->get('activites')); ?>
-<div class="alert alert-info">
-    <div style="display:inline-block;vertical-align: top;">
-        <span class="icon icon-info"></span>
-    </div>
-    <div style="display:inline-block;">
-        Les activités doivent être saisies en liste à puce, une puce par activité.
-    </div>
-</div>
-<?php echo $this->formElement($form->get('activites')); ?>
-<?php echo $this->formElementErrors($form->get('activites')); ?>
-</div>
-
 <?php echo $this->formControlGroup($form->get('familleprofessionnelle')); ?>
 
 <h3> Niveau de carrière associé </h3>

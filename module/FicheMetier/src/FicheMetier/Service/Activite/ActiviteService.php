@@ -49,7 +49,9 @@ class ActiviteService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getObjectManager()->getRepository(Activite::class)->createQueryBuilder('activite');
+        $qb = $this->getObjectManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+            ->leftJoin('activite.referentiel', 'referentiel')->addSelect('referentiel')
+        ;
         return $qb;
     }
 
@@ -76,7 +78,7 @@ class ActiviteService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
-            ->andWhere('activite.idOrig = :idOrig')->setParameter('idOrig', $idOrig)
+            ->andWhere('activite.reference = :idOrig')->setParameter('idOrig', $idOrig)
         ;
         try {
             $activite = $qb->getQuery()->getOneOrNullResult();
@@ -96,70 +98,68 @@ class ActiviteService
         return $result;
     }
 
+    /** @return Activite[] */
+    public function getActivitesWithFiltre(array $params = []): array
+    {
+        $qb = $this->createQueryBuilder();
+        if (isset($params['referentiel']) and $params['referentiel'] !== '') {
+            $referentielId = $params['referentiel'];
+            $qb = $qb->andWhere('referentiel.id = :referentiel')->setParameter('referentiel', $referentielId);
+        }
+        if (isset($params['histo']) and $params['histo'] !== '') {
+            if ($params['histo'] == 0) $qb = $qb->andWhere('mission.histoDestruction IS NULL');
+            if ($params['histo'] == 1) $qb = $qb->andWhere('mission.histoDestruction IS NOT NULL');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     //todo fonction de recherche
 
     /** FACADE ********************************************************************************************************/
 
-    public function readFromCsv(Referentiel $referentiel, string $file): array
+    public function createOneWithCsv(array $json, string $separateur, Referentiel $referentiel, ?int $position): Activite
     {
-        $info = []; $warning = []; $error = []; $activites = []; $created = []; $updated = [];
 
-        //lecture du header et dernimation
-        $handle = fopen($file, "r");
-        $header = fgetcsv($handle,null,";");
-        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
-        $header[0] = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header[0]);
+        /* CHAMPS OBLIGATOIRE *****************************************************************************************/
 
-        $positionLibelle = array_search("libellé", $header);
-        $positionDescription = array_search("description", $header);
-        $positionId = array_search("identifiant", $header);
+        if (!isset($json[Activite::ACTIVITE_HEADER_ID]) or trim($json[Activite::ACTIVITE_HEADER_ID]) === '') {
+            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_ID . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+        } else $idOrig = trim($json[Activite::ACTIVITE_HEADER_ID]);
 
-        $continue = true;
-        if ($positionId === false) {
-            $error[] = "La colonne obligatoire [identifiant] n'a pas été trouvée";
-            $continue = false;
-        }
-        if ($positionLibelle === false) {
-            $error[] = "La colonne obligatoire [libellé] n'a pas été trouvée";
-            $continue = false;
-        }
-        if ($positionDescription === false) {
-            $error[] = "La colonne facultative [description] n'a pas été trouvée";
-            $continue = false;
+        if (!isset($json[Activite::ACTIVITE_HEADER_LIBELLE]) or trim($json[Activite::ACTIVITE_HEADER_LIBELLE]) === '') {
+            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_LIBELLE . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+        } else $libelle = trim($json[Activite::ACTIVITE_HEADER_LIBELLE]);
+
+        /** RECUPERATION OR CREATION **********************************************************************************/
+
+        $activite = $this->getActiviteByReference($referentiel, $idOrig);
+        if ($activite === null) {
+            $activite = new Activite();
+            $activite->setReferentiel($referentiel);
+            $activite->setReference($idOrig);
+            $activite->setLibelle($libelle);
         }
 
-        if ($continue) {
-            while ($content = fgetcsv($handle, null, ";")) {
-                $identifiant = $content[$positionId];
-                $libelle = $content[$positionLibelle];
-                $description = ($positionDescription !== false) ? $content[$positionDescription] : null;
-                $raw = json_encode($content);
+        /** RECUPERATION DES AUTRES DONNEES ***************************************************************************/
 
-                $activite = $this->getActiviteByReference($referentiel, $identifiant);
-                if ($activite === null) {
-                    $activite = new Activite();
-                    $activite->setLibelle($libelle);
-                    $activite->setDescription($description);
-                    $activite->setIdOrig($identifiant);
-                    $activite->setReferentiel($referentiel);
-                    $activite->setRaw($raw);
-                    $created[] = $activite;
-                } else {
-                    if ($activite->getRaw() !== $raw) {
-                        $activite->setLibelle($libelle);
-                        $activite->setDescription($description);
-                        $activite->setIdOrig($identifiant);
-                        $activite->setReferentiel($referentiel);
-                        $activite->setRaw($raw);
-                        $updated[] = $activite;
-                    }
-                }
-                $activites[] = $activite;
-            }
+        if (isset($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) and trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) != '') {
+            $description = trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]);
+            $activite->setDescription($description);
+        }
+        if (isset($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) and trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) !== '') {
+            $codesFicheMetier = trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]);
+            $activite->setCodesFicheMetier($codesFicheMetier);
+        }
+        if (isset($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) and trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) !== '') {
+            $codesCodeFonction = trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]);
+            $activite->setCodesFonction($codesCodeFonction);
         }
 
-        return ['activités' => $activites, 'created' => $created, 'updated' => $updated, 'info' => $info, 'warning' => $warning, 'error' => $error];
+        $activite->setRaw(json_encode($json));
 
+        return $activite;
 
     }
 

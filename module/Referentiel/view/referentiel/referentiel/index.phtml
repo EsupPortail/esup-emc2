@@ -56,6 +56,12 @@ $this->headTitle("Référentiels");
                     <span class="missing-data">Aucune description</span><br><br>
                 <?php endif; ?>
 
+                <?php $nbActivites = count($referentiel->getActivites()); ?>
+                <?php if ($nbActivites > 0) : ?>
+                    <?php /** @see \FicheMetier\Controller\ActiviteController::indexAction()  */ ?>
+                    <a href="<?php echo $this->url('activite', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
+                        <span class="badge activite"> <?php echo $nbActivites; ?> activité·s </span></a>
+                <?php endif; ?>
                 <?php $nbMissions = count($referentiel->getMissions()); ?>
                 <?php if ($nbMissions > 0) : ?>
                     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction()  */ ?>

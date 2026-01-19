@@ -337,15 +337,20 @@ div.alert-danger .fa-exclamation-triangle {
     /*background: Green;*/
 }
 
+.badge.activite {
+    background: var(--emc2-activite);
+}
 .badge.mission {
     background: var(--emc2-mission);
 }
 .badge.competence {
     background: var(--emc2-competence);
 }
-
 .badge.fichemetier {
     background: var(--emc2-fichemetier);
+}
+.badge.ficheposte {
+    background: var(--emc2-ficheposte);
 }
 
 ul.dropdown-menu {

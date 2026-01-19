@@ -13,7 +13,6 @@ class MissionPrincipaleHydrator implements HydratorInterface
 {
 
     use FamilleProfessionnelleServiceAwareTrait;
-    use MissionActiviteServiceAwareTrait;
     use NiveauServiceAwareTrait;
 
 
@@ -22,7 +21,6 @@ class MissionPrincipaleHydrator implements HydratorInterface
         /** @var Mission $object */
         $data = [
             'libelle' => $object->getLibelle(),
-            'activites' => $object->getActivitesAsList(),
             'familleprofessionnelle' => $object->getFamillesProfessionnellesIds(),
             'borne_inferieure' => $object->getNiveau()?->getBorneInferieure()?->getId(),
             'borne_superieure' => $object->getNiveau()?->getBorneSuperieure()?->getId(),
@@ -33,19 +31,12 @@ class MissionPrincipaleHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         $libelle = (isset($data['libelle']) and trim($data['libelle']) != '') ? trim($data['libelle']) : null;
-        $activitesAsList = (isset($data['activites'])) ? $data['activites'] : [];
         $familleProfessionnelleIds = (isset($data['familleprofessionnelle'])) ? $data['familleprofessionnelle'] : [];
         $borneInferieure = (isset($data['borne_inferieure']) and $data['borne_inferieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_inferieure']) : null;
         $borneSuperieure = (isset($data['borne_superieure']) and $data['borne_superieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_superieure']) : null;
 
 
         /** @var Mission $object * */
-        //traitement des activites
-        $missions = $this->getMissionActiviteService()->transforms($object, $activitesAsList);
-        $object->clearActivites();
-        foreach ($missions as $missionActivite) {
-            $object->addMissionActivite($missionActivite);
-        }
         //traitement des familles professionnelles
         $object->clearFamillesProfessionnelles();
         foreach ($familleProfessionnelleIds as $familleProfessionnelleId) {

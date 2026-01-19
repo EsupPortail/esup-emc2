@@ -486,7 +486,8 @@ class MissionPrincipaleController extends AbstractActionController
                 $array = $this->readCSV($filepath, true, $separateur);
                 if (empty($array)) {
                     $warning[] = "Le fichier ne contient pas de données.";
-                } else {
+                } else
+                {
 
                     // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////////
                     $header = [];

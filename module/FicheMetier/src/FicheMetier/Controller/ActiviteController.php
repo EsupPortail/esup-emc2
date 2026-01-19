@@ -3,26 +3,40 @@
 namespace FicheMetier\Controller;
 
 use DateTime;
+use Exception;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Form\Activite\ActiviteFormAwareTrait;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
+use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
+use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
+use RuntimeException;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class ActiviteController extends AbstractActionController
 {
     use ActiviteServiceAwareTrait;
+    use ActiviteElementServiceAwareTrait;
+    use CodeFonctionServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ActiviteFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
-        $activites = $this->getActiviteService()->getActivites(true);
+        $params = $this->params()->fromQuery();
+        $activites = $this->getActiviteService()->getActivitesWithFiltre($params);
 
         return new ViewModel([
             'activites' => $activites,
+            'referentiels' => $this->getReferentielService()->getReferentiels(),
+            'params' => $params,
         ]);
     }
 
@@ -134,88 +148,214 @@ class ActiviteController extends AbstractActionController
     public function importerAction(): ViewModel
     {
 
-//        $form = $this->getImportationForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/importer', ['path' => null], [], true));
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
 
-        $activites = [];
-        $info = [];
-        $warning = [];
-        $error = [];
-
+        $separateur = "|";
         $request = $this->getRequest();
-        if ($request->isPost()) {
-            $continue = true;
-            $referentiel = null;
 
+        $data = null;
+        $activites = [];
+        $error = [];
+        $warning = [];
+        $info = [];
+
+        $filename = null;
+        $filepath = null;
+
+        if ($request->isPost()) {
             $data = $request->getPost();
-            if (isset($data['referentiel']) and $data['referentiel'] !== '') {
-                $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
-            }
-            if ($referentiel === null) {
-                $error[] = "Référentiel non trouvé";
-                $continue = false;
-            }
             $files = $request->getFiles()->toArray();
             $file = !empty($files) ? current($files) : null;
 
-            if ($file['size'] === 0 and $data['filepath'] === "") {
-                $error[] = "Fichier non trouvé";
-                $continue = false;
+            $filename = $data['filename'] ?? null;
+            $filepath = $data['filepath'] ?? null;
+
+            if (($file === null or $file['tmp_name'] === "") and $filepath === null) {
+                $error[] = "Aucun fichier fourni";
             } else {
-                if ($file['size'] !== 0) {
-                    $filepath = '/tmp/import_activites_' . (new DateTime())->getTimestamp() . '.csv';
+                if ($filepath === null) {
+                    $filepath = '/tmp/import_activite_' . (new DateTime())->getTimestamp() . '.csv';
+                    $filename = $file['name'];
                     copy($file['tmp_name'], $filepath);
-//                    $form->get('filepath')->setValue($filepath);
-//                    $form->get('filename')->setValue($file['name']);
-                    $data['filepath'] = $filepath;
-                    $data['filename'] = $file['name'];
-                } else {
-                    $file['tmp_name'] = $data['filepath'];
-//                    $form->get('filepath')->setValue($data['filepath']);
                 }
             }
+            if ($data['referentiel'] === '') {
+                $error[] = "Aucun référentiel sélectionné";
+            }
 
-            if ($continue) {
+            if ($data['mode'] and $data['referentiel'] !== '' and $filepath) {
+                $mode = $data['mode'];
+                if (!in_array($mode, ['preview', 'import'])) {
+                    $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
+                }
 
-                $result = $this->getActiviteService()->readFromCsv($referentiel, $file['tmp_name']);
-                $activites = $result['activités'];
-                $created = $result['created'];
-                $updated = $result['updated'];
-                $info = array_merge($info, $result['info']);
-                $warning = array_merge($warning, $result['warning']);
-                $error = array_merge($error, $result['error']);
-                $info[] = count($activites) . " activité·s lue·s depuis le fichier CSV";
+                $array = $this->readCSV($filepath, true, ",");
+                if (empty($array)) {
+                    $warning[] = "Le fichier ne contient pas de données.";
+                } else {
 
-
-                if (isset($data['mode']) and $data['mode'] === 'import') {
-                    $nbCreated = 0;
-                    $nbUpdated = 0;
-                    foreach ($created as $activite) {
-                        $this->getActiviteService()->create($activite);
-                        $nbCreated++;
+                    // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////
+                    $header = [];
+                    foreach ($array[0] as $key => $value) {
+                        $header[] = $key;
                     }
-                    if ($nbCreated !== 0) $info[] = $nbCreated . " activité·s crée·s";
-                    foreach ($updated as $activite) {
-                        $this->getActiviteService()->update($activite);
-                        $nbUpdated++;
+                    $hasId = in_array(Activite::ACTIVITE_HEADER_ID, $header);
+                    if (!$hasId) $error[] = "La colonne obligatoire [" . Activite::ACTIVITE_HEADER_ID . "] est manquante";
+                    $hasLibelle = in_array(Activite::ACTIVITE_HEADER_LIBELLE, $header);
+                    if (!$hasLibelle) $error[] = "La colonne obligatoire [" . Activite::ACTIVITE_HEADER_LIBELLE . "] est manquante";
+                    $hasDescription = in_array(Activite::ACTIVITE_HEADER_DESCRIPTION, $header);
+                    if (!$hasDescription) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_DESCRIPTION . "] est manquante";
+                    $hasCodesFichesMetiers = in_array(Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE, $header);
+                    if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE . "] est manquante";
+                    $hasCodesFonctions = in_array(Activite::ACTIVITE_HEADER_CODES_FONCTION, $header);
+                    if (!$hasCodesFonctions and $displayCodeFonction) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_CODES_FONCTION . "] est manquante";
+
+                    $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
+                    if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
+
+
+                    if ($hasId and $hasLibelle and $referentiel !== null) {
+                        $position = 1;
+
+                        // Lecture des données /////////////////////////////////////////////////////////////////////////////
+
+                        foreach ($array as $row) {
+                            $position++;
+                            try {
+                                $activite = $this->getActiviteService()->createOneWithCsv($row, $separateur, $referentiel, $position);
+                                $activites[] = $activite;
+                            } catch (Exception $e) {
+                                throw new RuntimeException("Un problème est survenue lors de la lecture du fichier CSV", 0, $e);
+                            }
+                        }
+
+                        //  Importation ////////////////////////////////////////////////////////////////////////////////
+                        if ($mode === 'import') {
+
+                            foreach ($activites as $activite) {
+
+                                // Entity Management ///////////////////////////////////////////////////////////////////
+                                if ($activite->getId() === null) {
+                                    $this->getActiviteService()->create($activite);
+                                } else {
+                                    $this->getActiviteService()->update($activite);
+                                }
+
+
+                                // TODO Factoriser  ////////////////////////////////////////////////////////////////////
+                                // Gestion des codes emploi type ///////////////////////////////////////////////////////
+                                $codesFicheMetier = explode($separateur, $activite->getCodesFicheMetier() ?? "");
+                                $codesFicheMetier = array_map('trim', $codesFicheMetier);
+                                $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) {
+                                    return $a !== '';
+                                });
+                                foreach ($codesFicheMetier as $codeFicheMetier) {
+                                    $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
+                                    if ($fichemetier === null) {
+                                        $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$activite->getCodesFicheMetier() . "</span> n&apos;existe pas";
+                                    } else {
+                                        if (!$fichemetier->hasActivite($activite)) {
+                                            $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
+                                            $info[] = "Ajout de l'activité " . $activite->printReference() . " à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                        }
+                                    }
+                                }
+
+                                // TODO Factoriser  ////////////////////////////////////////////////////////////////////
+                                // Gestion des codes fonction //////////////////////////////////////////////////////////
+                                $codesFonction = explode('|', $activite->getCodesFonction() ?? "");
+                                $codesFonction = array_map('trim', $codesFonction);
+                                $codesFonction = array_filter($codesFonction, function (string $a) {
+                                    return $a !== '';
+                                });
+                                foreach ($codesFonction as $codeFonction) {
+                                    $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
+                                    if ($codeFonction_ === null) {
+                                        $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale " . $activite->printReference() . " ne sera ajoutée à aucune fiche métier.";
+                                    } else {
+                                        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
+                                        if (empty($fichesmetiers)) {
+                                            $warning[] = "Aucune fiche métier utilise le code fonction <code>" . $codeFonction . "</code> ; l'activité ne sera ajoutée à aucune fiche métier.";
+                                        }
+                                        foreach ($fichesmetiers as $fichemetier) {
+                                            if (!$fichemetier->hasActivite($activite)) {
+                                                $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
+                                                $info[] = "Ajout de la mission [" . $activite->getReference() . "] à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                            }
+                                        }
+                                    }
+                                }
+                                //traitement des codes ...
+                            }
+
+                        }
                     }
-                    if ($nbUpdated !== 0) $info[] = $nbUpdated . " activité·s mise·s à jour";
                 }
             }
         }
 
         return new ViewModel([
-            'data' => $data ?? null,
-            'file' => $file ?? null,
+            'separateur' => $separateur,
+            'displayCodeFonction' => $displayCodeFonction,
+
             'activites' => $activites,
             'info' => $info,
             'warning' => $warning,
             'error' => $error,
+
+            'referentiels' => $this->getReferentielService()->getReferentiels(),
+            'data' => $data,
+            'filepath' => $filepath,
+            'filename' => $filename,
         ]);
+
+
+
     }
 
-    //todo fonction de recherche
-    // public function rechercherAction(): Json {}
+
+    public function readCSV(string $fichier_path, bool $explodeMultiline = false, string $separator = '|'): array
+    {
+        $handle = fopen($fichier_path, "r");
+
+        $header = fgetcsv($handle, null, ";");
+        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+        $header[0] = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header[0]);
+        $header = array_map('trim', $header);
+
+        $array = [];
+        while ($content = fgetcsv($handle, 0, ";")) {
+            $all = implode($separator, $content);
+            $encoding = mb_detect_encoding($all, 'UTF-8, ISO-8859-1');
+            $content = array_map(function (string $st) use ($encoding) {
+                $st = str_replace(chr(63), '\'', $st);
+                $st = mb_convert_encoding($st, 'UTF-8', $encoding);
+                return $st;
+            }, $content);
+            $array[] = $content;
+        }
+
+        $jsonData = [];
+        foreach ($array as $item) {
+            $jsonItem = [];
+            for ($position = 0; $position < count($header); $position++) {
+                $key = $header[$position];
+                if ($explodeMultiline) {
+                    if (strstr($item[$position], PHP_EOL)) {
+                        $jsonItem[$key] = explode(PHP_EOL, $item[$position]);
+                    } else {
+                        $jsonItem[$key] = $item[$position];
+                    }
+                } else {
+                    $jsonItem[$key] = $item[$position];
+                }
+            }
+            $jsonData[] = $jsonItem;
+        }
+
+        return $jsonData;
+    }
+
 
 
 }

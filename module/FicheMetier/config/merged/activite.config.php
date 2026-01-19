@@ -11,6 +11,8 @@ use FicheMetier\Form\Activite\ActiviteHydratorFactory;
 use FicheMetier\Provider\Privilege\ActivitePrivileges;
 use FicheMetier\Service\Activite\ActiviteService;
 use FicheMetier\Service\Activite\ActiviteServiceFactory;
+use FicheMetier\Service\ActiviteElement\ActiviteElementService;
+use FicheMetier\Service\ActiviteElement\ActiviteElementServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -226,6 +228,7 @@ return [
     'service_manager' => [
         'factories' => [
             ActiviteService::class => ActiviteServiceFactory::class,
+            ActiviteElementService::class => ActiviteElementServiceFactory::class,
         ],
     ],
     'controllers' => [

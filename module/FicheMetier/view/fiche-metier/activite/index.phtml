@@ -2,10 +2,12 @@
 
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Provider\Privilege\ActivitePrivileges;
+use Referentiel\Entity\Db\Referentiel;
 
 /**
  * @see \FicheMetier\Controller\ActiviteController::indexAction()
  * @var Activite[] $activites
+ * @var Referentiel[] $referentiels
  */
 
 $this->headTitle("Activités");
@@ -22,6 +24,57 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
 <h1 class="page-header">
     Activités
 </h1>
+
+
+<!-- Filtre ----------------------------------------------------------------------------------------------------------->
+<div class="card">
+    <div class="card-header bg-default">
+        <span class="icon icon-filtrer"></span>
+        Filtre de recherche des missions principales
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url('activite', [], [], true); ?>">
+            <div class="row">
+                <div class="col-md-10">
+                    <!-- fitres -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="referentiel">Référentiel :</label>
+                            <select id="referentiel" name="referentiel" class="form-control selectpicker" data-live-search="true">
+                                <option value="">Peu importe</option>
+                                <?php foreach ($referentiels as $referentiel) : ?>
+                                    <option value="<?php echo $referentiel->getId(); ?>" data-content="<?php echo $referentiel->printLabel(); ?>"
+                                            <?php if (isset($params['referentiel']) AND $params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
+                                    >
+                                        <?php echo $referentiel->getLibelleLong(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="histo">Historisation :</label>
+                            <select id="histo" name="histo" class="form-control selectpicker">
+                                <option value="">Peu importe</option>
+                                <option value="0" <?php if (isset($params['histo']) AND $params['histo'] == 0) echo 'selected'; ?>>Non historisée</option>
+                                <option value="1" <?php if (isset($params['histo']) AND $params['histo'] == 1) echo 'selected'; ?>>Historisée</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        Remise à zéro
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <?php if ($canActiviteAjouter) : ?>
     <?php /** @see \FicheMetier\Controller\ActiviteController::ajouterAction() */ ?>
@@ -47,8 +100,7 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
         <tr>
             <th class="col-md-6"> Libellé </th>
             <th class="col-md-2"> Référence </th>
-            <th class="col-md-1"> #Missions </th>
-            <th class="col-md-1"> #Fiches métiers </th>
+            <th class="col-md-2"> #Fiches métiers </th>
             <th class="action col-md-2"> Action </th>
         </tr>
     </thead>
@@ -62,13 +114,8 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
                 <?php endif; ?>
             </td>
             <td data-column-id="Référence">
-                <span class="badge">
-                <?php echo $activite->getReferentiel()?$activite->getReferentiel()->getLibelleCourt():"Aucun référentiel"; ?>
-                -
-                <?php echo $activite->getIdOrig()??"Aucun identifiant"; ?>
-                </span>
+                <?php echo $activite->printReference(); ?>
             </td>
-            <td data-column-id="#Missions"> TODO </td>
             <td data-column-id="#Fiches métiers"> TODO </td>
             <td data-column-id="Action" class="action">
                 <?php if ($canActiviteAfficher) : ?>
@@ -140,5 +187,10 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
             event.div.modal('hide');
             window.location.reload();
         });
+    });
+
+    $('button#clear').click(function(e) {
+        e.preventDefault();
+        window.location.href = '?';
     });
 </script>

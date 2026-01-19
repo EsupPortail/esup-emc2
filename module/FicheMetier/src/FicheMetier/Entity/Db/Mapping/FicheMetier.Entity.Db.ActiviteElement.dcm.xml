@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping>
-    <entity name="FicheMetier\Entity\Db\Activite" table="activite">
+    <entity name="FicheMetier\Entity\Db\ActiviteElement" table="activite_element">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"       length="1024"   column="libelle"/>
-        <field name="description"   type="text"     column="description"/>
-        <field name="codesFicheMetier" type="text" column="codes_fiche_metier"/>
-        <field name="codesFonction" type="text" column="codes_fonction"/>
-
-        <field name="raw"           type="text"     column="raw"/>
-
-        <!-- HAS REFERENCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <many-to-one target-entity="Referentiel\Entity\Db\Referentiel"  field="referentiel">
-            <join-column name="referentiel_id" referenced-column-name="id"/>
+        <many-to-one target-entity="FicheMetier\Entity\Db\Activite" field="activite">
+            <join-column name="activite_id" referenced-column-name="ID"/>
         </many-to-one>
-        <field name="reference" length="256" column="reference"/>
+        <field name="description"           type="text"         column="description"/>
+        <field name="position"              type="integer"      column="position"/>
 
         <!-- Historisation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation" type="datetime" column="histo_creation" nullable="false"/>

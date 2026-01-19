@@ -15,7 +15,9 @@ use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Carriere\Entity\Db\FamilleProfessionnelle;
+use FicheMetier\Entity\Db\Interface\HasActivitesInterface;
 use FicheMetier\Entity\Db\Interface\HasMissionsPrincipalesInterface;
+use FicheMetier\Entity\Db\Trait\HasActivitesTrait;
 use FicheMetier\Entity\Db\Trait\HasMissionsPrincipalesTrait;
 use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
 use Referentiel\Entity\Db\Referentiel;
@@ -26,15 +28,17 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheMetier implements
-    HistoriqueAwareInterface, HasEtatsInterface, HasMissionsPrincipalesInterface, HasNiveauCarriereInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasReferenceInterface
+    HistoriqueAwareInterface, HasEtatsInterface, HasNiveauCarriereInterface,
+    HasActivitesInterface, HasMissionsPrincipalesInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface,
+    HasReferenceInterface
 {
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
     use HasNiveauCarriereTrait;
-    use HasApplicationCollectionTrait;
-    use HasCompetenceCollectionTrait;
-    use HasMissionsPrincipalesTrait;
+    use HasActivitesTrait, HasMissionsPrincipalesTrait;
+    use HasApplicationCollectionTrait, HasCompetenceCollectionTrait;
+
     use HasReferenceTrait;
 
     private ?int $id = null;
@@ -46,7 +50,6 @@ class FicheMetier implements
     public ?string $lienWeb = null;
     public ?string $lienPdf = null;
 
-    private Collection $activites;
     private Collection $tendances;
     private Collection $thematiques;
 
@@ -175,12 +178,12 @@ class FicheMetier implements
     public function getActivitesFromFicheMetierAsText(): string
     {
         $texte = '<ul>';
-        $missions = $this->getMissions();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
-            return $a->getOrdre() <=> $b->getOrdre();
+        $activites = $this->getActivites();
+        usort($activites, function (ActiviteElement $a, ActiviteElement $b) {
+            return $a->getPosition() <=> $b->getPosition();
         });
-        foreach ($missions as $activite) {
-            $texte .= '<li>' . $activite->getMission()->getLibelle() . '</li>';
+        foreach ($activites as $activite) {
+            $texte .= '<li>' . $activite->getActivite()->getLibelle() . '</li>';
         }
         $texte .= '</ul>';
         return $texte;
