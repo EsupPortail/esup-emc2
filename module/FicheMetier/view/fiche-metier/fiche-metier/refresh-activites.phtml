@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::refreshActivitesAction()
+ * @var FicheMetier $fichemetier
+ * @var ActiviteElement[] $activites
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\ActiviteElement;
+use FicheMetier\Entity\Db\FicheMetier;
+
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
+
+?>
+
+<?php if (empty($activites)): ?>
+    <span class="missing-data"> Aucune activité </span>
+<?php else : ?>
+    <ul>
+        <?php foreach ($activites as $activite): ?>
+            <li><?php echo $activite->getActivite()->getLibelle() ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

@@ -40,6 +40,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                        'refresh-activites',
                         'refresh-applications',
                         'refresh-competences',
                         'refresh-missions',
@@ -119,6 +120,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'gerer-missions-principales',
+                        'gerer-activites',
                         'gerer-applications',
                         'gerer-competences',
                         'gerer-competences-specifiques',
@@ -393,6 +395,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::gererMissionsPrincipalesAction() */
                                 'action'     => 'gerer-missions-principales',
+                            ],
+                        ],
+                    ],
+                    'refresh-activites' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refresh-activites/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshActivitesAction() */
+                                'action'     => 'refresh-activites',
                             ],
                         ],
                     ],

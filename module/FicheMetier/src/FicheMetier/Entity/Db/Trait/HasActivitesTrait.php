@@ -12,9 +12,20 @@ trait HasActivitesTrait
     private Collection $activites;
 
     /** @return ActiviteElement[] */
-    public function getActivites(): array
+    public function getActivites(bool $withHisto = false): array
     {
-        return $this->activites->toArray();
+        $activites = $this->activites->toArray();
+        if (!$withHisto) {
+            $missions = array_filter($activites, function (ActiviteElement $element) {
+                return $element->estNonHistorise() AND $element->getActivite()->estNonHistorise();
+            });
+        }
+
+        usort($activites, function (ActiviteElement $a, ActiviteElement $b) {
+           if ($a->getPosition() !== $b->getPosition()) { return $a->getPosition() <=> $b->getPosition(); }
+           return $a->getActivite()->getLibelle() <=> $b->getActivite()->getLibelle();
+        });
+        return $activites;
     }
 
     public function addActivite(ActiviteElement $element): void

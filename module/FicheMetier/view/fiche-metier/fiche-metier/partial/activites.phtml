@@ -23,7 +23,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
                             <?php /** @see FicheMetierController::gererActivitesAction() */ ?>
                             <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
                                data-event="refresh-activites"
-                               href="<?php echo $this->url('fiche-metier/gerer-activites', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
+                               href="<?php //echo $this->url('fiche-metier/gerer-activites', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
                                 <span class="icon icon-listing"></span>
                                 Gérer les activités
                             </a>

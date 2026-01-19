@@ -8,7 +8,7 @@ use FicheMetier\Entity\Db\Mission;
 interface HasMissionsPrincipalesInterface
 {
     /** @return FicheMetierMission[] */
-    public function getMissions(): array;
+    public function getMissions(bool $withHisto = false): array;
     public function addMission(FicheMetierMission $ficheMetierMission): void;
     public function removeMission(FicheMetierMission $ficheMetierMission): void;
     public function clearMissions(): void;

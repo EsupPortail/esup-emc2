@@ -11,9 +11,15 @@ trait HasMissionsPrincipalesTrait
     private Collection $missions;
 
     /** @return FicheMetierMission[] */
-    public function getMissions(): array
+    public function getMissions(bool $withHisto = false): array
     {
-        return $this->missions->toArray();
+        $missions =  $this->missions->toArray();
+        if (!$withHisto) {
+            $missions = array_filter($missions, function (FicheMetierMission $mission) {
+                return $mission->getMission()->estNonHistorise();
+            });
+        }
+        return $missions;
     }
 
     public function addMission(FicheMetierMission $ficheMetierMission): void

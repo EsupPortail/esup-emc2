@@ -95,6 +95,7 @@ class FicheMetierController extends AbstractActionController
             return $this->redirect()->toRoute('fiche-metier', [], [], true);
         }
         $missions = $fichemetier->getMissions();
+        $activites = $fichemetier->getActivites();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
         $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
@@ -110,6 +111,7 @@ class FicheMetierController extends AbstractActionController
             'fiche' => $fichemetier,
             'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'missions' => $missions,
+            'activites' => $activites,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
@@ -165,6 +167,7 @@ class FicheMetierController extends AbstractActionController
             return $this->redirect()->toRoute('fiche-metier/ajouter', [], [], true);
         }
         $missions = $fichemetier->getMissions();
+        $activites = $fichemetier->getActivites();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
         $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
@@ -178,6 +181,7 @@ class FicheMetierController extends AbstractActionController
             'fiche' => $fichemetier,
             'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'missions' => $missions,
+            'activites' => $activites,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
@@ -702,6 +706,22 @@ EOS;
             'mode' => $mode,
         ]);
         $vm->setTemplate('fiche-metier/refresh-missions');
+        return $vm;
+    }
+
+    public function refreshActivitesAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        // TODO via le services ???
+        $activites = $fichemetier->getActivites();
+        $mode = $this->params()->fromRoute('mode');
+
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'activites' => $activites,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/refresh-activites');
         return $vm;
     }
 
