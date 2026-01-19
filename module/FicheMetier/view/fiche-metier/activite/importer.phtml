@@ -114,9 +114,18 @@ $this->headTitle("Importation d'activité");
 
             <u>Remarques :</u>
             <ul>
-                <li>Les entêtes des colonnes doivent respecter strictement les libellés ci-dessous.</li>
+                <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
                 <li>Les colonnes obligatoires sont désignées par <span class="icon icon-obligatoire"></span>.</li>
+                <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
+                <li>Le séparateur dans les listes est <code><?php echo $separateur; ?></code>.</li>
+                <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong>.</li>
             </ul>
+
+            <?php if ($displayCodeFonction) : ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_activites_codefonction.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import des activités</a>
+            <?php else: ?>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_activites.csv"><span class="icon icon-csv"></span>Télécharger la trame d'import des activités</a>
+            <?php endif; ?>
         </div>
     </div>
 </div>
