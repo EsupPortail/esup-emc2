@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @var ActiviteElement[] $activites
+ * @var FicheMetier $fichemetier
+ * @var string $mode
+ */
+
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Entity\Db\ActiviteElement;
+use FicheMetier\Entity\Db\FicheMetier;
+
+$canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+?>
+
+<div class="card info">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6"><h2> Activités </h2></div>
+            <div class="col-md-6">
+                <div class="float-end">
+                    <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
+                            <?php /** @see FicheMetierController::gererActivitesAction() */ ?>
+                            <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-activites"
+                               href="<?php echo $this->url('fiche-metier/gerer-activites', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
+                                <span class="icon icon-listing"></span>
+                                Gérer les activités
+                            </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:rgb(80,80,80);" id="activites_view">
+        Chargement des activités
+    </div>
+</div>
+
+<script>
+    //$(document).on('click', 'span.refresh-move', function() {
+    //    $("#missions_view").addClass('refreshing');
+    //    let fichemetier = $(this).data('fichemetier');
+    //    let mission = $(this).data('mission');
+    //    let direction = $(this).data('direction');
+    //    <?php ///** @see FicheMetierController::deplacerMissionAction() */ ?>
+    //    let url = "<?php //echo $this->url('fiche-metier/deplacer-mission', [], [], true); ?>//" + "/" + fichemetier + "/" + mission + "/" + direction;
+    //    console.log("toggleing deplacement " + fichemetier + " " + mission + " " + direction +" ")
+    //    $.ajax({
+    //        type: "POST",
+    //        url: url,
+    //        success:
+    //            function () {
+    //                refreshMissions()
+    //            }
+    //    });
+    //});
+</script>
