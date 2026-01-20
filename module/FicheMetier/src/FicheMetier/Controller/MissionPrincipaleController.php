@@ -14,7 +14,6 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Exception;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
@@ -128,7 +127,6 @@ class MissionPrincipaleController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-            $previousActivites = $mission->getActivites();
 
             if ($form->isValid()) {
                 $niveau = $mission->getNiveau();
@@ -436,7 +434,7 @@ class MissionPrincipaleController extends AbstractActionController
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                 if ($fichemetier === null) {
-                                    $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$mission->getCodesFicheMetier() . "</span> n'existe pas";
+                                    $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$mission->getCodesFicheMetier() . "</span> n&apos;existe pas";
                                 } else {
                                     if (!$fichemetier->hasMission($mission)) {
                                         $this->getFicheMetierService()->addMission($fichemetier, $mission);

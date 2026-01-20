@@ -10,7 +10,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
@@ -19,8 +18,6 @@ class MissionPrincipaleService
 {
     use ProvidesObjectManager;
     use FamilleProfessionnelleServiceAwareTrait;
-
-//    use FicheMetierServiceAwareTrait;
     use NiveauServiceAwareTrait;
 
     /** GESTION DES ENTITES  ******************************************************************************************/

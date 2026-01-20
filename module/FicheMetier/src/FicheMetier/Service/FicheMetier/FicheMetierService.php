@@ -562,6 +562,7 @@ class FicheMetierService
             'DISPLAY_CODEFONCTION' => $displayCode,
             'DISPLAY_RAISON' => $displayRaison,
             'DISPLAY_MISSION' => $displayMission,
+            'DISPLAY_ACTIVITE' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_ACTIVITE),
             'DISPLAY_APPLICATION' => $displayApplications,
             'DISPLAY_COMPETENCE' => $displayCompetences,
             'DISPLAY_COMPETENCE_SPECIFIQUE' => $displayCompetencesSpecifiques,

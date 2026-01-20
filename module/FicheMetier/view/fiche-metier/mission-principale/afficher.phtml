@@ -2,6 +2,7 @@
 
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 
 /**
@@ -14,6 +15,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
  * @var ?string $retour
  */
 
+$canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 
 ?>
 
@@ -110,15 +112,17 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
                     <?php else : ?>
                         <span class="text-danger"> Aucun libellé ou métier d'associé à la fiche métier #<?php echo $ficheId; ?></span>
                     <?php endif; ?>
-                    <small>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getFicheMetier()->getId()], ['force_canonical' => true], true); ?>"
-                           class="action secondary" target="_blank"
-                        >
-                            <span class="icon icon-voir"></span>
-                            Afficher
-                        </a>
-                    </small>
+                    <?php if ($canAfficherFicheMetier) : //todo ajouter le check de l'assertion ?>
+                        <small>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getFicheMetier()->getId()], ['force_canonical' => true], true); ?>"
+                               class="action secondary" target="_blank"
+                            >
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                        </small>
+                    <?php endif; ?>
                 </li>
             <?php endforeach; ?>
         </ul>

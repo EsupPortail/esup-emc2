@@ -228,15 +228,15 @@ class ImportController extends AbstractActionController
 
                     foreach ($missions as $mission) {
                         if ($mission->getId() === null) $this->getFicheMetierMissionService()->deepCreate($mission);
-                        else {
-                            foreach ($mission->getMission()->getActivites() as $activite) {
-                                if ($activite->getId() === null) $this->getMissionActiviteService()->create($activite);
-                                else {
-                                    if ($activite->getOrdre() === -1) $this->getMissionActiviteService()->delete($activite);
-                                    else $this->getMissionActiviteService()->update($activite);
-                                }
-                            }
-                        }
+//                        else {
+//                            foreach ($mission->getMission()->getActivites() as $activite) {
+//                                if ($activite->getId() === null) $this->getMissionActiviteService()->create($activite);
+//                                else {
+//                                    if ($activite->getOrdre() === -1) $this->getMissionActiviteService()->delete($activite);
+//                                    else $this->getMissionActiviteService()->update($activite);
+//                                }
+//                            }
+//                        }
                         $fiche->addMission($mission);
                     }
 

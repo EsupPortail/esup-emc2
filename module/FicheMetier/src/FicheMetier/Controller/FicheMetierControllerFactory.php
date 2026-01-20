@@ -11,7 +11,9 @@ use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesForm;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
+use FicheMetier\Service\ActiviteElement\ActiviteElementService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
@@ -40,6 +42,7 @@ class FicheMetierControllerFactory
     public function __invoke(ContainerInterface $container): FicheMetierController
     {
         /**
+         * @var ActiviteElementService $activiteElementService
          * @var AgentService $agentService
          * @var CodeFonctionService $codeFonctionService
          * @var CompetenceTypeService $competenceTypeService
@@ -55,6 +58,7 @@ class FicheMetierControllerFactory
          * @var ThematiqueElementService $thematiqueElementService
          * @var ThematiqueTypeService $thematiqueTypeService
          */
+        $activiteElementService = $container->get(ActiviteElementService::class);
         $agentService = $container->get(AgentService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
@@ -77,11 +81,13 @@ class FicheMetierControllerFactory
          * @var SelectionApplicationForm $selectionnerApplicationForm
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
          * @var SelectionEtatForm $selectionnerEtatForm
+         * @var SelectionnerActivitesForm $selectionnerActivitesForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
          * @var SelectionnerNiveauCarriereForm $selectionnerNiveauCarriereForm
          */
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
+        $selectionnerActivitesForm = $container->get('FormElementManager')->get(SelectionnerActivitesForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
@@ -90,6 +96,7 @@ class FicheMetierControllerFactory
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
         $controller = new FicheMetierController();
+        $controller->setActiviteElementService($activiteElementService);
         $controller->setAgentService($agentService);
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceTypeService($competenceTypeService);
@@ -107,6 +114,7 @@ class FicheMetierControllerFactory
         $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setRaisonForm($raisonForm);
+        $controller->setSelectionnerActivitesForm($selectionnerActivitesForm);
         $controller->setSelectionApplicationForm($selectionnerApplicationForm);
         $controller->setSelectionCompetenceForm($selectionnerCompetenceForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);

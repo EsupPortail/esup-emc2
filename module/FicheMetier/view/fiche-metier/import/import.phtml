@@ -221,21 +221,6 @@ $formats = [
     <?php if ($fiche->getFamilleProfessionnelle()) echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
     <?php if ($fiche->getFamilleProfessionnelle()?->getCorrespondance()) echo $fiche->getFamilleProfessionnelle()->getCorrespondance()->getLibelleLong(); ?>
 
-    <?php foreach ($fiche->getMissions() as $mission) : ?>
-        <div class="card">
-            <div class="card-header bg-default"> <?php echo $mission->getMission()->getLibelle(); ?> </div>
-            <div class="card-body">
-                <ul>
-                    <?php foreach ($mission->getMission()->getActivites() as $activite) : ?>
-                        <?php if ($activite->getOrdre() !== -1) : ?>
-                            <li> <?php echo $activite->getLibelle(); ?> </li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
-    <?php endforeach; ?>
-
     <?php
     $competences = $fiche->getCompetenceCollection();
     $dictionnaires = [];

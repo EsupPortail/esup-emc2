@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
@@ -285,33 +284,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function clearApplicationsRetirees()
     {
         $this->applicationsRetirees->clear();
-    }
-
-    /** Fonctions pour simplifier  */
-
-    /* @return MissionActivite[] */
-    public function getDescriptions(FicheMetierMission $mission): array
-    {
-        $dictionnaire = $mission->getMission()->getActivites();
-        return $dictionnaire;
-    }
-
-    /** @return MissionActivite[] */
-    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission): array
-    {
-        $activites = $ficheMetierMission->getMission()->getActivites();
-        $dictionnaire = [];
-        foreach ($activites as $activite) {
-            $found = false;
-            foreach ($this->getDescriptionsRetirees() as $retiree) {
-                if ($retiree->estNonHistorise() and $retiree->getActivite() === $activite) {
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) $dictionnaire[$activite->getId()] = $activite;
-        }
-        return $dictionnaire;
     }
 
     public function isComplete(): bool

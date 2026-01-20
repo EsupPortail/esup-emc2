@@ -85,7 +85,7 @@ class SpecificiteController extends AbstractActionController
     {
         $missionadditionnelle = $this->getMissionAdditionnelleService()->getRequestedMissionAdditionnelle($this, 'specificite-activite');
 
-        $descriptions = $missionadditionnelle->getMission()->getActivites();
+        $descriptions = [];
         $descriptions = array_filter($descriptions, function ($a) {
             return $a->estNonHistorise();
         });

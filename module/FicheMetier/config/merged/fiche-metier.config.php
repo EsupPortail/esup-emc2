@@ -85,7 +85,6 @@ return [
                     'action' => [
                         'modifier',
                         'modifier-libelle',
-                        'reinitialiser-libelle',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -121,6 +120,8 @@ return [
                     'action' => [
                         'gerer-missions-principales',
                         'gerer-activites',
+                        'retirer-activite',
+
                         'gerer-applications',
                         'gerer-competences',
                         'gerer-competences-specifiques',
@@ -214,16 +215,6 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::modifierLibelleAction() */
                                 'action'     => 'modifier-libelle',
-                            ],
-                        ],
-                    ],
-                    'reinitialiser-libelle' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/reinitialiser-libelle/:fiche-metier',
-                            'defaults' => [
-                                /** @see FicheMetierController::reinitialiserLibelleAction() */
-                                'action'     => 'reinitialiser-libelle',
                             ],
                         ],
                     ],
@@ -355,6 +346,26 @@ return [
                                 /** @see FicheMetierController::deplacerMissionAction() */
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'deplacer-mission',
+                            ],
+                        ],
+                    ],
+                    'gerer-activites' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-activites/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::gererActivitesAction() */
+                                'action'     => 'gerer-activites',
+                            ],
+                        ],
+                    ],
+                    'retirer-activite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-activite/:fiche-metier/:activite-element',
+                            'defaults' => [
+                                /** @see FicheMetierController::retirerActiviteAction() */
+                                'action'     => 'retirer-activite'
                             ],
                         ],
                     ],

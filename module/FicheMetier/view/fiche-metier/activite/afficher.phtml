@@ -2,6 +2,7 @@
 
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 
 /**
  * @see \FicheMetier\Controller\ActiviteController::afficherAction()
@@ -9,6 +10,7 @@ use FicheMetier\Entity\Db\FicheMetier;
  * @var FicheMetier[] $fichesmetiers
  */
 
+$canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 ?>
 
 <div class="row">
@@ -38,7 +40,19 @@ use FicheMetier\Entity\Db\FicheMetier;
 <?php else: ?>
     <ul>
         <?php foreach ($fichesmetiers as $fichemetier): ?>
-            <li> <?php echo $fichemetier->getLibelle(); ?> </li>
+            <li> <?php echo $fichemetier->getLibelle(); ?>
+                <?php if ($canAfficherFicheMetier) : //todo ajouter le check de l'assertion ?>
+                    <small>
+                        <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], ['force_canonical' => true], true); ?>"
+                           class="action secondary" target="_blank"
+                        >
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                        </a>
+                    </small>
+                <?php endif; ?>
+            </li>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>

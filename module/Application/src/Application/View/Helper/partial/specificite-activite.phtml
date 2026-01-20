@@ -1,7 +1,6 @@
 <?php
 
 use Application\Provider\Privilege\FichePostePrivileges;
-use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 
 /**
@@ -13,9 +12,6 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
 $mission = $missionAdditionnelle->getMission();
 $mode = 'affichage';
 if (isset($options["mode"])) $mode = $options["mode"];
-
-$activites = $mission->getActivites();
-usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
 $retrait = explode(";",$missionAdditionnelle->getRetraits()??"");
 $retraits = [];
@@ -71,15 +67,15 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
         <div class="col-md-8">
             <div class="activite-description">
                 Description de l'activité :
-                <ul>
-                    <?php foreach ($activites as $activite) : ?>
-                        <?php if (!isset($retraits[$activite->getId()])) : ?>
-                            <li>
-                                <?php echo $activite->getLibelle(); ?>
-                            </li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
+<!--                <ul>-->
+<!--                    --><?php //foreach ($activites as $activite) : ?>
+<!--                        --><?php //if (!isset($retraits[$activite->getId()])) : ?>
+<!--                            <li>-->
+<!--                                --><?php //echo $activite->getLibelle(); ?>
+<!--                            </li>-->
+<!--                        --><?php //endif; ?>
+<!--                    --><?php //endforeach; ?>
+<!--                </ul>-->
             </div>
         </div>
         <div class="col-md-4" style="margin-top: 0.5rem;">

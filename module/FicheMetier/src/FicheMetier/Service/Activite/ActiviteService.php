@@ -9,6 +9,8 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
@@ -110,15 +112,40 @@ class ActiviteService
             $qb = $qb->andWhere('referentiel.id = :referentiel')->setParameter('referentiel', $referentielId);
         }
         if (isset($params['histo']) and $params['histo'] !== '') {
-            if ($params['histo'] == 0) $qb = $qb->andWhere('mission.histoDestruction IS NULL');
-            if ($params['histo'] == 1) $qb = $qb->andWhere('mission.histoDestruction IS NOT NULL');
+            if ($params['histo'] == 0) $qb = $qb->andWhere('activite.histoDestruction IS NULL');
+            if ($params['histo'] == 1) $qb = $qb->andWhere('activite.histoDestruction IS NOT NULL');
         }
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    //todo fonction de recherche
+    public function getActivitesAsOptions(): array
+    {
+        $activites = $this->getActivites();
+
+        $options = [];
+        foreach ($activites as $activite) {
+            $options[$activite->getId()] = $this->optionify($activite);
+        }
+        return $options;
+    }
+
+    /** @return Activite[] */
+    public function getActivitesByTerm(string $term): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('LOWER(activite.libelle) like :search')
+            ->setParameter('search', '%' . strtolower($term) . '%');
+        $result = $qb->getQuery()->getResult();
+
+        $activites = [];
+        /** @var Activite $item */
+        foreach ($result as $item) {
+            $activites[$item->getId()] = $item;
+        }
+        return $activites;
+    }
 
     /** FACADE ********************************************************************************************************/
 
@@ -197,5 +224,33 @@ EOS;
             $dictionnaire[$item['activite_id']] = $item['count'];
         }
         return $dictionnaire;
+    }
+
+    private function optionify(Activite $activite): array
+    {
+//        $texte  = $mission->getLibelle();
+        $texte = "<span class='libelle_activite shorten'>" . MissionPrincipaleService::tronquerTexte($activite->getLibelle(), 100) . "</span>";
+        $texte .= "<span class='libelle_activite full' style='display: none'>" . $activite->getLibelle() . "</span>";
+        $description = $activite->getDescription();
+
+        $texte = "<span class='activite' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
+
+        if ($activite->getCodesFicheMetier() !== null) {
+            $texte .= "&nbsp;" . "<span class='badge'>" .
+                $activite->getCodesFicheMetier()
+                . "</span>";
+        }
+
+        $texte .= "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
+            . "</span>";
+
+        $this_option = [
+            'value' => $activite->getId(),
+            'attributes' => [
+                'data-content' => $texte
+            ],
+            'label' => $texte,
+        ];
+        return $this_option;
     }
 }

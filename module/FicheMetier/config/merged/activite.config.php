@@ -8,6 +8,10 @@ use FicheMetier\Form\Activite\ActiviteForm;
 use FicheMetier\Form\Activite\ActiviteFormFactory;
 use FicheMetier\Form\Activite\ActiviteHydrator;
 use FicheMetier\Form\Activite\ActiviteHydratorFactory;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesForm;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesFormFactory;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesHydrator;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesHydratorFactory;
 use FicheMetier\Provider\Privilege\ActivitePrivileges;
 use FicheMetier\Service\Activite\ActiviteService;
 use FicheMetier\Service\Activite\ActiviteServiceFactory;
@@ -239,11 +243,13 @@ return [
     'form_elements' => [
         'factories' => [
             ActiviteForm::class => ActiviteFormFactory::class,
+            SelectionnerActivitesForm::class => SelectionnerActivitesFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             ActiviteHydrator::class => ActiviteHydratorFactory::class,
+            SelectionnerActivitesHydrator::class => SelectionnerActivitesHydratorFactory::class,
         ],
     ],
 

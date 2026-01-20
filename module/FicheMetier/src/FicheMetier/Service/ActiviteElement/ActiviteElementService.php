@@ -91,15 +91,17 @@ class ActiviteElementService {
 
     /** FAÇADE ********************************************************************************************************/
 
-    public function addActiviteElement(HasActivitesInterface $object, Activite $activite, ?string $description = null, int $position = ActiviteElement::MAX_POSITION): void
+    public function addActiviteElement(HasActivitesInterface $object, Activite $activite, ?string $description = null, int $position = ActiviteElement::MAX_POSITION, bool $flush = true): void
     {
         $element = new ActiviteElement();
         $element->setActivite($activite);
         $element->setDescription($description);
         $element->setPosition($position);
-
-        $this->create($element);
         $object->addActivite($element);
-        $this->getObjectManager()->flush($object);
+
+        if ($flush) {
+            $this->create($element);
+            $this->getObjectManager()->flush($object);
+        }
     }
 }

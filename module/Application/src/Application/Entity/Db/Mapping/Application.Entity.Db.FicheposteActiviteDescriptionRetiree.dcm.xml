@@ -15,9 +15,6 @@
         <many-to-one target-entity="FicheMetier\Entity\Db\Mission"  field="mission">
             <join-column name="activite_id" />
         </many-to-one>
-        <many-to-one target-entity="FicheMetier\Entity\Db\MissionActivite"  field="activite">
-            <join-column name="description_id" />
-        </many-to-one>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     />

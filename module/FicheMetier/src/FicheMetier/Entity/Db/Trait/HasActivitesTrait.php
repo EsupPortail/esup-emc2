@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\ActiviteElement;
-use FicheMetier\Entity\Db\FicheMetierMission;
 
 trait HasActivitesTrait
 {
@@ -52,6 +51,18 @@ trait HasActivitesTrait
             if ($activiteElement->getActivite() === $activite) return true;
         }
         return false;
+    }
+
+    public function getActivitesAsList(bool $withHisto = false): string
+    {
+        $activites = $this->getActivites($withHisto);
+        if (empty($activites)) return 'Aucune activité';
+        $texte  = "<ul>";
+        foreach ($activites as $activite) {
+            $texte .= "<li>" . $activite->getActivite()->getLibelle() . "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
     }
 
     static public function decorateWithActivite(QueryBuilder $qb, string $entityName,  ?Activite $activite = null, bool $withHisto = false) : QueryBuilder

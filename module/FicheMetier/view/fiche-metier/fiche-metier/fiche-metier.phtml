@@ -253,10 +253,13 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             .on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        }).on("refresh-activites", function (event) {
+            event.div.modal('hide');
+            refreshActivites();
         }).on("refresh-missions", function (event) {
             event.div.modal('hide');
             refreshMissions();
-        })            .on("refresh-applications", function (event) {
+        }).on("refresh-applications", function (event) {
             event.div.modal('hide');
             refreshApplications();
         }).on("refresh-competences", function (event) {

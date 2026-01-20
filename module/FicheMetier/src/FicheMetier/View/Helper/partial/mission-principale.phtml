@@ -1,9 +1,6 @@
 <?php
 
-use Element\Entity\Db\ApplicationElement;
-use Element\Entity\Db\CompetenceElement;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 
 /**
  * @see \FicheMetier\View\Helper\MissionPrincipaleViewHelper
@@ -26,7 +23,7 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
         <div class="col-md-4 complements">
             <h4>Compléments</h4>
             <dl class="row">
-                <dt class="col-md-5"> FAP </dt>
+                <dt class="col-md-5"> FAP</dt>
                 <dd class="col-md-7">
                     <?php $familles = $mission->getFamillesProfessionnelles(); ?>
                     <?php if (empty($familles)) : ?>
@@ -77,7 +74,7 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                 <?php if ($mission->getSourceString() === null) : ?> : ?>
                     Aucune donnée source
                 <?php else: ?>
-<pre>
+                    <pre>
 <?php echo $mission->getSourceString(); ?>
 </pre>
                 <?php endif; ?>

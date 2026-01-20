@@ -15,6 +15,9 @@ interface HasActivitesInterface
     public function clearActivites(): void;
     public function hasActivite(Activite $activite): bool;
 
+    public function getActivitesAsList(bool $withHisto = false): string;
+
+
     static public function decorateWithActivite(QueryBuilder $qb, string $entityName,  ?Activite $activite = null, bool $withHisto = false) : QueryBuilder;
 
 }

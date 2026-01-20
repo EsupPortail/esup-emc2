@@ -202,13 +202,13 @@ trait FichePosteMacroTrait {
                     if ($mission->getId() === (int) $id) {
                         $texte .= "<span class='activite-libelle'>". $mission->getLibelle() . "</span>";
 
-                        $texte .= "<ul>";
-                        foreach ($mission->getActivites() as $activite) {
-                            if (!in_array($activite->getId(), $descriptionsRetirees)) {
-                                $texte .= "<li>" . $activite->getLibelle() . "</li>";
-                            }
-                        }
-                        $texte .= "</ul>";
+//                        $texte .= "<ul>";
+//                        foreach ($mission->getActivites() as $activite) {
+//                            if (!in_array($activite->getId(), $descriptionsRetirees)) {
+//                                $texte .= "<li>" . $activite->getLibelle() . "</li>";
+//                            }
+//                        }
+//                        $texte .= "</ul>";
 
                         break;
                     }

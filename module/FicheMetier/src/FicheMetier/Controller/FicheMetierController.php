@@ -15,8 +15,10 @@ use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesFormAwareTrait;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
@@ -39,6 +41,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 /** @method FlashMessenger flashMessenger() */
 class FicheMetierController extends AbstractActionController
 {
+    use ActiviteElementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
@@ -60,6 +63,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
+    use SelectionnerActivitesFormAwareTrait;
     use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
 
@@ -298,32 +302,6 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function reinitialiserLibelleAction(): ViewModel
-    {
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") {
-                $fichemetier->setLibelle(null);
-                $this->getFicheMetierService()->update($fichemetier);
-            }
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($fichemetier !== null) {
-            $vm->setTemplate('default/confirmation');
-            $vm->setVariables([
-                'title' => "Réinitialisation du libellé associé à la fiche métier",
-                'text' =>  "La réinitialisation forcera le libelle de la fiche à celui du métier associé ",
-                'action' => $this->url()->fromRoute('fiche-metier/reinitialiser-libelle', ["fiche-metier" => $fichemetier->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
     public function modifierEtatAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -497,6 +475,72 @@ class FicheMetierController extends AbstractActionController
 
 
     /** GESTIONS DES BLOCS ********************************************************************************************/
+
+    public function gererActivitesAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerActivitesForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/gerer-activites', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if (!isset($data['activites'])) $data['activites'] = [];
+            $form->setData($data);
+            if ($form->isValid()) {
+                foreach ($fichemetier->getActivites() as $activite) {
+                    if ($activite->getId() === null) $this->getActiviteElementService()->create($activite);
+                }
+                $this->getFicheMetierService()->update($fichemetier);
+            }
+        }
+
+        $css=<<<EOS
+.dropdown-item:hover span.text span.activite span.description { 
+    display: block !important; font-style: italic; 
+}    
+
+.dropdown-item:hover span.text span.activite span.full { 
+    display: block !important;  
+}
+.dropdown-item:hover span.text span.activite span.shorten { 
+    display: none !important;  
+}
+
+span.activite {    
+    display: inline-block;
+}
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+EOS;
+
+        $vm = new ViewModel([
+            'title' => "Gestion des activités associées à la fiche métier",
+            'form' => $form,
+            'css' => $css,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function retirerActiviteAction(): Response
+    {
+        $activiteElement = $this->getActiviteElementService()->getResquestedActiviteElement($this);
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this);
+
+        $ficheMetier->removeActivite($activiteElement);
+        $this->getFicheMetierService()->update($ficheMetier);
+        $this->getActiviteElementService()->delete($activiteElement);
+
+        //$this->getActiviteElementService()->reorder($ficheMetier);
+
+        return $this->redirect()->toRoute('fiche-metier/afficher', ['fiche-metier' => $ficheMetier->getId()], [], true);
+    }
 
     public function gererMissionsPrincipalesAction(): ViewModel
     {
