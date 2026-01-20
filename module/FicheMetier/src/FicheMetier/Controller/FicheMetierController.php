@@ -528,18 +528,30 @@ EOS;
         return $vm;
     }
 
-    public function retirerActiviteAction(): Response
+    public function bougerActiviteAction(): JsonModel
     {
         $activiteElement = $this->getActiviteElementService()->getResquestedActiviteElement($this);
-        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this);
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $direction = $this->params()->fromRoute('direction');
+
+        $this->getActiviteElementService()->move($ficheMetier, $activiteElement, $direction);
+        $this->getActiviteElementService()->reorder($ficheMetier);
+
+        return new JsonModel(['return' => true ]);
+    }
+
+    public function retirerActiviteAction(): JsonModel
+    {
+        $activiteElement = $this->getActiviteElementService()->getResquestedActiviteElement($this);
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
         $ficheMetier->removeActivite($activiteElement);
         $this->getFicheMetierService()->update($ficheMetier);
         $this->getActiviteElementService()->delete($activiteElement);
 
-        //$this->getActiviteElementService()->reorder($ficheMetier);
+        $this->getActiviteElementService()->reorder($ficheMetier);
 
-        return $this->redirect()->toRoute('fiche-metier/afficher', ['fiche-metier' => $ficheMetier->getId()], [], true);
+        return new JsonModel(['return' => true ]);
     }
 
     public function gererMissionsPrincipalesAction(): ViewModel

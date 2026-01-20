@@ -71,14 +71,14 @@ a.action {
 a.action.success {
     color: var(--bs-success);
 }
+
+span.action.danger,
 a.action.danger {
     color: var(--bs-danger);
 }
 a.action.warning {
     color: var(--bs-warning);
 }
-
-
 span.action.primary,
 a.action.primary {
     color: var(--bs-primary);
@@ -93,6 +93,7 @@ a.action:hover {
 a.action.success:hover {
     background: lightgreen;
 }
+span.action.danger:hover,
 a.action.danger:hover {
     background: #ffa6c4;
 }

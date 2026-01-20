@@ -121,6 +121,7 @@ return [
                         'gerer-missions-principales',
                         'gerer-activites',
                         'retirer-activite',
+                        'bouger-activite',
 
                         'gerer-applications',
                         'gerer-competences',
@@ -356,6 +357,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::gererActivitesAction() */
                                 'action'     => 'gerer-activites',
+                            ],
+                        ],
+                    ],
+                    'bouger-activite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/bouger-activite/:fiche-metier/:activite-element/:direction',
+                            'defaults' => [
+                                /** @see FicheMetierController::bougerActiviteAction() */
+                                'action'     => 'bouger-activite'
                             ],
                         ],
                     ],

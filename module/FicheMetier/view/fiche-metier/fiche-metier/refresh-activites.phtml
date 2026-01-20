@@ -9,12 +9,15 @@
 
 use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 
 $actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
 if ($mode === 'edition-fiche-metier') {
     $actions['modifier'] = true;
     $actions['supprimer'] = true;
 }
+
+$canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER))
 
 ?>
 
@@ -23,7 +26,52 @@ if ($mode === 'edition-fiche-metier') {
 <?php else : ?>
     <ul>
         <?php foreach ($activites as $activite): ?>
-            <li><?php echo $activite->getActivite()->getLibelle() ?></li>
+            <li>
+                <?php echo $activite->getActivite()->getLibelle() ?>
+                <?php if ($mode === "edition-fiche-metier" AND $canModifier) : ?>
+                <small>
+                    <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
+                    <span class="activite-ajax action primary "
+                          data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '-1'], [], true); ?>"
+                    >
+                        <span class="icon icon-monter"></span>
+                        Monter
+                    </span>
+                    <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
+                    <span class="activite-ajax action primary "
+                          data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '1'], [], true); ?>"
+                    >
+                        <span class="icon icon-descendre"></span>
+                        Descendre
+                    </span>
+                    <?php /** @see \FicheMetier\Controller\FicheMetierController::retirerActiviteAction() */ ?>
+                    <span class="activite-ajax action danger "
+                          data-url="<?php echo $this->url('fiche-metier/retirer-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId()], [], true); ?>"
+                    >
+                        <span class="icon icon-unchecked" ></span>
+                        Retirer
+                    </span>
+                </small>
+                <?php endif; ?>
+            </li>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
+
+
+
+
+<script>
+    $(".activite-ajax").on("click", function (event) {
+        let url = $(this).data("url");
+        $("#activites_view").addClass('refreshing');
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function () {
+                    refreshActivites();
+                }
+        });
+    });
+</script>

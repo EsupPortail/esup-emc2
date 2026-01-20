@@ -8,6 +8,7 @@ use Doctrine\Persistence\ObjectManager;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\ActiviteElement;
+use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Interface\HasActivitesInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
@@ -102,6 +103,46 @@ class ActiviteElementService {
         if ($flush) {
             $this->create($element);
             $this->getObjectManager()->flush($object);
+        }
+    }
+
+    public function reorder(HasActivitesInterface $ficheMetier): void
+    {
+        $activites = $ficheMetier->getActivites();
+        usort($activites, function (ActiviteElement $a, ActiviteElement $b) {
+            if ($a->getPosition() === $b->getPosition()) return $a->getActivite()->getLibelle() <=> $b->getActivite()->getLibelle();
+            return $a->getPosition() <=> $b->getPosition();
+        });
+
+        $position = 1 ;
+        foreach ($activites as $activite) {
+            $activite->setPosition($position);
+            $position++;
+        }
+        $this->getObjectManager()->flush($activites);
+    }
+
+    public function move(?FicheMetier $ficheMetier, ?ActiviteElement $activiteElement, int $direction): void
+    {
+        $this->reorder($ficheMetier);
+        $activites = $ficheMetier->getActivites();
+
+        $ranking = []; $position = 1; $elementRanking = null;
+        foreach ($activites as $activite) {
+            $ranking[$position] = $activite;
+            if ($activite === $activiteElement) $elementRanking = $position;
+            $position++;
+        }
+
+        if ($elementRanking !== null) {
+            $otherRanking =  $elementRanking + $direction;
+
+            if (isset($ranking[$otherRanking])) {
+                $ranking[$otherRanking]->setPosition($elementRanking);
+                $ranking[$elementRanking]->setPosition($otherRanking);
+                $this->getObjectManager()->flush($ranking[$elementRanking]);
+                $this->getObjectManager()->flush($ranking[$otherRanking]);
+            }
         }
     }
 }
