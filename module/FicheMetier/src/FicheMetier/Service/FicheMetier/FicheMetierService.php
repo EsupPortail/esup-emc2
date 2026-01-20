@@ -29,7 +29,6 @@ use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\Trait\HasActivitesTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
@@ -73,42 +72,33 @@ class FicheMetierService
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(FicheMetier $fiche): FicheMetier
+    public function create(FicheMetier $fiche): void
     {
         $this->getObjectManager()->persist($fiche);
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    public function update(FicheMetier $fiche): FicheMetier
+    public function update(FicheMetier $fiche): void
     {
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    public function historise(FicheMetier $fiche): FicheMetier
+    public function historise(FicheMetier $fiche): void
     {
         $fiche->historiser();
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    public function restore(FicheMetier $fiche): FicheMetier
+    public function restore(FicheMetier $fiche): void
     {
         $fiche->dehistoriser();
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
-     */
-    public function delete(FicheMetier $fiche): FicheMetier
+    public function delete(FicheMetier $fiche): void
     {
         $this->getObjectManager()->remove($fiche);
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
     /** REQUETAGE *****************************************************************************************************/

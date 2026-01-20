@@ -8,6 +8,7 @@ use Referentiel\Entity\Db\Referentiel;
  * @see \FicheMetier\Controller\ActiviteController::indexAction()
  * @var Activite[] $activites
  * @var Referentiel[] $referentiels
+ * @var array $dictionnaire
  */
 
 $this->headTitle("Activités");
@@ -116,7 +117,7 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
             <td data-column-id="Référence">
                 <?php echo $activite->printReference(); ?>
             </td>
-            <td data-column-id="#Fiches métiers"> TODO </td>
+            <td data-column-id="#Fiches métiers"> <?php echo $dictionnaire[$activite->getId()]??0; ?> </td>
             <td data-column-id="Action" class="action">
                 <?php if ($canActiviteAfficher) : ?>
                     <?php /** @see \FicheMetier\Controller\ActiviteController::afficherAction() */ ?>

@@ -32,9 +32,11 @@ class ActiviteController extends AbstractActionController
     {
         $params = $this->params()->fromQuery();
         $activites = $this->getActiviteService()->getActivitesWithFiltre($params);
+        $dictionnaire = $this->getActiviteService()->generateDictionnaireFicheMetier();
 
         return new ViewModel([
             'activites' => $activites,
+            'dictionnaire' => $dictionnaire,
             'referentiels' => $this->getReferentielService()->getReferentiels(),
             'params' => $params,
         ]);

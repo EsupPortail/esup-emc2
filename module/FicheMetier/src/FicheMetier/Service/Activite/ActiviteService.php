@@ -2,10 +2,13 @@
 
 namespace FicheMetier\Service\Activite;
 
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Activite;
+use FicheMetier\Entity\Db\FicheMetier;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
@@ -164,7 +167,35 @@ class ActiviteService
         $activite->setRaw(json_encode($json));
 
         return $activite;
-
     }
 
+    public function generateDictionnaireFicheMetier(): array
+    {
+        $sql = <<<EOS
+select ae.activite_id, count (DISTINCT fma.fichemetier_id) as count
+from fichemetier_activite fma
+join activite_element ae on ae.id = fma.activite_element_id
+join fichemetier fm on fm.id = fma.fichemetier_id
+where ae.histo_destruction IS NULL and fm.histo_destruction IS NULL
+group by ae.activite_id
+EOS;
+
+        try {
+            $params = [];
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("[DRV] Un problème est survenu lors du calcul du dictionnaire", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("[DBA] Un problème est survenu lors du calcul du dictionnaire", 0, $e);
+        }
+
+        $dictionnaire = [];
+        foreach ($tmp as $item) {
+            $dictionnaire[$item['activite_id']] = $item['count'];
+        }
+        return $dictionnaire;
+    }
 }

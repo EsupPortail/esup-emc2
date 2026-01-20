@@ -17,7 +17,7 @@ class ActiviteHydrator implements HydratorInterface
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
             'referentiel' => $object->getReferentiel()?->getId(),
-            'identifiant' => $object->getIdOrig(),
+            'identifiant' => $object->getReference(),
         ];
         return $data;
     }
@@ -33,7 +33,7 @@ class ActiviteHydrator implements HydratorInterface
         $object->setLibelle($libelle);
         $object->setDescription($description);
         $object->setReferentiel($referentiel);
-        $object->setIdOrig($identifiant);
+        $object->setReference($identifiant);
         return $object;
     }
 
