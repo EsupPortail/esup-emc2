@@ -66,11 +66,11 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
         <?php endif; ?>
         <?php
 
-            foreach ($fichemetier->getMissions() as $mission) {
-                if (in_array("" . $mission->getMission()->getId(), $activitesConservees)) {
-                    echo $this->activite($mission, $options['mode'], ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte]);
-                }
-            }
+//            foreach ($fichemetier->getMissions() as $mission) {
+//                if (in_array("" . $mission->getMission()->getId(), $activitesConservees)) {
+//                    echo $this->activite($mission, $options['mode'], ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte]);
+//                }
+//            }
         ?>
     </div>
 </div>

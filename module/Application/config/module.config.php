@@ -25,6 +25,7 @@ use Application\Service\Perimetre\PerimetreServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
+use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
@@ -301,6 +302,7 @@ return [
         'invokables' => [
             'actionIcon' => ActionIconViewHelper::class,
             'synchroniserIcon' => SynchorniserIconViewHelper::class,
+            'historiqueBloc' => HistoriqueBlocViewHelper::class,
         ],
     ],
 

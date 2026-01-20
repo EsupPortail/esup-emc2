@@ -1,0 +1,54 @@
+<?php
+
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+
+/**
+ * @see \Application\View\Helper\HistoriqueBlocViewHelper
+ * @var HistoriqueAwareInterface $object
+ * @var array $options
+ */
+
+$dateFormat = $options['date-format']??"d/m/Y H:i";
+$genre = $options['genre']??"N";
+$displayUtilisateur = $option['display-utilisateur']??true;
+
+?>
+
+<?php if (!$object->estNonHistorise()) : ?>
+    <span class="badge" style="background: var(--bs-danger); font-size:Large;">
+        <?php if ($genre === 'M') : ?> Historisé
+        <?php elseif ($genre === 'F') : ?> Historisée
+        <?php else : ?> Historisé·e
+        <?php endif; ?>
+    </span>
+<?php endif; ?>
+
+<dl class="row">
+    <dt class="col-md-4"> Création </dt>
+    <dd class="col-md-8">
+        le <?php echo $object->getHistoCreation()->format($dateFormat); ?>
+        <?php if ($displayUtilisateur) : ?>
+            <br>
+            par <?php echo $object->getHistoCreateur()->getDisplayName(); ?>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Modification </dt>
+    <dd class="col-md-8">
+        le <?php echo $object->getHistoModification()->format($dateFormat); ?>
+        <?php if ($displayUtilisateur) : ?>
+            <br>
+            par <?php echo $object->getHistoModificateur()->getDisplayName(); ?>
+        <?php endif; ?>
+    </dd>
+    <?php if (!$object->estNonHistorise()) : ?>
+        <dt class="col-md-4"> Historisation </dt>
+        <dd class="col-md-8">
+            le <?php echo $object->getHistoDestruction()->format($dateFormat); ?>
+            <?php if ($displayUtilisateur) : ?>
+                <br>
+                par <?php echo $object->getHistoDestructeur()->getDisplayName(); ?>
+            <?php endif; ?>
+        </dd>
+    <?php endif; ?>
+</dl>
+

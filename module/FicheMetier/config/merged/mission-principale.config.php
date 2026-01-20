@@ -2,7 +2,6 @@
 
 namespace FichePoste;
 
-use Application\View\Helper\ActiviteViewHelper;
 use FicheMetier\Controller\MissionPrincipaleController;
 use FicheMetier\Controller\MissionPrincipaleControllerFactory;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleForm;
@@ -338,9 +337,6 @@ return [
         ],
     ],
     'view_helpers' => [
-        'invokables' => [
-            'activite' => ActiviteViewHelper::class,
-        ],
         'factories' => [
             MissionPrincipaleViewHelper::class => MissionPrincipaleViewHelperFactory::class,
         ],

@@ -84,7 +84,7 @@ class FicheMetier implements
 
     public function getLibelle(): ?string
     {
-        return $this->libelle;
+        return $this->libelle??"<span class='missing-data'>Aucune libelle pour la fiche Id:".$this->id."</span>";
     }
 
     public function setLibelle(?string $libelle): void
@@ -190,7 +190,7 @@ class FicheMetier implements
     }
 
     /** @noinspection PhpUnused */
-    public function getIntitule(): string
+    public function getIntitule(): ?string
     {
         return $this->getLibelle();
     }

@@ -43,10 +43,12 @@ class ActiviteController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
+        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersHavingActivite($activite);
 
         return new ViewModel([
             'title' => "Affichage de l'activité",
             'activite' => $activite,
+            'fichesmetiers' => $fichesmetiers,
         ]);
     }
 

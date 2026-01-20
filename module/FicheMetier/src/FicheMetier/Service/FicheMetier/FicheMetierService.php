@@ -25,9 +25,11 @@ use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\Trait\HasActivitesTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
@@ -637,6 +639,16 @@ class FicheMetierService
         $result = $qb->getQuery()->getResult();
         return $result;
 
+    }
+
+    /** @return FicheMetier[] */
+    public function getFichesMetiersHavingActivite(Activite $activite): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = FicheMetier::decorateWithActivite($qb,'ficheMetier', $activite);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }

@@ -15,8 +15,10 @@ if ($mode === 'edition-fiche-metier') {
     $actions['modifier'] = true;
     $actions['supprimer'] = true;
 }
+?>
 
-foreach ($missions as $mission) {
-    /** @see \Application\View\Helper\ActiviteViewHelper */
-    echo $this->activite($mission, $mode, ['fichemetier' => $fichemetier]);
-}
+<ul>
+    <?php foreach ($missions as $mission) : ?>
+        <li> <?php echo $mission->getMission()->getLibelle(); ?> </li>
+    <?php endforeach; ?>
+</ul>

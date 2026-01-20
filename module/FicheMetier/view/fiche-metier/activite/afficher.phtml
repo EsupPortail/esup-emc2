@@ -1,10 +1,12 @@
 <?php
 
 use FicheMetier\Entity\Db\Activite;
+use FicheMetier\Entity\Db\FicheMetier;
 
 /**
  * @see \FicheMetier\Controller\ActiviteController::afficherAction()
  * @var Activite $activite
+ * @var FicheMetier[] $fichesmetiers
  */
 
 ?>
@@ -20,38 +22,23 @@ use FicheMetier\Entity\Db\Activite;
             <?php endif; ?>
             <dt class="col-md-4"> Référence</dt>
             <dd class="col-md-8">
-                <?php if ($activite->getReferentiel()) : ?>
-                    <span class="badge">
-                        <?php echo $activite->getReferentiel()?->getLibelleCourt(); ?>
-                        -
-                        <?php echo $activite->getIdOrig(); ?>
-                    </span>
-                <?php else : ?>
-                    <em>Aucun réféntiel</em>
-                <?php endif; ?>
+                <?php echo $activite->printReference(); ?>
             </dd>
         </dl>
     </div>
     <div class="col-md-6">
-        <dl class="row">
-            <dt class="col-md-4"> Créée </dt>
-            <dd class="col-md-8"> Le <?php echo $activite->getHistoCreation()->format('d/m/y à H:i'); ?> par <?php echo $activite->getHistoCreateur()->getDisplayName(); ?> </dd>
-            <?php if ($activite->getHistoModification()) : ?>
-                <dt class="col-md-4"> Modifiée </dt>
-                <dd class="col-md-8"> Le <?php echo $activite->getHistoModification()->format('d/m/y à H:i'); ?> par <?php echo $activite->getHistoModificateur()->getDisplayName(); ?> </dd>
-            <?php endif; ?>
-            <?php if ($activite->getHistoDestruction()) : ?>
-                <dt class="col-md-4"> Historisée </dt>
-                <dd class="col-md-8"> Le <?php echo $activite->getHistoDestruction()->format('d/m/y à H:i'); ?> par <?php echo $activite->getHistoDestructeur()->getDisplayName(); ?> </dd>
-            <?php endif; ?>
-        </dl>
+        <?php echo $this->historiqueBloc($activite, ["genre" => "F"]); ?>
     </div>
 </div>
 
-<h2> Listing des missions incluants cette activité </h2>
-
-<span class="todo"> À mettre en place après refonte </span>
-
 <h2> Listing des fiches métiers incluants cette activité </h2>
 
-<span class="todo"> À mettre en place après refonte </span>
+<?php if (empty($fichesmetiers)): ?>
+    Aucune fiche métier n'utilise cette activité
+<?php else: ?>
+    <ul>
+        <?php foreach ($fichesmetiers as $fichemetier): ?>
+            <li> <?php echo $fichemetier->getLibelle(); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
