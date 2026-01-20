@@ -66,7 +66,6 @@ class MissionPrincipaleService
         $qb = $this->getObjectManager()->getRepository(Mission::class)->createQueryBuilder('mission')
             ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
             ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
-            ->leftJoin('mission.activites', 'activite')->addSelect('activite')
             ->leftJoin('mission.famillesProfessionnelles', 'famille')->addSelect('famille')
             ->leftJoin('mission.referentiel', 'referentiel')->addSelect('referentiel');
         return $qb;
@@ -159,7 +158,6 @@ class MissionPrincipaleService
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(mission.libelle) like :search or LOWER(activite.libelle) like :search")
             ->andWhere('mission.histoDestruction IS NULL')
-            ->andWhere('activite.histoDestruction IS NULL')
             ->setParameter('search', '%' . strtolower($texte) . '%');
         $result = $qb->getQuery()->getResult();
 
@@ -174,40 +172,12 @@ class MissionPrincipaleService
             $result[] = array(
                 'id' => $mission->getId(),
                 'label' => $mission->getLibelle(),
-//                'description' => 'blabla bli bli',
-//                'extra' => "<span class='badge' style='background-color: slategray;'>" .. "</span>",
             );
         }
         usort($result, function ($a, $b) {
             return strcmp($a['label'], $b['label']);
         });
         return $result;
-    }
-
-    public function ajouterActivite(?Mission $mission, MissionActivite $activite): MissionActivite
-    {
-        $activite->setMission($mission);
-        $activite->setOrdre(9999);
-        $this->getObjectManager()->persist($activite);
-        $this->compressActiviteOrdre($mission);
-        $this->getObjectManager()->flush($activite);
-        return $activite;
-    }
-
-    public function compressActiviteOrdre(Mission $mission): Mission
-    {
-        $activites = $mission->getActivites();
-        usort($activites, function (MissionActivite $a, MissionActivite $b) {
-            return $a->getOrdre() > $b->getOrdre();
-        });
-
-        $position = 1;
-        foreach ($activites as $activite) {
-            $activite->setOrdre($position);
-            $this->getObjectManager()->flush($activite);
-            $position++;
-        }
-        return $mission;
     }
 
     /** FACADE ********************************************************************************************************/
@@ -217,21 +187,6 @@ class MissionPrincipaleService
         $mission = new Mission();
         $mission->setLibelle($intitule);
         if ($perist) $this->create($mission);
-
-        $position = 1;
-        foreach ($activites as $activite_) {
-            $activite = new MissionActivite();
-            $activite->setMission($mission);
-            $activite->setLibelle($activite_);
-            $activite->setOrdre($position);
-            $position++;
-            if ($perist) {
-                $this->getObjectManager()->persist($activite);
-            } else {
-                $mission->addMissionActivite($activite);
-            }
-        }
-
 
         return $mission;
     }
@@ -247,9 +202,7 @@ class MissionPrincipaleService
         $to_create = [
             'familles' => [],
         ];
-        $to_delete = [
-            'activites' => [],
-        ];
+        $to_delete = [];
 
         /* LIBELLE ****************************************************************************************************/
         if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) === '') {
@@ -270,23 +223,6 @@ class MissionPrincipaleService
         $mission->setLibelle($libelle);
         $mission->setReferentiel($referentiel);
         $mission->setReference($idOrig);
-
-        /* ACTIVITES **************************************************************************************************/
-        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES])) {
-            $activites = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES]);
-            $positionActivite = 0;
-            $to_delete['activites'] = $mission->getActivites();
-            $mission->clearActivites();
-            foreach ($activites as $activite) {
-                if (trim($activite) !== '' and !$mission->hasActivite($activite)) {
-                    $act = new MissionActivite();
-                    $act->setLibelle($activite);
-                    $act->setMission($mission);
-                    $act->setOrdre(++$positionActivite);
-                    $mission->addMissionActivite($act);
-                }
-            }
-        }
 
         /* NIVEAUX ***************************************************************************************************/
         if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
@@ -370,14 +306,6 @@ class MissionPrincipaleService
         $texte .= "<span class='libelle_mission full' style='display: none'>" . $mission->getLibelle() . "</span>";
         $description = null;
 
-        if (!empty($mission->getActivites())) {
-            $description = "<ul>";
-            foreach ($mission->getActivites() as $activite) {
-                $description .= "<li>" . htmlentities($activite->getLibelle()) . "</li>";
-            }
-            $description .= "</ul>";
-        }
-
         $texte = "<span class='mission' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
 
         if ($mission->getCodesFicheMetier() !== null) {
@@ -418,26 +346,4 @@ class MissionPrincipaleService
 
         return rtrim($texteTronque) . ' ...';
     }
-
-    public function updateWith(string $intitule, array $activites, Mission $mission): Mission
-    {
-        $mission->setLibelle($intitule);
-        foreach ($mission->getActivites() as $activite) {
-            $activite->setOrdre(-1);
-        }
-
-        $position = 1;
-        foreach ($activites as $activite_) {
-            $activite = new MissionActivite();
-            $activite->setMission($mission);
-            $activite->setLibelle($activite_);
-            $activite->setOrdre($position);
-            $position++;
-            $mission->addMissionActivite($activite);
-        }
-
-        return $mission;
-    }
-
-
 }

@@ -14,8 +14,6 @@ use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipale
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydrator;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydratorFactory;
 use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
-use FicheMetier\Service\MissionActivite\MissionActiviteService;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceFactory;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
 use FicheMetier\View\Helper\MissionPrincipaleViewHelper;
@@ -320,7 +318,6 @@ return [
     'service_manager' => [
         'factories' => [
             MissionPrincipaleService::class => MissionPrincipaleServiceFactory::class,
-            MissionActiviteService::class => MissionActiviteServiceFactory::class,
         ],
     ],
     'controllers' => [

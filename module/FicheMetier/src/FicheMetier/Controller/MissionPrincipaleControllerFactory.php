@@ -14,7 +14,6 @@ use Element\Service\CompetenceElement\CompetenceElementService;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleForm;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
-use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -40,7 +39,6 @@ class MissionPrincipaleControllerFactory
          * @var CompetenceElementService $competenceElementService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var FicheMetierService $ficheMetierService
-         * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          * @var ParametreService $parametreService
@@ -52,7 +50,6 @@ class MissionPrincipaleControllerFactory
         $competenceElementService = $container->get(CompetenceElementService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -80,7 +77,6 @@ class MissionPrincipaleControllerFactory
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelleService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setParametreService($parametreService);

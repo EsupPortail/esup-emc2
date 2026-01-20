@@ -25,7 +25,6 @@ use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
@@ -49,7 +48,6 @@ class ImportController extends AbstractActionController
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FicheMetierMissionServiceAwareTrait;
-    use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
@@ -407,7 +405,8 @@ class ImportController extends AbstractActionController
                     $mission->setReferentiel($referentiel);
                     $mission->setReference($fiche->getReference());
 
-                    $this->getMissionPrincipaleService()->updateWith($missionLibelle, $activites, $mission);
+                    $mission->setLibelle($missionLibelle);
+                    $this->getMissionPrincipaleService()->update($mission);
                 }
 
                 /** COMPETENCES ***************************************************************************************/
@@ -600,7 +599,8 @@ class ImportController extends AbstractActionController
                     $mission->setReferentiel($referentiel);
                     $mission->setReference($fiche->getReference());
 
-                    $this->getMissionPrincipaleService()->updateWith($missionLibelle, $activites, $mission);
+                    $mission->setLibelle($missionLibelle);
+                    $this->getMissionPrincipaleService()->update($mission);
                 }
 
 

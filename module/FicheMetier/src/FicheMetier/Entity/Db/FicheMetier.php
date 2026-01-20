@@ -244,27 +244,6 @@ EOS;
         return $html;
     }
 
-    /**
-     * Utiliser dans la macro FICHE_METIER#MISSIONS_PRINCIPALES
-     * @noinspection PhpUnused
-     */
-    public function getMissionsAsList(): string
-    {
-        $texte = "<h2> Mission·s principale·s</h2>";
-        foreach ($this->getMissions() as $mission) {
-            $texte .= "<h3 class='mission-principale'>" . $mission->getMission()->getLibelle() . "</h3>";
-            $activites = $mission->getMission()->getActivites();
-            $texte .= "<ul>";
-            foreach ($activites as $activite) {
-                $texte .= "<li>";
-                $texte .= $activite->getLibelle();
-                $texte .= "</li>";
-            }
-            $texte .= "</ul>";
-        }
-        return $texte;
-    }
-
     /** @noinspection PhpUnused */
     public function getCompetences(): string
     {

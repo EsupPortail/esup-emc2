@@ -129,13 +129,13 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
     <?php foreach ($missions as $mission) : ?>
         <tr class="<?php if ($mission->estHistorise()) echo " historise "; ?>">
             <td class="col-md-6">
-                <?php echo $mission->getLibelle(); ?>
+                <?php if ($mission->getLibelle() === null OR trim($mission->getLibelle()) === '') : ?>
+                    <span class="missing-data">Aucun libellé</span>
+                <?php else : ?>
+                    <?php echo $mission->getLibelle(); ?>
+                <?php endif; ?>
                 <br>
                 <?php echo $mission->printReference(); ?>
-                <br>
-                <span style="color: #4b4b4b;">
-                    <?php echo count($mission->getActivites()); ?> activité·s
-                </span>
             </td>
             <td class="col-md-2" data-column-id="Familles professionnelles">
                 <?php if (empty($mission->getFamillesProfessionnelles())) : ?>

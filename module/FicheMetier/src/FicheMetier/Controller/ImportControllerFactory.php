@@ -15,7 +15,6 @@ use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
-use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
@@ -48,7 +47,6 @@ class ImportControllerFactory
          * @var FicheMetierMissionService $ficheMetierMissionService
          * @var ImportService $importService
          * @var MissionPrincipaleService $missionPrincipaleService
-         * @var MissionActiviteService $missionActiviteService
          * @var NiveauService $niveauService
          * @var NiveauFonctionService $niveauFonctionService
          * @var ParametreService $parametreService
@@ -66,7 +64,6 @@ class ImportControllerFactory
         $ficheMetierService = $container->get(FicheMetierService::class);
         $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $importService = $container->get(ImportService::class);
-        $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauService = $container->get(NiveauService::class);
         $niveauFonctionService = $container->get(NiveauFonctionService::class);
@@ -91,7 +88,6 @@ class ImportControllerFactory
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierMissionService($ficheMetierMissionService);
         $controller->setImportService($importService);
-        $controller->setMissionActiviteService($missionActiviteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauService($niveauService);
         $controller->setNiveauFonctionService($niveauFonctionService);

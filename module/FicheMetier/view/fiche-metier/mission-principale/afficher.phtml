@@ -2,7 +2,6 @@
 
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 
 /**
@@ -31,77 +30,57 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
         <dl class="row">
             <dt> Libellé de la mission</dt>
             <dd> <?php echo $mission->getLibelle(); ?> </dd>
-            <dt> Activité·s associée·s
-            <dd>
-                <?php
-                    $activites = $mission->getActivites();
-                    usort($activites, function (MissionActivite $a, MissionActivite $b) {
-                        return $a->getOrdre() <=> $b->getOrdre();
-                    });
-                ?>
-                <?php if (empty($activites)): ?>
-                    <span class="missing-data">Aucune activité</span>
-                <?php else: ?>
+            <dt class="col-md-4"> Famille·s Professionnelle·s</dt>
+            <dd class="col-md-8">
+                <?php $familles = $mission->getFamillesProfessionnelles(); ?>
+                <?php if (empty($familles)): ?>
+                    <em style="color:gray;">Aucune famille professionnelle</em>
+                <?php else : ?>
                     <ul>
-                        <?php foreach ($activites as $activite) : ?>
-                            <li>
-                                <?php echo $activite->getLibelle(); ?>
-                            </li>
+                        <?php foreach ($mission->getFamillesProfessionnelles() as $famille) : ?>
+                            <li> <?php echo $famille->getLibelle(); ?> </li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
             </dd>
-    <dt class="col-md-4"> Famille·s Professionnelle·s </dt>
-    <dd class="col-md-8">
-        <?php $familles = $mission->getFamillesProfessionnelles(); ?>
-        <?php if (empty($familles)): ?>
-            <em style="color:gray;">Aucune famille professionnelle</em>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($mission->getFamillesProfessionnelles() as $famille) : ?>
-                    <li> <?php echo $famille->getLibelle(); ?> </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
-    <dt class="col-md-4"> Niveau </dt>
-    <dd class="col-md-8">
-        <?php if ($mission->getNiveau() === null) : ?>
-            <span class="missing-data">Aucun niveau </span>
-        <?php else : ?>
-            <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
-        <?php endif; ?>
-    </dd>
-    <dt class="col-md-4"> Référence </dt>
-    <dd class="col-md-8">
-        <?php if ($mission->getReferentiel() === null AND $mission->getReference() === null) : ?>
-            <span class="missing-data">Aucune référence </span>
-        <?php else : ?>
-            <?php echo $mission->printReference(); ?>
-        <?php endif; ?>
-    </dd>
-</dl>
+            <dt class="col-md-4"> Niveau</dt>
+            <dd class="col-md-8">
+                <?php if ($mission->getNiveau() === null) : ?>
+                    <span class="missing-data">Aucun niveau </span>
+                <?php else : ?>
+                    <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
+                <?php endif; ?>
+            </dd>
+            <dt class="col-md-4"> Référence</dt>
+            <dd class="col-md-8">
+                <?php if ($mission->getReferentiel() === null and $mission->getReference() === null) : ?>
+                    <span class="missing-data">Aucune référence </span>
+                <?php else : ?>
+                    <?php echo $mission->printReference(); ?>
+                <?php endif; ?>
+            </dd>
+        </dl>
     </div>
     <div class="col-md-6">
         <dl class="row">
             <?php if ($mission->getHistoCreation()) : ?>
-                <dt class="col-md-4"> Création </dt>
+                <dt class="col-md-4"> Création</dt>
                 <dd class="col-md-8">
-                    Créée le <?php echo $mission->getHistoCreation()->format("d/m/Y à H:i");?> <br>
+                    Créée le <?php echo $mission->getHistoCreation()->format("d/m/Y à H:i"); ?> <br>
                     par <?php echo $mission->getHistoCreateur()?->getDisplayName(); ?>
                 </dd>
             <?php endif; ?>
             <?php if ($mission->getHistoModification()) : ?>
-                <dt class="col-md-4"> Modification </dt>
+                <dt class="col-md-4"> Modification</dt>
                 <dd class="col-md-8">
-                    Créée le <?php echo $mission->getHistoModification()->format("d/m/Y à H:i");?> <br>
+                    Créée le <?php echo $mission->getHistoModification()->format("d/m/Y à H:i"); ?> <br>
                     par <?php echo $mission->getHistoModificateur()?->getDisplayName(); ?>
                 </dd>
             <?php endif; ?>
             <?php if ($mission->getHistoDestruction()) : ?>
-                <dt class="col-md-4"> Historisation </dt>
+                <dt class="col-md-4"> Historisation</dt>
                 <dd class="col-md-8">
-                    Créée le <?php echo $mission->getHistoDestruction()->format("d/m/Y à H:i");?> <br>
+                    Créée le <?php echo $mission->getHistoDestruction()->format("d/m/Y à H:i"); ?> <br>
                     par <?php echo $mission->getHistoDestructeur()?->getDisplayName(); ?>
                 </dd>
             <?php endif; ?>
@@ -111,7 +90,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
 </div>
 
 <dl>
-    <dt> Fiche·s métier·s attachée·s à la mission principale </dt>
+    <dt> Fiche·s métier·s attachée·s à la mission principale</dt>
     <dd>
         <?php echo count($fichesmetiers); ?> fiche·s métier·s
         <ul>
@@ -126,7 +105,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
                     <?php if ($libelle !== null) : ?>
                         <?php echo $libelle; ?>
                         <?php if ($codeFonction === true): ?>
-                            - <?php echo $fichemetier->getFicheMetier()->getCodeFonction()?$fichemetier->getFicheMetier()->getCodeFonction()->computeCode():"<em style='color:gray;'>Aucun code fonction</em>"; ?>
+                            - <?php echo $fichemetier->getFicheMetier()->getCodeFonction() ? $fichemetier->getFicheMetier()->getCodeFonction()->computeCode() : "<em style='color:gray;'>Aucun code fonction</em>"; ?>
                         <?php endif; ?>
                     <?php else : ?>
                         <span class="text-danger"> Aucun libellé ou métier d'associé à la fiche métier #<?php echo $ficheId; ?></span>
@@ -155,7 +134,7 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
                     $agent = ($ficheposte->getFicheposte() and $ficheposte->getFicheposte()->getAgent()) ? $ficheposte->getFicheposte()->getAgent() : null;
                     ?>
                     <?php echo $this->etatinstance($ficheposte->getFicheposte()->getEtatActif()); ?>
-                    <?php echo $ficheposte->getFicheposte()->getLibelle()??"Fiche sans libellé"; ?>
+                    <?php echo $ficheposte->getFicheposte()->getLibelle() ?? "Fiche sans libellé"; ?>
                     <?php if ($agent) : ?>
                         <?php echo $agent->getDenomination(); ?>
                     <?php else : ?>
@@ -180,7 +159,6 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
 
 
 </dl>
-
 
 
 <script>

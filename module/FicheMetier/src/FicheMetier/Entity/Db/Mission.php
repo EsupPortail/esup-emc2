@@ -22,7 +22,6 @@ class Mission implements HistoriqueAwareInterface,
 
     const MISSION_PRINCIPALE_HEADER_ID = 'Id_Mission';
     const MISSION_PRINCIPALE_HEADER_LIBELLE = 'Libellé';
-    const MISSION_PRINCIPALE_HEADER_ACTIVITES = 'Activités associées';
     const MISSION_PRINCIPALE_HEADER_FAMILLES = 'Familles professionnelles';
     const MISSION_PRINCIPALE_HEADER_NIVEAU = 'Niveau';
     const MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE = 'Codes Emploi Type';
@@ -32,10 +31,7 @@ class Mission implements HistoriqueAwareInterface,
     private ?string $libelle = null;
     private ?string $codesFicheMetier = null;
     private ?string $codesFonction = null;
-
-    /** Composition de la mission */
     private ?NiveauEnveloppe $niveau = null;
-    private Collection $activites;
 
     /** Liste des éléments possèdant la mission */
     private Collection $listeFicheMetierMission;
@@ -47,7 +43,6 @@ class Mission implements HistoriqueAwareInterface,
     public function __construct()
     {
         $this->famillesProfessionnelles = new ArrayCollection();
-        $this->activites = new ArrayCollection();
 
         $this->listeFicheMetierMission = new ArrayCollection();
         $this->listeFichePosteMission = new ArrayCollection();

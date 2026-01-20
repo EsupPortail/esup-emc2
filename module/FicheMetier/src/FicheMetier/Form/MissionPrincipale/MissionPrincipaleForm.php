@@ -7,7 +7,6 @@ use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
-use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;

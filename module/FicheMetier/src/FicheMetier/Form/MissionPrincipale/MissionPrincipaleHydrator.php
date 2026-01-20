@@ -6,7 +6,6 @@ use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class MissionPrincipaleHydrator implements HydratorInterface
