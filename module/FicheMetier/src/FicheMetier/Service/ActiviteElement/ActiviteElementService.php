@@ -4,7 +4,6 @@ namespace FicheMetier\Service\ActiviteElement;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ObjectManager;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\ActiviteElement;

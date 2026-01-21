@@ -18,6 +18,7 @@ use FicheMetier\Form\MissionPrincipale\MissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -36,6 +37,7 @@ class MissionPrincipaleController extends AbstractActionController
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use MissionElementServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
@@ -72,8 +74,8 @@ class MissionPrincipaleController extends AbstractActionController
             'title' => "Affichage de la mission principale",
             'modification' => false,
             'mission' => $mission,
-            'fichesmetiers' => $mission->getListeFicheMetier(),
-            'fichespostes' => $mission->getListeFichePoste(),
+            'fichesmetiers' => [],
+            'fichespostes' => [],
             'codeFonction' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION)
         ]);
         return $vm;
@@ -184,7 +186,7 @@ class MissionPrincipaleController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($mission !== null) {
-            $nbFicheMetier = count($mission->getListeFicheMetier());
+            $nbFicheMetier = 0;
             $nbFichePoste = 0;
             $warning = "<span class='icon icon-attention'></span> Attention cette mission principale est encore associée à " . $nbFicheMetier . " fiches métiers et à " . $nbFichePoste . " fiches de poste.";
             $vm->setTemplate('default/confirmation');
@@ -437,7 +439,7 @@ class MissionPrincipaleController extends AbstractActionController
                                     $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$mission->getCodesFicheMetier() . "</span> n&apos;existe pas";
                                 } else {
                                     if (!$fichemetier->hasMission($mission)) {
-                                        $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                        $this->getMissionElementService()->addMissionElement($fichemetier,$mission);
                                         $info[] = "Ajout de la mission " . $mission->printReference() . " a été ajouté à la fiche metier [" . $fichemetier->getReference() . "]";
                                     }
                                 }
@@ -458,7 +460,7 @@ class MissionPrincipaleController extends AbstractActionController
                                     }
                                     foreach ($fichesmetiers as $fichemetier) {
                                         if (!$fichemetier->hasMission($mission)) {
-                                            $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                            $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
                                             $info[] = "Ajout de la mission [" . $mission->getReference() . "] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
                                         }
                                     }

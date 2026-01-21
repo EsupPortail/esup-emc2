@@ -453,13 +453,12 @@ EOS;
         return $famille->getLibelle();
     }
 
-    public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?FicheMetierMission
+    public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?MissionElement
     {
         foreach ($this->missions as $mission) {
             if ($mission->getMission()->getReferentiel() === $referentiel && $mission->getMission()->getReference() === $reference) return $mission;
         }
         return null;
     }
-
 
 }

@@ -2,9 +2,9 @@
 
 namespace FicheMetier\Form\SelectionnerMissionPrincipale;
 
-use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
+use FicheMetier\Entity\Db\MissionElement;
+use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 use FicheMetier\Entity\Db\Interface\HasMissionsPrincipalesInterface;
@@ -12,12 +12,12 @@ use FicheMetier\Entity\Db\Interface\HasMissionsPrincipalesInterface;
 class SelectionnerMissionPrincipaleHydrator implements HydratorInterface
 {
     use MissionPrincipaleServiceAwareTrait;
-    use FicheMetierMissionServiceAwareTrait;
+    use MissionElementServiceAwareTrait;
 
     public function extract(object $object): array
     {
         /** @var HasMissionsPrincipalesInterface $object */
-        $missions = array_map(function (FicheMetierMission $a) { return $a->getMission(); }, $object->getMissions());
+        $missions = array_map(function (MissionElement $a) { return $a->getMission(); }, $object->getMissions());
         $missionsIds = array_map(function (Mission $f) { return $f->getId();}, $missions);
         $data = [
             'missions' => $missionsIds,
@@ -37,20 +37,15 @@ class SelectionnerMissionPrincipaleHydrator implements HydratorInterface
         }
 
         /** @var HasMissionsPrincipalesInterface $object */
-        foreach ($object->getMissions() as $ficheMetierMission) {
-            if (! isset($missions[$ficheMetierMission->getMission()->getId()])) {
-                $this->getFicheMetierMissionService()->delete($ficheMetierMission);
+        foreach ($object->getMissions() as $missionElement) {
+            if (!isset($missions[$missionElement->getMission()->getId()])) {
+                $this->getMissionElementService()->delete($missionElement);
             }
         }
 
         foreach ($missions as $mission) {
             if (!$object->hasMission($mission)) {
-                $element = new FicheMetierMission();
-                $element->setMission($mission);
-                $element->setFicheMetier($object);
-                $element->setOrdre(9999);
-                $this->getFicheMetierMissionService()->create($element);
-//                $object->addMissionElement($element);
+                $this->getMissionElementService()->addMissionElement($object, $mission, null, 9999, false);
             }
         }
 

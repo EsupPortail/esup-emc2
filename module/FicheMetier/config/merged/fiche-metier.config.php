@@ -17,8 +17,6 @@ use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceFactory;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -109,22 +107,16 @@ return [
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
-                        'deplacer-mission',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
                         'gerer-missions-principales',
+                        'retirer-mission',
+                        'bouger-mission',
+
                         'gerer-activites',
                         'retirer-activite',
                         'bouger-activite',
 
-                        'gerer-applications',
                         'gerer-competences',
+                        'gerer-applications',
                         'gerer-competences-specifiques',
                     ],
                     'privileges' => [
@@ -339,17 +331,6 @@ return [
                             ],
                         ],
                     ],
-                    'deplacer-mission' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/deplacer-mission[/:fiche-metier/:mission-principale/:direction]',
-                            'defaults' => [
-                                /** @see FicheMetierController::deplacerMissionAction() */
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'deplacer-mission',
-                            ],
-                        ],
-                    ],
                     'gerer-activites' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -420,6 +401,26 @@ return [
                             ],
                         ],
                     ],
+                    'bouger-mission' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/bouger-mission/:fiche-metier/:mission-element/:direction',
+                            'defaults' => [
+                                /** @see FicheMetierController::bougerMissionAction() */
+                                'action'     => 'bouger-mission'
+                            ],
+                        ],
+                    ],
+                    'retirer-mission' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-mission/:fiche-metier/:mission-element',
+                            'defaults' => [
+                                /** @see FicheMetierController::retirerMissionAction() */
+                                'action'     => 'retirer-mission'
+                            ],
+                        ],
+                    ],
                     'refresh-activites' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -468,7 +469,6 @@ return [
     'service_manager' => [
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
-            FicheMetierMissionService::class => FicheMetierMissionServiceFactory::class,
         ],
     ],
     'controllers'     => [

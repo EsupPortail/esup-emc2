@@ -13,6 +13,8 @@ use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipale
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydrator;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydratorFactory;
 use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
+use FicheMetier\Service\MissionElement\MissionElementService;
+use FicheMetier\Service\MissionElement\MissionElementServiceFactory;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
 use FicheMetier\View\Helper\MissionPrincipaleViewHelper;
@@ -317,6 +319,7 @@ return [
     'service_manager' => [
         'factories' => [
             MissionPrincipaleService::class => MissionPrincipaleServiceFactory::class,
+            MissionElementService::class => MissionElementServiceFactory::class,
         ],
     ],
     'controllers' => [

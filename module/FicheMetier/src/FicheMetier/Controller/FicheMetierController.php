@@ -19,9 +19,9 @@ use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesFormAwareTrait;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
+use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
@@ -47,9 +47,9 @@ class FicheMetierController extends AbstractActionController
     use CompetenceTypeServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use FicheMetierMissionServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use MissionElementServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
@@ -568,6 +568,9 @@ EOS;
             if (!isset($data['missions'])) $data['missions'] = [];
             $form->setData($data);
             if ($form->isValid()) {
+                foreach ($fichemetier->getMissions() as $mission) {
+                    if ($mission->getId() === null) $this->getMissionElementService()->create($mission);
+                }
                 $this->getFicheMetierService()->update($fichemetier);
             }
         }
@@ -604,18 +607,31 @@ EOS;
         return $vm;
     }
 
-    public function deplacerMissionAction(): JsonModel
+    public function bougerMissionAction(): JsonModel
     {
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+        $missionElement = $this->getMissionElementService()->getResquestedMissionElement($this);
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $direction = $this->params()->fromRoute('direction');
 
-        $this->getFicheMetierService()->compressMission($fichemetier);
-        $this->getFicheMetierService()->moveMission($fichemetier, $mission, $direction);
+        $this->getMissionElementService()->move($ficheMetier, $missionElement, $direction);
+        $this->getMissionElementService()->reorder($ficheMetier);
 
-        return new JsonModel([]);
+        return new JsonModel(['return' => true ]);
     }
 
+    public function retirerMissionAction(): JsonModel
+    {
+        $missionElement = $this->getMissionElementService()->getResquestedMissionElement($this);
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $ficheMetier->removeMission($missionElement);
+        $this->getFicheMetierService()->update($ficheMetier);
+        $this->getMissionElementService()->delete($missionElement);
+
+        $this->getActiviteElementService()->reorder($ficheMetier);
+
+        return new JsonModel(['return' => true ]);
+    }
 
     public function gererApplicationsAction(): ViewModel
     {
@@ -753,7 +769,7 @@ EOS;
     public function refreshMissionsAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $missions = $this->getFicheMetierMissionService()->getFichesMetiersMissionsByFicheMetier($fichemetier);
+        $missions = $fichemetier->getMissions();
         $mode = $this->params()->fromRoute('mode');
 
         $vm = new ViewModel([

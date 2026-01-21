@@ -2,17 +2,17 @@
 
 namespace FicheMetier\Entity\Db;
 
-
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class ActiviteElement implements HistoriqueAwareInterface {
+class MissionElement implements HistoriqueAwareInterface
+{
     use HistoriqueAwareTrait;
 
     const MAX_POSITION = 9999;
 
     private ?int $id = null;
-    private ?Activite $activite = null;
+    private ?Mission $mission = null;
     private ?string $description = null;
     private int $position = self::MAX_POSITION;
 
@@ -21,14 +21,14 @@ class ActiviteElement implements HistoriqueAwareInterface {
         return $this->id;
     }
 
-    public function getActivite(): ?Activite
+    public function getMission(): ?Mission
     {
-        return $this->activite;
+        return $this->mission;
     }
 
-    public function setActivite(?Activite $activite): void
+    public function setMission(?Mission $mission): void
     {
-        $this->activite = $activite;
+        $this->mission = $mission;
     }
 
     public function getDescription(): ?string
@@ -46,7 +46,7 @@ class ActiviteElement implements HistoriqueAwareInterface {
         return $this->position;
     }
 
-    public function setPosition(int $position = 9999): void
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }

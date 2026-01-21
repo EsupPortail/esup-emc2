@@ -27,11 +27,9 @@ use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwar
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\FicheMetierMission;
-use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
 use Mpdf\MpdfException;
@@ -55,7 +53,6 @@ class FicheMetierService
     use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
-    use FicheMetierMissionServiceAwareTrait;
     use MacroServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
@@ -280,58 +277,6 @@ class FicheMetierService
 
     /** FACADE ********************************************************************************************************/
 
-    public function addMission(FicheMetier $ficheMetier, Mission $missionPrincipale): void
-    {
-
-        $fichemetierMission = new FicheMetierMission();
-        $fichemetierMission->setFicheMetier($ficheMetier);
-        $fichemetierMission->setMission($missionPrincipale);
-        $fichemetierMission->setOrdre(9999);
-        $this->getFicheMetierMissionService()->create($fichemetierMission);
-    }
-
-    public function moveMission(FicheMetier $ficheMetier, Mission $missionPrincipale, string $direction): void
-    {
-        $fichemetierMission = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndMission($ficheMetier, $missionPrincipale);
-        if ($fichemetierMission === null) return;
-
-        $position = $fichemetierMission->getOrdre();
-        $newPosition = -1;
-        if ($direction === 'up') $newPosition = $position - 1;
-        if ($direction === 'down') $newPosition = $position + 1;
-
-        $fichemetierMissionBis = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndPosition($ficheMetier, $newPosition);
-        if ($fichemetierMissionBis === null) return;
-
-        if ($fichemetierMission !== $fichemetierMissionBis) {
-            $fichemetierMission->setOrdre($newPosition);
-            $this->getFicheMetierMissionService()->update($fichemetierMission);
-            $fichemetierMissionBis->setOrdre($position);
-            $this->getFicheMetierMissionService()->update($fichemetierMissionBis);
-        }
-    }
-
-    public function removeMission(FicheMetier $ficheMetier, Mission $missionPrincipale): void
-    {
-        $fichemetierMission = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndMission($ficheMetier, $missionPrincipale);
-        $this->getFicheMetierMissionService()->delete($fichemetierMission);
-    }
-
-    public function compressMission(FicheMetier $ficheMetier): void
-    {
-        $missions = $ficheMetier->getMissions();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
-            return $a->getOrdre() <=> $b->getOrdre();
-        });
-
-        $position = 1;
-        foreach ($missions as $mission) {
-            $mission->setOrdre($position);
-            $this->getFicheMetierMissionService()->update($mission);
-            $position++;
-        }
-    }
-
     public function setDefaultValues(FicheMetier $fiche): FicheMetier
     {
         $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_REDACTION);
@@ -451,12 +396,12 @@ class FicheMetierService
 
         //missions principales
         foreach ($fiche->getMissions() as $mission) {
-            $activiteDuplicata = new FicheMetierMission();
-            $activiteDuplicata->setFicheMetier($duplicata);
+            $activiteDuplicata = new MissionElement();
             $activiteDuplicata->setMission($mission->getMission());
-            $activiteDuplicata->setOrdre($mission->getOrdre());
+            $activiteDuplicata->setPosition($mission->getPosition());
             $this->getObjectManager()->persist($activiteDuplicata);
             $this->getObjectManager()->flush($activiteDuplicata);
+            $duplicata->addMission($mission);
         }
 
         //applications
@@ -636,7 +581,7 @@ class FicheMetierService
     public function getFichesMetiersHavingActivite(Activite $activite): array
     {
         $qb = $this->createQueryBuilder();
-        $qb = FicheMetier::decorateWithActivite($qb,'ficheMetier', $activite);
+        $qb = FicheMetier::decorateWithActivite($qb, 'ficheMetier', $activite);
 
         $result = $qb->getQuery()->getResult();
         return $result;

@@ -1,6 +1,5 @@
 <?php
 
-use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FichePoste\Entity\Db\MissionAdditionnelle;
@@ -8,7 +7,6 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
 /**
  * @see \FicheMetier\Controller\MissionPrincipaleController::afficherAction();
  * @var Mission $mission
- * @var FicheMetierMission[] $fichesmetiers
  * @var MissionAdditionnelle[] $fichespostes
  * @var bool $codeFonction
  * @var bool $modification
@@ -94,71 +92,74 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
 <dl>
     <dt> Fiche·s métier·s attachée·s à la mission principale</dt>
     <dd>
-        <?php echo count($fichesmetiers); ?> fiche·s métier·s
-        <ul>
-            <?php foreach ($fichesmetiers as $fichemetier) : ?>
-                <?php $libelle = $fichemetier->getFicheMetier()->getLibelle(); ?>
-                <li>
-                    <?php
-                    $ficheId = $fichemetier->getFicheMetier()->getId();
-                    ?>
-                    <?php echo $fichemetier->getFicheMetier()->printReference(); ?>
-                    <?php echo $this->etatinstance($fichemetier->getFicheMetier()->getEtatActif()); ?>
-                    <?php if ($libelle !== null) : ?>
-                        <?php echo $libelle; ?>
-                        <?php if ($codeFonction === true): ?>
-                            - <?php echo $fichemetier->getFicheMetier()->getCodeFonction() ? $fichemetier->getFicheMetier()->getCodeFonction()->computeCode() : "<em style='color:gray;'>Aucun code fonction</em>"; ?>
-                        <?php endif; ?>
-                    <?php else : ?>
-                        <span class="text-danger"> Aucun libellé ou métier d'associé à la fiche métier #<?php echo $ficheId; ?></span>
-                    <?php endif; ?>
-                    <?php if ($canAfficherFicheMetier) : //todo ajouter le check de l'assertion ?>
-                        <small>
-                            <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
-                            <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getFicheMetier()->getId()], ['force_canonical' => true], true); ?>"
-                               class="action secondary" target="_blank"
-                            >
-                                <span class="icon icon-voir"></span>
-                                Afficher
-                            </a>
-                        </small>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <span class="todo">TODO</span>
+
+<!--        --><?php //echo count($fichesmetiers); ?><!-- fiche·s métier·s-->
+<!--        <ul>-->
+<!--            --><?php //foreach ($fichesmetiers as $fichemetier) : ?>
+<!--                --><?php //$libelle = $fichemetier->getFicheMetier()->getLibelle(); ?>
+<!--                <li>-->
+<!--                    --><?php
+//                    $ficheId = $fichemetier->getFicheMetier()->getId();
+//                    ?>
+<!--                    --><?php //echo $fichemetier->getFicheMetier()->printReference(); ?>
+<!--                    --><?php //echo $this->etatinstance($fichemetier->getFicheMetier()->getEtatActif()); ?>
+<!--                    --><?php //if ($libelle !== null) : ?>
+<!--                        --><?php //echo $libelle; ?>
+<!--                        --><?php //if ($codeFonction === true): ?>
+<!--                            - --><?php //echo $fichemetier->getFicheMetier()->getCodeFonction() ? $fichemetier->getFicheMetier()->getCodeFonction()->computeCode() : "<em style='color:gray;'>Aucun code fonction</em>"; ?>
+<!--                        --><?php //endif; ?>
+<!--                    --><?php //else : ?>
+<!--                        <span class="text-danger"> Aucun libellé ou métier d'associé à la fiche métier #--><?php //echo $ficheId; ?><!--</span>-->
+<!--                    --><?php //endif; ?>
+<!--                    --><?php //if ($canAfficherFicheMetier) : //todo ajouter le check de l'assertion ?>
+<!--                        <small>-->
+<!--                            --><?php ///** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
+<!--                            <a href="--><?php //echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getFicheMetier()->getId()], ['force_canonical' => true], true); ?><!--"-->
+<!--                               class="action secondary" target="_blank"-->
+<!--                            >-->
+<!--                                <span class="icon icon-voir"></span>-->
+<!--                                Afficher-->
+<!--                            </a>-->
+<!--                        </small>-->
+<!--                    --><?php //endif; ?>
+<!--                </li>-->
+<!--            --><?php //endforeach; ?>
+<!--        </ul>-->
     </dd>
     <dt>Fiche·s de poste listant à la mission principale</dt>
     <dd>
-        <?php echo count($fichespostes); ?> fiche·s de poste
-        <ul>
-            <?php foreach ($fichespostes as $ficheposte) : ?>
-                <li>
-                    <?php
-                    $ficheId = ($ficheposte->getFicheposte()) ? $ficheposte->getFicheposte()->getId() : null;
-                    $agent = ($ficheposte->getFicheposte() and $ficheposte->getFicheposte()->getAgent()) ? $ficheposte->getFicheposte()->getAgent() : null;
-                    ?>
-                    <?php echo $this->etatinstance($ficheposte->getFicheposte()->getEtatActif()); ?>
-                    <?php echo $ficheposte->getFicheposte()->getLibelle() ?? "Fiche sans libellé"; ?>
-                    <?php if ($agent) : ?>
-                        <?php echo $agent->getDenomination(); ?>
-                    <?php else : ?>
-                        <span class="text-danger"> Aucun agent d'associé·e</span>
-                    <?php endif; ?>
-                    <?php if ($ficheId) : ?>
-                        (Fiche de poste #<?php echo $ficheId; ?>)
-                    <?php endif; ?>
-                    <small>
-                        <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getFicheposte()->getId()], ['force_canonical' => true], true); ?>"
-                           class="action secondary" target="_blank"
-                        >
-                            <span class="icon icon-voir"></span>
-                            Afficher
-                        </a>
-                    </small>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+            <span class="todo">TODO</span>
+<!--        --><?php //echo count($fichespostes); ?><!-- fiche·s de poste-->
+<!--        <ul>-->
+<!--            --><?php //foreach ($fichespostes as $ficheposte) : ?>
+<!--                <li>-->
+<!--                    --><?php
+//                    $ficheId = ($ficheposte->getFicheposte()) ? $ficheposte->getFicheposte()->getId() : null;
+//                    $agent = ($ficheposte->getFicheposte() and $ficheposte->getFicheposte()->getAgent()) ? $ficheposte->getFicheposte()->getAgent() : null;
+//                    ?>
+<!--                    --><?php //echo $this->etatinstance($ficheposte->getFicheposte()->getEtatActif()); ?>
+<!--                    --><?php //echo $ficheposte->getFicheposte()->getLibelle() ?? "Fiche sans libellé"; ?>
+<!--                    --><?php //if ($agent) : ?>
+<!--                        --><?php //echo $agent->getDenomination(); ?>
+<!--                    --><?php //else : ?>
+<!--                        <span class="text-danger"> Aucun agent d'associé·e</span>-->
+<!--                    --><?php //endif; ?>
+<!--                    --><?php //if ($ficheId) : ?>
+<!--                        (Fiche de poste #--><?php //echo $ficheId; ?><!--)-->
+<!--                    --><?php //endif; ?>
+<!--                    <small>-->
+<!--                        --><?php ///** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+<!--                        <a href="--><?php //echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getFicheposte()->getId()], ['force_canonical' => true], true); ?><!--"-->
+<!--                           class="action secondary" target="_blank"-->
+<!--                        >-->
+<!--                            <span class="icon icon-voir"></span>-->
+<!--                            Afficher-->
+<!--                        </a>-->
+<!--                    </small>-->
+<!--                </li>-->
+<!--            --><?php //endforeach; ?>
+<!--        </ul>-->
     </dd>
 </dl>
 

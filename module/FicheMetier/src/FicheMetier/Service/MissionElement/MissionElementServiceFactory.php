@@ -1,28 +1,28 @@
 <?php
 
-namespace FicheMetier\Service\FicheMetierMission;
+namespace FicheMetier\Service\MissionElement;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class FicheMetierMissionServiceFactory
+class MissionElementServiceFactory
 {
-
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): FicheMetierMissionService
+    public function __invoke(ContainerInterface $container): MissionElementService
     {
         /**
          * @var EntityManager $entityManager
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        $service = new FicheMetierMissionService();
+        $service = new MissionElementService();
         $service->setObjectManager($entityManager);
         return $service;
     }
+
 }

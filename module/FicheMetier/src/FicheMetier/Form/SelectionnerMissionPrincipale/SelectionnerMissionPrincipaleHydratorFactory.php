@@ -2,7 +2,7 @@
 
 namespace FicheMetier\Form\SelectionnerMissionPrincipale;
 
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
+use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -18,14 +18,14 @@ class SelectionnerMissionPrincipaleHydratorFactory
     {
         /**
          * @var MissionPrincipaleService $missionPrincipaleService
-         * @var FicheMetierMissionService $ficheMetierMissionService
+         * @var MissionElementService $missionElementService
          */
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
-        $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
+        $missionElementService = $container->get(MissionElementService::class);
 
         $hydrator = new SelectionnerMissionPrincipaleHydrator();
         $hydrator->setMissionPrincipaleService($missionPrincipaleService);
-        $hydrator->setFicheMetierMissionService($ficheMetierMissionService);
+        $hydrator->setMissionElementService($missionElementService);
         return $hydrator;
     }
 }

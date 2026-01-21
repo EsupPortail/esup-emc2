@@ -15,7 +15,6 @@ use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
@@ -45,7 +44,6 @@ class FicheMetierServiceFactory {
          * @var ConfigurationService $configurationService
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
-         * @var FicheMetierMissionService $ficheMetierMissionService
          * @var MacroService $macroService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauFonctionService $niveauFonctionService
@@ -65,7 +63,6 @@ class FicheMetierServiceFactory {
         $configurationService = $container->get(ConfigurationService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
-        $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $macroService = $container->get(MacroService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauFonctionService = $container->get(NiveauFonctionService::class);
@@ -92,7 +89,6 @@ class FicheMetierServiceFactory {
         $service->setConfigurationService($configurationService);
         $service->setEtatInstanceService($etatInstanceService);
         $service->setFamilleProfessionnelleService($familleProfessionnelleService);
-        $service->setFicheMetierMissionService($ficheMetierMissionService);
         $service->setMacroService($macroService);
         $service->setMissionPrincipaleService($missionPrincipaleService);
         $service->setNiveauFonctionService($niveauFonctionService);

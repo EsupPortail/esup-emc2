@@ -14,9 +14,9 @@ use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesForm;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
 use FicheMetier\Service\ActiviteElement\ActiviteElementService;
+use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
@@ -48,9 +48,9 @@ class FicheMetierControllerFactory
          * @var CompetenceTypeService $competenceTypeService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
-         * @var FicheMetierMissionService $ficheMetierMissionService
          * @var FichePosteService $fichePosteService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var MissionElementService $missionElementService
          * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
          * @var TendanceElementService $tendanceElementService
@@ -64,9 +64,9 @@ class FicheMetierControllerFactory
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $missionElementService = $container->get(MissionElementService::class);
         $parametreService = $container->get(ParametreService::class);
         $referentielService = $container->get(ReferentielService::class);
         $tendanceElementService = $container->get(TendanceElementService::class);
@@ -102,7 +102,7 @@ class FicheMetierControllerFactory
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setFicheMetierMissionService($ficheMetierMissionService);
+        $controller->setMissionElementService($missionElementService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setParametreService($parametreService);

@@ -16,14 +16,13 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\FicheMetierMission;
+use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
@@ -47,7 +46,6 @@ class ImportController extends AbstractActionController
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use FicheMetierMissionServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
@@ -227,7 +225,7 @@ class ImportController extends AbstractActionController
                     }
 
                     foreach ($missions as $mission) {
-                        if ($mission->getId() === null) $this->getFicheMetierMissionService()->deepCreate($mission);
+//                        if ($mission->getId() === null) $this->getFicheMetierMissionService()->deepCreate($mission);
 //                        else {
 //                            foreach ($mission->getMission()->getActivites() as $activite) {
 //                                if ($activite->getId() === null) $this->getMissionActiviteService()->create($activite);
@@ -394,12 +392,11 @@ class ImportController extends AbstractActionController
                     $mission->setReferentiel($referentiel);
                     $mission->setReference($fiche->getReference());
 
-                    $ficheMission = new FicheMetierMission();
-                    $ficheMission->setMission($mission);
-                    $ficheMission->setFicheMetier($fiche);
-                    $ficheMission->setOrdre(1);
+                    $missionElement = new MissionElement();
+                    $missionElement->setMission($mission);
+                    $missionElement->setPosition(1);
 
-                    $fiche->addMission($ficheMission);
+                    $fiche->addMission($missionElement);
                 } else {
                     $mission = $ficheMission->getMission();
                     $mission->setReferentiel($referentiel);
@@ -588,12 +585,11 @@ class ImportController extends AbstractActionController
                     $mission->setReferentiel($referentiel);
                     $mission->setReference($fiche->getReference());
 
-                    $ficheMission = new FicheMetierMission();
-                    $ficheMission->setMission($mission);
-                    $ficheMission->setFicheMetier($fiche);
-                    $ficheMission->setOrdre(1);
+                    $missionElement = new MissionElement();
+                    $missionElement->setMission($mission);
+                    $missionElement->setPosition(1);
+                    $fiche->addMission($missionElement);
 
-                    $fiche->addMission($ficheMission);
                 } else {
                     $mission = $ficheMission->getMission();
                     $mission->setReferentiel($referentiel);

@@ -13,7 +13,6 @@ use Element\Service\CompetenceType\CompetenceTypeService;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
 use FicheMetier\Service\Import\ImportService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
@@ -44,7 +43,6 @@ class ImportControllerFactory
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelService
          * @var FicheMetierService $ficheMetierService
-         * @var FicheMetierMissionService $ficheMetierMissionService
          * @var ImportService $importService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauService $niveauService
@@ -62,7 +60,6 @@ class ImportControllerFactory
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $importService = $container->get(ImportService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauService = $container->get(NiveauService::class);
@@ -86,7 +83,6 @@ class ImportControllerFactory
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setFicheMetierMissionService($ficheMetierMissionService);
         $controller->setImportService($importService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNiveauService($niveauService);

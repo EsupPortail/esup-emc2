@@ -34,7 +34,6 @@ class Mission implements HistoriqueAwareInterface,
     private ?NiveauEnveloppe $niveau = null;
 
     /** Liste des éléments possèdant la mission */
-    private Collection $listeFicheMetierMission;
     private Collection $listeFichePosteMission;
 
     /** Source de la mission principale */
@@ -44,7 +43,6 @@ class Mission implements HistoriqueAwareInterface,
     {
         $this->famillesProfessionnelles = new ArrayCollection();
 
-        $this->listeFicheMetierMission = new ArrayCollection();
         $this->listeFichePosteMission = new ArrayCollection();
     }
 
@@ -71,28 +69,6 @@ class Mission implements HistoriqueAwareInterface,
     public function setNiveau(?NiveauEnveloppe $niveau): void
     {
         $this->niveau = $niveau;
-    }
-
-    /** Liste des éléments possèdant la mission */
-
-    /** @return FicheMetierMission[] */
-    public function getListeFicheMetier(): array
-    {
-        $result = [];
-        foreach ($this->listeFicheMetierMission as $ficheMetierMission) {
-            $result[] = $ficheMetierMission;
-        }
-        return $result;
-    }
-
-    public function removeFicheMetier(FicheMetierMission $ficheMetier): void
-    {
-        $this->listeFicheMetierMission->removeElement($ficheMetier);
-    }
-
-    public function clearListeFicheMetier(): void
-    {
-        $this->listeFicheMetierMission->clear();
     }
 
     /** @return MissionAdditionnelle[] */

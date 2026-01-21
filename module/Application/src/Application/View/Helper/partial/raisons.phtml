@@ -8,8 +8,8 @@
 
 use Application\Entity\Db\Agent;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionElement;
 
 
 ?>
@@ -22,7 +22,7 @@ use FicheMetier\Entity\Db\Mission;
                 $label = "FicheMétier";
                 $class = 'fiche-metier';
                 break;
-            case $raison instanceof FicheMetierMission :
+            case $raison instanceof MissionElement :
                 $text = $raison->getMission()->getLibelle();
                 $label = "Mission";
                 $class = 'activite';

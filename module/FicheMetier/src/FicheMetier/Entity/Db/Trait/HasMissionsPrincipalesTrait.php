@@ -3,31 +3,31 @@
 namespace FicheMetier\Entity\Db\Trait;
 
 use Doctrine\Common\Collections\Collection;
-use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionElement;
 
 trait HasMissionsPrincipalesTrait
 {
     private Collection $missions;
 
-    /** @return FicheMetierMission[] */
+    /** @return MissionElement[] */
     public function getMissions(bool $withHisto = false): array
     {
         $missions =  $this->missions->toArray();
         if (!$withHisto) {
-            $missions = array_filter($missions, function (FicheMetierMission $mission) {
+            $missions = array_filter($missions, function (MissionElement $mission) {
                 return $mission->getMission()->estNonHistorise();
             });
         }
         return $missions;
     }
 
-    public function addMission(FicheMetierMission $ficheMetierMission): void
+    public function addMission(MissionElement $ficheMetierMission): void
     {
         $this->missions->add($ficheMetierMission);
     }
 
-    public function removeMission(FicheMetierMission $ficheMetierMission): void
+    public function removeMission(MissionElement $ficheMetierMission): void
     {
         $this->missions->removeElement($ficheMetierMission);
     }
@@ -39,7 +39,7 @@ trait HasMissionsPrincipalesTrait
 
     public function hasMission(Mission $mission): bool
     {
-        /** @var FicheMetierMission[] $missions */
+        /** @var MissionElement[] $missions */
         $missions = $this->missions->toArray();
         foreach ($missions as $fmMission) {
             if ($fmMission->getMission() === $mission) return true;

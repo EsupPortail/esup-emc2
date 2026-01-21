@@ -45,19 +45,12 @@ div.modal div.modal-footer {
 
 /** TABLE ************************************/
 
-th.action {
-    width:8rem;
-}
-
-td.action,
-div.action,
-span.action
+div.action
 {
     font-size: small;
 }
 td.action a,
-div.action a,
-span.action a
+div.action a
 {
     text-decoration: none;
 }
@@ -67,11 +60,12 @@ a.action {
     text-decoration: none;
     padding: 0 0.5rem;
     border-radius : 0.25rem;
+    font-size: small;
 }
+span.action.danger,
 a.action.success {
     color: var(--bs-success);
 }
-
 span.action.danger,
 a.action.danger {
     color: var(--bs-danger);
@@ -83,13 +77,16 @@ span.action.primary,
 a.action.primary {
     color: var(--bs-primary);
 }
+span.action.secondary,
 a.action.secondary {
     color: var(--bs-secondary);
 }
+span.action:hover,
 a.action:hover {
     background: lightgray;
+    cursor: pointer;
 }
-
+span.action.success:hover,
 a.action.success:hover {
     background: lightgreen;
 }
@@ -97,15 +94,15 @@ span.action.danger:hover,
 a.action.danger:hover {
     background: #ffa6c4;
 }
+span.action.warning:hover,
 a.action.warning:hover {
     background: #ffd2b9;
 }
 span.action.primary:hover,
 a.action.primary:hover {
     background: lightblue;
-    cursor: pointer;
 }
-
+span.action.secondary:hover,
 a.action.secondary:hover {
     background: lightgray;
 }

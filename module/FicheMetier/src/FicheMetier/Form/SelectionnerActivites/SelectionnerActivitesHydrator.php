@@ -7,6 +7,7 @@ use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\Interface\HasActivitesInterface;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
+use FicheMetier\Service\ActiviteElement\MissionElementServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class SelectionnerActivitesHydrator implements HydratorInterface

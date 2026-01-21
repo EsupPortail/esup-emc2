@@ -61,8 +61,6 @@ class MissionPrincipaleService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Mission::class)->createQueryBuilder('mission')
-            ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
-            ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
             ->leftJoin('mission.famillesProfessionnelles', 'famille')->addSelect('famille')
             ->leftJoin('mission.referentiel', 'referentiel')->addSelect('referentiel');
         return $qb;
