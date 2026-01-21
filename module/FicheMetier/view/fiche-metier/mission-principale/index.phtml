@@ -11,6 +11,7 @@ use Referentiel\Entity\Db\Referentiel;
  * @var Referentiel[] $referentiels
  * @var FamilleProfessionnelle[] $familles
  * @var array $params
+ * @var array $dictionnaire
  */
 
 $this->headTitle('Missions principales');
@@ -121,7 +122,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
         <th> Libellé</th>
         <th> Famille·s professionnelle·s</th>
         <th> Niveau</th>
-        <th style="width: 10rem;"> Liens</th>
+        <th style="width: 10rem;"> #Fiches Métiers</th>
         <th class="action"> Action</th>
     </tr>
     </thead>
@@ -154,10 +155,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
                     <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
                 <?php endif; ?>
             </td>
-            <td class="col-md-2" data-column-id="Liens">
-                Fiche métier : <span class="todo">TODO</span> <br/>
-                Fiche de poste : <span class="todo">TODO</span>
-            </td>
+            <td data-column-id="#Fiches métiers"> <?php echo $dictionnaire[$mission->getId()]??0; ?> </td>
             <td class="action col-md-1" data-column-id="Action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::afficherAction() */ ?>

@@ -22,6 +22,7 @@ class Mission implements HistoriqueAwareInterface,
 
     const MISSION_PRINCIPALE_HEADER_ID = 'Id_Mission';
     const MISSION_PRINCIPALE_HEADER_LIBELLE = 'Libellé';
+    const MISSION_PRINCIPALE_HEADER_DESCRIPTION = 'Description';
     const MISSION_PRINCIPALE_HEADER_FAMILLES = 'Familles professionnelles';
     const MISSION_PRINCIPALE_HEADER_NIVEAU = 'Niveau';
     const MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE = 'Codes Emploi Type';
@@ -29,6 +30,7 @@ class Mission implements HistoriqueAwareInterface,
 
     private ?int $id = null;
     private ?string $libelle = null;
+    private ?string $description = null;
     private ?string $codesFicheMetier = null;
     private ?string $codesFonction = null;
     private ?NiveauEnveloppe $niveau = null;
@@ -59,6 +61,16 @@ class Mission implements HistoriqueAwareInterface,
     public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 
     public function getNiveau(): ?NiveauEnveloppe

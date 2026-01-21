@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Entity\Db\Interface;
 
+use Doctrine\ORM\QueryBuilder;
 use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Entity\Db\Mission;
 
@@ -15,5 +16,6 @@ interface HasMissionsPrincipalesInterface
     public function hasMission(Mission $mission): bool;
 
     public function getMissionsAsList(bool $withHisto = false): string;
+    static public function decorateWithMissionPrincipale(QueryBuilder $qb, string $entityName,  ?Mission $mission = null, bool $withHisto = false) : QueryBuilder;
 
 }

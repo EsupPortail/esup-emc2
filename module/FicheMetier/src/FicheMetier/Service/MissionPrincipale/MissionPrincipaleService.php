@@ -6,6 +6,8 @@ use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -177,7 +179,7 @@ class MissionPrincipaleService
 
     /** FACADE ********************************************************************************************************/
 
-    public function createWith(string $intitule, array $activites, bool $perist = true): ?Mission
+    public function createWith(string $intitule, bool $perist = true): ?Mission
     {
         $mission = new Mission();
         $mission->setLibelle($intitule);
@@ -274,6 +276,9 @@ class MissionPrincipaleService
         if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]) !== '') {
             $mission->setCodesFonction(trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]));
         }
+        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]) !== '') {
+            $mission->setDescription(trim($json[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]));
+        }
 
         /** SOURCE ****************************************************************************************************/
         $source_string = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -340,5 +345,35 @@ class MissionPrincipaleService
         }
 
         return rtrim($texteTronque) . ' ...';
+    }
+
+    public function generateDictionnaireFicheMetier(): array
+    {
+        $sql = <<<EOS
+select me.mission_id, count (DISTINCT fmm.fichemetier_id) as count
+from fichemetier_mission fmm
+join missionprincipale_element me on me.id = fmm.mission_element_id
+join fichemetier fm on fm.id = fmm.fichemetier_id
+where me.histo_destruction IS NULL and fm.histo_destruction IS NULL
+group by me.mission_id
+EOS;
+
+        try {
+            $params = [];
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("[DRV] Un problème est survenu lors du calcul du dictionnaire", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("[DBA] Un problème est survenu lors du calcul du dictionnaire", 0, $e);
+        }
+
+        $dictionnaire = [];
+        foreach ($tmp as $item) {
+            $dictionnaire[$item['mission_id']] = $item['count'];
+        }
+        return $dictionnaire;
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
+use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
-use FichePoste\Entity\Db\MissionAdditionnelle;
 
 /**
  * @see \FicheMetier\Controller\MissionPrincipaleController::afficherAction();
  * @var Mission $mission
- * @var MissionAdditionnelle[] $fichespostes
+ * @var FicheMetier[] $fichesmetiers
  * @var bool $codeFonction
  * @var bool $modification
  * @var ?string $retour
@@ -30,6 +30,10 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
         <dl class="row">
             <dt> Libellé de la mission</dt>
             <dd> <?php echo $mission->getLibelle(); ?> </dd>
+            <?php if ($mission->getDescription() !== null) : ?>
+                <dt> Description</dt>
+                <dd> <?php echo $mission->getDescription(); ?> </dd>
+            <?php endif; ?>
             <dt class="col-md-4"> Famille·s Professionnelle·s</dt>
             <dd class="col-md-8">
                 <?php $familles = $mission->getFamillesProfessionnelles(); ?>
@@ -62,74 +66,37 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
         </dl>
     </div>
     <div class="col-md-6">
-        <dl class="row">
-            <?php if ($mission->getHistoCreation()) : ?>
-                <dt class="col-md-4"> Création</dt>
-                <dd class="col-md-8">
-                    Créée le <?php echo $mission->getHistoCreation()->format("d/m/Y à H:i"); ?> <br>
-                    par <?php echo $mission->getHistoCreateur()?->getDisplayName(); ?>
-                </dd>
-            <?php endif; ?>
-            <?php if ($mission->getHistoModification()) : ?>
-                <dt class="col-md-4"> Modification</dt>
-                <dd class="col-md-8">
-                    Créée le <?php echo $mission->getHistoModification()->format("d/m/Y à H:i"); ?> <br>
-                    par <?php echo $mission->getHistoModificateur()?->getDisplayName(); ?>
-                </dd>
-            <?php endif; ?>
-            <?php if ($mission->getHistoDestruction()) : ?>
-                <dt class="col-md-4"> Historisation</dt>
-                <dd class="col-md-8">
-                    Créée le <?php echo $mission->getHistoDestruction()->format("d/m/Y à H:i"); ?> <br>
-                    par <?php echo $mission->getHistoDestructeur()?->getDisplayName(); ?>
-                </dd>
-            <?php endif; ?>
-
-        </dl>
+        <?php echo $this->historiqueBloc($mission, ["genre" => "F"]); ?>
     </div>
 </div>
 
 <dl>
     <dt> Fiche·s métier·s attachée·s à la mission principale</dt>
     <dd>
-        <span class="todo">TODO</span>
-
-<!--        --><?php //echo count($fichesmetiers); ?><!-- fiche·s métier·s-->
-<!--        <ul>-->
-<!--            --><?php //foreach ($fichesmetiers as $fichemetier) : ?>
-<!--                --><?php //$libelle = $fichemetier->getFicheMetier()->getLibelle(); ?>
-<!--                <li>-->
-<!--                    --><?php
-//                    $ficheId = $fichemetier->getFicheMetier()->getId();
-//                    ?>
-<!--                    --><?php //echo $fichemetier->getFicheMetier()->printReference(); ?>
-<!--                    --><?php //echo $this->etatinstance($fichemetier->getFicheMetier()->getEtatActif()); ?>
-<!--                    --><?php //if ($libelle !== null) : ?>
-<!--                        --><?php //echo $libelle; ?>
-<!--                        --><?php //if ($codeFonction === true): ?>
-<!--                            - --><?php //echo $fichemetier->getFicheMetier()->getCodeFonction() ? $fichemetier->getFicheMetier()->getCodeFonction()->computeCode() : "<em style='color:gray;'>Aucun code fonction</em>"; ?>
-<!--                        --><?php //endif; ?>
-<!--                    --><?php //else : ?>
-<!--                        <span class="text-danger"> Aucun libellé ou métier d'associé à la fiche métier #--><?php //echo $ficheId; ?><!--</span>-->
-<!--                    --><?php //endif; ?>
-<!--                    --><?php //if ($canAfficherFicheMetier) : //todo ajouter le check de l'assertion ?>
-<!--                        <small>-->
-<!--                            --><?php ///** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
-<!--                            <a href="--><?php //echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getFicheMetier()->getId()], ['force_canonical' => true], true); ?><!--"-->
-<!--                               class="action secondary" target="_blank"-->
-<!--                            >-->
-<!--                                <span class="icon icon-voir"></span>-->
-<!--                                Afficher-->
-<!--                            </a>-->
-<!--                        </small>-->
-<!--                    --><?php //endif; ?>
-<!--                </li>-->
-<!--            --><?php //endforeach; ?>
-<!--        </ul>-->
+        <?php if (empty($fichesmetiers)): ?>
+            Aucune fiche métier n'utilise cette mission principale
+        <?php else: ?>
+            <ul>
+                <?php foreach ($fichesmetiers as $fichemetier): ?>
+                    <li> <?php echo $fichemetier->getLibelle(); ?>
+                        <?php if ($canAfficherFicheMetier) : //todo ajouter le check de l'assertion ?>
+                            <small>
+                                <?php /** @see \FicheMetier\Controller\FicheMetierController::afficherAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], ['force_canonical' => true], true); ?>"
+                                   class="action secondary" target="_blank"
+                                >
+                                    <span class="icon icon-voir"></span>
+                                    Afficher
+                                </a>
+                            </small>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
     </dd>
-    <dt>Fiche·s de poste listant à la mission principale</dt>
-    <dd>
-            <span class="todo">TODO</span>
+<!--    <dt>Fiche·s de poste listant à la mission principale</dt>-->
+<!--    <dd>-->
 <!--        --><?php //echo count($fichespostes); ?><!-- fiche·s de poste-->
 <!--        <ul>-->
 <!--            --><?php //foreach ($fichespostes as $ficheposte) : ?>
@@ -160,7 +127,7 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
 <!--                </li>-->
 <!--            --><?php //endforeach; ?>
 <!--        </ul>-->
-    </dd>
+<!--    </dd>-->
 </dl>
 
 <script>

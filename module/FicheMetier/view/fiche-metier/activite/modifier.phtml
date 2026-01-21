@@ -1,13 +1,11 @@
 <?php
 
-use FicheMetier\Form\MissionPrincipale\MissionPrincipaleForm;
-use UnicaenRenderer\Entity\Db\Rendu;
+use FicheMetier\Form\Activite\ActiviteForm;
 
 /**
- * @see \FicheMetier\Controller\MissionPrincipaleController::ajouterAction()
- * @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction()
- * @var MissionPrincipaleForm $form
- * @var Rendu $rendu
+ * @see \FicheMetier\Controller\ActiviteController::ajouterAction()
+ * @see \FicheMetier\Controller\ActiviteController::modifierAction()
+ * @var ActiviteForm $form
  */
 
 ?>
@@ -19,19 +17,10 @@ use UnicaenRenderer\Entity\Db\Rendu;
 
 <?php echo $this->formControlGroup($form->get('libelle')); ?>
 <?php echo $this->formControlGroup($form->get('description')); ?>
-<?php echo $this->formControlGroup($form->get('familleprofessionnelle')); ?>
 <div class="row">
     <div class="col-md-6"><?php echo $this->formControlGroup($form->get('referentiel')); ?></div>
     <div class="col-md-6"><?php echo $this->formControlGroup($form->get('identifiant')); ?></div>
 </div>
-
-<!--<h4> Niveau de carrière associé </h4>-->
-
-<div class="row">
-    <div class="col-md-6"><?php echo $this->formControlGroup($form->get('borne_superieure')); ?></div>
-    <div class="col-md-6"><?php echo $this->formControlGroup($form->get('borne_inferieure')); ?></div>
-</div>
-
 
 <?php echo $this->formControlGroup($form->get('submit')); ?>
 <?php echo $this->form()->closeTag(); ?>

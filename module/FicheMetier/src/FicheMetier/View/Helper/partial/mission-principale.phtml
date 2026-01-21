@@ -15,10 +15,12 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
 <?php if ($mission === null) : ?>
     <p>Aucune mission</p>
 <?php else: ?>
+    <div class="card" style="padding: 0.25rem;">
     <div class="row">
         <div class="col-md-8">
             <h3 class="mission-libelle"> <?php echo $mission->getLibelle(); ?> </h3>
             <?php echo $mission->printReference(); ?>
+            <div>Description : <?php echo $mission->getDescription(); ?></div>
         </div>
         <div class="col-md-4 complements">
             <h4>Compléments</h4>
@@ -80,6 +82,7 @@ $displaySource = isset($options['display-source']) ? $options['display-source'] 
                 <?php endif; ?>
             </div>
         <?php endif; ?>
+    </div>
     </div>
 <?php endif; ?>
 

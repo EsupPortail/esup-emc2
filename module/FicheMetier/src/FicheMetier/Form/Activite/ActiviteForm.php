@@ -74,7 +74,7 @@ class ActiviteForm extends Form
         // button
         $this->add([
             'type' => Button::class,
-            'name' => 'enregistrer',
+            'name' => 'submit',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
                 'label_options' => [

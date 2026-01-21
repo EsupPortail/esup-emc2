@@ -75,7 +75,7 @@ class ActiviteController extends AbstractActionController
             'title' => "Ajout d'une activité",
             'form' => $form,
         ]);
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('fiche-metier/activite/modifier');
         return $vm;
     }
 
@@ -101,7 +101,7 @@ class ActiviteController extends AbstractActionController
             'title' => "Modification d'une activité",
             'form' => $form,
         ]);
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('fiche-metier/activite/modifier');
         return $vm;
     }
 

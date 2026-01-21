@@ -7,6 +7,7 @@ use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 
 class MissionPrincipaleFormFactory {
 
@@ -19,9 +20,11 @@ class MissionPrincipaleFormFactory {
         /**
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var NiveauService $niveauService
+         * @var ReferentielService $referentielService
          */
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $niveauService = $container->get(NiveauService::class);
+        $referentielService = $container->get(ReferentielService::class);
 
         /** @var MissionPrincipaleHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(MissionPrincipaleHydrator::class);
@@ -29,6 +32,7 @@ class MissionPrincipaleFormFactory {
         $form = new MissionPrincipaleForm();
         $form->setFamilleProfessionnelleService($familleProfessionnelleService);
         $form->setNiveauService($niveauService);
+        $form->setReferentielService($referentielService);
         $form->setHydrator($hydrator);
 
         $array = [];

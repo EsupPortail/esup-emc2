@@ -106,7 +106,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'gestion' => [
+                    'ressource' => [
                         'pages' => [
                             'activite' => [
                                 'label' => 'Activités',

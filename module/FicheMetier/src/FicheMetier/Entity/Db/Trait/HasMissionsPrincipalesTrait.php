@@ -3,6 +3,7 @@
 namespace FicheMetier\Entity\Db\Trait;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\QueryBuilder;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionElement;
 
@@ -57,5 +58,26 @@ trait HasMissionsPrincipalesTrait
         }
         $texte .= "</ul>";
         return $texte;
+    }
+
+
+    static public function decorateWithMissionPrincipale(QueryBuilder $qb, string $entityName,  ?Mission $mission = null, bool $withHisto = false) : QueryBuilder
+    {
+        $qb = $qb
+            ->leftJoin($entityName . '.missions', 'missionElement')->addSelect('missionElement')
+            ->leftJoin('missionElement.mission', 'mission')->addSelect('mission')
+        ;
+
+        if (!$withHisto) {
+            $qb = $qb
+                ->andWhere('missionElement.histoDestruction IS NULL')
+                ->andWhere('mission.histoDestruction IS NULL')
+            ;
+        }
+        if ($mission) {
+            $qb = $qb
+                ->andWhere('missionElement.mission = :mission')->setParameter('mission', $mission);
+        }
+        return $qb;
     }
 }

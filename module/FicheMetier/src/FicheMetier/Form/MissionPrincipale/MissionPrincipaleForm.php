@@ -7,14 +7,17 @@ use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class MissionPrincipaleForm extends Form
 {
     use FamilleProfessionnelleServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
 
     public array $niveaux = [];
 
@@ -30,6 +33,21 @@ class MissionPrincipaleForm extends Form
             ],
             'attributes' => [
                 'id' => 'libelle',
+            ],
+        ]);
+        //description
+        $this->add([
+            'name' => 'description',
+            'type' => Textarea::class,
+            'options' => [
+                'label' => 'Description  : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+            ],
+            'attributes' => [
+                'id'                => 'description',
+                'class'             => 'tinymce',
             ],
         ]);
         //famille professionnelle
@@ -81,6 +99,34 @@ class MissionPrincipaleForm extends Form
                 'data-live-search' => 'true',
             ],
         ]);
+        //referentiel
+        $this->add([
+            'type' => Select::class,
+            'name' => 'referentiel',
+            'options' => [
+                'label' => "Référentiel <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'empty_option' => 'Sélectionner un référentiel ...',
+                'value_options' => $this->getReferentielService()->getReferentielsAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'referentiel',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
+        //idOrig
+        $this->add([
+            'type' => Text::class,
+            'name' => 'identifiant',
+            'options' => [
+                'label' => "Identifiant dans le référentiel <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'identifiant',
+            ],
+        ]);
         $this->add([
             'type' => Button::class,
             'name' => 'submit',
@@ -97,6 +143,7 @@ class MissionPrincipaleForm extends Form
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
+            'description' => ['required' => false,],
             'familleprofessionnelle' => ['required' => true,],
             'borne_inferieure' => [
                 'required' => false,
@@ -132,6 +179,8 @@ class MissionPrincipaleForm extends Form
                     ],
                 ]],
             ],
+            'referentiel' => ['required' => true,],
+            'identifiant' => ['required' => true,],
         ]));
     }
 }

@@ -8,6 +8,7 @@ use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Referentiel\ReferentielService;
 
 class MissionPrincipaleHydratorFactory {
 
@@ -20,13 +21,16 @@ class MissionPrincipaleHydratorFactory {
         /**
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var NiveauService $niveauService
+         * @var ReferentielService $referentielService
          */
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $niveauService = $container->get(NiveauService::class);
+        $referentielService = $container->get(ReferentielService::class);
 
         $hydrator = new MissionPrincipaleHydrator();
         $hydrator->setFamilleProfessionnelleService($familleProfessionnelleService);
         $hydrator->setNiveauService($niveauService);
+        $hydrator->setReferentielService($referentielService);
         return $hydrator;
     }
 }

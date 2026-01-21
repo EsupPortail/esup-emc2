@@ -147,7 +147,30 @@ class ActiviteService
         return $activites;
     }
 
+    public function getActiviteByLibelle(?string $libelle): ?Mission
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('activite.libelle = :libelle')->setParameter('libelle', $libelle);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            // todo probablement ajouter la notion de référentiel ...
+            throw new RuntimeException("Plusieurs [" . Activite::class . "] partagent le même libellé [" . $libelle . "]", -1, $e);
+        }
+        return $result;
+    }
+
     /** FACADE ********************************************************************************************************/
+
+    public function createWith(string $intitule, bool $perist = true): ?Activite
+    {
+        $activite = new Activite();
+        $activite->setLibelle($intitule);
+        if ($perist) $this->create($activite);
+
+        return $activite;
+    }
 
     public function createOneWithCsv(array $json, string $separateur, Referentiel $referentiel, ?int $position): Activite
     {

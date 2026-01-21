@@ -55,11 +55,13 @@ class MissionPrincipaleController extends AbstractActionController
     {
         $params = $this->params()->fromQuery();
         $missions = $this->getMissionPrincipaleService()->getMissionsPrincipalesWithFiltre($params);
+        $dictionnaire = $this->getMissionPrincipaleService()->generateDictionnaireFicheMetier();
 
         return new ViewModel([
             'missions' => $missions,
             'referentiels' => $this->getReferentielService()->getReferentiels(),
             'familles' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles(),
+            'dictionnaire' => $dictionnaire,
             'params' => $params,
         ]);
     }
@@ -69,13 +71,13 @@ class MissionPrincipaleController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersHavingMissionPrincipale($mission);
 
         $vm = new ViewModel([
             'title' => "Affichage de la mission principale",
             'modification' => false,
             'mission' => $mission,
-            'fichesmetiers' => [],
-            'fichespostes' => [],
+            'fichesmetiers' => $fichesmetiers,
             'codeFonction' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION)
         ]);
         return $vm;
@@ -104,6 +106,7 @@ class MissionPrincipaleController extends AbstractActionController
                         $this->getNiveauEnveloppeService()->update($niveau);
                     }
                 }
+                $this->getMissionPrincipaleService()->create($mission);
                 exit();
             }
         }
@@ -139,6 +142,7 @@ class MissionPrincipaleController extends AbstractActionController
                         $this->getNiveauEnveloppeService()->update($niveau);
                     }
                 }
+                $this->getMissionPrincipaleService()->update($mission);
                 exit();
             }
         }
@@ -362,6 +366,8 @@ class MissionPrincipaleController extends AbstractActionController
                     if (!$hasIdMission) $error[] = "La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_ID . "] est manquante";
                     $hasLibelle = in_array(Mission::MISSION_PRINCIPALE_HEADER_LIBELLE, $header);
                     if (!$hasLibelle) $error[] = "La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_LIBELLE . "] est manquante";
+                    $hasDescription = in_array(Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION, $header);
+                    if (!$hasDescription) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION . "] est manquante";
                     $hasFamilles = in_array(Mission::MISSION_PRINCIPALE_HEADER_FAMILLES, $header);
                     if (!$hasFamilles) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_FAMILLES . "] est manquante";
                     $hasNiveau = in_array(Mission::MISSION_PRINCIPALE_HEADER_NIVEAU, $header);
