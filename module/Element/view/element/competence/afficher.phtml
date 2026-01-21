@@ -32,7 +32,12 @@ use FicheMetier\Entity\Db\Mission;
     <dt class="col-md-4"> Codes Emploi Types</dt>
     <dd class="col-md-8">
         <?php if ($competence->getCodesEmploiType()) : ?>
-            <?php echo implode("|", $competence->getCodesEmploiType()); ?>
+            <?php $codes =  explode("|", $competence->getCodesEmploiType()); ?>
+            <ul>
+            <?php foreach ($codes as $code) : ?>
+                <li><?php echo $code; ?></li>
+            <?php endforeach; ?>
+            </ul>
         <?php else : ?>
             <span class="missing-data">Aucun code emploi type</span>
         <?php endif; ?>
@@ -41,7 +46,12 @@ use FicheMetier\Entity\Db\Mission;
         <dt class="col-md-4"> Codes Fonction</dt>
         <dd class="col-md-8">
             <?php if ($competence->getCodesFonction()) : ?>
-                <?php echo implode("|", $competence->getCodesFonction()); ?>
+                <?php $codes =  explode("|", $competence->getCodesFonction()); ?>
+                <ul>
+                    <?php foreach ($codes as $code) : ?>
+                        <li><?php echo $code; ?></li>
+                    <?php endforeach; ?>
+                </ul>
             <?php else : ?>
                 <span class="missing-data">Aucun code fonction</span>
             <?php endif; ?>
