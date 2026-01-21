@@ -144,4 +144,14 @@ class MissionElementService {
             }
         }
     }
+
+
+    /** @var MissionElement[] $missionsElements */
+    public function getMissionElementFromArray(array $missionsElements, Mission $mission): ?MissionElement
+    {
+        foreach ($missionsElements as $missionElement) {
+            if ($missionElement->getMission() === $mission) return $missionElement;
+        }
+        return null;
+    }
 }

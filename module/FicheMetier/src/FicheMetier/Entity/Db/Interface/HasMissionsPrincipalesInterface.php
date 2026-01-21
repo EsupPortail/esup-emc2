@@ -17,5 +17,5 @@ interface HasMissionsPrincipalesInterface
 
     public function getMissionsAsList(bool $withHisto = false): string;
     static public function decorateWithMissionPrincipale(QueryBuilder $qb, string $entityName,  ?Mission $mission = null, bool $withHisto = false) : QueryBuilder;
-
+    public function getMissionElementByMission(Mission $mission, bool $withHisto = false) : ?MissionElement;
 }

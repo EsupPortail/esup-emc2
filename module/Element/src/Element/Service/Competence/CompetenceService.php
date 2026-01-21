@@ -458,6 +458,8 @@ class CompetenceService
 
     public function import(string $filepath, Referentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
     {
+        $SEP_SYNONYME = '|';
+
         $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
         // Note : ceci est un dictionnaire pour rattraper les variations dans les écritures des types.
         // Attention : il ne faut pas oublier de mettre le libellé lu du CSV en minuscules.
@@ -620,7 +622,7 @@ class CompetenceService
                 }
                 if ($positionSynonyme !== false) {
                     if ($item[$positionSynonyme] !== "") {
-                        $liste = explode(";", $item[$positionSynonyme]);
+                        $liste = explode($SEP_SYNONYME, $item[$positionSynonyme]);
                         foreach ($liste as $synonyme) {
                             $eSynonyme = new CompetenceSynonyme();
                             $eSynonyme->setCompetence($competence);

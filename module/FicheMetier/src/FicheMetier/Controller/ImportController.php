@@ -211,9 +211,11 @@ class ImportController extends AbstractActionController
                     $fiche->clearCompetences();
                     $tendances = $fiche->getTendances();
                     $fiche->clearTendances();
+
+                    // Il faut clear les elements pour permettre la création
                     $missions = $fiche->getMissions();
-                    $activites = $fiche->getActivites();
                     $fiche->clearMissions();
+                    $activites = $fiche->getActivites();
                     $fiche->clearActivites();
 
                     if ($fiche->getId() === null) $this->getFicheMetierService()->create($fiche);
@@ -233,18 +235,24 @@ class ImportController extends AbstractActionController
                         $fiche->addTendance($tendance);
                     }
 
+                    // GESTION DES MISSIONS ////////////////////////////////////////////////////////////////////////////
+
                     foreach ($missions as $mission) {
                         if ($mission->getMission()->getId() === null) $this->getMissionPrincipaleService()->create($mission->getMission());
                         else $this->getMissionPrincipaleService()->update($mission->getMission());
-                        if ($mission->getId() === null) $this->getMissionElementService()->addMissionElement($fiche, $mission->getMission());
+                        if ($mission->getId() === null) $this->getMissionElementService()->create($mission);
                         else $this->getMissionElementService()->update($mission);
+                        $fiche->addMission($mission);
                     }
+
+                    // GESTION DES ACTIVITES ///////////////////////////////////////////////////////////////////////////
 
                     foreach ($activites as $activite) {
                         if ($activite->getActivite()->getId() === null) $this->getActiviteService()->create($activite->getActivite());
                         else $this->getActiviteService()->update($activite->getActivite());
-                        if ($activite->getId() === null) $this->getActiviteElementService()->addActiviteElement($fiche, $activite->getActivite());
+                        if ($activite->getId() === null) $this->getActiviteElementService()->create($activite);
                         else $this->getActiviteElementService()->update($activite);
+                        $fiche->addActivite($activite);
                     }
 
                     $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
@@ -392,28 +400,49 @@ class ImportController extends AbstractActionController
 
                 /** Partie Mission et activités ***********************************************************************/
 
-                $missionLibelle = $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "";
-                $activites = explode("|", $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "");
+                $readMissions = explode("|", $raw[self::HEADER_REFERENS3_MISSION_LIBELLE]);
+                $missions = $fiche->getMissions();
+                $fiche->clearMissions();
 
-                $ficheMission = $fiche->getMissionByReference($fiche->getReferentiel(), $fiche->getReference());
-                if ($ficheMission === null) {
-                    $mission = $this->getMissionPrincipaleService()->createWith($missionLibelle, false);
-                    $mission->setReferentiel($referentiel);
-                    $mission->setReference($fiche->getReference());
-
-                    $missionElement = new MissionElement();
-                    $missionElement->setMission($mission);
-                    $missionElement->setPosition(1);
-
+                $readMissionPosition = 1;
+                foreach ($readMissions as $readMission) {
+                    $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission);
+                    if ($mission === null) {
+                        $reference = $fiche->getReference() . "_" . $readMissionPosition;
+                        $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
+                    }
+                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions,$mission);
+                    if ($missionElement === null) {
+                        $missionElement = new MissionElement();
+                        $missionElement->setMission($mission);
+                    }
+                    $missionElement->setPosition($readMissionPosition);
                     $fiche->addMission($missionElement);
-                } else {
-                    $mission = $ficheMission->getMission();
-                    $mission->setReferentiel($referentiel);
-                    $mission->setReference($fiche->getReference());
-
-                    $mission->setLibelle($missionLibelle);
-                    $this->getMissionPrincipaleService()->update($mission);
+                    $readMissionPosition++;
                 }
+
+                $readActivites = explode("|", $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "");
+                $activites = $fiche->getActivites();
+                $fiche->clearActivites();
+
+                $readActivitePosition = 1;
+                foreach ($readActivites as $readActivite) {
+                    $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite);
+                    if ($activite === null) {
+                        $reference = $fiche->getReference() . "_" . $readActivitePosition;
+                        $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
+                    }
+                    $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites,$activite);
+                    if ($activiteElement === null) {
+                        $activiteElement = new ActiviteElement();
+                        $activiteElement->setActivite($activite);
+                    }
+                    $activiteElement->setPosition($readActivitePosition);
+                    $fiche->addActivite($activiteElement);
+                    $readActivitePosition++;
+                }
+
+
 
                 /** COMPETENCES ***************************************************************************************/
                 $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE] ?? "");
@@ -587,34 +616,44 @@ class ImportController extends AbstractActionController
 
                 $readMissions = explode("\n", $raw[self::HEADER_RMFP_MISSION_LIBELLE]);
                 $missions = $fiche->getMissions();
+                $fiche->clearMissions();
 
                 $readMissionPosition = 1;
                 foreach ($readMissions as $readMission) {
-                    // !!!Attention!!! on trichait par le passé, on récupérait la mission element par le nom de la fiche car unique
                     $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission);
-                    if ($mission === null) $mission = $this->getMissionPrincipaleService()->createWith($readMission, false);
-                    if (!$fiche->hasMission($mission)) {
+                    if ($mission === null) {
+                        $reference = $fiche->getReference() . "_" . $readMissionPosition;
+                        $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
+                    }
+                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions,$mission);
+                    if ($missionElement === null) {
                         $missionElement = new MissionElement();
                         $missionElement->setMission($mission);
-                        $missionElement->setPosition($readMissionPosition);
-                        $fiche->addMission($missionElement);
                     }
+                    $missionElement->setPosition($readMissionPosition);
+                    $fiche->addMission($missionElement);
                     $readMissionPosition++;
                 }
 
                 $readActivites = explode("\n", $raw[self::HEADER_RMFP_MISSION_ACTIVITE]);
-                $readActivitesPosition = 1;
+                $activites = $fiche->getActivites();
+                $fiche->clearActivites();
+
+                $readActivitePosition = 1;
                 foreach ($readActivites as $readActivite) {
-                    // !!!Attention!!! on trichait par le passé, on récupérait la mission element par le nom de la fiche car unique
                     $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite);
-                    if ($activite === null) $activite = $this->getActiviteService()->createWith($readActivite, false);
-                    if (!$fiche->hasActivite($activite)) {
+                    if ($activite === null) {
+                        $reference = $fiche->getReference() . "_" . $readActivitePosition;
+                        $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
+                    }
+                        $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites,$activite);
+                    if ($activiteElement === null) {
                         $activiteElement = new ActiviteElement();
                         $activiteElement->setActivite($activite);
-                        $activiteElement->setPosition($readActivitesPosition);
-                        $fiche->addActivite($activiteElement);
                     }
-                    $readActivitesPosition++;
+                    $activiteElement->setPosition($readActivitePosition);
+                    $fiche->addActivite($activiteElement);
+                    $readActivitePosition++;
                 }
 
                 /** COMPETENCES ***************************************************************************************/

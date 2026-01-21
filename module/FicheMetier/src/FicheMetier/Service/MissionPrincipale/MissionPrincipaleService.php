@@ -179,10 +179,12 @@ class MissionPrincipaleService
 
     /** FACADE ********************************************************************************************************/
 
-    public function createWith(string $intitule, bool $perist = true): ?Mission
+    public function createWith(string $intitule, Referentiel $referentiel, string $reference, bool $perist = true): ?Mission
     {
         $mission = new Mission();
         $mission->setLibelle($intitule);
+        $mission->setReferentiel($referentiel);
+        $mission->setReference($reference);
         if ($perist) $this->create($mission);
 
         return $mission;

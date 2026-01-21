@@ -144,4 +144,13 @@ class ActiviteElementService {
             }
         }
     }
+
+    /** @var ActiviteElement[] $activitesElements */
+    public function getActiviteElementFromArray(array $activitesElements, Activite $activite): ?ActiviteElement
+    {
+        foreach ($activitesElements as $activiteElement) {
+            if ($activiteElement->getActivite() === $activite) return $activiteElement;
+        }
+        return null;
+    }
 }

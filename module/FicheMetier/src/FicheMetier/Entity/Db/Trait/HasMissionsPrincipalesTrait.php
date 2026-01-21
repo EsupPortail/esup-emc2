@@ -80,4 +80,13 @@ trait HasMissionsPrincipalesTrait
         }
         return $qb;
     }
+
+    public function getMissionElementByMission(Mission $mission, bool $withHisto = false) : ?MissionElement
+    {
+        $missions = $this->getMissions($withHisto);
+        foreach ($missions as $missionElement) {
+            if ($missionElement->getMission() === $mission) return $missionElement;
+        }
+        return null;
+    }
 }

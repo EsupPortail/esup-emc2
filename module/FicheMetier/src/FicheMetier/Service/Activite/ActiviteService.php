@@ -147,7 +147,7 @@ class ActiviteService
         return $activites;
     }
 
-    public function getActiviteByLibelle(?string $libelle): ?Mission
+    public function getActiviteByLibelle(?string $libelle): ?Activite
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.libelle = :libelle')->setParameter('libelle', $libelle);
@@ -163,10 +163,12 @@ class ActiviteService
 
     /** FACADE ********************************************************************************************************/
 
-    public function createWith(string $intitule, bool $perist = true): ?Activite
+    public function createWith(string $intitule, Referentiel $referentiel, string $reference, bool $perist = true): ?Activite
     {
         $activite = new Activite();
         $activite->setLibelle($intitule);
+        $activite->setReferentiel($referentiel);
+        $activite->setReference($reference);
         if ($perist) $this->create($activite);
 
         return $activite;
