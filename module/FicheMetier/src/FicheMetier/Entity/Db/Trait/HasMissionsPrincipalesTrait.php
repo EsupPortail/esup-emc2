@@ -46,4 +46,16 @@ trait HasMissionsPrincipalesTrait
         }
         return false;
     }
+
+    public function getMissionsAsList(bool $withHisto = false): string
+    {
+        $missions = $this->getMissions($withHisto);
+        if (empty($missions)) return 'Aucune mission';
+        $texte  = "<ul>";
+        foreach ($missions as $mission) {
+            $texte .= "<li>" . $mission->getMission()->getLibelle() . "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
 }

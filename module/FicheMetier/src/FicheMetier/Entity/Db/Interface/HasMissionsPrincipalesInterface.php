@@ -14,4 +14,6 @@ interface HasMissionsPrincipalesInterface
     public function clearMissions(): void;
     public function hasMission(Mission $mission): bool;
 
+    public function getMissionsAsList(bool $withHisto = false): string;
+
 }
