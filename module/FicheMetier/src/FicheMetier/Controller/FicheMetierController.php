@@ -13,6 +13,7 @@ use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormAwareTrait;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesFormAwareTrait;
@@ -58,6 +59,7 @@ class FicheMetierController extends AbstractActionController
     use ThematiqueTypeServiceAwareTrait;
 
     use CodeFonctionFormAwareTrait;
+    use CodeEmploiTypeFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -355,6 +357,7 @@ class FicheMetierController extends AbstractActionController
                     $this->getCodeFonctionService()->create($codeFonction);
                     $fichemetier->setCodeFonction($codeFonction);
                 }
+                $fichemetier->setFamilleProfessionnelle($codeFonction->getFamilleProfessionnelle());
                 $this->getFicheMetierService()->update($fichemetier);
                 exit();
             }
@@ -405,6 +408,43 @@ class FicheMetierController extends AbstractActionController
             'form' => $form,
         ]);
         return $vm;
+    }
+
+    public function modifierCodeEmploiTypeAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getCodeEmploiTypeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modification des emploi-types associés",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function supprimerCodeEmploiTypeAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fichemetier->setCodesEmploiType(null);
+        $this->getFicheMetierService()->update($fichemetier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
     }
 
     public function modifierRaisonAction(): ViewModel

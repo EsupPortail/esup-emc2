@@ -9,6 +9,7 @@ use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereForm;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\CompetenceType\CompetenceTypeService;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesForm;
@@ -75,6 +76,7 @@ class FicheMetierControllerFactory
         $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
         /**
+         * @var CodeEmploiTypeForm $codeEmploiTypeForm
          * @var CodeFonctionForm $codeFonctionForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var RaisonForm $raisonForm
@@ -85,6 +87,7 @@ class FicheMetierControllerFactory
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
          * @var SelectionnerNiveauCarriereForm $selectionnerNiveauCarriereForm
          */
+        $codeEmploiTypeForm = $container->get('FormElementManager')->get(CodeEmploiTypeForm::class);
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerActivitesForm = $container->get('FormElementManager')->get(SelectionnerActivitesForm::class);
@@ -111,6 +114,7 @@ class FicheMetierControllerFactory
         $controller->setTendanceTypeService($tendanceTypeService);
         $controller->setThematiqueElementService($thematiqueElementService);
         $controller->setThematiqueTypeService($thematiqueTypeService);
+        $controller->setCodeEmploiTypeForm($codeEmploiTypeForm);
         $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setRaisonForm($raisonForm);

@@ -46,6 +46,7 @@ class FicheMetier implements
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?string $raison = null;
     private ?CodeFonction $codeFonction = null;
+    private ?string $codesEmploiType = null;
 
     public ?string $lienWeb = null;
     public ?string $lienPdf = null;
@@ -101,6 +102,18 @@ class FicheMetier implements
     {
         $this->familleProfessionnelle = $familleProfessionnelle;
     }
+
+    public function getCodesEmploiType(): ?string
+    {
+        return $this->codesEmploiType;
+    }
+
+    public function setCodesEmploiType(?string $codesEmploiType): void
+    {
+        $this->codesEmploiType = $codesEmploiType;
+    }
+
+
 
     public function getRaison(): ?string
     {

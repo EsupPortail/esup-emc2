@@ -21,7 +21,11 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             <?php echo $fichemetier->getLibelle(); ?>
     </span>
 </h1>
+<?php if ($fichemetier->getReference()): ?>
+    <?php echo $fichemetier->printReference(); ?>
+<?php endif; ?>
 <?php if ($mode !== 'affichage' AND $canModifier): ?>
+    <br>
     <?php /** @see \FicheMetier\Controller\FicheMetierController::modifierLibelleAction() */ ?>
     <a href="<?php echo $this->url('fiche-metier/modifier-libelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
        class="action primary ajax-modal" data-event="modification"
