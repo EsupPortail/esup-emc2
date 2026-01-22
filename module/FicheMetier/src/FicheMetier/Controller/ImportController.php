@@ -106,6 +106,7 @@ class ImportController extends AbstractActionController
 
     // HEADER SUPPLEMENTAIRE ///////////////////////////////////////////////////////////////////////////////////////////
     const HEADER_CODE_FONCTION = "Code Fonction";
+    const HEADER_CODE_EMPLOITYPE = "Codes Emploi Type";
 
     public function importAction(): ViewModel
     {
@@ -389,6 +390,9 @@ class ImportController extends AbstractActionController
                         $fiche->setCodeFonction($code);
                     }
                 }
+                //code fonction
+                $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
+                $fiche->setCodesEmploiType($codesEmploiType);
 
                 /** Liens *********************************************************************************************/
 
@@ -607,6 +611,9 @@ class ImportController extends AbstractActionController
                         $fiche->setCodeFonction($code);
                     }
                 }
+                //code fonction
+                $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
+                $fiche->setCodesEmploiType($codesEmploiType);
 
                 /** Partie Mission et activités ***********************************************************************/
 

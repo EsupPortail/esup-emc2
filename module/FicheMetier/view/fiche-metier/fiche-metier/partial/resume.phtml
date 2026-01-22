@@ -18,7 +18,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
 <dl class="row">
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Niveau de fonction </dt>
+        <dt class="col-md-4"> Niveau de fonction</dt>
         <dd class="col-md-8">
             <?php if ($fichemetier->getCodeFonction()): ?>
                 <?php echo $fichemetier->getCodeFonction()->getNiveauFonction()?->getLibelle(); ?>
@@ -28,12 +28,14 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
         </dd>
     <?php endif; ?>
     <?php $famille = $fichemetier->getFamilleProfessionnelle(); ?>
-    <dt class="col-md-4"> Spécialité </dt>
+    <dt class="col-md-4"> Spécialité</dt>
     <dd class="col-md-8">
         <?php if ($famille === null) : ?>
-            <em>Aucune spécialité</em> <span class="icon icon-info" title="L'absence de famille empêche de déterminer la spécialité"></span>
+            <em>Aucune spécialité</em> <span class="icon icon-info"
+                                             title="L'absence de famille empêche de déterminer la spécialité"></span>
         <?php elseif ($famille->getCorrespondance() === null) : ?>
-            <em style="color:gray;">Aucune spécialité </em><span class="icon icon-info" title="Aucune spécialité liée à la famille professionnelle"></span>
+            <em style="color:gray;">Aucune spécialité </em><span class="icon icon-info"
+                                                                 title="Aucune spécialité liée à la famille professionnelle"></span>
         <?php else : ?>
             <?php echo $famille->getCorrespondance()->getLibelleLong(); ?>
         <?php endif; ?>
@@ -56,7 +58,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                 <em style="color:gray;">Non renseigné</em>
             <?php endif; ?>
             <br> <!-- // todo : retirer ce br copium -->
-            <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
+            <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
                 <?php /** @see FicheMetierController::modifierCodeFonctionAction() */ ?>
                 <a href="<?php echo $this->url('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                    class="ajax-modal action primary" data-event="modification"
@@ -77,49 +79,49 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                 </a>
             <?php endif; ?>
         </dd>
+        <dt class="col-md-4"> Codes Emploi Type</dt>
+        <dd class="col-md-8">
+            <?php $codeET = $fichemetier->getCodesEmploiType() ?>
+            <?php if ($codeET !== null) : ?>
+                <code> <?php echo $codeET; ?> </code>
+            <?php else : ?>
+                <em style="color:gray;">Non renseigné</em>
+            <?php endif; ?>
+            <br> <!-- // todo : retirer ce br copium -->
+            <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
+                <?php /** @see FicheMetierController::modifierCodeEmploiTypeAction() */ ?>
+                <a href="<?php echo $this->url('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                   class="ajax-modal action primary" data-event="modification"
+                >
+                    <small>
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </small>
+                </a>
+                <?php /** @see FicheMetierController::supprimerCodeFonctionAction() */ ?>
+                <a href="<?php echo $this->url('fiche-metier/supprimer-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                   class="action danger"
+                >
+                    <small>
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </small>
+                </a>
+            <?php endif; ?>
+        </dd>
     <?php endif; ?>
-    <dt class="col-md-4"> Code emploi type</dt>
-    <dd class="col-md-8">
-        <?php $codeET = $fichemetier->getCodesEmploiType() ?>
-        <?php if ($codeET !== null) : ?>
-            <code> <?php echo $codeET; ?> </code>
-        <?php else : ?>
-            <em style="color:gray;">Non renseigné</em>
-        <?php endif; ?>
-        <br> <!-- // todo : retirer ce br copium -->
-        <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
-            <?php /** @see FicheMetierController::modifierCodeEmploiTypeAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/modifier-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-               class="ajax-modal action primary" data-event="modification"
-            >
-                <small>
-                    <span class="icon icon-editer"></span>
-                    Modifier
-                </small>
-            </a>
-            <?php /** @see FicheMetierController::supprimerCodeFonctionAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/supprimer-code-emploi-type', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-               class="action danger"
-            >
-                <small>
-                    <span class="icon icon-unchecked"></span>
-                    Supprimer
-                </small>
-            </a>
-        <?php endif; ?>
-    </dd>
-    <dt class="col-md-4"> Niveau de carrière </dt>
+    <dt class="col-md-4"> Niveau de carrière</dt>
     <dd class="col-md-8">
         <?php if ($fichemetier->getNiveauCarriere() === null) : ?>
             <span class="missing-data">Aucun niveau associé</span>
         <?php else : ?>
             <?php echo $fichemetier->getNiveauCarriere()->getLibelle(); ?>
-<!--            --><?php //if ($fichemetier->getNiveauCarriere()->getCategorie()): ?>
-<!--                (--><?php //echo $fichemetier->getNiveauCarriere()->getCategorie()->getLibelle(); ?><!--)-->
-<!--            --><?php //endif; ?>
+            <!--            --><?php //if ($fichemetier->getNiveauCarriere()->getCategorie()): ?>
+            <!--                (--><?php //echo $fichemetier->getNiveauCarriere()->getCategorie()->getLibelle(); ?><!--)-->
+            <!--            --><?php //endif; ?>
         <?php endif; ?>
         <br> <!-- // todo : retirer ce br copium -->
-        <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
+        <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
             <?php /** @see FicheMetierController::modifierNiveauCarriereAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier/modifier-niveau-carriere', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                class="ajax-modal action primary" data-event="modification"
@@ -140,7 +142,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
     </dd>
-        <dt class="col-md-4"> Date de dépôt</dt>
+    <dt class="col-md-4"> Date de dépôt</dt>
     <dd class="col-md-8"> <?php echo $fichemetier->getEtatActif()?->getHistoCreation()->format("d/m/Y"); ?></dd>
     <dt class="col-md-4"> État</dt>
     <dd class="col-md-8">
