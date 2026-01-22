@@ -9,6 +9,7 @@
  * @var array $params
  * @var ?CompetenceType $type
  * @var Competence[] $competences
+ * @var bool $displayCodeFonction
  */
 
 use Element\Entity\Db\Competence;
@@ -77,6 +78,14 @@ if ($type !== null) {
                 <?php endif; ?>
                 <br/>
                 <?php echo $competence->printReference(); ?>
+                <?php if ($displayCodeFonction) : ?>
+                    <?php if ($competence->getCodesFonction()) : ?>
+                        <?php $codes = explode("|", $competence->getCodesFonction()); ?>
+                        <?php foreach ($codes as $code) : ?>
+                            &nbsp;<code> <?php echo $code; ?></code>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
                 <br>
                 <small>
                 <?php $synonymes = $competence->getSynonymes(); ?>
@@ -125,18 +134,16 @@ if ($type !== null) {
                 <?php endforeach; ?>
                 </ul>
                 </small>
-
-
             </td>
             <?php if ($type === null) : ?>
                 <td> <?php echo $competence->getType()?->getLibelle(); ?> </td>
             <?php endif; ?>
             <?php if ($type === null || $type->getCode() === CompetenceType::CODE_SPECIFIQUE) : ?>
-                <td> <?php echo ($competence->getDiscipline()) ? $competence->getDiscipline()->getLibelle() : "Aucune"; ?> </td>
+                <td> <?php echo ($competence->getDiscipline()) ? $competence->getDiscipline()->getLibelle() : "-"; ?> </td>
             <?php endif; ?>
-            <td> <?php echo ($competence->getTheme()) ? $competence->getTheme()->getLibelle() : "Aucun"; ?> </td>
+            <td> <?php echo ($competence->getTheme()) ? $competence->getTheme()->getLibelle() : "-"; ?> </td>
             <td>
-                <?php echo ($competence->getReferentiel()) ? $competence->getReferentiel()->getLibelleCourt() : "Aucun"; ?>
+                <?php echo ($competence->getReferentiel()) ? $competence->getReferentiel()->getLibelleCourt() : "-"; ?>
             </td>
             <td class="action">
                 <?php if ($canVoir): ?>

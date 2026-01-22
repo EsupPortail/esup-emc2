@@ -5,12 +5,12 @@
  *
  * @var Competence $competence
  * @var FicheMetier[] $fiches
- * @var Agent[] $agents
  * @var bool $displayCodeFonction
  */
 
 use Application\Entity\Db\Agent;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceType;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 
@@ -21,6 +21,10 @@ use FicheMetier\Entity\Db\Mission;
     <dd class="col-md-8"> <?php echo $competence->getLibelle(); ?> </dd>
     <dt class="col-md-4"> Type </dt>
     <dd class="col-md-8"> <?php echo ($competence->getType())?$competence->getType()->getLibelle():"Aucun"; ?> </dd>
+    <?php if ($competence->getType()?->getCode() === CompetenceType::CODE_SPECIFIQUE) : ?>
+        <dt class="col-md-4"> Discipline </dt>
+        <dd class="col-md-8"> <?php echo ($competence->getDiscipline())?$competence->getDiscipline()->getLibelle():"Aucune"; ?> </dd>
+    <?php endif; ?>
     <dt class="col-md-4"> Thème </dt>
     <dd class="col-md-8"> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </dd>
     <dt class="col-md-4"> Description </dt>
@@ -82,15 +86,3 @@ use FicheMetier\Entity\Db\Mission;
         </ul>
     </dd>
 </dl>
-
-<h2>  Agents ayant en acquis la compétence </h2>
-
-<?php if (!empty($agents)) : ?>
-    <ul>
-        <?php foreach($agents as $agent): ?>
-            <li> <?php echo $agent->getDenomination(true); ?> </li>
-        <?php endforeach; ?>
-    </ul>
-<?php else : ?>
-    Aucun·e agent·e ne possède cette compétence
-<?php endif; ?>

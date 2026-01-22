@@ -113,7 +113,7 @@ class CompetenceForm extends Form {
             'type' => Select::class,
             'name' => 'discipline',
             'options' => [
-                'label' => "Discipline de compétence <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Discipline de la compétence <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner la discipline de la compétence ...",
                 'value_options' => $this->getCompetenceDisciplineService()->getCompetencesDisciplinesAsOptions(),

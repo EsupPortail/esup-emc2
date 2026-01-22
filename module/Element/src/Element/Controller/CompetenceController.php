@@ -93,6 +93,7 @@ class CompetenceController extends AbstractActionController
 
             'type' => $type,
             'competences' => $competences,
+            'displayCodeFonction' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION),
         ]);
     }
 
@@ -102,14 +103,14 @@ class CompetenceController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
-        $agents = $this->getCompetenceElementService()->getAgentsHavinCompetenceFromAgent($competence);
+//        $agents = $this->getCompetenceElementService()->getAgentsHavinCompetenceFromAgent($competence);
         $fiches = $this->getFicheMetierService()->getFichesMetiersByCompetence($competence);
 
         $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
         return new ViewModel([
             'title' => "Affichage d'une compétence",
             'competence' => $competence,
-            'agents' => $agents,
+//            'agents' => $agents,
             'fiches' => $fiches,
             'displayCodeFonction' => $displayCodeFonction,
         ]);
