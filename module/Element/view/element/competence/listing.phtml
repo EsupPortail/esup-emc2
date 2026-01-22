@@ -52,7 +52,7 @@ if ($type !== null) {
 <table class="table table-condensed table-hover datatable" id="competences-<?php echo $type?->getCode(); ?>">
     <thead>
     <tr>
-        <th> Libellé</th>
+        <th data-type="string"> Libellé</th>
         <?php if ($type ===null) : ?>
             <th> Type </th>
         <?php endif; ?>
@@ -67,7 +67,8 @@ if ($type !== null) {
     <tbody>
     <?php foreach ($competences as $competence) : ?>
         <tr class="<?php if ($competence->estHistorise()) echo " historise "; ?>">
-            <td>
+
+            <td data-column-id="Libellé" data-order="<?php echo iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $competence->getLibelle()); ?>">
                 <?php echo $competence->getLibelle(); ?>
                 <?php if ($competence->getDescription() !== null and trim($competence->getDescription() !== '')) : ?>
                     <span class="icon icon-information" title="<?php echo $competence->getDescription(); ?>"

@@ -153,6 +153,7 @@ class CompetenceService
 
     public function getCompetencesAsGroupOptions(?CompetenceType $type = null): array
     {
+        $a = 1;
         if ($type === null) {
             $competences = $this->getCompetences();
             $competences = array_filter($competences, function (Competence $competence) {
@@ -174,7 +175,7 @@ class CompetenceService
             foreach ($dictionnaire as $clef => $listing) {
                 $optionsoptions = [];
                 usort($listing, function (Competence $a, Competence $b) {
-                    return $a->getLibelle() <=> $b->getLibelle();
+                    return iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $a->getLibelle()) <=> iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $b->getLibelle());
                 });
 
                 foreach ($listing as $competence) {
@@ -200,7 +201,7 @@ class CompetenceService
             foreach ($dictionnaire as $clef => $listing) {
                 $optionsoptions = [];
                 usort($listing, function (Competence $a, Competence $b) {
-                    return $a->getLibelle() <=> $b->getLibelle();
+                    return iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $a->getLibelle()) <=> iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $b->getLibelle());
                 });
 
                 foreach ($listing as $competence) {
@@ -219,8 +220,6 @@ class CompetenceService
 
     private function competenceOptionify(Competence $competence): array
     {
-        /** @var CompetenceReferentiel $referentiel */
-        $referentiel = $competence->getReferentiel();
         $type = $competence->getType();
         $texte = $competence->getLibelle();
         $this_option = [
@@ -231,7 +230,7 @@ class CompetenceService
                         . $texte
                         . "&nbsp;" . "<span class='badge'>"
                         . (($type !== null) ? $type->getLibelle() : "Sans type")
-                        . "</span>"
+                        . "</span>&nbsp;"
                         . $competence->printReference()
                     . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($competence->getDescription() ?? "Aucune description") . "</span>"
                     . "</span>",
