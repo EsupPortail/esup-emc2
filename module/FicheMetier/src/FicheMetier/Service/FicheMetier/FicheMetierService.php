@@ -276,6 +276,16 @@ class FicheMetierService
         return $result;
     }
 
+    /** @return FicheMetier[] */
+    public function getFichesMetiersByFamilleProfessionnelle(FamilleProfessionnelle $familleProfessionnelle): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ficheMetier.familleProfessionnelle = :familleProfessionnelle')->setParameter('familleProfessionnelle', $familleProfessionnelle);
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
     /** FACADE ********************************************************************************************************/
 
     public function setDefaultValues(FicheMetier $fiche): FicheMetier

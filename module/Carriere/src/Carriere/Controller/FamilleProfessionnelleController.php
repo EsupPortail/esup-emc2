@@ -137,11 +137,20 @@ class FamilleProfessionnelleController extends AbstractActionController
             exit();
         }
 
+        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByFamilleProfessionnelle($famille);
+        if (!empty($fichesmetiers)) {
+            return new ViewModel([
+                'title' => "Suppression de la famille professionnelle " . $famille->getLibelle(),
+                'famille' => $famille,
+                'fichesmetiers' => $fichesmetiers,
+            ]);
+        }
+
         $vm = new ViewModel();
         if ($famille !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la famille professionnelle" . $famille->getLibelle(),
+                'title' => "Suppression de la famille professionnelle " . $famille->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('famille-professionnelle/supprimer', ["famille-professionnelle" => $famille->getId()], [], true),
             ]);

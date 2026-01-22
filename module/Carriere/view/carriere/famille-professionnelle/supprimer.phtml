@@ -1,0 +1,36 @@
+<?php
+
+use Carriere\Entity\Db\FamilleProfessionnelle;
+use FicheMetier\Entity\Db\FicheMetier;
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::supprimerAction()
+ * @var FamilleProfessionnelle $famille
+ * @var FicheMetier[] $fichesmetiers
+ */
+
+?>
+
+<span class="text-danger" style="font-weight: bold;">
+    <span class="icon icon-unchecked"></span>
+    La famille professionnelle <?php echo $famille->getLibelle(); ?> ne peut pas être supprimée.
+</span>
+
+<br>
+<br>
+
+<?php if (!empty($fichesmetiers)) : ?>
+    <?php echo count($fichesmetiers); ?> fiche·s métier·s utilise·nt cette famille :
+    <ul>
+        <?php foreach ($fichesmetiers as $fichemetier) : ?>
+            <li>
+                <?php echo $fichemetier->getLibelle(); ?>
+                <?php if ($fichemetier->estHistorise()) : ?>
+                    <span class="badge" style="background: var(--bs-danger);"> Historisée </span>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+
