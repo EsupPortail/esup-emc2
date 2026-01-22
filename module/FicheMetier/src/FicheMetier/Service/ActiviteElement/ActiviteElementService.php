@@ -129,16 +129,16 @@ class ActiviteElementService {
         $ranking = []; $position = 1; $elementRanking = null;
         foreach ($activites as $activite) {
             $ranking[$position] = $activite;
-            if ($activite === $activiteElement) $elementRanking = $position;
             $position++;
         }
+        $elementRanking = $activiteElement->getPosition();
 
         if ($elementRanking !== null) {
             $otherRanking =  $elementRanking + $direction;
 
             if (isset($ranking[$otherRanking])) {
                 $ranking[$otherRanking]->setPosition($elementRanking);
-                $ranking[$elementRanking]->setPosition($otherRanking);
+                $activiteElement->setPosition($otherRanking);
                 $this->getObjectManager()->flush($ranking[$elementRanking]);
                 $this->getObjectManager()->flush($ranking[$otherRanking]);
             }

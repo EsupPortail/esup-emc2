@@ -126,19 +126,19 @@ class MissionElementService {
         $this->reorder($ficheMetier);
         $missions = $ficheMetier->getMissions();
 
-        $ranking = []; $position = 1; $elementRanking = null;
+        $ranking = []; $position = 1;
         foreach ($missions as $mission) {
             $ranking[$position] = $mission;
-            if ($mission === $missionElement) $elementRanking = $position;
             $position++;
         }
+        $elementRanking = $missionElement->getPosition();
 
         if ($elementRanking !== null) {
             $otherRanking =  $elementRanking + $direction;
 
             if (isset($ranking[$otherRanking])) {
                 $ranking[$otherRanking]->setPosition($elementRanking);
-                $ranking[$elementRanking]->setPosition($otherRanking);
+                $missionElement->setPosition($otherRanking);
                 $this->getObjectManager()->flush($ranking[$elementRanking]);
                 $this->getObjectManager()->flush($ranking[$otherRanking]);
             }
