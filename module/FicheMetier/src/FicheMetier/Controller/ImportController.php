@@ -304,7 +304,7 @@ class ImportController extends AbstractActionController
         if ($tendanceFacteur === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::FACTEUR . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
         }
-        if ($tendanceCondition === null) {
+        if (false and $tendanceCondition === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
         }
 
@@ -530,7 +530,7 @@ class ImportController extends AbstractActionController
         if ($tendanceFacteur === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::FACTEUR . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
         }
-        if ($tendanceCondition === null) {
+        if (false and $tendanceCondition === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
         }
 

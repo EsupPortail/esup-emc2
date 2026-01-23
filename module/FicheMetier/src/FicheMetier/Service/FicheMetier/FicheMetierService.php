@@ -32,6 +32,8 @@ use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
 use Mpdf\MpdfException;
 use Referentiel\Entity\Db\Referentiel;
@@ -59,6 +61,8 @@ class FicheMetierService
     use NiveauFonctionServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use TendanceTypeServiceAwareTrait;
+    use ThematiqueTypeServiceAwareTrait;
 
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
@@ -510,6 +514,11 @@ class FicheMetierService
         $displayCompetencesSpecifiques = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE);
         $displayContexte = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_CONTEXTE);
         $displayTendance = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_TENDANCE);
+
+        $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes('ordre','asc',false);
+        $fichemetier->setTendancesTypes($tendancesTypes);
+        $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('ordre','asc',false);
+        $fichemetier->setThematiquesTypes($thematiquesTypes);
 
         $vars = [
             'fichemetier' => $fichemetier,

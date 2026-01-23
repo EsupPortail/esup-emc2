@@ -216,9 +216,16 @@ $formats = [
 <?php endif; ?>
 
 <?php foreach ($fiches as $fiche) : ?>
-
     <div class="card" style="padding: 0.25rem">
-    <h3><span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+        <div class="row">
+            <div class="col-md-8">
+                <h3> <span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+            </div>
+            <div class="col-md-4">
+                <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <?php endif; ?><br>
+                <?php if ($fiche->getCodesEmploiType()): ?> <strong>Codes emploi type</strong> <?php echo $fiche->getCodesEmploiType(); ?> <?php endif; ?><br>
+            </div>
+        </div>
     <?php if ($fiche->getFamilleProfessionnelle()) echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
     <?php if ($fiche->getFamilleProfessionnelle()?->getCorrespondance()) echo $fiche->getFamilleProfessionnelle()->getCorrespondance()->getLibelleLong(); ?>
 
@@ -232,7 +239,7 @@ $formats = [
         <strong>Activités</strong>
         <ul>
         <?php foreach ($fiche->getActivites() as $activite) : ?>
-            <li><?php echo $activite->getActivite()->getLibelle(); ?> <?php if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?></li></li>
+            <li><?php echo $activite->getActivite()->getLibelle(); ?> <?php if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?></li>
         <?php endforeach; ?>
         </ul>
 
@@ -253,10 +260,8 @@ $formats = [
                 <?php /** @var Competence $competence */ ?>
                 <?php foreach ($competences_ as $competence) : ?>
                     <?php echo $competence->getLibelle(); ?>
-                    <span class="badge"
-                          style="background:<?php echo $competence->getReferentiel()->getCouleur(); ?>">
-                        <?php echo $competence->getReferentiel()->getLibelleCourt(); ?><?php echo $competence->getReference(); ?>
-                    </span><br>
+                    <?php echo $competence->printReference(); ?>
+                    <br>
                 <?php endforeach; ?>
             </div>
         <?php endforeach; ?>

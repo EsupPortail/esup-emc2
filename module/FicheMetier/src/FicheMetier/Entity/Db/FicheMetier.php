@@ -56,6 +56,23 @@ class FicheMetier implements
 
     private ?string $raw = null;
 
+    /** @var TendanceType[] */
+    private array $tendancesTypes = [];
+
+    public function setTendancesTypes(array $types): void
+    {
+        $this->tendancesTypes = $types;
+    }
+
+    /** @var ThematiqueType[] */
+    private array $thematiquesTypes = [];
+
+    public function setThematiquesTypes (array $types): void
+    {
+        $this->thematiquesTypes  = $types;
+    }
+
+
     public function __construct()
     {
         $this->activites = new ArrayCollection();
@@ -181,6 +198,29 @@ class FicheMetier implements
     public function clearTendances(): void
     {
         $this->tendances->clear();
+    }
+
+    /** @return ThematiqueElement[] */
+    public function getThematiques(): array
+    {
+        $thematiques = [];
+        /** @var ThematiqueElement $thematique */
+        foreach ($this->thematiques as $tendance) {
+            if ($thematique->estNonHistorise()) {
+                $thematique[$thematique->getType()->getCode()] = $thematique;
+            }
+        }
+        return $thematiques;
+    }
+
+    public function addThematique(ThematiqueElement $thematique): void
+    {
+        $this->thematiques->add($thematique);
+    }
+
+    public function clearThematique(): void
+    {
+        $this->thematiques->clear();
     }
 
     /** FONCTION POUR MACRO *******************************************************************************************/
@@ -348,22 +388,17 @@ EOS;
         return $this->raison;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     * N.B. On suppose que l'attribut $thematiquesTypes est initialisé avec la liste des types de thematiques
+     */
     public function toStringThematiques(): string
     {
-        /** @var ThematiqueElement[] $thematiques */
-        $thematiques = $this->thematiques->toArray();
-        $thematiques = array_filter($thematiques, function (ThematiqueElement $a) {
-            return $a->estNonHistorise() && $a->getType()->estNonHistorise();
-        });
-        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) {
-            return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
-        });
-        if (empty($thematiques)) return "";
-
+        $listing = [];
+        foreach ($this->getThematiques() as $thematique) {
+            $listing[$thematique->getType()->getCode()] = $thematique;
+        }
         $html = <<<EOS
-<h2>Environnement et contexte de travail</h2>
-
 <table style='width:100%; border-collapse: collapse;' id="environnement">
 <thead>
     <tr>
@@ -374,43 +409,35 @@ EOS;
 <tbody>
 EOS;
 
-        foreach ($thematiques as $thematique) {
-            $html .= "<tr>";
-            $html .= "<td>" . $thematique->getType()->getLibelle() . "</td>";
-            $html .= "<td>" . $thematique->getNiveauMaitrise()->getLibelle() . "</td>";
-            $html .= "</tr>";
+        foreach ($this->thematiquesTypes as $type) {
+            if ($type->isObligatoire() OR isset($listing[$type->getCode()])) {
+                $thematique = $listing[$type->getCode()]??null;
+                $html .= "<tr>";
+                $html .= "<td>" . $type->getLibelle() . "</td>";
+                $html .= "<td>" . ($thematique?->getNiveauMaitrise()?$thematique->getNiveauMaitrise()->getLibelle():"non précisé") . "</td>";
+                $html .= "</tr>";
+            }
         }
-        $html .= <<<EOS
-</tbody>
-</table>
-EOS;
-
+        $html .= "</tbody></table>";
         return $html;
     }
 
-    /** @noinspection PhpUnused */
+    /** @noinspection PhpUnused
+     * N.B. On suppose que l'attribut $tendancesTypes est initialisé avec la liste des types de tendance
+     **/
+
     public function toStringTendances(): string
     {
-        /** @var TendanceElement[] $tendances */
-        $tendances = $this->tendances->toArray();
-        $tendances = array_filter($tendances, function (TendanceElement $a) {
-            return $a->estNonHistorise() && $a->getType()->estNonHistorise();
-        });
-        usort($tendances, function (TendanceElement $a, TendanceElement $b) {
-            return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
-        });
-        if (empty($tendances)) return "";
+        $listing = [];
+        foreach ($this->getTendances() as $tendance) $listing[$tendance->getType()->getCode()] = $tendance;
 
-        $html = <<<EOS
-<h2>Tendances d'évolution </h2>
-EOS;
-
-        $html .= "<div class='tendances'>";
-        foreach ($tendances as $tendance) {
-            $html .= "<div class='tendance'>";
-            $html .= "<div class='tendance-libelle'>" . $tendance->getType()->getLibelle() . "</div>";
-            $html .= "<div class='tendance-texte'>" . $tendance->getTexte() . "</div>";
-            $html .= "</div>";
+        $html = "<div class='tendances'>";
+        foreach ($this->tendancesTypes as $type) {
+            if ($type->isObligatoire() OR isset($listing[$type->getCode()])) {
+                $tendance = $listing[$type->getCode()]??null;
+                $html .= "<div class='tendance-libelle'>" . $type->getLibelle() . "</div>";
+                $html .= "<div class='tendance-texte'>" . ($tendance?$tendance->getTexte():"non précisé") . "</div>";
+            }
         }
         $html .= "</div>";
         return $html;

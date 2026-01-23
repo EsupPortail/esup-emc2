@@ -16,6 +16,8 @@ use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheMetier\Service\TendanceType\TendanceTypeService;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Interop\Container\ContainerInterface;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
@@ -49,6 +51,8 @@ class FicheMetierServiceFactory {
          * @var NiveauFonctionService $niveauFonctionService
          * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
+         * @var TendanceTypeService $tendanceTypeService
+         * @var ThematiqueTypeService $thematiqueTypeService
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
@@ -71,6 +75,8 @@ class FicheMetierServiceFactory {
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $referentielService = $container->get(ReferentielService::class);
+        $tendanceTypeService = $container->get(TendanceTypeService::class);
+        $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
         /**
          * @var SelectionApplicationHydrator $selectionApplicationHydrator
@@ -95,6 +101,8 @@ class FicheMetierServiceFactory {
         $service->setParametreService($parametreService);
         $service->setReferentielService($referentielService);
         $service->setRenduService($renduService);
+        $service->setTendanceTypeService($tendanceTypeService);
+        $service->setThematiqueTypeService($thematiqueTypeService);
 
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);
         $service->setHasCompetenceCollectionService($hasCompetenceCollectionService);
