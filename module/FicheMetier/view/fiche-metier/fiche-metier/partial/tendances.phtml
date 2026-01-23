@@ -53,7 +53,7 @@ foreach ($tendancesElements as $tendancesElement) {
             <tbody>
             <?php usort($tendancesTypes, function (TendanceType $a, TendanceType $b) { return $a->getOrdre() <=> $b->getOrdre();}); ?>
             <?php foreach ($tendancesTypes as $tendanceType): ?>
-                <?php if ($editable || $tendanceType->isObligatoire() ||  isset($elements[$tendanceType->getCode()])) : ?>
+                <?php if (true || $editable || $tendanceType->isObligatoire() ||  isset($elements[$tendanceType->getCode()])) : ?>
                 <tr>
                     <td data-column-id="Libellé">
                         <span>

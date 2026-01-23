@@ -392,7 +392,7 @@ EOS;
      * @noinspection PhpUnused
      * N.B. On suppose que l'attribut $thematiquesTypes est initialisé avec la liste des types de thematiques
      */
-    public function toStringThematiques(): string
+    public function toStringThematiques(string $all = "false"): string
     {
         $listing = [];
         foreach ($this->getThematiques() as $thematique) {
@@ -410,7 +410,7 @@ EOS;
 EOS;
 
         foreach ($this->thematiquesTypes as $type) {
-            if ($type->isObligatoire() OR isset($listing[$type->getCode()])) {
+            if ($all === "1" OR $type->isObligatoire() OR isset($listing[$type->getCode()])) {
                 $thematique = $listing[$type->getCode()]??null;
                 $html .= "<tr>";
                 $html .= "<td>" . $type->getLibelle() . "</td>";
@@ -426,14 +426,14 @@ EOS;
      * N.B. On suppose que l'attribut $tendancesTypes est initialisé avec la liste des types de tendance
      **/
 
-    public function toStringTendances(): string
+    public function toStringTendances(string $all = "false"): string
     {
         $listing = [];
         foreach ($this->getTendances() as $tendance) $listing[$tendance->getType()->getCode()] = $tendance;
 
         $html = "<div class='tendances'>";
         foreach ($this->tendancesTypes as $type) {
-            if ($type->isObligatoire() OR isset($listing[$type->getCode()])) {
+            if ($all === "1" OR $type->isObligatoire() OR isset($listing[$type->getCode()])) {
                 $tendance = $listing[$type->getCode()]??null;
                 $html .= "<div class='tendance-libelle'>" . $type->getLibelle() . "</div>";
                 $html .= "<div class='tendance-texte'>" . ($tendance?$tendance->getTexte():"non précisé") . "</div>";
