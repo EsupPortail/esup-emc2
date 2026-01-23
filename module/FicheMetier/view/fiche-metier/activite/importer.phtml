@@ -105,7 +105,7 @@ $this->headTitle("Importation d'activité");
             <ul>
                 <li> <code><?php echo Activite::ACTIVITE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> Identifiant de l'activité dans le réféntiel</li>
                 <li> <code><?php echo Activite::ACTIVITE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> le libellé de l'activité</li>
-                <li> <code><?php echo Activite::ACTIVITE_HEADER_DESCRIPTION; ?></code> la description de l'activité</li>
+<!--                <li> <code>--><?php //echo Activite::ACTIVITE_HEADER_DESCRIPTION; ?><!--</code> la description de l'activité</li>-->
                 <li><code><?php echo Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE; ?></code> : la liste des codes des fiches métiers incluant l'activité,
                     <?php if ($displayCodeFonction) : ?>
                 <li><code><?php echo Activite::ACTIVITE_HEADER_CODES_FONCTION; ?></code> : la liste des codes des "fonctions" incluant l'activité.</li>
@@ -157,7 +157,7 @@ $this->headTitle("Importation d'activité");
         <thead>
             <tr>
                 <th class="col-md-4"> Libellé </th>
-                <th class="col-md-4"> Description </th>
+<!--                <th class="col-md-4"> Description </th>-->
                 <th class="col-md-2"> Référence </th>
                 <th class="col-md-2"> Codes </th>
             </tr>
@@ -166,13 +166,13 @@ $this->headTitle("Importation d'activité");
         <?php foreach ($activites as $activite) : ?>
             <tr>
                 <td> <?php echo $activite->getLibelle(); ?> </td>
-                <td>
-                    <?php if($activite->getDescription()): ?>
-                        <?php echo $activite->getDescription(); ?>
-                    <?php else : ?>
-                        <span class="missing-data"> Aucune description </span>
-                    <?php endif ?>
-                </td>
+<!--                <td>-->
+<!--                    --><?php //if($activite->getDescription()): ?>
+<!--                        --><?php //echo $activite->getDescription(); ?>
+<!--                    --><?php //else : ?>
+<!--                        <span class="missing-data"> Aucune description </span>-->
+<!--                    --><?php //endif ?>
+<!--                </td>-->
                 <td>
                     <span class="badge">
                         <?php echo $activite->getReferentiel()->getLibelleCourt(); ?>

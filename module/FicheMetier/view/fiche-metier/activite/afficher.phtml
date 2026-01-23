@@ -18,10 +18,10 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
         <dl class="row">
             <dt class="col-md-4"> Libellé</dt>
             <dd class="col-md-8"> <?php echo $activite->getLibelle(); ?> </dd>
-            <?php if ($activite->getDescription()) : ?>
-                <dt class="col-md-4"> Description</dt>
-                <dd class="col-md-8"> <?php echo $activite->getDescription(); ?> </dd>
-            <?php endif; ?>
+<!--            --><?php //if ($activite->getDescription()) : ?>
+<!--                <dt class="col-md-4"> Description</dt>-->
+<!--                <dd class="col-md-8"> --><?php //echo $activite->getDescription(); ?><!-- </dd>-->
+<!--            --><?php //endif; ?>
             <dt class="col-md-4"> Référence</dt>
             <dd class="col-md-8">
                 <?php echo $activite->printReference(); ?>
@@ -33,7 +33,7 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
     </div>
 </div>
 
-<h2> Listing des fiches métiers incluants cette activité </h2>
+<h2> Listing des fiches métiers incluant cette activité </h2>
 
 <?php if (empty($fichesmetiers)): ?>
     Aucune fiche métier n'utilise cette activité

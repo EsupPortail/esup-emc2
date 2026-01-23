@@ -29,20 +29,20 @@ class ActiviteForm extends Form
             ],
         ]);
         //description
-        $this->add([
-            'name' => 'description',
-            'type' => Textarea::class,
-            'options' => [
-                'label' => 'Description  : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'id'                => 'description',
-                'class'             => 'tinymce',
-            ],
-        ]);
+//        $this->add([
+//            'name' => 'description',
+//            'type' => Textarea::class,
+//            'options' => [
+//                'label' => 'Description  : ',
+//                'label_attributes' => [
+//                    'class' => 'control-label',
+//                ],
+//            ],
+//            'attributes' => [
+//                'id'                => 'description',
+//                'class'             => 'tinymce',
+//            ],
+//        ]);
         //referentiel
         $this->add([
             'type' => Select::class,
@@ -89,7 +89,7 @@ class ActiviteForm extends Form
         //inputFilter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
-            'description' => ['required' => false,],
+//            'description' => ['required' => false,],
             'referentiel' => ['required' => true,],
             'identifiant' => ['required' => true,],
         ]));
