@@ -736,15 +736,6 @@ EOS;
         $css=<<<EOS
 .dropdown-item:hover span.text span.competence span.description { 
     display: block !important; font-style: italic; 
-}    
-
-span.competence {    
-    display: inline-block;
-}
-
-.bootstrap-select .filter-option-inner {
-    white-space: normal;
-    height: auto;
 }
 EOS;
 
@@ -783,15 +774,6 @@ EOS;
         $css=<<<EOS
 .dropdown-item:hover span.text span.competence span.description {
     display: block !important; font-style: italic;
-}
-
-span.competence {
-    display: inline-block;
-}
-
-.bootstrap-select .filter-option-inner {
-    white-space: normal;
-    height: auto;
 }
 EOS;
 

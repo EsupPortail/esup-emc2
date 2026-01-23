@@ -351,19 +351,34 @@ div.alert-danger .fa-exclamation-triangle {
     background: var(--emc2-ficheposte);
 }
 
-ul.dropdown-menu {
-    max-width:90vh;
+/*ul.dropdown-menu {*/
+/*    width: 100%;*/
+/*}*/
+
+/** Parametrage de bootstrap-select ***********************************************************************************/
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
 }
 
-ul.dropdown-menu span.libelle_mission {
-    width:75%;
+ul.dropdown-menu span.libelle_mission,
+ul.dropdown-menu span.libelle_competence
+{
     white-space: normal !important;
     word-wrap: break-word;
+    max-width: 90% !important;
 }
 
+
+ul.dropdown-menu span.description {
+    white-space: normal !important;
+    word-wrap: break-word;
+    max-width: 90% !important;
+}
 ul.dropdown-menu span.description li {
-    white-space: normal !important;
-    word-wrap: break-word;
+    /*white-space: normal !important;*/
+    /*word-wrap: break-word;*/
 }
 
 div.filter-option-inner-inner span.mission {

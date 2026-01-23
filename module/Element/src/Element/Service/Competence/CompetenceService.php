@@ -226,7 +226,7 @@ class CompetenceService
             'value' => $competence->getId(),
             'attributes' => [
                 'data-content' =>
-                    "<span class='competence' title='" . ($competence->getDescription() ?? "Aucune description") . "' class='badge btn-danger'>"
+                    "<span class='libelle_competence competence' title='" . ($competence->getDescription() ?? "Aucune description") . "' class='badge btn-danger'>"
                         . $texte
                         . "&nbsp;" . "<span class='badge'>"
                         . (($type !== null) ? $type->getLibelle() : "Sans type")
