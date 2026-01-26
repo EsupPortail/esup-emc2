@@ -256,9 +256,8 @@ EOS;
 //        $texte  = $mission->getLibelle();
         $texte = "<span class='libelle_activite shorten'>" . MissionPrincipaleService::tronquerTexte($activite->getLibelle(), 100) . "</span>";
         $texte .= "<span class='libelle_activite full' style='display: none'>" . $activite->getLibelle() . "</span>";
-        $description = $activite->getDescription();
-
-        $texte = "<span class='activite' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
+//        $description = $activite->getDescription();
+//        $texte = "<span class='activite' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
 
         if ($activite->getCodesFicheMetier() !== null) {
             $texte .= "&nbsp;" . "<span class='badge'>" .

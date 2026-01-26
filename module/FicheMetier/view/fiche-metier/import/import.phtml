@@ -232,14 +232,16 @@ $formats = [
         <strong>Missions</strong>
         <ul>
         <?php foreach ($fiche->getMissions() as $mission) : ?>
-            <li><?php echo $mission->getMission()->getLibelle(); ?> <?php if ($mission->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?></li>
+            <li><?php echo $mission->getMission()->getLibelle(); ?>
+<!--                --><?php //if ($mission->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?><!--</li>-->
         <?php endforeach; ?>
         </ul>
 
         <strong>Activités</strong>
         <ul>
         <?php foreach ($fiche->getActivites() as $activite) : ?>
-            <li><?php echo $activite->getActivite()->getLibelle(); ?> <?php if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?></li>
+            <li><?php echo $activite->getActivite()->getLibelle(); ?>
+<!--                --><?php //if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?><!--</li>-->
         <?php endforeach; ?>
         </ul>
 

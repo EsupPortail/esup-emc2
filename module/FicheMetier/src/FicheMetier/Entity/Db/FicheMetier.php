@@ -100,8 +100,9 @@ class FicheMetier implements
         $this->raw = $raw;
     }
 
-    public function getLibelle(): ?string
+    public function getLibelle(bool $fillEmptyLibelle = true): ?string
     {
+        if (!$fillEmptyLibelle) { return $this->libelle; }
         return $this->libelle??"<span class='missing-data'>Aucune libelle pour la fiche Id:".$this->id."</span>";
     }
 

@@ -378,6 +378,7 @@ class CompetenceController extends AbstractActionController
                     $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) {
                         return $a !== '';
                     });
+                    $ajoutFiches = [];
                     foreach ($codesFicheMetier as $codeFicheMetier) {
                         $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                         if ($fichemetier === null) {
@@ -389,15 +390,19 @@ class CompetenceController extends AbstractActionController
                                 $this->getCompetenceElementService()->create($element);
                                 $fichemetier->addCompetenceElement($element);
                                 $this->getFicheMetierService()->update($fichemetier);
-                                $info[] = "Ajout de la compétence [" . $competence->getReference() ."|". $competence->getLibelle() ."] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                $ajoutFiches[] = $fichemetier->printReference();
                             }
                         }
+                    }
+                    if (!empty($ajoutFiches)) {
+                        $info[] = "La compétence [libelle: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Emploi Type).";
                     }
                     $codesFonction = explode('|', $competence->getCodesFonction() ?? "");
                     $codesFonction = array_map('trim', $codesFonction);
                     $codesFonction = array_filter($codesFonction, function (string $a) {
                         return $a !== '';
                     });
+                    $ajoutFiches = [];
                     foreach ($codesFonction as $codeFonction) {
                         $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                         if ($codeFonction_ === null) {
@@ -415,8 +420,11 @@ class CompetenceController extends AbstractActionController
                                 $this->getCompetenceElementService()->create($element);
                                 $fichemetier->addCompetenceElement($element);
                                 $this->getFicheMetierService()->update($fichemetier);
-                                $info[] = "Ajout de la compétence [" . $competence->getReference() ."|". $competence->getLibelle() ."] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                $ajoutFiches[] = $fichemetier->printReference();
                             }
+                        }
+                        if (!empty($ajoutFiches)) {
+                            $info[] = "La compétence [libelle: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Fonction).";
                         }
                     }
                 }
