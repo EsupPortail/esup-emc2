@@ -207,8 +207,8 @@ class ActiviteController extends AbstractActionController
                     if (!$hasId) $error[] = "La colonne obligatoire [" . Activite::ACTIVITE_HEADER_ID . "] est manquante";
                     $hasLibelle = in_array(Activite::ACTIVITE_HEADER_LIBELLE, $header);
                     if (!$hasLibelle) $error[] = "La colonne obligatoire [" . Activite::ACTIVITE_HEADER_LIBELLE . "] est manquante";
-                    $hasDescription = in_array(Activite::ACTIVITE_HEADER_DESCRIPTION, $header);
-                    if (!$hasDescription) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_DESCRIPTION . "] est manquante";
+//                    $hasDescription = in_array(Activite::ACTIVITE_HEADER_DESCRIPTION, $header);
+//                    if (!$hasDescription) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_DESCRIPTION . "] est manquante";
                     $hasCodesFichesMetiers = in_array(Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE, $header);
                     if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE . "] est manquante";
                     $hasCodesFonctions = in_array(Activite::ACTIVITE_HEADER_CODES_FONCTION, $header);

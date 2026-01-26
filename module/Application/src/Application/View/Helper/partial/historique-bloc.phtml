@@ -24,6 +24,7 @@ $displayUtilisateur = $option['display-utilisateur']??true;
 <?php endif; ?>
 
 <dl class="row">
+    <?php if ($object->getHistoCreation()) : ?>
     <dt class="col-md-4"> Création </dt>
     <dd class="col-md-8">
         le <?php echo $object->getHistoCreation()->format($dateFormat); ?>
@@ -32,14 +33,17 @@ $displayUtilisateur = $option['display-utilisateur']??true;
             par <?php echo $object->getHistoCreateur()->getDisplayName(); ?>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-4"> Modification </dt>
-    <dd class="col-md-8">
-        le <?php echo $object->getHistoModification()->format($dateFormat); ?>
-        <?php if ($displayUtilisateur) : ?>
-            <br>
-            par <?php echo $object->getHistoModificateur()->getDisplayName(); ?>
-        <?php endif; ?>
-    </dd>
+    <?php endif; ?>
+    <?php if ($object->getHistoModification()) : ?>
+        <dt class="col-md-4"> Modification </dt>
+        <dd class="col-md-8">
+            le <?php echo $object->getHistoModification()->format($dateFormat); ?>
+            <?php if ($displayUtilisateur) : ?>
+                <br>
+                par <?php echo $object->getHistoModificateur()->getDisplayName(); ?>
+            <?php endif; ?>
+        </dd>
+    <?php endif; ?>
     <?php if (!$object->estNonHistorise()) : ?>
         <dt class="col-md-4"> Historisation </dt>
         <dd class="col-md-8">
