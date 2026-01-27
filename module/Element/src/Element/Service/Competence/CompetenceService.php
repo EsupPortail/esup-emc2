@@ -578,7 +578,7 @@ class CompetenceService
                         $type->setLibelle($libelle);
                         $info[] = "Nouveau type : " . $libelle;
                     }
-                    $types[$oldLibelle] = $type;
+                    $types[$dictionnairesTypes[$libelle]] = $type;
                 }
             }
         }
@@ -595,7 +595,8 @@ class CompetenceService
                 if ($competence === null and $libelle !== "") {
                     $competence = new Competence();
                 } else {
-                    $old = $competence->getSynonymes(); foreach ($old as $synonyme) $oldSynonymes[] = $synonyme;
+                    $old = $competence->getSynonymes();
+                    foreach ($old as $synonyme) $oldSynonymes[] = $synonyme;
                     $competence->clearSynonymes();
 
                     if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [libellé:" . $competence->getLibelle() . "]";
@@ -609,7 +610,7 @@ class CompetenceService
                 $competence->setReferentiel($referentiel);
                 $competence->setReference($id);
                 $competence->setLibelle(trim($item[$positionLibelle]));
-                $type = $types[$item[$positionType]];
+                $type = $types[$dictionnairesTypes[strtolower($item[$positionType])]];
                 $competence->setType($type);
                 // facultatif
                 if ($positionTheme !== false) {

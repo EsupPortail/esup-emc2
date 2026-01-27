@@ -47,6 +47,27 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
         <?php else : ?>
             <?php echo $famille->getLibelle(); ?>
         <?php endif; ?>
+        <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
+        <br>
+            <?php /** @see FicheMetierController::modifierFamilleProfessionnelleAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/modifier-famille-professionnelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="ajax-modal action primary" data-event="modification"
+            >
+                <small>
+                    <span class="icon icon-editer"></span>
+                    Modifier
+                </small>
+            </a>
+            <?php /** @see FicheMetierController::supprimerFamilleProfessionnelleAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/supprimer-famille-professionnelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="action danger"
+            >
+                <small>
+                    <span class="icon icon-unchecked"></span>
+                    Supprimer
+                </small>
+            </a>
+        <?php endif; ?>
     </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-5"> Code Fonction</dt>
@@ -147,5 +168,16 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     <dt class="col-md-5"> État</dt>
     <dd class="col-md-7">
         <?php echo $this->etatinstance($fichemetier->getEtatActif()); ?>
+        <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
+        <?php /** @see FicheMetierController::modifierEtatAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/modifier-etat', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+           class="ajax-modal action primary" data-event="modification"
+        >
+            <small>
+                <span class="icon icon-editer"></span>
+                Modifier
+            </small>
+        </a>
+        <?php endif; ?>
     </dd>
 </dl>

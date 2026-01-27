@@ -9,8 +9,11 @@ use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTr
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use DateTime;
+use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
+use Element\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
@@ -44,6 +47,8 @@ class ImportController extends AbstractActionController
 
     use ActiviteServiceAwareTrait;
     use ActiviteElementServiceAwareTrait;
+    use ApplicationServiceAwareTrait;
+    use ApplicationElementServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -111,6 +116,21 @@ class ImportController extends AbstractActionController
     const HEADER_REFERENS3_URL = "FICHE_URL";
     const HEADER_REFERENS3_PDF = "Fiche au format pdf";
 
+    // HEADER EMC2 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const HEADER_EMC2_CODE = "Code";
+    const HEADER_EMC2_LIBELLE = "Intitulé";
+    const HEADER_EMC2_RAISON = "Raison d'être";
+    const HEADER_EMC2_MISSION = "Missions";
+    const HEADER_EMC2_ACTIVITE = "Activités";
+
+    const HEADER_EMC2_FAMILLE_LIBELLE = "Libellé de la famille professionnelle";
+    const HEADER_EMC2_FAMILLE_POSITION = "Position de la famille dans la spécialité";
+
+    const HEADER_EMC2_APPLICATION = "Identifiants applications";
+    const HEADER_EMC2_COMPETENCE = "Identifiants compétences";
+
+
     // HEADER SUPPLEMENTAIRE ///////////////////////////////////////////////////////////////////////////////////////////
     const HEADER_CODE_FONCTION = "Code Fonction";
     const HEADER_CODE_EMPLOITYPE = "Codes Emploi Type";
@@ -159,34 +179,24 @@ class ImportController extends AbstractActionController
                 $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
             }
 
-            if ($data['format'] === ImportController::FORMAT_RMFP) {
-                $result = $this->readAsRmfp($data, $filepath, $referentiel, 0);
-                /** @var FicheMetier[] $fiches */
-                $fiches = $result["fiches"];
-                foreach ($result['warning'] as $item) {
-                    $warning[] = $item;
-                }
-                foreach ($result['error'] as $item) {
-                    $error[] = $item;
-                }
-                foreach ($result['info'] as $item) {
-                    $info[] = $item;
-                }
-            }
+            $result = match ($data['format']) {
+                ImportController::FORMAT_RMFP => $this->readAsRmfp($data, $filepath, $referentiel, 0),
+                ImportController::FORMAT_REFERENS3 => $this->readAsReferens($data, $filepath, $referentiel, 0),
+                ImportController::FORMAT_EMC2 => $this->readAsEmc2($data, $filepath, $referentiel, 0),
+                default => ['fiches' => [], 'info' => [], 'warning' => [], 'error' => ["Format non reconnu [" . $data['format'] . "]"]],
+            };
 
-            if ($data['format'] === ImportController::FORMAT_REFERENS3) {
-                $result = $this->readAsReferens($data, $filepath, $referentiel, 100);
-                /** @var FicheMetier[] $fiches */
-                $fiches = $result['fiches'];
-                foreach ($result['warning'] as $item) {
-                    $warning[] = $item;
-                }
-                foreach ($result['error'] as $item) {
-                    $error[] = $item;
-                }
-                foreach ($result['info'] as $item) {
-                    $info[] = $item;
-                }
+
+            /** @var FicheMetier[] $fiches */
+            $fiches = $result["fiches"];
+            foreach ($result['warning'] as $item) {
+                $warning[] = $item;
+            }
+            foreach ($result['error'] as $item) {
+                $error[] = $item;
+            }
+            foreach ($result['info'] as $item) {
+                $info[] = $item;
             }
 
             $referentielId = (isset($data["referentiel"]) and $data["referentiel"] !== "") ? $data["referentiel"] : null;
@@ -215,8 +225,10 @@ class ImportController extends AbstractActionController
 
                 /** @var FicheMetier $fiche */
                 foreach ($fiches as $fiche) {
-                    $elements = $fiche->getCompetenceCollection()->toArray();
+                    $competences = $fiche->getCompetenceCollection()->toArray();
                     $fiche->clearCompetences();
+                    $applications = $fiche->getApplicationCollection()->toArray();
+                    $fiche->clearApplications();
                     $tendances = $fiche->getTendances();
                     $fiche->clearTendances();
 
@@ -228,11 +240,17 @@ class ImportController extends AbstractActionController
 
                     if ($fiche->getId() === null) $this->getFicheMetierService()->create($fiche);
 
-                    foreach ($elements as $element) {
+                    foreach ($competences as $element) {
                         if ($element->getId() === null) $this->getCompetenceElementService()->create($element);
                         else $this->getCompetenceElementService()->update($element);
 
                         $fiche->addCompetenceElement($element);
+                    }
+                    foreach ($applications as $element) {
+                        if ($element->getId() === null) $this->getApplicationElementService()->create($element);
+                        else $this->getApplicationElementService()->update($element);
+
+                        $fiche->addApplicationElement($element);
                     }
 
                     foreach ($tendances as $tendance) {
@@ -304,16 +322,16 @@ class ImportController extends AbstractActionController
         $dictionnaireCompetence = $this->getCompetenceService()->generateDictionnaire($referentiel, 'reference');
         $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
         $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
-        $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
+//        $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
         if ($tendanceImpact === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::IMPACT . "] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte";
         }
         if ($tendanceFacteur === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::FACTEUR . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
         }
-        if (false and $tendanceCondition === null) {
-            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
-        }
+//        if ($tendanceCondition === null) {
+//            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
+//        }
 
         /** Préparation pour les niveaus de carrière */
         $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
@@ -424,7 +442,7 @@ class ImportController extends AbstractActionController
                         $reference = $fiche->getReference() . "_" . $readMissionPosition;
                         $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
                     }
-                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions,$mission);
+                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions, $mission);
                     if ($missionElement === null) {
                         $missionElement = new MissionElement();
                         $missionElement->setMission($mission);
@@ -445,7 +463,7 @@ class ImportController extends AbstractActionController
                         $reference = $fiche->getReference() . "_" . $readActivitePosition;
                         $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
                     }
-                    $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites,$activite);
+                    $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites, $activite);
                     if ($activiteElement === null) {
                         $activiteElement = new ActiviteElement();
                         $activiteElement->setActivite($activite);
@@ -454,7 +472,6 @@ class ImportController extends AbstractActionController
                     $fiche->addActivite($activiteElement);
                     $readActivitePosition++;
                 }
-
 
 
                 /** COMPETENCES ***************************************************************************************/
@@ -486,7 +503,7 @@ class ImportController extends AbstractActionController
                 $tendancesListing = [
                     ['type' => $tendanceFacteur, 'colonne' => self::HEADER_REFERENS3_TENDANCE],
                     ['type' => $tendanceImpact, 'colonne' => self::HEADER_REFERENS3_IMPACT],
-                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_REFERENS3_CONDITION],
+//                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_REFERENS3_CONDITION],
                 ];
                 foreach ($tendancesListing as $tendanceType) {
                     $type = $tendanceType['type'];
@@ -532,16 +549,16 @@ class ImportController extends AbstractActionController
         $dictionnaireSavoirEtre = $this->getCompetenceService()->generateDictionnaire($referentiel, 'libelle', $tsavoiretre);
         $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
         $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
-        $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
+//        $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
         if ($tendanceImpact === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::IMPACT . "] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte";
         }
         if ($tendanceFacteur === null) {
             $warning[] = "Aucune type de tendance [" . TendanceType::FACTEUR . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
         }
-        if (false and $tendanceCondition === null) {
-            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
-        }
+//        if ($tendanceCondition === null) {
+//            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
+//        }
 
         $mode = ($data['mode'] === 'import') ? 'import' : 'preview';
         $debut = (new DateTime())->getTimestamp();
@@ -641,7 +658,7 @@ class ImportController extends AbstractActionController
                         $reference = $fiche->getReference() . "_" . $readMissionPosition;
                         $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
                     }
-                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions,$mission);
+                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions, $mission);
                     if ($missionElement === null) {
                         $missionElement = new MissionElement();
                         $missionElement->setMission($mission);
@@ -662,7 +679,7 @@ class ImportController extends AbstractActionController
                         $reference = $fiche->getReference() . "_" . $readActivitePosition;
                         $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
                     }
-                        $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites,$activite);
+                    $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites, $activite);
                     if ($activiteElement === null) {
                         $activiteElement = new ActiviteElement();
                         $activiteElement->setActivite($activite);
@@ -674,7 +691,7 @@ class ImportController extends AbstractActionController
 
                 /** COMPETENCES ***************************************************************************************/
 
-                //todo ajouter le type pour eviter les homonymies
+                //todo ajouter le type pour éviter les homonymies
                 //todo ajouter un boolean pour la recherche parmi les synonymes
 
                 $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE] ?? "", "\n");
@@ -723,7 +740,7 @@ class ImportController extends AbstractActionController
                 $tendancesListing = [
                     ['type' => $tendanceFacteur, 'colonne' => self::HEADER_RMFP_TENDANCE],
                     ['type' => $tendanceImpact, 'colonne' => self::HEADER_RMFP_IMPACT],
-                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_RMFP_CONDITION],
+//                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_RMFP_CONDITION],
                 ];
                 foreach ($tendancesListing as $tendanceType) {
                     $type = $tendanceType['type'];
@@ -758,6 +775,88 @@ class ImportController extends AbstractActionController
         return ['fiches' => $fiches, 'error' => $error, 'warning' => $warning, 'info' => $info];
     }
 
+    public function readAsEmc2($data, string $filepath, Referentiel $referentiel, int $verbosity = 0): array
+    {
+        $warning = [];
+        $error = [];
+        $info = [];
+        $fiches = [];
+
+        $csvFile = fopen($filepath, "r");
+        // lecture du header + position colonne
+        if ($csvFile !== false) {
+            $header = fgetcsv($csvFile, null, ";");
+            // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+            $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $nbElements = count($header);
+
+            if (!in_array(ImportController::HEADER_EMC2_CODE, $header)) $error[] = "La colonne obligatoire [" . ImportController::HEADER_EMC2_CODE . "] est absente.";
+            if (!in_array(ImportController::HEADER_EMC2_LIBELLE, $header)) $error[] = "La colonne obligatoire [" . ImportController::HEADER_EMC2_LIBELLE . "] est absente.";
+            if (!in_array(ImportController::HEADER_EMC2_MISSION, $header)) $error[] = "La colonne obligatoire [" . ImportController::HEADER_EMC2_MISSION . "] est absente.";
+            if (!in_array(ImportController::HEADER_EMC2_ACTIVITE, $header)) $error[] = "La colonne obligatoire [" . ImportController::HEADER_EMC2_ACTIVITE . "] est absente.";
+            if (!in_array(ImportController::HEADER_EMC2_RAISON, $header)) $warning[] = "La colonne facultative [" . ImportController::HEADER_EMC2_RAISON . "] est absente.";
+
+            //lecture des fiches
+            $raws = [];
+            while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                $item = [];
+                for ($position = 0; $position < $nbElements; ++$position) {
+                    $item[$header[$position]] = $row[$position];
+                }
+                $raws[] = $item;
+            }
+
+            $nbFiches = count($raws);
+            if ($verbosity > 0) {
+                $info[] = $nbFiches . " fiches dans le csv";
+            }
+
+            $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
+            if ($referentiel === null) {
+                $referentiel = new Referentiel();
+                $referentiel->setLibelleCourt('EMC2');
+                $referentiel->setLibelleLong('Référentiel interne à EMC2');
+                $referentiel->setCouleur("#37689B");
+                $this->getReferentielService()->create($referentiel);
+            }
+
+            if (empty($error)) {
+                $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
+                $dictionnaireApplication = $this->getApplicationService()->generateDictionnaire();
+
+                foreach ($raws as $raw) {
+                    $fiche = new FicheMetier();
+                    $fiche->setReferentiel($referentiel);
+                    $fiche->setReference($raw[ImportController::HEADER_EMC2_CODE]);
+                    $fiche->setLibelle($raw[ImportController::HEADER_EMC2_LIBELLE]);
+
+                    if (isset($raw[ImportController::HEADER_EMC2_RAISON]) and trim($raw[ImportController::HEADER_EMC2_RAISON]) != '') {
+                        $fiche->setRaison(trim($raw[ImportController::HEADER_EMC2_RAISON]));
+                    }
+
+                    $this->readCodeFonction($fiche, $raw[ImportController::HEADER_CODE_FONCTION], $dictionnaireCodeFonction, $warning);
+                    if (isset($raw[ImportController::HEADER_CODE_EMPLOITYPE]) and trim($raw[ImportController::HEADER_CODE_EMPLOITYPE]) != '') {
+                        $fiche->setCodesEmploiType(trim($raw[ImportController::HEADER_CODE_EMPLOITYPE]));
+                    }
+
+
+
+                    $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION], "|", $referentiel);
+                    $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE], "|", $referentiel);
+
+                    $this->readApplications($fiche, $raw[self::HEADER_EMC2_APPLICATION], "|", $dictionnaireApplication, $warning);
+
+                    $fiches[] = $fiche;
+                }
+            }
+
+
+        }
+
+        return ['fiches' => $fiches, 'error' => $error, 'warning' => $warning, 'info' => $info];
+    }
+
+
     /** @return string[] */
     static public function explodeAndTrim(?string $listing, string $separateur = "\n"): array
     {
@@ -769,6 +868,84 @@ class ImportController extends AbstractActionController
             return trim($s);
         }, $result);
         return $result;
+    }
+
+    public function readFamilleProfessionnelle(): void
+    {
+//        $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_EMC2_FAMILLE_LIBELLE] ?? "");
+//        if ($famille === null) {
+//            $famille = new FamilleProfessionnelle();
+//            $famille->setLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "");
+//            $famille->setPosition($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "");
+//            $famille->setCorrespondance($specialite);
+//        } else {
+//            if ($famille->getCorrespondance() !== $specialite)
+//                $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
+//            if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? ""))
+//                $warning[] = "La position dans la spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getPosition() . " &ne; Fichier:" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
+//        }
+//        $fiche->setFamilleProfessionnelle($famille);
+    }
+
+    public function readMissions(FicheMetier &$fiche, string $data, string $separator, Referentiel $referentiel): void
+    {
+        $readMissions = explode($separator, $data);
+        $missions = $fiche->getMissions();
+        $fiche->clearMissions();
+
+        $readMissionPosition = 1;
+        foreach ($readMissions as $readMission) {
+            $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission);
+            if ($mission === null) {
+                $reference = $fiche->getReference() . "_" . $readMissionPosition;
+                $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
+            }
+            $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions, $mission);
+            if ($missionElement === null) {
+                $missionElement = new MissionElement();
+                $missionElement->setMission($mission);
+            }
+            $missionElement->setPosition($readMissionPosition);
+            $fiche->addMission($missionElement);
+            $readMissionPosition++;
+        }
+    }
+
+    public function readActivites(FicheMetier &$fiche, string $data, string $separator, Referentiel $referentiel): void
+    {
+        $readActivites = explode($separator, $data);
+        $activites = $fiche->getActivites();
+        $fiche->clearActivites();
+
+        $readActivitePosition = 1;
+        foreach ($readActivites as $readActivite) {
+            $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite);
+            if ($activite === null) {
+                $reference = $fiche->getReference() . "_" . $readActivitePosition;
+                $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
+            }
+            $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites, $activite);
+            if ($activiteElement === null) {
+                $activiteElement = new ActiviteElement();
+                $activiteElement->setActivite($activite);
+            }
+            $activiteElement->setPosition($readActivitePosition);
+            $fiche->addActivite($activiteElement);
+            $readActivitePosition++;
+        }
+    }
+
+    public function readCodeFonction(FicheMetier &$fiche, string $data, array &$dictionnaireCodeFonction, array &$warning): void
+    {
+        $codeFonction = (isset($data) and trim($data) !== '') ? trim($data) : null;
+        if ($codeFonction !== null) {
+            if (isset($dictionnaireCodeFonction[$codeFonction])) {
+                $fiche->setCodeFonction($dictionnaireCodeFonction[$codeFonction]);
+            } else {
+                $code = $this->createCodeFonction($codeFonction, $warning);
+                $fiche->setCodeFonction($code);
+            }
+        }
     }
 
     public function createCodeFonction(string $codeFonction, array &$warning): ?CodeFonction
@@ -793,4 +970,31 @@ class ImportController extends AbstractActionController
         }
         return null;
     }
+
+    public function readApplications(FicheMetier &$fiche, string $data, string $separator, array &$dictionnaireApplication, array &$warning): void
+    {
+        $applicationIds = explode($separator, $data);
+
+        $applications = $fiche->getApplicationListe();
+        foreach ($applications as $application) {
+            $dictionnaireFicheMetierApplication[$application->getApplication()->getId()] = $application;
+        }
+        $fiche->clearApplications();
+        foreach ($applicationIds as $applicationId) {
+            if (isset($dictionnaireFicheMetierApplication[$applicationId])) {
+                $fiche->addApplicationElement($dictionnaireFicheMetierApplication[$applicationId]);
+            } else {
+                $application = $dictionnaireApplication[$applicationId] ?? null;
+                if ($application !== null) {
+                    $element = new ApplicationElement();
+                    $element->setApplication($application);
+                    $fiche->addApplicationElement($element);
+                } else {
+                    $warning[] = "[" . $applicationId . "] application non trouvée.";
+                }
+            }
+        }
+    }
+
+
 }

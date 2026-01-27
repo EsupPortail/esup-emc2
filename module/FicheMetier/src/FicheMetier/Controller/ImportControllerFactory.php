@@ -7,10 +7,11 @@ use Carriere\Service\Correspondance\CorrespondanceService;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\NiveauFonction\NiveauFonctionService;
+use Element\Service\Application\ApplicationService;
+use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceType\CompetenceTypeService;
-use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\Activite\ActiviteService;
 use FicheMetier\Service\ActiviteElement\ActiviteElementService;
@@ -40,6 +41,8 @@ class ImportControllerFactory
         /**
          * @var ActiviteService $activiteService
          * @var ActiviteElementService $activiteElementService
+         * @var ApplicationService $applicationService
+         * @var ApplicationElementService $applicationElementService
          * @var CodeFonctionService $codeFonctionService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
@@ -61,6 +64,8 @@ class ImportControllerFactory
          */
         $activiteService = $container->get(ActiviteService::class);
         $activiteElementService = $container->get(ActiviteElementService::class);
+        $applicationService = $container->get(ApplicationService::class);
+        $applicationElementService = $container->get(ApplicationElementService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -87,6 +92,8 @@ class ImportControllerFactory
         $controller = new ImportController();
         $controller->setActiviteService($activiteService);
         $controller->setActiviteElementService($activiteElementService);
+        $controller->setApplicationService($applicationService);
+        $controller->setApplicationElementService($applicationElementService);
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);

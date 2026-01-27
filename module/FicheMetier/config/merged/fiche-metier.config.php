@@ -96,9 +96,10 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'modifier-etat',
-                        'modifier-metier',
                         'modifier-raison',
 
+                        'modifier-famille-professionnelle',
+                        'supprimer-famille-professionnelle',
                         'modifier-niveau-carriere',
                         'supprimer-niveau-carriere',
                         'modifier-code-fonction',
@@ -277,16 +278,6 @@ return [
                             ],
                         ],
                     ],
-                    'modifier-metier' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-metier/:fiche-metier',
-                            'defaults' => [
-                                /** @see FicheMetierController::modifierMetierAction() */
-                                'action'     => 'modifier-metier',
-                            ],
-                        ],
-                    ],
                     'modifier-raison' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -334,6 +325,26 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerCodeEmploiTypeAction() */
                                 'action'     => 'supprimer-code-emploi-type',
+                            ],
+                        ],
+                    ],
+                    'modifier-famille-professionnelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-famille-professionnelle/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierFamilleProfessionnelleAction() */
+                                'action'     => 'modifier-famille-professionnelle',
+                            ],
+                        ],
+                    ],
+                    'supprimer-famille-professionnelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-famille-professionnelle/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::supprimerFamilleProfessionnelleAction() */
+                                'action'     => 'supprimer-famille-professionnelle',
                             ],
                         ],
                     ],

@@ -144,7 +144,7 @@ $this->headTitle("Importation des fiches métiers");
             <p>
                 Vous pouvez :
                 <ul>
-                <li>Importez vos fiches métiers via l'un des deux référentiels (Referens3 ou RMFP);</li>
+                <li>Importez vos fiches métiers via l'un des deux référentiels (REFERENS3 ou RMFP);</li>
                 <li>Importez vos fiches métiers via la trame EMC2 (référentiel maison).</li>
             </ul>
 
@@ -215,6 +215,9 @@ $this->headTitle("Importation des fiches métiers");
         <div class="row">
             <div class="col-md-8">
                 <h3> <span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+                <?php if ($fiche->getRaison()) : ?>
+                    <strong>Raison d'être :</strong> <?php echo $fiche->getRaison(); ?>
+                <?php endif; ?>
             </div>
             <div class="col-md-4">
                 <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <?php endif; ?><br>
@@ -263,6 +266,14 @@ $this->headTitle("Importation des fiches métiers");
             </div>
         <?php endforeach; ?>
     </div>
+
+    <?php $applications = $fiche->getApplicationCollection(); ?>
+    <ul>
+    <?php foreach ($applications as $application) : ?>
+        <strong>Applications</strong>
+        <li><?php echo $application->getLibelle(); ?></li>
+    <?php endforeach; ?>
+    </ul>
 
     <?php foreach ($fiche->getTendances() as $tendance) : ?>
         <strong><?php echo $tendance->getType()->getLibelle(); ?></strong>
