@@ -35,7 +35,6 @@ class FicheMetier implements
     HasReferenceInterface
 {
     use HistoriqueAwareTrait;
-    use HasMetierTrait;
     use HasCategorieTrait;
     use HasEtatsTrait;
     use HasNiveauCarriereTrait;
@@ -56,8 +55,22 @@ class FicheMetier implements
 
     private Collection $tendances;
     private Collection $thematiques;
-
     private ?string $raw = null;
+
+    /** @var array Bricolage pour affiches les types non renseignés */
+    private array $tendancesTypes = [];
+    private array $thematiquesTypes = [];
+
+    public function setTendancesTypes(array $tendancesTypes): void
+    {
+        $this->tendancesTypes = $tendancesTypes;
+    }
+
+    public function setThematiquesTypes(array $thematiquesTypes): void
+    {
+        $this->thematiquesTypes = $thematiquesTypes;
+    }
+
 
     public function __construct()
     {

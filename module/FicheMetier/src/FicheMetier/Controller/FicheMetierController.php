@@ -389,34 +389,6 @@ class FicheMetierController extends AbstractActionController
         return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
     }
 
-    public function modifierMetierAction(): ViewModel
-    {
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-
-        $form = $this->getSelectionnerMetierForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-metier', ['fiche-metier' => $fichemetier->getId()], [], true));
-        $form->bind($fichemetier);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fichemetier);
-                $this->flashMessenger()->addSuccessMessage("Mise à jour du métier associé.");
-                exit();
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier le métier associé à la fiche métier',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
     public function modifierCodeEmploiTypeAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');

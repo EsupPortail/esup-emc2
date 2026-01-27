@@ -88,7 +88,6 @@ class FicheMetierControllerFactory
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerCategorieForm $selectionnerCategorieForm
-         * @var SelectionnerMetierForm $selectionnerMetierForm
          * @var SelectionnerActivitesForm $selectionnerActivitesForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
          * @var SelectionnerNiveauCarriereForm $selectionnerNiveauCarriereForm
@@ -101,7 +100,6 @@ class FicheMetierControllerFactory
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionnerCategorieForm = $container->get('FormElementManager')->get(SelectionnerCategorieForm::class);
-        $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
         $selectionnerNiveauCarriereForm = $container->get('FormElementManager')->get(SelectionnerNiveauCarriereForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);

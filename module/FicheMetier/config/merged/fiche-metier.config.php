@@ -96,7 +96,6 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'modifier-etat',
-                        'modifier-metier',
                         'modifier-raison',
 
                         'modifier-categorie',
@@ -276,16 +275,6 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::modifierEtatAction() */
                                 'action'     => 'modifier-etat',
-                            ],
-                        ],
-                    ],
-                    'modifier-metier' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-metier/:fiche-metier',
-                            'defaults' => [
-                                /** @see FicheMetierController::modifierMetierAction() */
-                                'action'     => 'modifier-metier',
                             ],
                         ],
                     ],

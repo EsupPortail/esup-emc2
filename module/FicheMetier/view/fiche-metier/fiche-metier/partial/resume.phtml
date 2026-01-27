@@ -111,8 +111,6 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-4"> Code Fonction</dt>
-    <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Code Fonction</dt>
         <dd class="col-md-8">
             <?php $code = $fichemetier->getCodeFonction(); ?>
             <?php if ($code !== null) : ?>
