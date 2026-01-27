@@ -3,18 +3,27 @@
 namespace FicheMetier\Entity\Db;
 
 
-use Referentiel\Entity\Db\Referentiel;
+use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
+use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Activite implements HistoriqueAwareInterface {
+class Activite implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
+    use HasReferenceTrait;
+
+    const ACTIVITE_HEADER_ID = 'Id_Activité';
+    const ACTIVITE_HEADER_LIBELLE = 'Libellé';
+    const ACTIVITE_HEADER_DESCRIPTION = 'Description';
+    const ACTIVITE_HEADER_CODES_EMPLOITYPE = 'Codes Emploi Type';
+    const ACTIVITE_HEADER_CODES_FONCTION = 'Codes Fonction';
 
     private ?int $id = null;
     private ?string $libelle = null;
     private ?string $description = null;
-    private ?Referentiel $referentiel = null;
-    private ?string $idOrig = null;
+    private ?string $codesFicheMetier = null;
+    private ?string $codesFonction = null;
+
     private ?string $raw = null;
 
     public function getId(): ?int
@@ -47,24 +56,24 @@ class Activite implements HistoriqueAwareInterface {
         $this->description = $description;
     }
 
-    public function getReferentiel(): ?Referentiel
+    public function getCodesFicheMetier(): ?string
     {
-        return $this->referentiel;
+        return $this->codesFicheMetier;
     }
 
-    public function setReferentiel(?Referentiel $referentiel): void
+    public function setCodesFicheMetier(?string $codesFicheMetier): void
     {
-        $this->referentiel = $referentiel;
+        $this->codesFicheMetier = $codesFicheMetier;
     }
 
-    public function getIdOrig(): ?string
+    public function getCodesFonction(): ?string
     {
-        return $this->idOrig;
+        return $this->codesFonction;
     }
 
-    public function setIdOrig(?string $idOrig): void
+    public function setCodesFonction(?string $codesFonction): void
     {
-        $this->idOrig = $idOrig;
+        $this->codesFonction = $codesFonction;
     }
 
     public function setRaw(?string $raw): void

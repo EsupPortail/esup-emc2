@@ -20,13 +20,7 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
     <div class="card-header">
         <div class="row">
             <div class="col-md-5">
-                <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelleGenre($agent); ?> </h2>
-                <?php $metier =  $fiche->getFicheType()->getMetier(); ?>
-                <?php if ($metier) : ?>
-                    <?php foreach($metier->getReferences() as $reference) : ?>
-                        <span class="badge" style="background-color: #dfc4b2"><a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a></span>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <h2> <?php echo $fiche->getFicheType()->getLibelle(); ?> </h2>
             </div>
             <div class="col-md-7">
                 <div class="col-md-6">
@@ -72,11 +66,11 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
         <?php endif; ?>
         <?php
 
-            foreach ($fichemetier->getMissions() as $mission) {
-                if (in_array("" . $mission->getMission()->getId(), $activitesConservees)) {
-                    echo $this->activite($mission, $options['mode'], ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte]);
-                }
-            }
+//            foreach ($fichemetier->getMissions() as $mission) {
+//                if (in_array("" . $mission->getMission()->getId(), $activitesConservees)) {
+//                    echo $this->activite($mission, $options['mode'], ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte]);
+//                }
+//            }
         ?>
     </div>
 </div>

@@ -34,18 +34,7 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
         </dl>
     </div>
     <div class="col-md-6">
-        <dl class="row">
-            <dt class="col-md-4"> Créé </dt>
-            <dd class="col-md-8"> Le <?php echo $codeFonction->getHistoCreation()->format('d/m/y à H:i'); ?> par <?php echo $codeFonction->getHistoCreateur()->getDisplayName(); ?> </dd>
-            <?php if ($codeFonction->getHistoModification()) : ?>
-                <dt class="col-md-4"> Modifié </dt>
-                <dd class="col-md-8"> Le <?php echo $codeFonction->getHistoModification()->format('d/m/y à H:i'); ?> par <?php echo $codeFonction->getHistoModificateur()->getDisplayName(); ?> </dd>
-            <?php endif; ?>
-            <?php if ($codeFonction->getHistoDestruction()) : ?>
-                <dt class="col-md-4"> Historisé </dt>
-                <dd class="col-md-8"> Le <?php echo $codeFonction->getHistoDestruction()->format('d/m/y à H:i'); ?> par <?php echo $codeFonction->getHistoDestructeur()->getDisplayName(); ?> </dd>
-            <?php endif; ?>
-        </dl>
+        <?php echo  $this->historiqueBloc($codeFonction, ["genre" => "M"]); ?>
     </div>
 </div>
 
@@ -56,7 +45,7 @@ $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
         <?php echo count($fichesmetiers); ?> fiche·s métier·s
         <ul>
             <?php foreach ($fichesmetiers as $fichemetier) : ?>
-                <?php $libelle = $fichemetier->getLibelle()??$fichemetier->getMetier()->getLibelle(); ?>
+                <?php $libelle = $fichemetier->getLibelle()??$fichemetier->getLibelle(); ?>
                 <li>
                     <?php
                     $ficheId = $fichemetier->getId();

@@ -2,11 +2,11 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Entity\Db\NiveauFonction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use Metier\Entity\Db\FamilleProfessionnelle;
 use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
@@ -95,11 +95,11 @@ class CodeFonction implements HistoriqueAwareInterface, ResourceInterface
 
     public function computeCode(): ?string
     {
-        if ($this->getNiveauFonction() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
-        if ($this->getFamilleProfessionnelle() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction",-1);
-        $code = $this->getNiveauFonction()->getCode()??"????";
-        $code .= $this->getFamilleProfessionnelle()->getCorrespondance()?->getCategorie()??"?";
-        $code .= $this->getFamilleProfessionnelle()->getPosition()??"?";
+        if ($this->getNiveauFonction() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction", -1);
+        if ($this->getFamilleProfessionnelle() === null) throw new RuntimeException("Le code fonction ne possède pas de niveau de fonction", -1);
+        $code = $this->getNiveauFonction()->getCode() ?? "????";
+        $code .= $this->getFamilleProfessionnelle()->getCorrespondance()?->getCategorie() ?? "?";
+        $code .= $this->getFamilleProfessionnelle()->getPosition() ?? "?";
         return $code;
     }
 }

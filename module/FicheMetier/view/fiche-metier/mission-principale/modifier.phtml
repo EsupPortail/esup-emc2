@@ -2,7 +2,6 @@
 
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleForm;
 use UnicaenRenderer\Entity\Db\Rendu;
-use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
 
 /**
  * @see \FicheMetier\Controller\MissionPrincipaleController::ajouterAction()
@@ -11,31 +10,22 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var Rendu $rendu
  */
 
-$canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));
-
 ?>
 
 <?php echo $this->form()->openTag($form); ?>
 
+
+<!--<h4> Description </h4>-->
+
 <?php echo $this->formControlGroup($form->get('libelle')); ?>
-
-<div class="form-group" style="padding-bottom: 0.5rem;">
-<?php echo $this->formLabel($form->get('activites')); ?>
-<div class="alert alert-info">
-    <div style="display:inline-block;vertical-align: top;">
-        <span class="icon icon-info"></span>
-    </div>
-    <div style="display:inline-block;">
-        Les activités doivent être saisies en liste à puce, une puce par activité.
-    </div>
-</div>
-<?php echo $this->formElement($form->get('activites')); ?>
-<?php echo $this->formElementErrors($form->get('activites')); ?>
-</div>
-
+<?php echo $this->formControlGroup($form->get('description')); ?>
 <?php echo $this->formControlGroup($form->get('familleprofessionnelle')); ?>
+<div class="row">
+    <div class="col-md-6"><?php echo $this->formControlGroup($form->get('referentiel')); ?></div>
+    <div class="col-md-6"><?php echo $this->formControlGroup($form->get('identifiant')); ?></div>
+</div>
 
-<h3> Niveau de carrière associé </h3>
+<!--<h4> Niveau de carrière associé </h4>-->
 
 <div class="row">
     <div class="col-md-6"><?php echo $this->formControlGroup($form->get('borne_superieure')); ?></div>
@@ -43,19 +33,17 @@ $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceI
 </div>
 
 
-
 <?php echo $this->formControlGroup($form->get('submit')); ?>
 <?php echo $this->form()->closeTag(); ?>
 
 
-
 <script>
-    $(function() {
-        $('select').selectpicker();
+    $(document).ready(function () {
+
         tinymce.remove();
         tinymce.init({
-            selector: '.tinymce',
-            toolbar: 'newdocument bullist',
+            selector: 'textarea.tinymce',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
             resize: true,
             language: 'fr_FR',
             plugins: 'lists',
@@ -73,20 +61,8 @@ $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceI
                 });
             }
         });
+
+        $('select:not(.select2)').selectpicker();
+        $('.select2').select2();
     });
 </script>
-<!---->
-<!--<style>-->
-<!--    label[for=activites]::after {-->
-<!--            content: "";-->
-<!--            display: block;-->
-<!--            padding: 10px;-->
-<!--            background: #f0f0f0;-->
-<!--            border-radius: 5px;-->
-<!--            margin: 8px 0;-->
-<!--            color: #333;-->
-<!--            border-color: var(--bs-info);-->
-<!--            border-left-width: 1rem;-->
-<!--        }-->
-<!--    }-->
-<!--</style>-->

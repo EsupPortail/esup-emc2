@@ -36,23 +36,3 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         Chargement des missions principales
     </div>
 </div>
-
-<script>
-    $(document).on('click', 'span.refresh-move', function() {
-        $("#missions_view").addClass('refreshing');
-        let fichemetier = $(this).data('fichemetier');
-        let mission = $(this).data('mission');
-        let direction = $(this).data('direction');
-        <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
-        let url = "<?php echo $this->url('fiche-metier/deplacer-mission', [], [], true); ?>" + "/" + fichemetier + "/" + mission + "/" + direction;
-        console.log("toggleing deplacement " + fichemetier + " " + mission + " " + direction +" ")
-        $.ajax({
-            type: "POST",
-            url: url,
-            success:
-                function () {
-                    refreshMissions()
-                }
-        });
-    });
-</script>

@@ -4,13 +4,12 @@ upload/
 config/autoload/*local*
 composer.lock
 vendor
-/public/css/font-local.css
-/public/css/logos.css
 !public/unicaen/app/vendor
 documentation/SQL/USER.sql
 save_ccc/
 !public/vendor
 !public/unicaen
 public/css/local.css
+public/css/font-local.css
 public/css/environnement.css
 .env

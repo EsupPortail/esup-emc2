@@ -85,10 +85,6 @@ class CompetenceService
         $qb = $this->createQueryBuilder()
             ->orderBy('competence.' . $champ, $order);
         if (!$withHisto) $qb = $qb->andWhere('competence.histoDestruction IS NULL');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -124,9 +120,9 @@ class CompetenceService
         return $result;
     }
 
-    public function getCompetencesByTypes(): array
+    public function getCompetencesByTypes(bool $withHisto = false): array
     {
-        $competences = $this->getCompetences();
+        $competences = $this->getCompetences($withHisto);
 
         $array = [];
         foreach ($competences as $competence) {
@@ -179,7 +175,7 @@ class CompetenceService
             foreach ($dictionnaire as $clef => $listing) {
                 $optionsoptions = [];
                 usort($listing, function (Competence $a, Competence $b) {
-                    return $a->getLibelle() <=> $b->getLibelle();
+                    return iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $a->getLibelle()) <=> iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $b->getLibelle());
                 });
 
                 foreach ($listing as $competence) {
@@ -205,7 +201,7 @@ class CompetenceService
             foreach ($dictionnaire as $clef => $listing) {
                 $optionsoptions = [];
                 usort($listing, function (Competence $a, Competence $b) {
-                    return $a->getLibelle() <=> $b->getLibelle();
+                    return iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $a->getLibelle()) <=> iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $b->getLibelle());
                 });
 
                 foreach ($listing as $competence) {
@@ -224,19 +220,17 @@ class CompetenceService
 
     private function competenceOptionify(Competence $competence): array
     {
-        /** @var CompetenceReferentiel $referentiel */
-        $referentiel = $competence->getReferentiel();
         $type = $competence->getType();
         $texte = $competence->getLibelle();
         $this_option = [
             'value' => $competence->getId(),
             'attributes' => [
                 'data-content' =>
-                    "<span class='competence' title='" . ($competence->getDescription() ?? "Aucune description") . "' class='badge btn-danger'>"
+                    "<span class='libelle_competence competence' title='" . ($competence->getDescription() ?? "Aucune description") . "' class='badge btn-danger'>"
                         . $texte
                         . "&nbsp;" . "<span class='badge'>"
                         . (($type !== null) ? $type->getLibelle() : "Sans type")
-                        . "</span>"
+                        . "</span>&nbsp;"
                         . $competence->printReference()
                     . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($competence->getDescription() ?? "Aucune description") . "</span>"
                     . "</span>",
@@ -464,6 +458,8 @@ class CompetenceService
 
     public function import(string $filepath, Referentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
     {
+        $SEP_SYNONYME = '|';
+
         $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
         // Note : ceci est un dictionnaire pour rattraper les variations dans les écritures des types.
         // Attention : il ne faut pas oublier de mettre le libellé lu du CSV en minuscules.
@@ -599,12 +595,12 @@ class CompetenceService
                     $old = $competence->getSynonymes(); foreach ($old as $synonyme) $oldSynonymes[] = $synonyme;
                     $competence->clearSynonymes();
 
-                    if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
-                    if ($competence->getType() !== $types[$item[$positionType]]) $info[] = "Mise à jour du type de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
-                    if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $info[] = "Mise à jour du thème de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
-                    if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $info[] = "Mise à jour de la discipline de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
-                    if ($positionSynonyme !== false and $competence->getSynonymes() !== (($item[$positionSynonyme] !== '') ? $item[$positionSynonyme] : null)) $info[] = "Mise à jour de la liste des synonymes de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
-                    if ($positionDefinition !== false and $competence->getDescription() !== (($item[$positionDefinition] !== '') ? $item[$positionDefinition] : null)) $info[] = "Mise à jour de la définition de la compétence [id:" . $competence->getId() . " | libelle:" . $competence->getLibelle() . "]";
+                    if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [libelle:" . $competence->getLibelle() . "]";
+                    if ($competence->getType() !== $types[$item[$positionType]]) $info[] = "Mise à jour du type de la compétence [libelle:" . $competence->getLibelle() . "]";
+                    if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $info[] = "Mise à jour du thème de la compétence [libelle:" . $competence->getLibelle() . "]";
+                    if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $info[] = "Mise à jour de la discipline de la compétence [libelle:" . $competence->getLibelle() . "]";
+                    if ($positionSynonyme !== false and $competence->getSynonymes() !== (($item[$positionSynonyme] !== '') ? $item[$positionSynonyme] : null)) $info[] = "Mise à jour de la liste des synonymes de la compétence [libelle:" . $competence->getLibelle() . "]";
+                    if ($positionDefinition !== false and $competence->getDescription() !== (($item[$positionDefinition] !== '') ? $item[$positionDefinition] : null)) $info[] = "Mise à jour de la définition de la compétence [libelle:" . $competence->getLibelle() . "]";
                 }
                 // obligatoire
                 $competence->setReferentiel($referentiel);
@@ -626,7 +622,7 @@ class CompetenceService
                 }
                 if ($positionSynonyme !== false) {
                     if ($item[$positionSynonyme] !== "") {
-                        $liste = explode(";", $item[$positionSynonyme]);
+                        $liste = explode($SEP_SYNONYME, $item[$positionSynonyme]);
                         foreach ($liste as $synonyme) {
                             $eSynonyme = new CompetenceSynonyme();
                             $eSynonyme->setCompetence($competence);
@@ -637,12 +633,12 @@ class CompetenceService
                 }
                 if ($positionCodesFonction !== false) {
                     if ($item[$positionCodesFonction] !== "") {
-                        $competence->setCodesFonction($item[$positionCodesFonction]);
+                        $competence->setCodesFonction(str_replace(",","|",$item[$positionCodesFonction]));
                     }
                 }
                 if ($positionCodesEmploiType !== false) {
                     if ($item[$positionCodesEmploiType] !== "") {
-                        $competence->setCodesEmploiType($item[$positionCodesEmploiType]);
+                        $competence->setCodesEmploiType(str_replace(",","|",$item[$positionCodesEmploiType]));
                     }
                 }
 
@@ -663,19 +659,19 @@ class CompetenceService
                 foreach ($types as $type) {
                     if ($type->getId() === null) {
                         $this->getCompetenceTypeService()->create($type);
-                        $info[] = "Création du type de compétences [id:" . $type->getId() . " | libelle:" . $type->getLibelle() . "]";
+                        $info[] = "Création du type de compétences [libelle:" . $type->getLibelle() . "]";
                     }
                 }
                 foreach ($themes as $theme) {
                     if ($theme !== null and $theme->getId() === null) {
                         $this->getCompetenceThemeService()->create($theme);
-                        $info[] = "Création du thème de compétences [id:" . $theme->getId() . "libelle:" . $theme->getLibelle() . "]";
+                        $info[] = "Création du thème de compétences [libelle:" . $theme->getLibelle() . "]";
                     }
                 }
                 foreach ($disciplines as $discipline) {
                     if ($discipline !== null and $discipline->getId() === null) {
                         $this->getCompetenceDisciplineService()->create($discipline);
-                        $info[] = "Création de la discipline de compétences [id:" . $discipline->getId() . "libelle:" . $discipline->getLibelle() . "]";
+                        $info[] = "Création de la discipline de compétences [libelle:" . $discipline->getLibelle() . "]";
                     }
                 }
                 foreach ($competences as $competence) {
@@ -683,12 +679,12 @@ class CompetenceService
                     $competence->clearSynonymes();
                     if ($competence->getId() === null) {
                         $this->create($competence);
-                        $info[] = "Création de la compétence [id:" . $competence->getId() . "libelle:" . $competence->getLibelle() . "]";
+                        $info[] = "Création de la compétence [libelle:" . $competence->getLibelle() . "]";
                     } else {
                         //clear synonymes ???
 
                         $this->update($competence);
-//                        $info[] = "Mise à jour de la compétence [id:".$competence->getId()."libelle:".$competence->getLibelle()."]";
+//                        $info[] = "Mise à jour de la compétence [libelle:".$competence->getLibelle()."]";
                     }
                     foreach ($synonymes as $synonyme) {
                         if ($synonyme->getId() === null) {

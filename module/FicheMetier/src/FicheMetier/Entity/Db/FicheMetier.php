@@ -15,11 +15,11 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
-use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Entity\HasMetierInterface;
-use Metier\Entity\HasMetierTrait;
-use Metier\Entity\HasMissionsPrincipalesInterface;
-use Metier\Entity\HasMissionsPrincipalesTrait;
+use Carriere\Entity\Db\FamilleProfessionnelle;
+use FicheMetier\Entity\Db\Interface\HasActivitesInterface;
+use FicheMetier\Entity\Db\Interface\HasMissionsPrincipalesInterface;
+use FicheMetier\Entity\Db\Trait\HasActivitesTrait;
+use FicheMetier\Entity\Db\Trait\HasMissionsPrincipalesTrait;
 use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
 use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Entity\Db\Traits\HasReferenceTrait;
@@ -28,18 +28,20 @@ use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface, HasMissionsPrincipalesInterface,
-    HasNiveauCarriereInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasReferenceInterface
+class FicheMetier implements
+    HistoriqueAwareInterface, HasEtatsInterface, HasNiveauCarriereInterface,
+    HasActivitesInterface, HasMissionsPrincipalesInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface,
+    HasReferenceInterface
 {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
     use HasCategorieTrait;
     use HasEtatsTrait;
     use HasNiveauCarriereTrait;
-    use HasApplicationCollectionTrait;
-    use HasCompetenceCollectionTrait;
-    use HasMissionsPrincipalesTrait;
+    use HasActivitesTrait, HasMissionsPrincipalesTrait;
+    use HasApplicationCollectionTrait, HasCompetenceCollectionTrait;
+
     use HasReferenceTrait;
 
     private ?int $id = null;
@@ -47,11 +49,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?string $raison = null;
     private ?CodeFonction $codeFonction = null;
+    private ?string $codesEmploiType = null;
 
     public ?string $lienWeb = null;
     public ?string $lienPdf = null;
 
-    private Collection $activites;
     private Collection $tendances;
     private Collection $thematiques;
 
@@ -84,9 +86,10 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->raw = $raw;
     }
 
-    public function getLibelle(): ?string
+    public function getLibelle(bool $fillEmptyLibelle = true): ?string
     {
-        return $this->libelle;
+        if (!$fillEmptyLibelle) { return $this->libelle; }
+        return $this->libelle??"<span class='missing-data'>Aucune libelle pour la fiche Id:".$this->id."</span>";
     }
 
     public function setLibelle(?string $libelle): void
@@ -103,6 +106,18 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     {
         $this->familleProfessionnelle = $familleProfessionnelle;
     }
+
+    public function getCodesEmploiType(): ?string
+    {
+        return $this->codesEmploiType;
+    }
+
+    public function setCodesEmploiType(?string $codesEmploiType): void
+    {
+        $this->codesEmploiType = $codesEmploiType;
+    }
+
+
 
     public function getRaison(): ?string
     {
@@ -172,6 +187,29 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->tendances->clear();
     }
 
+    /** @return ThematiqueElement[] */
+    public function getThematiques(): array
+    {
+        $thematiques = [];
+        /** @var ThematiqueElement $thematique */
+        foreach ($this->thematiques as $tendance) {
+            if ($thematique->estNonHistorise()) {
+                $thematique[$thematique->getType()->getCode()] = $thematique;
+            }
+        }
+        return $thematiques;
+    }
+
+    public function addThematique(ThematiqueElement $thematique): void
+    {
+        $this->thematiques->add($thematique);
+    }
+
+    public function clearThematique(): void
+    {
+        $this->thematiques->clear();
+    }
+
     /** FONCTION POUR MACRO *******************************************************************************************/
 
     /**
@@ -180,24 +218,21 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function getActivitesFromFicheMetierAsText(): string
     {
         $texte = '<ul>';
-        $missions = $this->getMissions();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
-            return $a->getOrdre() <=> $b->getOrdre();
+        $activites = $this->getActivites();
+        usort($activites, function (ActiviteElement $a, ActiviteElement $b) {
+            return $a->getPosition() <=> $b->getPosition();
         });
-        foreach ($missions as $activite) {
-            $texte .= '<li>' . $activite->getMission()->getLibelle() . '</li>';
+        foreach ($activites as $activite) {
+            $texte .= '<li>' . $activite->getActivite()->getLibelle() . '</li>';
         }
         $texte .= '</ul>';
         return $texte;
     }
 
     /** @noinspection PhpUnused */
-    public function getIntitule(): string
+    public function getIntitule(): ?string
     {
-        if ($this->getLibelle()) return $this->getLibelle();
-        $metier = $this->getMetier();
-        if ($metier === null) return "Aucun métier est associé.";
-        return $metier->getLibelle();
+        return $this->getLibelle();
     }
 
     /** @noinspection PhpUnused */
@@ -210,29 +245,14 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 EOS;
 
         //metier
-        $html .= "<tr><th>Métier</th><td>" . $this->getMetier()->getLibelle() . "</td>";
-        $html .= "<tr><th>Correspondance</th><td><ul>";
-        foreach ($this->getMetier()->getCorrespondances() as $correspondance) {
-            $html .= "<li>";
-            $html .= $correspondance->getType()->getLibelleCourt() . " " . $correspondance->getCategorie();
-            $html .= "</li>";
-        }
-        $html .= "</ul></td>";
-        $html .= "<tr><th>Famille</th><td><ul>";
-        foreach ($this->getMetier()->getFamillesProfessionnelles() as $familleProfessionnelle) {
-            $html .= "<li>";
-            $html .= $familleProfessionnelle->getLibelle();
-            $html .= "</li>";
-        }
-        $html .= "</ul></td>";
+        $html .= "<tr><th>Spécialité</th>";
+        $html .= "<td>" . $this->getFamilleProfessionnelle()?->getCorrespondance()?->getLibelleLong() . "</td>";
+
+        $html .= "<tr><th>Famille professionnelle</th>";
+        $html .= "<td>" . $this->getFamilleProfessionnelle()?->getLibelle() . "</td>";
         //$html .= "<tr><th>Code Fonction</th><td>".$this->getMetier()->getLibelle()."</td>";
-        $html .= "<tr><th>Référence·s</th><td>";
-        foreach ($this->getMetier()->getReferences() as $reference) {
-            $html .= "<li>";
-            $html .= $reference->getReferentiel()->getLibelleCourt() . " " . $reference->getCode();
-            $html .= "</li>";
-        }
-        $html .= "</td>";
+        $html .= "<tr><th>Référence·s</th>";
+        $html .= "<td>". $this->printReference()."</td>";
         $html .= "<tr><th>Date de dépôt</th><td>";
         $etat = $this->getEtatActif();
         if ($etat === null) $html .= "État inconnu";
@@ -262,27 +282,6 @@ EOS;
 EOS;
 
         return $html;
-    }
-
-    /**
-     * Utiliser dans la macro FICHE_METIER#MISSIONS_PRINCIPALES
-     * @noinspection PhpUnused
-     */
-    public function getMissionsAsList(): string
-    {
-        $texte = "<h2> Mission·s principale·s</h2>";
-        foreach ($this->getMissions() as $mission) {
-            $texte .= "<h3 class='mission-principale'>" . $mission->getMission()->getLibelle() . "</h3>";
-            $activites = $mission->getMission()->getActivites();
-            $texte .= "<ul>";
-            foreach ($activites as $activite) {
-                $texte .= "<li>";
-                $texte .= $activite->getLibelle();
-                $texte .= "</li>";
-            }
-            $texte .= "</ul>";
-        }
-        return $texte;
     }
 
     /** @noinspection PhpUnused */
@@ -376,22 +375,17 @@ EOS;
         return $this->raison;
     }
 
-    /** @noinspection PhpUnused */
-    public function toStringThematiques(): string
+    /**
+     * @noinspection PhpUnused
+     * N.B. On suppose que l'attribut $thematiquesTypes est initialisé avec la liste des types de thematiques
+     */
+    public function toStringThematiques(string $all = "false"): string
     {
-        /** @var ThematiqueElement[] $thematiques */
-        $thematiques = $this->thematiques->toArray();
-        $thematiques = array_filter($thematiques, function (ThematiqueElement $a) {
-            return $a->estNonHistorise() && $a->getType()->estNonHistorise();
-        });
-        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) {
-            return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
-        });
-        if (empty($thematiques)) return "";
-
+        $listing = [];
+        foreach ($this->getThematiques() as $thematique) {
+            $listing[$thematique->getType()->getCode()] = $thematique;
+        }
         $html = <<<EOS
-<h2>Environnement et contexte de travail</h2>
-
 <table style='width:100%; border-collapse: collapse;' id="environnement">
 <thead>
     <tr>
@@ -402,43 +396,35 @@ EOS;
 <tbody>
 EOS;
 
-        foreach ($thematiques as $thematique) {
-            $html .= "<tr>";
-            $html .= "<td>" . $thematique->getType()->getLibelle() . "</td>";
-            $html .= "<td>" . $thematique->getNiveauMaitrise()->getLibelle() . "</td>";
-            $html .= "</tr>";
+        foreach ($this->thematiquesTypes as $type) {
+            if ($all === "1" OR $type->isObligatoire() OR isset($listing[$type->getCode()])) {
+                $thematique = $listing[$type->getCode()]??null;
+                $html .= "<tr>";
+                $html .= "<td>" . $type->getLibelle() . "</td>";
+                $html .= "<td>" . ($thematique?->getNiveauMaitrise()?$thematique->getNiveauMaitrise()->getLibelle():"non précisé") . "</td>";
+                $html .= "</tr>";
+            }
         }
-        $html .= <<<EOS
-</tbody>
-</table>
-EOS;
-
+        $html .= "</tbody></table>";
         return $html;
     }
 
-    /** @noinspection PhpUnused */
-    public function toStringTendances(): string
+    /** @noinspection PhpUnused
+     * N.B. On suppose que l'attribut $tendancesTypes est initialisé avec la liste des types de tendance
+     **/
+
+    public function toStringTendances(string $all = "false"): string
     {
-        /** @var TendanceElement[] $tendances */
-        $tendances = $this->tendances->toArray();
-        $tendances = array_filter($tendances, function (TendanceElement $a) {
-            return $a->estNonHistorise() && $a->getType()->estNonHistorise();
-        });
-        usort($tendances, function (TendanceElement $a, TendanceElement $b) {
-            return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();
-        });
-        if (empty($tendances)) return "";
+        $listing = [];
+        foreach ($this->getTendances() as $tendance) $listing[$tendance->getType()->getCode()] = $tendance;
 
-        $html = <<<EOS
-<h2>Tendances d'évolution </h2>
-EOS;
-
-        $html .= "<div class='tendances'>";
-        foreach ($tendances as $tendance) {
-            $html .= "<div class='tendance'>";
-            $html .= "<div class='tendance-libelle'>" . $tendance->getType()->getLibelle() . "</div>";
-            $html .= "<div class='tendance-texte'>" . $tendance->getTexte() . "</div>";
-            $html .= "</div>";
+        $html = "<div class='tendances'>";
+        foreach ($this->tendancesTypes as $type) {
+            if ($all === "1" OR $type->isObligatoire() OR isset($listing[$type->getCode()])) {
+                $tendance = $listing[$type->getCode()]??null;
+                $html .= "<div class='tendance-libelle'>" . $type->getLibelle() . "</div>";
+                $html .= "<div class='tendance-texte'>" . ($tendance?$tendance->getTexte():"non précisé") . "</div>";
+            }
         }
         $html .= "</div>";
         return $html;
@@ -501,13 +487,12 @@ EOS;
         return $famille->getLibelle();
     }
 
-    public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?FicheMetierMission
+    public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?MissionElement
     {
         foreach ($this->missions as $mission) {
             if ($mission->getMission()->getReferentiel() === $referentiel && $mission->getMission()->getReference() === $reference) return $mission;
         }
         return null;
     }
-
 
 }

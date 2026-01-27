@@ -125,12 +125,9 @@ $this->headTitle('Importation de missions principales');
             <span class="icon icon-info"></span>
             Le fichier importé doit contenir les colonnes suivantes :
             <ul>
-                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_ID; ?></code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> :
-                    l'identifiant unique de la mission dans le référentiel,
-                </li>
-                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> : le
-                    libellé de la mission principale,
-                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES; ?></code> : les différentes activités composant la mission,</li>
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_ID; ?></code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> : l'identifiant unique de la mission dans le référentiel,</li>
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire" title="Champ obligatoire"></span> : le libellé de la mission principale, </li>
+                <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION; ?></code> : la description de la mission principale, </li>
                 <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_FAMILLES; ?></code> : la liste des familles professionnelles rattachées à la mission, </li>
                 <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_NIVEAU; ?></code> : le niveau doit correspondre à un niveau de carrière déclaré,
                 <li><code><?php echo Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE; ?></code> : la liste des codes des fiches métiers incluant la mission,

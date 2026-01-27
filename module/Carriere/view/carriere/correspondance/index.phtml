@@ -17,13 +17,13 @@ $canLister      = $this->isAllowed(CorrespondancePrivileges::getResourceId(Corre
 
 $canAction = ($canLister);
 
-$this->headTitle("Liste des correspondances");
+$this->headTitle("Liste des spécialités");
 ?>
 
 <div class="row">
     <div class="col-md-9">
         <h1 class="page-header">
-            Liste des correspondances
+            Liste des spécialités
             <span class="badge">
                 <?php echo count($correspondances); ?>
             </span>
@@ -34,7 +34,7 @@ $this->headTitle("Liste des correspondances");
            class="btn btn-secondary"
         >
             <span class="icon icon-lister"></span>
-            Accéder aux types de correspondance
+            Accéder aux types de spécialité
         </a>
     </div>
 </div>
@@ -45,7 +45,7 @@ $this->headTitle("Liste des correspondances");
     <?php if ($avecAgent) : ?>
         <br>
         <span class="icon icon-information"></span>
-        Seules les correspondances avec au moins un agent·e sont présentées
+        Seules les spécialités avec au moins un agent·e sont présentées
     <?php endif; ?>
 </div>
 
@@ -79,7 +79,7 @@ $this->headTitle("Liste des correspondances");
             <td>
                 <?php if ($correspondance->getType()) : ?>
                     <span title="<?php echo $correspondance->getType()->getLibelleLong(); ?>">
-                        <?php echo $correspondance->getType()->getLibelleCourt(); ?>
+                        <code><?php echo $correspondance->getType()->getLibelleCourt(); ?></code>
                     </span>
                 <?php else : ?>
                     Aucun

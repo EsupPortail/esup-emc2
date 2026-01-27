@@ -5,6 +5,7 @@ namespace FicheMetier\Controller;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use DateTime;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -13,19 +14,17 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Exception;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
+use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Metier\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -37,8 +36,8 @@ class MissionPrincipaleController extends AbstractActionController
     use CompetenceElementServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use MissionElementServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
@@ -52,16 +51,17 @@ class MissionPrincipaleController extends AbstractActionController
     use SelectionnerFamilleProfessionnelleFormAwareTrait;
 
 
-
     public function indexAction(): ViewModel
     {
         $params = $this->params()->fromQuery();
         $missions = $this->getMissionPrincipaleService()->getMissionsPrincipalesWithFiltre($params);
+        $dictionnaire = $this->getMissionPrincipaleService()->generateDictionnaireFicheMetier();
 
         return new ViewModel([
             'missions' => $missions,
             'referentiels' => $this->getReferentielService()->getReferentiels(),
             'familles' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles(),
+            'dictionnaire' => $dictionnaire,
             'params' => $params,
         ]);
     }
@@ -71,13 +71,13 @@ class MissionPrincipaleController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersHavingMissionPrincipale($mission);
 
         $vm = new ViewModel([
             'title' => "Affichage de la mission principale",
             'modification' => false,
             'mission' => $mission,
-            'fichesmetiers' => $mission->getListeFicheMetier(),
-            'fichespostes' => $mission->getListeFichePoste(),
+            'fichesmetiers' => $fichesmetiers,
             'codeFonction' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION)
         ]);
         return $vm;
@@ -106,16 +106,7 @@ class MissionPrincipaleController extends AbstractActionController
                         $this->getNiveauEnveloppeService()->update($niveau);
                     }
                 }
-                $missionsActivites = $mission->getActivites();
-                $mission->clearActivites();
                 $this->getMissionPrincipaleService()->create($mission);
-                $mission->setReference($mission->getId());
-                $this->getMissionPrincipaleService()->update($mission);
-                foreach ($missionsActivites as $activite) {
-                    $mission->addMissionActivite($activite);
-                    if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
-                    else $this->getMissionActiviteService()->create($activite);
-                }
                 exit();
             }
         }
@@ -141,7 +132,6 @@ class MissionPrincipaleController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-            $previousActivites = $mission->getActivites();
 
             if ($form->isValid()) {
                 $niveau = $mission->getNiveau();
@@ -152,17 +142,7 @@ class MissionPrincipaleController extends AbstractActionController
                         $this->getNiveauEnveloppeService()->update($niveau);
                     }
                 }
-                $missionsActivites = $mission->getActivites();
-                $mission->clearActivites();
                 $this->getMissionPrincipaleService()->update($mission);
-                foreach ($missionsActivites as $activite) {
-                    $mission->addMissionActivite($activite);
-                    if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
-                    else $this->getMissionActiviteService()->create($activite);
-                }
-                foreach ($previousActivites as $activite) {
-                    if (!$mission->hasActivite($activite->getLibelle())) $this->getMissionActiviteService()->delete($activite);
-                }
                 exit();
             }
         }
@@ -210,7 +190,7 @@ class MissionPrincipaleController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($mission !== null) {
-            $nbFicheMetier = count($mission->getListeFicheMetier());
+            $nbFicheMetier = 0;
             $nbFichePoste = 0;
             $warning = "<span class='icon icon-attention'></span> Attention cette mission principale est encore associée à " . $nbFicheMetier . " fiches métiers et à " . $nbFichePoste . " fiches de poste.";
             $vm->setTemplate('default/confirmation');
@@ -312,119 +292,6 @@ class MissionPrincipaleController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterActiviteAction(): ViewModel
-    {
-        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
-
-        $activite = new MissionActivite();
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/ajouter-activite', ['mission-principale' => $mission->getId()], [], true));
-        $form->bind($activite);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionPrincipaleService()->ajouterActivite($mission, $activite);
-                exit();
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Ajouter une activité à la mission principale",
-            'form' => $form,
-        ]);
-        $vm->setTemplate('default/default-form');
-        return $vm;
-    }
-
-    public function modifierActiviteAction(): ViewModel
-    {
-        $activite = $this->getMissionActiviteService()->getRequestedActivite($this);
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/modifier-activite', ['mission-principale' => $activite->getId()], [], true));
-        $form->bind($activite);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionActiviteService()->update($activite);
-                exit();
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Modifier le libellé de l'activité",
-            'form' => $form,
-        ]);
-        $vm->setTemplate('default/default-form');
-        return $vm;
-    }
-
-    public function supprimerActiviteAction(): Response
-    {
-        $activite = $this->getMissionActiviteService()->getRequestedActivite($this);
-        $mission = $activite->getMission();
-        $this->getMissionActiviteService()->delete($activite);
-
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true);
-    }
-
-    public function gererApplicationsAction(): ViewModel
-    {
-        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
-        $form = $this->getSelectionApplicationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/gerer-applications', ['mission-principale' => $mission->getId()], [], true));
-        $form->bind($mission);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionPrincipaleService()->update($mission);
-                exit();
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Gestion des applications associées à la mission",
-            'form' => $form,
-        ]);
-        $vm->setTemplate('default/default-form');
-        return $vm;
-    }
-
-    public function gererCompetencesAction(): ViewModel
-    {
-        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
-        $form = $this->getSelectionCompetenceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/gerer-competences', ['mission-principale' => $mission->getId()], [], true));
-        $form->bind($mission);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionPrincipaleService()->update($mission);
-                exit();
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Gestion des compétences associées à la mission",
-            'form' => $form,
-        ]);
-        $vm->setTemplate('default/default-form');
-        return $vm;
-    }
-
     /** FONCTIONS DE RECHERCHE ****************************************************************************************/
 
     public function rechercherAction(): JsonModel
@@ -441,7 +308,7 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function importerAction(): ViewModel
     {
-        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE,FicheMetierParametres::CODE_FONCTION);
+        $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
 
         $separateur = '|';
 
@@ -487,7 +354,8 @@ class MissionPrincipaleController extends AbstractActionController
                 $array = $this->readCSV($filepath, true, $separateur);
                 if (empty($array)) {
                     $warning[] = "Le fichier ne contient pas de données.";
-                } else {
+                } else
+                {
 
                     // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////////
                     $header = [];
@@ -498,8 +366,8 @@ class MissionPrincipaleController extends AbstractActionController
                     if (!$hasIdMission) $error[] = "La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_ID . "] est manquante";
                     $hasLibelle = in_array(Mission::MISSION_PRINCIPALE_HEADER_LIBELLE, $header);
                     if (!$hasLibelle) $error[] = "La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_LIBELLE . "] est manquante";
-                    $hasActivites = in_array(Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES, $header);
-                    if (!$hasActivites) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_ACTIVITES . "] est manquante";
+                    $hasDescription = in_array(Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION, $header);
+                    if (!$hasDescription) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION . "] est manquante";
                     $hasFamilles = in_array(Mission::MISSION_PRINCIPALE_HEADER_FAMILLES, $header);
                     if (!$hasFamilles) $warning[] = "La colonne facultative [" . Mission::MISSION_PRINCIPALE_HEADER_FAMILLES . "] est manquante";
                     $hasNiveau = in_array(Mission::MISSION_PRINCIPALE_HEADER_NIVEAU, $header);
@@ -523,10 +391,6 @@ class MissionPrincipaleController extends AbstractActionController
                                 [$mission, $debug, $to_create_, $to_delete_] = $this->getMissionPrincipaleService()->createOneWithCsv($row, $separateur, $referentiel, $position);
                                 $missions[] = $mission;
 
-                                foreach ($to_delete_['activites'] as $activite) {
-                                    $to_delete['activites'][] = $activite;
-                                }
-
                                 if (isset($debug['info'])) {
                                     foreach ($debug['info'] as $line) {
                                         $info[] = $line;
@@ -549,17 +413,11 @@ class MissionPrincipaleController extends AbstractActionController
                     }
 
                     if ($mode === 'import') {
-                        if (isset($to_delete['activites'])) {
-                            foreach ($to_delete['activites'] as $activite) {
-                                $this->getMissionActiviteService()->delete($activite);
-                            }
-                        }
 
                         /** @var Mission $mission */
                         foreach ($missions as $mission) {
-                            if ($mission->getId() !== null)
-                            {
-                                $info[] = "La mission ".$mission->printReference()." existe déjà et sera mise à jour";
+                            if ($mission->getId() !== null) {
+                                $info[] = "La mission " . $mission->printReference() . " existe déjà et sera mise à jour";
                             }
                             //famille professionnelle
                             foreach ($mission->getFamillesProfessionnelles() as $famille) {
@@ -572,43 +430,35 @@ class MissionPrincipaleController extends AbstractActionController
                             if ($mission->getNiveau()) {
                                 $this->getNiveauEnveloppeService()->create($mission->getNiveau());
                             }
-                            //activite
-                            $activites = [];
-                            foreach ($mission->getActivites() as $activite) {
-                                $activites[$activite->getOrdre()] = $activite;
-                            }
-                            $mission->clearActivites();
                             //mission
                             $this->getMissionPrincipaleService()->create($mission);
 
-                            foreach ($activites as $activite) {
-                                if ($activite->getId()) $this->getMissionActiviteService()->update($activite);
-                                else $this->getMissionActiviteService()->create($activite);
-                                $mission->addMissionActivite($activite);
-                            }
-                            $this->getMissionPrincipaleService()->update($mission);
-
                             // Bricolage pour satisfaire Marseille
-                            $codesFicheMetier = explode('|',$mission->getCodesFicheMetier()??"");
+                            $codesFicheMetier = explode('|', $mission->getCodesFicheMetier() ?? "");
                             $codesFicheMetier = array_map('trim', $codesFicheMetier);
-                            $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) { return $a !== ''; });
+                            $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) {
+                                return $a !== '';
+                            });
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
-                                if ($fichemetier === null) { $warning[] = "La fiche metier ".$mission->printReference()." n'existe pas"; }
-                                else {
+                                if ($fichemetier === null) {
+                                    $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$mission->getCodesFicheMetier() . "</span> n&apos;existe pas";
+                                } else {
                                     if (!$fichemetier->hasMission($mission)) {
-                                        $this->getFicheMetierService()->addMission($fichemetier, $mission);
-                                        $info[] = "Ajout de la mission ".$mission->printReference()." a été ajouté à la fiche metier [".$fichemetier->getReference()."]";
+                                        $this->getMissionElementService()->addMissionElement($fichemetier,$mission);
+                                        $info[] = "Ajout de la mission " . $mission->printReference() . " a été ajouté à la fiche metier [" . $fichemetier->getReference() . "]";
                                     }
                                 }
                             }
-                            $codesFonction = explode('|',$mission->getCodesFonction()??"");
+                            $codesFonction = explode('|', $mission->getCodesFonction() ?? "");
                             $codesFonction = array_map('trim', $codesFonction);
-                            $codesFonction = array_filter($codesFonction, function (string $a) { return $a !== ''; });
+                            $codesFonction = array_filter($codesFonction, function (string $a) {
+                                return $a !== '';
+                            });
                             foreach ($codesFonction as $codeFonction) {
                                 $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                 if ($codeFonction_ === null) {
-                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale ".$mission->printReference()." ne sera ajoutée à aucune fiche métier.";
+                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale " . $mission->printReference() . " ne sera ajoutée à aucune fiche métier.";
                                 } else {
                                     $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                     if (empty($fichesmetiers)) {
@@ -616,7 +466,7 @@ class MissionPrincipaleController extends AbstractActionController
                                     }
                                     foreach ($fichesmetiers as $fichemetier) {
                                         if (!$fichemetier->hasMission($mission)) {
-                                            $this->getFicheMetierService()->addMission($fichemetier, $mission);
+                                            $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
                                             $info[] = "Ajout de la mission [" . $mission->getReference() . "] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
                                         }
                                     }

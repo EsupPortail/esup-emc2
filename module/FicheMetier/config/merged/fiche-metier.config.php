@@ -4,6 +4,10 @@ namespace FichePoste;
 
 use FicheMetier\Controller\FicheMetierController;
 use FicheMetier\Controller\FicheMetierControllerFactory;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormFactory;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydrator;
+use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydratorFactory;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
 use FicheMetier\Form\FicheMetierImportation\FichierMetierImportationHydrator;
@@ -17,8 +21,6 @@ use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceFactory;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -40,6 +42,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                        'refresh-activites',
                         'refresh-applications',
                         'refresh-competences',
                         'refresh-missions',
@@ -84,7 +87,6 @@ return [
                     'action' => [
                         'modifier',
                         'modifier-libelle',
-                        'reinitialiser-libelle',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -103,15 +105,8 @@ return [
                         'supprimer-niveau-carriere',
                         'modifier-code-fonction',
                         'supprimer-code-fonction',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'deplacer-mission',
+                        'modifier-code-emploi-type',
+                        'supprimer-code-emploi-type',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -121,8 +116,15 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'gerer-missions-principales',
-                        'gerer-applications',
+                        'retirer-mission',
+                        'bouger-mission',
+
+                        'gerer-activites',
+                        'retirer-activite',
+                        'bouger-activite',
+
                         'gerer-competences',
+                        'gerer-applications',
                         'gerer-competences-specifiques',
                     ],
                     'privileges' => [
@@ -214,16 +216,6 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::modifierLibelleAction() */
                                 'action'     => 'modifier-libelle',
-                            ],
-                        ],
-                    ],
-                    'reinitialiser-libelle' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/reinitialiser-libelle/:fiche-metier',
-                            'defaults' => [
-                                /** @see FicheMetierController::reinitialiserLibelleAction() */
-                                'action'     => 'reinitialiser-libelle',
                             ],
                         ],
                     ],
@@ -347,6 +339,26 @@ return [
                             ],
                         ],
                     ],
+                    'modifier-code-emploi-type' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-code-emploi-type/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierCodeEmploiTypeAction() */
+                                'action'     => 'modifier-code-emploi-type',
+                            ],
+                        ],
+                    ],
+                    'supprimer-code-emploi-type' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-code-emploi-type/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::supprimerCodeEmploiTypeAction() */
+                                'action'     => 'supprimer-code-emploi-type',
+                            ],
+                        ],
+                    ],
                     'modifier-niveau-carriere' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -367,14 +379,33 @@ return [
                             ],
                         ],
                     ],
-                    'deplacer-mission' => [
+                    'gerer-activites' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/deplacer-mission[/:fiche-metier/:mission-principale/:direction]',
+                            'route'    => '/gerer-activites/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::deplacerMissionAction() */
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'deplacer-mission',
+                                /** @see FicheMetierController::gererActivitesAction() */
+                                'action'     => 'gerer-activites',
+                            ],
+                        ],
+                    ],
+                    'bouger-activite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/bouger-activite/:fiche-metier/:activite-element/:direction',
+                            'defaults' => [
+                                /** @see FicheMetierController::bougerActiviteAction() */
+                                'action'     => 'bouger-activite'
+                            ],
+                        ],
+                    ],
+                    'retirer-activite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-activite/:fiche-metier/:activite-element',
+                            'defaults' => [
+                                /** @see FicheMetierController::retirerActiviteAction() */
+                                'action'     => 'retirer-activite'
                             ],
                         ],
                     ],
@@ -418,6 +449,36 @@ return [
                             ],
                         ],
                     ],
+                    'bouger-mission' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/bouger-mission/:fiche-metier/:mission-element/:direction',
+                            'defaults' => [
+                                /** @see FicheMetierController::bougerMissionAction() */
+                                'action'     => 'bouger-mission'
+                            ],
+                        ],
+                    ],
+                    'retirer-mission' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-mission/:fiche-metier/:mission-element',
+                            'defaults' => [
+                                /** @see FicheMetierController::retirerMissionAction() */
+                                'action'     => 'retirer-mission'
+                            ],
+                        ],
+                    ],
+                    'refresh-activites' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refresh-activites/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshActivitesAction() */
+                                'action'     => 'refresh-activites',
+                            ],
+                        ],
+                    ],
                     'refresh-applications' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -456,7 +517,6 @@ return [
     'service_manager' => [
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
-            FicheMetierMissionService::class => FicheMetierMissionServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -466,6 +526,7 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            CodeEmploiTypeForm::class => CodeEmploiTypeFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
@@ -473,6 +534,7 @@ return [
     ],
     'hydrators' => [
         'factories' => [
+            CodeEmploiTypeHydrator::class => CodeEmploiTypeHydratorFactory::class,
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],

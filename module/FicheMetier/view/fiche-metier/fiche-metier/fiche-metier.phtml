@@ -3,6 +3,7 @@
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\CompetenceType;
 use EmploiRepere\Entity\Db\EmploiRepere;
+use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -16,6 +17,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var array $competencesSpecifiques
  * @var array $applications
  * @var array $missions
+ * @var ActiviteElement[] $activites
  * @var array $tendancesTypes
  * @var array $tendancesElements
  * @var array $thematiquestypes
@@ -25,7 +27,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var string $mode ('affichage', 'edition-fiche-metier')
  */
 
-$libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
+$libelle = $fiche->getLibelle();
 $titre = " de la fiche métier #" . $fiche->getId(). " : " . $libelle;
 if ($mode === 'affichage') $titre = "Affichage".$titre;
 if ($mode === 'edition-fiche-metier') $titre = "Modification".$titre;
@@ -105,6 +107,10 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_MISSION]) || $parametres[FicheMetierParametres::DISPLAY_MISSION]->getValeur() !== "false") : ?>
    <?php echo $this->partial('partial/missions-principales',   ['fichemetier' => $fiche, 'missionsprincipales' => $missions, 'mode' => $mode ],  [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_ACTIVITE]) || $parametres[FicheMetierParametres::DISPLAY_ACTIVITE]->getValeur() !== "false") : ?>
+    <?php echo $this->partial('partial/activites',   ['fichemetier' => $fiche, 'activites' => $activites, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
 
 <!-- COMPETENCES STANDARDS -------------------------------------------------------------------------------------------->
@@ -207,6 +213,24 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         });
     }
 
+    function refreshActivites() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshActivitesAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-activites", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
+        console.log("refreshing activites");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("#activites_view").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("#activites_view").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
     function refreshCompetences(type) {
         <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesAction() */ ?>
         let url = "<?php echo $this->url("fiche-metier/refresh-competences", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
@@ -235,10 +259,13 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             .on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        }).on("refresh-activites", function (event) {
+            event.div.modal('hide');
+            refreshActivites();
         }).on("refresh-missions", function (event) {
             event.div.modal('hide');
             refreshMissions();
-        })            .on("refresh-applications", function (event) {
+        }).on("refresh-applications", function (event) {
             event.div.modal('hide');
             refreshApplications();
         }).on("refresh-competences", function (event) {
@@ -254,6 +281,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         });
 
         refreshMissions();
+        refreshActivites();
         refreshApplications();
         types.forEach(function (type) {
             refreshCompetences(type);

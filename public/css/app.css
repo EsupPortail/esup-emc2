@@ -45,19 +45,12 @@ div.modal div.modal-footer {
 
 /** TABLE ************************************/
 
-th.action {
-    width:8rem;
-}
-
-td.action,
-div.action,
-span.action
+div.action
 {
     font-size: small;
 }
 td.action a,
-div.action a,
-span.action a
+div.action a
 {
     text-decoration: none;
 }
@@ -67,44 +60,49 @@ a.action {
     text-decoration: none;
     padding: 0 0.5rem;
     border-radius : 0.25rem;
+    font-size: small;
 }
+span.action.danger,
 a.action.success {
     color: var(--bs-success);
 }
+span.action.danger,
 a.action.danger {
     color: var(--bs-danger);
 }
 a.action.warning {
     color: var(--bs-warning);
 }
-
-
 span.action.primary,
 a.action.primary {
     color: var(--bs-primary);
 }
+span.action.secondary,
 a.action.secondary {
     color: var(--bs-secondary);
 }
+span.action:hover,
 a.action:hover {
     background: lightgray;
+    cursor: pointer;
 }
-
+span.action.success:hover,
 a.action.success:hover {
     background: lightgreen;
 }
+span.action.danger:hover,
 a.action.danger:hover {
     background: #ffa6c4;
 }
+span.action.warning:hover,
 a.action.warning:hover {
     background: #ffd2b9;
 }
 span.action.primary:hover,
 a.action.primary:hover {
     background: lightblue;
-    cursor: pointer;
 }
-
+span.action.secondary:hover,
 a.action.secondary:hover {
     background: lightgray;
 }
@@ -337,30 +335,50 @@ div.alert-danger .fa-exclamation-triangle {
     /*background: Green;*/
 }
 
+.badge.activite {
+    background: var(--emc2-activite);
+}
 .badge.mission {
     background: var(--emc2-mission);
 }
 .badge.competence {
     background: var(--emc2-competence);
 }
-
 .badge.fichemetier {
     background: var(--emc2-fichemetier);
 }
-
-ul.dropdown-menu {
-    max-width:90vh;
+.badge.ficheposte {
+    background: var(--emc2-ficheposte);
 }
 
-ul.dropdown-menu span.libelle_mission {
-    width:75%;
+/*ul.dropdown-menu {*/
+/*    width: 100%;*/
+/*}*/
+
+/** Parametrage de bootstrap-select ***********************************************************************************/
+
+.bootstrap-select .filter-option-inner {
+    white-space: normal;
+    height: auto;
+}
+
+ul.dropdown-menu span.libelle_mission,
+ul.dropdown-menu span.libelle_competence
+{
     white-space: normal !important;
     word-wrap: break-word;
+    max-width: 90% !important;
 }
 
+
+ul.dropdown-menu span.description {
+    white-space: normal !important;
+    word-wrap: break-word;
+    max-width: 90% !important;
+}
 ul.dropdown-menu span.description li {
-    white-space: normal !important;
-    word-wrap: break-word;
+    /*white-space: normal !important;*/
+    /*word-wrap: break-word;*/
 }
 
 div.filter-option-inner-inner span.mission {

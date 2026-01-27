@@ -3,12 +3,10 @@
 /**
  * @see \Element\Controller\ApplicationController::cartographieAction()
  * @var Application[]   $applications
- * @var Metier[]        $metiers
  * @var array           $link
  */
 
 use Element\Entity\Db\Application;
-use Metier\Entity\Db\Metier;
 
 $this->headTitle('Cartographie Metier/Application');
 $nbApplications = count($applications);
@@ -67,9 +65,6 @@ $nbApplications = count($applications);
         border: 1px solid var(--header-background-hover);
         background: white;
         text-align: center;
-    }
-
-    th.metier {
     }
 
     th.application {

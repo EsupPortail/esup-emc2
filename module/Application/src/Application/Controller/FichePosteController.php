@@ -21,7 +21,6 @@ use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
-use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -85,7 +84,7 @@ class FichePosteController extends AbstractActionController
         $fichesIncompletes = [];
         $ficheVides = [];
         foreach ($fiches as $fiche) {
-            if ($fiche['agent_id'] !== null and $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
+            if (isset($fiche['fiche_principale']) and $fiche['agent_id'] !== null and $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
             else {
                 if ($fiche['agent_id'] === null and $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
                 else $fichesIncompletes[] = $fiche;
@@ -175,7 +174,7 @@ class FichePosteController extends AbstractActionController
         $titre = 'Fiche de poste <br/>';
         $titre .= '<strong>';
         if ($fiche->getFicheTypeExternePrincipale()) {
-            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getLibelle();
         } else {
             $titre .= "<span class='icon icon-attention' style='color:darkred;'></span> Aucun fiche principale";
         }
@@ -311,7 +310,7 @@ class FichePosteController extends AbstractActionController
         $vars = [
             'ficheposte' => $ficheposte,
             'agent' => $agent,
-            'structure' => !empty($structures)?current($structures):null,
+            'structure' => !empty($structures) ? current($structures) : null,
 //            'structure' => ($agent) ? $agent->getAffectationPrincipale()->getStructure() : null,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_POSTE, $vars);
@@ -588,7 +587,7 @@ class FichePosteController extends AbstractActionController
         }
 
         return new ViewModel([
-            'title' => 'Liste des activités de la fiche métier <br/> <strong>' . $ficheTypeExterne->getFicheType()->getMetier() . '</strong>',
+            'title' => 'Liste des activités de la fiche métier <br/> <strong>' . $ficheTypeExterne->getFicheType()->getLibelle() . '</strong>',
             'fichePoste' => $fichePoste,
             'ficheTypeExterne' => $ficheTypeExterne,
         ]);
@@ -688,10 +687,9 @@ class FichePosteController extends AbstractActionController
         $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
         /**
-         * @var MissionActivite[] $activites
          * @var FicheposteActiviteDescriptionRetiree[] $retirees
          */
-        $activites = $mission->getActivites();
+        $activites = $fichemetier->getActivites();
         $retirees = $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $mission);
 
         /** @var Request $request */
@@ -714,7 +712,6 @@ class FichePosteController extends AbstractActionController
                     $item->setFichePoste($ficheposte);
                     $item->setFicheMetier($fichemetier);
                     $item->setMission($mission);
-                    $item->setActivite($description);
                     $this->getActivitesDescriptionsRetireesService()->create($item);
                 }
             }

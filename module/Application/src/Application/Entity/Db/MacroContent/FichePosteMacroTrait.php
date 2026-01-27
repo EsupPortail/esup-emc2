@@ -6,7 +6,6 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceType;
-use Metier\Entity\Db\Reference;
 
 trait FichePosteMacroTrait {
 
@@ -53,7 +52,7 @@ trait FichePosteMacroTrait {
         $texte .= "<ul>";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $texte .= "<li>";
-            $texte .= $ficheTypeExterne->getFicheType()->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $texte .= $ficheTypeExterne->getFicheType()->getLibelle();
 //            foreach ($ficheTypeExterne->getFicheType()->getMetier()->getReferences() as $reference) {
 //                $texte .= $reference->getUrl();
 //            }
@@ -191,19 +190,9 @@ trait FichePosteMacroTrait {
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $texte .= "<h3>";
-            $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $texte .= $ficheMetier->getLibelle();
             $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
             $texte .= " (".$supplement.")";
-            $references = $ficheMetier->getMetier()->getReferences();
-
-            if ($references !== null AND !empty($references)) {
-                $texte .= "<br/><small>";
-                /** @var Reference $reference */
-                foreach ($references as $reference) {
-                    $texte .= " <a href='".$reference->getUrl()."'>".$reference->getReferentiel()->getLibelleCourt() . "-" . $reference->getCode()."</a>";
-                }
-                $texte.="</small>";
-            }
             $texte .= "</h3>";
 
             $ids = explode(";",$ficheTypeExterne->getActivites());
@@ -213,13 +202,13 @@ trait FichePosteMacroTrait {
                     if ($mission->getId() === (int) $id) {
                         $texte .= "<span class='activite-libelle'>". $mission->getLibelle() . "</span>";
 
-                        $texte .= "<ul>";
-                        foreach ($mission->getActivites() as $activite) {
-                            if (!in_array($activite->getId(), $descriptionsRetirees)) {
-                                $texte .= "<li>" . $activite->getLibelle() . "</li>";
-                            }
-                        }
-                        $texte .= "</ul>";
+//                        $texte .= "<ul>";
+//                        foreach ($mission->getActivites() as $activite) {
+//                            if (!in_array($activite->getId(), $descriptionsRetirees)) {
+//                                $texte .= "<li>" . $activite->getLibelle() . "</li>";
+//                            }
+//                        }
+//                        $texte .= "</ul>";
 
                         break;
                     }
@@ -241,19 +230,9 @@ trait FichePosteMacroTrait {
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $texte .= "<h3>";
-            $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $texte .= $ficheMetier->getLibelle();
             $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
             $texte .= " (".$supplement.")";
-            $references = $ficheMetier->getMetier()->getReferences();
-
-            if ($references !== null AND !empty($references)) {
-                $texte .= "<br/><small>";
-                /** @var Reference $reference */
-                foreach ($references as $reference) {
-                    $texte .= " <a href='".$reference->getUrl()."'>".$reference->getReferentiel()->getLibelleCourt() . "-" . $reference->getCode()."</a>";
-                }
-                $texte.="</small>";
-            }
             $texte .= "</h3>";
 
             $ids = explode(";",$ficheTypeExterne->getActivites());
@@ -286,18 +265,7 @@ trait FichePosteMacroTrait {
 
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
-
-        foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
-            $tmp = $ficheTypeExterne->getFicheType()->getMetier();
-            if ($metier === null OR $metier->getNiveaux()->getBorneInferieure()->getNiveau() < $tmp->getNiveaux()->getBorneInferieure()->getNiveau()) $metier = $tmp;
-        }
-
-        $texte = "";
-        if ($metier === null) return $texte;
-        if ($metier->getCategorie())            $texte .= "Catégorie : " . $metier->getCategorie()->getCode() . "<br/>";
-        if (true /**$metier->getNiveau()**/)    $texte .= "Corps : " . "Lien manquant" . "<br/>";
-        if (true /**$metier->getBap()**/)       $texte .= "Correspondance : " . "Lien manquant" . "<br/>";
-        return $texte;
+        return "Missing !";
     }
 
     //Specificite ------------------------------------------------------------------------------------------------------

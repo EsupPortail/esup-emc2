@@ -24,7 +24,7 @@ class MissionSpecifiqueForm extends Form
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle :",
+                'label' => "Libellé :",
             ],
             'attributes' => [
                 'id' => 'libelle',

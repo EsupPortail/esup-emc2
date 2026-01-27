@@ -24,6 +24,28 @@
             </join-table>
         </many-to-many>
 
+        <!-- HAS ACTIVITES INTERFACE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <many-to-many field="activites" target-entity="FicheMetier\Entity\Db\ActiviteElement">
+            <join-table name="fichemetier_activite">
+                <join-columns>
+                    <join-column name="fichemetier_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="activite_element_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="missions" target-entity="FicheMetier\Entity\Db\MissionElement">
+            <join-table name="fichemetier_mission">
+                <join-columns>
+                    <join-column name="fichemetier_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="mission_element_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <many-to-many field="applications" target-entity="Element\Entity\Db\ApplicationElement">
             <join-table name="fichemetier_application">
                 <join-columns>
@@ -46,20 +68,19 @@
             </join-table>
         </many-to-many>
 
-        <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="ficheMetier" field="missions"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\ThematiqueElement" mapped-by="ficheMetier" field="thematiques"/>
         <one-to-many target-entity="FicheMetier\Entity\Db\TendanceElement" mapped-by="ficheMetier" field="tendances"/>
 
 
         <field name="libelle" length="10124" column="libelle" nullable="true"/>
-        <many-to-one target-entity="Metier\Entity\Db\FamilleProfessionnelle" field="familleProfessionnelle">
+        <many-to-one target-entity="Carriere\Entity\Db\FamilleProfessionnelle" field="familleProfessionnelle">
             <join-column name="famille_id" referenced-column-name="id"/>
         </many-to-one>
 
         <field name="raison" type="text" column="raison" nullable="true"/>
 
 
-
+        <field name="codesEmploiType" length="2048"  column="codes_emploi_type" nullable="true"/>
         <many-to-one target-entity="FicheMetier\Entity\Db\CodeFonction" field="codeFonction">
             <join-column name="code_fonction_id" referenced-column-name="id"/>
         </many-to-one>

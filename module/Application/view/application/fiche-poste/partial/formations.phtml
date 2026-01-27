@@ -45,7 +45,7 @@ foreach ($formations as $item) {
                     <?php echo $item["object"]->getLibelle(); ?>
                     <?php foreach ($item["raison"] as $raison) : ?>
                         <?php if ($raison instanceof  FicheMetier) : ?>
-                            <span class="fiche-metier" title="<?php echo $raison->getMetier()->getLibelle(); ?>">
+                            <span class="fiche-metier" title="<?php echo $raison->getLibelle(); ?>">
                                 F
                             </span>
                         <?php endif; ?>

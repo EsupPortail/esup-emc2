@@ -5,6 +5,7 @@ namespace Referentiel\Entity\Db;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Competence;
+use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -20,12 +21,14 @@ class Referentiel implements HistoriqueAwareInterface
     private ?string $couleur = null;
     private ?string $description = null;
 
+    private Collection $activites;
     private Collection $missions;
     private Collection $competences;
     private Collection $fichesmetiers;
 
     public function __construct()
     {
+        $this->activites = new ArrayCollection();
         $this->missions = new ArrayCollection();
         $this->competences = new ArrayCollection();
         $this->fichesmetiers = new ArrayCollection();
@@ -79,6 +82,11 @@ class Referentiel implements HistoriqueAwareInterface
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    /** @return Activite[] */
+    public function getActivites(): array {
+        return $this->activites->toArray();
     }
 
     /** @return Mission[] */

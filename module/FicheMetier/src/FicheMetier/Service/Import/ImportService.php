@@ -4,14 +4,12 @@ namespace FicheMetier\Service\Import;
 
 use Carriere\Entity\Db\Categorie;
 use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
-use Metier\Entity\Db\FamilleProfessionnelle;
-use Referentiel\Entity\Db\Referentiel;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Metier\Service\Metier\MetierServiceAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
 class ImportService
@@ -22,7 +20,6 @@ class ImportService
     use ReferentielServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
-    use MetierServiceAwareTrait;
 
     /** @return Categorie[] */
     public function readCategorie(array $header, array $data, string $mode, array &$info, array &$warning, array &$error): array
@@ -118,32 +115,4 @@ class ImportService
         return $famillesProfessionnelles;
     }
 
-    public function readMetier(array $header, array $data, string $mode, array $famillesProfessionnelles, array $correspondances, array $categories, Referentiel $referentiel, array &$info, array &$warning, array&$error): array
-    {
-        $metiers = [];
-        $codeReferentiel = $referentiel->getLibelleCourt();
-        if (in_array("Code emploi type", $header)) {
-            foreach ($data as $item) {
-                $code = $item["Code emploi type"] ?? null;
-                $metier = $this->getMetierService()->getMetierByReference($codeReferentiel, $code);
-                if ($metier === null)
-                {
-                    $intitule = $item["Intitulé de l’emploi type"] ?? null;
-                    $metier = $this->getMetierService()->createWith($intitule, $codeReferentiel, $code, null, $mode === 'import');
-
-                    if (isset($item["Famille d’activité professionnelle"])) {
-                        $elements = explode("|", $item["Famille d’activité professionnelle"]);
-                        foreach ($elements as $element) {
-                            $metier->addFamillesProfessionnelles($famillesProfessionnelles[$element]);
-                        }
-                    }
-                    if (isset($item["Code de la branche d’activité professionnelle"]) and $item["Code de la branche d’activité professionnelle"] !== '' and $correspondances[$item["Code de la branche d’activité professionnelle"]]) $metier->addCorrespondance($correspondances[$item["Code de la branche d’activité professionnelle"]]);
-                    if (isset($item["REFERENS_CATEGORIE_EMPLOI"]) AND $item["REFERENS_CATEGORIE_EMPLOI"] !== '' and $categories[$item["REFERENS_CATEGORIE_EMPLOI"]]) $metier->setCategorie($categories[$item["REFERENS_CATEGORIE_EMPLOI"]]);
-                    if ($mode === 'import') $this->getMetierService()->update($metier);
-                }
-                $metiers[$code] = $metier;
-            }
-        }
-        return $metiers;
-    }
 }

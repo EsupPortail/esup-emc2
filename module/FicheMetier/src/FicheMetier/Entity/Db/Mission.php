@@ -2,12 +2,12 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Carriere\Entity\Db\Interface\HasFamillesProfessionnellesInterface;
 use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Entity\Db\Trait\HasFamillesProfessionnellesTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FichePoste\Entity\Db\MissionAdditionnelle;
-use Metier\Entity\Db\Interface\HasFamillesProfessionnellesInterface;
-use Metier\Entity\Db\Trait\HasFamillesProfessionnellesTrait;
 use Referentiel\Entity\Db\Interfaces\HasReferenceInterface;
 use Referentiel\Entity\Db\Traits\HasReferenceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -22,7 +22,7 @@ class Mission implements HistoriqueAwareInterface,
 
     const MISSION_PRINCIPALE_HEADER_ID = 'Id_Mission';
     const MISSION_PRINCIPALE_HEADER_LIBELLE = 'Libellé';
-    const MISSION_PRINCIPALE_HEADER_ACTIVITES = 'Activités associées';
+    const MISSION_PRINCIPALE_HEADER_DESCRIPTION = 'Description';
     const MISSION_PRINCIPALE_HEADER_FAMILLES = 'Familles professionnelles';
     const MISSION_PRINCIPALE_HEADER_NIVEAU = 'Niveau';
     const MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE = 'Codes Emploi Type';
@@ -30,15 +30,12 @@ class Mission implements HistoriqueAwareInterface,
 
     private ?int $id = null;
     private ?string $libelle = null;
+    private ?string $description = null;
     private ?string $codesFicheMetier = null;
     private ?string $codesFonction = null;
-
-    /** Composition de la mission */
     private ?NiveauEnveloppe $niveau = null;
-    private Collection $activites;
 
     /** Liste des éléments possèdant la mission */
-    private Collection $listeFicheMetierMission;
     private Collection $listeFichePosteMission;
 
     /** Source de la mission principale */
@@ -47,9 +44,7 @@ class Mission implements HistoriqueAwareInterface,
     public function __construct()
     {
         $this->famillesProfessionnelles = new ArrayCollection();
-        $this->activites = new ArrayCollection();
 
-        $this->listeFicheMetierMission = new ArrayCollection();
         $this->listeFichePosteMission = new ArrayCollection();
     }
 
@@ -68,6 +63,16 @@ class Mission implements HistoriqueAwareInterface,
         $this->libelle = $libelle;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
     public function getNiveau(): ?NiveauEnveloppe
     {
         return $this->niveau;
@@ -76,36 +81,6 @@ class Mission implements HistoriqueAwareInterface,
     public function setNiveau(?NiveauEnveloppe $niveau): void
     {
         $this->niveau = $niveau;
-    }
-
-    /**
-     * @return MissionActivite[]
-     */
-    public function getActivites(): array
-    {
-        return $this->activites->toArray();
-    }
-
-    /** Liste des éléments possèdant la mission */
-
-    /** @return FicheMetierMission[] */
-    public function getListeFicheMetier(): array
-    {
-        $result = [];
-        foreach ($this->listeFicheMetierMission as $ficheMetierMission) {
-            $result[] = $ficheMetierMission;
-        }
-        return $result;
-    }
-
-    public function removeFicheMetier(FicheMetierMission $ficheMetier): void
-    {
-        $this->listeFicheMetierMission->removeElement($ficheMetier);
-    }
-
-    public function clearListeFicheMetier(): void
-    {
-        $this->listeFicheMetierMission->clear();
     }
 
     /** @return MissionAdditionnelle[] */
@@ -119,21 +94,6 @@ class Mission implements HistoriqueAwareInterface,
             }
         }
         return $result;
-    }
-
-    public function clearListeFichePoste(): void
-    {
-        $this->listeFichePosteMission->clear();
-    }
-
-    public function addMissionActivite(MissionActivite $activite): void
-    {
-        $this->activites->add($activite);
-    }
-
-    public function clearActivites(): void
-    {
-        $this->activites->clear();
     }
 
     public function getCodesFicheMetier(): ?string
@@ -164,34 +124,6 @@ class Mission implements HistoriqueAwareInterface,
     public function setSourceString(?string $sourceString): void
     {
         $this->sourceString = $sourceString;
-    }
-
-    public function hasActivite(?string $libelle): bool
-    {
-        foreach ($this->activites as $activite) {
-            if ($activite->getLibelle() === $libelle) return true;
-        }
-        return false;
-    }
-
-    public function getActivite(?string $libelle): ?MissionActivite
-    {
-        foreach ($this->activites as $activite) {
-            if ($activite->getLibelle() === $libelle) return $activite;
-        }
-        return null;
-    }
-
-    public function getActivitesAsList(): string
-    {
-        $activites = $this->activites->toArray();
-        if (!empty($activites)) {
-            $listing = array_map(function (MissionActivite $activite) {
-                return "<li>" . $activite->getLibelle() . "</li>";
-            }, $this->activites->toArray());
-            return "<ul>" . implode("", $listing) . "</ul>";
-        }
-        return "<ul><li></li></ul>";
     }
 
 

@@ -1,7 +1,6 @@
 <?php
 
 use Application\Provider\Privilege\FichePostePrivileges;
-use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 
 /**
@@ -13,9 +12,6 @@ use FichePoste\Entity\Db\MissionAdditionnelle;
 $mission = $missionAdditionnelle->getMission();
 $mode = 'affichage';
 if (isset($options["mode"])) $mode = $options["mode"];
-
-$activites = $mission->getActivites();
-usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
 $retrait = explode(";",$missionAdditionnelle->getRetraits()??"");
 $retraits = [];
@@ -71,25 +67,25 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
         <div class="col-md-8">
             <div class="activite-description">
                 Description de l'activité :
-                <ul>
-                    <?php foreach ($activites as $activite) : ?>
-                        <?php if (!isset($retraits[$activite->getId()])) : ?>
-                            <li>
-                                <?php echo $activite->getLibelle(); ?>
-                            </li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
+<!--                <ul>-->
+<!--                    --><?php //foreach ($activites as $activite) : ?>
+<!--                        --><?php //if (!isset($retraits[$activite->getId()])) : ?>
+<!--                            <li>-->
+<!--                                --><?php //echo $activite->getLibelle(); ?>
+<!--                            </li>-->
+<!--                        --><?php //endif; ?>
+<!--                    --><?php //endforeach; ?>
+<!--                </ul>-->
             </div>
         </div>
         <div class="col-md-4" style="margin-top: 0.5rem;">
 
             <?php
-                $metiers = [];
-                foreach ($mission->getListeFicheMetier() as $ficheMetier) {
-                    $metier = $ficheMetier->getFicheMetier()->getMetier();
-                    $metiers[$metier->getId()] = $metier;
-                }
+//                $metiers = [];
+//                foreach ($mission->getListeFicheMetier() as $ficheMetier) {
+//                    $metier = $ficheMetier->getFicheMetier()->getMetier();
+//                    $metiers[$metier->getId()] = $metier;
+//                }
             ?>
             <div class="card panel-default">
                 <div class="card-header">
@@ -98,16 +94,16 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
                 <div class="card-body">
                     <?php $count = 0; ?>
                     <ul>
-                        <?php foreach ($metiers as $metier) : ?>
-                            <li>
-                                <?php $count++; ?>
-                                <?php echo $metier->getLibelle(); ?>
-                                <?php foreach ($metier->getReferences() as $reference) : ?>
-                                    <span class="badge" style="background-color: #dfc4b2"><a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a></span>
-                                <?php endforeach; ?>
-                            </li>
-                        <?php endforeach; ?>
-                        <?php if ($count === 0) echo "Aucun"; ?>
+<!--                        --><?php //foreach ($metiers as $metier) : ?>
+<!--                            <li>-->
+<!--                                --><?php //$count++; ?>
+<!--                                --><?php //echo $metier->getLibelle(); ?>
+<!--                                --><?php //foreach ($metier->getReferences() as $reference) : ?>
+<!--                                    <span class="badge" style="background-color: #dfc4b2"><a href="--><?php //echo $reference->getUrl(); ?><!--"> --><?php //echo $reference->getTitre(); ?><!-- </a></span>-->
+<!--                                --><?php //endforeach; ?>
+<!--                            </li>-->
+<!--                        --><?php //endforeach; ?>
+<!--                        --><?php //if ($count === 0) echo "Aucun"; ?>
                     </ul>
                 </div>
             </div>

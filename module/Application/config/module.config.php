@@ -25,13 +25,13 @@ use Application\Service\Perimetre\PerimetreServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
+use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Laminas\Router\Http\Literal;
-use Metier\Provider\Privilege\MetierPrivileges;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
@@ -67,7 +67,6 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
-                        MetierPrivileges::METIER_INDEX,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         StructurePrivileges::STRUCTURE_INDEX,
                     ],
@@ -303,6 +302,7 @@ return [
         'invokables' => [
             'actionIcon' => ActionIconViewHelper::class,
             'synchroniserIcon' => SynchorniserIconViewHelper::class,
+            'historiqueBloc' => HistoriqueBlocViewHelper::class,
         ],
     ],
 

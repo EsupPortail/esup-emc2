@@ -2,7 +2,6 @@
 
 namespace FichePoste;
 
-use Application\View\Helper\ActiviteViewHelper;
 use FicheMetier\Controller\MissionPrincipaleController;
 use FicheMetier\Controller\MissionPrincipaleControllerFactory;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleForm;
@@ -14,8 +13,8 @@ use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipale
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydrator;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleHydratorFactory;
 use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
-use FicheMetier\Service\MissionActivite\MissionActiviteService;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceFactory;
+use FicheMetier\Service\MissionElement\MissionElementService;
+use FicheMetier\Service\MissionElement\MissionElementServiceFactory;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
 use FicheMetier\View\Helper\MissionPrincipaleViewHelper;
@@ -106,7 +105,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'gestion' => [
+                    'ressource' => [
                         'pages' => [
                             'mission-pincipale' => [
                                 'label' => 'Missions principales',
@@ -320,7 +319,7 @@ return [
     'service_manager' => [
         'factories' => [
             MissionPrincipaleService::class => MissionPrincipaleServiceFactory::class,
-            MissionActiviteService::class => MissionActiviteServiceFactory::class,
+            MissionElementService::class => MissionElementServiceFactory::class,
         ],
     ],
     'controllers' => [
@@ -341,9 +340,6 @@ return [
         ],
     ],
     'view_helpers' => [
-        'invokables' => [
-            'activite' => ActiviteViewHelper::class,
-        ],
         'factories' => [
             MissionPrincipaleViewHelper::class => MissionPrincipaleViewHelperFactory::class,
         ],

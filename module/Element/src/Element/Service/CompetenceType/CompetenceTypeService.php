@@ -138,7 +138,8 @@ class CompetenceTypeService
     public function getCompetenceTypeByCode(?string $code): ?CompetenceType
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('type.code = :code')->setParameter('code', $code);
+            ->andWhere('type.code = :code')->setParameter('code', $code)
+        ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {

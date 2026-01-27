@@ -90,7 +90,7 @@ if ($retour)    $query['retour'] = $retour;
             $agent = (isset($fiche['nom_usage'])?strtoupper($fiche['nom_usage']):'') . ' ' .(isset($fiche['prenom'])?ucwords(strtolower($fiche['prenom']), ' -'):'');
             $structureId = $fiche['structure_id'];
             $structure = $fiche['structure'];
-            $fichePrincipale = $fiche['fiche_principale'];
+            $fichePrincipale = $fiche['fiche_principale']??null;
             $ficheLibelle = $fiche['fiche_libelle'];
             $isEnCours = $fiche['en_cours'] === true;
             $finValidite = $fiche['fin_validite'];

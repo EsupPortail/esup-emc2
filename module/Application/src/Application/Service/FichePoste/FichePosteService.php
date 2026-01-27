@@ -119,10 +119,7 @@ class FichePosteService
             //            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
             ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
             ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
-            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
-            ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
-
+;
         return $qb;
     }
 
@@ -232,7 +229,6 @@ select
     a.c_individu AS agent_id, a.prenom, a.nom_usage,
     aa.id_orig,
     s.id as structure_id, s.libelle_court as structure,
-    m.libelle_default as fiche_principale,
     et.id as etat,
     et.code as etat_code,
    (f.fin_validite IS NULL OR f.fin_validite > current_timestamp) as en_cours,
@@ -243,7 +239,6 @@ left join agent_carriere_affectation aa on a.c_individu = aa.agent_id
 left join structure s on aa.structure_id = s.id
 left join ficheposte_fichemetier fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
-left join metier_metier m on m.id = f2.metier_id
 left join ficheposte_etat fpe on f.id=fpe.ficheposte_id
 left join unicaen_etat_instance ei on fpe.etat_id = ei.id
 left join unicaen_etat_type et on ei.type_id = et.id

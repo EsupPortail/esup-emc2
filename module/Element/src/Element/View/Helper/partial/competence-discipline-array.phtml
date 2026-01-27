@@ -79,7 +79,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
     <?php foreach ($discipline as $d) : ?>
         <?php $key = $d->getId(); ?>
 
-        <h3> <?php echo $d->getLibelle(); ?> </h3>
+        <h3> <strong>Discipline : <?php echo $d->getLibelle(); ?></strong> </h3>
 
         <table class="table table-condensed datatable" id="<?php echo str_replace(" ", "_", $d->getLibelle()) ?>">
             <thead>

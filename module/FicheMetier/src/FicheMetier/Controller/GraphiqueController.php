@@ -58,7 +58,7 @@ class GraphiqueController extends AbstractActionController
             ];
         }
 
-        $libelle = $ficheMetier->getMetier()->getLibelle();
+        $libelle = $ficheMetier->getLibelle();
         $vm = new ViewModel([
             'title' => "Diagramme des compétences pour la fiche métier <strong>" . $libelle . "</strong>",
             'agent' => $agent,
@@ -113,7 +113,7 @@ class GraphiqueController extends AbstractActionController
             ];
         }
 
-        $libelle = $ficheMetier->getMetier()->getLibelle();
+        $libelle = $ficheMetier->getLibelle();
         $vm = new ViewModel([
             'title' => "Diagramme des applications pour la fiche métier <strong>" . $libelle . "</strong>",
             'agent' => $agent,

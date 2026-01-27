@@ -6,7 +6,8 @@ use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
-use Carriere\Service\Niveau\NiveauService;
+use Carriere\Entity\Db\FamilleProfessionnelle;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -24,19 +25,16 @@ use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
-use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Entity\Db\Metier;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
 use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
@@ -58,17 +56,16 @@ class FicheMetierService
     use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
-    use FicheMetierMissionServiceAwareTrait;
     use MacroServiceAwareTrait;
-    use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use TendanceTypeServiceAwareTrait;
+    use ThematiqueTypeServiceAwareTrait;
 
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
-    use MetierServiceAwareTrait;
 
     use SelectionApplicationHydratorAwareTrait;
     use SelectionCompetenceHydratorAwareTrait;
@@ -77,42 +74,33 @@ class FicheMetierService
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(FicheMetier $fiche): FicheMetier
+    public function create(FicheMetier $fiche): void
     {
         $this->getObjectManager()->persist($fiche);
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    public function update(FicheMetier $fiche): FicheMetier
+    public function update(FicheMetier $fiche): void
     {
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    public function historise(FicheMetier $fiche): FicheMetier
+    public function historise(FicheMetier $fiche): void
     {
         $fiche->historiser();
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    public function restore(FicheMetier $fiche): FicheMetier
+    public function restore(FicheMetier $fiche): void
     {
         $fiche->dehistoriser();
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
-    /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
-     */
-    public function delete(FicheMetier $fiche): FicheMetier
+    public function delete(FicheMetier $fiche): void
     {
         $this->getObjectManager()->remove($fiche);
         $this->getObjectManager()->flush($fiche);
-        return $fiche;
     }
 
     /** REQUETAGE *****************************************************************************************************/
@@ -120,13 +108,11 @@ class FicheMetierService
     public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
-            ->addSelect('metier')->leftJoin('ficheMetier.metier', 'metier')
-            ->addSelect('famille')->leftjoin('metier.famillesProfessionnelles', 'famille')
             ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
+            ->addSelect('famille')->leftjoin('ficheMetier.familleProfessionnelle', 'famille')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
             ->addSelect('referentiel')->leftJoin('ficheMetier.referentiel', 'referentiel')
             ->addSelect('codeFonction')->leftJoin('ficheMetier.codeFonction', 'codeFonction');
-        $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
 
@@ -229,8 +215,6 @@ class FicheMetierService
 //            ->addSelect('fiche_competence_niveau')->leftJoin('fiche_competenceelement.niveau', 'fiche_competence_niveau')
 //            ->addSelect('fiche_competence_theme')->leftJoin('fiche_competence.theme', 'fiche_competence_theme')
 //            ->addSelect('fiche_competence_type')->leftJoin('fiche_competence.type', 'fiche_competence_type')
-
-            ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
             ->setParameter('id', $id);
 
@@ -270,7 +254,7 @@ class FicheMetierService
         foreach ($familles as $famille) {
             $optionsoptions = [];
             foreach ($this->getFicheByFamilleProfessionnelle($famille) as $fiche) {
-                if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . " (dernière modification " . $fiche->getHistoModification()->format("d/m/Y") . ")";
+                if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getLibelle() . " (dernière modification " . $fiche->getHistoModification()->format("d/m/Y") . ")";
             }
             asort($optionsoptions);
             $array = [
@@ -291,64 +275,22 @@ class FicheMetierService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".FicheMetier::class."] partagent la même identification [".$referentiel->getLibelleCourt()."|".$code."]",-1,$e);
+            throw new RuntimeException("Plusieurs [" . FicheMetier::class . "] partagent la même identification [" . $referentiel->getLibelleCourt() . "|" . $code . "]", -1, $e);
         }
         return $result;
     }
 
+    /** @return FicheMetier[] */
+    public function getFichesMetiersByFamilleProfessionnelle(FamilleProfessionnelle $familleProfessionnelle): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ficheMetier.familleProfessionnelle = :familleProfessionnelle')->setParameter('familleProfessionnelle', $familleProfessionnelle);
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
     /** FACADE ********************************************************************************************************/
-
-    public function addMission(FicheMetier $ficheMetier, Mission $missionPrincipale): void
-    {
-
-        $fichemetierMission = new FicheMetierMission();
-        $fichemetierMission->setFicheMetier($ficheMetier);
-        $fichemetierMission->setMission($missionPrincipale);
-        $fichemetierMission->setOrdre(9999);
-        $this->getFicheMetierMissionService()->create($fichemetierMission);
-    }
-
-    public function moveMission(FicheMetier $ficheMetier, Mission $missionPrincipale, string $direction): void
-    {
-        $fichemetierMission = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndMission($ficheMetier, $missionPrincipale);
-        if ($fichemetierMission === null) return;
-
-        $position = $fichemetierMission->getOrdre();
-        $newPosition = -1;
-        if ($direction === 'up') $newPosition = $position - 1;
-        if ($direction === 'down') $newPosition = $position + 1;
-
-        $fichemetierMissionBis = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndPosition($ficheMetier, $newPosition);
-        if ($fichemetierMissionBis === null) return;
-
-        if ($fichemetierMission !== $fichemetierMissionBis) {
-            $fichemetierMission->setOrdre($newPosition);
-            $this->getFicheMetierMissionService()->update($fichemetierMission);
-            $fichemetierMissionBis->setOrdre($position);
-            $this->getFicheMetierMissionService()->update($fichemetierMissionBis);
-        }
-    }
-
-    public function removeMission(FicheMetier $ficheMetier, Mission $missionPrincipale): void
-    {
-        $fichemetierMission = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndMission($ficheMetier, $missionPrincipale);
-        $this->getFicheMetierMissionService()->delete($fichemetierMission);
-    }
-
-    public function compressMission(FicheMetier $ficheMetier): void
-    {
-        $missions = $ficheMetier->getMissions();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {
-            return $a->getOrdre() <=> $b->getOrdre();
-        });
-
-        $position = 1;
-        foreach ($missions as $mission) {
-            $mission->setOrdre($position);
-            $this->getFicheMetierMissionService()->update($mission);
-            $position++;
-        }
-    }
 
     public function setDefaultValues(FicheMetier $fiche): FicheMetier
     {
@@ -451,7 +393,7 @@ class FicheMetierService
             ->addSelect('fiche_competence')->leftJoin('fiche_competenceelement.competence', 'fiche_competence')
             ->andWhere('fiche_competenceelement.competence = :competence')
             ->setParameter('competence', $competence)
-            ->orderBy('metier.libelle', 'ASC');
+            ->orderBy('ficheMetier.libelle', 'ASC');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -465,17 +407,16 @@ class FicheMetierService
     {
         $duplicata = new FicheMetier();
         //base
-        $duplicata->setMetier($fiche->getMetier());
         $this->create($duplicata);
 
         //missions principales
         foreach ($fiche->getMissions() as $mission) {
-            $activiteDuplicata = new FicheMetierMission();
-            $activiteDuplicata->setFicheMetier($duplicata);
+            $activiteDuplicata = new MissionElement();
             $activiteDuplicata->setMission($mission->getMission());
-            $activiteDuplicata->setOrdre($mission->getOrdre());
+            $activiteDuplicata->setPosition($mission->getPosition());
             $this->getObjectManager()->persist($activiteDuplicata);
             $this->getObjectManager()->flush($activiteDuplicata);
+            $duplicata->addMission($mission);
         }
 
         //applications
@@ -526,7 +467,6 @@ class FicheMetierService
 
         $code_index = array_search('Code emploi type', $array[0]);
         $code_libelle = $array[1][$code_index];
-        $metier = $this->getMetierService()->getMetierByReference('REFERENS', $code_libelle);
         $mission_index = array_search('Mission', $array[0]);
         $mission_libelle = $array[1][$mission_index];
         $activites_index = array_search('Activités principales', $array[0]);
@@ -554,7 +494,6 @@ class FicheMetierService
 
         return [
             'code' => $code_libelle,
-            'metier' => $metier,
             'mission' => $mission_libelle,
             'activites' => $activites_libelle,
             'competences' => $competences,
@@ -576,14 +515,19 @@ class FicheMetierService
         $displayContexte = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_CONTEXTE);
         $displayTendance = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_TENDANCE);
 
+        $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes('ordre','asc',false);
+        $fichemetier->setTendancesTypes($tendancesTypes);
+        $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('ordre','asc',false);
+        $fichemetier->setThematiquesTypes($thematiquesTypes);
+
         $vars = [
             'fichemetier' => $fichemetier,
-            'metier' => $fichemetier->getMetier(),
             'MacroService' => $this->getMacroService(),
             'DISPLAY_RESUME' => $displayResume,
             'DISPLAY_CODEFONCTION' => $displayCode,
             'DISPLAY_RAISON' => $displayRaison,
             'DISPLAY_MISSION' => $displayMission,
+            'DISPLAY_ACTIVITE' => $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_ACTIVITE),
             'DISPLAY_APPLICATION' => $displayApplications,
             'DISPLAY_COMPETENCE' => $displayCompetences,
             'DISPLAY_COMPETENCE_SPECIFIQUE' => $displayCompetencesSpecifiques,
@@ -604,16 +548,6 @@ class FicheMetierService
         }
     }
 
-    /** @return FicheMetier[] */
-    public function getFichesMetiersByMetier(Metier $metier, ?string $raw = null): array
-    {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('ficheMetier.metier = :metier')->setParameter('metier', $metier);
-        if ($raw !== null) $qb->andWhere('ficheMetier.raw = :raw')->setParameter('raw', $raw);
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
     public function getFichesMetiersByDiscipline(?CompetenceDiscipline $discipline): array
     {
         $qb = $this->createQueryBuilder()
@@ -621,7 +555,7 @@ class FicheMetierService
             ->join('competenceElement.competence', 'competence')->addSelect('competence')
             ->leftjoin('competence.discipline', 'discipline')->addSelect('discipline')
             ->andWhere('ficheMetier.histoDestruction IS NULL')
-            ->orderby('metier.libelle');
+            ->orderby('ficheMetier.libelle');
         $qb = $qb->andWhere('competence.discipline = :discipline')->setParameter('discipline', $discipline);
 
         $result = $qb->getQuery()->getResult();
@@ -648,14 +582,14 @@ class FicheMetierService
         if ($niveauFonction === null) return [];
 
         // le reste correspond au code de la famille professionnelle
-        $codeFamilleProfessionnelle = substr($strCodeFonction,4);
+        $codeFamilleProfessionnelle = substr($strCodeFonction, 4);
         $familleProfessionnelle = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByCode($codeFamilleProfessionnelle);
         if ($familleProfessionnelle === null) return [];
 
         $codeFonction = $this->getCodeFonctionService()->getCodeFonctionByNiveauAndFamille($niveauFonction, $familleProfessionnelle);
         if ($codeFonction === null) return [];
 
-        $qb= $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder()
             ->andWhere('ficheMetier.codeFonction = :codeFonction')->setParameter('codeFonction', $codeFonction);
         if (!$withHisto) $qb = $qb->andWhere('ficheMetier.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
@@ -663,5 +597,24 @@ class FicheMetierService
 
     }
 
+    /** @return FicheMetier[] */
+    public function getFichesMetiersHavingActivite(Activite $activite): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = FicheMetier::decorateWithActivite($qb, 'ficheMetier', $activite);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return FicheMetier[] */
+    public function getFichesMetiersHavingMissionPrincipale(Mission $mission): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = FicheMetier::decorateWithMissionPrincipale($qb, 'ficheMetier', $mission);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 
 }

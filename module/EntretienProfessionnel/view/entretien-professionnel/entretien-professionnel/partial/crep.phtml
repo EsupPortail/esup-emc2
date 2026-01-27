@@ -43,7 +43,7 @@ $date_depassee = (($isAgent) and ($now > $date));
     <h3 class="categorie"> Missions du poste </h3>
     <ul>
         <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
-            <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
+            <li> <?php echo $ficheTypeExterne->getFicheType()->getLibelle(); ?>
                 <?php echo $ficheTypeExterne->getFicheType()->getActivitesFromFicheMetierAsText(); ?>
             </li>
         <?php endforeach; ?>

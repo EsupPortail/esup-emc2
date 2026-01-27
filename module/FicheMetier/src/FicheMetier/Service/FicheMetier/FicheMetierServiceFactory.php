@@ -15,12 +15,11 @@ use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
-use FicheMetier\Service\MissionActivite\MissionActiviteService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheMetier\Service\TendanceType\TendanceTypeService;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
-use Metier\Service\Metier\MetierService;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Referentiel\ReferentielService;
@@ -47,17 +46,16 @@ class FicheMetierServiceFactory {
          * @var ConfigurationService $configurationService
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
-         * @var FicheMetierMissionService $ficheMetierMissionService
          * @var MacroService $macroService
-         * @var MissionActiviteService $missionActiviteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NiveauFonctionService $niveauFonctionService
          * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
+         * @var TendanceTypeService $tendanceTypeService
+         * @var ThematiqueTypeService $thematiqueTypeService
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
-         * @var MetierService $metierService
          * @var RenduService $renduService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
@@ -69,17 +67,16 @@ class FicheMetierServiceFactory {
         $configurationService = $container->get(ConfigurationService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
-        $ficheMetierMissionService = $container->get(FicheMetierMissionService::class);
         $macroService = $container->get(MacroService::class);
-        $missionActiviteService = $container->get(MissionActiviteService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $niveauFonctionService = $container->get(NiveauFonctionService::class);
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
-        $metierService = $container->get(MetierService::class);
         $referentielService = $container->get(ReferentielService::class);
+        $tendanceTypeService = $container->get(TendanceTypeService::class);
+        $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
         /**
          * @var SelectionApplicationHydrator $selectionApplicationHydrator
@@ -98,18 +95,17 @@ class FicheMetierServiceFactory {
         $service->setConfigurationService($configurationService);
         $service->setEtatInstanceService($etatInstanceService);
         $service->setFamilleProfessionnelleService($familleProfessionnelleService);
-        $service->setFicheMetierMissionService($ficheMetierMissionService);
         $service->setMacroService($macroService);
-        $service->setMissionActiviteService($missionActiviteService);
         $service->setMissionPrincipaleService($missionPrincipaleService);
         $service->setNiveauFonctionService($niveauFonctionService);
         $service->setParametreService($parametreService);
         $service->setReferentielService($referentielService);
         $service->setRenduService($renduService);
+        $service->setTendanceTypeService($tendanceTypeService);
+        $service->setThematiqueTypeService($thematiqueTypeService);
 
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);
         $service->setHasCompetenceCollectionService($hasCompetenceCollectionService);
-        $service->setMetierService($metierService);
 
         $service->setSelectionApplicationHydrator($selectionApplicationHydrator);
         $service->setSelectionCompetenceHydrator($selectionCompetenceHydrator);

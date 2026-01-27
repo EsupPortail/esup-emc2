@@ -5,12 +5,12 @@
  *
  * @var Competence $competence
  * @var FicheMetier[] $fiches
- * @var Agent[] $agents
  * @var bool $displayCodeFonction
  */
 
 use Application\Entity\Db\Agent;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceType;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 
@@ -21,6 +21,10 @@ use FicheMetier\Entity\Db\Mission;
     <dd class="col-md-8"> <?php echo $competence->getLibelle(); ?> </dd>
     <dt class="col-md-4"> Type </dt>
     <dd class="col-md-8"> <?php echo ($competence->getType())?$competence->getType()->getLibelle():"Aucun"; ?> </dd>
+    <?php if ($competence->getType()?->getCode() === CompetenceType::CODE_SPECIFIQUE) : ?>
+        <dt class="col-md-4"> Discipline </dt>
+        <dd class="col-md-8"> <?php echo ($competence->getDiscipline())?$competence->getDiscipline()->getLibelle():"Aucune"; ?> </dd>
+    <?php endif; ?>
     <dt class="col-md-4"> Thème </dt>
     <dd class="col-md-8"> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </dd>
     <dt class="col-md-4"> Description </dt>
@@ -32,7 +36,12 @@ use FicheMetier\Entity\Db\Mission;
     <dt class="col-md-4"> Codes Emploi Types</dt>
     <dd class="col-md-8">
         <?php if ($competence->getCodesEmploiType()) : ?>
-            <?php echo implode("|", $competence->getCodesEmploiType()); ?>
+            <?php $codes =  explode("|", $competence->getCodesEmploiType()); ?>
+            <ul>
+            <?php foreach ($codes as $code) : ?>
+                <li><?php echo $code; ?></li>
+            <?php endforeach; ?>
+            </ul>
         <?php else : ?>
             <span class="missing-data">Aucun code emploi type</span>
         <?php endif; ?>
@@ -41,7 +50,12 @@ use FicheMetier\Entity\Db\Mission;
         <dt class="col-md-4"> Codes Fonction</dt>
         <dd class="col-md-8">
             <?php if ($competence->getCodesFonction()) : ?>
-                <?php echo implode("|", $competence->getCodesFonction()); ?>
+                <?php $codes =  explode("|", $competence->getCodesFonction()); ?>
+                <ul>
+                    <?php foreach ($codes as $code) : ?>
+                        <li><?php echo $code; ?></li>
+                    <?php endforeach; ?>
+                </ul>
             <?php else : ?>
                 <span class="missing-data">Aucun code fonction</span>
             <?php endif; ?>
@@ -56,8 +70,6 @@ use FicheMetier\Entity\Db\Mission;
                 <li>
                     <?php if ($fiche->getLibelle()): ?>
                         <?php echo $fiche->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
-                    <?php elseif ($fiche->getMetier()) : ?>
-                        <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)
                     <?php endif; ?>
                     <?php if ($displayCodeFonction === true) : ?>
                         <?php if ($fiche->getCodeFonction()) : ?>
@@ -74,15 +86,3 @@ use FicheMetier\Entity\Db\Mission;
         </ul>
     </dd>
 </dl>
-
-<h2>  Agents ayant en acquis la compétence </h2>
-
-<?php if (!empty($agents)) : ?>
-    <ul>
-        <?php foreach($agents as $agent): ?>
-            <li> <?php echo $agent->getDenomination(true); ?> </li>
-        <?php endforeach; ?>
-    </ul>
-<?php else : ?>
-    Aucun·e agent·e ne possède cette compétence
-<?php endif; ?>

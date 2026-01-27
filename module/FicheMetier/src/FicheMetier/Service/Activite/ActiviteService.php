@@ -2,10 +2,15 @@
 
 namespace FicheMetier\Service\Activite;
 
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Activite;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Referentiel\Entity\Db\Referentiel;
 use RuntimeException;
@@ -49,7 +54,9 @@ class ActiviteService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getObjectManager()->getRepository(Activite::class)->createQueryBuilder('activite');
+        $qb = $this->getObjectManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+            ->leftJoin('activite.referentiel', 'referentiel')->addSelect('referentiel')
+        ;
         return $qb;
     }
 
@@ -76,7 +83,7 @@ class ActiviteService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
-            ->andWhere('activite.idOrig = :idOrig')->setParameter('idOrig', $idOrig)
+            ->andWhere('activite.reference = :idOrig')->setParameter('idOrig', $idOrig)
         ;
         try {
             $activite = $qb->getQuery()->getOneOrNullResult();
@@ -96,71 +103,178 @@ class ActiviteService
         return $result;
     }
 
-    //todo fonction de recherche
+    /** @return Activite[] */
+    public function getActivitesWithFiltre(array $params = []): array
+    {
+        $qb = $this->createQueryBuilder();
+        if (isset($params['referentiel']) and $params['referentiel'] !== '') {
+            $referentielId = $params['referentiel'];
+            $qb = $qb->andWhere('referentiel.id = :referentiel')->setParameter('referentiel', $referentielId);
+        }
+        if (isset($params['histo']) and $params['histo'] !== '') {
+            if ($params['histo'] == 0) $qb = $qb->andWhere('activite.histoDestruction IS NULL');
+            if ($params['histo'] == 1) $qb = $qb->andWhere('activite.histoDestruction IS NOT NULL');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getActivitesAsOptions(): array
+    {
+        $activites = $this->getActivites();
+
+        $options = [];
+        foreach ($activites as $activite) {
+            $options[$activite->getId()] = $this->optionify($activite);
+        }
+        return $options;
+    }
+
+    /** @return Activite[] */
+    public function getActivitesByTerm(string $term): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('LOWER(activite.libelle) like :search')
+            ->setParameter('search', '%' . strtolower($term) . '%');
+        $result = $qb->getQuery()->getResult();
+
+        $activites = [];
+        /** @var Activite $item */
+        foreach ($result as $item) {
+            $activites[$item->getId()] = $item;
+        }
+        return $activites;
+    }
+
+    public function getActiviteByLibelle(?string $libelle): ?Activite
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('activite.libelle = :libelle')->setParameter('libelle', $libelle);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            // todo probablement ajouter la notion de référentiel ...
+            throw new RuntimeException("Plusieurs [" . Activite::class . "] partagent le même libellé [" . $libelle . "]", -1, $e);
+        }
+        return $result;
+    }
 
     /** FACADE ********************************************************************************************************/
 
-    public function readFromCsv(Referentiel $referentiel, string $file): array
+    public function createWith(string $intitule, Referentiel $referentiel, string $reference, bool $perist = true): ?Activite
     {
-        $info = []; $warning = []; $error = []; $activites = []; $created = []; $updated = [];
+        $activite = new Activite();
+        $activite->setLibelle($intitule);
+        $activite->setReferentiel($referentiel);
+        $activite->setReference($reference);
+        if ($perist) $this->create($activite);
 
-        //lecture du header et dernimation
-        $handle = fopen($file, "r");
-        $header = fgetcsv($handle,null,";");
-        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
-        $header[0] = preg_replace(sprintf('/^%s/', pack('H*','EFBBBF')), "", $header[0]);
-
-        $positionLibelle = array_search("libellé", $header);
-        $positionDescription = array_search("description", $header);
-        $positionId = array_search("identifiant", $header);
-
-        $continue = true;
-        if ($positionId === false) {
-            $error[] = "La colonne obligatoire [identifiant] n'a pas été trouvée";
-            $continue = false;
-        }
-        if ($positionLibelle === false) {
-            $error[] = "La colonne obligatoire [libellé] n'a pas été trouvée";
-            $continue = false;
-        }
-        if ($positionDescription === false) {
-            $error[] = "La colonne facultative [description] n'a pas été trouvée";
-            $continue = false;
-        }
-
-        if ($continue) {
-            while ($content = fgetcsv($handle, null, ";")) {
-                $identifiant = $content[$positionId];
-                $libelle = $content[$positionLibelle];
-                $description = ($positionDescription !== false) ? $content[$positionDescription] : null;
-                $raw = json_encode($content);
-
-                $activite = $this->getActiviteByReference($referentiel, $identifiant);
-                if ($activite === null) {
-                    $activite = new Activite();
-                    $activite->setLibelle($libelle);
-                    $activite->setDescription($description);
-                    $activite->setIdOrig($identifiant);
-                    $activite->setReferentiel($referentiel);
-                    $activite->setRaw($raw);
-                    $created[] = $activite;
-                } else {
-                    if ($activite->getRaw() !== $raw) {
-                        $activite->setLibelle($libelle);
-                        $activite->setDescription($description);
-                        $activite->setIdOrig($identifiant);
-                        $activite->setReferentiel($referentiel);
-                        $activite->setRaw($raw);
-                        $updated[] = $activite;
-                    }
-                }
-                $activites[] = $activite;
-            }
-        }
-
-        return ['activités' => $activites, 'created' => $created, 'updated' => $updated, 'info' => $info, 'warning' => $warning, 'error' => $error];
-
-
+        return $activite;
     }
 
+    public function createOneWithCsv(array $json, string $separateur, Referentiel $referentiel, ?int $position): Activite
+    {
+
+        /* CHAMPS OBLIGATOIRE *****************************************************************************************/
+
+        if (!isset($json[Activite::ACTIVITE_HEADER_ID]) or trim($json[Activite::ACTIVITE_HEADER_ID]) === '') {
+            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_ID . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+        } else $idOrig = trim($json[Activite::ACTIVITE_HEADER_ID]);
+
+        if (!isset($json[Activite::ACTIVITE_HEADER_LIBELLE]) or trim($json[Activite::ACTIVITE_HEADER_LIBELLE]) === '') {
+            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_LIBELLE . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
+        } else $libelle = trim($json[Activite::ACTIVITE_HEADER_LIBELLE]);
+
+        /** RECUPERATION OR CREATION **********************************************************************************/
+
+        $activite = $this->getActiviteByReference($referentiel, $idOrig);
+        if ($activite === null) {
+            $activite = new Activite();
+            $activite->setReferentiel($referentiel);
+            $activite->setReference($idOrig);
+            $activite->setLibelle($libelle);
+        }
+
+        /** RECUPERATION DES AUTRES DONNEES ***************************************************************************/
+
+        if (isset($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) and trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) != '') {
+            $description = trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]);
+            $activite->setDescription($description);
+        }
+        if (isset($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE])) {
+            if (trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) !== '') {
+                $codesFicheMetier = trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]);
+                $activite->setCodesFicheMetier($codesFicheMetier);
+            } else $activite->setCodesFicheMetier(null);
+        }
+        if (isset($json[Activite::ACTIVITE_HEADER_CODES_FONCTION])) {
+            if (trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) !== '') {
+                $codesCodeFonction = trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]);
+                $activite->setCodesFonction($codesCodeFonction);
+            } else $activite->setCodesFonction(null);
+        }
+
+        $activite->setRaw(json_encode($json));
+
+        return $activite;
+    }
+
+    public function generateDictionnaireFicheMetier(): array
+    {
+        $sql = <<<EOS
+select ae.activite_id, count (DISTINCT fma.fichemetier_id) as count
+from fichemetier_activite fma
+join activite_element ae on ae.id = fma.activite_element_id
+join fichemetier fm on fm.id = fma.fichemetier_id
+where ae.histo_destruction IS NULL and fm.histo_destruction IS NULL
+group by ae.activite_id
+EOS;
+
+        try {
+            $params = [];
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("[DRV] Un problème est survenu lors du calcul du dictionnaire", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("[DBA] Un problème est survenu lors du calcul du dictionnaire", 0, $e);
+        }
+
+        $dictionnaire = [];
+        foreach ($tmp as $item) {
+            $dictionnaire[$item['activite_id']] = $item['count'];
+        }
+        return $dictionnaire;
+    }
+
+    private function optionify(Activite $activite): array
+    {
+//        $texte  = $mission->getLibelle();
+        $texte = "<span class='libelle_activite shorten'>" . MissionPrincipaleService::tronquerTexte($activite->getLibelle(), 100) . "</span>";
+        $texte .= "<span class='libelle_activite full' style='display: none'>" . $activite->getLibelle() . "</span>";
+//        $description = $activite->getDescription();
+//        $texte = "<span class='activite' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
+
+        if ($activite->getCodesFicheMetier() !== null) {
+            $texte .= "&nbsp;" . "<span class='badge'>" .
+                $activite->getCodesFicheMetier()
+                . "</span>";
+        }
+
+        $texte .= "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
+            . "</span>";
+
+        $this_option = [
+            'value' => $activite->getId(),
+            'attributes' => [
+                'data-content' => $texte
+            ],
+            'label' => $texte,
+        ];
+        return $this_option;
+    }
 }

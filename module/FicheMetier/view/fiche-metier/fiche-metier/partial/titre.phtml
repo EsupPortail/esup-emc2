@@ -18,19 +18,14 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     <?php echo ($mode === 'affichage')?'Affichage':'Modification'; ?> de la fiche métier
     <br>
     <span style="font-weight:bold; color: var(--unistrap-color-main);">
-        <?php if ($fichemetier->getLibelle()): ?>
             <?php echo $fichemetier->getLibelle(); ?>
-        <?php elseif ($fichemetier->getMetier()) : ?>
-            <?php echo $fichemetier->getMetier()->getLibelle(); ?>
-        <?php else : ?>
-            Aucun métier ou libellé alternatif
-        <?php endif; ?>
     </span>
-    <?php if ($fichemetier->getLibelle() AND $fichemetier->getMetier()): ?>
-        <span class="icon icon-info" title="Remplace le libellé du métier <strong><?php echo $fichemetier->getMetier()->getLibelle(); ?></strong>" data-bs-toggle="tooltip" data-bs-html="true"></span>
-    <?php endif; ?>
 </h1>
+<?php if ($fichemetier->getReference()): ?>
+    <?php echo $fichemetier->printReference(); ?>
+<?php endif; ?>
 <?php if ($mode !== 'affichage' AND $canModifier): ?>
+    <br>
     <?php /** @see \FicheMetier\Controller\FicheMetierController::modifierLibelleAction() */ ?>
     <a href="<?php echo $this->url('fiche-metier/modifier-libelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
        class="action primary ajax-modal" data-event="modification"
@@ -38,13 +33,4 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         <span class="icon icon-editer"></span>
         Modifier le libellé
     </a>
-    <?php if ($fichemetier->getLibelle() !== null And $fichemetier->getMetier()) : ?>
-        <?php /** @see \FicheMetier\Controller\FicheMetierController::reinitialiserLibelleAction() */ ?>
-        <a href="<?php echo $this->url('fiche-metier/reinitialiser-libelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-           class="action warning ajax-modal"  data-event="modification"
-        >
-            <span class="icon icon-gommer"></span>
-            Réinitialiser le libellé
-        </a>
-    <?php endif; ?>
 <?php endif; ?>

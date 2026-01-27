@@ -3,17 +3,18 @@
 namespace FicheMetier\Form\MissionPrincipale;
 
 use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 
-class MissionPrincipaleHydrator implements HydratorInterface {
+class MissionPrincipaleHydrator implements HydratorInterface
+{
 
     use FamilleProfessionnelleServiceAwareTrait;
-    use MissionActiviteServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use ReferentielServiceAwareTrait;
 
 
     public function extract(object $object): array
@@ -21,37 +22,34 @@ class MissionPrincipaleHydrator implements HydratorInterface {
         /** @var Mission $object */
         $data = [
             'libelle' => $object->getLibelle(),
-            'activites' => $object->getActivitesAsList(),
+            'description' => $object->getDescription(),
             'familleprofessionnelle' => $object->getFamillesProfessionnellesIds(),
             'borne_inferieure' => $object->getNiveau()?->getBorneInferieure()?->getId(),
             'borne_superieure' => $object->getNiveau()?->getBorneSuperieure()?->getId(),
+            'referentiel' => $object->getReferentiel()?->getId(),
+            'identifiant' => $object->getReference(),
         ];
         return $data;
     }
 
     public function hydrate(array $data, object $object): object
     {
-        $libelle = (isset($data['libelle']) AND trim($data['libelle']) != '') ? trim($data['libelle']) : null;
-        $activitesAsList = (isset($data['activites'])) ? $data['activites'] : [];
+        $libelle = (isset($data['libelle']) and trim($data['libelle']) != '') ? trim($data['libelle']) : null;
+        $description = (isset($data['description']) and trim($data['description']) != '') ? trim($data['description']) : null;
         $familleProfessionnelleIds = (isset($data['familleprofessionnelle'])) ? $data['familleprofessionnelle'] : [];
-        $borneInferieure = (isset($data['borne_inferieure']) AND $data['borne_inferieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_inferieure']) : null;
-        $borneSuperieure = (isset($data['borne_superieure']) AND $data['borne_superieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_superieure']) : null;
+        $borneInferieure = (isset($data['borne_inferieure']) and $data['borne_inferieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_inferieure']) : null;
+        $borneSuperieure = (isset($data['borne_superieure']) and $data['borne_superieure'] !== '') ? $this->getNiveauService()->getNiveau($data['borne_superieure']) : null;
+        $referentiel = (isset($data['referentiel'])) ? $this->getReferentielService()->getReferentiel($data['referentiel']):null;
+        $identifiant = (isset($data['identifiant']) AND trim($data['identifiant']) != '') ? trim($data['identifiant']) : null;
 
 
-        /** @var Mission $object **/
-        //traitement des activites
-        $missions = $this->getMissionActiviteService()->transforms($object, $activitesAsList);
-        $object->clearActivites();
-        foreach ($missions as $missionActivite) {
-            $object->addMissionActivite($missionActivite);
-        }
+        /** @var Mission $object * */
         //traitement des familles professionnelles
         $object->clearFamillesProfessionnelles();
         foreach ($familleProfessionnelleIds as $familleProfessionnelleId) {
             $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($familleProfessionnelleId);
             if ($famille) $object->addFamilleProfessionnelle($famille);
         }
-        //traitement de l'enveloppe de niveau
         if ($borneInferieure AND $borneSuperieure) {
             if ($object->getNiveau()) {
                 $object->getNiveau()->setBorneInferieure($borneInferieure);
@@ -64,7 +62,10 @@ class MissionPrincipaleHydrator implements HydratorInterface {
             }
         }
 
+        $object->setReferentiel($referentiel);
+        $object->setReference($identifiant);
         $object->setLibelle($libelle);
+        $object->setDescription($description);
         return $object;
     }
 }

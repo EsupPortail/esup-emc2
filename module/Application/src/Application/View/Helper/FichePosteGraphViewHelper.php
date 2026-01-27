@@ -65,8 +65,8 @@ class FichePosteGraphViewHelper extends AbstractHelper {
                 $libelle = $activite->getActivite()->getLibelle();
                 if (strlen($libelle) > self::MAX_LEN) $libelle = substr($libelle, 0, self::MAX_LEN) . " ...";
 
-                $allDescriptions = $ficheposte->getDescriptions($activite);
-                $conDescriptions = $ficheposte->getDescriptionsConservees($activite);
+                $allDescriptions = [];
+                $conDescriptions = [];
                 $data[$libelle] = empty($allDescriptions) ? 0 : (count($conDescriptions) / count($allDescriptions)) * 100;
             }
         }

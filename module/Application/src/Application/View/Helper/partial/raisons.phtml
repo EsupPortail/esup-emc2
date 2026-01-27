@@ -8,8 +8,8 @@
 
 use Application\Entity\Db\Agent;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionElement;
 
 
 ?>
@@ -18,11 +18,11 @@ use FicheMetier\Entity\Db\Mission;
         <?php $text = "";
         switch ($raison) {
             case $raison instanceof FicheMetier :
-                $text = "Obtenue grâce à la fiche métier [".$raison->getMetier()->getLibelle()."]";
+                $text = "Obtenue grâce à la fiche métier [".$raison->getLibelle()."]";
                 $label = "FicheMétier";
                 $class = 'fiche-metier';
                 break;
-            case $raison instanceof FicheMetierMission :
+            case $raison instanceof MissionElement :
                 $text = $raison->getMission()->getLibelle();
                 $label = "Mission";
                 $class = 'activite';

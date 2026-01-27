@@ -69,8 +69,8 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 2300,
-                                'label' => 'Correspondances',
+                                'order' => 2005,
+                                'label' => 'Spécialités',
                                 'route' => 'correspondance',
                                 'resource' => PrivilegeController::getResourceId(CorrespondanceController::class, 'index') ,
                                 'icon' => 'fas fa-angle-right',

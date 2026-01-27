@@ -8,9 +8,15 @@ use FicheMetier\Form\Activite\ActiviteForm;
 use FicheMetier\Form\Activite\ActiviteFormFactory;
 use FicheMetier\Form\Activite\ActiviteHydrator;
 use FicheMetier\Form\Activite\ActiviteHydratorFactory;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesForm;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesFormFactory;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesHydrator;
+use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesHydratorFactory;
 use FicheMetier\Provider\Privilege\ActivitePrivileges;
 use FicheMetier\Service\Activite\ActiviteService;
 use FicheMetier\Service\Activite\ActiviteServiceFactory;
+use FicheMetier\Service\ActiviteElement\ActiviteElementService;
+use FicheMetier\Service\ActiviteElement\ActiviteElementServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -100,7 +106,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'gestion' => [
+                    'ressource' => [
                         'pages' => [
                             'activite' => [
                                 'label' => 'Activités',
@@ -226,6 +232,7 @@ return [
     'service_manager' => [
         'factories' => [
             ActiviteService::class => ActiviteServiceFactory::class,
+            ActiviteElementService::class => ActiviteElementServiceFactory::class,
         ],
     ],
     'controllers' => [
@@ -236,11 +243,13 @@ return [
     'form_elements' => [
         'factories' => [
             ActiviteForm::class => ActiviteFormFactory::class,
+            SelectionnerActivitesForm::class => SelectionnerActivitesFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             ActiviteHydrator::class => ActiviteHydratorFactory::class,
+            SelectionnerActivitesHydrator::class => SelectionnerActivitesHydratorFactory::class,
         ],
     ],
 

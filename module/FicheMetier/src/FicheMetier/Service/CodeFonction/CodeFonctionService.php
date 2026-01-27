@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\CodeFonction;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Metier\Entity\Db\FamilleProfessionnelle;
+use Carriere\Entity\Db\FamilleProfessionnelle;
 use RuntimeException;
 
 class CodeFonctionService

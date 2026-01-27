@@ -2,12 +2,12 @@
 
 namespace FicheMetier\Form\CodeFonction;
 
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 
 class CodeFonctionForm extends Form
 {
@@ -22,14 +22,14 @@ class CodeFonctionForm extends Form
             'name' => 'niveau_fonction',
             'options' => [
                 'label' => "Niveau de fonction <span title='Champ obligatoire'></span>:",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => 'Sélectionner le niveau de fonction ...',
                 'value_options' => $this->getNiveauFonctionService()->getNiveauxFonctionsAsOptions(),
             ],
             'attributes' => [
                 'id' => 'niveau_fonction',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ],
         ]);
         //Famille professionnelle
@@ -38,14 +38,14 @@ class CodeFonctionForm extends Form
             'name' => 'famille',
             'options' => [
                 'label' => "Famille professionnelle <span title='Champ obligatoire'></span>:",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => 'Sélectionner une famille professionnelle ...',
                 'value_options' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'famille',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ],
         ]);
         $this->add([
@@ -65,8 +65,8 @@ class CodeFonctionForm extends Form
 
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'niveau_fonction'         => [ 'required' => false,  ],
-            'famille'                 => [ 'required' => false,  ],
+            'niveau_fonction' => ['required' => false,],
+            'famille' => ['required' => false,],
         ]));
     }
 

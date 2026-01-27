@@ -8,9 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
-use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
@@ -287,33 +285,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         $this->applicationsRetirees->clear();
     }
 
-    /** Fonctions pour simplifier  */
-
-    /* @return MissionActivite[] */
-    public function getDescriptions(FicheMetierMission $mission): array
-    {
-        $dictionnaire = $mission->getMission()->getActivites();
-        return $dictionnaire;
-    }
-
-    /** @return MissionActivite[] */
-    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission): array
-    {
-        $activites = $ficheMetierMission->getMission()->getActivites();
-        $dictionnaire = [];
-        foreach ($activites as $activite) {
-            $found = false;
-            foreach ($this->getDescriptionsRetirees() as $retiree) {
-                if ($retiree->estNonHistorise() and $retiree->getActivite() === $activite) {
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) $dictionnaire[$activite->getId()] = $activite;
-        }
-        return $dictionnaire;
-    }
-
     public function isComplete(): bool
     {
         if (!$this->getAgent()) return false;
@@ -345,21 +316,8 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function getLibelleMetierPrincipal(string $type = FichePoste::TYPE_INCLUSIF): ?string
     {
         if ($this->getFicheTypeExternePrincipale() === null) return null;
-        $metier = $this->getFicheTypeExternePrincipale()->getFicheType()->getMetier();
+        return  $this->getFicheTypeExternePrincipale()->getFicheType()->getLibelle();
 
-        switch ($type) {
-            case FichePoste::TYPE_INCLUSIF :
-                return $metier->getLibelle();
-            case FichePoste::TYPE_GENRE :
-                if ($this->agent === null) return $metier->getLibelle();
-                if ($this->agent->getSexe() === 'M' and $metier->getLibelleMasculin()) return $metier->getLibelleMasculin();
-                if ($this->agent->getSexe() === 'F' and $metier->getLibelleFeminin()) return $metier->getLibelleFeminin();
-                return $metier->getLibelle();
-            case FichePoste::TYPE_DEFAULT :
-                return $metier->getLibelle(false);
-        }
-
-        return $metier->getLibelle();
     }
 
     public function generateTag(): string

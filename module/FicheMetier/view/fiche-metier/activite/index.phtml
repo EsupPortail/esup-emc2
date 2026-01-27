@@ -2,10 +2,13 @@
 
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Provider\Privilege\ActivitePrivileges;
+use Referentiel\Entity\Db\Referentiel;
 
 /**
  * @see \FicheMetier\Controller\ActiviteController::indexAction()
  * @var Activite[] $activites
+ * @var Referentiel[] $referentiels
+ * @var array $dictionnaire
  */
 
 $this->headTitle("Activités");
@@ -23,11 +26,12 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
     Activités
 </h1>
 
+
 <?php if ($canActiviteAjouter) : ?>
     <?php /** @see \FicheMetier\Controller\ActiviteController::ajouterAction() */ ?>
     <a href="<?php echo $this->url('activite/ajouter', [], [], true); ?>"
        class="btn btn-primary ajax-modal" data-event="modification"
-   >
+    >
         <span class="icon icon-ajouter"></span>
         Ajouter une activité
     </a>
@@ -42,13 +46,64 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
     </a>
 <?php endif; ?>
 
+
+
+<!-- Filtre ----------------------------------------------------------------------------------------------------------->
+<div class="card" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+    <div class="card-header bg-default">
+        <span class="icon icon-filtrer"></span>
+        Filtre de recherche des activités
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url('activite', [], [], true); ?>">
+            <div class="row">
+                <div class="col-md-10">
+                    <!-- fitres -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="referentiel">Référentiel :</label>
+                            <select id="referentiel" name="referentiel" class="form-control selectpicker" data-live-search="true">
+                                <option value="">Peu importe</option>
+                                <?php foreach ($referentiels as $referentiel) : ?>
+                                    <option value="<?php echo $referentiel->getId(); ?>" data-content="<?php echo $referentiel->printLabel(); ?>"
+                                            <?php if (isset($params['referentiel']) AND $params['referentiel'] == $referentiel->getId()) echo 'selected'; ?>
+                                    >
+                                        <?php echo $referentiel->getLibelleLong(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="histo">Historisation :</label>
+                            <select id="histo" name="histo" class="form-control selectpicker">
+                                <option value="">Peu importe</option>
+                                <option value="0" <?php if (isset($params['histo']) AND $params['histo'] == 0) echo 'selected'; ?>>Non historisée</option>
+                                <option value="1" <?php if (isset($params['histo']) AND $params['histo'] == 1) echo 'selected'; ?>>Historisée</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        Remise à zéro
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <table class="table table-condensed" id="activites">
     <thead>
         <tr>
             <th class="col-md-6"> Libellé </th>
             <th class="col-md-2"> Référence </th>
-            <th class="col-md-1"> #Missions </th>
-            <th class="col-md-1"> #Fiches métiers </th>
+            <th class="col-md-2"> #Fiches métiers </th>
             <th class="action col-md-2"> Action </th>
         </tr>
     </thead>
@@ -57,19 +112,14 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
         <tr <?php if ($activite->estHistorise()) echo " class='historise' "; ?> >
             <td data-column-id="Libellé">
                 <?php echo $activite->getLibelle(); ?>
-                <?php if ($activite->getDescription()): ?>
-                    <span class="icon icon-info" title="<?php echo $activite->getDescription(); ?>" data-bs-toggle="tooltip" data-bs-html="true"></span>
-                <?php endif; ?>
+<!--                --><?php //if ($activite->getDescription()): ?>
+<!--                    <span class="icon icon-info" title="--><?php //echo $activite->getDescription(); ?><!--" data-bs-toggle="tooltip" data-bs-html="true"></span>-->
+<!--                --><?php //endif; ?>
             </td>
             <td data-column-id="Référence">
-                <span class="badge">
-                <?php echo $activite->getReferentiel()?$activite->getReferentiel()->getLibelleCourt():"Aucun référentiel"; ?>
-                -
-                <?php echo $activite->getIdOrig()??"Aucun identifiant"; ?>
-                </span>
+                <?php echo $activite->printReference(); ?>
             </td>
-            <td data-column-id="#Missions"> TODO </td>
-            <td data-column-id="#Fiches métiers"> TODO </td>
+            <td data-column-id="#Fiches métiers"> <?php echo $dictionnaire[$activite->getId()]??0; ?> </td>
             <td data-column-id="Action" class="action">
                 <?php if ($canActiviteAfficher) : ?>
                     <?php /** @see \FicheMetier\Controller\ActiviteController::afficherAction() */ ?>
@@ -133,12 +183,17 @@ $canActiviteImporter =  $this->isAllowed(ActivitePrivileges::getResourceId(Activ
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                { targets: [4], orderable: false }
+                { targets: [3], orderable: false }
             ]
         });
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
+    });
+
+    $('button#clear').click(function(e) {
+        e.preventDefault();
+        window.location.href = '?';
     });
 </script>

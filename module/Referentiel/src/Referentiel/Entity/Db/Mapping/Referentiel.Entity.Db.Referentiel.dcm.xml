@@ -11,6 +11,7 @@
         <field name="couleur"         length="256"      column="couleur"        />
         <field name="description"     type="text"       column="description"                  nullable="true"/>
 
+        <one-to-many field="activites" target-entity="FicheMetier\Entity\Db\Activite" mapped-by="referentiel"/>
         <one-to-many field="missions" target-entity="FicheMetier\Entity\Db\Mission" mapped-by="referentiel"/>
         <one-to-many field="competences" target-entity="Element\Entity\Db\Competence" mapped-by="referentiel"/>
         <one-to-many field="fichesmetiers" target-entity="FicheMetier\Entity\Db\FicheMetier" mapped-by="referentiel"/>

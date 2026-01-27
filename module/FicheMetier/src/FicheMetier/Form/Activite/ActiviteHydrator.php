@@ -15,9 +15,9 @@ class ActiviteHydrator implements HydratorInterface
         /** @var Activite $object */
         $data = [
             'libelle' => $object->getLibelle(),
-            'description' => $object->getDescription(),
+//            'description' => $object->getDescription(),
             'referentiel' => $object->getReferentiel()?->getId(),
-            'identifiant' => $object->getIdOrig(),
+            'identifiant' => $object->getReference(),
         ];
         return $data;
     }
@@ -25,15 +25,15 @@ class ActiviteHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) != '') ? trim($data['libelle']) : null;
-        $description = (isset($data['description']) AND trim($data['description']) != '') ? trim($data['description']) : null;
+//        $description = (isset($data['description']) AND trim($data['description']) != '') ? trim($data['description']) : null;
         $referentiel = (isset($data['referentiel'])) ? $this->getReferentielService()->getReferentiel($data['referentiel']):null;
         $identifiant = (isset($data['identifiant']) AND trim($data['identifiant']) != '') ? trim($data['identifiant']) : null;
 
         /** @var Activite $object */
         $object->setLibelle($libelle);
-        $object->setDescription($description);
+//        $object->setDescription($description);
         $object->setReferentiel($referentiel);
-        $object->setIdOrig($identifiant);
+        $object->setReference($identifiant);
         return $object;
     }
 

@@ -123,10 +123,6 @@ class AjouterFicheMetierForm extends Form {
                 $famille = $ficheMetier->getFamilleProfessionnelle();
                 $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
             }
-            $familles = $ficheMetier->getMetier()?$ficheMetier->getMetier()->getFamillesProfessionnelles():[];
-            foreach ($familles as $famille) {
-                $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
-            }
         }
 
         ksort($dictionnaire);
@@ -135,13 +131,13 @@ class AjouterFicheMetierForm extends Form {
             /** @var FicheMetier $fiche */
             foreach ($listing as $fiche) {
                 $references = [];
-                if ($fiche->getMetier()) {
-                    foreach ($fiche->getMetier()->getReferences() as $reference) {
-                        $references[] = $reference->getTitre();
-                    }
-                    $str_references = implode(", ", $references);
-                    $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . (!empty($references) ? " (" . $str_references . ")" : "");
-                }
+//                if ($fiche->getMetier()) {
+//                    foreach ($fiche->getMetier()->getReferences() as $reference) {
+//                        $references[] = $reference->getTitre();
+//                    }
+//                    $str_references = implode(", ", $references);
+//                    $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . (!empty($references) ? " (" . $str_references . ")" : "");
+//                }
             }
             $array = [
                 'label' => $clef,
@@ -174,18 +170,16 @@ class AjouterFicheMetierForm extends Form {
         $fiches = array_filter($fiches, function (FicheMetier $a) use ($agent) {
             return (
                 $a->estNonHistorise() AND
-                $a->isEtatActif(FicheMetierEtats::ETAT_VALIDE) AND
-                ($a->getMetier() AND $a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe())));
+                $a->isEtatActif(FicheMetierEtats::ETAT_VALIDE)
+            //    AND ($a->getMetier() AND $a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe()))
+            );
         });
 
         $options = [];
         $dictionnaire = [];
         foreach ($fiches as $ficheMetier) {
-            $familles = $ficheMetier->getMetier()->getFamillesProfessionnelles();
-            foreach ($familles as $famille) {
-                $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
-            }
-            if (empty($familles)) $dictionnaire["Sans famille professionnelle"][] = $ficheMetier;
+            $famille = $ficheMetier->getFamilleProfessionnelle();
+            $dictionnaire[($famille) ? $famille->getLibelle() : "Sans famille professionnelle"][] = $ficheMetier;
         }
 
         ksort($dictionnaire);
@@ -193,18 +187,14 @@ class AjouterFicheMetierForm extends Form {
             $optionsoptions = [];
             /** @var FicheMetier $fiche */
             foreach ($listing as $fiche) {
-                $metier = $fiche->getMetier();
                 $references = [];
-                foreach ($metier->getReferences() as $reference) {
-                    $references[] = $reference->getTitre();
-                }
-                $str_references = implode(", ", $references);
+
                 $niveaux = "";
 //                if ($metier->getNiveaux()) $niveaux .= " [".$metier->getNiveaux()->getBorneInferieure().":".$metier->getNiveaux()->getBorneSuperieure()."]";
 //                $niveaux .= " >>> ".$agent->getMeilleurNiveau();
                 $label = "";
                 //$label .= $metier->getNiveaux()->getBorneInferieure()->getNiveau() . ":". $metier->getNiveaux()->getBorneSuperieure()->getNiveau() . " ";
-                $label .= $metier->getLibelle() . (!empty($references)?" (".$str_references.")":"") . $niveaux;
+                $label .= $fiche->getLibelle() . " " . $niveaux;
                 $optionsoptions[$fiche->getId()] = $label;
             }
             $array = [

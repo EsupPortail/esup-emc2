@@ -3,7 +3,9 @@
 namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
 use DateTime;
@@ -12,27 +14,25 @@ use Element\Entity\Db\CompetenceType;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\FicheMetierMission;
+use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
+use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
-use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
+use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Metier\Entity\Db\FamilleProfessionnelle;
-use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Metier\Service\Metier\MetierServiceAwareTrait;
-use Metier\Service\Reference\ReferenceServiceAwareTrait;
 use Referentiel\Entity\Db\Referentiel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
@@ -42,6 +42,8 @@ class ImportController extends AbstractActionController
 {
     use ImportServiceAwareTrait;
 
+    use ActiviteServiceAwareTrait;
+    use ActiviteElementServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -50,15 +52,12 @@ class ImportController extends AbstractActionController
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use FicheMetierMissionServiceAwareTrait;
-    use MetierServiceAwareTrait;
-    use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use MissionElementServiceAwareTrait;
     use NiveauServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
-    use ReferenceServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
     use TendanceTypeServiceAwareTrait;
 
@@ -107,6 +106,7 @@ class ImportController extends AbstractActionController
 
     // HEADER SUPPLEMENTAIRE ///////////////////////////////////////////////////////////////////////////////////////////
     const HEADER_CODE_FONCTION = "Code Fonction";
+    const HEADER_CODE_EMPLOITYPE = "Codes Emploi Type";
 
     public function importAction(): ViewModel
     {
@@ -129,14 +129,14 @@ class ImportController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $request->getPost();
-            $mode = ($data['mode'] === 'import')?'import':'preview';
+            $mode = ($data['mode'] === 'import') ? 'import' : 'preview';
             $files = $request->getFiles()->toArray();
-            $file = !empty($files)?current($files):null;
+            $file = !empty($files) ? current($files) : null;
 
-            $filename = $data['filename']??null;
-            $filepath = $data['filepath']??null;
+            $filename = $data['filename'] ?? null;
+            $filepath = $data['filepath'] ?? null;
 
-            if (($file === null OR $file['tmp_name'] === "") AND $filepath === null) {
+            if (($file === null or $file['tmp_name'] === "") and $filepath === null) {
                 $error[] = "Aucun fichier fourni";
             } else {
                 if ($filepath === null) {
@@ -153,88 +153,113 @@ class ImportController extends AbstractActionController
             }
 
             if ($data['format'] === ImportController::FORMAT_RMFP) {
-                $result = $this->readAsRmfp($data, $filepath,$referentiel, 0);
+                $result = $this->readAsRmfp($data, $filepath, $referentiel, 0);
                 /** @var FicheMetier[] $fiches */
                 $fiches = $result["fiches"];
-                foreach ($result['warning'] as $item) { $warning[] = $item; }
-                foreach ($result['error'] as $item) { $error[] = $item; }
-                foreach ($result['info'] as $item) { $info[] = $item; }
+                foreach ($result['warning'] as $item) {
+                    $warning[] = $item;
+                }
+                foreach ($result['error'] as $item) {
+                    $error[] = $item;
+                }
+                foreach ($result['info'] as $item) {
+                    $info[] = $item;
+                }
             }
 
             if ($data['format'] === ImportController::FORMAT_REFERENS3) {
-                $result = $this->readAsReferens($data, $filepath,$referentiel, 100);
+                $result = $this->readAsReferens($data, $filepath, $referentiel, 100);
                 /** @var FicheMetier[] $fiches */
                 $fiches = $result['fiches'];
-                foreach ($result['warning'] as $item) { $warning[] = $item; }
-                foreach ($result['error'] as $item) { $error[] = $item; }
-                foreach ($result['info'] as $item) { $info[] = $item; }
+                foreach ($result['warning'] as $item) {
+                    $warning[] = $item;
+                }
+                foreach ($result['error'] as $item) {
+                    $error[] = $item;
+                }
+                foreach ($result['info'] as $item) {
+                    $info[] = $item;
+                }
             }
 
-            $referentielId = (isset($data["referentiel"]) AND $data["referentiel"] !== "") ? $data["referentiel"] : null;
+            $referentielId = (isset($data["referentiel"]) and $data["referentiel"] !== "") ? $data["referentiel"] : null;
             $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
 
             if ($mode === 'import') {
-                    // recuperation des nouvelles familles professionnelles
-                    foreach ($fiches as $fiche) {
-                        if ($fiche->getFamilleProfessionnelle() AND $fiche->getFamilleProfessionnelle()->getCorrespondance() AND $fiche->getFamilleProfessionnelle()->getCorrespondance()->getId() === null) {
-                            $fiche->getFamilleProfessionnelle()->getCorrespondance()->setId(100000 + rand(0,100000));
-                            $this->getCorrespondanceService()->create($fiche->getFamilleProfessionnelle()->getCorrespondance());
-                        }
-                    }
-                    foreach ($fiches as $fiche) {
-                        if ($fiche->getFamilleProfessionnelle() AND $fiche->getFamilleProfessionnelle()->getId() === null) {
-                            $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
-                        }
-                    }
-                    $a=1;
-                    foreach ($fiches as $fiche) {
-                        if ($fiche->getCodeFonction() AND $fiche->getCodeFonction()->getId() === null) {
-                            $this->getCodeFonctionService()->create($fiche->getCodeFonction());
-                        }
-                    }
-
-
-                    /** @var FicheMetier $fiche */
-                    foreach ($fiches as $fiche) {
-                        $elements = $fiche->getCompetenceCollection()->toArray(); $fiche->clearCompetences();
-                        $tendances = $fiche->getTendances(); $fiche->clearTendances();
-                        $missions = $fiche->getMissions(); $fiche->clearMissions();
-
-                        if ($fiche->getId() === null) $this->getFicheMetierService()->create($fiche);
-
-                        foreach ($elements as $element) {
-                            if ($element->getId() === null) $this->getCompetenceElementService()->create($element);
-                            else $this->getCompetenceElementService()->update($element);
-
-                            $fiche->addCompetenceElement($element);
-                        }
-
-                        foreach ($tendances as $tendance) {
-                            $tendance->setFicheMetier($fiche);
-                            if ($tendance->getId() === null) $this->getTendanceElementService()->create($tendance);
-                            else $this->getTendanceElementService()->update($tendance);
-
-                            $fiche->addTendance($tendance);
-                        }
-
-                        foreach ($missions as $mission) {
-                            if ($mission->getId() === null) $this->getFicheMetierMissionService()->deepCreate($mission);
-                            else {
-                                foreach ($mission->getMission()->getActivites() as $activite) {
-                                    if ($activite->getId() === null) $this->getMissionActiviteService()->create($activite);
-                                    else {
-                                        if ($activite->getOrdre() === -1) $this->getMissionActiviteService()->delete($activite);
-                                        else $this->getMissionActiviteService()->update($activite);
-                                    }
-                                }
-                            }
-                            $fiche->addMission($mission);
-                        }
-
-                        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
-                        $this->getFicheMetierService()->update($fiche);
+                // recuperation des nouvelles familles professionnelles
+                foreach ($fiches as $fiche) {
+                    if ($fiche->getFamilleProfessionnelle() and $fiche->getFamilleProfessionnelle()->getCorrespondance() and $fiche->getFamilleProfessionnelle()->getCorrespondance()->getId() === null) {
+                        $fiche->getFamilleProfessionnelle()->getCorrespondance()->setId(100000 + rand(0, 100000));
+                        $this->getCorrespondanceService()->create($fiche->getFamilleProfessionnelle()->getCorrespondance());
                     }
                 }
+                foreach ($fiches as $fiche) {
+                    if ($fiche->getFamilleProfessionnelle() and $fiche->getFamilleProfessionnelle()->getId() === null) {
+                        $this->getFamilleProfessionnelleService()->create($fiche->getFamilleProfessionnelle());
+                    }
+                }
+                $a = 1;
+                foreach ($fiches as $fiche) {
+                    if ($fiche->getCodeFonction() and $fiche->getCodeFonction()->getId() === null) {
+                        $this->getCodeFonctionService()->create($fiche->getCodeFonction());
+                    }
+                }
+
+
+                /** @var FicheMetier $fiche */
+                foreach ($fiches as $fiche) {
+                    $elements = $fiche->getCompetenceCollection()->toArray();
+                    $fiche->clearCompetences();
+                    $tendances = $fiche->getTendances();
+                    $fiche->clearTendances();
+
+                    // Il faut clear les elements pour permettre la création
+                    $missions = $fiche->getMissions();
+                    $fiche->clearMissions();
+                    $activites = $fiche->getActivites();
+                    $fiche->clearActivites();
+
+                    if ($fiche->getId() === null) $this->getFicheMetierService()->create($fiche);
+
+                    foreach ($elements as $element) {
+                        if ($element->getId() === null) $this->getCompetenceElementService()->create($element);
+                        else $this->getCompetenceElementService()->update($element);
+
+                        $fiche->addCompetenceElement($element);
+                    }
+
+                    foreach ($tendances as $tendance) {
+                        $tendance->setFicheMetier($fiche);
+                        if ($tendance->getId() === null) $this->getTendanceElementService()->create($tendance);
+                        else $this->getTendanceElementService()->update($tendance);
+
+                        $fiche->addTendance($tendance);
+                    }
+
+                    // GESTION DES MISSIONS ////////////////////////////////////////////////////////////////////////////
+
+                    foreach ($missions as $mission) {
+                        if ($mission->getMission()->getId() === null) $this->getMissionPrincipaleService()->create($mission->getMission());
+                        else $this->getMissionPrincipaleService()->update($mission->getMission());
+                        if ($mission->getId() === null) $this->getMissionElementService()->create($mission);
+                        else $this->getMissionElementService()->update($mission);
+                        $fiche->addMission($mission);
+                    }
+
+                    // GESTION DES ACTIVITES ///////////////////////////////////////////////////////////////////////////
+
+                    foreach ($activites as $activite) {
+                        if ($activite->getActivite()->getId() === null) $this->getActiviteService()->create($activite->getActivite());
+                        else $this->getActiviteService()->update($activite->getActivite());
+                        if ($activite->getId() === null) $this->getActiviteElementService()->create($activite);
+                        else $this->getActiviteElementService()->update($activite);
+                        $fiche->addActivite($activite);
+                    }
+
+                    $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
+                    $this->getFicheMetierService()->update($fiche);
+                }
+            }
         }
         if ($referentiel === null) $error[] = "Aucun référentiel de sélectionné";
         else $form->get('referentiel')->setValue($referentiel->getId());
@@ -242,7 +267,7 @@ class ImportController extends AbstractActionController
         else $form->get('mode')->setValue($mode);
         if ($fichier_path === "") $error[] = "Aucun fichier fourni";
         else {
-            $form->get('fichier')->setValue($data['fichier']??null);
+            $form->get('fichier')->setValue($data['fichier'] ?? null);
         }
 
         return new ViewModel([
@@ -256,23 +281,32 @@ class ImportController extends AbstractActionController
             'referentiels' => $this->getReferentielService()->getReferentiels(),
             'data' => $data,
             'file' => $file,
-            'filepath' => $filepath??null,
-            'filename' => $filename??null,
+            'filepath' => $filepath ?? null,
+            'filename' => $filename ?? null,
         ]);
     }
 
-    public function readAsReferens($data, string $filepath, Referentiel $referentiel, int $verbosity = 0) : array
+    public function readAsReferens($data, string $filepath, Referentiel $referentiel, int $verbosity = 0): array
     {
-        $error = []; $warning = []; $info = []; $fiches = [];
+        $error = [];
+        $warning = [];
+        $info = [];
+        $fiches = [];
 
         /** Préparation pour le traitement des compétences */
-        $dictionnaireCompetence = $this->getCompetenceService()->generateDictionnaire($referentiel,'reference');
+        $dictionnaireCompetence = $this->getCompetenceService()->generateDictionnaire($referentiel, 'reference');
         $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
         $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
         $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
-        if ($tendanceImpact === null) { $warning[] = "Aucune type de tendance [".TendanceType::IMPACT."] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte"; }
-        if ($tendanceFacteur === null) { $warning[] = "Aucune type de tendance [".TendanceType::FACTEUR."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
-        if ($tendanceCondition === null) { $warning[] = "Aucune type de tendance [".TendanceType::CONDITIONS."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
+        if ($tendanceImpact === null) {
+            $warning[] = "Aucune type de tendance [" . TendanceType::IMPACT . "] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte";
+        }
+        if ($tendanceFacteur === null) {
+            $warning[] = "Aucune type de tendance [" . TendanceType::FACTEUR . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
+        }
+        if (false and $tendanceCondition === null) {
+            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
+        }
 
         /** Préparation pour les niveaus de carrière */
         $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
@@ -306,8 +340,8 @@ class ImportController extends AbstractActionController
 
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
-                $intitule = $raw[self::HEADER_REFERENS3_LIBELLE]??"";
-                $code = $raw[self::HEADER_REFERENS3_REFERENCE]??"";
+                $intitule = $raw[self::HEADER_REFERENS3_LIBELLE] ?? "";
+                $code = $raw[self::HEADER_REFERENS3_REFERENCE] ?? "";
 
                 $fiche = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
                 if ($fiche === null) {
@@ -319,35 +353,35 @@ class ImportController extends AbstractActionController
                 $fiche->setReferentiel($referentiel);
 
                 //specialité
-                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]??""));
+                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? ""));
                 if ($specialite === null) {
-                    $specialite = $this->getCorrespondanceService()->createWith('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]??""), trim($raw[self::HEADER_REFERENS3_SPECIALITE_LIBELLE]??""), false);
+                    $specialite = $this->getCorrespondanceService()->createWith('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? ""), trim($raw[self::HEADER_REFERENS3_SPECIALITE_LIBELLE] ?? ""), false);
                     $specialite->setId(null);
                 }
                 //famille
-                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"");
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "");
                 if ($famille === null) {
                     $famille = new FamilleProfessionnelle();
-                    $famille->setLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"");
-                    $famille->setPosition($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]??"");
+                    $famille->setLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "");
+                    $famille->setPosition($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "");
                     $famille->setCorrespondance($specialite);
                 } else {
-                    if ($famille->getCorrespondance() !== $specialite) $warning[] = "La famille professionnelle [".($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"")."] n'a pas la spécialité connue par EMC2 [".$famille->getCorrespondance()?->getCategorie()."!=".($raw[self::HEADER_REFERENS3_SPECIALITE_CODE]??"")."]";
-                    if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]??"")) $warning[] = "La famille professionnelle [".($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE]??"")."] n'a pas la position connue par EMC2 [".$famille->getPosition()."!=".($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]??"")."]";
+                    if ($famille->getCorrespondance() !== $specialite) $warning[] = "La famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] n'a pas la spécialité connue par EMC2 [" . $famille->getCorrespondance()?->getCategorie() . "!=" . ($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? "") . "]";
+                    if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "")) $warning[] = "La famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] n'a pas la position connue par EMC2 [" . $famille->getPosition() . "!=" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "]";
                 }
                 $fiche->setFamilleProfessionnelle($famille);
                 //Niveau de carriere
-                $niveauCarriereId = (isset($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) AND trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) !== '')?trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]):null;
+                $niveauCarriereId = (isset($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) and trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) !== '') ? trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) : null;
                 if ($niveauCarriereId !== null) {
                     if (isset($dictionnaireNiveauCarriere[$niveauCarriereId])) {
                         $fiche->setNiveauCarriere($dictionnaireNiveauCarriere[$niveauCarriereId]);
                     } else {
-                        $warning[] = "Aucun niveau de carrière de connue pour le niveau ".$niveauCarriereId." ".($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE])??"Colonne manquante [".self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE."]";
+                        $warning[] = "Aucun niveau de carrière de connue pour le niveau " . $niveauCarriereId . " " . ($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE]) ?? "Colonne manquante [" . self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE . "]";
                     }
                 }
 
                 //code fonction
-                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) AND trim($raw[self::HEADER_CODE_FONCTION]) !== '')?trim($raw[self::HEADER_CODE_FONCTION]):null;
+                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) and trim($raw[self::HEADER_CODE_FONCTION]) !== '') ? trim($raw[self::HEADER_CODE_FONCTION]) : null;
                 if ($codeFonction !== null) {
                     if (isset($dictionnaireCodeFonction[$codeFonction])) {
                         $fiche->setCodeFonction($dictionnaireCodeFonction[$codeFonction]);
@@ -356,42 +390,66 @@ class ImportController extends AbstractActionController
                         $fiche->setCodeFonction($code);
                     }
                 }
+                //code fonction
+                $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
+                $fiche->setCodesEmploiType($codesEmploiType);
 
                 /** Liens *********************************************************************************************/
 
-                $lienWeb = isset($raw[self::HEADER_REFERENS3_URL])?trim($raw[self::HEADER_REFERENS3_URL]):null;
+                $lienWeb = isset($raw[self::HEADER_REFERENS3_URL]) ? trim($raw[self::HEADER_REFERENS3_URL]) : null;
                 if ($lienWeb !== null and $lienWeb !== '') $fiche->setLienWeb($lienWeb);
 
-                $lienPdf = isset($raw[self::HEADER_REFERENS3_PDF])?trim($raw[self::HEADER_REFERENS3_PDF]):null;
+                $lienPdf = isset($raw[self::HEADER_REFERENS3_PDF]) ? trim($raw[self::HEADER_REFERENS3_PDF]) : null;
                 if ($lienPdf !== null and $lienPdf !== '') $fiche->setLienPdf($lienPdf);
 
                 /** Partie Mission et activités ***********************************************************************/
 
-                $missionLibelle = $raw[self::HEADER_REFERENS3_MISSION_LIBELLE]??"";
-                $activites = explode("|",$raw[self::HEADER_REFERENS3_MISSION_ACTIVITE]??"");
+                $readMissions = explode("|", $raw[self::HEADER_REFERENS3_MISSION_LIBELLE]);
+                $missions = $fiche->getMissions();
+                $fiche->clearMissions();
 
-                $ficheMission = $fiche->getMissionByReference($fiche->getReferentiel(), $fiche->getReference());
-                if ($ficheMission === null) {
-                    $mission = $this->getMissionPrincipaleService()->createWith($missionLibelle, $activites, false);
-                    $mission->setReferentiel($referentiel);
-                    $mission->setReference($fiche->getReference());
-
-                    $ficheMission = new FicheMetierMission();
-                    $ficheMission->setMission($mission);
-                    $ficheMission->setFicheMetier($fiche);
-                    $ficheMission->setOrdre(1);
-
-                    $fiche->addMission($ficheMission);
-                } else {
-                    $mission = $ficheMission->getMission();
-                    $mission->setReferentiel($referentiel);
-                    $mission->setReference($fiche->getReference());
-
-                    $this->getMissionPrincipaleService()->updateWith($missionLibelle, $activites, $mission);
+                $readMissionPosition = 1;
+                foreach ($readMissions as $readMission) {
+                    $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission);
+                    if ($mission === null) {
+                        $reference = $fiche->getReference() . "_" . $readMissionPosition;
+                        $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
+                    }
+                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions,$mission);
+                    if ($missionElement === null) {
+                        $missionElement = new MissionElement();
+                        $missionElement->setMission($mission);
+                    }
+                    $missionElement->setPosition($readMissionPosition);
+                    $fiche->addMission($missionElement);
+                    $readMissionPosition++;
                 }
 
+                $readActivites = explode("|", $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "");
+                $activites = $fiche->getActivites();
+                $fiche->clearActivites();
+
+                $readActivitePosition = 1;
+                foreach ($readActivites as $readActivite) {
+                    $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite);
+                    if ($activite === null) {
+                        $reference = $fiche->getReference() . "_" . $readActivitePosition;
+                        $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
+                    }
+                    $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites,$activite);
+                    if ($activiteElement === null) {
+                        $activiteElement = new ActiviteElement();
+                        $activiteElement->setActivite($activite);
+                    }
+                    $activiteElement->setPosition($readActivitePosition);
+                    $fiche->addActivite($activiteElement);
+                    $readActivitePosition++;
+                }
+
+
+
                 /** COMPETENCES ***************************************************************************************/
-                $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE]??"");
+                $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE] ?? "");
                 $dictionnaireFicheMetierCompetence = [];
                 $competences = $fiche->getCompetenceListe();
                 foreach ($competences as $competence) {
@@ -399,7 +457,7 @@ class ImportController extends AbstractActionController
                 }
                 $fiche->clearCompetences();
                 foreach ($comptenceIds as $comptenceId) {
-                    if (isset($dictionnaireFicheMetierCompetence[ $comptenceId ])) {
+                    if (isset($dictionnaireFicheMetierCompetence[$comptenceId])) {
                         $fiche->addCompetenceElement($dictionnaireFicheMetierCompetence[$comptenceId]);
                     } else {
                         $competence = $dictionnaireCompetence[$comptenceId] ?? null;
@@ -417,24 +475,22 @@ class ImportController extends AbstractActionController
 
                 $tendances = $fiche->getTendances();
                 $tendancesListing = [
-                    [ 'type' => $tendanceFacteur,   'colonne' => self::HEADER_REFERENS3_TENDANCE ],
-                    [ 'type' => $tendanceImpact,    'colonne' => self::HEADER_REFERENS3_IMPACT ],
-                    [ 'type' => $tendanceCondition, 'colonne' => self::HEADER_REFERENS3_CONDITION ],
+                    ['type' => $tendanceFacteur, 'colonne' => self::HEADER_REFERENS3_TENDANCE],
+                    ['type' => $tendanceImpact, 'colonne' => self::HEADER_REFERENS3_IMPACT],
+                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_REFERENS3_CONDITION],
                 ];
                 foreach ($tendancesListing as $tendanceType) {
                     $type = $tendanceType['type'];
                     $colonne = $tendanceType['colonne'];
-                    if ($type AND isset($raw[$colonne]) AND trim($raw[$colonne]) !== "") {
+                    if ($type and isset($raw[$colonne]) and trim($raw[$colonne]) !== "") {
                         $tendance = null;
-                        if (isset($tendances[$type->getCode()]))
-                        {
+                        if (isset($tendances[$type->getCode()])) {
                             $tendance = $tendances[$type->getCode()];
-                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
-                        }
-                        else {
+                            $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
+                        } else {
                             $tendance = new TendanceElement();
                             $tendance->setType($type);
-                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
+                            $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
                             $fiche->addTendance($tendance);
                         }
                     }
@@ -445,14 +501,17 @@ class ImportController extends AbstractActionController
 
         fclose($csvFile);
         $fin = (new DateTime())->getTimestamp();
-        $info[] = "Temps de traitement : " . max(1,($fin-$debut)) . " seconde·s";
+        $info[] = "Temps de traitement : " . max(1, ($fin - $debut)) . " seconde·s";
 
         return ['fiches' => $fiches, 'warning' => $warning, 'info' => $info, 'error' => $error];
     }
 
-    public function readAsRmfp($data, string $filepath, Referentiel $referentiel, int $verbosity = 0) : array
+    public function readAsRmfp($data, string $filepath, Referentiel $referentiel, int $verbosity = 0): array
     {
-        $warning = []; $error = []; $info = []; $fiches = [];
+        $warning = [];
+        $error = [];
+        $info = [];
+        $fiches = [];
 
         /** Préparation pour le traitement des compétences */
         $tConnaissance = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_CONNAISSANCE);
@@ -465,11 +524,17 @@ class ImportController extends AbstractActionController
         $tendanceImpact = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::IMPACT);
         $tendanceFacteur = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::FACTEUR);
         $tendanceCondition = $this->getTendanceTypeService()->getTendanceTypeByCode(TendanceType::CONDITIONS);
-        if ($tendanceImpact === null) { $warning[] = "Aucune type de tendance [".TendanceType::IMPACT."] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte"; }
-        if ($tendanceFacteur === null) { $warning[] = "Aucune type de tendance [".TendanceType::FACTEUR."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
-        if ($tendanceCondition === null) { $warning[] = "Aucune type de tendance [".TendanceType::CONDITIONS."] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte"; }
+        if ($tendanceImpact === null) {
+            $warning[] = "Aucune type de tendance [" . TendanceType::IMPACT . "] les informations contenues dans la colonne [Impact sur l'ER] ne seront pas prise en compte";
+        }
+        if ($tendanceFacteur === null) {
+            $warning[] = "Aucune type de tendance [" . TendanceType::FACTEUR . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
+        }
+        if (false and $tendanceCondition === null) {
+            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
+        }
 
-        $mode = ($data['mode'] === 'import')?'import':'preview';
+        $mode = ($data['mode'] === 'import') ? 'import' : 'preview';
         $debut = (new DateTime())->getTimestamp();
 
 
@@ -505,8 +570,8 @@ class ImportController extends AbstractActionController
 
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
-                $intitule = $raw[self::HEADER_RMFP_LIBELLE]??"";
-                $code = $raw[self::HEADER_RMFP_REFERENCE]??"";
+                $intitule = $raw[self::HEADER_RMFP_LIBELLE] ?? "";
+                $code = $raw[self::HEADER_RMFP_REFERENCE] ?? "";
                 $fiche = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
 
                 if ($fiche === null) {
@@ -518,26 +583,26 @@ class ImportController extends AbstractActionController
                 $fiche->setReferentiel($referentiel);
 //                $this->getFicheMetierService()->create($fiche);
 
-                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]??""));
+                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw[self::HEADER_RMFP_FAMILLE] ?? ""));
                 $newFamille = false;
                 if ($famille === null) {
                     $famille = new FamilleProfessionnelle();
-                    $famille->setLibelle(trim($raw[self::HEADER_RMFP_FAMILLE]??""));
+                    $famille->setLibelle(trim($raw[self::HEADER_RMFP_FAMILLE] ?? ""));
                     $newFamille = true;
                 }
                 $fiche->setFamilleProfessionnelle($famille);
-                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]??""));
+                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw[self::HEADER_RMFP_SPECIALITE] ?? ""));
                 if ($specialite === null) {
-                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw[self::HEADER_RMFP_SPECIALITE]??""), trim($raw[self::HEADER_RMFP_SPECIALITE]??""), false);
+                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw[self::HEADER_RMFP_SPECIALITE] ?? ""), trim($raw[self::HEADER_RMFP_SPECIALITE] ?? ""), false);
                     $specialite->setId(null);
                 }
                 if ($newFamille) $famille->setCorrespondance($specialite);
                 elseif ($famille->getCorrespondance() !== $specialite) {
-                    $warning[] = "La spécialité attaché à la famille professionnelle [".$famille->getLibelle()."] ne correspond pas à la spécialité connue.";
+                    $warning[] = "La spécialité attaché à la famille professionnelle [" . $famille->getLibelle() . "] ne correspond pas à la spécialité connue.";
                 }
 
                 //code fonction
-                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) AND trim($raw[self::HEADER_CODE_FONCTION]) !== '')?trim($raw[self::HEADER_CODE_FONCTION]):null;
+                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) and trim($raw[self::HEADER_CODE_FONCTION]) !== '') ? trim($raw[self::HEADER_CODE_FONCTION]) : null;
                 if ($codeFonction !== null) {
                     if (isset($dictionnaireCodeFonction[$codeFonction])) {
                         $fiche->setCodeFonction($dictionnaireCodeFonction[$codeFonction]);
@@ -546,6 +611,9 @@ class ImportController extends AbstractActionController
                         $fiche->setCodeFonction($code);
                     }
                 }
+                //code fonction
+                $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
+                $fiche->setCodesEmploiType($codesEmploiType);
 
                 /** Partie Mission et activités ***********************************************************************/
 
@@ -553,71 +621,89 @@ class ImportController extends AbstractActionController
                 // > revoir un peu la fiche pour avoir une définition + une liste d'activité sans mission ?
                 // > fiche metier devrait pouvoir avoir des activités hors mission ?
 
-                $missionLibelle = $raw[self::HEADER_RMFP_MISSION_LIBELLE];
-                $activites = explode("\n",$raw[self::HEADER_RMFP_MISSION_ACTIVITE]);
+                $readMissions = explode("\n", $raw[self::HEADER_RMFP_MISSION_LIBELLE]);
+                $missions = $fiche->getMissions();
+                $fiche->clearMissions();
 
-                $ficheMission = $fiche->getMissionByReference($fiche->getReferentiel(), $fiche->getReference());
-                if ($ficheMission === null) {
-                    $mission = $this->getMissionPrincipaleService()->createWith($missionLibelle, $activites, false);
-                    $mission->setReferentiel($referentiel);
-                    $mission->setReference($fiche->getReference());
-
-                    $ficheMission = new FicheMetierMission();
-                    $ficheMission->setMission($mission);
-                    $ficheMission->setFicheMetier($fiche);
-                    $ficheMission->setOrdre(1);
-
-                    $fiche->addMission($ficheMission);
-                } else {
-                    $mission = $ficheMission->getMission();
-                    $mission->setReferentiel($referentiel);
-                    $mission->setReference($fiche->getReference());
-
-                    $this->getMissionPrincipaleService()->updateWith($missionLibelle, $activites, $mission);
+                $readMissionPosition = 1;
+                foreach ($readMissions as $readMission) {
+                    $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission);
+                    if ($mission === null) {
+                        $reference = $fiche->getReference() . "_" . $readMissionPosition;
+                        $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
+                    }
+                    $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions,$mission);
+                    if ($missionElement === null) {
+                        $missionElement = new MissionElement();
+                        $missionElement->setMission($mission);
+                    }
+                    $missionElement->setPosition($readMissionPosition);
+                    $fiche->addMission($missionElement);
+                    $readMissionPosition++;
                 }
 
+                $readActivites = explode("\n", $raw[self::HEADER_RMFP_MISSION_ACTIVITE]);
+                $activites = $fiche->getActivites();
+                $fiche->clearActivites();
+
+                $readActivitePosition = 1;
+                foreach ($readActivites as $readActivite) {
+                    $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite);
+                    if ($activite === null) {
+                        $reference = $fiche->getReference() . "_" . $readActivitePosition;
+                        $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
+                    }
+                        $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites,$activite);
+                    if ($activiteElement === null) {
+                        $activiteElement = new ActiviteElement();
+                        $activiteElement->setActivite($activite);
+                    }
+                    $activiteElement->setPosition($readActivitePosition);
+                    $fiche->addActivite($activiteElement);
+                    $readActivitePosition++;
+                }
 
                 /** COMPETENCES ***************************************************************************************/
 
                 //todo ajouter le type pour eviter les homonymies
                 //todo ajouter un boolean pour la recherche parmi les synonymes
 
-                $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE]??"", "\n");
+                $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE] ?? "", "\n");
                 foreach ($connaissances as $item) {
 //                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
-                    $connaissance = $dictionnaireConnaissances[$item]??null;
+                    $connaissance = $dictionnaireConnaissances[$item] ?? null;
                     if ($connaissance !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($connaissance);
                         $fiche->addCompetenceElement($element);
                     } else {
-                        $warning[] = "[".$item."] compétence de type [".$tConnaissance->getLibelle()."] non trouvée.";
+                        $warning[] = "[" . $item . "] compétence de type [" . $tConnaissance->getLibelle() . "] non trouvée.";
                     }
                 }
-                $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE]??"", "\n");
+                $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE] ?? "", "\n");
                 foreach ($savoiretres as $item) {
 //                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
-                    $savoiretre = $dictionnaireSavoirEtre[$item]??null;
+                    $savoiretre = $dictionnaireSavoirEtre[$item] ?? null;
                     if ($savoiretre !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($savoiretre);
 //                        $this->getCompetenceElementService()->create($element);
                         $fiche->addCompetenceElement($element);
                     } else {
-                        $warning[] = "[".$item."] compétence de type [".$tsavoiretre->getLibelle()."] non trouvée.";
+                        $warning[] = "[" . $item . "] compétence de type [" . $tsavoiretre->getLibelle() . "] non trouvée.";
                     }
                 }
-                $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE]??"", "\n");
+                $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE] ?? "", "\n");
                 foreach ($savoirfaires as $item) {
 //                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
-                    $savoirfaire = $dictionnaireSavoirFaire[$item]??null;
+                    $savoirfaire = $dictionnaireSavoirFaire[$item] ?? null;
                     if ($savoirfaire !== null) {
                         $element = new CompetenceElement();
                         $element->setCompetence($savoirfaire);
 //                        $this->getCompetenceElementService()->create($element);
                         $fiche->addCompetenceElement($element);
                     } else {
-                        $warning[] = "[".$item."] compétence de type [".$tsavoirfaire->getLibelle()."] non trouvée.";
+                        $warning[] = "[" . $item . "] compétence de type [" . $tsavoirfaire->getLibelle() . "] non trouvée.";
                     }
                 }
 //                $this->getFicheMetierService()->update($fiche);
@@ -626,24 +712,22 @@ class ImportController extends AbstractActionController
 
                 $tendances = $fiche->getTendances();
                 $tendancesListing = [
-                    [ 'type' => $tendanceFacteur,   'colonne' => self::HEADER_RMFP_TENDANCE ],
-                    [ 'type' => $tendanceImpact,    'colonne' => self::HEADER_RMFP_IMPACT ],
-                    [ 'type' => $tendanceCondition, 'colonne' => self::HEADER_RMFP_CONDITION ],
+                    ['type' => $tendanceFacteur, 'colonne' => self::HEADER_RMFP_TENDANCE],
+                    ['type' => $tendanceImpact, 'colonne' => self::HEADER_RMFP_IMPACT],
+                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_RMFP_CONDITION],
                 ];
                 foreach ($tendancesListing as $tendanceType) {
                     $type = $tendanceType['type'];
                     $colonne = $tendanceType['colonne'];
-                    if ($type AND isset($raw[$colonne]) AND trim($raw[$colonne]) !== "") {
+                    if ($type and isset($raw[$colonne]) and trim($raw[$colonne]) !== "") {
                         $tendance = null;
-                        if (isset($tendances[$type->getCode()]))
-                        {
+                        if (isset($tendances[$type->getCode()])) {
                             $tendance = $tendances[$type->getCode()];
-                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
-                        }
-                        else {
+                            $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
+                        } else {
                             $tendance = new TendanceElement();
                             $tendance->setType($type);
-                            $tendance->setTexte(str_replace("|","<br>",trim($raw[$colonne])));
+                            $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
                             $fiche->addTendance($tendance);
                         }
                     }
@@ -659,7 +743,7 @@ class ImportController extends AbstractActionController
         if ($mode === 'preview') $temps .= "<span class='icon icon-checked'></span> Prévisualisation réalisée en ";
         if ($mode === 'import') $temps .= "<span class='icon icon-checked'></span> Importation réalisée en ";
         if ($temps === "") $temps .= "<span class='icon icon-checked'></span> Traitement réalisée en ";
-        $temps .= max(1,($fin-$debut)) . " seconde·s";
+        $temps .= max(1, ($fin - $debut)) . " seconde·s";
         $info[] = $temps;
 
         return ['fiches' => $fiches, 'error' => $error, 'warning' => $warning, 'info' => $info];
@@ -668,22 +752,30 @@ class ImportController extends AbstractActionController
     /** @return string[] */
     static public function explodeAndTrim(?string $listing, string $separateur = "\n"): array
     {
-        if ($listing === null) { return []; }
+        if ($listing === null) {
+            return [];
+        }
         $result = explode($separateur, $listing);
-        $result = array_map(function(string $s) { return trim($s); }, $result);
+        $result = array_map(function (string $s) {
+            return trim($s);
+        }, $result);
         return $result;
     }
 
-    public function createCodeFonction(string $codeFonction, array& $warning) : ?CodeFonction
+    public function createCodeFonction(string $codeFonction, array &$warning): ?CodeFonction
     {
-        $codeNiveauFonction = substr($codeFonction,0,4);
+        $codeNiveauFonction = substr($codeFonction, 0, 4);
         $fonction_ = $this->getNiveauFonctionService()->getNiveauFonctionByCode($codeNiveauFonction);
-        if ($fonction_ === null) { $warning[] = "Aucun niveau de fonction connu pour le code ".$codeNiveauFonction." le code fonction [$codeFonction] n'a pu être créé."; }
-        $codeFamilleProfessionnelle = substr($codeFonction,4);
+        if ($fonction_ === null) {
+            $warning[] = "Aucun niveau de fonction connu pour le code " . $codeNiveauFonction . " le code fonction [$codeFonction] n'a pu être créé.";
+        }
+        $codeFamilleProfessionnelle = substr($codeFonction, 4);
         $famille_ = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByCode($codeFamilleProfessionnelle);
-        if ($famille_ === null) { $warning[] = "Aucune famille professionnelle connue pour le code ".$codeFamilleProfessionnelle." le code fonction [$codeFonction] n'a pu être créé."; }
+        if ($famille_ === null) {
+            $warning[] = "Aucune famille professionnelle connue pour le code " . $codeFamilleProfessionnelle . " le code fonction [$codeFonction] n'a pu être créé.";
+        }
 
-        if ($fonction_ AND $famille_) {
+        if ($fonction_ and $famille_) {
             $code = new CodeFonction();
             $code->setNiveauFonction($fonction_);
             $code->setFamilleProfessionnelle($famille_);
