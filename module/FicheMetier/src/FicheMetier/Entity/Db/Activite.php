@@ -12,7 +12,7 @@ class Activite implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
     use HasReferenceTrait;
 
-    const ACTIVITE_HEADER_ID = 'Id_Activité';
+    const ACTIVITE_HEADER_ID = 'Id';
     const ACTIVITE_HEADER_LIBELLE = 'Libellé';
     const ACTIVITE_HEADER_DESCRIPTION = 'Description';
     const ACTIVITE_HEADER_CODES_EMPLOITYPE = 'Codes Emploi Type';

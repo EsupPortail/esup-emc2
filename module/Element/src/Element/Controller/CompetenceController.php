@@ -395,7 +395,7 @@ class CompetenceController extends AbstractActionController
                         }
                     }
                     if (!empty($ajoutFiches)) {
-                        $info[] = "La compétence [libelle: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Emploi Type).";
+                        $info[] = "La compétence [libellé: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Emploi Type).";
                     }
                     $codesFonction = explode('|', $competence->getCodesFonction() ?? "");
                     $codesFonction = array_map('trim', $codesFonction);
@@ -424,7 +424,7 @@ class CompetenceController extends AbstractActionController
                             }
                         }
                         if (!empty($ajoutFiches)) {
-                            $info[] = "La compétence [libelle: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Fonction).";
+                            $info[] = "La compétence [libellé: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Fonction).";
                         }
                     }
                 }

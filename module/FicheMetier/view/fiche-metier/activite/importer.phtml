@@ -103,7 +103,7 @@ $this->headTitle("Importation d'activité");
         <div class="alert alert-info">
             Le fichier csv doit être constitué des colonnes suivantes :
             <ul>
-                <li> <code><?php echo Activite::ACTIVITE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> Identifiant de l'activité dans le réféntiel</li>
+                <li> <code><?php echo Activite::ACTIVITE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> Identifiant de l'activité dans le référentiel</li>
                 <li> <code><?php echo Activite::ACTIVITE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> le libellé de l'activité</li>
 <!--                <li> <code>--><?php //echo Activite::ACTIVITE_HEADER_DESCRIPTION; ?><!--</code> la description de l'activité</li>-->
                 <li><code><?php echo Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE; ?></code> : la liste des codes des fiches métiers incluant l'activité,
@@ -112,7 +112,7 @@ $this->headTitle("Importation d'activité");
                 <?php endif; ?>
             </ul>
 
-            <u>Remarques :</u>
+            <strong><u>Remarques :</u></strong>
             <ul>
                 <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
                 <li>Les colonnes obligatoires sont désignées par <span class="icon icon-obligatoire"></span>.</li>

@@ -193,7 +193,7 @@ class ActiviteController extends AbstractActionController
                     $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
                 }
 
-                $array = $this->readCSV($filepath, true, ",");
+                $array = $this->readCSV($filepath, true, ";");
                 if (empty($array)) {
                     $warning[] = "Le fichier ne contient pas de données.";
                 } else {

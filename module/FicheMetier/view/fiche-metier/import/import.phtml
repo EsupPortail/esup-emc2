@@ -28,10 +28,6 @@ $canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
 
 $this->headTitle("Importation des fiches métiers");
 
-$formats = [
-        ImportController::FORMAT_REFERENS3 => 'Referens 3',
-        ImportController::FORMAT_RMFP => 'RMFP',
-];
 ?>
 
 <script xmlns="http://www.w3.org/1999/html">
@@ -106,7 +102,7 @@ $formats = [
                     </label>
                     <select class="selectpicker show-tick form-control" id="format" name="format">
                         <option value="">Sélectionnez un format</option>
-                        <?php foreach ($formats as $key => $libelle): ?>
+                        <?php foreach (ImportController::FORMATS as $key => $libelle): ?>
                             <option value="<?php echo $key; ?>"
                                     <?php if (isset($data["format"]) and $data["format"] == $key) : ?>
                                         selected

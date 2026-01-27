@@ -112,13 +112,11 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
     </div>
     <div class="col-md-6">
         <div class="alert alert-info">
-            <span class="icon icon-info"></span> <strong>À propos du format des imports de compétences.</strong>
-            <br>
             Vous pouvez importer vos compétences "normales" en même temps que vos compétences spécifiques si ces dernières peuvent être affectées au même référentiel.
             En revanche, si vous souhaitez qu'elles soient étiquetées "Référentiel Compétences Spécifiques" par exemple, vous devrez construire et importer deux fichiers différents en choisissant à chaque fois le bon référentiel.
             <br>
-            Pour construire votre fichier, respectez les colonnes suivantes.
-            L'importation ne tient pas compte de l'ordre des colonnes, mais du libellé exact (avec accent et majuscule) de celles-ci :
+            <br>
+            Le fichier csv doit être constitué des colonnes suivantes :
             <ul>
                 <li><code><?php echo Competence::COMPETENCE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> l'identifiant unique de la compétence,</li>
                 <li><code><?php echo Competence::COMPETENCE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> le libellé de la compétence,</li>
@@ -136,7 +134,8 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
 
             <u><strong>Remarques :</strong></u>
                 <ul>
-                    <li>Les colonnes obligatoires sont désignées par l'icone&nbsp;<span class="icon icon-obligatoire"></span>.</li>
+                    <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
+                    <li>Les colonnes obligatoires sont désignées par l'icône&nbsp;<span class="icon icon-obligatoire"></span>.</li>
                     <li>Le séparateur dans les listes est <code>|</code>. Par exemple la liste "Rigueur", "Rigoureux" et "Faire preuve de rigueur" sera représentée par <code>Rigueur|Rigoureux|Faire preuve de rigueur</code>.</li>
                     <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong></li>
                 </ul>

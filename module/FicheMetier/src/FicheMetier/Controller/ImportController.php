@@ -65,6 +65,13 @@ class ImportController extends AbstractActionController
 
     const FORMAT_RMFP = 'FORMAT_RMFP';
     const FORMAT_REFERENS3 = 'FORMAT_REFERENS3';
+    const FORMAT_EMC2 = 'FORMAT_EMC2';
+
+    const FORMATS = [
+        self::FORMAT_REFERENS3 => "Format associé à REFERENS3",
+        self::FORMAT_RMFP => "Format associé aux RMFP",
+        self::FORMAT_EMC2 => "Format interne",
+    ];
 
     // RMFP ///////////////////////////////////////////////////////////////////////////////////////
     const HEADER_RMFP_REFERENCE = "Code";

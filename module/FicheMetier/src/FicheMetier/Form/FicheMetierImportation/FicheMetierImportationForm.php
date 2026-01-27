@@ -51,10 +51,7 @@ class FicheMetierImportationForm extends Form {
                 'label' => 'Format du fichier  <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => 'Sélectionnez un format',
-                'value_options' => [
-                    ImportController::FORMAT_REFERENS3 => 'Format REFERENS3',
-                    ImportController::FORMAT_RMFP => 'Format RMFP',
-                ],
+                'value_options' => ImportController::FORMATS,
             ],
             'attributes' => [
                 'id' => 'format',
