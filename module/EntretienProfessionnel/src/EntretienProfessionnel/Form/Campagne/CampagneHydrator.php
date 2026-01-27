@@ -6,9 +6,11 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
+use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 
 class  CampagneHydrator implements HydratorInterface {
     use CampagneServiceAwareTrait;
+    use FormulaireServiceAwareTrait;
 
     /**
      * @param Campagne $object
@@ -23,6 +25,8 @@ class  CampagneHydrator implements HydratorInterface {
             'date_circulaire' => $object->getDateCirculaire()?$object->getDateCirculaire()->format('Y-m-d'):null,
             'date_en_poste' => $object->getDateEnPoste()?$object->getDateEnPoste()->format('Y-m-d'):null,
             'precede' => $object->getPrecede()?$object->getPrecede()->getId():null,
+            'formulaire_crep' => $object->getFormulaireCREP()?->getId(),
+            'formulaire_cref' => $object->getFormulaireCREF()?->getId(),
         ];
         return $data;
     }
@@ -45,12 +49,18 @@ class  CampagneHydrator implements HydratorInterface {
         if ($date_en_poste === false) $date_en_poste = null;
         $precede = (isset($data['precede']) AND $data['precede'] !== '')?$this->getCampagneService()->getCampagne($data['precede']):null;
 
+        $formulaireCrep = (isset($data['formulaire_crep']) AND $data['formulaire_crep'] !== "") ? $this->getFormulaireService()->getFormulaire($data['formulaire_crep']):null;
+        $formulaireCref = (isset($data['formulaire_cref']) AND $data['formulaire_cref'] !== "") ? $this->getFormulaireService()->getFormulaire($data['formulaire_cref']):null;
+
         $object->setAnnee($annee);
         $object->setDateDebut($date_debut);
         $object->setDateFin($date_fin);
         $object->setDateCirculaire($date_circulaire);
         $object->setDateEnPoste($date_en_poste);
         $object->setPrecede($precede);
+
+        $object->setFormulaireCREP($formulaireCrep);
+        $object->setFormulaireCREF($formulaireCref);
 
         return $object;
     }

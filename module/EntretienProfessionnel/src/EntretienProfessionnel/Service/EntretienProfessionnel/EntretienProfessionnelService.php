@@ -399,12 +399,14 @@ class EntretienProfessionnelService
      */
     public function initialiser(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
-        $entretien_instance = $this->getFormulaireInstanceService()->createInstance('CREP');
-        $formation_instance = $this->getFormulaireInstanceService()->createInstance('CREF');
+        $campagne = $entretien->getCampagne();
+        $crep = $campagne->getFormulaireCREP(); $cref = $campagne->getFormulaireCREF();
+        $entretien_instance = $this->getFormulaireInstanceService()->createInstance($crep->getCode());
+        $formation_instance = $this->getFormulaireInstanceService()->createInstance($cref->getCode());
         $entretien->setFormulaireInstance($entretien_instance);
         $entretien->setFormationInstance($formation_instance);
         $this->create($entretien);
-        $this->recopiePrecedent($entretien);
+        //$this->recopiePrecedent($entretien);
         return $entretien;
     }
 

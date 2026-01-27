@@ -18,8 +18,14 @@
             <join-column name="precede_id"/>
         </many-to-one>
 
-        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" mapped-by="campagne"
-                     field="entretiens"/>
+        <many-to-one target-entity="UnicaenAutoform\Entity\Db\Formulaire" field="formulaireCREP">
+            <join-column name="formulaire_crep_id"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenAutoform\Entity\Db\Formulaire" field="formulaireCREF">
+            <join-column name="formulaire_cref_id"/>
+        </many-to-one>
+
+        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" mapped-by="campagne" field="entretiens"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation" type="datetime" column="histo_creation"/>

@@ -9,10 +9,12 @@ use Laminas\Form\Element\Date;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 
 class CampagneForm extends Form
 {
     use CampagneServiceAwareTrait;
+    use FormulaireServiceAwareTrait;
 
     public function init(): void
     {
@@ -122,15 +124,55 @@ class CampagneForm extends Form
                 'data-live-search'  => 'true',
             ]
         ]);
+
+        /** Gestion du CREP et du CREF ********************************************************************************/
+
+        $this->add([
+            'name' => 'formulaire_crep',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Formulaire pour la partie CREP <span class="icon icon-obligatoire"></span> : ',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => "Sélectionner un formulaire ... ",
+                'value_options' => $this->getFormulaireService()->getFormulairesAsOptions(),
+            ],
+            'attributes' => [
+                'id'                => 'formulaire_crep',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ]
+        ]);
+        $this->add([
+            'name' => 'formulaire_cref',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Formulaire pour la partie CREF  <span class="icon icon-obligatoire"></span> : ',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => "Sélectionner un formulaire ... ",
+                'value_options' => $this->getFormulaireService()->getFormulairesAsOptions(),
+            ],
+            'attributes' => [
+                'id'                => 'formulaire_cref',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ]
+        ]);
+
+        /** Autre *****************************************************************************************************/
+
         //SUBMIT
         $this->add([
             'type' => Button::class,
             'name' => 'bouton',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -145,6 +187,8 @@ class CampagneForm extends Form
             'date_en_poste' =>   [  'required' => true,   ],
             'date_circulaire' =>   [  'required' => false,   ],
             'precede' =>    [  'required' => false,  ],
+            'formulaire_crep' =>    [  'required' => true,  ],
+            'formulaire_cref' =>    [  'required' => true,  ],
         ]));
     }
 }

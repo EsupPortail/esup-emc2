@@ -7,6 +7,7 @@ use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
+use UnicaenAutoform\Entity\Db\Formulaire;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -20,6 +21,9 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     private ?DateTime $dateCirculaire = null;
     private ?DateTime $dateEnPoste = null;
     private Collection $entretiens;
+
+    private ?Formulaire $formulaireCREP = null;
+    private ?Formulaire $formulaireCREF = null;
 
     public function getId() : ?int
     {
@@ -81,6 +85,26 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     public function getEntretiensProfessionnels() : array
     {
         return $this->entretiens->toArray();
+    }
+
+    public function getFormulaireCREP(): ?Formulaire
+    {
+        return $this->formulaireCREP;
+    }
+
+    public function setFormulaireCREP(?Formulaire $formulaireCREP): void
+    {
+        $this->formulaireCREP = $formulaireCREP;
+    }
+
+    public function getFormulaireCREF(): ?Formulaire
+    {
+        return $this->formulaireCREF;
+    }
+
+    public function setFormulaireCREF(?Formulaire $formulaireCREF): void
+    {
+        $this->formulaireCREF = $formulaireCREF;
     }
 
     /** prédicats *****************************************************************************************************/
