@@ -602,7 +602,7 @@ class CompetenceService
                     if ($competence->getType() !== $types[$item[$positionType]]) $info[] = "Mise à jour du type de la compétence [libellé:" . $competence->getLibelle() . "]";
                     if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $info[] = "Mise à jour du thème de la compétence [libellé:" . $competence->getLibelle() . "]";
                     if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $info[] = "Mise à jour de la discipline de la compétence [libellé:" . $competence->getLibelle() . "]";
-                    if ($positionSynonyme !== false and $competence->getSynonymes() !== (($item[$positionSynonyme] !== '') ? $item[$positionSynonyme] : null)) $info[] = "Mise à jour de la liste des synonymes de la compétence [libellé:" . $competence->getLibelle() . "]";
+//                    if ($positionSynonyme !== false and $competence->getSynonymes() !== (($item[$positionSynonyme] !== '') ? $item[$positionSynonyme] : null)) $info[] = "Mise à jour de la liste des synonymes de la compétence [libellé:" . $competence->getLibelle() . "]";
                     if ($positionDefinition !== false and $competence->getDescription() !== (($item[$positionDefinition] !== '') ? $item[$positionDefinition] : null)) $info[] = "Mise à jour de la définition de la compétence [libellé:" . $competence->getLibelle() . "]";
                 }
                 // obligatoire

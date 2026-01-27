@@ -373,8 +373,10 @@ class ImportController extends AbstractActionController
                     $famille->setPosition($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "");
                     $famille->setCorrespondance($specialite);
                 } else {
-                    if ($famille->getCorrespondance() !== $specialite) $warning[] = "La famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] n'a pas la spécialité connue par EMC2 [" . $famille->getCorrespondance()?->getCategorie() . "!=" . ($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? "") . "]";
-                    if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "")) $warning[] = "La famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] n'a pas la position connue par EMC2 [" . $famille->getPosition() . "!=" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "]";
+                    if ($famille->getCorrespondance() !== $specialite)
+                        $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? "") . "]. <br> Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
+                    if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? ""))
+                        $warning[] = "La position dans la spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getPosition() . " &ne; Fichier:" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "] <br> Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                 }
                 $fiche->setFamilleProfessionnelle($famille);
                 //Niveau de carriere
