@@ -141,38 +141,37 @@ $this->headTitle("Importation des fiches métiers");
     </div>
     <div class="col-md-6">
         <div class="alert alert-info">
-            Deux formats sont reconnus :
-            <ul>
-                <li> le format <code>REFERENS3</code></li>
-                <li> le format <code>RMFP</code></li>
+            <p>
+                Vous pouvez :
+                <ul>
+                <li>Importez vos fiches métiers via l'un des deux référentiels (Referens3 ou RMFP);</li>
+                <li>Importez vos fiches métiers via la trame EMC2 (référentiel maison).</li>
             </ul>
-            Pour les établissements avec un référentiel maison qui souhaiteraient importer les fiches métiers, choisir l’une des 2 trames proposées.
-            <br><br>
 
-            <strong><span class="icon icon-attention"></span> Remarques :</strong>
+            <p>
+
+            </p>
+
+            <strong><u>Remarques :</u></strong>
             <ul>
+                <li>Le fichier importé doit être enregistré en <strong style="color:red;">CSV UTF8</strong> (et non CSV).</li>
                 <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
                 <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
-                <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong>.</li>
-                <li>Pour <code>REFERENS3</code> le séparateur est <code>|</code>. </li>
-                <li>Pour <code>RMFP</code> le séparateur est le <em>saut de ligne</em>. </li>
-                <?php if ($displayCodeFonction) : ?>
-                    <li>La colonne <code>Code Fonction</code> peut être ajoutée aux deux trames vierges pour les renseigner lors de l'import.</li>
-                <?php endif; ?>
+                <li>Pour REFERENS3 le séparateur est <code>|</code>.</li>
+                <li>Pour RMFP le séparateur est le saut de ligne.</li>
             </ul>
 
-            <?php if ($displayCodeFonction) : ?>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3_codefonction.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp_codefonction.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
-            <?php else : ?>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
-            <?php endif; ?>
-            <br><br>
+<!--            --><?php //if ($displayCodeFonction) : ?>
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_referens3_codefonction.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>-->
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp_codefonction.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
+<!--            --><?php //else : ?>
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_referens3.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>-->
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
+<!--            --><?php //endif; ?>
             <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
                 <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>
             <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv">

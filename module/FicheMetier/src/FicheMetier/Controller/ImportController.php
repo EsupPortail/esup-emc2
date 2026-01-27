@@ -374,9 +374,9 @@ class ImportController extends AbstractActionController
                     $famille->setCorrespondance($specialite);
                 } else {
                     if ($famille->getCorrespondance() !== $specialite)
-                        $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? "") . "]. <br> Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
+                        $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                     if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? ""))
-                        $warning[] = "La position dans la spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getPosition() . " &ne; Fichier:" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "] <br> Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
+                        $warning[] = "La position dans la spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getPosition() . " &ne; Fichier:" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                 }
                 $fiche->setFamilleProfessionnelle($famille);
                 //Niveau de carriere
@@ -607,7 +607,7 @@ class ImportController extends AbstractActionController
                 }
                 if ($newFamille) $famille->setCorrespondance($specialite);
                 elseif ($famille->getCorrespondance() !== $specialite) {
-                    $warning[] = "La spécialité attaché à la famille professionnelle [" . $famille->getLibelle() . "] ne correspond pas à la spécialité connue.";
+                    $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                 }
 
                 //code fonction
