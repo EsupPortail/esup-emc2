@@ -24,6 +24,13 @@ $this->headTitle("Importation d'activité");
 
 ?>
 
+<script>
+    function reset() {
+        console.log('click');
+        window.location.href = "../activite/importer";
+    }
+</script>
+
 <h1 class="page-header">
     Importation d'activité
 </h1>
@@ -214,12 +221,6 @@ $this->headTitle("Importation d'activité");
         let valueMode = '<?php echo $data['mode']; ?>';
         $('select[name="mode"]').val(valueMode);
     <?php endif; ?>
-
-    $(function() {
-        $('#remove_file').on('click', function() {
-            window.location.href="../activite/importer";
-        });
-    })
 </script>
 
 <style>

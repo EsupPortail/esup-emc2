@@ -183,31 +183,33 @@ $this->headTitle("Importation des fiches métiers");
     </div>
 </div>
 
-<?php if (!empty($error)) : ?>
-    <div class="alert alert-danger">
-        <?php foreach ($error as $line): ?>
-            <?php echo $line ?>
-            <br>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<?php if ($data !== null) : ?>
+    <?php if (!empty($error)) : ?>
+        <div class="alert alert-danger">
+            <?php foreach ($error as $line): ?>
+                <?php echo $line ?>
+                <br>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-<?php if (!empty($info)) : ?>
-    <div class="alert alert-info">
-        <?php foreach ($info as $line): ?>
-            <?php echo $line ?>
-            <br>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+    <?php if (!empty($info)) : ?>
+        <div class="alert alert-info">
+            <?php foreach ($info as $line): ?>
+                <?php echo $line ?>
+                <br>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-<?php if (!empty($warning)) : ?>
-    <div class="alert alert-warning">
-        <?php foreach ($warning as $line): ?>
-            <?php echo $line ?>
-            <br>
-        <?php endforeach; ?>
-    </div>
+    <?php if (!empty($warning)) : ?>
+        <div class="alert alert-warning">
+            <?php foreach ($warning as $line): ?>
+                <?php echo $line ?>
+                <br>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?php foreach ($fiches as $fiche) : ?>

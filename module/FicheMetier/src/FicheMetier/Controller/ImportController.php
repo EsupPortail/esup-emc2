@@ -271,7 +271,7 @@ class ImportController extends AbstractActionController
                         $fiche->addMission($mission);
                     }
 
-                    // GESTION DES ACTIVITES ///////////////////////////////////////////////////////////////////////////
+                    // GESTION DES ACTIVITÉS ///////////////////////////////////////////////////////////////////////////
 
                     foreach ($activites as $activite) {
                         if ($activite->getActivite()->getId() === null) $this->getActiviteService()->create($activite->getActivite());
@@ -475,7 +475,13 @@ class ImportController extends AbstractActionController
 
 
                 /** COMPETENCES ***************************************************************************************/
-                $comptenceIds = explode("|", $raw[self::HEADER_REFERENS3_COMPETENCE] ?? "");
+
+                // NB : Le referentiel n'est pas cohérent ; le séparateur de compétence est le '|' ou ','.
+                // '|' est le séparateur que l'on a choisi. On va substituer ',' par '|'
+                $stringCompetenceIds = $raw[self::HEADER_REFERENS3_COMPETENCE] ?? "";
+                $stringCompetenceIds = str_replace(',', '|', $stringCompetenceIds);
+
+                $comptenceIds = explode("|", $stringCompetenceIds);
                 $dictionnaireFicheMetierCompetence = [];
                 $competences = $fiche->getCompetenceListe();
                 foreach ($competences as $competence) {
