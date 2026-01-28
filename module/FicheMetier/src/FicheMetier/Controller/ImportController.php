@@ -5,6 +5,7 @@ namespace FicheMetier\Controller;
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Carriere\Service\CorrespondanceType\CorrespondanceTypeServiceAwareTrait;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Carriere\Service\NiveauFonction\NiveauFonctionServiceAwareTrait;
@@ -17,12 +18,14 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
+use FicheMetier\Entity\Db\ThematiqueElement;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
@@ -34,6 +37,9 @@ use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
+use FicheMetier\Service\ThematiqueElement\ThematiqueElementServiceAwareTrait;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
+use Laminas\Form\Form;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Entity\Db\Referentiel;
@@ -54,6 +60,7 @@ class ImportController extends AbstractActionController
     use CompetenceElementServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
+    use CorrespondanceTypeServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
@@ -61,10 +68,13 @@ class ImportController extends AbstractActionController
     use MissionElementServiceAwareTrait;
     use NiveauServiceAwareTrait;
     use NiveauFonctionServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use TendanceElementServiceAwareTrait;
     use TendanceTypeServiceAwareTrait;
+    use ThematiqueElementServiceAwareTrait;
+    use ThematiqueTypeServiceAwareTrait;
 
     use FicheMetierImportationFormAwareTrait;
 
@@ -75,7 +85,7 @@ class ImportController extends AbstractActionController
     const FORMATS = [
         self::FORMAT_REFERENS3 => "Format associé à REFERENS3",
         self::FORMAT_RMFP => "Format associé aux RMFP",
-        self::FORMAT_EMC2 => "Format interne",
+        self::FORMAT_EMC2 => "Format interne à EMC2",
     ];
 
     // RMFP ///////////////////////////////////////////////////////////////////////////////////////
@@ -123,10 +133,12 @@ class ImportController extends AbstractActionController
     const HEADER_EMC2_RAISON = "Raison d'être";
     const HEADER_EMC2_MISSION = "Missions";
     const HEADER_EMC2_ACTIVITE = "Activités";
-
+    const HEADER_EMC2_NIVEAU_CARRIERE = "Niveau de carrière";
+    const HEADER_EMC2_SPECIALITE_TYPE = "Type de la spécialité";
+    const HEADER_EMC2_SPECIALITE_LIBELLE = "Libelle de la spécialité";
+    const HEADER_EMC2_SPECIALITE_CODE = "Code de la spécialité";
     const HEADER_EMC2_FAMILLE_LIBELLE = "Libellé de la famille professionnelle";
-    const HEADER_EMC2_FAMILLE_POSITION = "Position de la famille dans la spécialité";
-
+    const HEADER_EMC2_FAMILLE_POSITION = "Position de la famille professionnelle";
     const HEADER_EMC2_APPLICATION = "Identifiants applications";
     const HEADER_EMC2_COMPETENCE = "Identifiants compétences";
 
@@ -231,6 +243,8 @@ class ImportController extends AbstractActionController
                     $fiche->clearApplications();
                     $tendances = $fiche->getTendances();
                     $fiche->clearTendances();
+                    $thematiques = $fiche->getThematiques();
+                    $fiche->clearThematique();
 
                     // Il faut clear les elements pour permettre la création
                     $missions = $fiche->getMissions();
@@ -259,6 +273,13 @@ class ImportController extends AbstractActionController
                         else $this->getTendanceElementService()->update($tendance);
 
                         $fiche->addTendance($tendance);
+                    }
+                    foreach ($thematiques as $thematique) {
+                        $thematique->setFicheMetier($fiche);
+                        if ($thematique->getId() === null) $this->getThematiqueElementService()->create($thematique);
+                        else $this->getThematiqueElementService()->update($thematique);
+
+                        $fiche->addThematique($thematique);
                     }
 
                     // GESTION DES MISSIONS ////////////////////////////////////////////////////////////////////////////
@@ -334,7 +355,6 @@ class ImportController extends AbstractActionController
 //        }
 
         /** Préparation pour les niveaus de carrière */
-        $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
         /** Préparation pour les codes fonctions  */
         $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
 
@@ -362,6 +382,8 @@ class ImportController extends AbstractActionController
                 }
                 $raws[] = $item;
             }
+
+            $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
 
             foreach ($raws as $raw) {
                 // Intitulé + (domaine ...)
@@ -397,26 +419,10 @@ class ImportController extends AbstractActionController
                         $warning[] = "La position dans la spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getPosition() . " &ne; Fichier:" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                 }
                 $fiche->setFamilleProfessionnelle($famille);
-                //Niveau de carriere
-                $niveauCarriereId = (isset($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) and trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) !== '') ? trim($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]) : null;
-                if ($niveauCarriereId !== null) {
-                    if (isset($dictionnaireNiveauCarriere[$niveauCarriereId])) {
-                        $fiche->setNiveauCarriere($dictionnaireNiveauCarriere[$niveauCarriereId]);
-                    } else {
-                        $warning[] = "Aucun niveau de carrière de connue pour le niveau " . $niveauCarriereId . " " . ($raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE]) ?? "Colonne manquante [" . self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_CODE . "]";
-                    }
-                }
 
-                //code fonction
-                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) and trim($raw[self::HEADER_CODE_FONCTION]) !== '') ? trim($raw[self::HEADER_CODE_FONCTION]) : null;
-                if ($codeFonction !== null) {
-                    if (isset($dictionnaireCodeFonction[$codeFonction])) {
-                        $fiche->setCodeFonction($dictionnaireCodeFonction[$codeFonction]);
-                    } else {
-                        $code = $this->createCodeFonction($codeFonction, $warning);
-                        $fiche->setCodeFonction($code);
-                    }
-                }
+                $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU], $dictionnaireNiveauCarriere, $warning);
+                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION], $dictionnaireCodeFonction, $warning );
+
                 //code fonction
                 $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
                 $fiche->setCodesEmploiType($codesEmploiType);
@@ -633,16 +639,8 @@ class ImportController extends AbstractActionController
                     $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                 }
 
-                //code fonction
-                $codeFonction = (isset($raw[self::HEADER_CODE_FONCTION]) and trim($raw[self::HEADER_CODE_FONCTION]) !== '') ? trim($raw[self::HEADER_CODE_FONCTION]) : null;
-                if ($codeFonction !== null) {
-                    if (isset($dictionnaireCodeFonction[$codeFonction])) {
-                        $fiche->setCodeFonction($dictionnaireCodeFonction[$codeFonction]);
-                    } else {
-                        $code = $this->createCodeFonction($codeFonction, $warning);
-                        $fiche->setCodeFonction($code);
-                    }
-                }
+                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION], $dictionnaireCodeFonction, $warning );
+
                 //code fonction
                 $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
                 $fiche->setCodesEmploiType($codesEmploiType);
@@ -829,6 +827,14 @@ class ImportController extends AbstractActionController
             if (empty($error)) {
                 $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
                 $dictionnaireApplication = $this->getApplicationService()->generateDictionnaire();
+                $dictionnaireCompetence = $this->getCompetenceService()->generateCompleteDictionnaire();
+                $dictionnaireTendance = $this->getTendanceTypeService()->generateTendanceDictionnaire();
+                $dictionnaireThematique = $this->getThematiqueTypeService()->generateThematiqueDictionnaire();
+                $dictionnaireNiveauMaitrise = $this->getNiveauMaitriseService()->generateDictionnaire("Contexte et environnement de travail");
+                $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire('etiquette');
+                $dictionnaireFamille = $this->getFamilleProfessionnelleService()->generateDictionnaire('libelle');
+                $dictionnaireSpecialite = []; //$this->getCorrespondanceService()->generateDictionnaire('libelle');
+                $dictionnaireSpecialiteType = []; //$this->getCorrespondanceTypeService()->generateDictionnaire('code');
 
                 foreach ($raws as $raw) {
                     $fiche = new FicheMetier();
@@ -844,13 +850,16 @@ class ImportController extends AbstractActionController
                     if (isset($raw[ImportController::HEADER_CODE_EMPLOITYPE]) and trim($raw[ImportController::HEADER_CODE_EMPLOITYPE]) != '') {
                         $fiche->setCodesEmploiType(trim($raw[ImportController::HEADER_CODE_EMPLOITYPE]));
                     }
-
-
-
+                    $this->readNiveauCarriere($fiche, $raw[self::HEADER_EMC2_NIVEAU_CARRIERE], $dictionnaireNiveauCarriere, $warning);
+                    $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_EMC2, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                     $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION], "|", $referentiel);
                     $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE], "|", $referentiel);
-
                     $this->readApplications($fiche, $raw[self::HEADER_EMC2_APPLICATION], "|", $dictionnaireApplication, $warning);
+                    $this->readCompetences($fiche, $raw[self::HEADER_EMC2_COMPETENCE], "|", $dictionnaireCompetence, $warning);
+                    $this->readTendances($fiche, $raw, $dictionnaireTendance, $warning);
+                    $this->readThematiques($fiche, $raw, $dictionnaireThematique, $dictionnaireNiveauMaitrise, $warning);
+
+
 
                     $fiches[] = $fiche;
                 }
@@ -876,8 +885,61 @@ class ImportController extends AbstractActionController
         return $result;
     }
 
-    public function readFamilleProfessionnelle(): void
+    public function readFamilleProfessionnelle(FicheMetier &$fiche, array $raw, string $format, array &$dictionnaireFamille, array &$dictionnaireSpecialite,  array &$dictionnaireSpecialiteType,  array &$warning): void
     {
+        $HEADER_FAMILLE_LIBELLE = match ($format) {
+            ImportController::FORMAT_EMC2 => ImportController::HEADER_EMC2_FAMILLE_LIBELLE,
+            ImportController::FORMAT_REFERENS3 => ImportController::HEADER_REFERENS3_FAMILLE_LIBELLE,
+            ImportController::FORMAT_RMFP => ImportController::HEADER_RMFP_FAMILLE,
+            default => null,
+        };
+        $HEADER_FAMILLE_POSITION = match ($format) {
+            ImportController::FORMAT_EMC2 => ImportController::HEADER_EMC2_FAMILLE_POSITION,
+            ImportController::FORMAT_REFERENS3 => ImportController::HEADER_REFERENS3_FAMILLE_POSITION,
+            default => null,
+        };
+
+        $HEADER_SPECIALITE_TYPE = match ($format) {
+            ImportController::FORMAT_EMC2 => ImportController::HEADER_EMC2_SPECIALITE_TYPE,
+            ImportController::FORMAT_REFERENS3 => "BAP",
+            ImportController::FORMAT_RMFP => "DF",
+            default => null,
+        };
+        $HEADER_SPECIALITE_LIBELLE = match ($format) {
+            ImportController::FORMAT_EMC2 => ImportController::HEADER_EMC2_SPECIALITE_LIBELLE,
+            ImportController::FORMAT_REFERENS3 => ImportController::HEADER_REFERENS3_SPECIALITE_LIBELLE,
+            ImportController::FORMAT_RMFP => ImportController::HEADER_RMFP_SPECIALITE,
+            default => null,
+        };
+        $HEADER_SPECIALITE_CODE = match ($format) {
+            ImportController::FORMAT_EMC2 => ImportController::HEADER_EMC2_SPECIALITE_CODE,
+            ImportController::FORMAT_REFERENS3 => ImportController::HEADER_REFERENS3_SPECIALITE_CODE,
+            ImportController::FORMAT_RMFP => ImportController::HEADER_RMFP_SPECIALITE,
+            default => null,
+        };
+
+        $famille = $dictionnaireFamille[$raw[$HEADER_FAMILLE_LIBELLE]]??null;
+        if ($famille === null) {
+            $famille = new FamilleProfessionnelle();
+            $famille->setLibelle($raw[$HEADER_FAMILLE_LIBELLE] ?? "");
+            $famille->setPosition($raw[$HEADER_FAMILLE_POSITION] ?? null);
+
+            $specialiteType = $raw[$HEADER_SPECIALITE_TYPE]??null;
+            $specialiteCode = $raw[$HEADER_SPECIALITE_CODE]??null;
+            $specialiteLibelle = $raw[$HEADER_SPECIALITE_LIBELLE]??null;
+
+            $specialite = $dictionnaireSpecialite[$specialiteCode]??null;
+            if ($specialite === null) {
+
+            }
+
+
+
+            $warning[] = "La création de famille professionnelle n'est pas encore implémenté";
+        } else {
+            $fiche->setFamilleProfessionnelle($famille);
+        }
+
 //        $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_EMC2_FAMILLE_LIBELLE] ?? "");
 //        if ($famille === null) {
 //            $famille = new FamilleProfessionnelle();
@@ -891,6 +953,14 @@ class ImportController extends AbstractActionController
 //                $warning[] = "La position dans la spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getPosition() . " &ne; Fichier:" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
 //        }
 //        $fiche->setFamilleProfessionnelle($famille);
+    }
+
+    public function readNiveauCarriere(FicheMetier &$fiche, string $data, array &$dictionnaireNiveauCarriere, array &$warning): void
+    {
+        $niveau = $dictionnaireNiveauCarriere[trim($data)]??null;
+        if ($niveau === null) $warning[] = "Le niveau de carrière [".$data."] est inconnu";
+        $fiche->setNiveauCarriere($niveau);
+
     }
 
     public function readMissions(FicheMetier &$fiche, string $data, string $separator, Referentiel $referentiel): void
@@ -951,6 +1021,7 @@ class ImportController extends AbstractActionController
                 $code = $this->createCodeFonction($codeFonction, $warning);
                 $fiche->setCodeFonction($code);
             }
+            $fiche->setFamilleProfessionnelle($fiche->getCodeFonction()->getFamilleProfessionnelle());
         }
     }
 
@@ -998,6 +1069,75 @@ class ImportController extends AbstractActionController
                 } else {
                     $warning[] = "[" . $applicationId . "] application non trouvée.";
                 }
+            }
+        }
+    }
+
+    // pour le moment cela ne sera compatible qu'avec le format EMC2
+    public function readCompetences(FicheMetier &$fiche, string $data, string $separator, array &$dictionnaireCompetence, array &$warning): void
+    {
+        $competenceIds = explode($separator, $data);
+        $dictionnaireFicheMetierCompetence = [];
+        $competences = $fiche->getCompetenceListe();
+        foreach ($competences as $competence) {
+            $dictionnaireFicheMetierCompetence[$competence->getCompetence()->getId()] = $competence;
+        }
+        $fiche->clearCompetences();
+        foreach ($competenceIds as $competenceId) {
+            if (isset($dictionnaireFicheMetierCompetence[$competenceId])) {
+                $fiche->addCompetenceElement($dictionnaireFicheMetierCompetence[$competenceId]);
+            } else {
+                $competence = $dictionnaireCompetence[$competenceId] ?? null;
+                if ($competence !== null) {
+                    $element = new CompetenceElement();
+                    $element->setCompetence($competence);
+                    $fiche->addCompetenceElement($element);
+                } else {
+                    $warning[] = "[" . $competenceId . "] compétence non trouvée.";
+                }
+            }
+        }
+    }
+
+    public function readTendances(FicheMetier &$fiche, array $raw, array &$dictionnaireTendance, array &$warning): void
+    {
+        $tendances = $fiche->getTendances();
+        foreach ($tendances as $tendance) {
+            $dictionnaireFicheMetierTendance[$tendance->getType()->getLibelle()] = $tendance;
+        }
+        foreach ($dictionnaireTendance as $libelle => $type) {
+            if (isset($raw[$libelle])) {
+                if (isset($dictionnaireFicheMetierTendance[$libelle])) {
+                    $element = $dictionnaireFicheMetierTendance[$libelle];
+                } else {
+                    $type = $dictionnaireTendance[$libelle];
+                    $element = new TendanceElement();
+                    $element->setType($type);
+                }
+                $element->setTexte($raw[$libelle]);
+                $fiche->addTendance($element);
+            }
+        }
+    }
+
+    public function readThematiques(FicheMetier &$fiche, array $raw, array &$dictionnaireThematique, array &$dictionnaireNiveau, array &$warning): void
+    {
+        $thematiques = $fiche->getThematiques();
+        foreach ($thematiques as $thematique) {
+            $dictionnaireFicheMetierThematique[$thematique->getType()->getLibelle()] = $thematique;
+        }
+        foreach ($dictionnaireThematique as $libelle => $type) {
+            if (isset($raw[$libelle])) {
+                if (isset($dictionnaireFicheMetierThematique[$libelle])) {
+                    $element = $dictionnaireFicheMetierThematique[$libelle];
+                } else {
+                    $type = $dictionnaireThematique[$libelle];
+                    $element = new ThematiqueElement();
+                    $element->setType($type);
+                }
+                $niveau = $dictionnaireNiveau[$raw[$libelle]];
+                $element->setNiveauMaitrise($niveau);
+                $fiche->addThematique($element);
             }
         }
     }

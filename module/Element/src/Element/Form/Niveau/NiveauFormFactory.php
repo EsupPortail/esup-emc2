@@ -2,7 +2,7 @@
 
 namespace Element\Form\Niveau;
 
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -18,14 +18,14 @@ class NiveauFormFactory {
     public function __invoke(ContainerInterface $container) : NiveauForm
     {
         /**
-         * @var NiveauService $NiveauService
+         * @var NiveauMaitriseService $NiveauService
          * @var NiveauHydrator $NiveauHydrator
          */
-        $NiveauService = $container->get(NiveauService::class);
+        $NiveauService = $container->get(NiveauMaitriseService::class);
         $NiveauHydrator = $container->get('HydratorManager')->get(NiveauHydrator::class);
 
         $form = new NiveauForm();
-        $form->setNiveauService($NiveauService);
+        $form->setNiveauMaitriseService($NiveauService);
         $form->setHydrator($NiveauHydrator);
         return $form;
     }

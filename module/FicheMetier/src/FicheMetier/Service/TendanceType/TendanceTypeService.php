@@ -99,5 +99,16 @@ class TendanceTypeService
         return $result;
     }
 
+    public function generateTendanceDictionnaire(): array
+    {
+        $dictionnaire = [];
+        $types = $this->getTendancesTypes();
+
+        foreach ($types as $type) {
+            $dictionnaire[$type->getLibelle()] = $type;
+        }
+        return $dictionnaire;
+    }
+
     /** FACADE ********************************************************************************************************/
 }

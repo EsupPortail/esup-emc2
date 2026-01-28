@@ -15,7 +15,7 @@
 
         <field name="complement"     type="text"                     column="complement"      nullable="true"  />
 
-        <many-to-one target-entity="Element\Entity\Db\Niveau"  field="niveau">
+        <many-to-one target-entity="Element\Entity\Db\NiveauMaitrise"  field="niveau">
             <join-column name="niveau_id" referenced-column-name="id"/>
         </many-to-one>
         

@@ -7,7 +7,7 @@ use Application\Entity\Db\Traits\HasDescriptionTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Niveau implements HistoriqueAwareInterface, HasDescriptionInterface {
+class NiveauMaitrise implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;
     use HasDescriptionTrait;
 

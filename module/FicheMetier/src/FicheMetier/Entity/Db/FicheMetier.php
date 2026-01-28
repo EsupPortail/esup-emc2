@@ -206,9 +206,9 @@ class FicheMetier implements
     {
         $thematiques = [];
         /** @var ThematiqueElement $thematique */
-        foreach ($this->thematiques as $tendance) {
+        foreach ($this->thematiques as $thematique) {
             if ($thematique->estNonHistorise()) {
-                $thematique[$thematique->getType()->getCode()] = $thematique;
+                $thematiques[$thematique->getType()->getCode()] = $thematique;
             }
         }
         return $thematiques;

@@ -13,8 +13,8 @@ use Element\Form\SelectionNiveau\SelectionNiveauFormFactory;
 use Element\Form\SelectionNiveau\SelectionNiveauHydrator;
 use Element\Form\SelectionNiveau\SelectionNiveauHydratorFactory;
 use Element\Provider\Privilege\NiveauPrivileges;
-use Element\Service\Niveau\NiveauService;
-use Element\Service\Niveau\NiveauServiceFactory;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -204,7 +204,7 @@ return [
 
     'service_manager' => [
         'factories' => [
-            NiveauService::class => NiveauServiceFactory::class,
+            NiveauMaitriseService::class => NiveauMaitriseServiceFactory::class,
         ],
     ],
     'controllers'     => [

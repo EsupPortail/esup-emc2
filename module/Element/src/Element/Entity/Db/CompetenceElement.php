@@ -3,17 +3,17 @@
 namespace Element\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Element\Entity\Db\Interfaces\HasNiveauInterface;
-use Element\Entity\Db\Traits\HasNiveauTrait;
+use Element\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
+use Element\Entity\Db\Traits\HasNiveauMaitriseTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class CompetenceElement implements HistoriqueAwareInterface, HasValidationsInterface, HasNiveauInterface {
+class CompetenceElement implements HistoriqueAwareInterface, HasValidationsInterface, HasNiveauMaitriseInterface {
     use HistoriqueAwareTrait;
     use HasValidationsTrait;
-    use HasNiveauTrait;
+    use HasNiveauMaitriseTrait;
 
     private ?int $id = null;
     private ?Competence $competence = null;

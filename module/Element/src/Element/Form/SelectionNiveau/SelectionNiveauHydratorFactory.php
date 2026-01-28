@@ -2,7 +2,7 @@
 
 namespace Element\Form\SelectionNiveau;
 
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -18,12 +18,12 @@ class SelectionNiveauHydratorFactory {
     public function __invoke(ContainerInterface $container): SelectionNiveauHydrator
     {
         /**
-         * @var NiveauService $niveauService
+         * @var NiveauMaitriseService $niveauService
          */
-        $niveauService = $container->get(NiveauService::class);
+        $niveauService = $container->get(NiveauMaitriseService::class);
 
         $hydrator = new SelectionNiveauHydrator();
-        $hydrator->setNiveauService($niveauService);
+        $hydrator->setNiveauMaitriseService($niveauService);
         return $hydrator;
     }
 }

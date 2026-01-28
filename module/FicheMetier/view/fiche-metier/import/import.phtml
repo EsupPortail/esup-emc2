@@ -222,6 +222,7 @@ $this->headTitle("Importation des fiches métiers");
                 <?php endif; ?>
             </div>
             <div class="col-md-4">
+                <?php if ($fiche->getNiveauCarriere()): ?> <strong>Niveau de carrière</strong> <?php echo $fiche->getNiveauCarriere()->getLibelle(); ?> <?php endif; ?><br>
                 <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <?php endif; ?><br>
                 <?php if ($fiche->getCodesEmploiType()): ?> <strong>Codes emploi type</strong> <?php echo $fiche->getCodesEmploiType(); ?> <?php endif; ?><br>
             </div>
@@ -282,5 +283,14 @@ $this->headTitle("Importation des fiches métiers");
         <?php echo $tendance->getTexte(); ?>
         <br>
     <?php endforeach; ?>
+
+        <?php foreach ($fiche->getThematiques() as $thematique) : ?>
+            <strong><?php echo $thematique->getType()->getLibelle(); ?></strong>
+            <?php echo $thematique->getNiveauMaitrise()->getLibelle(); ?>
+            <?php if ($thematique->getComplement()) : ?>
+                <br> <?php echo $thematique->getComplement(); ?>
+            <?php endif; ?>
+            <br>
+        <?php endforeach; ?>
     </div>
 <?php endforeach; ?>

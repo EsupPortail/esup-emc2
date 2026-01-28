@@ -4,6 +4,7 @@ namespace FicheMetier\Controller;
 
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Correspondance\CorrespondanceService;
+use Carriere\Service\CorrespondanceType\CorrespondanceTypeService;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\NiveauFonction\NiveauFonctionService;
@@ -12,6 +13,7 @@ use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceType\CompetenceTypeService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\Activite\ActiviteService;
 use FicheMetier\Service\ActiviteElement\ActiviteElementService;
@@ -22,6 +24,8 @@ use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
+use FicheMetier\Service\ThematiqueElement\ThematiqueElementService;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -49,6 +53,7 @@ class ImportControllerFactory
          * @var CompetenceTypeService $competenceTypeService
          * @var CategorieService $categorieService
          * @var CorrespondanceService $correspondanceService
+         * @var CorrespondanceTypeService $correspondanceTypeService
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelService
          * @var FicheMetierService $ficheMetierService
@@ -57,10 +62,13 @@ class ImportControllerFactory
          * @var MissionElementService $missionElementService
          * @var NiveauService $niveauService
          * @var NiveauFonctionService $niveauFonctionService
+         * @var NiveauMaitriseService $niveauMaitriseService
          * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
          * @var TendanceElementService $tendanceElementService
          * @var TendanceTypeService $tendanceTypeService
+         * @var ThematiqueElementService $thematiqueElementService
+         * @var ThematiqueTypeService $thematiqueTypeService
          */
         $activiteService = $container->get(ActiviteService::class);
         $activiteElementService = $container->get(ActiviteElementService::class);
@@ -71,6 +79,7 @@ class ImportControllerFactory
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
+        $correspondanceTypeService = $container->get(CorrespondanceTypeService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -79,10 +88,13 @@ class ImportControllerFactory
         $missionElementService = $container->get(MissionElementService::class);
         $niveauService = $container->get(NiveauService::class);
         $niveauFonctionService = $container->get(NiveauFonctionService::class);
+        $niveauMaitriseService = $container->get(NiveauMaitriseService::class);
         $parametreService = $container->get(ParametreService::class);
         $referentielService = $container->get(ReferentielService::class);
         $tendanceElementService = $container->get(TendanceElementService::class);
         $tendanceTypeService = $container->get(TendanceTypeService::class);
+        $thematiqueElementService = $container->get(ThematiqueElementService::class);
+        $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
         /**
          * @var FicheMetierImportationForm $ficheMetierImportationForm
@@ -99,6 +111,7 @@ class ImportControllerFactory
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCorrespondanceService($correspondanceService);
+        $controller->setCorrespondanceTypeService($correspondanceTypeService);
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);
         $controller->setFicheMetierService($ficheMetierService);
@@ -107,10 +120,13 @@ class ImportControllerFactory
         $controller->setMissionElementService($missionElementService);
         $controller->setNiveauService($niveauService);
         $controller->setNiveauFonctionService($niveauFonctionService);
+        $controller->setNiveauMaitriseService($niveauMaitriseService);
         $controller->setParametreService($parametreService);
         $controller->setReferentielService($referentielService);
         $controller->setTendanceElementService($tendanceElementService);
         $controller->setTendanceTypeService($tendanceTypeService);
+        $controller->setThematiqueElementService($thematiqueElementService);
+        $controller->setThematiqueTypeService($thematiqueTypeService);
         $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
 
         return $controller;

@@ -16,6 +16,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
 ?>
 
+<div class="card bg-default" style="padding: 1rem; padding-bottom: 0;">
 <dl class="row">
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-5"> Niveau de fonction</dt>
@@ -181,3 +182,4 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
         <?php endif; ?>
     </dd>
 </dl>
+</div>

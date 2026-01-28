@@ -1,63 +1,58 @@
 <?php
 
-namespace Element\Service\Niveau;
+namespace Element\Service\NiveauMaitrise;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Element\Entity\Db\Niveau;
+use Element\Entity\Db\NiveauMaitrise;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
-class NiveauService
+class NiveauMaitriseService
 {
     use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(Niveau $maitrise): Niveau
+    public function create(NiveauMaitrise $maitrise): void
     {
         $this->getObjectManager()->persist($maitrise);
         $this->getObjectManager()->flush($maitrise);
-        return $maitrise;
     }
 
-    public function update(Niveau $maitrise): Niveau
+    public function update(NiveauMaitrise $maitrise): void
     {
         $this->getObjectManager()->flush($maitrise);
-        return $maitrise;
     }
 
-    public function historise(Niveau $maitrise): Niveau
+    public function historise(NiveauMaitrise $maitrise): void
     {
         $maitrise->historiser();
         $this->getObjectManager()->flush($maitrise);
-        return $maitrise;
     }
 
-    public function restore(Niveau $maitrise): Niveau
+    public function restore(NiveauMaitrise $maitrise): void
     {
         $maitrise->dehistoriser();
         $this->getObjectManager()->flush($maitrise);
-        return $maitrise;
     }
 
-    public function delete(Niveau $maitrise): Niveau
+    public function delete(NiveauMaitrise $maitrise): void
     {
         $this->getObjectManager()->remove($maitrise);
         $this->getObjectManager()->flush($maitrise);
-        return $maitrise;
     }
 
     /** QUERY *********************************************************************************************************/
 
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getObjectManager()->getRepository(Niveau::class)->createQueryBuilder('maitrise');
+        $qb = $this->getObjectManager()->getRepository(NiveauMaitrise::class)->createQueryBuilder('maitrise');
         return $qb;
     }
 
-    /** @return Niveau[] */
+    /** @return NiveauMaitrise[] */
     public function getMaitrisesNiveaux(string $type = "", string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false): array
     {
         $qb = $this->createQueryBuilder()
@@ -84,7 +79,7 @@ class NiveauService
         return $options;
     }
 
-    public function getMaitriseNiveau(?int $id): ?Niveau
+    public function getMaitriseNiveau(?int $id): ?NiveauMaitrise
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -98,14 +93,14 @@ class NiveauService
         return $result;
     }
 
-    public function getRequestedMaitriseNiveau(AbstractActionController $controller, string $param = 'maitrise'): ?Niveau
+    public function getRequestedMaitriseNiveau(AbstractActionController $controller, string $param = 'maitrise'): ?NiveauMaitrise
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getMaitriseNiveau($id);
         return $result;
     }
 
-    public function getMaitriseNiveauByNiveau(string $type, int $niveau): ?Niveau
+    public function getMaitriseNiveauByNiveau(string $type, int $niveau): ?NiveauMaitrise
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('maitrise.niveau = :niveau')
@@ -119,4 +114,20 @@ class NiveauService
         }
         return $result;
     }
+
+    /** FACADE  *******************************************************************************************************/
+
+    /** @return NiveauMaitrise[] */
+    public function generateDictionnaire(string $type ): array
+    {
+        $niveaux = $this->getMaitrisesNiveaux($type);
+        $dictionnaire = [];
+        foreach ($niveaux as $niveau) {
+            $dictionnaire[$niveau->getLibelle()] = $niveau;
+        }
+
+        return $dictionnaire;
+    }
+
+
 }

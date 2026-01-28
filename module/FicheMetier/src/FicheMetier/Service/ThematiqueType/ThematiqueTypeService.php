@@ -99,5 +99,16 @@ class ThematiqueTypeService
         return $result;
     }
 
+    public function generateThematiqueDictionnaire(): array
+    {
+        $dictionnaire = [];
+        $types = $this->getThematiquesTypes();
+
+        foreach ($types as $type) {
+            $dictionnaire[$type->getLibelle()] = $type;
+        }
+        return $dictionnaire;
+    }
+
     /** FACADE ********************************************************************************************************/
 }

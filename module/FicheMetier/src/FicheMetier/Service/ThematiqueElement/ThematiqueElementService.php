@@ -5,7 +5,7 @@ namespace FicheMetier\Service\ThematiqueElement;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Element\Entity\Db\Niveau;
+use Element\Entity\Db\NiveauMaitrise;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\ThematiqueElement;
 use FicheMetier\Entity\Db\ThematiqueType;
@@ -123,7 +123,7 @@ class ThematiqueElementService
 
     /** FACADE ********************************************************************************************************/
 
-    public function createOrUpdate(FicheMetier $ficheMetier, ThematiqueType $thematiqueType, Niveau $niveau, ?string $complement): void
+    public function createOrUpdate(FicheMetier $ficheMetier, ThematiqueType $thematiqueType, NiveauMaitrise $niveau, ?string $complement): void
     {
         $element = $this->getThematiqueElementByFicheMetierAndThematiqueType($ficheMetier, $thematiqueType);
         if ($element === null) {

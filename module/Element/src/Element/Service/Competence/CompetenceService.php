@@ -79,7 +79,7 @@ class CompetenceService
         return $qb;
     }
 
-    /** Competence[] */
+    /** @return Competence[] */
     public function getCompetences(bool $withHisto = false, string $champ = 'libelle', string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
@@ -455,6 +455,16 @@ class CompetenceService
         return $dictionnaire;
     }
 
+    public function generateCompleteDictionnaire(): array
+    {
+        $dictionnaire = [];
+
+        $competences = $this->getCompetences();
+        foreach ($competences as $competence) {
+            $dictionnaire[$competence->generateTag()] = $competence;
+        }
+        return $dictionnaire;
+    }
 
     public function import(string $filepath, Referentiel $referentiel, string $mode, array &$info, array &$warning, array &$error): array
     {

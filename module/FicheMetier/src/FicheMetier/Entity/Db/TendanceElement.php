@@ -2,8 +2,6 @@
 
 namespace FicheMetier\Entity\Db;
 
-use Element\Entity\Db\Interfaces\HasNiveauInterface;
-use Element\Entity\Db\Traits\HasNiveauTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 

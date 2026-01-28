@@ -13,11 +13,10 @@ use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Request;
-use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
@@ -30,7 +29,7 @@ class ElementController extends AbstractActionController
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use NiveauServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
     use CompetenceElementFormAwareTrait;
@@ -235,7 +234,7 @@ class ElementController extends AbstractActionController
                         }
                     }
                 } else {
-                    $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau']);
+                    $niveau = $this->getNiveauMaitriseService()->getMaitriseNiveau($data['niveau']);
                     $clef = (isset($data['clef']) and $data['clef'] === "1");
                     foreach ($data['application'] as $applicationId) {
                         $application = $this->getApplicationService()->getApplication($applicationId);
@@ -329,7 +328,7 @@ class ElementController extends AbstractActionController
                         }
                     }
                 } else {
-                    $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau']);
+                    $niveau = $this->getNiveauMaitriseService()->getMaitriseNiveau($data['niveau']);
                     $clef = (isset($data['clef']) and $data['clef'] === "1");
                     foreach ($data['competence'] as $competenceId) {
                         $competence = $this->getCompetenceService()->getCompetence($competenceId);

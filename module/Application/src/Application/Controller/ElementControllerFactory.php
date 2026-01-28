@@ -10,7 +10,7 @@ use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -31,7 +31,7 @@ class ElementControllerFactory {
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
          * @var FicheMetierService $ficheMetierService
-         * @var NiveauService $niveauService
+         * @var NiveauMaitriseService $niveauMaitriseService
          */
         $agentService = $container->get(AgentService::class);
         $applicationService = $container->get(ApplicationService::class);
@@ -39,7 +39,7 @@ class ElementControllerFactory {
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $niveauService = $container->get(NiveauService::class);
+        $niveauMaitriseService = $container->get(NiveauMaitriseService::class);
 
         /**
          * @var ApplicationElementForm $applicationElementForm
@@ -57,7 +57,7 @@ class ElementControllerFactory {
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setNiveauService($niveauService);
+        $controller->setNiveauMaitriseService($niveauMaitriseService);
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);
         $controller->setSelectionNiveauForm($selectionMaitriseForm);

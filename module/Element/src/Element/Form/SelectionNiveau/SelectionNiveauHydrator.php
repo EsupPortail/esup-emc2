@@ -2,15 +2,15 @@
 
 namespace Element\Form\SelectionNiveau;
 
-use Element\Entity\Db\Interfaces\HasNiveauInterface;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class SelectionNiveauHydrator implements HydratorInterface {
-    use NiveauServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
 
     /**
-     * @param HasNiveauInterface $object
+     * @param HasNiveauMaitriseInterface $object
      * @return array
      */
     public function extract($object): array
@@ -24,12 +24,12 @@ class SelectionNiveauHydrator implements HydratorInterface {
 
     /**
      * @param array $data
-     * @param HasNiveauInterface $object
-     * @return HasNiveauInterface
+     * @param HasNiveauMaitriseInterface $object
+     * @return HasNiveauMaitriseInterface
      */
     public function hydrate(array $data, $object): object
     {
-        $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau'] ?? null);
+        $niveau = $this->getNiveauMaitriseService()->getMaitriseNiveau($data['niveau'] ?? null);
         $object->setNiveauMaitrise($niveau);
 
         if (isset($data['clef'])) {

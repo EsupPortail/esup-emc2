@@ -2,17 +2,14 @@
 
 namespace Element\Form\Niveau;
 
-use Element\Entity\Db\Niveau;
+use Element\Entity\Db\NiveauMaitrise;
 use Laminas\Hydrator\HydratorInterface;
 
 class NiveauHydrator implements HydratorInterface {
 
-    /**
-     * @param Niveau $object
-     * @return array
-     */
     public function extract($object): array
     {
+        /** @var NiveauMaitrise $object */
         $data = [
             'libelle' => $object->getLibelle(),
             'niveau' => $object->getNiveau(),
@@ -22,11 +19,6 @@ class NiveauHydrator implements HydratorInterface {
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param Niveau $object
-     * @return Niveau
-     */
     public function hydrate(array $data, $object) : object
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
@@ -34,6 +26,7 @@ class NiveauHydrator implements HydratorInterface {
         $type = (isset($data['type']))?$data['type']:null;
         $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
 
+        /** @var NiveauMaitrise $object */
         $object->setLibelle($libelle);
         $object->setType($type);
         $object->setNiveau($niveau);

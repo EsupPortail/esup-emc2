@@ -16,7 +16,6 @@ use Element\Service\CompetenceDiscipline\CompetenceDisciplineServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -42,7 +41,6 @@ class CompetenceController extends AbstractActionController
     use FicheMetierServiceAwareTrait;
     use GradeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
-    use NiveauServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -55,16 +53,9 @@ class CompetenceController extends AbstractActionController
     public function indexAction(): ViewModel
     {
         $types = $this->getCompetenceTypeService()->getCompetencesTypes(false, 'ordre');
-//        $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
-//        $niveaux = $this->getNiveauService()->getMaitrisesNiveaux('Compétence', 'niveau', 'ASC', true);
-//        $array = $this->getCompetenceService()->getCompetencesByTypes();
 
         return new ViewModel([
             'types' => $types,
-//            'competencesByType' => $array,
-//            'themes' => $themes,
-
-//            'niveaux' => $niveaux,
         ]);
     }
 

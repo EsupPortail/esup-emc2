@@ -3,8 +3,7 @@
 namespace Element\Service\CompetenceElement;
 
 use Doctrine\ORM\EntityManager;
-use Element\Service\Competence\CompetenceService;
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -21,14 +20,14 @@ class CompetenceElementServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
-         * @var NiveauService $niveauService
+         * @var NiveauMaitriseService $niveauService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $niveauService = $container->get(NiveauService::class);
+        $niveauService = $container->get(NiveauMaitriseService::class);
 
         $service = new CompetenceElementService();
         $service->setObjectManager($entityManager);
-        $service->setNiveauService($niveauService);
+        $service->setNiveauMaitriseService($niveauService);
         return $service;
     }
 }

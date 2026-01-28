@@ -2,19 +2,19 @@
 
 namespace Element\Entity\Db\Traits;
 
-use Element\Entity\Db\Niveau;
+use Element\Entity\Db\NiveauMaitrise;
 
-trait HasNiveauTrait {
+trait HasNiveauMaitriseTrait {
 
-    private ?Niveau $niveau = null;
+    private ?NiveauMaitrise $niveau = null;
     private bool $clef = false;
 
-    public function getNiveauMaitrise(): ?Niveau
+    public function getNiveauMaitrise(): ?NiveauMaitrise
     {
         return $this->niveau;
     }
 
-    public function setNiveauMaitrise(?Niveau $niveau): void
+    public function setNiveauMaitrise(?NiveauMaitrise $niveau): void
     {
         $this->niveau = $niveau;
     }

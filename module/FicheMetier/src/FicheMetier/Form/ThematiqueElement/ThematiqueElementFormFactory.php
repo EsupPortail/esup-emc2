@@ -2,7 +2,7 @@
 
 namespace FicheMetier\Form\ThematiqueElement;
 
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -17,14 +17,14 @@ class ThematiqueElementFormFactory
     public function __invoke(ContainerInterface $container): ThematiqueElementForm
     {
         /**
-         * @var NiveauService $niveauService
+         * @var NiveauMaitriseService $niveauService
          * @var ThematiqueElementHydrator $thematiqueElementHydrator
          */
-        $niveauService = $container->get(NiveauService::class);
+        $niveauService = $container->get(NiveauMaitriseService::class);
         $thematiqueElementHydrator = $container->get('HydratorManager')->get(ThematiqueElementHydrator::class);
 
         $form = new ThematiqueElementForm();
-        $form->setNiveauService($niveauService);
+        $form->setNiveauMaitriseService($niveauService);
         $form->setHydrator($thematiqueElementHydrator);
         return $form;
     }

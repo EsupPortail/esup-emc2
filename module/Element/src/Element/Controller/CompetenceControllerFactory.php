@@ -11,7 +11,6 @@ use Element\Service\CompetenceDiscipline\CompetenceDisciplineService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
-use Element\Service\Niveau\NiveauService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
@@ -43,7 +42,6 @@ class CompetenceControllerFactory
          * @var FicheMetierService $ficherMetierService
          * @var GradeService $gradeService
          * @var MissionPrincipaleService $missionPrincipaleService
-         * @var NiveauService $maitriseNiveauService
          * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
          * @var StructureService $structureService
@@ -51,7 +49,6 @@ class CompetenceControllerFactory
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceDisciplineService = $container->get(CompetenceDisciplineService::class);
-        $maitriseNiveauService = $container->get(NiveauService::class);
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -81,7 +78,6 @@ class CompetenceControllerFactory
         $controller->setFicheMetierService($ficherMetierService);
         $controller->setGradeService($gradeService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
-        $controller->setNiveauService($maitriseNiveauService);
         $controller->setParametreService($parametreService);
         $controller->setStructureService($structureService);
         $controller->setCompetenceForm($competenceForm);

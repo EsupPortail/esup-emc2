@@ -8,13 +8,13 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
 class CompetenceElementService
 {
-    use NiveauServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
     use ProvidesObjectManager;
 
     /** Gestion des entites ***************************************************************************************/
@@ -108,13 +108,12 @@ class CompetenceElementService
             ->join('agent.competences', 'competenceelement')->addSelect('fcompetenceelement')
             ->join('agent.competences', 'fcompetenceelement')->addSelect('fcompetenceelement')
             ->join('fcompetenceelement.competence', 'competence')->addSelect('competence')
-            ->join('fcompetenceelement.niveau', 'niveau')->addSelect('niveau')
-    ;
+            ->join('fcompetenceelement.niveau', 'niveau')->addSelect('niveau');
 
         foreach ($criteria as $criterion) {
             $competence = $criterion['competence'];
             $operateur = $criterion['operateur'];
-            $niveau = $this->getNiveauService()->getMaitriseNiveau(($criterion['niveau'] !== '')?$criterion['niveau']:null);
+            $niveau = $this->getNiveauMaitriseService()->getMaitriseNiveau(($criterion['niveau'] !== '') ? $criterion['niveau'] : null);
 
             $qb = $qb->andWhere('fcompetenceelement.competence = :competence')->setParameter('competence', $competence);
             if ($operateur !== null && $niveau !== null) {

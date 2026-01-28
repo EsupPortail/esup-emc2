@@ -8,7 +8,6 @@ use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\ApplicationTheme\ApplicationThemeService;
-use Element\Service\Niveau\NiveauService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -30,14 +29,12 @@ class ApplicationControllerFactory {
          * @var ApplicationElementService $applicationElementService
          * @var AgentService $agentService
          * @var FicheMetierService $ficheMetierService
-         * @var NiveauService $maitriseNiveauService
          */
         $applicationService = $container->get(ApplicationService::class);
         $applicationGroupeService = $container->get(ApplicationThemeService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
         $agentService = $container->get(AgentService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $maitriseNiveauService = $container->get(NiveauService::class);
 
         /**
          * @var ApplicationForm $applicationForm
@@ -52,7 +49,6 @@ class ApplicationControllerFactory {
         $controller->setApplicationElementService($applicationElementService);
         $controller->setAgentService($agentService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setNiveauService($maitriseNiveauService);
         $controller->setApplicationForm($applicationForm);
         $controller->setApplicationElementForm($applicationElementForm);
         return $controller;
