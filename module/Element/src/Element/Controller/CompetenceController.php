@@ -373,7 +373,9 @@ class CompetenceController extends AbstractActionController
                     foreach ($codesFicheMetier as $codeFicheMetier) {
                         $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                         if ($fichemetier === null) {
-                            $warning[] = "La fiche metier [" . $referentiel->getLibelleCourt() . "|" . $codeFicheMetier . "] n'existe pas";
+                            $message  = "Aucune fiche métier identifiée ". $codeFicheMetier ." dans le référentiel <span class='badge' style='background:".$referentiel->getCouleur()."'>" . $referentiel->getLibelleCourt() . "</span>. ";
+                            $message .= "La Compétence \"".$competence->getLibelle()."\" " . $competence->printReference() . " ne sera pas ajoutée.";
+                            $warning[] = $message;
                         } else {
                             if (!$fichemetier->hasCompetence($competence)) {
                                 $element = new CompetenceElement();
@@ -386,7 +388,7 @@ class CompetenceController extends AbstractActionController
                         }
                     }
                     if (!empty($ajoutFiches)) {
-                        $info[] = "La compétence [libellé: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Emploi Type).";
+                        $info[] = "La compétence \"".$competence->getLibelle()."\" ".$competence->printReference()." a été ajoutée aux fiches métiers suivantes ".implode(', ', $ajoutFiches)." (colonne Codes Emploi Type).";
                     }
                     $codesFonction = explode('|', $competence->getCodesFonction() ?? "");
                     $codesFonction = array_map('trim', $codesFonction);
@@ -397,7 +399,9 @@ class CompetenceController extends AbstractActionController
                     foreach ($codesFonction as $codeFonction) {
                         $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                         if ($codeFonction_ === null) {
-                            $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas.";
+                            $message  = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
+                            $message .= "La compétence \"".$competence->getLibelle()."\" " . $competence->printReference() . " ne peut pas être ajoutée.";
+                            $warning[] = $message;
                         } else {
                             $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                             if (empty($fichesmetiers)) {
@@ -415,10 +419,11 @@ class CompetenceController extends AbstractActionController
                             }
                         }
                         if (!empty($ajoutFiches)) {
-                            $info[] = "La compétence [libellé: ".$competence->getLiblle()."] a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Fonction).";
+                            $info[] = "La compétence \"".$competence->getLibelle()."\" ".$competence->printReference()." a été ajoutée aux fiches métiers suivantes ".implode(", ", $ajoutFiches)." (colonne Codes Fonction).";
                         }
                     }
                 }
+                $info= array_merge(["Importation terminée."], $info);
             }
         }
 

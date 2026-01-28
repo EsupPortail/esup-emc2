@@ -14,6 +14,7 @@ use Element\Service\CompetenceElement\CompetenceElementService;
 use FicheMetier\Form\MissionPrincipale\MissionPrincipaleForm;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -40,6 +41,7 @@ class MissionPrincipaleControllerFactory
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var FicheMetierService $ficheMetierService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var MissionElementService $missionElementService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          * @var ParametreService $parametreService
          * @var ReferentielService $referentielService
@@ -51,6 +53,7 @@ class MissionPrincipaleControllerFactory
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $missionElementService = $container->get(MissionElementService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
         $parametreService = $container->get(ParametreService::class);
         $referentielService = $container->get(ReferentielService::class);
@@ -78,6 +81,7 @@ class MissionPrincipaleControllerFactory
         $controller->setFamilleProfessionnelleService($familleProfessionnelleService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
+        $controller->setMissionElementService($missionElementService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setParametreService($parametreService);
         $controller->setReferentielService($referentielService);

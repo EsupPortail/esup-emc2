@@ -3,6 +3,7 @@
 namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Carriere\Service\CorrespondanceType\CorrespondanceTypeServiceAwareTrait;
@@ -930,7 +931,11 @@ class ImportController extends AbstractActionController
 
             $specialite = $dictionnaireSpecialite[$specialiteCode]??null;
             if ($specialite === null) {
-
+                $specialite = new Correspondance();
+                $specialite->setCategorie($HEADER_SPECIALITE_CODE);
+                $specialite->setLibelleLong($HEADER_SPECIALITE_LIBELLE);
+                $specialite->setLibelleCourt($HEADER_SPECIALITE_LIBELLE);
+                $specialite->setType($dictionnaireSpecialiteType[$specialiteType]??null);
             }
 
 

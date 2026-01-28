@@ -413,12 +413,13 @@ class MissionPrincipaleController extends AbstractActionController
                     }
 
                     if ($mode === 'import') {
+                        $info[] = "Importation terminée.";
 
                         /** @var Mission $mission */
                         foreach ($missions as $mission) {
-                            if ($mission->getId() !== null) {
-                                $info[] = "La mission " . $mission->printReference() . " existe déjà et sera mise à jour";
-                            }
+//                            if ($mission->getId() !== null) {
+//                                $info[] = "La mission " . $mission->printReference() . " existe déjà et sera mise à jour";
+//                            }
                             //famille professionnelle
                             foreach ($mission->getFamillesProfessionnelles() as $famille) {
                                 $exist = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($famille->getLibelle());
@@ -442,11 +443,13 @@ class MissionPrincipaleController extends AbstractActionController
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                 if ($fichemetier === null) {
-                                    $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$mission->getCodesFicheMetier() . "</span> n&apos;existe pas";
+                                    $message  = "Aucune fiche métier identifiée ". $codeFicheMetier ." dans le référentiel <span class='badge' style='background:".$referentiel->getCouleur()."'>" . $referentiel->getLibelleCourt() . "</span>. ";
+                                    $message .= "La mission principale \"".$mission->getLibelle()."\" " . $mission->printReference() . " ne sera pas ajoutée.";
+                                    $warning[] = $message;
                                 } else {
                                     if (!$fichemetier->hasMission($mission)) {
                                         $this->getMissionElementService()->addMissionElement($fichemetier,$mission);
-                                        $info[] = "Ajout de la mission " . $mission->printReference() . " a été ajouté à la fiche metier [" . $fichemetier->getReference() . "]";
+                                        $info[] = "La mission \"".$mission->getLibelle()."\" " . $mission->printReference() . " a été ajoutée à la fiche métier \"". $fichemetier->getLibelle() . "\" " . $fichemetier->printReference() ;
                                     }
                                 }
                             }
@@ -458,16 +461,18 @@ class MissionPrincipaleController extends AbstractActionController
                             foreach ($codesFonction as $codeFonction) {
                                 $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                 if ($codeFonction_ === null) {
-                                    $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale " . $mission->printReference() . " ne sera ajoutée à aucune fiche métier.";
+                                    $message  = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
+                                    $message .= "La mission principale \"".$mission->getLibelle()."\" " . $mission->printReference() . " ne peut pas être ajoutée.";
+                                    $warning[] = $message;
                                 } else {
                                     $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                     if (empty($fichesmetiers)) {
-                                        $warning[] = "Aucune fiche métier utilise le code fonction <code>" . $codeFonction . "</code> ; la compétence ne sera ajoutée à aucune fiche métier.";
+                                        $warning[] = "Aucune fiche métier utilise le code fonction <code>" . $codeFonction . "</code> ; la mission principale ne sera ajoutée à aucune fiche métier.";
                                     }
                                     foreach ($fichesmetiers as $fichemetier) {
                                         if (!$fichemetier->hasMission($mission)) {
                                             $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
-                                            $info[] = "Ajout de la mission [" . $mission->getReference() . "] a été ajouté à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                            $info[] = "La mission \"".$mission->getLibelle() . "\" ". $mission->printReference() ." a été ajoutée à la fiche métier \"". $fichemetier->getLibelle() . "\" " . $fichemetier->printReference() ;
                                         }
                                     }
                                 }

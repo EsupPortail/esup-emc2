@@ -225,7 +225,7 @@ class MissionPrincipaleService
 
         /* NIVEAUX ***************************************************************************************************/
         if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
-            $niveau = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
+            $niveau = explode(":", $json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
             if (count($niveau) === 1) {
                 $niv = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
                 if ($niv === null) {
@@ -248,6 +248,10 @@ class MissionPrincipaleService
                 }
                 if ($inf !== null and $sup !== null) {
                     $niveau_ = new NiveauEnveloppe();
+                    if ($inf->getNiveau() > $sup->getNiveau()) {
+                        $niveau_->setBorneInferieure($sup);
+                        $niveau_->setBorneSuperieure($inf);
+                    }
                     $niveau_->setBorneInferieure($inf);
                     $niveau_->setBorneSuperieure($sup);
                     $mission->setNiveau($niveau_);

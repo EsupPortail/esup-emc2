@@ -30,24 +30,22 @@ $this->headTitle('Importation de missions principales');
 </script>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <h1 class="page-header">
             Importation de missions principales
         </h1>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction() */ ?>
         <a href="<?php echo $this->url('mission-principale') ?>"
-           class="btn btn-secondary">
+           class="btn btn-secondary float-end">
             <span class="icon icon-listing"></span>
             Accéder aux missions principales
         </a>
     </div>
 </div>
 
-<!-- Explications ----------------------------------------------------------------------------------------------------->
-
-<!-- Formulaire ------------------------------------------------------------------------------------------------------->
+<br>
 
 <div class="row">
     <div class="col-md-6">
@@ -165,10 +163,6 @@ $this->headTitle('Importation de missions principales');
 <?php endif; ?>
 <?php if (isset($warning) and !empty($warning)) : ?>
     <div class="alert alert-warning">
-        <strong>
-            <span class="icon icon-attention"></span> <?php echo count($warning); ?> avertissement·s
-        </strong>
-        <br>
         <?php foreach ($warning as $line): ?>
             <?php echo $line; ?><br>
         <?php endforeach; ?>
@@ -188,7 +182,77 @@ $this->headTitle('Importation de missions principales');
 
 <!-- Résultats -------------------------------------------------------------------------------------------------------->
 
-<?php foreach ($missions as $mission) : ?>
-    <?php /** @see \FicheMetier\View\Helper\MissionPrincipaleViewHelper */ ?>
-    <?php echo $this->missionPrincipale($mission, ['display-source' => false]); ?>
-<?php endforeach; ?>
+<table class="table table-condensed" id="missions">
+    <thead>
+        <tr>
+            <th class="col-md-2"> Libellé </th>
+            <th class="col-md-2"> Description </th>
+            <th class="col-md-2"> Compléments </th>
+            <th class="col-md-2"> Code </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($missions as $mission) : ?>
+        <tr>
+            <td>
+                <?php echo $mission->getLibelle(); ?> <br>
+                <?php echo $mission->printReference(); ?>
+            </td>
+            <td>
+                <?php echo $mission->getDescription()??"-"; ?>
+            </td>
+            <td>
+                <strong>Familles professionnelles </strong>
+                <?php if (!empty($mission->getFamillesProfessionnelles())) : ?>
+                    <ul>
+                    <?php foreach ($mission->getFamillesProfessionnelles() as $professionnel) : ?>
+                        <li><?php echo $professionnel->getLibelle(); ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php else : ?>
+                    <span class="missing-data"> Aucune famille professionnelle </span>
+                <?php endif; ?>
+                <br>
+                <strong>Niveau de carrière </strong>
+                <?php if ($mission->getNiveau()) : ?>
+                    <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
+                <?php else : ?>
+                    <span class="missing-data"> Aucune niveau </span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($mission->getCodesFicheMetier()) : ?>
+                    <?php $codes = explode($separateur, $mission->getCodesFicheMetier()); ?>
+                    <strong>Codes Emploi-Types :</strong>
+                    <ul>
+                        <?php foreach ($codes as $code) : ?>
+                            <li> <?php echo $code; ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                <?php if ($displayCodeFonction AND $mission->getCodesFonction()) : ?>
+                    <?php $codes = explode($separateur, $mission->getCodesFonction()); ?>
+                    <strong>Codes Fonctions :</strong>
+                    <ul>
+                        <?php foreach ($codes as $code) : ?>
+                            <li> <?php echo $code; ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $('table#missions').DataTable({
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+        });
+    });
+</script>
+

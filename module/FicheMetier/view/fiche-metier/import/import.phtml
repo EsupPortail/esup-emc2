@@ -47,13 +47,15 @@ $this->headTitle("Importation des fiches métiers");
         <?php if ($canFicheMetier) : ?>
             <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
-               class="btn btn-secondary">
+               class="btn btn-secondary float-end">
                 <span class="icon icon-listing"></span>
                 Accéder aux fiches métiers
             </a>
         <?php endif; ?>
     </div>
 </div>
+
+<br>
 
 <div class="row">
     <div class="col-md-6">

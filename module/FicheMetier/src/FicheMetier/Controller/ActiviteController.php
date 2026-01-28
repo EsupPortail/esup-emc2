@@ -236,6 +236,8 @@ class ActiviteController extends AbstractActionController
                         //  Importation ////////////////////////////////////////////////////////////////////////////////
                         if ($mode === 'import') {
 
+                            $info[] = "Importation terminée.";
+
                             foreach ($activites as $activite) {
 
                                 // Entity Management ///////////////////////////////////////////////////////////////////
@@ -245,8 +247,6 @@ class ActiviteController extends AbstractActionController
                                     $this->getActiviteService()->update($activite);
                                 }
 
-
-                                // TODO Factoriser  ////////////////////////////////////////////////////////////////////
                                 // Gestion des codes emploi type ///////////////////////////////////////////////////////
                                 $codesFicheMetier = explode($separateur, $activite->getCodesFicheMetier() ?? "");
                                 $codesFicheMetier = array_map('trim', $codesFicheMetier);
@@ -256,16 +256,17 @@ class ActiviteController extends AbstractActionController
                                 foreach ($codesFicheMetier as $codeFicheMetier) {
                                     $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                     if ($fichemetier === null) {
-                                        $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$activite->getCodesFicheMetier() . "</span> n&apos;existe pas";
+                                        $message  = "Aucune fiche métier identifiée ". $codeFicheMetier ." dans le référentiel <span class='badge' style='background:".$referentiel->getCouleur()."'>" . $referentiel->getLibelleCourt() . "</span>. ";
+                                        $message .= "L'activité \"".$activite->getLibelle()."\" " . $activite->printReference() . " ne sera pas ajoutée.";
+                                        $warning[] = $message;
                                     } else {
                                         if (!$fichemetier->hasActivite($activite)) {
                                             $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                            $info[] = "Ajout de l'activité " . $activite->printReference() . " à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                            $info[] = "L'activité \"" . $activite->getLibelle() . "\" " . $activite->printReference() . "a été ajoutée à la fiche métier \"".$fichemetier->getLibelle() ."\" " . $fichemetier->printReference();
                                         }
                                     }
                                 }
 
-                                // TODO Factoriser  ////////////////////////////////////////////////////////////////////
                                 // Gestion des codes fonction //////////////////////////////////////////////////////////
                                 $codesFonction = explode('|', $activite->getCodesFonction() ?? "");
                                 $codesFonction = array_map('trim', $codesFonction);
@@ -275,7 +276,9 @@ class ActiviteController extends AbstractActionController
                                 foreach ($codesFonction as $codeFonction) {
                                     $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                     if ($codeFonction_ === null) {
-                                        $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale " . $activite->printReference() . " ne sera ajoutée à aucune fiche métier.";
+                                        $message  = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
+                                        $message .= "L'activité \"".$activite->getLibelle()."\" " . $activite->printReference() . " ne peut pas être ajoutée.";
+                                        $warning[] = $message;
                                     } else {
                                         $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                         if (empty($fichesmetiers)) {
@@ -284,14 +287,12 @@ class ActiviteController extends AbstractActionController
                                         foreach ($fichesmetiers as $fichemetier) {
                                             if (!$fichemetier->hasActivite($activite)) {
                                                 $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                                $info[] = "Ajout de l'activité ".$activite->printReference()." à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                                $info[] = "L'activité \"". $activite->getLibelle() . "\" " . $activite->printReference()."a été ajoutée à la fiche métier \"".$fichemetier->getLibelle() ."\" " . $fichemetier->printReference();
                                             }
                                         }
                                     }
                                 }
-                                //traitement des codes ...
                             }
-
                         }
                     }
                 }
