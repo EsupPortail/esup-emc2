@@ -421,8 +421,8 @@ class ImportController extends AbstractActionController
                 }
                 $fiche->setFamilleProfessionnelle($famille);
 
-                $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU], $dictionnaireNiveauCarriere, $warning);
-                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION], $dictionnaireCodeFonction, $warning );
+                $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]??null, $dictionnaireNiveauCarriere, $warning);
+                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION]??null, $dictionnaireCodeFonction, $warning );
 
                 //code fonction
                 $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
@@ -640,7 +640,7 @@ class ImportController extends AbstractActionController
                     $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                 }
 
-                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION], $dictionnaireCodeFonction, $warning );
+                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION]??null, $dictionnaireCodeFonction, $warning );
 
                 //code fonction
                 $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
@@ -960,7 +960,7 @@ class ImportController extends AbstractActionController
 //        $fiche->setFamilleProfessionnelle($famille);
     }
 
-    public function readNiveauCarriere(FicheMetier &$fiche, string $data, array &$dictionnaireNiveauCarriere, array &$warning): void
+    public function readNiveauCarriere(FicheMetier &$fiche, ?string $data, array &$dictionnaireNiveauCarriere, array &$warning): void
     {
         $niveau = $dictionnaireNiveauCarriere[trim($data)]??null;
         if ($niveau === null) $warning[] = "Le niveau de carrière [".$data."] est inconnu";
@@ -968,7 +968,7 @@ class ImportController extends AbstractActionController
 
     }
 
-    public function readMissions(FicheMetier &$fiche, string $data, string $separator, Referentiel $referentiel): void
+    public function readMissions(FicheMetier &$fiche, ?string $data, string $separator, Referentiel $referentiel): void
     {
         $readMissions = explode($separator, $data);
         $missions = $fiche->getMissions();
@@ -1016,7 +1016,7 @@ class ImportController extends AbstractActionController
         }
     }
 
-    public function readCodeFonction(FicheMetier &$fiche, string $data, array &$dictionnaireCodeFonction, array &$warning): void
+    public function readCodeFonction(FicheMetier &$fiche, ?string $data, array &$dictionnaireCodeFonction, array &$warning): void
     {
         $codeFonction = (isset($data) and trim($data) !== '') ? trim($data) : null;
         if ($codeFonction !== null) {
