@@ -10,5 +10,5 @@ interface HasReferenceInterface
     public function setReferentiel(?Referentiel $referentiel): void;
     public function getReference(): ?string;
     public function setReference(?string $reference): void;
-    public function printReference(bool $withHTML = true): string;
+    public function printReference(): string;
 }

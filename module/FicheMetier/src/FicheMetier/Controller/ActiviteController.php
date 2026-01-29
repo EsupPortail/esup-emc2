@@ -7,6 +7,7 @@ use Exception;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Form\Activite\ActiviteFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
@@ -17,6 +18,8 @@ use Laminas\View\Model\ViewModel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ActiviteController extends AbstractActionController
 {
@@ -25,7 +28,9 @@ class ActiviteController extends AbstractActionController
     use CodeFonctionServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
     use ReferentielServiceAwareTrait;
+    use UserServiceAwareTrait;
     use ActiviteFormAwareTrait;
 
     public function indexAction(): ViewModel
@@ -237,8 +242,12 @@ class ActiviteController extends AbstractActionController
                         if ($mode === 'import') {
 
                             $info[] = "Importation terminée.";
+                            $role = $this->getUserService()->getConnectedRole();
+                            $allowed = $this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_AFFICHER, $role);
 
+                            $a=1;
                             foreach ($activites as $activite) {
+
 
                                 // Entity Management ///////////////////////////////////////////////////////////////////
                                 if ($activite->getId() === null) {
@@ -256,13 +265,19 @@ class ActiviteController extends AbstractActionController
                                 foreach ($codesFicheMetier as $codeFicheMetier) {
                                     $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                     if ($fichemetier === null) {
-                                        $message  = "Aucune fiche métier identifiée ". $codeFicheMetier ." dans le référentiel <span class='badge' style='background:".$referentiel->getCouleur()."'>" . $referentiel->getLibelleCourt() . "</span>. ";
+                                        $message  = "Aucune fiche métier identifiée ". $codeFicheMetier ." dans le référentiel ";
+                                        $message .= "<span class='badge' style='background:".$referentiel->getCouleur()."'>" . $referentiel->getLibelleCourt() . "</span>";
+                                        $message .= ". ";
                                         $message .= "L'activité \"".$activite->getLibelle()."\" " . $activite->printReference() . " ne sera pas ajoutée.";
                                         $warning[] = $message;
                                     } else {
                                         if (!$fichemetier->hasActivite($activite)) {
                                             $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                            $info[] = "L'activité \"" . $activite->getLibelle() . "\" " . $activite->printReference() . "a été ajoutée à la fiche métier \"".$fichemetier->getLibelle() ."\" " . $fichemetier->printReference();
+                                            $message = "L'activité \"" . $activite->getLibelle() . "\" " . $activite->printReference() . "a été ajoutée à la fiche métier \"".$fichemetier->getLibelle() ."\" ";
+                                            if ($allowed) $message .= "<a target='_blank' href='".$this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true)."'>";
+                                            $message .= $fichemetier->printReference();
+                                            if ($allowed) $message .= "</a>";
+                                            $info[] = $message;
                                         }
                                     }
                                 }

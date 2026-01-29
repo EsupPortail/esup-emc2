@@ -12,6 +12,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class ActiviteControllerFactory
 {
@@ -27,7 +29,9 @@ class ActiviteControllerFactory
          * @var CodeFonctionService $codeFonctionService
          * @var FicheMetierService $ficheMetierService
          * @var ParametreService $parametreService
+         * @var PrivilegeService $privilegeService
          * @var ReferentielService $referentielService
+         * @var UserService $userService
          * @var ActiviteForm $activiteForm
          */
         $activiteService = $container->get(ActiviteService::class);
@@ -35,7 +39,9 @@ class ActiviteControllerFactory
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $parametreService = $container->get(ParametreService::class);
+        $privilegeService = $container->get(PrivilegeService::class);
         $referentielService = $container->get(ReferentielService::class);
+        $userService = $container->get(UserService::class);
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
 
         $controller = new ActiviteController();
@@ -44,7 +50,9 @@ class ActiviteControllerFactory
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setParametreService($parametreService);
+        $controller->setPrivilegeService($privilegeService);
         $controller->setReferentielService($referentielService);
+        $controller->setUserService($userService);
         $controller->setActiviteForm($activiteForm);
         return $controller;
     }
