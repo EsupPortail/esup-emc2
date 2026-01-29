@@ -110,4 +110,27 @@ class Referentiel implements HistoriqueAwareInterface
     {
         return "<span class='badge' style='background:".$this->getCouleur()."'>".$this->getLibelleCourt()."</span> ". $this->getLibelleLong();
     }
+
+    /** Les modes sont : modal, lien **/
+    public function printReference(?string $mode = null, ?string $url = null, bool $isAllowed = true): string
+    {
+        $label  = ($this->getLibelleCourt()??"Aucun référentiel");
+        $span = "<span class='badge' style='background:".($this->getCouleur()??"grey")."'>" . $label . "</span>";
+
+        if ($isAllowed AND $mode !== null) {
+            if ($mode === 'modal') {
+                $texte  = "<a href='" . $url . "' class='ajax-modal'>";
+                $texte .= $span;
+                $texte .= "</a>";
+                return $texte;
+            }
+            if ($mode === 'lien') {
+                $texte  = "<a href='" . $url . "' target='_blank'> ";
+                $texte .= $span;
+                $texte .= "</a>";
+                return $texte;
+            }
+        }
+        return $span;
+    }
 }

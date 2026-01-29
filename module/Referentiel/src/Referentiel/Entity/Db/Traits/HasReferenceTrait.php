@@ -38,15 +38,20 @@ trait HasReferenceTrait
         $label .= ($this->getReference()??"Aucune référence");
         $span = "<span class='badge' style='background:".($referentiel?$referentiel->getCouleur():"grey")."'>" . $label . "</span>";
 
-        if (!$isAllowed OR $mode === null) {
-            return $span;
-        } else {
-            return "TODO";
+        if ($isAllowed AND $mode !== null) {
+            if ($mode === 'modal') {
+                $texte  = "<a href='" . $url . "' class='ajax-modal'>";
+                $texte .= $span;
+                $texte .= "</a>";
+                return $texte;
+            }
+            if ($mode === 'lien') {
+                $texte  = "<a href='" . $url . "' target='_blank'> ";
+                $texte .= $span;
+                $texte .= "</a>";
+                return $texte;
+            }
         }
-
-        $texte  = "<span class='badge' style='background:".($referentiel?$referentiel->getCouleur():"grey")."'>";
-        $texte .= $label;
-        $texte .= "</span>";
-        return $texte;
+        return $span;
     }
 }

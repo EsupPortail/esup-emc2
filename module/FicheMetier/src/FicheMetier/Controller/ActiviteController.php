@@ -7,6 +7,7 @@ use Exception;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Form\Activite\ActiviteFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Provider\Privilege\ActivitePrivileges;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
@@ -15,6 +16,7 @@ use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Referentiel\Provider\Privilege\ReferentielPrivileges;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -243,9 +245,11 @@ class ActiviteController extends AbstractActionController
 
                             $info[] = "Importation terminée.";
                             $role = $this->getUserService()->getConnectedRole();
-                            $allowed = $this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_AFFICHER, $role);
+                            $allowedActivite = $this->getPrivilegeService()->checkPrivilege(ActivitePrivileges::ACTIVITE_AFFICHER, $role);
+                            $allowedFicheMetier = $this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_AFFICHER, $role);
+                            $allowedReferentiel = $this->getPrivilegeService()->checkPrivilege(ReferentielPrivileges::REFERENTIEL_AFFICHER, $role);
 
-                            $a=1;
+                            $a = 1;
                             foreach ($activites as $activite) {
 
 
@@ -265,18 +269,20 @@ class ActiviteController extends AbstractActionController
                                 foreach ($codesFicheMetier as $codeFicheMetier) {
                                     $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                     if ($fichemetier === null) {
-                                        $message  = "Aucune fiche métier identifiée ". $codeFicheMetier ." dans le référentiel ";
-                                        $message .= "<span class='badge' style='background:".$referentiel->getCouleur()."'>" . $referentiel->getLibelleCourt() . "</span>";
+                                        $message  = "Aucune fiche métier identifiée " . $codeFicheMetier . " dans le référentiel ";
+                                        $message .= $referentiel?$referentiel->printReference("lien",$this->url()->fromRoute("referentiel", [], [], true),$allowedReferentiel):"<span class='badge' style='background: grey;'>Aucun référentiel</span>";
                                         $message .= ". ";
-                                        $message .= "L'activité \"".$activite->getLibelle()."\" " . $activite->printReference() . " ne sera pas ajoutée.";
+                                        $message .= "L'activité \"" . $activite->getLibelle() . "\" ";
+                                        $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                        $message .= " ne sera pas ajoutée.";
                                         $warning[] = $message;
                                     } else {
                                         if (!$fichemetier->hasActivite($activite)) {
                                             $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                            $message = "L'activité \"" . $activite->getLibelle() . "\" " . $activite->printReference() . "a été ajoutée à la fiche métier \"".$fichemetier->getLibelle() ."\" ";
-                                            if ($allowed) $message .= "<a target='_blank' href='".$this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true)."'>";
-                                            $message .= $fichemetier->printReference();
-                                            if ($allowed) $message .= "</a>";
+                                            $message = "L'activité \"" . $activite->getLibelle() . "\" ";
+                                            $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                            $message .= " a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
+                                            $message .= $fichemetier->printReference("lien", $this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true), $allowedFicheMetier);
                                             $info[] = $message;
                                         }
                                     }
@@ -292,7 +298,9 @@ class ActiviteController extends AbstractActionController
                                     $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                     if ($codeFonction_ === null) {
                                         $message  = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
-                                        $message .= "L'activité \"".$activite->getLibelle()."\" " . $activite->printReference() . " ne peut pas être ajoutée.";
+                                        $message .= "L'activité \"" . $activite->getLibelle() . "\" ";
+                                        $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                        $message .= " ne peut pas être ajoutée.";
                                         $warning[] = $message;
                                     } else {
                                         $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
@@ -302,7 +310,10 @@ class ActiviteController extends AbstractActionController
                                         foreach ($fichesmetiers as $fichemetier) {
                                             if (!$fichemetier->hasActivite($activite)) {
                                                 $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                                $info[] = "L'activité \"". $activite->getLibelle() . "\" " . $activite->printReference()."a été ajoutée à la fiche métier \"".$fichemetier->getLibelle() ."\" " . $fichemetier->printReference();
+                                                $message  = "L'activité \"" . $activite->getLibelle() . "\" " ;
+                                                $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                                $message .= "a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" " . $fichemetier->printReference();
+                                                $info[] = $message;
                                             }
                                         }
                                     }
@@ -328,7 +339,6 @@ class ActiviteController extends AbstractActionController
             'filepath' => $filepath,
             'filename' => $filename,
         ]);
-
 
 
     }
@@ -375,7 +385,6 @@ class ActiviteController extends AbstractActionController
 
         return $jsonData;
     }
-
 
 
 }
