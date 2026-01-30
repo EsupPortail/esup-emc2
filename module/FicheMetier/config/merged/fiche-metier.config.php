@@ -8,6 +8,10 @@ use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormFactory;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydrator;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeHydratorFactory;
+use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationForm;
+use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationFormFactory;
+use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationHydrator;
+use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationHydratorFactory;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
 use FicheMetier\Form\FicheMetierImportation\FichierMetierImportationHydrator;
@@ -86,7 +90,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'modifier',
-                        'modifier-libelle',
+                        'modifier-identification',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -208,13 +212,13 @@ return [
                             ],
                         ],
                     ],
-                    'modifier-libelle' => [
+                    'modifier-identification' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-libelle/:fiche-metier',
+                            'route'    => '/modifier-identification/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::modifierLibelleAction() */
-                                'action'     => 'modifier-libelle',
+                                /** @see FicheMetierController::modifierIdentificationAction() */
+                                'action'     => 'modifier-identification',
                             ],
                         ],
                     ],
@@ -517,6 +521,7 @@ return [
         'factories' => [
             CodeEmploiTypeForm::class => CodeEmploiTypeFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
+            FicheMetierIdentificationForm::class  => FicheMetierIdentificationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
         ],
@@ -525,6 +530,7 @@ return [
         'factories' => [
             CodeEmploiTypeHydrator::class => CodeEmploiTypeHydratorFactory::class,
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
+            FicheMetierIdentificationHydrator::class => FicheMetierIdentificationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],
     ]
