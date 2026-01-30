@@ -12,6 +12,10 @@ use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessi
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormFactory;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleHydrator;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleHydratorFactory;
+use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesForm;
+use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesFormFactory;
+use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesHydrator;
+use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesHydratorFactory;
 use Carriere\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
@@ -199,14 +203,16 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            SelectionnerFamilleProfessionnelleForm::class  => SelectionnerFamilleProfessionnelleFormFactory::class,
             FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
+            SelectionnerFamilleProfessionnelleForm::class  => SelectionnerFamilleProfessionnelleFormFactory::class,
+            SelectionnerFamillesProfessionnellesForm::class  => SelectionnerFamillesProfessionnellesFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            SelectionnerFamilleProfessionnelleHydrator::class  => SelectionnerFamilleProfessionnelleHydratorFactory::class,
             FamilleProfessionnelleHydrator::class => FamilleProfessionnelleHydratorFactory::class,
+            SelectionnerFamilleProfessionnelleHydrator::class  => SelectionnerFamilleProfessionnelleHydratorFactory::class,
+            SelectionnerFamillesProfessionnellesHydrator::class  => SelectionnerFamillesProfessionnellesHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

@@ -339,8 +339,6 @@ class ActiviteController extends AbstractActionController
             'filepath' => $filepath,
             'filename' => $filename,
         ]);
-
-
     }
 
 

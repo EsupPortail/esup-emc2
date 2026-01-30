@@ -4,7 +4,7 @@ namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
-use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
+use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesForm;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
@@ -65,14 +65,14 @@ class MissionPrincipaleControllerFactory
          * @var NiveauEnveloppeForm $niveauEnveloppeForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetencesForm
-         * @var SelectionnerFamilleProfessionnelleForm $selectionnerFamillesProfessionnellesForm
+         * @var SelectionnerFamillesProfessionnellesForm $selectionnerFamillesProfessionnellesForm
          */
         $missionPrincipaleForm = $container->get('FormElementManager')->get(MissionPrincipaleForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetencesForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
-        $selectionnerFamillesProfessionnellesForm = $container->get('FormElementManager')->get(SelectionnerFamilleProfessionnelleForm::class);
+        $selectionnerFamillesProfessionnellesForm = $container->get('FormElementManager')->get(SelectionnerFamillesProfessionnellesForm::class);
 
         $controller = new MissionPrincipaleController();
         $controller->setApplicationElementService($applicationElementService);
@@ -91,7 +91,7 @@ class MissionPrincipaleControllerFactory
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetencesForm);
-        $controller->setSelectionnerFamilleProfessionnelleForm($selectionnerFamillesProfessionnellesForm);
+        $controller->setSelectionnerFamillesProfessionnellesForm($selectionnerFamillesProfessionnellesForm);
         return $controller;
     }
 }

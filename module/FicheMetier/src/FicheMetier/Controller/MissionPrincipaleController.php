@@ -5,6 +5,7 @@ namespace FicheMetier\Controller;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
+use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesFormAwareTrait;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use DateTime;
@@ -24,7 +25,6 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -48,7 +48,7 @@ class MissionPrincipaleController extends AbstractActionController
     use NiveauEnveloppeFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
-    use SelectionnerFamilleProfessionnelleFormAwareTrait;
+    use SelectionnerFamillesProfessionnellesFormAwareTrait;
 
 
     public function indexAction(): ViewModel
@@ -354,8 +354,7 @@ class MissionPrincipaleController extends AbstractActionController
                 $array = $this->readCSV($filepath, true, $separateur);
                 if (empty($array)) {
                     $warning[] = "Le fichier ne contient pas de données.";
-                } else
-                {
+                } else {
 
                     // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////////
                     $header = [];
@@ -443,13 +442,13 @@ class MissionPrincipaleController extends AbstractActionController
                             foreach ($codesFicheMetier as $codeFicheMetier) {
                                 $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                 if ($fichemetier === null) {
-                                    $message  = "Aucune fiche métier identifiée ". $codeFicheMetier ." dans le référentiel <span class='badge' style='background:".$referentiel->getCouleur()."'>" . $referentiel->getLibelleCourt() . "</span>. ";
-                                    $message .= "La mission principale \"".$mission->getLibelle()."\" " . $mission->printReference() . " ne sera pas ajoutée.";
+                                    $message = "Aucune fiche métier identifiée " . $codeFicheMetier . " dans le référentiel <span class='badge' style='background:" . $referentiel->getCouleur() . "'>" . $referentiel->getLibelleCourt() . "</span>. ";
+                                    $message .= "La mission principale \"" . $mission->getLibelle() . "\" " . $mission->printReference() . " ne sera pas ajoutée.";
                                     $warning[] = $message;
                                 } else {
                                     if (!$fichemetier->hasMission($mission)) {
-                                        $this->getMissionElementService()->addMissionElement($fichemetier,$mission);
-                                        $info[] = "La mission \"".$mission->getLibelle()."\" " . $mission->printReference() . " a été ajoutée à la fiche métier \"". $fichemetier->getLibelle() . "\" " . $fichemetier->printReference() ;
+                                        $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
+                                        $info[] = "La mission \"" . $mission->getLibelle() . "\" " . $mission->printReference() . " a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" " . $fichemetier->printReference();
                                     }
                                 }
                             }
@@ -461,8 +460,8 @@ class MissionPrincipaleController extends AbstractActionController
                             foreach ($codesFonction as $codeFonction) {
                                 $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                 if ($codeFonction_ === null) {
-                                    $message  = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
-                                    $message .= "La mission principale \"".$mission->getLibelle()."\" " . $mission->printReference() . " ne peut pas être ajoutée.";
+                                    $message = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
+                                    $message .= "La mission principale \"" . $mission->getLibelle() . "\" " . $mission->printReference() . " ne peut pas être ajoutée.";
                                     $warning[] = $message;
                                 } else {
                                     $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
@@ -472,7 +471,7 @@ class MissionPrincipaleController extends AbstractActionController
                                     foreach ($fichesmetiers as $fichemetier) {
                                         if (!$fichemetier->hasMission($mission)) {
                                             $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
-                                            $info[] = "La mission \"".$mission->getLibelle() . "\" ". $mission->printReference() ." a été ajoutée à la fiche métier \"". $fichemetier->getLibelle() . "\" " . $fichemetier->printReference() ;
+                                            $info[] = "La mission \"" . $mission->getLibelle() . "\" " . $mission->printReference() . " a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" " . $fichemetier->printReference();
                                         }
                                     }
                                 }

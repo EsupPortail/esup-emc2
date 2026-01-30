@@ -1,13 +1,13 @@
 <?php
 
-namespace Carriere\Form\SelectionnerFamilleProfessionnelle;
+namespace Carriere\Form\SelectionnerFamillesProfessionnelles;
 
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 
-class SelectionnerFamilleProfessionnelleForm extends Form
+class SelectionnerFamillesProfessionnellesForm extends Form
 {
     use FamilleProfessionnelleServiceAwareTrait;
 
@@ -17,7 +17,7 @@ class SelectionnerFamilleProfessionnelleForm extends Form
         // libelle
         $this->add([
             'type' => Select::class,
-            'name' => 'familleprofessionnelle',
+            'name' => 'famillesprofessionnelles',
             'options' => [
                 'label' => "Libellé de la famille professionnelle :",
                 'empty_option' => "Sélectionner une famille professionnelle",
@@ -25,9 +25,10 @@ class SelectionnerFamilleProfessionnelleForm extends Form
                     $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'familleprofessionnelle',
+                'id' => 'famillesprofessionnelles',
                 'class' => 'bootstrap-selectpicker show-tick',
                 'data-live-search' => 'true',
+                'multiple' => 'multiple',
             ],
         ]);
         // button
