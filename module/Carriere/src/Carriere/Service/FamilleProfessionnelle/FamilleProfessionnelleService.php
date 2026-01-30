@@ -266,6 +266,7 @@ class FamilleProfessionnelleService
         foreach ($familles as $famille) {
             $tabId = match ($discriminant) {
                 'libelle' => $famille->getLibelle(),
+                'code' => $famille->getCorrespondance()?->getCategorie() . $famille->getPosition(),
                 default => $famille->getId(),
             };
             $dictionnaire[$tabId] = $famille;

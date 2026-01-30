@@ -69,6 +69,21 @@ class CorrespondanceTypeService
         return $result;
     }
 
+    public function generateDictionnaire(string $discrimant): array
+    {
+        $types = $this->getCorrespondancesTypes();
+
+        $dictionnaire = [];
+        foreach ($types as $type) {
+            $tabId = match ($discrimant) {
+                'code' => $type->getCode(),
+                default => $type->getId(),
+            };
+            $dictionnaire[$tabId] = $type;
+        }
+        return $dictionnaire;
+    }
+
     /** FACADE ********************************************************************************************************/
 
 

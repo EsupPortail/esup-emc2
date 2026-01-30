@@ -225,26 +225,43 @@ $this->headTitle("Importation des fiches métiers");
                 <?php if ($fiche->getNiveauCarriere()): ?> <strong>Niveau de carrière</strong> <?php echo $fiche->getNiveauCarriere()->getLibelle(); ?> <?php endif; ?><br>
                 <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <?php endif; ?><br>
                 <?php if ($fiche->getCodesEmploiType()): ?> <strong>Codes emploi type</strong> <?php echo $fiche->getCodesEmploiType(); ?> <?php endif; ?><br>
+                <?php if ($fiche->getFamilleProfessionnelle()): ?>
+                    <strong>Famille professionnelle</strong>
+                    <?php echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
+                    <?php echo $fiche->getFamilleProfessionnelle()->computeCode(); ?>
+                    <br>
+                <?php endif; ?>
+
+                <?php if ($fiche->getFamilleProfessionnelle()?->getCorrespondance()): ?> <strong>Spécialité </strong> <?php echo $fiche->getFamilleProfessionnelle()->getCorrespondance()->getLibelleLong(); ?> <?php endif; ?>
             </div>
         </div>
-    <?php if ($fiche->getFamilleProfessionnelle()) echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
-    <?php if ($fiche->getFamilleProfessionnelle()?->getCorrespondance()) echo $fiche->getFamilleProfessionnelle()->getCorrespondance()->getLibelleLong(); ?>
 
-        <strong>Missions</strong>
-        <ul>
-        <?php foreach ($fiche->getMissions() as $mission) : ?>
-            <li><?php echo $mission->getMission()->getLibelle(); ?>
-<!--                --><?php //if ($mission->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?><!--</li>-->
-        <?php endforeach; ?>
-        </ul>
 
-        <strong>Activités</strong>
-        <ul>
-        <?php foreach ($fiche->getActivites() as $activite) : ?>
-            <li><?php echo $activite->getActivite()->getLibelle(); ?>
-<!--                --><?php //if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?><!--</li>-->
-        <?php endforeach; ?>
-        </ul>
+        <?php $missions = $fiche->getMissions(); ?>
+        <?php if (!empty($missions)) : ?>
+            <strong>Missions</strong>
+            <ul>
+            <?php foreach ($missions as $mission) : ?>
+                <li>
+                    <?php echo $mission->getMission()->getLibelle(); ?>
+                    <?php //if ($mission->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <?php $activites = $fiche->getActivites(); ?>
+        <?php if (!empty($activites)) : ?>
+            <strong>Activités</strong>
+            <ul>
+            <?php foreach ($fiche->getActivites() as $activite) : ?>
+                <li>
+                    <?php echo $activite->getActivite()->getLibelle(); ?>
+                    <?php //if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
 
 
     <?php
