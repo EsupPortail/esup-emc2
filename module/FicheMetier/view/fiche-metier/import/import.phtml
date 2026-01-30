@@ -2,7 +2,6 @@
 
 /**
  * @see ImportController::importAction()
- * @var FicheMetierImportationForm $form
  *
  * @var array $info
  * @var array $warning
@@ -21,7 +20,6 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\Competence;
 use FicheMetier\Controller\ImportController;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use Referentiel\Entity\Db\Referentiel;
 
 $canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));

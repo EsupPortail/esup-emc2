@@ -14,7 +14,6 @@ use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use Element\Service\NiveauMaitrise\NiveauMaitriseService;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Service\Activite\ActiviteService;
 use FicheMetier\Service\ActiviteElement\ActiviteElementService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
@@ -96,10 +95,6 @@ class ImportControllerFactory
         $thematiqueElementService = $container->get(ThematiqueElementService::class);
         $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
-        /**
-         * @var FicheMetierImportationForm $ficheMetierImportationForm
-         */
-        $ficheMetierImportationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
 
         $controller = new ImportController();
         $controller->setActiviteService($activiteService);
@@ -127,7 +122,6 @@ class ImportControllerFactory
         $controller->setTendanceTypeService($tendanceTypeService);
         $controller->setThematiqueElementService($thematiqueElementService);
         $controller->setThematiqueTypeService($thematiqueTypeService);
-        $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
 
         return $controller;
     }

@@ -27,7 +27,6 @@ use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
 use FicheMetier\Entity\Db\ThematiqueElement;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
@@ -40,7 +39,6 @@ use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
 use FicheMetier\Service\ThematiqueElement\ThematiqueElementServiceAwareTrait;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
-use Laminas\Form\Form;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Entity\Db\Referentiel;
@@ -77,7 +75,6 @@ class ImportController extends AbstractActionController
     use ThematiqueElementServiceAwareTrait;
     use ThematiqueTypeServiceAwareTrait;
 
-    use FicheMetierImportationFormAwareTrait;
 
     const FORMAT_RMFP = 'FORMAT_RMFP';
     const FORMAT_REFERENS3 = 'FORMAT_REFERENS3';
@@ -150,9 +147,6 @@ class ImportController extends AbstractActionController
 
     public function importAction(): ViewModel
     {
-        $form = $this->getFicheMetierImportationForm();
-        $form->setAttribute("action", $this->url()->fromRoute("fiche-metier/import"));
-
         $fiches = [];
         $info = [];
         $warning = [];
@@ -308,17 +302,8 @@ class ImportController extends AbstractActionController
                 }
             }
         }
-        if ($referentiel === null) $error[] = "Aucun référentiel de sélectionné";
-        else $form->get('referentiel')->setValue($referentiel->getId());
-        if ($mode === null) $error[] = "Aucun mode d'importation de sélectionné";
-        else $form->get('mode')->setValue($mode);
-        if ($fichier_path === "") $error[] = "Aucun fichier fourni";
-        else {
-            $form->get('fichier')->setValue($data['fichier'] ?? null);
-        }
 
         return new ViewModel([
-            'form' => $form,
             'info' => $info,
             'warning' => $warning,
             'error' => $error,
@@ -421,8 +406,8 @@ class ImportController extends AbstractActionController
                 }
                 $fiche->setFamilleProfessionnelle($famille);
 
-                $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU]??null, $dictionnaireNiveauCarriere, $warning);
-                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION]??null, $dictionnaireCodeFonction, $warning );
+                $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU] ?? null, $dictionnaireNiveauCarriere, $warning);
+                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? null, $dictionnaireCodeFonction, $warning);
 
                 //code fonction
                 $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
@@ -640,7 +625,7 @@ class ImportController extends AbstractActionController
                     $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
                 }
 
-                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION]??null, $dictionnaireCodeFonction, $warning );
+                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? null, $dictionnaireCodeFonction, $warning);
 
                 //code fonction
                 $codesEmploiType = (isset($raw[self::HEADER_CODE_EMPLOITYPE]) and trim($raw[self::HEADER_CODE_EMPLOITYPE]) !== '') ? trim($raw[self::HEADER_CODE_EMPLOITYPE]) : null;
@@ -861,7 +846,6 @@ class ImportController extends AbstractActionController
                     $this->readThematiques($fiche, $raw, $dictionnaireThematique, $dictionnaireNiveauMaitrise, $warning);
 
 
-
                     $fiches[] = $fiche;
                 }
             }
@@ -886,7 +870,7 @@ class ImportController extends AbstractActionController
         return $result;
     }
 
-    public function readFamilleProfessionnelle(FicheMetier &$fiche, array $raw, string $format, array &$dictionnaireFamille, array &$dictionnaireSpecialite,  array &$dictionnaireSpecialiteType,  array &$warning): void
+    public function readFamilleProfessionnelle(FicheMetier &$fiche, array $raw, string $format, array &$dictionnaireFamille, array &$dictionnaireSpecialite, array &$dictionnaireSpecialiteType, array &$warning): void
     {
         $HEADER_FAMILLE_LIBELLE = match ($format) {
             ImportController::FORMAT_EMC2 => ImportController::HEADER_EMC2_FAMILLE_LIBELLE,
@@ -919,25 +903,24 @@ class ImportController extends AbstractActionController
             default => null,
         };
 
-        $famille = $dictionnaireFamille[$raw[$HEADER_FAMILLE_LIBELLE]]??null;
+        $famille = $dictionnaireFamille[$raw[$HEADER_FAMILLE_LIBELLE]] ?? null;
         if ($famille === null) {
             $famille = new FamilleProfessionnelle();
             $famille->setLibelle($raw[$HEADER_FAMILLE_LIBELLE] ?? "");
             $famille->setPosition($raw[$HEADER_FAMILLE_POSITION] ?? null);
 
-            $specialiteType = $raw[$HEADER_SPECIALITE_TYPE]??null;
-            $specialiteCode = $raw[$HEADER_SPECIALITE_CODE]??null;
-            $specialiteLibelle = $raw[$HEADER_SPECIALITE_LIBELLE]??null;
+            $specialiteType = $raw[$HEADER_SPECIALITE_TYPE] ?? null;
+            $specialiteCode = $raw[$HEADER_SPECIALITE_CODE] ?? null;
+            $specialiteLibelle = $raw[$HEADER_SPECIALITE_LIBELLE] ?? null;
 
-            $specialite = $dictionnaireSpecialite[$specialiteCode]??null;
+            $specialite = $dictionnaireSpecialite[$specialiteCode] ?? null;
             if ($specialite === null) {
                 $specialite = new Correspondance();
                 $specialite->setCategorie($HEADER_SPECIALITE_CODE);
                 $specialite->setLibelleLong($HEADER_SPECIALITE_LIBELLE);
                 $specialite->setLibelleCourt($HEADER_SPECIALITE_LIBELLE);
-                $specialite->setType($dictionnaireSpecialiteType[$specialiteType]??null);
+                $specialite->setType($dictionnaireSpecialiteType[$specialiteType] ?? null);
             }
-
 
 
             $warning[] = "La création de famille professionnelle n'est pas encore implémenté";
@@ -962,8 +945,8 @@ class ImportController extends AbstractActionController
 
     public function readNiveauCarriere(FicheMetier &$fiche, ?string $data, array &$dictionnaireNiveauCarriere, array &$warning): void
     {
-        $niveau = $dictionnaireNiveauCarriere[trim($data)]??null;
-        if ($niveau === null) $warning[] = "Le niveau de carrière [".$data."] est inconnu";
+        $niveau = $dictionnaireNiveauCarriere[trim($data)] ?? null;
+        if ($niveau === null) $warning[] = "Le niveau de carrière [" . $data . "] est inconnu";
         $fiche->setNiveauCarriere($niveau);
 
     }

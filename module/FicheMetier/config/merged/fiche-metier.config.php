@@ -25,9 +25,9 @@ use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceFactory;
-use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -138,7 +138,7 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
@@ -147,8 +147,8 @@ return [
                             'fiche-metier' => [
                                 'label' => 'Fiches métiers',
                                 'route' => 'fiche-metier',
-                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
-                                'order'    => 2045,
+                                'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX),
+                                'order' => 2045,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -158,347 +158,347 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'fiche-metier' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/fiche-metier',
+                    'route' => '/fiche-metier',
                     'defaults' => [
                         /** @see FicheMetierController::indexAction() */
                         'controller' => FicheMetierController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
                     'afficher' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/afficher/:fiche-metier',
+                            'route' => '/afficher/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::afficherAction() */
-                                'action'     => 'afficher',
+                                'action' => 'afficher',
                             ],
                         ],
                     ],
                     'lister-agents' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/lister-agents/:fiche-metier',
+                            'route' => '/lister-agents/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::listerAgentsAction() */
-                                'action'     => 'lister-agents',
+                                'action' => 'lister-agents',
                             ],
                         ],
                     ],
                     'exporter' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/exporter/:fiche-metier',
+                            'route' => '/exporter/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::exporterAction() */
-                                'action'     => 'exporter',
+                                'action' => 'exporter',
                             ],
                         ],
                     ],
                     'ajouter' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/ajouter',
+                            'route' => '/ajouter',
                             'defaults' => [
                                 /** @see FicheMetierController::ajouterAction() */
-                                'action'     => 'ajouter',
+                                'action' => 'ajouter',
                             ],
                         ],
                     ],
                     'modifier-identification' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-identification/:fiche-metier',
+                            'route' => '/modifier-identification/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierIdentificationAction() */
-                                'action'     => 'modifier-identification',
+                                'action' => 'modifier-identification',
                             ],
                         ],
                     ],
                     'dupliquer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/dupliquer/:fiche-metier',
+                            'route' => '/dupliquer/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::dupliquerAction() */
-                                'action'     => 'dupliquer',
+                                'action' => 'dupliquer',
                             ],
                         ],
                     ],
                     'modifier' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier/:fiche-metier',
+                            'route' => '/modifier/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierAction() */
-                                'action'     => 'modifier',
+                                'action' => 'modifier',
                             ],
                         ],
                     ],
                     'historiser' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/historiser/:fiche-metier',
+                            'route' => '/historiser/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::historiserAction() */
-                                'action'     => 'historiser',
+                                'action' => 'historiser',
                             ],
                         ],
                     ],
                     'restaurer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer/:fiche-metier',
+                            'route' => '/restaurer/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::restaurerAction() */
-                                'action'     => 'restaurer',
+                                'action' => 'restaurer',
                             ],
                         ],
                     ],
                     'supprimer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer/:fiche-metier',
+                            'route' => '/supprimer/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerAction() */
-                                'action'     => 'supprimer',
+                                'action' => 'supprimer',
                             ],
                         ],
                     ],
                     'modifier-etat' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-etat/:fiche-metier',
+                            'route' => '/modifier-etat/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierEtatAction() */
-                                'action'     => 'modifier-etat',
+                                'action' => 'modifier-etat',
                             ],
                         ],
                     ],
                     'modifier-raison' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-raison/:fiche-metier',
+                            'route' => '/modifier-raison/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierRaisonAction() */
-                                'action'     => 'modifier-raison',
+                                'action' => 'modifier-raison',
                             ],
                         ],
                     ],
                     'modifier-code-fonction' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-code-fonction/:fiche-metier',
+                            'route' => '/modifier-code-fonction/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierCodeFonctionAction() */
-                                'action'     => 'modifier-code-fonction',
+                                'action' => 'modifier-code-fonction',
                             ],
                         ],
                     ],
                     'supprimer-code-fonction' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-code-fonction/:fiche-metier',
+                            'route' => '/supprimer-code-fonction/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerCodeFonctionAction() */
-                                'action'     => 'supprimer-code-fonction',
+                                'action' => 'supprimer-code-fonction',
                             ],
                         ],
                     ],
                     'modifier-code-emploi-type' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-code-emploi-type/:fiche-metier',
+                            'route' => '/modifier-code-emploi-type/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierCodeEmploiTypeAction() */
-                                'action'     => 'modifier-code-emploi-type',
+                                'action' => 'modifier-code-emploi-type',
                             ],
                         ],
                     ],
                     'supprimer-code-emploi-type' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-code-emploi-type/:fiche-metier',
+                            'route' => '/supprimer-code-emploi-type/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerCodeEmploiTypeAction() */
-                                'action'     => 'supprimer-code-emploi-type',
+                                'action' => 'supprimer-code-emploi-type',
                             ],
                         ],
                     ],
                     'modifier-famille-professionnelle' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-famille-professionnelle/:fiche-metier',
+                            'route' => '/modifier-famille-professionnelle/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierFamilleProfessionnelleAction() */
-                                'action'     => 'modifier-famille-professionnelle',
+                                'action' => 'modifier-famille-professionnelle',
                             ],
                         ],
                     ],
                     'supprimer-famille-professionnelle' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-famille-professionnelle/:fiche-metier',
+                            'route' => '/supprimer-famille-professionnelle/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerFamilleProfessionnelleAction() */
-                                'action'     => 'supprimer-famille-professionnelle',
+                                'action' => 'supprimer-famille-professionnelle',
                             ],
                         ],
                     ],
                     'modifier-niveau-carriere' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-niveau-carriere/:fiche-metier',
+                            'route' => '/modifier-niveau-carriere/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::modifierNiveauCarriereAction() */
-                                'action'     => 'modifier-niveau-carriere',
+                                'action' => 'modifier-niveau-carriere',
                             ],
                         ],
                     ],
                     'supprimer-niveau-carriere' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-niveau-carriere/:fiche-metier',
+                            'route' => '/supprimer-niveau-carriere/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerNiveauCarriereAction() */
-                                'action'     => 'supprimer-niveau-carriere',
+                                'action' => 'supprimer-niveau-carriere',
                             ],
                         ],
                     ],
                     'gerer-activites' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-activites/:fiche-metier',
+                            'route' => '/gerer-activites/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererActivitesAction() */
-                                'action'     => 'gerer-activites',
+                                'action' => 'gerer-activites',
                             ],
                         ],
                     ],
                     'bouger-activite' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/bouger-activite/:fiche-metier/:activite-element/:direction',
+                            'route' => '/bouger-activite/:fiche-metier/:activite-element/:direction',
                             'defaults' => [
                                 /** @see FicheMetierController::bougerActiviteAction() */
-                                'action'     => 'bouger-activite'
+                                'action' => 'bouger-activite'
                             ],
                         ],
                     ],
                     'retirer-activite' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/retirer-activite/:fiche-metier/:activite-element',
+                            'route' => '/retirer-activite/:fiche-metier/:activite-element',
                             'defaults' => [
                                 /** @see FicheMetierController::retirerActiviteAction() */
-                                'action'     => 'retirer-activite'
+                                'action' => 'retirer-activite'
                             ],
                         ],
                     ],
                     'gerer-applications' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-application/:fiche-metier',
+                            'route' => '/gerer-application/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererApplicationsAction() */
-                                'action'     => 'gerer-applications',
+                                'action' => 'gerer-applications',
                             ],
                         ],
                     ],
                     'gerer-competences' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-competences/:fiche-metier',
+                            'route' => '/gerer-competences/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererCompetencesAction() */
-                                'action'     => 'gerer-competences',
+                                'action' => 'gerer-competences',
                             ],
                         ],
                     ],
                     'gerer-competences-specifiques' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-competences-specifiques/:fiche-metier',
+                            'route' => '/gerer-competences-specifiques/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererCompetencesSpecifiquesAction() */
-                                'action'     => 'gerer-competences-specifiques',
+                                'action' => 'gerer-competences-specifiques',
                             ],
                         ],
                     ],
                     'gerer-missions-principales' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/gerer-missions-principales/:fiche-metier',
+                            'route' => '/gerer-missions-principales/:fiche-metier',
                             'defaults' => [
                                 /** @see FicheMetierController::gererMissionsPrincipalesAction() */
-                                'action'     => 'gerer-missions-principales',
+                                'action' => 'gerer-missions-principales',
                             ],
                         ],
                     ],
                     'bouger-mission' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/bouger-mission/:fiche-metier/:mission-element/:direction',
+                            'route' => '/bouger-mission/:fiche-metier/:mission-element/:direction',
                             'defaults' => [
                                 /** @see FicheMetierController::bougerMissionAction() */
-                                'action'     => 'bouger-mission'
+                                'action' => 'bouger-mission'
                             ],
                         ],
                     ],
                     'retirer-mission' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/retirer-mission/:fiche-metier/:mission-element',
+                            'route' => '/retirer-mission/:fiche-metier/:mission-element',
                             'defaults' => [
                                 /** @see FicheMetierController::retirerMissionAction() */
-                                'action'     => 'retirer-mission'
+                                'action' => 'retirer-mission'
                             ],
                         ],
                     ],
                     'refresh-activites' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/refresh-activites/:fiche-metier/:mode',
+                            'route' => '/refresh-activites/:fiche-metier/:mode',
                             'defaults' => [
                                 /** @see FicheMetierController::refreshActivitesAction() */
-                                'action'     => 'refresh-activites',
+                                'action' => 'refresh-activites',
                             ],
                         ],
                     ],
                     'refresh-applications' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/refresh-applications/:fiche-metier/:mode',
+                            'route' => '/refresh-applications/:fiche-metier/:mode',
                             'defaults' => [
                                 /** @see FicheMetierController::refreshApplicationsAction() */
-                                'action'     => 'refresh-applications',
+                                'action' => 'refresh-applications',
                             ],
                         ],
                     ],
                     'refresh-competences' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/refresh-competences/:fiche-metier/:mode[/:type]',
+                            'route' => '/refresh-competences/:fiche-metier/:mode[/:type]',
                             'defaults' => [
                                 /** @see FicheMetierController::refreshCompetencesAction() */
-                                'action'     => 'refresh-competences',
+                                'action' => 'refresh-competences',
                             ],
                         ],
                     ],
                     'refresh-missions' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/refresh-missions/:fiche-metier/:mode',
+                            'route' => '/refresh-missions/:fiche-metier/:mode',
                             'defaults' => [
                                 /** @see FicheMetierController::refreshMissionsAction() */
-                                'action'     => 'refresh-missions',
+                                'action' => 'refresh-missions',
                             ],
                         ],
                     ],
@@ -512,7 +512,7 @@ return [
             FicheMetierService::class => FicheMetierServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             FicheMetierController::class => FicheMetierControllerFactory::class,
         ],
@@ -520,8 +520,7 @@ return [
     'form_elements' => [
         'factories' => [
             CodeEmploiTypeForm::class => CodeEmploiTypeFormFactory::class,
-            FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
-            FicheMetierIdentificationForm::class  => FicheMetierIdentificationFormFactory::class,
+            FicheMetierIdentificationForm::class => FicheMetierIdentificationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
         ],
@@ -529,7 +528,6 @@ return [
     'hydrators' => [
         'factories' => [
             CodeEmploiTypeHydrator::class => CodeEmploiTypeHydratorFactory::class,
-            FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             FicheMetierIdentificationHydrator::class => FicheMetierIdentificationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],
