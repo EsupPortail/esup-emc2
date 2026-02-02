@@ -786,7 +786,7 @@ class ImportController extends AbstractActionController
             if ($famille === null) {
                 $famille = new FamilleProfessionnelle();
                 $famille->setLibelle($raw[$HEADER_FAMILLE_LIBELLE]);
-                $famille->setPosition((isset($raw[$HEADER_FAMILLE_POSITION]) and $raw[$HEADER_FAMILLE_POSITION] !== "") ? $raw[$HEADER_FAMILLE_POSITION] : null);
+                $famille->setPosition(($HEADER_FAMILLE_POSITION !== null AND isset($raw[$HEADER_FAMILLE_POSITION]) and $raw[$HEADER_FAMILLE_POSITION] !== "") ? $raw[$HEADER_FAMILLE_POSITION] : null);
 
                 $specialiteType = $raw[$HEADER_SPECIALITE_TYPE] ?? null;
                 $specialiteCode = $raw[$HEADER_SPECIALITE_CODE] ?? null;
@@ -803,7 +803,7 @@ class ImportController extends AbstractActionController
                 $famille->setCorrespondance($specialite);
             } else {
                 if ($famille->getLibelle() !== $raw[$HEADER_FAMILLE_LIBELLE]) $warning[] = "Le libellé de la famille est différent [FamilleProfessionnelle:" . $famille->getLibelle() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_LIBELLE] . " ]";
-                if ($famille->getPosition() != $raw[$HEADER_FAMILLE_POSITION]) $warning[] = "La position de la famille " . $famille->getLibelle() . " est différente [FamilleProfessionnelle:" . $famille->getPosition() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_POSITION] . " ]";
+                if ($HEADER_FAMILLE_POSITION !== null AND $famille->getPosition() != $raw[$HEADER_FAMILLE_POSITION]) $warning[] = "La position de la famille " . $famille->getLibelle() . " est différente [FamilleProfessionnelle:" . $famille->getPosition() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_POSITION] . " ]";
                 if ($famille->getCorrespondance() !== ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] ?? null))
                     $warning[] = "La spécialité de la famille " . $famille->getLibelle() . " est différente [Spécialité:" . $famille->getCorrespondance()?->getId() . " &ne; Fichier:" . ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_LIBELLE]] ?? null)?->getId() . " ]";
             }
