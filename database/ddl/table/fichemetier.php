@@ -10,6 +10,18 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'fichemetier_id_seq',
     'columns'     => [
+        'categorie_id'          => [
+            'name'        => 'categorie_id',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 18,
+            'commentaire' => NULL,
+        ],
         'code_fonction_id'      => [
             'name'        => 'code_fonction_id',
             'type'        => 'int',
@@ -19,7 +31,19 @@ return [
             'precision'   => 4,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 15,
+            'position'    => 14,
+            'commentaire' => NULL,
+        ],
+        'codes_emploi_type'     => [
+            'name'        => 'codes_emploi_type',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 1024,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 19,
             'commentaire' => NULL,
         ],
         'famille_id'            => [
@@ -31,7 +55,7 @@ return [
             'precision'   => 4,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 12,
+            'position'    => 11,
             'commentaire' => NULL,
         ],
         'histo_createur_id'     => [
@@ -43,7 +67,7 @@ return [
             'precision'   => 4,
             'nullable'    => FALSE,
             'default'     => NULL,
-            'position'    => 4,
+            'position'    => 3,
             'commentaire' => NULL,
         ],
         'histo_creation'        => [
@@ -55,7 +79,7 @@ return [
             'precision'   => 6,
             'nullable'    => FALSE,
             'default'     => NULL,
-            'position'    => 3,
+            'position'    => 2,
             'commentaire' => NULL,
         ],
         'histo_destructeur_id'  => [
@@ -67,7 +91,7 @@ return [
             'precision'   => 4,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 8,
+            'position'    => 7,
             'commentaire' => NULL,
         ],
         'histo_destruction'     => [
@@ -79,7 +103,7 @@ return [
             'precision'   => 6,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 7,
+            'position'    => 6,
             'commentaire' => NULL,
         ],
         'histo_modificateur_id' => [
@@ -91,7 +115,7 @@ return [
             'precision'   => 4,
             'nullable'    => FALSE,
             'default'     => NULL,
-            'position'    => 6,
+            'position'    => 5,
             'commentaire' => NULL,
         ],
         'histo_modification'    => [
@@ -103,7 +127,7 @@ return [
             'precision'   => 6,
             'nullable'    => FALSE,
             'default'     => NULL,
-            'position'    => 5,
+            'position'    => 4,
             'commentaire' => NULL,
         ],
         'id'                    => [
@@ -127,7 +151,7 @@ return [
             'precision'   => NULL,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 11,
+            'position'    => 10,
             'commentaire' => 'Libellé alternatif',
         ],
         'lien_pdf'              => [
@@ -139,7 +163,7 @@ return [
             'precision'   => NULL,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 17,
+            'position'    => 16,
             'commentaire' => NULL,
         ],
         'lien_web'              => [
@@ -151,19 +175,7 @@ return [
             'precision'   => NULL,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 16,
-            'commentaire' => NULL,
-        ],
-        'metier_id'             => [
-            'name'        => 'metier_id',
-            'type'        => 'int',
-            'bdd-type'    => 'integer',
-            'length'      => 0,
-            'scale'       => NULL,
-            'precision'   => 4,
-            'nullable'    => TRUE,
-            'default'     => NULL,
-            'position'    => 2,
+            'position'    => 15,
             'commentaire' => NULL,
         ],
         'niveau_carriere_id'    => [
@@ -175,7 +187,7 @@ return [
             'precision'   => 4,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 18,
+            'position'    => 17,
             'commentaire' => NULL,
         ],
         'raison'                => [
@@ -187,7 +199,7 @@ return [
             'precision'   => NULL,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 9,
+            'position'    => 8,
             'commentaire' => NULL,
         ],
         'raw'                   => [
@@ -199,7 +211,7 @@ return [
             'precision'   => NULL,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 10,
+            'position'    => 9,
             'commentaire' => NULL,
         ],
         'reference'             => [
@@ -211,7 +223,7 @@ return [
             'precision'   => NULL,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 13,
+            'position'    => 12,
             'commentaire' => NULL,
         ],
         'referentiel_id'        => [
@@ -223,7 +235,7 @@ return [
             'precision'   => 4,
             'nullable'    => TRUE,
             'default'     => NULL,
-            'position'    => 14,
+            'position'    => 13,
             'commentaire' => NULL,
         ],
     ],

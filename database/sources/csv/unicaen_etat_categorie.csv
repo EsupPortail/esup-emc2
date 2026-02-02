@@ -1,4 +1,4 @@
 'code';'libelle';'icone';'couleur';'ordre'
-"FICHE_METIER","États liés aux fiches métiers","far fa-check-square","#ad7fa8","200"
-"FICHE_POSTE","États associés aux fiches de poste","fas fa-book-reader","#8ae234","200"
-"ENTRETIEN_PROFESSIONNEL","États associés aux entretiens professionnels","fas fa-briefcase","#75507b","200"
+"FICHE_METIER","États liés aux fiches métiers","fas fa-regular fa-file","#ad7fa8","200"
+"FICHE_POSTE","États associés aux fiches de poste","fas fa-solid fa-file-contract","#37a0df","200"
+"ENTRETIEN_PROFESSIONNEL","États associés aux entretiens professionnels","fas fa-regular fa-comments","#9379d7","200"
