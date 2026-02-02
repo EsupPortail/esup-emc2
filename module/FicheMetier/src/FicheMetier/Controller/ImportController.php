@@ -976,6 +976,7 @@ class ImportController extends AbstractActionController
     public function readTendances(FicheMetier &$fiche, array $raw, array &$dictionnaireTendance, array &$warning): void
     {
         $tendances = $fiche->getTendances();
+        $fiche->clearTendances();
         foreach ($tendances as $tendance) {
             $dictionnaireFicheMetierTendance[$tendance->getType()->getLibelle()] = $tendance;
         }
@@ -997,7 +998,7 @@ class ImportController extends AbstractActionController
     public function readThematiques(FicheMetier &$fiche, array $raw, array &$dictionnaireThematique, array &$dictionnaireNiveau, array &$warning): void
     {
         $thematiques = $fiche->getThematiques();
-        $fiche->clearTendances();
+        $fiche->clearThematique();
         foreach ($thematiques as $thematique) {
             $dictionnaireFicheMetierThematique[$thematique->getType()->getLibelle()] = $thematique;
         }
@@ -1014,10 +1015,10 @@ class ImportController extends AbstractActionController
                 if ($raw[$libelle] !== "" and $niveau === null) {
                     $warning[] = "Le niveau de Contexte [" . $raw[$libelle] . "] n'existe pas.";
                 }
-//                if ($niveau !== null) {
+                if ($niveau !== null) {
                     $element->setNiveauMaitrise($niveau);
                     $fiche->addThematique($element);
-//                }
+                }
             }
         }
     }

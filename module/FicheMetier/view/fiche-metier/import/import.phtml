@@ -301,14 +301,14 @@ $this->headTitle("Importation des fiches métiers");
     <?php endforeach; ?>
     </ul>
 
-    <strong> Tendances d'évolution  </strong> <br>
+<!--    <strong> Tendances d'évolution  </strong> <br>-->
     <?php foreach ($fiche->getTendances() as $tendance) : ?>
         <strong><?php echo $tendance->getType()->getLibelle(); ?></strong>
         <?php echo $tendance->getTexte(); ?>
         <br>
     <?php endforeach; ?>
 
-    <strong> Contexte et environnement de travail </strong> <br>
+<!--    <strong> Contexte et environnement de travail </strong> <br>-->
     <?php foreach ($fiche->getThematiques() as $thematique) : ?>
         <strong><?php echo $thematique->getType()->getLibelle(); ?></strong>
         <?php echo $thematique->getNiveauMaitrise()?->getLibelle(); ?>
