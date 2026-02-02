@@ -3,7 +3,6 @@
 namespace FicheMetier\Controller;
 
 use DateTime;
-use Exception;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Form\Activite\ActiviteFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
@@ -18,7 +17,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Provider\Privilege\ReferentielPrivileges;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
-use RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -229,7 +227,6 @@ class ActiviteController extends AbstractActionController
                     }
 
                     if (empty($error)) {
-                        $activites = [];
                         $ligne = 1;
                         foreach ($raws as $raw) {
                             $ligne++;
