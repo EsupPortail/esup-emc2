@@ -358,7 +358,7 @@ class ImportController extends AbstractActionController
             $nbElements = count($header);
 
             foreach ($colonnesObligatoires as $colonne) {
-                if (!in_array($colonne, $header))     $error[] = "La colonne obligatoire [" . $colonne . "] est absente.";
+                if (!in_array($colonne, $header)) $error[] = "La colonne obligatoire [" . $colonne . "] est absente.";
             }
 
             $raws = [];
@@ -386,7 +386,7 @@ class ImportController extends AbstractActionController
                     $allGood = true;
                     foreach ($colonnesObligatoires as $colonne) {
                         if (trim($raw[$colonne]) === "") {
-                            $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne ".$ligne." a été ignorée";
+                            $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne " . $ligne . " a été ignorée";
                             $allGood = false;
                         }
                     }
@@ -406,12 +406,12 @@ class ImportController extends AbstractActionController
                         $fiche->setReference($code);
                         $fiche->setReferentiel($referentiel);
 
-                        $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_REFERENS3, $dictionnaireFamille,  $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
+                        $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_REFERENS3, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU] ?? "", $dictionnaireNiveauCarriere, $warning);
                         $this->readMissions($fiche, $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "", "|", $referentiel);
                         $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
-                        $this->readLinks($fiche, $raw[self::HEADER_REFERENS3_URL] ??"", $raw[self::HEADER_REFERENS3_PDF] ??"" , $warning );
+                        $this->readLinks($fiche, $raw[self::HEADER_REFERENS3_URL] ?? "", $raw[self::HEADER_REFERENS3_PDF] ?? "", $warning);
                         $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
                         $this->readCodesEmploiType($fiche, $raw[ImportController::HEADER_CODE_EMPLOITYPE] ?? "", $warning);
 
@@ -459,6 +459,8 @@ class ImportController extends AbstractActionController
 
     public function readAsRmfp($data, string $filepath, Referentiel $referentiel, int $verbosity = 0): array
     {
+        $colonnesObligatoires = [ImportController::HEADER_RMFP_REFERENCE, ImportController::HEADER_RMFP_LIBELLE, ImportController::HEADER_RMFP_MISSION_LIBELLE];
+
         $warning = [];
         $error = [];
         $info = [];
@@ -484,14 +486,15 @@ class ImportController extends AbstractActionController
 //        if ($tendanceCondition === null) {
 //            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
 //        }
+        $tendancesListing = [
+            ['type' => $tendanceFacteur, 'colonne' => self::HEADER_RMFP_TENDANCE],
+            ['type' => $tendanceImpact, 'colonne' => self::HEADER_RMFP_IMPACT],
+//                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_RMFP_CONDITION],
+        ];
 
         $mode = ($data['mode'] === 'import') ? 'import' : 'preview';
         $debut = (new DateTime())->getTimestamp();
 
-
-        /** Préparation pour les codes fonctions  */
-        $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
-        $dictionnaireFamilleProfessionnelle = $this->getFamilleProfessionnelleService()->generateDictionnaire('code');
 
         $csvFile = fopen($filepath, "r");
         // lecture du header + position colonne
@@ -500,6 +503,11 @@ class ImportController extends AbstractActionController
             // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
             $nbElements = count($header);
+
+
+            foreach ($colonnesObligatoires as $colonne) {
+                if (!in_array($colonne, $header)) $error[] = "La colonne obligatoire [" . $colonne . "] est absente.";
+            }
 
             //lecture des fiches
             $raws = [];
@@ -511,117 +519,99 @@ class ImportController extends AbstractActionController
                 $raws[] = $item;
             }
 
-            foreach ($raws as $raw) {
-                // Intitulé + (domaine ...)
-                $intitule = $raw[self::HEADER_RMFP_LIBELLE] ?? "";
-                $code = $raw[self::HEADER_RMFP_REFERENCE] ?? "";
-                $fiche = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
+            if (empty($error)) {
+                $dictionnaireFamille = $this->getFamilleProfessionnelleService()->generateDictionnaire('libelle');
+                $dictionnaireFamilleProfessionnelle = $this->getFamilleProfessionnelleService()->generateDictionnaire('code');
+                $dictionnaireSpecialite = $this->getCorrespondanceService()->generateDictionnaire('code');
+                $dictionnaireSpecialiteType = $this->getCorrespondanceTypeService()->generateDictionnaire('code');
+                $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
 
-                if ($fiche === null) {
-                    $fiche = new FicheMetier();
-                }
-                $fiche->setRaw(json_encode($raw));
-                $fiche->setLibelle($intitule);
-                $fiche->setReference($code);
-                $fiche->setReferentiel($referentiel);
-//                $this->getFicheMetierService()->create($fiche);
+                $ligne = 1;
+                foreach ($raws as $raw) {
 
-                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($raw[self::HEADER_RMFP_FAMILLE] ?? ""));
-                $newFamille = false;
-                if ($famille === null) {
-                    $famille = new FamilleProfessionnelle();
-                    $famille->setLibelle(trim($raw[self::HEADER_RMFP_FAMILLE] ?? ""));
-                    $newFamille = true;
-                }
-                $fiche->setFamilleProfessionnelle($famille);
-                $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeCodeAndLibelle('DF', trim($raw[self::HEADER_RMFP_SPECIALITE] ?? ""));
-                if ($specialite === null) {
-                    $specialite = $this->getCorrespondanceService()->createWith('DF', trim($raw[self::HEADER_RMFP_SPECIALITE] ?? ""), trim($raw[self::HEADER_RMFP_SPECIALITE] ?? ""), false);
-                    $specialite->setId(null);
-                }
-                if ($newFamille) $famille->setCorrespondance($specialite);
-                elseif ($famille->getCorrespondance() !== $specialite) {
-                    $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_RMFP_SPECIALITE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
-                }
+                    $ligne++;
 
-                $this->readMissions($fiche, $raw[self::HEADER_RMFP_MISSION_LIBELLE]??"", "\n", $referentiel);
-                $this->readActivites($fiche, $raw[self::HEADER_RMFP_MISSION_ACTIVITE]??"", "\n", $referentiel);
-
-                /** COMPETENCES ***************************************************************************************/
-
-                //todo ajouter le type pour éviter les homonymies
-                //todo ajouter un boolean pour la recherche parmi les synonymes
-
-                $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE] ?? "", "\n");
-                foreach ($connaissances as $item) {
-//                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
-                    $connaissance = $dictionnaireConnaissances[$item] ?? null;
-                    if ($connaissance !== null) {
-                        $element = new CompetenceElement();
-                        $element->setCompetence($connaissance);
-                        $fiche->addCompetenceElement($element);
-                    } else {
-                        $warning[] = "[" . $item . "] compétence de type [" . $tConnaissance->getLibelle() . "] non trouvée.";
-                    }
-                }
-                $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE] ?? "", "\n");
-                foreach ($savoiretres as $item) {
-//                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
-                    $savoiretre = $dictionnaireSavoirEtre[$item] ?? null;
-                    if ($savoiretre !== null) {
-                        $element = new CompetenceElement();
-                        $element->setCompetence($savoiretre);
-//                        $this->getCompetenceElementService()->create($element);
-                        $fiche->addCompetenceElement($element);
-                    } else {
-                        $warning[] = "[" . $item . "] compétence de type [" . $tsavoiretre->getLibelle() . "] non trouvée.";
-                    }
-                }
-                $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE] ?? "", "\n");
-                foreach ($savoirfaires as $item) {
-//                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
-                    $savoirfaire = $dictionnaireSavoirFaire[$item] ?? null;
-                    if ($savoirfaire !== null) {
-                        $element = new CompetenceElement();
-                        $element->setCompetence($savoirfaire);
-//                        $this->getCompetenceElementService()->create($element);
-                        $fiche->addCompetenceElement($element);
-                    } else {
-                        $warning[] = "[" . $item . "] compétence de type [" . $tsavoirfaire->getLibelle() . "] non trouvée.";
-                    }
-                }
-//                $this->getFicheMetierService()->update($fiche);
-
-                /** TENDANCE ******************************************************************************************/
-
-                $tendances = $fiche->getTendances();
-                $tendancesListing = [
-                    ['type' => $tendanceFacteur, 'colonne' => self::HEADER_RMFP_TENDANCE],
-                    ['type' => $tendanceImpact, 'colonne' => self::HEADER_RMFP_IMPACT],
-//                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_RMFP_CONDITION],
-                ];
-                foreach ($tendancesListing as $tendanceType) {
-                    $type = $tendanceType['type'];
-                    $colonne = $tendanceType['colonne'];
-                    if ($type and isset($raw[$colonne]) and trim($raw[$colonne]) !== "") {
-                        $tendance = null;
-                        if (isset($tendances[$type->getCode()])) {
-                            $tendance = $tendances[$type->getCode()];
-                            $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
-                        } else {
-                            $tendance = new TendanceElement();
-                            $tendance->setType($type);
-                            $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
-                            $fiche->addTendance($tendance);
+                    /** Check des valeurs obligatoires **/
+                    $allGood = true;
+                    foreach ($colonnesObligatoires as $colonne) {
+                        if (trim($raw[$colonne]) === "") {
+                            $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne " . $ligne . " a été ignorée";
+                            $allGood = false;
                         }
                     }
+
+                    if ($allGood) {
+
+                        // Intitulé + (domaine ...)
+                        $intitule = $raw[self::HEADER_RMFP_LIBELLE] ?? "";
+                        $code = $raw[self::HEADER_RMFP_REFERENCE] ?? "";
+                        $fiche = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $code);
+
+                        if ($fiche === null) {
+                            $fiche = new FicheMetier();
+                        }
+                        $fiche->setRaw(json_encode($raw));
+                        $fiche->setLibelle($intitule);
+                        $fiche->setReference($code);
+                        $fiche->setReferentiel($referentiel);
+                        $this->readMissions($fiche, $raw[self::HEADER_RMFP_MISSION_LIBELLE] ?? "", "\n", $referentiel);
+                        $this->readActivites($fiche, $raw[self::HEADER_RMFP_MISSION_ACTIVITE] ?? "", "\n", $referentiel);
+                        $this->readFamilleProfessionnelle($fiche, $raw, self::FORMAT_RMFP, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
+                        $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
+                        $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
+                        $this->readCodesEmploiType($fiche, $raw[ImportController::HEADER_CODE_EMPLOITYPE] ?? "", $warning);
+
+                        /** COMPETENCES ***************************************************************************************/
+
+                        //todo ajouter le type pour éviter les homonymies
+                        //todo ajouter un boolean pour la recherche parmi les synonymes
+
+                        $fiche->clearCompetences();
+                        $connaissances = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_CONNAISSANCE] ?? "", "\n");
+                        foreach ($connaissances as $item) {
+                            //                    $connaissance = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tConnaissance);
+                            $connaissance = $dictionnaireConnaissances[$item] ?? null;
+                            if ($connaissance !== null) {
+                                $element = new CompetenceElement();
+                                $element->setCompetence($connaissance);
+                                $fiche->addCompetenceElement($element);
+                            } else {
+                                $warning[] = "[" . $item . "] compétence de type [" . $tConnaissance->getLibelle() . "] non trouvée.";
+                            }
+                        }
+                        $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE] ?? "", "\n");
+                        foreach ($savoiretres as $item) {
+                            //                    $savoiretre = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item,$tsavoiretre);
+                            $savoiretre = $dictionnaireSavoirEtre[$item] ?? null;
+                            if ($savoiretre !== null) {
+                                $element = new CompetenceElement();
+                                $element->setCompetence($savoiretre);
+                                //                        $this->getCompetenceElementService()->create($element);
+                                $fiche->addCompetenceElement($element);
+                            } else {
+                                $warning[] = "[" . $item . "] compétence de type [" . $tsavoiretre->getLibelle() . "] non trouvée.";
+                            }
+                        }
+                        $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE] ?? "", "\n");
+                        foreach ($savoirfaires as $item) {
+                            //                    $savoirfaire = $this->getCompetenceService()->getCompetenceByRefentielAndLibelle($rmfp, $item, $tsavoirfaire);
+                            $savoirfaire = $dictionnaireSavoirFaire[$item] ?? null;
+                            if ($savoirfaire !== null) {
+                                $element = new CompetenceElement();
+                                $element->setCompetence($savoirfaire);
+                                //                        $this->getCompetenceElementService()->create($element);
+                                $fiche->addCompetenceElement($element);
+                            } else {
+                                $warning[] = "[" . $item . "] compétence de type [" . $tsavoirfaire->getLibelle() . "] non trouvée.";
+                            }
+                        }
+                        //                $this->getFicheMetierService()->update($fiche);
+
+
+                        $fiches[] = $fiche;
+                    }
+
                 }
-
-                $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
-                $this->readCodesEmploiType($fiche, $raw[ImportController::HEADER_CODE_EMPLOITYPE]??"", $warning);
-
-                $fiches[] = $fiche;
-
             }
 
         }
@@ -655,7 +645,7 @@ class ImportController extends AbstractActionController
             $nbElements = count($header);
 
             foreach ($colonnesObligatoires as $colonne) {
-                if (!in_array($colonne, $header))     $error[] = "La colonne obligatoire [" . $colonne . "] est absente.";
+                if (!in_array($colonne, $header)) $error[] = "La colonne obligatoire [" . $colonne . "] est absente.";
             }
 
             //lecture des fiches
@@ -698,7 +688,7 @@ class ImportController extends AbstractActionController
                     $allGood = true;
                     foreach ($colonnesObligatoires as $colonne) {
                         if (trim($raw[$colonne]) === "") {
-                            $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne ".$ligne." a été ignorée";
+                            $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne " . $ligne . " a été ignorée";
                             $allGood = false;
                         }
                     }
@@ -714,17 +704,17 @@ class ImportController extends AbstractActionController
                         }
                         $fiche->setLibelle($raw[ImportController::HEADER_EMC2_LIBELLE]);
 
-                        $this->readRaison($fiche, $raw[self::HEADER_EMC2_RAISON]??"", $warning);
-                        $this->readNiveauCarriere($fiche, $raw[self::HEADER_EMC2_NIVEAU_CARRIERE]??"", $dictionnaireNiveauCarriere, $warning);
+                        $this->readRaison($fiche, $raw[self::HEADER_EMC2_RAISON] ?? "", $warning);
+                        $this->readNiveauCarriere($fiche, $raw[self::HEADER_EMC2_NIVEAU_CARRIERE] ?? "", $dictionnaireNiveauCarriere, $warning);
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_EMC2, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
-                        $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION]??"", "|", $referentiel);
-                        $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE]??"", "|", $referentiel);
+                        $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION] ?? "", "|", $referentiel);
+                        $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE] ?? "", "|", $referentiel);
                         $this->readApplications($fiche, $raw[self::HEADER_EMC2_APPLICATION] ?? "", "|", $dictionnaireApplication, $warning);
                         $this->readCompetences($fiche, $raw[self::HEADER_EMC2_COMPETENCE] ?? "", "|", $dictionnaireCompetence, $warning);
                         $this->readTendances($fiche, $raw, $dictionnaireTendance, $warning);
                         $this->readThematiques($fiche, $raw, $dictionnaireThematique, $dictionnaireNiveauMaitrise, $warning);
-                        $this->readCodeFonction($fiche, $raw[ImportController::HEADER_CODE_FONCTION]??"", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
-                        $this->readCodesEmploiType($fiche, $raw[ImportController::HEADER_CODE_EMPLOITYPE]??"", $warning);
+                        $this->readCodeFonction($fiche, $raw[ImportController::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
+                        $this->readCodesEmploiType($fiche, $raw[ImportController::HEADER_CODE_EMPLOITYPE] ?? "", $warning);
 
                         $fiches[] = $fiche;
 
@@ -788,7 +778,7 @@ class ImportController extends AbstractActionController
             default => null,
         };
 
-        if (isset($raw[$HEADER_FAMILLE_LIBELLE]) AND trim($raw[$HEADER_FAMILLE_LIBELLE]) !== '') {
+        if (isset($raw[$HEADER_FAMILLE_LIBELLE]) and trim($raw[$HEADER_FAMILLE_LIBELLE]) !== '') {
             /** @var FamilleProfessionnelle $famille */
             $famille = $dictionnaireFamille[$raw[$HEADER_FAMILLE_LIBELLE]] ?? null;
             if ($famille === null) {
@@ -822,7 +812,7 @@ class ImportController extends AbstractActionController
     public function readNiveauCarriere(FicheMetier &$fiche, string $data, array &$dictionnaireNiveauCarriere, array &$warning): void
     {
         $niveau = $dictionnaireNiveauCarriere[trim($data)] ?? null;
-        if ($niveau === null AND trim($data) !== '') $warning[] = "Le niveau de carrière [" . $data . "] est inconnu";
+        if ($niveau === null and trim($data) !== '') $warning[] = "Le niveau de carrière [" . $data . "] est inconnu";
         $fiche->setNiveauCarriere($niveau);
 
     }
@@ -832,7 +822,7 @@ class ImportController extends AbstractActionController
         $missions = $fiche->getMissions();
         $fiche->clearMissions();
 
-        if (trim($data) === "") return ;
+        if (trim($data) === "") return;
         $readMissions = explode($separator, $data);
 
         $readMissionPosition = 1;
@@ -858,7 +848,7 @@ class ImportController extends AbstractActionController
         $activites = $fiche->getActivites();
         $fiche->clearActivites();
 
-        if (trim($data) === "") return ;
+        if (trim($data) === "") return;
         $readActivites = explode($separator, $data);
 
         $readActivitePosition = 1;
@@ -889,7 +879,7 @@ class ImportController extends AbstractActionController
     public function readCodeFonction(FicheMetier &$fiche, ?string $data, array &$dictionnaireCodeFonction, array &$dictionnaireFamilleProfessionnelle, array &$warning): void
     {
         $code = $fiche->getFamilleProfessionnelle()?->computeCode();
-        if ($code AND !isset($dictionnaireFamilleProfessionnelle[$code])) $dictionnaireFamilleProfessionnelle[$code] = $fiche->getFamilleProfessionnelle();
+        if ($code and !isset($dictionnaireFamilleProfessionnelle[$code])) $dictionnaireFamilleProfessionnelle[$code] = $fiche->getFamilleProfessionnelle();
         $codeFonction = (isset($data) and trim($data) !== '') ? trim($data) : null;
         if ($codeFonction !== null) {
             if (isset($dictionnaireCodeFonction[$codeFonction])) {
@@ -987,7 +977,7 @@ class ImportController extends AbstractActionController
             $dictionnaireFicheMetierTendance[$tendance->getType()->getLibelle()] = $tendance;
         }
         foreach ($dictionnaireTendance as $libelle => $type) {
-            if (isset($raw[$libelle]) AND trim($raw[$libelle]) !== "") {
+            if (isset($raw[$libelle]) and trim($raw[$libelle]) !== "") {
                 if (isset($dictionnaireFicheMetierTendance[$libelle])) {
                     $element = $dictionnaireFicheMetierTendance[$libelle];
                 } else {
@@ -1004,11 +994,12 @@ class ImportController extends AbstractActionController
     public function readThematiques(FicheMetier &$fiche, array $raw, array &$dictionnaireThematique, array &$dictionnaireNiveau, array &$warning): void
     {
         $thematiques = $fiche->getThematiques();
+        $fiche->clearTendances();
         foreach ($thematiques as $thematique) {
             $dictionnaireFicheMetierThematique[$thematique->getType()->getLibelle()] = $thematique;
         }
         foreach ($dictionnaireThematique as $libelle => $type) {
-            if (isset($raw[$libelle]) AND trim($raw[$libelle]) !== "") {
+            if (isset($raw[$libelle]) and trim($raw[$libelle]) !== "") {
                 if (isset($dictionnaireFicheMetierThematique[$libelle])) {
                     $element = $dictionnaireFicheMetierThematique[$libelle];
                 } else {
@@ -1023,10 +1014,10 @@ class ImportController extends AbstractActionController
         }
     }
 
-    public function readTendancesFromListing(FicheMetier& $fiche, array $raw, array& $tendancesListing, array& $warning): void
+    public function readTendancesFromListing(FicheMetier &$fiche, array $raw, array &$tendancesListing, array &$warning): void
     {
         $tendances = $fiche->getTendances();
-
+        $fiche->clearTendances();
         foreach ($tendancesListing as $tendanceType) {
             $type = $tendanceType['type'];
             $colonne = $tendanceType['colonne'];
@@ -1039,14 +1030,14 @@ class ImportController extends AbstractActionController
                     $tendance = new TendanceElement();
                     $tendance->setType($type);
                     $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
-                    $fiche->addTendance($tendance);
                 }
+                $fiche->addTendance($tendance);
             }
         }
     }
 
 
-public function readLinks(FicheMetier &$fiche, string $urlLink, string $pdfLink, array &$warning ): void
+    public function readLinks(FicheMetier &$fiche, string $urlLink, string $pdfLink, array &$warning): void
     {
         $fiche->setLienWeb(trim($urlLink) !== '' ? trim($urlLink) : null);
         $fiche->setLienPdf(trim($pdfLink) !== '' ? trim($pdfLink) : null);
