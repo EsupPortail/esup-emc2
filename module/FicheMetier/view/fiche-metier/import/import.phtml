@@ -221,7 +221,7 @@ $this->headTitle("Importation des fiches métiers");
     <div class="card" style="padding: 0.25rem">
         <div class="row">
             <div class="col-md-8">
-                <h3> <span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+                <h3> <?php echo $fiche->printReference(); ?> <?php echo $fiche->getLibelle(); ?> </h3>
                 <?php if ($fiche->getRaison()) : ?>
                     <strong>Raison d'être :</strong> <?php echo $fiche->getRaison(); ?>
                 <?php endif; ?>
@@ -293,26 +293,29 @@ $this->headTitle("Importation des fiches métiers");
     </div>
 
     <?php $applications = $fiche->getApplicationCollection(); ?>
+    <strong>Applications</strong>
     <ul>
     <?php foreach ($applications as $application) : ?>
-        <strong>Applications</strong>
+
         <li><?php echo $application->getLibelle(); ?></li>
     <?php endforeach; ?>
     </ul>
 
+    <strong> Tendances d'évolution  </strong> <br>
     <?php foreach ($fiche->getTendances() as $tendance) : ?>
         <strong><?php echo $tendance->getType()->getLibelle(); ?></strong>
         <?php echo $tendance->getTexte(); ?>
         <br>
     <?php endforeach; ?>
 
-        <?php foreach ($fiche->getThematiques() as $thematique) : ?>
-            <strong><?php echo $thematique->getType()->getLibelle(); ?></strong>
-            <?php echo $thematique->getNiveauMaitrise()->getLibelle(); ?>
-            <?php if ($thematique->getComplement()) : ?>
-                <br> <?php echo $thematique->getComplement(); ?>
-            <?php endif; ?>
-            <br>
-        <?php endforeach; ?>
+    <strong> Contexte et environnement de travail </strong> <br>
+    <?php foreach ($fiche->getThematiques() as $thematique) : ?>
+        <strong><?php echo $thematique->getType()->getLibelle(); ?></strong>
+        <?php echo $thematique->getNiveauMaitrise()?->getLibelle(); ?>
+        <?php if ($thematique->getComplement()) : ?>
+            <br> <?php echo $thematique->getComplement(); ?>
+        <?php endif; ?>
+        <br>
+    <?php endforeach; ?>
     </div>
 <?php endforeach; ?>

@@ -163,7 +163,7 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     public function generateTag(): string
     {
         $tag  = $this->getReferentiel()?$this->getReferentiel()->getLibelleCourt():"NULL";
-        $tag .= "_";
+        $tag .= "-";
         $tag .= $this->getReference()?$this->getReference():"NULL";
         return $tag;
     }
