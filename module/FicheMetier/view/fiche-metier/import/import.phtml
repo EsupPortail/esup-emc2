@@ -142,19 +142,26 @@ $this->headTitle("Importation des fiches métiers");
     <div class="col-md-6">
         <div class="alert alert-info">
             <p>
-                Vous pouvez :
-                <ul>
-                <li>Importez vos fiches métiers via l'un des deux référentiels (REFERENS3 ou RMFP);</li>
-                <li>Importez vos fiches métiers via la trame EMC2 (référentiel maison).</li>
-            </ul>
+                Importez vos fiches métiers depuis un référentiel (<code>REFERENS3</code> ou <code>RMFP</code>).
+                <br>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
+                    <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv">
+                    <span class="icon icon-csv"></span> Le référentiel des fiches métiers RMFP</a><br>
+                Construisez votre référentiel fiche métier via la trame <code>EMC2</code>.<br>
+                <a href="../exemples/trame_csv/import_fichemetier_emc2.csv">
+                    <span class="icon icon-csv"></span> La trame vierge au format EMC2
+                </a>
+            </p>
+
 
             <p>
                 Pour la trame EMC2 :
                 <ul>
                     <li><code><?php echo ImportController::HEADER_EMC2_CODE; ?></code> <span class="icon icon-obligatoire"></span> : identifiant unique de la fiche métier</li>
                     <li><code><?php echo ImportController::HEADER_EMC2_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> </li>
-                    <li>Type de la spécialité : LIEN blank Code associé au type de la spécialité ; par exemple BAP, CNU</li>
-                    <li>Code de la spécialité  : LIEN blank Code associé à la spécialité ; par exemple A, 37</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_TYPE; ?></code> : <a href="<?php echo $this->url('carriere/correspondance-type',[],[],true); ?>" target="_blank">Code associé au type de la spécialité</a> ; par exemple <code>BAP</code>, <code>CNU</code></li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_CODE; ?></code> : <a href="<?php echo $this->url('correspondance',[],[],true); ?>" target="_blank">Code de la spécialité</a> ; par exemple <code>A</code>, <code>37</code> </li>
                     <li>Libellé de la spécialité : nom de la spécialité ou nom de la branche d’activité ; créée si non connue d'EMC2.</li>
                     <li>Libellé de la famille professionnelle : nom de la famille professionnelle. Création via import si inexistante dans EMC2.</li>
                     <li>Position de la famille professionnelle : optionnel, uniquement demandée pour le code fonction (fonctionnalité AMU). Doit contenir le numéro de la position de la FAP dans la branche d’activité professionnelle pour ensuite créer le code fonction.</li>
@@ -199,15 +206,7 @@ $this->headTitle("Importation des fiches métiers");
 <!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp.csv">-->
 <!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
 <!--            --><?php //endif; ?>
-            <a href="../exemples/trame_csv/import_fichemetier_emc2.csv">
-                <span class="icon icon-csv"></span> Télécharger la trame vierge au format EMC2
-            </a>
-            <br>
-            <br>
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
-                <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv">
-                <span class="icon icon-csv"></span> Le référentiel des fiches métiers RMFP</a><br>
+
 
 
 
