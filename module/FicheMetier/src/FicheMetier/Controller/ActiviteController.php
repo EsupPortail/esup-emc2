@@ -14,6 +14,7 @@ use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Provider\Privilege\ReferentielPrivileges;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
@@ -368,4 +369,13 @@ class ActiviteController extends AbstractActionController
         ]);
     }
 
+    public function rechercherAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $activites = $this->getActiviteService()->getActivitesByTerm($term);
+            $result = $this->getActiviteService()->formatAsJson($activites);
+            return new JsonModel($result);
+        }
+        exit;
+    }
 }
