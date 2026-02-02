@@ -174,53 +174,6 @@ class ActiviteService
         return $activite;
     }
 
-    public function createOneWithCsv(array $json, string $separateur, Referentiel $referentiel, ?int $position): Activite
-    {
-
-        /* CHAMPS OBLIGATOIRE *****************************************************************************************/
-
-        if (!isset($json[Activite::ACTIVITE_HEADER_ID]) or trim($json[Activite::ACTIVITE_HEADER_ID]) === '') {
-            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_ID . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $idOrig = trim($json[Activite::ACTIVITE_HEADER_ID]);
-
-        if (!isset($json[Activite::ACTIVITE_HEADER_LIBELLE]) or trim($json[Activite::ACTIVITE_HEADER_LIBELLE]) === '') {
-            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_LIBELLE . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $libelle = trim($json[Activite::ACTIVITE_HEADER_LIBELLE]);
-
-        /** RECUPERATION OR CREATION **********************************************************************************/
-
-        $activite = $this->getActiviteByReference($referentiel, $idOrig);
-        if ($activite === null) {
-            $activite = new Activite();
-            $activite->setReferentiel($referentiel);
-            $activite->setReference($idOrig);
-            $activite->setLibelle($libelle);
-        }
-
-        /** RECUPERATION DES AUTRES DONNEES ***************************************************************************/
-
-        if (isset($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) and trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) != '') {
-            $description = trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]);
-            $activite->setDescription($description);
-        }
-        if (isset($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE])) {
-            if (trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) !== '') {
-                $codesFicheMetier = trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]);
-                $activite->setCodesFicheMetier($codesFicheMetier);
-            } else $activite->setCodesFicheMetier(null);
-        }
-        if (isset($json[Activite::ACTIVITE_HEADER_CODES_FONCTION])) {
-            if (trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) !== '') {
-                $codesCodeFonction = trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]);
-                $activite->setCodesFonction($codesCodeFonction);
-            } else $activite->setCodesFonction(null);
-        }
-
-        $activite->setRaw(json_encode($json));
-
-        return $activite;
-    }
-
     public function generateDictionnaireFicheMetier(): array
     {
         $sql = <<<EOS
