@@ -341,12 +341,11 @@ class ImportController extends AbstractActionController
 //        if ($tendanceCondition === null) {
 //            $warning[] = "Aucune type de tendance [" . TendanceType::CONDITIONS . "] les informations contenues dans la colonne [Tendance / évolution] ne seront pas prise en compte";
 //        }
-
-        /** Préparation pour les niveaus de carrière */
-        /** Préparation pour les codes fonctions  */
-        $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
-        $dictionnaireFamilleProfessionnelle = $this->getFamilleProfessionnelleService()->generateDictionnaire('code');
-
+        $tendancesListing = [
+            ['type' => $tendanceFacteur, 'colonne' => self::HEADER_REFERENS3_TENDANCE],
+            ['type' => $tendanceImpact, 'colonne' => self::HEADER_REFERENS3_IMPACT],
+            //                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_REFERENS3_CONDITION],
+        ];
 
         $debut = (new DateTime())->getTimestamp();
 
@@ -371,13 +370,15 @@ class ImportController extends AbstractActionController
                 $raws[] = $item;
             }
 
-
-
-
             if (empty($error)) {
                 $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
+                $dictionnaireFamille = $this->getFamilleProfessionnelleService()->generateDictionnaire('libelle');
+                $dictionnaireFamilleProfessionnelle = $this->getFamilleProfessionnelleService()->generateDictionnaire('code');
+                $dictionnaireSpecialite = $this->getCorrespondanceService()->generateDictionnaire('code');
+                $dictionnaireSpecialiteType = $this->getCorrespondanceTypeService()->generateDictionnaire('code');
+                $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
 
-                $ligne = 0;
+                $ligne = 1;
                 foreach ($raws as $raw) {
                     $ligne++;
 
@@ -405,40 +406,14 @@ class ImportController extends AbstractActionController
                         $fiche->setReference($code);
                         $fiche->setReferentiel($referentiel);
 
-                        //specialité
-                        $specialite = $this->getCorrespondanceService()->getCorrespondanceByTypeAndCode('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? ""));
-                        if ($specialite === null) {
-                            $specialite = $this->getCorrespondanceService()->createWith('BAP', trim($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? ""), trim($raw[self::HEADER_REFERENS3_SPECIALITE_LIBELLE] ?? ""), false);
-                            $specialite->setId(null);
-                        }
-                        //famille
-                        $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "");
-                        if ($famille === null) {
-                            $famille = new FamilleProfessionnelle();
-                            $famille->setLibelle($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "");
-                            $famille->setPosition((isset($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]) AND trim($raw[self::HEADER_REFERENS3_FAMILLE_POSITION]) !== "") ? $raw[self::HEADER_REFERENS3_FAMILLE_POSITION] : null);
-                            $famille->setCorrespondance($specialite);
-                        } else {
-                            if ($famille->getCorrespondance() !== $specialite)
-                                $warning[] = "La spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getCorrespondance()?->getCategorie() . " &ne; Fichier" . ($raw[self::HEADER_REFERENS3_SPECIALITE_CODE] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
-                            if ($famille->getPosition() != ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? ""))
-                                $warning[] = "La position dans la spécialité connue par EMC2 pour la famille professionnelle [" . ($raw[self::HEADER_REFERENS3_FAMILLE_LIBELLE] ?? "") . "] est différente de celle fournie dans le fichier CSV [EMC2:" . $famille->getPosition() . " &ne; Fichier:" . ($raw[self::HEADER_REFERENS3_FAMILLE_POSITION] ?? "") . "]. Corrigez votre fichier CSV ou modifiez la famille professionnelle dans EMC2.";
-                        }
-                        $fiche->setFamilleProfessionnelle($famille);
-
+                        $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_REFERENS3, $dictionnaireFamille,  $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU] ?? "", $dictionnaireNiveauCarriere, $warning);
-
-                        /** Liens *********************************************************************************************/
-
-                        $lienWeb = isset($raw[self::HEADER_REFERENS3_URL]) ? trim($raw[self::HEADER_REFERENS3_URL]) : null;
-                        if ($lienWeb !== null and $lienWeb !== '') $fiche->setLienWeb($lienWeb);
-
-                        $lienPdf = isset($raw[self::HEADER_REFERENS3_PDF]) ? trim($raw[self::HEADER_REFERENS3_PDF]) : null;
-                        if ($lienPdf !== null and $lienPdf !== '') $fiche->setLienPdf($lienPdf);
-
                         $this->readMissions($fiche, $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "", "|", $referentiel);
-
+                        $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
+                        $this->readLinks($fiche, $raw[self::HEADER_REFERENS3_URL] ??"", $raw[self::HEADER_REFERENS3_PDF] ??"" , $warning );
+                        $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
+                        $this->readCodesEmploiType($fiche, $raw[ImportController::HEADER_CODE_EMPLOITYPE] ?? "", $warning);
 
                         /** COMPETENCES ***************************************************************************************/
 
@@ -468,34 +443,6 @@ class ImportController extends AbstractActionController
                                 }
                             }
                         }
-
-                        /** TENDANCE ******************************************************************************************/
-
-                        $tendances = $fiche->getTendances();
-                        $tendancesListing = [
-                            ['type' => $tendanceFacteur, 'colonne' => self::HEADER_REFERENS3_TENDANCE],
-                            ['type' => $tendanceImpact, 'colonne' => self::HEADER_REFERENS3_IMPACT],
-    //                    ['type' => $tendanceCondition, 'colonne' => self::HEADER_REFERENS3_CONDITION],
-                        ];
-                        foreach ($tendancesListing as $tendanceType) {
-                            $type = $tendanceType['type'];
-                            $colonne = $tendanceType['colonne'];
-                            if ($type and isset($raw[$colonne]) and trim($raw[$colonne]) !== "") {
-                                $tendance = null;
-                                if (isset($tendances[$type->getCode()])) {
-                                    $tendance = $tendances[$type->getCode()];
-                                    $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
-                                } else {
-                                    $tendance = new TendanceElement();
-                                    $tendance->setType($type);
-                                    $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
-                                    $fiche->addTendance($tendance);
-                                }
-                            }
-                        }
-
-                        $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
-                        $this->readCodesEmploiType($fiche, $raw[ImportController::HEADER_CODE_EMPLOITYPE] ?? "", $warning);
 
                         $fiches[] = $fiche;
                     }
@@ -554,11 +501,6 @@ class ImportController extends AbstractActionController
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
             $nbElements = count($header);
 
-            if ($verbosity > 0) {
-                var_dump($nbElements . " colonnes dans le header");
-                var_dump($header);
-            }
-
             //lecture des fiches
             $raws = [];
             while (($row = fgetcsv($csvFile, null, ';')) !== false) {
@@ -567,10 +509,6 @@ class ImportController extends AbstractActionController
                     $item[$header[$position]] = $row[$position];
                 }
                 $raws[] = $item;
-            }
-            $nbFiches = count($raws);
-            if ($verbosity > 0) {
-                var_dump($nbFiches . " fiches dans le csv");
             }
 
             foreach ($raws as $raw) {
@@ -730,11 +668,6 @@ class ImportController extends AbstractActionController
                 $raws[] = $item;
             }
 
-            $nbFiches = count($raws);
-            if ($verbosity > 0) {
-                $info[] = $nbFiches . " fiches dans le csv";
-            }
-
             $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
             if ($referentiel === null) {
                 $referentiel = new Referentiel();
@@ -757,7 +690,7 @@ class ImportController extends AbstractActionController
                 $dictionnaireSpecialite = $this->getCorrespondanceService()->generateDictionnaire('code');
                 $dictionnaireSpecialiteType = $this->getCorrespondanceTypeService()->generateDictionnaire('code');
 
-                $ligne = 0;
+                $ligne = 1;
                 foreach ($raws as $raw) {
                     $ligne++;
 
@@ -798,8 +731,6 @@ class ImportController extends AbstractActionController
                     }
                 }
             }
-
-
         }
 
         return ['fiches' => $fiches, 'error' => $error, 'warning' => $warning, 'info' => $info];
@@ -1021,7 +952,7 @@ class ImportController extends AbstractActionController
         }
     }
 
-    // pour le moment cela ne sera compatible qu'avec le format EMC2
+    // pour le moment cela ne sera compatible qu'avec le format EMC2 (les autres formats sont particuliers (eventuellement referens3)
     public function readCompetences(FicheMetier &$fiche, string $data, string $separator, array &$dictionnaireCompetence, array &$warning): void
     {
         if (trim($data) === "") return;
@@ -1092,5 +1023,32 @@ class ImportController extends AbstractActionController
         }
     }
 
+    public function readTendancesFromListing(FicheMetier& $fiche, array $raw, array& $tendancesListing, array& $warning): void
+    {
+        $tendances = $fiche->getTendances();
 
+        foreach ($tendancesListing as $tendanceType) {
+            $type = $tendanceType['type'];
+            $colonne = $tendanceType['colonne'];
+            if ($type and isset($raw[$colonne]) and trim($raw[$colonne]) !== "") {
+                $tendance = null;
+                if (isset($tendances[$type->getCode()])) {
+                    $tendance = $tendances[$type->getCode()];
+                    $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
+                } else {
+                    $tendance = new TendanceElement();
+                    $tendance->setType($type);
+                    $tendance->setTexte(str_replace("|", "<br>", trim($raw[$colonne])));
+                    $fiche->addTendance($tendance);
+                }
+            }
+        }
+    }
+
+
+public function readLinks(FicheMetier &$fiche, string $urlLink, string $pdfLink, array &$warning ): void
+    {
+        $fiche->setLienWeb(trim($urlLink) !== '' ? trim($urlLink) : null);
+        $fiche->setLienPdf(trim($pdfLink) !== '' ? trim($pdfLink) : null);
+    }
 }
