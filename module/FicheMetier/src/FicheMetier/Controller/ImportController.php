@@ -576,7 +576,7 @@ class ImportController extends AbstractActionController
                                 $element->setCompetence($connaissance);
                                 $fiche->addCompetenceElement($element);
                             } else {
-                                $warning[] = "[" . $item . "] compétence de type [" . $tConnaissance->getLibelle() . "] non trouvée.";
+                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tConnaissance->getLibelle() . "] non trouvée.";
                             }
                         }
                         $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE] ?? "", "\n");
@@ -589,7 +589,7 @@ class ImportController extends AbstractActionController
                                 //                        $this->getCompetenceElementService()->create($element);
                                 $fiche->addCompetenceElement($element);
                             } else {
-                                $warning[] = "[" . $item . "] compétence de type [" . $tsavoiretre->getLibelle() . "] non trouvée.";
+                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tsavoiretre->getLibelle() . "] non trouvée.";
                             }
                         }
                         $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE] ?? "", "\n");
@@ -602,7 +602,7 @@ class ImportController extends AbstractActionController
                                 //                        $this->getCompetenceElementService()->create($element);
                                 $fiche->addCompetenceElement($element);
                             } else {
-                                $warning[] = "[" . $item . "] compétence de type [" . $tsavoirfaire->getLibelle() . "] non trouvée.";
+                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tsavoirfaire->getLibelle() . "] non trouvée.";
                             }
                         }
                         //                $this->getFicheMetierService()->update($fiche);
