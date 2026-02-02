@@ -240,7 +240,7 @@ class FicheMetierService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('famille = :famille')->setParameter('famille', $famille)
-            ->orderBy('metier.libelle');
+            ->orderBy('ficheMetier.libelle');
 
         $result = $qb->getQuery()->getResult();
         return $result;

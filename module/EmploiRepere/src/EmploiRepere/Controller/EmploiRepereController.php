@@ -2,6 +2,7 @@
 
 namespace EmploiRepere\Controller;
 
+use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use EmploiRepere\Entity\Db\EmploiRepere;
 use EmploiRepere\Form\EmploiRepere\EmploiRepereFormAwareTrait;
 use EmploiRepere\Service\EmploiRepere\EmploiRepereServiceAwareTrait;
@@ -11,6 +12,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
 class EmploiRepereController extends  AbstractActionController {
+    use AgentPosteServiceAwareTrait;
     use EmploiRepereServiceAwareTrait;
     use EmploiRepereFormAwareTrait;
 
@@ -77,9 +79,19 @@ class EmploiRepereController extends  AbstractActionController {
     public function afficherAction() : ViewModel
     {
         $emploi = $this->getEmploiRepereService()->getRequestedEmploiRepere($this);
+        $agentsPostes= [];
+
+        foreach ($emploi->getCodesFonctionsFichesMetiers() as $codeFonctionFicheMetier) {
+            $liste = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($codeFonctionFicheMetier->getCodeFonction());
+            foreach ($liste as $agentPoste) {
+                $agentsPostes[$agentPoste->getId()] = $agentPoste;
+            }
+        }
+
 
         return new ViewModel([
             'emploiRepere' => $emploi,
+            'agentsPostes' => $agentsPostes,
         ]);
     }
 

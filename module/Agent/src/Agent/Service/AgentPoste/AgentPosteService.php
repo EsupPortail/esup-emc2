@@ -6,6 +6,7 @@ use Agent\Entity\Db\AgentPoste;
 use Application\Entity\Db\Agent;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use FicheMetier\Entity\Db\CodeFonction;
 
 class AgentPosteService
 {
@@ -26,6 +27,19 @@ class AgentPosteService
         $qb = $this->createQueryBuilder()
             ->andWhere('poste.agent = :agent')->setParameter('agent', $agent)
             ->andWhere('poste.deletedOn IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return AgentPoste[] */
+    public function getAgentsPostesByCodeFonction(?CodeFonction $codeFonction): array
+    {
+        $code = $codeFonction->computeCode();
+        $qb = $this->createQueryBuilder()
+            ->andWhere('poste.codeFonction = :code')->setParameter('code', $code)
+            ->andWhere('poste.deletedOn IS NULL')
+        ;
 
         $result = $qb->getQuery()->getResult();
         return $result;

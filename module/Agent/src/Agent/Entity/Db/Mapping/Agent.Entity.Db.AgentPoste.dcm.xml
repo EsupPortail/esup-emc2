@@ -13,6 +13,9 @@
         <field name="code" column="code_poste" length="128" nullable="true"/>
         <field name="libelle" column="intitule" length="1024" nullable="true"/>
 
+        <field name="codeFonction" column="code_fonction" length="256" nullable="true"/>
+        <field name="codeEmploiType" column="code_emploi_type" length="256" nullable="true"/>
+
         <!-- DB IMPORT  #############################  -->
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime" nullable="true"/>

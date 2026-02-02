@@ -14,6 +14,8 @@ class AgentPoste implements IsSynchronisableInterface
     private ?Agent $agent = null;
     private ?string $code = null;
     private ?string $libelle = null;
+    private ?string $codeFonction = null;
+    private ?string $codeEmploiType = null;
 
     public function getId(): ?int
     {
@@ -50,5 +52,24 @@ class AgentPoste implements IsSynchronisableInterface
         $this->libelle = $libelle;
     }
 
+    public function getCodeFonction(): ?string
+    {
+        return $this->codeFonction;
+    }
+
+    public function setCodeFonction(?string $codeFonction): void
+    {
+        $this->codeFonction = $codeFonction;
+    }
+
+    public function getCodeEmploiType(): ?string
+    {
+        return $this->codeEmploiType;
+    }
+
+    public function setCodeEmploiType(?string $codeEmploiType): void
+    {
+        $this->codeEmploiType = $codeEmploiType;
+    }
 
 }
