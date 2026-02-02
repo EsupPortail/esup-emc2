@@ -3,7 +3,7 @@
 namespace Element\Controller;
 
 use Element\Form\Niveau\NiveauForm;
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -19,14 +19,14 @@ class NiveauControllerFactory {
     public function __invoke(ContainerInterface $container) : NiveauController
     {
         /**
-         * @var NiveauService $NiveauService
+         * @var NiveauMaitriseService $NiveauMaitriseService
          * @var NiveauForm $NiveauForm
          */
-        $NiveauService = $container->get(NiveauService::class);
+        $NiveauMaitriseService = $container->get(NiveauMaitriseService::class);
         $NiveauForm = $container->get('FormElementManager')->get(NiveauForm::class);
 
         $controller = new NiveauController();
-        $controller->setNiveauService($NiveauService);
+        $controller->setNiveauMaitriseService($NiveauMaitriseService);
         $controller->setNiveauForm($NiveauForm);
         return $controller;
     }

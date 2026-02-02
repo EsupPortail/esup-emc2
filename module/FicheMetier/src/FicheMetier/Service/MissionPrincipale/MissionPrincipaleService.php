@@ -179,115 +179,15 @@ class MissionPrincipaleService
 
     /** FACADE ********************************************************************************************************/
 
-    public function createWith(string $intitule, Referentiel $referentiel, string $reference, bool $perist = true): ?Mission
+    public function createWith(string $intitule, Referentiel $referentiel, string $reference, bool $persist = true): ?Mission
     {
         $mission = new Mission();
         $mission->setLibelle($intitule);
         $mission->setReferentiel($referentiel);
         $mission->setReference($reference);
-        if ($perist) $this->create($mission);
+        if ($persist) $this->create($mission);
 
         return $mission;
-    }
-
-    /** @return array (?Mission, string[], array) * */
-    public function createOneWithCsv($json, string $separateur = '|', ?Referentiel $referentiel = null, ?int $position = null): array
-    {
-        $debugs = [
-            'info' => [],
-            'warning' => [],
-            'error' => [],
-        ];
-        $to_create = [
-            'familles' => [],
-        ];
-        $to_delete = [];
-
-        /* LIBELLE ****************************************************************************************************/
-        if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]) === '') {
-            throw new RuntimeException("La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_LIBELLE . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $libelle = trim($json[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]);
-        if (!isset($json[Mission::MISSION_PRINCIPALE_HEADER_ID]) or trim($json[Mission::MISSION_PRINCIPALE_HEADER_ID]) === '') {
-            throw new RuntimeException("La colonne obligatoire [" . Mission::MISSION_PRINCIPALE_HEADER_ID . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $idOrig = trim($json[Mission::MISSION_PRINCIPALE_HEADER_ID]);
-
-
-        /*Recupération ou creation */
-
-        $mission = $this->getMissionPrincipaleByReference($referentiel, $json[Mission::MISSION_PRINCIPALE_HEADER_ID]);
-        if ($mission === null) {
-            $mission = new Mission();
-        }
-
-        $mission->setLibelle($libelle);
-        $mission->setReferentiel($referentiel);
-        $mission->setReference($idOrig);
-
-        /* NIVEAUX ***************************************************************************************************/
-        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
-            $niveau = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
-            if (count($niveau) === 1) {
-                $niv = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
-                if ($niv === null) {
-                    $debugs['warning'][] = "Le niveau [" . trim($niveau[0]) . "] n'existe pas (ligne " . $position . ").";
-                } else {
-                    $niveau_ = new NiveauEnveloppe();
-                    $niveau_->setBorneInferieure($niv);
-                    $niveau_->setBorneSuperieure($niv);
-                    $mission->setNiveau($niveau_);
-                }
-            }
-            if (count($niveau) === 2) {
-                $inf = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
-                if ($inf === null) {
-                    $debugs['warning'][] = "Le niveau [" . trim($niveau[0]) . "] n'existe pas (ligne " . $position . ").";
-                }
-                $sup = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[1]));
-                if ($sup === null) {
-                    $debugs['warning'][] = "Le niveau [" . trim($niveau[1]) . "] n'existe pas (ligne " . $position . ").";
-                }
-                if ($inf !== null and $sup !== null) {
-                    $niveau_ = new NiveauEnveloppe();
-                    $niveau_->setBorneInferieure($inf);
-                    $niveau_->setBorneSuperieure($sup);
-                    $mission->setNiveau($niveau_);
-                }
-            }
-        }
-
-        /* FAMILLE PROFESSIONNELLE ***********************************************************************************/
-        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) !== '') {
-            $mission->clearFamillesProfessionnelles();
-            $famillesString = explode($separateur, $json[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]);
-            foreach ($famillesString as $familleString) {
-                $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($familleString));
-                if ($famille === null) {
-                    $famille = new FamilleProfessionnelle();
-                    $famille->setLibelle(trim($familleString));
-                    $debugs['warning'][] = "La famille professionnelle [" . trim($familleString) . "] n'existe pas (ligne " . $position . ") et sera créée.";
-                    $to_create['familles'][] = trim($familleString);
-                }
-                if (!$mission->hasFamilleProfessionnelle($famille)) $mission->addFamilleProfessionnelle($famille);
-            }
-        }
-
-        /* COMPLEMENT *************************************************************************************************/
-        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]) !== '') {
-            $mission->setCodesFicheMetier(trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]));
-        }
-        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]) !== '') {
-            $mission->setCodesFonction(trim($json[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]));
-        }
-        if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]) !== '') {
-            $mission->setDescription(trim($json[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]));
-        }
-
-        /** SOURCE ****************************************************************************************************/
-        $source_string = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $mission->setSourceString($source_string);
-
-        return [$mission, $debugs, $to_create, $to_delete];
-
     }
 
     public function getMissionsPrincipalesAsOptions(): array

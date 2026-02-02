@@ -31,7 +31,7 @@ $verbose = (isset($options['verbose']) AND $options['verbose'] === true);
     <?php if ($niveauEnveloppe === null) : ?>
         Non&nbsp;précisé
     <?php else: ?>
-        [<?php echo $niveauEnveloppe->getBorneSuperieure()->getEtiquette(); ?>:<?php echo $niveauEnveloppe->getBorneInferieure()->getEtiquette(); ?>]<br/>
+        [<?php echo $niveauEnveloppe->getBorneInferieure()->getEtiquette(); ?>:<?php echo $niveauEnveloppe->getBorneSuperieure()->getEtiquette(); ?>]<br/>
         <?php if ($niveauEnveloppe->getValeurRecommandee()) : ?>
             Recommandé&nbsp;<?php echo $niveauEnveloppe->getValeurRecommandee()->getEtiquette(); ?>
         <?php endif; ?>

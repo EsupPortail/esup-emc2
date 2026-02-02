@@ -2,13 +2,13 @@
 
 namespace FicheMetier\Form\ThematiqueElement;
 
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use FicheMetier\Entity\Db\ThematiqueElement;
 use Laminas\Hydrator\HydratorInterface;
 
 class ThematiqueElementHydrator implements HydratorInterface
 {
-    use NiveauServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
 
     public function extract(object $object): array
     {
@@ -22,7 +22,7 @@ class ThematiqueElementHydrator implements HydratorInterface
 
     public function hydrate(array $data, object $object): object
     {
-        $niveau = (isset($data['niveau']))?$this->getNiveauService()->getMaitriseNiveau($data['niveau']):null;
+        $niveau = (isset($data['niveau']))?$this->getNiveauMaitriseService()->getMaitriseNiveau($data['niveau']):null;
         $complement = (isset($data['complement']) && trim($data['complement']) !== "")?trim($data['complement']):null;
 
         /** @var ThematiqueElement $object */

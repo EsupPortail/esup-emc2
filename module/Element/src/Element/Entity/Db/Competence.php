@@ -13,8 +13,8 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
     use HistoriqueAwareTrait;
     use HasReferenceTrait;
 
-    const COMPETENCE_HEADER_ID = "Id_compétence";
-    const COMPETENCE_HEADER_LIBELLE = "Compétence";
+    const COMPETENCE_HEADER_ID = "Id";
+    const COMPETENCE_HEADER_LIBELLE = "Libellé";
     const COMPETENCE_HEADER_TYPE = "Type";
     const COMPETENCE_HEADER_THEME = "Thème";
     const COMPETENCE_HEADER_DEFINITION = "Définition";
@@ -160,4 +160,11 @@ class Competence implements HistoriqueAwareInterface, HasReferenceInterface {
         $this->raw = $raw;
     }
 
+    public function generateTag(): string
+    {
+        $tag  = $this->getReferentiel()?$this->getReferentiel()->getLibelleCourt():"NULL";
+        $tag .= "_";
+        $tag .= $this->getReference()?$this->getReference():"NULL";
+        return $tag;
+    }
 }

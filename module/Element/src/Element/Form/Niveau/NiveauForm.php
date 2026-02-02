@@ -3,7 +3,7 @@
 namespace Element\Form\Niveau;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Hidden;
 use Laminas\Form\Element\Number;
@@ -14,7 +14,7 @@ use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
 
 class NiveauForm extends Form {
-    use NiveauServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
 
     private ?string $type = null;
 
@@ -118,7 +118,7 @@ class NiveauForm extends Form {
                         ],
                         'callback' => function ($value, $context = []) {
                             if($value ==  $context['old-niveau']) return true;
-                            return ($this->getNiveauService()->getMaitriseNiveauByNiveau($context['type'],$value) == null);
+                            return ($this->getNiveauMaitriseService()->getMaitriseNiveauByNiveau($context['type'],$value) == null);
                         },
                     ],
                 ]],

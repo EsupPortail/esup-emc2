@@ -2,15 +2,16 @@
 
 namespace Element\Form\SelectionNiveau;
 
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
-class SelectionNiveauForm extends Form {
-    use NiveauServiceAwareTrait;
+class SelectionNiveauForm extends Form
+{
+    use NiveauMaitriseServiceAwareTrait;
 
     private ?string $type = null;
 
@@ -32,14 +33,14 @@ class SelectionNiveauForm extends Form {
             'name' => 'niveau',
             'options' => [
                 'label' => "Niveau de maîtrise <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => "Sélectionner un niveau de maîtrise",
-                'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions(($this->type)??""),
+                'value_options' => $this->getNiveauMaitriseService()->getMaitrisesNiveauxAsOptions(($this->type) ?? ""),
             ],
             'attributes' => [
-                'id'                => 'niveau',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'id' => 'niveau',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ],
         ]);
         $this->add([
@@ -49,7 +50,7 @@ class SelectionNiveauForm extends Form {
                 'label' => "Est clef",
             ],
             'attributes' => [
-                'id'                => 'clef',
+                'id' => 'clef',
             ],
         ]);
         //button
@@ -69,8 +70,8 @@ class SelectionNiveauForm extends Form {
         ]);
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'niveau'           => [ 'required' => true,  ],
-            'clef'             => [ 'required' => false,  ],
+            'niveau' => ['required' => true,],
+            'clef' => ['required' => false,],
         ]));
     }
 

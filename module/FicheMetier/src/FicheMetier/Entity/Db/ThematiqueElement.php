@@ -2,14 +2,14 @@
 
 namespace FicheMetier\Entity\Db;
 
-use Element\Entity\Db\Interfaces\HasNiveauInterface;
-use Element\Entity\Db\Traits\HasNiveauTrait;
+use Element\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
+use Element\Entity\Db\Traits\HasNiveauMaitriseTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class ThematiqueElement implements HistoriqueAwareInterface, HasNiveauInterface {
+class ThematiqueElement implements HistoriqueAwareInterface, HasNiveauMaitriseInterface {
     use HistoriqueAwareTrait;
-    use HasNiveauTrait;
+    use HasNiveauMaitriseTrait;
 
     private ?int $id = null;
     private ?FicheMetier $ficheMetier = null;

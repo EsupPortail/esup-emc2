@@ -13,6 +13,7 @@ class SelectionnerFamilleProfessionnelleForm extends Form
 
     public function init(): void
     {
+
         // libelle
         $this->add([
             'type' => Select::class,
@@ -27,7 +28,6 @@ class SelectionnerFamilleProfessionnelleForm extends Form
                 'id' => 'familleprofessionnelle',
                 'class' => 'bootstrap-selectpicker show-tick',
                 'data-live-search' => 'true',
-                'multiple' => 'multiple',
             ],
         ]);
         // button

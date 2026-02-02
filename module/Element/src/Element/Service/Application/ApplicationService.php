@@ -152,4 +152,15 @@ class ApplicationService
         return $this_option;
     }
 
+    public function generateDictionnaire(): array
+    {
+        $applications = $this->getApplications();
+        $dictionnaire = [];
+
+        foreach ($applications as $application) {
+            $dictionnaire[$application->getLibelle()] = $application;
+        }
+        return $dictionnaire;
+    }
+
 }

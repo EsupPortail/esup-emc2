@@ -125,12 +125,16 @@ class NiveauService
     }
 
     /** @return Niveau[] */
-    public function generateDictionnaire(): array
+    public function generateDictionnaire(string $disciminant = 'niveau'): array
     {
         $dictionnaire = [];
         $niveaux = $this->getNiveaux();
         foreach ($niveaux as $niveau) {
-            $dictionnaire[$niveau->getNiveau()] = $niveau;
+            $tabId = match ($disciminant) {
+                'niveau' => $niveau->getNiveau(),
+                'etiquette' => $niveau->getEtiquette(),
+            };
+            $dictionnaire[$tabId] = $niveau;
         }
         return $dictionnaire;
     }

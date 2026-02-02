@@ -3,7 +3,9 @@
 namespace FicheMetier\Entity\Db;
 
 use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\Interface\HasFamilleProfessionnelleInterface;
 use Carriere\Entity\Db\Interface\HasNiveauCarriereInterface;
+use Carriere\Entity\Db\Trait\HasFamilleProfessionnelleTrait;
 use Carriere\Entity\Db\Trait\HasCategorieTrait;
 use Carriere\Entity\Db\Trait\HasNiveauCarriereTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +17,6 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
-use Carriere\Entity\Db\FamilleProfessionnelle;
 use FicheMetier\Entity\Db\Interface\HasActivitesInterface;
 use FicheMetier\Entity\Db\Interface\HasMissionsPrincipalesInterface;
 use FicheMetier\Entity\Db\Trait\HasActivitesTrait;
@@ -30,7 +31,7 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheMetier implements
     HistoriqueAwareInterface, HasEtatsInterface, HasNiveauCarriereInterface,
-    HasActivitesInterface, HasMissionsPrincipalesInterface,
+    HasActivitesInterface, HasMissionsPrincipalesInterface, HasFamilleProfessionnelleInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface,
     HasReferenceInterface
 {
@@ -38,14 +39,13 @@ class FicheMetier implements
     use HasCategorieTrait;
     use HasEtatsTrait;
     use HasNiveauCarriereTrait;
-    use HasActivitesTrait, HasMissionsPrincipalesTrait;
+    use HasActivitesTrait, HasMissionsPrincipalesTrait, HasFamilleProfessionnelleTrait;
     use HasApplicationCollectionTrait, HasCompetenceCollectionTrait;
 
     use HasReferenceTrait;
 
     private ?int $id = null;
     private ?string $libelle = null;
-    private ?FamilleProfessionnelle $familleProfessionnelle = null;
     private ?string $raison = null;
     private ?CodeFonction $codeFonction = null;
     private ?string $codesEmploiType = null;
@@ -108,16 +108,6 @@ class FicheMetier implements
     public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
-    }
-
-    public function getFamilleProfessionnelle(): ?FamilleProfessionnelle
-    {
-        return $this->familleProfessionnelle;
-    }
-
-    public function setFamilleProfessionnelle(?FamilleProfessionnelle $familleProfessionnelle): void
-    {
-        $this->familleProfessionnelle = $familleProfessionnelle;
     }
 
     public function getCodesEmploiType(): ?string
@@ -205,9 +195,9 @@ class FicheMetier implements
     {
         $thematiques = [];
         /** @var ThematiqueElement $thematique */
-        foreach ($this->thematiques as $tendance) {
+        foreach ($this->thematiques as $thematique) {
             if ($thematique->estNonHistorise()) {
-                $thematique[$thematique->getType()->getCode()] = $thematique;
+                $thematiques[$thematique->getType()->getCode()] = $thematique;
             }
         }
         return $thematiques;

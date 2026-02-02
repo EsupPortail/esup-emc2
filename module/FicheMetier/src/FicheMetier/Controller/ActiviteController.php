@@ -3,20 +3,24 @@
 namespace FicheMetier\Controller;
 
 use DateTime;
-use Exception;
 use FicheMetier\Entity\Db\Activite;
 use FicheMetier\Form\Activite\ActiviteFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use FicheMetier\Provider\Privilege\ActivitePrivileges;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Referentiel\Provider\Privilege\ReferentielPrivileges;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
-use RuntimeException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ActiviteController extends AbstractActionController
 {
@@ -25,7 +29,9 @@ class ActiviteController extends AbstractActionController
     use CodeFonctionServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
     use ReferentielServiceAwareTrait;
+    use UserServiceAwareTrait;
     use ActiviteFormAwareTrait;
 
     public function indexAction(): ViewModel
@@ -57,6 +63,9 @@ class ActiviteController extends AbstractActionController
     public function ajouterAction(): ViewModel
     {
         $activite = new Activite();
+        $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
+        $activite->setReferentiel($referentiel);
+
         $form = $this->getActiviteForm();
         $form->setAttribute('action', $this->url()->fromRoute('activite/ajouter', [], [], true));
         $form->bind($activite);
@@ -67,6 +76,10 @@ class ActiviteController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
+                if ($activite->getReference() === null) {
+                    $activite->setReference($activite->getId());
+                }
+                $this->getActiviteService()->update($activite);
                 exit();
             }
         }
@@ -92,7 +105,10 @@ class ActiviteController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getActiviteService()->create($activite);
+                if ($activite->getReference() === null) {
+                    $activite->setReference($activite->getId());
+                }
+                $this->getActiviteService()->update($activite);
                 exit();
             }
         }
@@ -152,6 +168,8 @@ class ActiviteController extends AbstractActionController
     public function importerAction(): ViewModel
     {
 
+        $colonnesObligatoires = [Activite::ACTIVITE_HEADER_ID, Activite::ACTIVITE_HEADER_LIBELLE];
+
         $displayCodeFonction = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::CODE_FONCTION);
 
         $separateur = "|";
@@ -193,48 +211,83 @@ class ActiviteController extends AbstractActionController
                     $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
                 }
 
-                $array = $this->readCSV($filepath, true, ",");
-                if (empty($array)) {
-                    $warning[] = "Le fichier ne contient pas de données.";
-                } else {
 
-                    // Vérification des colonnes et référentiel ////////////////////////////////////////////////////////
-                    $header = [];
-                    foreach ($array[0] as $key => $value) {
-                        $header[] = $key;
+                $csvFile = fopen($filepath, "r");
+                // lecture du header + position colonne
+                if ($csvFile !== false) {
+                    $header = fgetcsv($csvFile, null, ";");
+                    // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+                    $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+                    $nbElements = count($header);
+
+                    foreach ($colonnesObligatoires as $colonne) {
+                        if (!in_array($colonne, $header)) $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> est absente.";
                     }
-                    $hasId = in_array(Activite::ACTIVITE_HEADER_ID, $header);
-                    if (!$hasId) $error[] = "La colonne obligatoire [" . Activite::ACTIVITE_HEADER_ID . "] est manquante";
-                    $hasLibelle = in_array(Activite::ACTIVITE_HEADER_LIBELLE, $header);
-                    if (!$hasLibelle) $error[] = "La colonne obligatoire [" . Activite::ACTIVITE_HEADER_LIBELLE . "] est manquante";
-//                    $hasDescription = in_array(Activite::ACTIVITE_HEADER_DESCRIPTION, $header);
-//                    if (!$hasDescription) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_DESCRIPTION . "] est manquante";
-                    $hasCodesFichesMetiers = in_array(Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE, $header);
-                    if (!$hasCodesFichesMetiers) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE . "] est manquante";
-                    $hasCodesFonctions = in_array(Activite::ACTIVITE_HEADER_CODES_FONCTION, $header);
-                    if (!$hasCodesFonctions and $displayCodeFonction) $warning[] = "La colonne facultative [" . Activite::ACTIVITE_HEADER_CODES_FONCTION . "] est manquante";
 
                     $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
                     if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
 
 
-                    if ($hasId and $hasLibelle and $referentiel !== null) {
-                        $position = 1;
+                    $raws = [];
+                    while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                        $item = [];
+                        for ($position = 0; $position < $nbElements; ++$position) {
+                            $item[$header[$position]] = $row[$position];
+                        }
+                        $raws[] = $item;
+                    }
 
-                        // Lecture des données /////////////////////////////////////////////////////////////////////////////
+                    if (empty($error)) {
+                        $ligne = 1;
+                        foreach ($raws as $raw) {
+                            $ligne++;
 
-                        foreach ($array as $row) {
-                            $position++;
-                            try {
-                                $activite = $this->getActiviteService()->createOneWithCsv($row, $separateur, $referentiel, $position);
+                            /** Check des valeurs obligatoires **/
+                            $allGood = true;
+                            foreach ($colonnesObligatoires as $colonne) {
+                                if (trim($raw[$colonne]) === "") {
+                                    $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne " . $ligne . " a été ignorée";
+                                    $allGood = false;
+                                }
+                            }
+
+                            if ($allGood) {
+                                $idOrig = trim($raw[Activite::ACTIVITE_HEADER_ID]);
+                                $libelle = trim($raw[Activite::ACTIVITE_HEADER_LIBELLE]);
+
+                                $activite = $this->getActiviteService()->getActiviteByReference($referentiel, $idOrig);
+                                if ($activite === null) {
+                                    $activite = new Activite();
+                                    $activite->setReferentiel($referentiel);
+                                    $activite->setReference($idOrig);
+                                }
+                                $activite->setLibelle($libelle);
+
+                                if (isset($raw[Activite::ACTIVITE_HEADER_DESCRIPTION])) {
+                                    $description = $raw[Activite::ACTIVITE_HEADER_DESCRIPTION] ?? trim($raw[Activite::ACTIVITE_HEADER_DESCRIPTION]);
+                                    $activite->setDescription($description !== '' ? $description : null);
+                                }
+                                if (isset($raw[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE])) {
+                                    $codeEmploiType = $raw[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE] ?? trim($raw[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]);
+                                    $activite->setCodesFicheMetier($codeEmploiType !== '' ? $codeEmploiType : null);
+                                }
+                                if (isset($raw[Activite::ACTIVITE_HEADER_CODES_FONCTION])) {
+                                    $codeFonction = $raw[Activite::ACTIVITE_HEADER_CODES_FONCTION] ?? trim($raw[Activite::ACTIVITE_HEADER_CODES_FONCTION]);
+                                    $activite->setCodesFonction($codeFonction !== '' ? $codeFonction : null);
+                                }
+                                $activite->setRaw(json_encode($raw));
+
                                 $activites[] = $activite;
-                            } catch (Exception $e) {
-                                throw new RuntimeException("Un problème est survenue lors de la lecture du fichier CSV", 0, $e);
                             }
                         }
 
-                        //  Importation ////////////////////////////////////////////////////////////////////////////////
                         if ($mode === 'import') {
+
+                            $info[] = "Importation terminée.";
+                            $role = $this->getUserService()->getConnectedRole();
+                            $allowedActivite = $this->getPrivilegeService()->checkPrivilege(ActivitePrivileges::ACTIVITE_AFFICHER, $role);
+                            $allowedFicheMetier = $this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_AFFICHER, $role);
+                            $allowedReferentiel = $this->getPrivilegeService()->checkPrivilege(ReferentielPrivileges::REFERENTIEL_AFFICHER, $role);
 
                             foreach ($activites as $activite) {
 
@@ -245,8 +298,6 @@ class ActiviteController extends AbstractActionController
                                     $this->getActiviteService()->update($activite);
                                 }
 
-
-                                // TODO Factoriser  ////////////////////////////////////////////////////////////////////
                                 // Gestion des codes emploi type ///////////////////////////////////////////////////////
                                 $codesFicheMetier = explode($separateur, $activite->getCodesFicheMetier() ?? "");
                                 $codesFicheMetier = array_map('trim', $codesFicheMetier);
@@ -256,16 +307,25 @@ class ActiviteController extends AbstractActionController
                                 foreach ($codesFicheMetier as $codeFicheMetier) {
                                     $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                     if ($fichemetier === null) {
-                                        $warning[] = "La fiche metier <span class='badge' style='background:".$referentiel->getCouleur().">" . $referentiel->getLibelleCourt() . " - " .$activite->getCodesFicheMetier() . "</span> n&apos;existe pas";
+                                        $message = "Aucune fiche métier identifiée " . $codeFicheMetier . " dans le référentiel ";
+                                        $message .= $referentiel ? $referentiel->printReference("lien", $this->url()->fromRoute("referentiel", [], [], true), $allowedReferentiel) : "<span class='badge' style='background: grey;'>Aucun référentiel</span>";
+                                        $message .= ". ";
+                                        $message .= "L'activité \"" . $activite->getLibelle() . "\" ";
+                                        $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                        $message .= " ne sera pas ajoutée.";
+                                        $warning[] = $message;
                                     } else {
                                         if (!$fichemetier->hasActivite($activite)) {
                                             $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                            $info[] = "Ajout de l'activité " . $activite->printReference() . " à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                            $message = "L'activité \"" . $activite->getLibelle() . "\" ";
+                                            $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                            $message .= " a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
+                                            $message .= $fichemetier->printReference("lien", $this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true), $allowedFicheMetier);
+                                            $info[] = $message;
                                         }
                                     }
                                 }
 
-                                // TODO Factoriser  ////////////////////////////////////////////////////////////////////
                                 // Gestion des codes fonction //////////////////////////////////////////////////////////
                                 $codesFonction = explode('|', $activite->getCodesFonction() ?? "");
                                 $codesFonction = array_map('trim', $codesFonction);
@@ -275,7 +335,11 @@ class ActiviteController extends AbstractActionController
                                 foreach ($codesFonction as $codeFonction) {
                                     $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
                                     if ($codeFonction_ === null) {
-                                        $warning[] = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas ; la mission principale " . $activite->printReference() . " ne sera ajoutée à aucune fiche métier.";
+                                        $message = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
+                                        $message .= "L'activité \"" . $activite->getLibelle() . "\" ";
+                                        $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                        $message .= " ne peut pas être ajoutée.";
+                                        $warning[] = $message;
                                     } else {
                                         $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
                                         if (empty($fichesmetiers)) {
@@ -284,14 +348,16 @@ class ActiviteController extends AbstractActionController
                                         foreach ($fichesmetiers as $fichemetier) {
                                             if (!$fichemetier->hasActivite($activite)) {
                                                 $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
-                                                $info[] = "Ajout de l'activité ".$activite->printReference()." à la fiche metier [" . ($fichemetier->getReference() ?? ("Fiche #" . $fichemetier->getId())) . "]";
+                                                $message = "L'activité \"" . $activite->getLibelle() . "\" ";
+                                                $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
+                                                $message .= "a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
+                                                $message .= $fichemetier->printReference("lien", $this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true), $allowedFicheMetier);
+                                                $info[] = $message;
                                             }
                                         }
                                     }
                                 }
-                                //traitement des codes ...
                             }
-
                         }
                     }
                 }
@@ -312,54 +378,15 @@ class ActiviteController extends AbstractActionController
             'filepath' => $filepath,
             'filename' => $filename,
         ]);
-
-
-
     }
 
-
-    public function readCSV(string $fichier_path, bool $explodeMultiline = false, string $separator = '|'): array
+    public function rechercherAction(): JsonModel
     {
-        $handle = fopen($fichier_path, "r");
-
-        $header = fgetcsv($handle, null, ";");
-        // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
-        $header[0] = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header[0]);
-        $header = array_map('trim', $header);
-
-        $array = [];
-        while ($content = fgetcsv($handle, 0, ";")) {
-            $all = implode($separator, $content);
-            $encoding = mb_detect_encoding($all, 'UTF-8, ISO-8859-1');
-            $content = array_map(function (string $st) use ($encoding) {
-                $st = str_replace(chr(63), '\'', $st);
-                $st = mb_convert_encoding($st, 'UTF-8', $encoding);
-                return $st;
-            }, $content);
-            $array[] = $content;
+        if (($term = $this->params()->fromQuery('term'))) {
+            $activites = $this->getActiviteService()->getActivitesByTerm($term);
+            $result = $this->getActiviteService()->formatAsJson($activites);
+            return new JsonModel($result);
         }
-
-        $jsonData = [];
-        foreach ($array as $item) {
-            $jsonItem = [];
-            for ($position = 0; $position < count($header); $position++) {
-                $key = $header[$position];
-                if ($explodeMultiline) {
-                    if (strstr($item[$position], PHP_EOL)) {
-                        $jsonItem[$key] = explode(PHP_EOL, $item[$position]);
-                    } else {
-                        $jsonItem[$key] = $item[$position];
-                    }
-                } else {
-                    $jsonItem[$key] = $item[$position];
-                }
-            }
-            $jsonData[] = $jsonItem;
-        }
-
-        return $jsonData;
+        exit;
     }
-
-
-
 }

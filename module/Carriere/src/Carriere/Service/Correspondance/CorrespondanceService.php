@@ -158,4 +158,20 @@ class CorrespondanceService {
         if ($persist) $this->create($correspondance);
         return $correspondance;
     }
+
+    public function generateDictionnaire(string $discriminant):array
+    {
+        $specialites = $this->getCorrespondances();
+
+        $dictionnaire = [];
+        foreach ($specialites as $specialite) {
+            $tabId = match($discriminant) {
+                'libelle' => $specialite->getLibelleLong(),
+                'code' => $specialite->getCategorie(),
+                default => $specialite->getId(),
+            };
+            $dictionnaire[$tabId] = $specialite;
+        }
+        return $dictionnaire;
+    }
 }

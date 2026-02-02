@@ -3,9 +3,9 @@
 namespace Element\Form\CompetenceElement;
 
 use Element\Service\Competence\CompetenceService;
-use Element\Service\Niveau\NiveauService;
-use Interop\Container\ContainerInterface;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class CompetenceElementHydratorFactory {
@@ -20,14 +20,14 @@ class CompetenceElementHydratorFactory {
     {
         /**
          * @var CompetenceService $competenceService
-         * @var NiveauService $maitriseNiveauService
+         * @var NiveauMaitriseService $maitriseNiveauService
          */
         $competenceService = $container->get(CompetenceService::class);
-        $maitriseNiveauService = $container->get(NiveauService::class);
+        $maitriseNiveauService = $container->get(NiveauMaitriseService::class);
 
         $hydrator = new CompetenceElementHydrator();
         $hydrator->setCompetenceService($competenceService);
-        $hydrator->setNiveauService($maitriseNiveauService);
+        $hydrator->setNiveauMaitriseService($maitriseNiveauService);
         return $hydrator;
     }
 }

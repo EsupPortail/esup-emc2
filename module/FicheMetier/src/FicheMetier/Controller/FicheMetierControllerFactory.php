@@ -2,10 +2,10 @@
 
 namespace FicheMetier\Controller;
 
-use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieForm;
+use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereForm;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -13,13 +13,14 @@ use Element\Service\CompetenceType\CompetenceTypeService;
 use EmploiRepere\Service\EmploiRepere\EmploiRepereService;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
+use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesForm;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleForm;
 use FicheMetier\Service\ActiviteElement\ActiviteElementService;
-use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
@@ -82,24 +83,26 @@ class FicheMetierControllerFactory
         /**
          * @var CodeEmploiTypeForm $codeEmploiTypeForm
          * @var CodeFonctionForm $codeFonctionForm
-         * @var ModifierLibelleForm $modifierLibelleForm
+         * @var FicheMetierIdentificationForm $ficheMetierIdentificationForm
          * @var RaisonForm $raisonForm
          * @var SelectionApplicationForm $selectionnerApplicationForm
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerCategorieForm $selectionnerCategorieForm
          * @var SelectionnerActivitesForm $selectionnerActivitesForm
+         * @var SelectionnerFamilleProfessionnelleForm $selectionnerFamilleProfesionnelleForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
          * @var SelectionnerNiveauCarriereForm $selectionnerNiveauCarriereForm
          */
         $codeEmploiTypeForm = $container->get('FormElementManager')->get(CodeEmploiTypeForm::class);
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
-        $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
+        $ficheMetierIdentificationForm = $container->get('FormElementManager')->get(FicheMetierIdentificationForm::class);
         $selectionnerActivitesForm = $container->get('FormElementManager')->get(SelectionnerActivitesForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionnerCategorieForm = $container->get('FormElementManager')->get(SelectionnerCategorieForm::class);
+        $selectionnerFamilleProfesionnelleForm = $container->get('FormElementManager')->get(SelectionnerFamilleProfessionnelleForm::class);
         $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
         $selectionnerNiveauCarriereForm = $container->get('FormElementManager')->get(SelectionnerNiveauCarriereForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
@@ -123,13 +126,14 @@ class FicheMetierControllerFactory
         $controller->setThematiqueTypeService($thematiqueTypeService);
         $controller->setCodeEmploiTypeForm($codeEmploiTypeForm);
         $controller->setCodeFonctionForm($codeFonctionForm);
-        $controller->setModifierLibelleForm($modifierLibelleForm);
+        $controller->setFicheMetierIdentificationForm($ficheMetierIdentificationForm);
         $controller->setRaisonForm($raisonForm);
         $controller->setSelectionnerActivitesForm($selectionnerActivitesForm);
         $controller->setSelectionApplicationForm($selectionnerApplicationForm);
         $controller->setSelectionnerCategorieForm($selectionnerCategorieForm);
         $controller->setSelectionCompetenceForm($selectionnerCompetenceForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);
+        $controller->setSelectionnerFamilleProfessionnelleForm($selectionnerFamilleProfesionnelleForm);
         $controller->setSelectionnerMissionPrincipaleForm($selectionnerMissionPrincipaleForm);
         $controller->setSelectionnerNiveauCarriereForm($selectionnerNiveauCarriereForm);
         return $controller;

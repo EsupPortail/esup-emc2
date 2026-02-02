@@ -12,7 +12,6 @@ use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\ApplicationTheme\ApplicationThemeServiceAwareTrait;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -27,7 +26,6 @@ class ApplicationController extends AbstractActionController
     use ApplicationElementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use NiveauServiceAwareTrait;
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
 

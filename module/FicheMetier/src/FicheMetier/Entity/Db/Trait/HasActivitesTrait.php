@@ -43,7 +43,7 @@ trait HasActivitesTrait
         $this->activites->clear();
     }
 
-    public function hasActivite(Activite $activite): bool
+    public function hasActivite(Activite $activite, ): bool
     {
         /** @var ActiviteElement[] $activites */
         $activites = $this->activites->toArray();

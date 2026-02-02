@@ -8,8 +8,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\Activite;
-use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Referentiel\Entity\Db\Referentiel;
@@ -54,10 +52,9 @@ class ActiviteService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getObjectManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+        return $this->getObjectManager()->getRepository(Activite::class)->createQueryBuilder('activite')
             ->leftJoin('activite.referentiel', 'referentiel')->addSelect('referentiel')
         ;
-        return $qb;
     }
 
     public function getActivite(?int $id = null): ?Activite
@@ -163,60 +160,13 @@ class ActiviteService
 
     /** FACADE ********************************************************************************************************/
 
-    public function createWith(string $intitule, Referentiel $referentiel, string $reference, bool $perist = true): ?Activite
+    public function createWith(string $intitule, Referentiel $referentiel, string $reference, bool $persist = true): ?Activite
     {
         $activite = new Activite();
         $activite->setLibelle($intitule);
         $activite->setReferentiel($referentiel);
         $activite->setReference($reference);
-        if ($perist) $this->create($activite);
-
-        return $activite;
-    }
-
-    public function createOneWithCsv(array $json, string $separateur, Referentiel $referentiel, ?int $position): Activite
-    {
-
-        /* CHAMPS OBLIGATOIRE *****************************************************************************************/
-
-        if (!isset($json[Activite::ACTIVITE_HEADER_ID]) or trim($json[Activite::ACTIVITE_HEADER_ID]) === '') {
-            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_ID . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $idOrig = trim($json[Activite::ACTIVITE_HEADER_ID]);
-
-        if (!isset($json[Activite::ACTIVITE_HEADER_LIBELLE]) or trim($json[Activite::ACTIVITE_HEADER_LIBELLE]) === '') {
-            throw new RuntimeException("La colonne obligatoire [" . Activite::ACTIVITE_HEADER_LIBELLE . "] est manquante dans le fichier CSV sur la ligne [" . ($position ?? "non préciser") . "]");
-        } else $libelle = trim($json[Activite::ACTIVITE_HEADER_LIBELLE]);
-
-        /** RECUPERATION OR CREATION **********************************************************************************/
-
-        $activite = $this->getActiviteByReference($referentiel, $idOrig);
-        if ($activite === null) {
-            $activite = new Activite();
-            $activite->setReferentiel($referentiel);
-            $activite->setReference($idOrig);
-            $activite->setLibelle($libelle);
-        }
-
-        /** RECUPERATION DES AUTRES DONNEES ***************************************************************************/
-
-        if (isset($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) and trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]) != '') {
-            $description = trim($json[Activite::ACTIVITE_HEADER_DESCRIPTION]);
-            $activite->setDescription($description);
-        }
-        if (isset($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE])) {
-            if (trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]) !== '') {
-                $codesFicheMetier = trim($json[Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE]);
-                $activite->setCodesFicheMetier($codesFicheMetier);
-            } else $activite->setCodesFicheMetier(null);
-        }
-        if (isset($json[Activite::ACTIVITE_HEADER_CODES_FONCTION])) {
-            if (trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]) !== '') {
-                $codesCodeFonction = trim($json[Activite::ACTIVITE_HEADER_CODES_FONCTION]);
-                $activite->setCodesFonction($codesCodeFonction);
-            } else $activite->setCodesFonction(null);
-        }
-
-        $activite->setRaw(json_encode($json));
+        if ($persist) $this->create($activite);
 
         return $activite;
     }
@@ -265,16 +215,32 @@ EOS;
                 . "</span>";
         }
 
-        $texte .= "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
-            . "</span>";
+//        $texte .= "<span class='description' style='display : none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
+//            . "</span>";
 
-        $this_option = [
+        return [
             'value' => $activite->getId(),
             'attributes' => [
                 'data-content' => $texte
             ],
             'label' => $texte,
         ];
-        return $this_option;
+    }
+
+    /** @param Activite[] $activites */
+    public function formatAsJson(array $activites): array
+    {
+        $result = [];
+        foreach ($activites as $activite) {
+            $result[] = array(
+                'id' => $activite->getId(),
+                'label' => $activite->getLibelle(),
+                'extra' => $activite->printReference(),
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
     }
 }

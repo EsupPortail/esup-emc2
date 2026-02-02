@@ -2,7 +2,6 @@
 
 /**
  * @see ImportController::importAction()
- * @var FicheMetierImportationForm $form
  *
  * @var array $info
  * @var array $warning
@@ -21,17 +20,12 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\Competence;
 use FicheMetier\Controller\ImportController;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use Referentiel\Entity\Db\Referentiel;
 
 $canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
 
 $this->headTitle("Importation des fiches métiers");
 
-$formats = [
-        ImportController::FORMAT_REFERENS3 => 'Referens 3',
-        ImportController::FORMAT_RMFP => 'RMFP',
-];
 ?>
 
 <script xmlns="http://www.w3.org/1999/html">
@@ -51,13 +45,15 @@ $formats = [
         <?php if ($canFicheMetier) : ?>
             <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
-               class="btn btn-secondary">
+               class="btn btn-secondary float-end">
                 <span class="icon icon-listing"></span>
                 Accéder aux fiches métiers
             </a>
         <?php endif; ?>
     </div>
 </div>
+
+<br>
 
 <div class="row">
     <div class="col-md-6">
@@ -106,7 +102,7 @@ $formats = [
                     </label>
                     <select class="selectpicker show-tick form-control" id="format" name="format">
                         <option value="">Sélectionnez un format</option>
-                        <?php foreach ($formats as $key => $libelle): ?>
+                        <?php foreach (ImportController::FORMATS as $key => $libelle): ?>
                             <option value="<?php echo $key; ?>"
                                     <?php if (isset($data["format"]) and $data["format"] == $key) : ?>
                                         selected
@@ -145,38 +141,42 @@ $formats = [
     </div>
     <div class="col-md-6">
         <div class="alert alert-info">
-            Deux formats sont reconnus :
-            <ul>
-                <li> le format <code>REFERENS3</code></li>
-                <li> le format <code>RMFP</code></li>
+            <p>
+                Vous pouvez :
+                <ul>
+                <li>Importez vos fiches métiers via l'un des deux référentiels (REFERENS3 ou RMFP);</li>
+                <li>Importez vos fiches métiers via la trame EMC2 (référentiel maison).</li>
             </ul>
-            Pour les établissements avec un référentiel maison qui souhaiteraient importer les fiches métiers, choisir l’une des 2 trames proposées.
-            <br><br>
 
-            <strong><span class="icon icon-attention"></span> Remarques :</strong>
+            <p>
+
+            </p>
+
+            <strong><u>Remarques :</u></strong>
             <ul>
+                <li>Le fichier importé doit être enregistré en <strong style="color:red;">CSV UTF8</strong> (et non CSV).</li>
                 <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
                 <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
-                <li>Le fichier doit être enregistré en <strong>CSV UTF8</strong>.</li>
-                <li>Pour <code>REFERENS3</code> le séparateur est <code>|</code>. </li>
-                <li>Pour <code>RMFP</code> le séparateur est le <em>saut de ligne</em>. </li>
-                <?php if ($displayCodeFonction) : ?>
-                    <li>La colonne <code>Code Fonction</code> peut être ajoutée aux deux trames vierges pour les renseigner lors de l'import.</li>
-                <?php endif; ?>
+                <li>Pour REFERENS3 le séparateur est <code>|</code>.</li>
+                <li>Pour RMFP le séparateur est le saut de ligne.</li>
             </ul>
 
-            <?php if ($displayCodeFonction) : ?>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3_codefonction.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp_codefonction.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
-            <?php else : ?>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_referens3.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_fichesmetiers_rmfp.csv">
-                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>
-            <?php endif; ?>
-            <br><br>
+<!--            --><?php //if ($displayCodeFonction) : ?>
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_referens3_codefonction.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>-->
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp_codefonction.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
+<!--            --><?php //else : ?>
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_referens3.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>-->
+<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp.csv">-->
+<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
+<!--            --><?php //endif; ?>
+            <a href="../exemples/trame_csv/import_fichemetier_emc2.csv">
+                <span class="icon icon-csv"></span> Télécharger la trame vierge au format EMC2
+            </a>
+            <br>
+            <br>
             <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
                 <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>
             <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv">
@@ -188,31 +188,33 @@ $formats = [
     </div>
 </div>
 
-<?php if (!empty($error)) : ?>
-    <div class="alert alert-danger">
-        <?php foreach ($error as $line): ?>
-            <?php echo $line ?>
-            <br>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<?php if ($data !== null) : ?>
+    <?php if (!empty($error)) : ?>
+        <div class="alert alert-danger">
+            <?php foreach ($error as $line): ?>
+                <?php echo $line ?>
+                <br>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-<?php if (!empty($info)) : ?>
-    <div class="alert alert-info">
-        <?php foreach ($info as $line): ?>
-            <?php echo $line ?>
-            <br>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+    <?php if (!empty($info)) : ?>
+        <div class="alert alert-info">
+            <?php foreach ($info as $line): ?>
+                <?php echo $line ?>
+                <br>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-<?php if (!empty($warning)) : ?>
-    <div class="alert alert-warning">
-        <?php foreach ($warning as $line): ?>
-            <?php echo $line ?>
-            <br>
-        <?php endforeach; ?>
-    </div>
+    <?php if (!empty($warning)) : ?>
+        <div class="alert alert-warning">
+            <?php foreach ($warning as $line): ?>
+                <?php echo $line ?>
+                <br>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?php foreach ($fiches as $fiche) : ?>
@@ -220,30 +222,51 @@ $formats = [
         <div class="row">
             <div class="col-md-8">
                 <h3> <span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+                <?php if ($fiche->getRaison()) : ?>
+                    <strong>Raison d'être :</strong> <?php echo $fiche->getRaison(); ?>
+                <?php endif; ?>
             </div>
             <div class="col-md-4">
-                <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <?php endif; ?><br>
-                <?php if ($fiche->getCodesEmploiType()): ?> <strong>Codes emploi type</strong> <?php echo $fiche->getCodesEmploiType(); ?> <?php endif; ?><br>
+                <?php if ($fiche->getNiveauCarriere()): ?> <strong>Niveau de carrière</strong> <?php echo $fiche->getNiveauCarriere()->getLibelle(); ?> <br> <?php endif; ?>
+                <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <br> <?php endif; ?>
+                <?php if ($fiche->getCodesEmploiType()): ?> <strong>Codes emploi type</strong> <?php echo $fiche->getCodesEmploiType(); ?> <br> <?php endif; ?>
+                <?php if ($fiche->getFamilleProfessionnelle()): ?>
+                    <strong>Famille professionnelle</strong>
+                    <?php echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
+                    <?php echo $fiche->getFamilleProfessionnelle()->computeCode(); ?>
+                    <br>
+                <?php endif; ?>
+
+                <?php if ($fiche->getFamilleProfessionnelle()?->getCorrespondance()): ?> <strong>Spécialité </strong> <?php echo $fiche->getFamilleProfessionnelle()->getCorrespondance()->getLibelleLong(); ?> <?php endif; ?>
             </div>
         </div>
-    <?php if ($fiche->getFamilleProfessionnelle()) echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
-    <?php if ($fiche->getFamilleProfessionnelle()?->getCorrespondance()) echo $fiche->getFamilleProfessionnelle()->getCorrespondance()->getLibelleLong(); ?>
 
-        <strong>Missions</strong>
-        <ul>
-        <?php foreach ($fiche->getMissions() as $mission) : ?>
-            <li><?php echo $mission->getMission()->getLibelle(); ?>
-<!--                --><?php //if ($mission->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?><!--</li>-->
-        <?php endforeach; ?>
-        </ul>
 
-        <strong>Activités</strong>
-        <ul>
-        <?php foreach ($fiche->getActivites() as $activite) : ?>
-            <li><?php echo $activite->getActivite()->getLibelle(); ?>
-<!--                --><?php //if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?><!--</li>-->
-        <?php endforeach; ?>
-        </ul>
+        <?php $missions = $fiche->getMissions(); ?>
+        <?php if (!empty($missions)) : ?>
+            <strong>Missions</strong>
+            <ul>
+            <?php foreach ($missions as $mission) : ?>
+                <li>
+                    <?php echo $mission->getMission()->getLibelle(); ?>
+                    <?php //if ($mission->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <?php $activites = $fiche->getActivites(); ?>
+        <?php if (!empty($activites)) : ?>
+            <strong>Activités</strong>
+            <ul>
+            <?php foreach ($fiche->getActivites() as $activite) : ?>
+                <li>
+                    <?php echo $activite->getActivite()->getLibelle(); ?>
+                    <?php //if ($activite->getId() === null) echo "<span style='color:darkred;font-variant: small-caps;font-size:small;padding-left: 1rem;font-weight: bold;'>NEW</span>"; ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
 
 
     <?php
@@ -269,10 +292,27 @@ $formats = [
         <?php endforeach; ?>
     </div>
 
+    <?php $applications = $fiche->getApplicationCollection(); ?>
+    <ul>
+    <?php foreach ($applications as $application) : ?>
+        <strong>Applications</strong>
+        <li><?php echo $application->getLibelle(); ?></li>
+    <?php endforeach; ?>
+    </ul>
+
     <?php foreach ($fiche->getTendances() as $tendance) : ?>
         <strong><?php echo $tendance->getType()->getLibelle(); ?></strong>
         <?php echo $tendance->getTexte(); ?>
         <br>
     <?php endforeach; ?>
+
+        <?php foreach ($fiche->getThematiques() as $thematique) : ?>
+            <strong><?php echo $thematique->getType()->getLibelle(); ?></strong>
+            <?php echo $thematique->getNiveauMaitrise()->getLibelle(); ?>
+            <?php if ($thematique->getComplement()) : ?>
+                <br> <?php echo $thematique->getComplement(); ?>
+            <?php endif; ?>
+            <br>
+        <?php endforeach; ?>
     </div>
 <?php endforeach; ?>

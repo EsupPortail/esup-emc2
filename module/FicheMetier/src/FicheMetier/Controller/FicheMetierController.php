@@ -2,11 +2,11 @@
 
 namespace FicheMetier\Controller;
 
-use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieFormAwareTrait;
+use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormAwareTrait;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -17,14 +17,15 @@ use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormAwareTrait;
 use FicheMetier\Form\CodeFonction\CodeFonctionFormAwareTrait;
+use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationFormAwareTrait;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Form\SelectionnerActivites\SelectionnerActivitesFormAwareTrait;
 use FicheMetier\Form\SelectionnerMissionPrincipale\SelectionnerMissionPrincipaleFormAwareTrait;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
-use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
 use FicheMetier\Service\TendanceType\TendanceTypeServiceAwareTrait;
@@ -63,13 +64,14 @@ class FicheMetierController extends AbstractActionController
 
     use CodeFonctionFormAwareTrait;
     use CodeEmploiTypeFormAwareTrait;
-    use ModifierLibelleFormAwareTrait;
+    use FicheMetierIdentificationFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SelectionnerActivitesFormAwareTrait;
     use SelectionnerCategorieFormAwareTrait;
+    use SelectionnerFamilleProfessionnelleFormAwareTrait;
     use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
 
@@ -81,7 +83,7 @@ class FicheMetierController extends AbstractActionController
         $referentiels = $this->getReferentielService()->getReferentiels();
         $etatTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
 
-        $codesFonctions = $displayCodeFonction?$this->getCodeFonctionService()->getCodesFonctions():null;
+        $codesFonctions = $displayCodeFonction ? $this->getCodeFonctionService()->getCodesFonctions() : null;
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
 
@@ -101,7 +103,7 @@ class FicheMetierController extends AbstractActionController
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         if ($fichemetier === null) {
-            $this->flashMessenger()->addErrorMessage("<strong>La fiche métier #".$this->params()->fromRoute('fiche-metier'). " n'existe pas.</strong><br>Basculement sur l'index des fiches métiers.");
+            $this->flashMessenger()->addErrorMessage("<strong>La fiche métier #" . $this->params()->fromRoute('fiche-metier') . " n'existe pas.</strong><br>Basculement sur l'index des fiches métiers.");
             return $this->redirect()->toRoute('fiche-metier', [], [], true);
         }
         $missions = $fichemetier->getMissions();
@@ -174,7 +176,7 @@ class FicheMetierController extends AbstractActionController
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         if ($fichemetier === null) {
-            $this->flashMessenger()->addErrorMessage("<strong>La fiche métier #".$this->params()->fromRoute('fiche-metier'). " n'existe pas.</strong><br>Basculement en création de fiche métier.");
+            $this->flashMessenger()->addErrorMessage("<strong>La fiche métier #" . $this->params()->fromRoute('fiche-metier') . " n'existe pas.</strong><br>Basculement en création de fiche métier.");
             return $this->redirect()->toRoute('fiche-metier/ajouter', [], [], true);
         }
         $missions = $fichemetier->getMissions();
@@ -286,11 +288,11 @@ class FicheMetierController extends AbstractActionController
 
     /** COMPOSITION FICHE *********************************************************************************************/
 
-    public function modifierLibelleAction(): ViewModel
+    public function modifierIdentificationAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-libelle', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form = $this->getFicheMetierIdentificationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-identification', ['fiche-metier' => $fichemetier->getId()], [], true));
         $form->bind($fichemetier);
 
         $request = $this->getRequest();
@@ -304,10 +306,9 @@ class FicheMetierController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Modifier la libellé de la fiche métier",
+            'title' => "Modifier l'identification de la fiche métier",
             'form' => $form,
         ]);
-        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -419,6 +420,43 @@ class FicheMetierController extends AbstractActionController
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $fichemetier->setCodesEmploiType(null);
+        $this->getFicheMetierService()->update($fichemetier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
+    public function modifierFamilleProfessionnelleAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerFamilleProfessionnelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-famille-professionnelle', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modification de la famille professionnelle",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function supprimerFamilleProfessionnelleAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fichemetier->setFamilleProfessionnelle(null);
         $this->getFicheMetierService()->update($fichemetier);
 
         $retour = $this->params()->fromQuery('retour');
@@ -555,7 +593,7 @@ class FicheMetierController extends AbstractActionController
             }
         }
 
-        $css=<<<EOS
+        $css = <<<EOS
 .dropdown-item:hover span.text span.activite span.description { 
     display: block !important; font-style: italic; 
 }    
@@ -595,7 +633,7 @@ EOS;
         $this->getActiviteElementService()->move($ficheMetier, $activiteElement, $direction);
         $this->getActiviteElementService()->reorder($ficheMetier);
 
-        return new JsonModel(['return' => true ]);
+        return new JsonModel(['return' => true]);
     }
 
     public function retirerActiviteAction(): JsonModel
@@ -609,7 +647,7 @@ EOS;
 
         $this->getActiviteElementService()->reorder($ficheMetier);
 
-        return new JsonModel(['return' => true ]);
+        return new JsonModel(['return' => true]);
     }
 
     public function gererMissionsPrincipalesAction(): ViewModel
@@ -633,7 +671,7 @@ EOS;
             }
         }
 
-        $css=<<<EOS
+        $css = <<<EOS
 .dropdown-item:hover span.text span.mission span.description { 
     display: block !important; font-style: italic; 
 }    
@@ -674,7 +712,7 @@ EOS;
         $this->getMissionElementService()->move($ficheMetier, $missionElement, $direction);
         $this->getMissionElementService()->reorder($ficheMetier);
 
-        return new JsonModel(['return' => true ]);
+        return new JsonModel(['return' => true]);
     }
 
     public function retirerMissionAction(): JsonModel
@@ -688,7 +726,7 @@ EOS;
 
         $this->getActiviteElementService()->reorder($ficheMetier);
 
-        return new JsonModel(['return' => true ]);
+        return new JsonModel(['return' => true]);
     }
 
     public function gererApplicationsAction(): ViewModel
@@ -708,7 +746,7 @@ EOS;
             }
         }
 
-        $css=<<<EOS
+        $css = <<<EOS
 .dropdown-item:hover span.text span.competence span.description { 
     display: block !important; font-style: italic; 
 }    
@@ -740,7 +778,6 @@ EOS;
         $form->bind($fichemetier);
 
 
-
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -751,7 +788,7 @@ EOS;
             }
         }
 
-        $css=<<<EOS
+        $css = <<<EOS
 .dropdown-item:hover span.text span.competence span.description { 
     display: block !important; font-style: italic; 
 }
@@ -789,7 +826,7 @@ EOS;
             }
         }
 
-        $css=<<<EOS
+        $css = <<<EOS
 .dropdown-item:hover span.text span.competence span.description {
     display: block !important; font-style: italic;
 }
@@ -859,11 +896,11 @@ EOS;
 
 //        $typeLibelle = str_replace("_"," ", $this->params()->fromRoute('type'));
 //        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($typeLibelle);
-        $typeCode = str_replace("_"," ", $this->params()->fromRoute('type'));
+        $typeCode = str_replace("_", " ", $this->params()->fromRoute('type'));
         $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($typeCode);
 
         if ($type == null) {
-            throw new RuntimeException("Aucun type de compétences avec le code [".$typeCode."]",-1);
+            throw new RuntimeException("Aucun type de compétences avec le code [" . $typeCode . "]", -1);
         }
 
         $competences = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $type, true);
@@ -884,7 +921,7 @@ EOS;
         $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
         return new ViewModel([
-            'title' => "Liste des agents ayant la fiche métier <strong>".$fichemetier->getLibelle()."</strong>",
+            'title' => "Liste des agents ayant la fiche métier <strong>" . $fichemetier->getLibelle() . "</strong>",
             'fichemetier' => $fichemetier,
             'fichespostes' => $fichespostes,
         ]);

@@ -52,4 +52,10 @@ class FamilleProfessionnelle implements HistoriqueAwareInterface {
     {
         return $this->getLibelle();
     }
+    public function computeCode(): ?string
+    {
+        $code  = $this->getCorrespondance()?->getCategorie() ?? "?";
+        $code .= $this->getPosition() ?? "?";
+        return $code;
+    }
 }

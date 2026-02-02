@@ -3,7 +3,7 @@
 namespace Element\Form\CompetenceElement;
 
 use Element\Service\Competence\CompetenceServiceAwareTrait;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Select;
@@ -13,7 +13,7 @@ use Laminas\InputFilter\Factory;
 
 class CompetenceElementForm extends Form {
     use CompetenceServiceAwareTrait;
-    use NiveauServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
 
     public function init(): void
     {
@@ -44,7 +44,7 @@ class CompetenceElementForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner un niveau ... ",
-                'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions('Competence'),
+                'value_options' => $this->getNiveauMaitriseService()->getMaitrisesNiveauxAsOptions('Competence'),
             ],
             'attributes' => [
                 'id'                => 'niveau',

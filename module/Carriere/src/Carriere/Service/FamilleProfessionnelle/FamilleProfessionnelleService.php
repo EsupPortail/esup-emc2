@@ -258,5 +258,21 @@ class FamilleProfessionnelleService
         return $famille;
     }
 
+    public function generateDictionnaire(string $discriminant): array
+    {
+        $familles = $this->getFamillesProfessionnelles();
+
+        $dictionnaire = [];
+        foreach ($familles as $famille) {
+            $tabId = match ($discriminant) {
+                'libelle' => $famille->getLibelle(),
+                'code' => $famille->getCorrespondance()?->getCategorie() . $famille->getPosition(),
+                default => $famille->getId(),
+            };
+            $dictionnaire[$tabId] = $famille;
+        }
+        return  $dictionnaire;
+    }
+
 
 }

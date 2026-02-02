@@ -3,7 +3,7 @@
 namespace Element\Form\ApplicationElement;
 
 use Element\Service\Application\ApplicationService;
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -20,14 +20,14 @@ class ApplicationElementHydratorFactory {
     {
         /**
          * @var ApplicationService $applicationService
-         * @var NiveauService $MaitriseNiveauService
+         * @var NiveauMaitriseService $MaitriseNiveauService
          */
         $applicationService = $container->get(ApplicationService::class);
-        $MaitriseNiveauService = $container->get(NiveauService::class);
+        $MaitriseNiveauService = $container->get(NiveauMaitriseService::class);
 
         $hydrator = new ApplicationElementHydrator();
         $hydrator->setApplicationService($applicationService);
-        $hydrator->setNiveauService($MaitriseNiveauService);
+        $hydrator->setNiveauMaitriseService($MaitriseNiveauService);
         return $hydrator;
     }
 }

@@ -3,7 +3,7 @@
 namespace Element\Form\CompetenceElement;
 
 use Element\Service\Competence\CompetenceService;
-use Element\Service\Niveau\NiveauService;
+use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -20,17 +20,17 @@ class CompetenceElementFormFactory {
     {
         /**
          * @var CompetenceService $competenceService
-         * @var NiveauService $maitriseNiveauService
+         * @var NiveauMaitriseService $maitriseNiveauMaitriseService
          */
         $competenceService = $container->get(CompetenceService::class);
-        $maitriseNiveauService = $container->get(NiveauService::class);
+        $maitriseNiveauMaitriseService = $container->get(NiveauMaitriseService::class);
 
         /** @var CompetenceElementHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(CompetenceElementHydrator::class);
 
         $form = new CompetenceElementForm();
         $form->setCompetenceService($competenceService);
-        $form->setNiveauService($maitriseNiveauService);
+        $form->setNiveauMaitriseService($maitriseNiveauMaitriseService);
         $form->setHydrator($hydrator);
         return $form;
     }

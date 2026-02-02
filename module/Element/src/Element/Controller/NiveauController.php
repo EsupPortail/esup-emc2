@@ -2,27 +2,27 @@
 
 namespace Element\Controller;
 
-use Element\Entity\Db\Niveau;
+use Element\Entity\Db\NiveauMaitrise;
 use Element\Form\Niveau\NiveauFormAwareTrait;
-use Element\Service\Niveau\NiveauServiceAwareTrait;
+use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
 class NiveauController extends AbstractActionController
 {
-    use NiveauServiceAwareTrait;
+    use NiveauMaitriseServiceAwareTrait;
     use NiveauFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
-        $niveaux = $this->getNiveauService()->getMaitrisesNiveaux("", 'id', 'ASC', true);
+        $niveaux = $this->getNiveauMaitriseService()->getMaitrisesNiveaux("", 'id', 'ASC', true);
         return new ViewModel(['niveaux' => $niveaux]);
     }
 
     public function afficherAction() : ViewModel
     {
-        $maitrise = $this->getNiveauService()->getRequestedMaitriseNiveau($this);
+        $maitrise = $this->getNiveauMaitriseService()->getRequestedMaitriseNiveau($this);
 
         $vm = new ViewModel([
             'title' => "Affichage d'un niveau de maîtrise",
@@ -33,7 +33,7 @@ class NiveauController extends AbstractActionController
 
     public function ajouterAction() : ViewModel
     {
-        $maitrise = new Niveau();
+        $maitrise = new NiveauMaitrise();
         $form = $this->getNiveauForm();
         $form->setAttribute('action', $this->url()->fromRoute('element/niveau/ajouter', [], [], true));
         $form->bind($maitrise);
@@ -43,7 +43,7 @@ class NiveauController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getNiveauService()->create($maitrise);
+                $this->getNiveauMaitriseService()->create($maitrise);
             }
         }
 
@@ -57,7 +57,7 @@ class NiveauController extends AbstractActionController
 
     public function modifierAction()  : ViewModel
     {
-        $maitrise = $this->getNiveauService()->getRequestedMaitriseNiveau($this);
+        $maitrise = $this->getNiveauMaitriseService()->getRequestedMaitriseNiveau($this);
         $form = $this->getNiveauForm();
         $form->setAttribute('action', $this->url()->fromRoute('element/niveau/modifier', ['maitrise' => $maitrise->getId()], [], true));
         $form->bind($maitrise);
@@ -68,7 +68,7 @@ class NiveauController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getNiveauService()->update($maitrise);
+                $this->getNiveauMaitriseService()->update($maitrise);
             }
         }
 
@@ -82,10 +82,10 @@ class NiveauController extends AbstractActionController
 
     public function historiserAction() : Response
     {
-        $maitrise = $this->getNiveauService()->getRequestedMaitriseNiveau($this);
+        $maitrise = $this->getNiveauMaitriseService()->getRequestedMaitriseNiveau($this);
         $retour = $this->params()->fromQuery('retour');
 
-        $this->getNiveauService()->historise($maitrise);
+        $this->getNiveauMaitriseService()->historise($maitrise);
 
         if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('competence', [], ['fragment' => 'niveau'], true);
@@ -93,10 +93,10 @@ class NiveauController extends AbstractActionController
 
     public function restaurerAction() : Response
     {
-        $maitrise = $this->getNiveauService()->getRequestedMaitriseNiveau($this);
+        $maitrise = $this->getNiveauMaitriseService()->getRequestedMaitriseNiveau($this);
         $retour = $this->params()->fromQuery('retour');
 
-        $this->getNiveauService()->restore($maitrise);
+        $this->getNiveauMaitriseService()->restore($maitrise);
 
         if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('competence', [], ['fragment' => 'niveau'], true);
@@ -104,12 +104,12 @@ class NiveauController extends AbstractActionController
 
     public function supprimerAction() : ViewModel
     {
-        $maitrise = $this->getNiveauService()->getRequestedMaitriseNiveau($this);
+        $maitrise = $this->getNiveauMaitriseService()->getRequestedMaitriseNiveau($this);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getNiveauService()->delete($maitrise);
+            if ($data["reponse"] === "oui") $this->getNiveauMaitriseService()->delete($maitrise);
             exit();
         }
 

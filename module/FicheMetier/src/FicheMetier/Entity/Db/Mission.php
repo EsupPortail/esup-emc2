@@ -20,7 +20,7 @@ class Mission implements HistoriqueAwareInterface,
     use HasFamillesProfessionnellesTrait;
     use HasReferenceTrait;
 
-    const MISSION_PRINCIPALE_HEADER_ID = 'Id_Mission';
+    const MISSION_PRINCIPALE_HEADER_ID = 'Id';
     const MISSION_PRINCIPALE_HEADER_LIBELLE = 'Libellé';
     const MISSION_PRINCIPALE_HEADER_DESCRIPTION = 'Description';
     const MISSION_PRINCIPALE_HEADER_FAMILLES = 'Familles professionnelles';

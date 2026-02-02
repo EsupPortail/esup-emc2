@@ -16,10 +16,11 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
 ?>
 
+<div class="card bg-default" style="padding: 1rem; padding-bottom: 0;">
 <dl class="row">
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Niveau de fonction</dt>
-        <dd class="col-md-8">
+        <dt class="col-md-5"> Niveau de fonction</dt>
+        <dd class="col-md-7">
             <?php if ($fichemetier->getCodeFonction()): ?>
                 <?php echo $fichemetier->getCodeFonction()->getNiveauFonction()?->getLibelle(); ?>
             <?php else : ?>
@@ -28,8 +29,8 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
         </dd>
     <?php endif; ?>
     <?php $famille = $fichemetier->getFamilleProfessionnelle(); ?>
-    <dt class="col-md-4"> Spécialité</dt>
-    <dd class="col-md-8">
+    <dt class="col-md-5"> Spécialité</dt>
+    <dd class="col-md-7">
         <?php if ($famille === null) : ?>
             <em>Aucune spécialité</em> <span class="icon icon-info"
                                              title="L'absence de famille empêche de déterminer la spécialité"></span>
@@ -40,12 +41,33 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             <?php echo $famille->getCorrespondance()->getLibelleLong(); ?>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-4"> Famille professionnelle</dt>
-    <dd class="col-md-8">
+    <dt class="col-md-5"> Famille professionnelle</dt>
+    <dd class="col-md-7">
         <?php if ($famille === null) : ?>
             <em>Aucune famille professionnelle </em>
         <?php else : ?>
             <?php echo $famille->getLibelle(); ?>
+        <?php endif; ?>
+        <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
+        <br>
+            <?php /** @see FicheMetierController::modifierFamilleProfessionnelleAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/modifier-famille-professionnelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="ajax-modal action primary" data-event="modification"
+            >
+                <small>
+                    <span class="icon icon-editer"></span>
+                    Modifier
+                </small>
+            </a>
+            <?php /** @see FicheMetierController::supprimerFamilleProfessionnelleAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/supprimer-famille-professionnelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="action danger"
+            >
+                <small>
+                    <span class="icon icon-unchecked"></span>
+                    Supprimer
+                </small>
+            </a>
         <?php endif; ?>
     </dd>
     <dt class="col-md-4"> Catégorie  </dt>
@@ -110,8 +132,8 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
         <?php endif; ?>
     </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
-        <dt class="col-md-4"> Code Fonction</dt>
-        <dd class="col-md-8">
+        <dt class="col-md-5"> Code Fonction</dt>
+        <dd class="col-md-7">
             <?php $code = $fichemetier->getCodeFonction(); ?>
             <?php if ($code !== null) : ?>
                 <code> <?php echo $code->computeCode(); ?> </code>
@@ -140,8 +162,8 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                 </a>
             <?php endif; ?>
         </dd>
-        <dt class="col-md-4"> Codes Emploi Type</dt>
-        <dd class="col-md-8">
+        <dt class="col-md-5"> Codes Emploi Type</dt>
+        <dd class="col-md-7">
             <?php $codeET = $fichemetier->getCodesEmploiType() ?>
             <?php if ($codeET !== null) : ?>
                 <code> <?php echo $codeET; ?> </code>
@@ -171,8 +193,8 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             <?php endif; ?>
         </dd>
     <?php endif; ?>
-    <dt class="col-md-4"> Niveau de carrière</dt>
-    <dd class="col-md-8">
+    <dt class="col-md-5"> Niveau de carrière</dt>
+    <dd class="col-md-7">
         <?php if ($fichemetier->getNiveauCarriere() === null) : ?>
             <span class="missing-data">Aucun niveau associé</span>
         <?php else : ?>
@@ -203,10 +225,22 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-4"> Date de dépôt</dt>
-    <dd class="col-md-8"> <?php echo $fichemetier->getEtatActif()?->getHistoCreation()->format("d/m/Y"); ?></dd>
-    <dt class="col-md-4"> État</dt>
-    <dd class="col-md-8">
+    <dt class="col-md-5"> Date de dépôt</dt>
+    <dd class="col-md-7"> <?php echo $fichemetier->getEtatActif()?->getHistoCreation()->format("d/m/Y"); ?></dd>
+    <dt class="col-md-5"> État</dt>
+    <dd class="col-md-7">
         <?php echo $this->etatinstance($fichemetier->getEtatActif()); ?>
+        <?php if ($mode === 'edition-fiche-metier' and $canEditer) : ?>
+        <?php /** @see FicheMetierController::modifierEtatAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/modifier-etat', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+           class="ajax-modal action primary" data-event="modification"
+        >
+            <small>
+                <span class="icon icon-editer"></span>
+                Modifier
+            </small>
+        </a>
+        <?php endif; ?>
     </dd>
 </dl>
+</div>

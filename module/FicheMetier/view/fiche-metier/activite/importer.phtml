@@ -1,6 +1,7 @@
 <?php
 
 use FicheMetier\Entity\Db\Activite;
+use FicheMetier\Provider\Privilege\ActivitePrivileges;
 use Referentiel\Entity\Db\Referentiel;
 
 /**
@@ -22,12 +23,34 @@ use Referentiel\Entity\Db\Referentiel;
 
 $this->headTitle("Importation d'activité");
 
+$canIndex = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_INDEX));
 ?>
 
-<h1 class="page-header">
-    Importation d'activité
-</h1>
+<script>
+    function reset() {
+        console.log('click');
+        window.location.href = "../activite/importer";
+    }
+</script>
 
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Importation d'activité
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canIndex) : ?>
+            <?php /** @see \FicheMetier\Controller\ActiviteController::indexAction() */ ?>
+            <a href="<?php echo $this->url('activite', [], [], true); ?>" class="btn btn-secondary float-end">
+                <span class="icon icon-listing"></span>
+                Accéder aux activités
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<br>
 
 <div class="row">
     <div class="col-md-6">
@@ -103,7 +126,7 @@ $this->headTitle("Importation d'activité");
         <div class="alert alert-info">
             Le fichier csv doit être constitué des colonnes suivantes :
             <ul>
-                <li> <code><?php echo Activite::ACTIVITE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> Identifiant de l'activité dans le réféntiel</li>
+                <li> <code><?php echo Activite::ACTIVITE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> Identifiant de l'activité dans le référentiel</li>
                 <li> <code><?php echo Activite::ACTIVITE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> le libellé de l'activité</li>
 <!--                <li> <code>--><?php //echo Activite::ACTIVITE_HEADER_DESCRIPTION; ?><!--</code> la description de l'activité</li>-->
                 <li><code><?php echo Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE; ?></code> : la liste des codes des fiches métiers incluant l'activité,
@@ -112,7 +135,7 @@ $this->headTitle("Importation d'activité");
                 <?php endif; ?>
             </ul>
 
-            <u>Remarques :</u>
+            <strong><u>Remarques :</u></strong>
             <ul>
                 <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
                 <li>Les colonnes obligatoires sont désignées par <span class="icon icon-obligatoire"></span>.</li>
@@ -156,34 +179,21 @@ $this->headTitle("Importation d'activité");
     <table class="table table-condensed" id="activites">
         <thead>
             <tr>
-                <th class="col-md-4"> Libellé </th>
-<!--                <th class="col-md-4"> Description </th>-->
-                <th class="col-md-2"> Référence </th>
+                <th class="col-md-10"> Libellé </th>
                 <th class="col-md-2"> Codes </th>
             </tr>
         </thead>
         <tbody>
         <?php foreach ($activites as $activite) : ?>
             <tr>
-                <td> <?php echo $activite->getLibelle(); ?> </td>
-<!--                <td>-->
-<!--                    --><?php //if($activite->getDescription()): ?>
-<!--                        --><?php //echo $activite->getDescription(); ?>
-<!--                    --><?php //else : ?>
-<!--                        <span class="missing-data"> Aucune description </span>-->
-<!--                    --><?php //endif ?>
-<!--                </td>-->
                 <td>
-                    <span class="badge">
-                        <?php echo $activite->getReferentiel()->getLibelleCourt(); ?>
-                        -
-                        <?php echo $activite->getReference(); ?>
-                    </span>
+                    <?php echo $activite->getLibelle(); ?> <br>
+                    <?php echo $activite->printReference(); ?>
                 </td>
                 <td>
                     <?php if ($activite->getCodesFicheMetier()) : ?>
                         <?php $codes = explode($separateur, $activite->getCodesFicheMetier()); ?>
-                        Codes Emploi-Types :
+                        <strong>Codes Emploi-Types :</strong>
                         <ul>
                             <?php foreach ($codes as $code) : ?>
                                 <li> <?php echo $code; ?> </li>
@@ -192,7 +202,7 @@ $this->headTitle("Importation d'activité");
                     <?php endif; ?>
                     <?php if ($displayCodeFonction AND $activite->getCodesFonction()) : ?>
                         <?php $codes = explode($separateur, $activite->getCodesFonction()); ?>
-                        Codes Fonctions :
+                        <strong>Codes Fonctions :</strong>
                         <ul>
                             <?php foreach ($codes as $code) : ?>
                                 <li> <?php echo $code; ?> </li>
@@ -215,11 +225,14 @@ $this->headTitle("Importation d'activité");
         $('select[name="mode"]').val(valueMode);
     <?php endif; ?>
 
-    $(function() {
-        $('#remove_file').on('click', function() {
-            window.location.href="../activite/importer";
+    $(function () {
+        $('table#activites').DataTable({
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
         });
-    })
+    });
 </script>
 
 <style>

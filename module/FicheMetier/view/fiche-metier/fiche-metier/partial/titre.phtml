@@ -26,11 +26,11 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 <?php endif; ?>
 <?php if ($mode !== 'affichage' AND $canModifier): ?>
     <br>
-    <?php /** @see \FicheMetier\Controller\FicheMetierController::modifierLibelleAction() */ ?>
-    <a href="<?php echo $this->url('fiche-metier/modifier-libelle', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    <?php /** @see \FicheMetier\Controller\FicheMetierController::modifierIdentificationAction() */ ?>
+    <a href="<?php echo $this->url('fiche-metier/modifier-identification', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
        class="action primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-editer"></span>
-        Modifier le libellé
+        Modifier l'identification
     </a>
 <?php endif; ?>

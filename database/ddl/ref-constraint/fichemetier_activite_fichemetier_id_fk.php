@@ -5,7 +5,7 @@
 return [
     'schema'      => 'public',
     'name'        => 'fichemetier_activite_fichemetier_id_fk',
-    'table'       => 'fichemetier_mission',
+    'table'       => 'fichemetier_activite',
     'rtable'      => 'fichemetier',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',

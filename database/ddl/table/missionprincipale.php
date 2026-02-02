@@ -34,6 +34,18 @@ return [
             'position'    => 14,
             'commentaire' => NULL,
         ],
+        'description'           => [
+            'name'        => 'description',
+            'type'        => 'clob',
+            'bdd-type'    => 'text',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 15,
+            'commentaire' => NULL,
+        ],
         'histo_createur_id'     => [
             'name'        => 'histo_createur_id',
             'type'        => 'int',
