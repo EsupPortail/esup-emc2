@@ -3,7 +3,6 @@
 namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
-use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesFormAwareTrait;
@@ -116,6 +115,10 @@ class MissionPrincipaleController extends AbstractActionController
                     }
                 }
                 $this->getMissionPrincipaleService()->create($mission);
+                if ($mission->getReference() === null) {
+                    $mission->setReference($mission->getId());
+                    $this->getMissionPrincipaleService()->update($mission);
+                }
                 exit();
             }
         }
@@ -126,7 +129,6 @@ class MissionPrincipaleController extends AbstractActionController
         ]);
         $vm->setTemplate('fiche-metier/mission-principale/modifier');
         return $vm;
-
     }
 
     public function modifierAction(): ViewModel
@@ -150,6 +152,9 @@ class MissionPrincipaleController extends AbstractActionController
                     } else {
                         $this->getNiveauEnveloppeService()->update($niveau);
                     }
+                }
+                if ($mission->getReference() === null) {
+                    $mission->setReference($mission->getId());
                 }
                 $this->getMissionPrincipaleService()->update($mission);
                 exit();

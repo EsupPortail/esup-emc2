@@ -63,6 +63,9 @@ class ActiviteController extends AbstractActionController
     public function ajouterAction(): ViewModel
     {
         $activite = new Activite();
+        $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
+        $activite->setReferentiel($referentiel);
+
         $form = $this->getActiviteForm();
         $form->setAttribute('action', $this->url()->fromRoute('activite/ajouter', [], [], true));
         $form->bind($activite);
@@ -73,6 +76,10 @@ class ActiviteController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
+                if ($activite->getReference() === null) {
+                    $activite->setReference($activite->getId());
+                }
+                $this->getActiviteService()->update($activite);
                 exit();
             }
         }
@@ -98,7 +105,10 @@ class ActiviteController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getActiviteService()->create($activite);
+                if ($activite->getReference() === null) {
+                    $activite->setReference($activite->getId());
+                }
+                $this->getActiviteService()->update($activite);
                 exit();
             }
         }

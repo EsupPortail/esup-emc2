@@ -64,7 +64,7 @@ class ActiviteForm extends Form
             'type' => Text::class,
             'name' => 'identifiant',
             'options' => [
-                'label' => "Identifiant dans le référentiel <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Identifiant dans le référentiel <span class='icon icon-information' title='Si aucun identifiant de renseigné, EMC2 donnera une valeur numérique à la mission.'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
@@ -91,7 +91,7 @@ class ActiviteForm extends Form
             'libelle' => ['required' => true,],
 //            'description' => ['required' => false,],
             'referentiel' => ['required' => true,],
-            'identifiant' => ['required' => true,],
+            'identifiant' => ['required' => false,],
         ]));
     }
 }
