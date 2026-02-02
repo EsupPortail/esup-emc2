@@ -340,7 +340,8 @@ class ActiviteController extends AbstractActionController
                                                 $this->getActiviteElementService()->addActiviteElement($fichemetier, $activite);
                                                 $message = "L'activité \"" . $activite->getLibelle() . "\" ";
                                                 $message .= $activite->printReference("modal", $this->url()->fromRoute('activite/afficher', ['activite' => $activite->getId()], [], true), $allowedActivite);
-                                                $message .= "a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" " . $fichemetier->printReference();
+                                                $message .= "a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
+                                                $message .= $fichemetier->printReference("lien", $this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true), $allowedFicheMetier);
                                                 $info[] = $message;
                                             }
                                         }

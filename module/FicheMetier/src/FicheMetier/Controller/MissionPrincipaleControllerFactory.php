@@ -6,6 +6,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfessionnellesForm;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -21,7 +22,9 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Referentiel\ReferentielService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenRenderer\Service\Rendu\RenduService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class MissionPrincipaleControllerFactory
 {
@@ -42,10 +45,13 @@ class MissionPrincipaleControllerFactory
          * @var FicheMetierService $ficheMetierService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var MissionElementService $missionElementService
+         * @var NiveauService $niveauService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          * @var ParametreService $parametreService
+         * @var PrivilegeService $privilegeService
          * @var ReferentielService $referentielService
          * @var RenduService $renduService
+         * @var UserService $userService
          */
         $applicationElementService = $container->get(ApplicationElementService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
@@ -54,10 +60,13 @@ class MissionPrincipaleControllerFactory
         $ficheMetierService = $container->get(FicheMetierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $missionElementService = $container->get(MissionElementService::class);
+        $privilegeService = $container->get(PrivilegeService::class);
+        $niveauService = $container->get(NiveauService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
         $parametreService = $container->get(ParametreService::class);
         $referentielService = $container->get(ReferentielService::class);
         $renduService = $container->get(RenduService::class);
+        $userService = $container->get(UserService::class);
 
         /**
          * @var MissionPrincipaleForm $missionPrincipaleForm
@@ -82,10 +91,14 @@ class MissionPrincipaleControllerFactory
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setMissionElementService($missionElementService);
+        $controller->setNiveauService($niveauService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setParametreService($parametreService);
+        $controller->setPrivilegeService($privilegeService);
         $controller->setReferentielService($referentielService);
         $controller->setRenduService($renduService);
+        $controller->setUserService($userService);
+
         $controller->setMissionPrincipaleForm($missionPrincipaleForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
