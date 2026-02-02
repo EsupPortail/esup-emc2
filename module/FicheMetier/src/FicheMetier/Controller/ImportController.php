@@ -357,6 +357,7 @@ class ImportController extends AbstractActionController
             $header = fgetcsv($csvFile, null, ";");
             // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $header = array_map("trim", $header);
             $nbElements = count($header);
 
             foreach ($colonnesObligatoires as $colonne) {
@@ -504,6 +505,7 @@ class ImportController extends AbstractActionController
             $header = fgetcsv($csvFile, null, ";");
             // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $header = array_map("trim", $header);
             $nbElements = count($header);
 
 
@@ -644,6 +646,7 @@ class ImportController extends AbstractActionController
             $header = fgetcsv($csvFile, null, ";");
             // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $header = array_map("trim", $header);
             $nbElements = count($header);
 
             foreach ($colonnesObligatoires as $colonne) {
