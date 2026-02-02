@@ -17,8 +17,8 @@
 
 $sousstructure = true;
 
+use Agent\Entity\Db\AgentPoste;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentPoste;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Provider\Privilege\FichePostePrivileges;
@@ -38,10 +38,10 @@ $date = new DateTime();
 $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
 
 
-$this->headTitle("Modification de la fiche de poste #".$ficheId);
+$this->headTitle("Modification de la fiche de poste #" . $ficheId);
 ?>
 
-<?php if (! $canModifier ) : ?>
+<?php if (!$canModifier) : ?>
 
     <div class="alert alert-danger col-md-8">
         <p class="lead">
@@ -54,7 +54,9 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
 <?php else : ?>
 
     <style>
-        a.action {width: 18em;}
+        a.action {
+            width: 18em;
+        }
     </style>
 
     <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
@@ -68,10 +70,10 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
         </div>
         <div class="pull-right">
             <a
-                <?php /** @see \Application\Controller\FichePosteController::associerTitreAction() */ ?>
-                href="<?php echo $this->url('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                class="btn btn-primary ajax-modal"
-                data-event="modification"
+                    <?php /** @see \Application\Controller\FichePosteController::associerTitreAction() */ ?>
+                    href="<?php echo $this->url('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                    class="btn btn-primary ajax-modal"
+                    data-event="modification"
             >
                 <span class="icon icon-editer"></span>
                 Modifier le titre
@@ -86,7 +88,6 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
     <?php echo $this->partial("partial/validations.phtml"); ?>
 
 
-
     <div class="card panel-info">
         <div class="card-header">
             <div class="row">
@@ -94,9 +95,9 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
                     <h2> Agent occupant le poste </h2>
                 </div>
                 <div class="col-md-6">
-                    <?php if($canAssocierAgent) : ?>
+                    <?php if ($canAssocierAgent) : ?>
                         <?php /** @see \Application\Controller\FichePosteController::associerAgentAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
+                        <a href="<?php echo $this->url('fiche-poste/associer-agent', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure) ? $structure->getId() : null, "sous-structure" => $sousstructure]], true); ?>"
                            class="btn btn-primary ajax-modal"
                            data-event="modification"
                         >
@@ -108,15 +109,15 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
             </div>
         </div>
         <div class="card-body">
-            <?php if($agent === null) : ?>
+            <?php if ($agent === null) : ?>
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle"></i>
                     Aucun agent d'associé à ce poste
                 </div>
             <?php else : ?>
                 <?php
-                    $retour = $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
-                    echo $this->agent($agent, 'edition', ["retour" => $retour]);
+                $retour = $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
+                echo $this->agent($agent, 'edition', ["retour" => $retour]);
                 ?>
             <?php endif; ?>
         </div>
@@ -130,46 +131,53 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
     <?php
     $principal = $fiche->getFicheTypeExternePrincipale();
     $fichesMetiers = $fiche->getFichesMetiers();
-    $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
-    usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
+    $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) {
+        return !$a->getPrincipale();
+    });
+    usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) {
+        return ($a->getQuotite() > $b->getQuotite());
+    });
     ?>
 
 
-    <?php /** @var FicheTypeExterne $ficheType **/ ?>
+    <?php /** @var FicheTypeExterne $ficheType * */ ?>
     <div class="card panel-default">
         <div class="card-header">
             <div class="row">
                 <div class="col-md-8">
-                <h2>Fiche de poste composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) métier(s).</h2>
-                <ul>
-                    <?php if ($principal) : ?>
-                        <li>
-                            <strong> <?php echo $principal->getFicheType()->getLibelle(); ?> à <?php echo $principal->getQuotite(); ?>%</strong>
-                            (principale)
-                            <?php if ($canEditer) : ?>
-                                <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $principal->getId()], [], true); ?>"
-                                   class="ajax-modal" data-event="modification"
-                                >
-                                    <span class="icon icon-editer"></span></a>
-                                <a href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $principal->getId()], [], true); ?>">
-                                    <span class="icon icon-unchecked text-danger"></span></a>
-                            <?php endif; ?>
-                        </li>
-                    <?php endif; ?>
-                    <?php foreach ($fichesMetiers as $ficheType) : ?>
-                        <li>
-                            <?php echo $ficheType->getFicheType()->getLibelle(); ?> à <?php echo $ficheType->getQuotite(); ?>%
-                            <?php if ($canEditer) : ?>
-                                <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $ficheType->getId()], [], true); ?>"
-                                   class="ajax-modal" data-event="modification"
-                                >
-                                    <span class="icon icon-editer"></span></a>
-                                <a href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $ficheType->getId()], [], true); ?>">
-                                    <span class="icon icon-unchecked text-danger"></span></a>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                    <h2>Fiche de poste composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s)
+                        métier(s).</h2>
+                    <ul>
+                        <?php if ($principal) : ?>
+                            <li>
+                                <strong> <?php echo $principal->getFicheType()->getLibelle(); ?>
+                                    à <?php echo $principal->getQuotite(); ?>%</strong>
+                                (principale)
+                                <?php if ($canEditer) : ?>
+                                    <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $principal->getId()], [], true); ?>"
+                                       class="ajax-modal" data-event="modification"
+                                    >
+                                        <span class="icon icon-editer"></span></a>
+                                    <a href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $principal->getId()], [], true); ?>">
+                                        <span class="icon icon-unchecked text-danger"></span></a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endif; ?>
+                        <?php foreach ($fichesMetiers as $ficheType) : ?>
+                            <li>
+                                <?php echo $ficheType->getFicheType()->getLibelle(); ?>
+                                à <?php echo $ficheType->getQuotite(); ?>%
+                                <?php if ($canEditer) : ?>
+                                    <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $ficheType->getId()], [], true); ?>"
+                                       class="ajax-modal" data-event="modification"
+                                    >
+                                        <span class="icon icon-editer"></span></a>
+                                    <a href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $ficheType->getId()], [], true); ?>">
+                                        <span class="icon icon-unchecked text-danger"></span></a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
                 <div class="col-md-4">
                     <?php /**  @see \Application\Controller\FichePosteController::ajouterFicheMetierAction() */ ?>
@@ -179,15 +187,15 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
                     >
                         <span class="icon icon-ajouter"></span>
                         Ajouter une fiche métier
-                        </a>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php if ($principal) echo $this->ficheMetierExterne($principal, ['mode' => 'edition-fiche-poste']);  ?>
+    <?php if ($principal) echo $this->ficheMetierExterne($principal, ['mode' => 'edition-fiche-poste']); ?>
     <?php foreach ($fichesMetiers as $ficheType) : ?>
-        <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'edition-fiche-poste']);  ?>
+        <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'edition-fiche-poste']); ?>
     <?php endforeach; ?>
 
     <!-- REGROUPE DES COMPETENCES, APPLICATIONS ET DES FORMATIONS ----------------------------------------------------->
@@ -197,25 +205,25 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
         </div>
         <div class="card-body">
             <?php //echo $this->competenceBloc($competences, $fiche->getAgent()); ?>
-            <?php echo $this->partial('partial/competences',  ['fiche' => $fiche, 'competences' => $competences,   'mode' => 'edition'], [], true); ?>
+            <?php echo $this->partial('partial/competences', ['fiche' => $fiche, 'competences' => $competences, 'mode' => 'edition'], [], true); ?>
             <?php echo $this->partial('partial/applications', ['fiche' => $fiche, 'applications' => $applications, 'mode' => 'edition'], [], true); ?>
         </div>
     </div>
 
     <!-- GRAPH -------------------------------------------------------------------------------------------------------->
 
-<!--    <div class="row">-->
-<!--        <div class="col-md-6">-->
-<!--            --><?php //echo $this->fichePosteGraph($fiche,
+    <!--    <div class="row">-->
+    <!--        <div class="col-md-6">-->
+    <!--            --><?php //echo $this->fichePosteGraph($fiche,
 //                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
 //                'radar', $date); ?>
-<!--        </div>-->
-<!--        <div class="col-md-6">-->
-<!--            --><?php //echo $this->fichePosteGraph($fiche,
+    <!--        </div>-->
+    <!--        <div class="col-md-6">-->
+    <!--            --><?php //echo $this->fichePosteGraph($fiche,
 //                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
 //                'bar', $date); ?>
-<!--        </div>-->
-<!--    </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 
     <!-- RIFSEEP et NBI ----------------------------------------------------------------------------------------------->
     <?php echo $this->partial('partial/rifseep', ['fiche' => $fiche, 'mode' => 'edition'], [], true); ?>
@@ -228,7 +236,7 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
 <?php echo $this->partial("partial/retour-structure.phtml"); ?>
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

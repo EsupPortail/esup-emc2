@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Agent\Entity\Db\AgentAffectation;
+use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
@@ -14,7 +15,6 @@ use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;

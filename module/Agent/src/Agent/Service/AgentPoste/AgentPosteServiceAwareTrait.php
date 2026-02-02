@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\AgentPoste;
+namespace Agent\Service\AgentPoste;
 
 trait AgentPosteServiceAwareTrait {
 

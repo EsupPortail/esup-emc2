@@ -1,9 +1,9 @@
 <?php
 
-namespace Application\Service\AgentPoste;
+namespace Agent\Service\AgentPoste;
 
+use Agent\Entity\Db\AgentPoste;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentPoste;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 

@@ -70,8 +70,8 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-4"> Catégorie  </dt>
-    <dd class="col-md-8">
+    <dt class="col-md-5"> Catégorie  </dt>
+    <dd class="col-md-7">
         <?php if ($fichemetier->getCategorie() === null) : ?>
             <span class="missing-data">Aucune catégorie associé</span>
         <?php else : ?>
@@ -99,8 +99,8 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-4"> Niveau de carrière </dt>
-    <dd class="col-md-8">
+    <dt class="col-md-5"> Niveau de carrière </dt>
+    <dd class="col-md-7">
         <?php if ($fichemetier->getNiveauCarriere() === null) : ?>
             <span class="missing-data">Aucun niveau associé</span>
         <?php else : ?>
