@@ -435,6 +435,13 @@ EOS;
     }
 
     /** @noinspection PhpUnused */
+    public function toStringNiveauCarriere(): string
+    {
+        if ($this->getNiveauCarriere() === null) return "Non précisé";
+        return $this->getNiveauCarriere()->getLibelle();
+    }
+
+    /** @noinspection PhpUnused */
     public function toStringNiveauFonction(): string
     {
         if ($this->getCodeFonction() AND $this->getCodeFonction()->getNiveauFonction()) return $this->getCodeFonction()->getNiveauFonction()->getLibelle();
@@ -445,7 +452,7 @@ EOS;
     public function toStringCodeFonction(): string
     {
         if ($this->getCodeFonction()) return $this->getCodeFonction()->computeCode();
-        return "Non précisé";
+        return "Aucun code renseigné";
     }
 
     /** @noinspection PhpUnused */
@@ -482,6 +489,14 @@ EOS;
         $famille = $this->getFamilleProfessionnelle();
         if ($famille === null) return "Aucune famille professionnelle connue";
         return $famille->getLibelle();
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringCodesEmploiType(): string
+    {
+        $codes = $this->getCodesEmploiType();
+        if ($codes === null) return "Aucun code renseigné";
+        return $codes;
     }
 
     public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?MissionElement
