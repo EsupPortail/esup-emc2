@@ -142,36 +142,34 @@ $this->headTitle("Importation des fiches métiers");
     <div class="col-md-6">
         <div class="alert alert-info">
             <p>
-                Importez vos fiches métiers depuis un référentiel (<code>REFERENS3</code> ou <code>RMFP</code>).
-                <br>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
-                    <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>
-                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv">
-                    <span class="icon icon-csv"></span> Le référentiel des fiches métiers RMFP</a><br>
-                Construisez votre référentiel fiche métier via la trame <code>EMC2</code>.<br>
-                <a href="../exemples/trame_csv/import_fichemetier_emc2.csv">
-                    <span class="icon icon-csv"></span> La trame vierge au format EMC2
-                </a>
+                Importez vos fiches métiers depuis un référentiel (<code>REFERENS3</code>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv"><span class="icon icon-csv"></span> référentiel des fiches métiers REFERENS3</a>
+                ou <code>RMFP</code> <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv"> <span class="icon icon-csv"></span> référentiel des fiches métiers RMFP</a>).<br>
+                Construisez votre référentiel fiche métier via la trame <code>EMC2</code>  <a href="../exemples/trame_csv/import_fichemetier_emc2.csv"> <span class="icon icon-csv"></span> trame vierge EMC2 </a>.
             </p>
 
 
-            <p>
                 Pour la trame EMC2 :
                 <ul>
                     <li><code><?php echo ImportController::HEADER_EMC2_CODE; ?></code> <span class="icon icon-obligatoire"></span> : identifiant unique de la fiche métier</li>
                     <li><code><?php echo ImportController::HEADER_EMC2_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> </li>
                     <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_TYPE; ?></code> : <a href="<?php echo $this->url('carriere/correspondance-type',[],[],true); ?>" target="_blank">Code associé au type de la spécialité</a> ; par exemple <code>BAP</code>, <code>CNU</code></li>
                     <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_CODE; ?></code> : <a href="<?php echo $this->url('correspondance',[],[],true); ?>" target="_blank">Code de la spécialité</a> ; par exemple <code>A</code>, <code>37</code> </li>
-                    <li>Libellé de la spécialité : nom de la spécialité ou nom de la branche d’activité ; créée si non connue d'EMC2.</li>
-                    <li>Libellé de la famille professionnelle : nom de la famille professionnelle. Création via import si inexistante dans EMC2.</li>
-                    <li>Position de la famille professionnelle : optionnel, uniquement demandée pour le code fonction (fonctionnalité AMU). Doit contenir le numéro de la position de la FAP dans la branche d’activité professionnelle pour ensuite créer le code fonction.</li>
-                    <li>Niveau de carrière : doit être identique aux niveaux renseignés dans EMC2. Exemple : IGE</li>
-                    <li>Codes fonction : crée si non existant (LIEN blank le niveau de fonction doit exister).</li>
-                    <li>Raison d’être : texte simple</li>
-                    <li>Missions * : peut contenir plusieurs missions. Séparateur |. Création via l’import. Exemple : Mission 1 | Mission 2</li>
-                    <li>Activités : peut contenir plusieurs activités. Séparateur |. Création via l’import. Exemple : Activité 1 | Activité 2</li>
-                    <li>Compétences : identifiant des compétences importées dans EMC2. Séparateur |. Pas d’espaces avant et après le séparateur. Peut contenir différents référentiels. Exemple : REFERENS3-0002|REFERENS-0004|RMFP-487</li>
-                    <li>Applications : intitulé exact des applications déjà connues dans EMC2.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_LIBELLE; ?></code> : créée si non connue et cohérente avec la famille professionnelle.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_FAMILLE_LIBELLE; ?></code> : la <a href="<?php echo $this->url('famille-professionnelle',[],[],true); ?>" target="_blank">famille professionnelle</a> est créée si non existante.</li>
+                    <?php if ($displayCodeFonction): ?>
+                        <li><code><?php echo ImportController::HEADER_EMC2_FAMILLE_POSITION; ?></code> : Correspond à la position de la FAP dans la spécialité et utilisée dans le code fonction (fonctionnalité AMU). </li>
+                    <?php endif; ?>
+                    <li><code><?php echo ImportController::HEADER_EMC2_NIVEAU_CARRIERE; ?></code> : étiquette du <a href="<?php echo $this->url('niveau',[],[],true); ?>" target="_blank">niveau de carrière</a> ; par exemple <code>TECH</code>, <code>IGE</code></li>
+                    <?php if ($displayCodeFonction): ?>
+                        <li><code><?php echo ImportController::HEADER_CODE_FONCTION; ?></code> : créé si non existant, attention le <a href="<?php echo $this->url('niveau-fonction',[],[],true); ?>" target="_blank">niveau de fonction</a> doit exister.</li>
+                    <?php endif; ?>
+                    <li><code><?php echo ImportController::HEADER_CODE_EMPLOITYPE; ?></code> : texte permettant de faire le lien vers d'autre entre emploi type</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_RAISON; ?></code> : texte simple </li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_MISSION; ?></code> <span class="icon icon-obligatoire"></span> : Liste des missions (séparateur <code>|</code>) créées via l’import. Exemple : Mission 1 | Mission 2</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_ACTIVITE; ?></code> : Liste des activités (séparateur <code>|</code>) créées via l’import. Exemple : Activité 1 | Activité 2</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_COMPETENCE; ?></code> : identifiant des compétences importées dans EMC2 (séparateur <code>|</code>). Peut contenir différents référentiels ; par exemple <code>REFERENS3-0002|REFERENS-0004|RMFP-487</code></li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_APPLICATION; ?></code> : intitulé exact des applications déjà connues dans EMC2.</li>
                     <li>Module "Contexte et environnement"
                         <ul>
                             <li> En-tête de la colonne : le libellé exact du champ </li>
@@ -183,7 +181,7 @@ $this->headTitle("Importation des fiches métiers");
                         <li> Valeur : texte simple</li>
                     </ul>
                 </ul>
-            </p>
+
 
             <strong><u>Remarques :</u></strong>
             <ul>
@@ -191,7 +189,7 @@ $this->headTitle("Importation des fiches métiers");
                 <li> <span class="icon icon-obligatoire"></span> indique un champ obligatoire </li>
                 <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
                 <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
-                <li>Pour REFERENS3 le séparateur est <code>|</code>.</li>
+                <li>Pour EMC2 et REFERENS3 le séparateur est <code>|</code>.</li>
                 <li>Pour RMFP le séparateur est le saut de ligne.</li>
             </ul>
 
