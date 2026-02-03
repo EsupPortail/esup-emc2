@@ -2,17 +2,6 @@ table.xdebug-error {
     margin-top: 4rem;
 }
 
-
-.unistrap.unistrap-th-apc .text-info {
-    color: var(--bs-info);
-}
-.unistrap.unistrap-th-apc .text-danger {
-    color: var(--bs-danger);
-}
-.unistrap.unistrap-th-apc .text-warning {
-    color: var(--bs-warning);
-}
-
 .bg-default {
     background: rgb(238,238,238);
 }
@@ -190,6 +179,12 @@ div.ui-datepicker {
 }
 
 /** RATTRAPAGE **/
+
+
+.bootstrap-select:not(.modal-dialog) {
+    width:100% !important;
+}
+
 
 div.alert a.btn span.icon {
     color:white;

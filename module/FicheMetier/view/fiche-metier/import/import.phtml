@@ -142,22 +142,54 @@ $this->headTitle("Importation des fiches métiers");
     <div class="col-md-6">
         <div class="alert alert-info">
             <p>
-                Vous pouvez :
-                <ul>
-                <li>Importez vos fiches métiers via l'un des deux référentiels (REFERENS3 ou RMFP);</li>
-                <li>Importez vos fiches métiers via la trame EMC2 (référentiel maison).</li>
-            </ul>
-
-            <p>
-
+                Importez vos fiches métiers depuis un référentiel (<code>REFERENS3</code>
+                <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv"><span class="icon icon-csv"></span> référentiel des fiches métiers REFERENS3</a>
+                ou <code>RMFP</code> <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv"> <span class="icon icon-csv"></span> référentiel des fiches métiers RMFP</a>).<br>
+                Construisez votre référentiel fiche métier via la trame <code>EMC2</code>  <a href="../exemples/trame_csv/import_fichemetier_emc2.csv"> <span class="icon icon-csv"></span> trame vierge EMC2 </a>.
             </p>
+
+
+                Pour la trame EMC2 :
+                <ul>
+                    <li><code><?php echo ImportController::HEADER_EMC2_CODE; ?></code> <span class="icon icon-obligatoire"></span> : identifiant unique de la fiche métier</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> </li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_TYPE; ?></code> : <a href="<?php echo $this->url('carriere/correspondance-type',[],[],true); ?>" target="_blank">Code associé au type de la spécialité</a> ; par exemple <code>BAP</code>, <code>CNU</code></li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_CODE; ?></code> : <a href="<?php echo $this->url('correspondance',[],[],true); ?>" target="_blank">Code de la spécialité</a> ; par exemple <code>A</code>, <code>37</code> </li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_LIBELLE; ?></code> : créée si non connue et cohérente avec la famille professionnelle.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_FAMILLE_LIBELLE; ?></code> : la <a href="<?php echo $this->url('famille-professionnelle',[],[],true); ?>" target="_blank">famille professionnelle</a> est créée si non existante.</li>
+                    <?php if ($displayCodeFonction): ?>
+                        <li><code><?php echo ImportController::HEADER_EMC2_FAMILLE_POSITION; ?></code> : Correspond à la position de la FAP dans la spécialité et utilisée dans le code fonction (fonctionnalité AMU). </li>
+                    <?php endif; ?>
+                    <li><code><?php echo ImportController::HEADER_EMC2_NIVEAU_CARRIERE; ?></code> : étiquette du <a href="<?php echo $this->url('niveau',[],[],true); ?>" target="_blank">niveau de carrière</a> ; par exemple <code>TECH</code>, <code>IGE</code></li>
+                    <?php if ($displayCodeFonction): ?>
+                        <li><code><?php echo ImportController::HEADER_CODE_FONCTION; ?></code> : créé si non existant, attention le <a href="<?php echo $this->url('niveau-fonction',[],[],true); ?>" target="_blank">niveau de fonction</a> doit exister.</li>
+                    <?php endif; ?>
+                    <li><code><?php echo ImportController::HEADER_CODE_EMPLOITYPE; ?></code> : texte permettant de faire le lien vers d'autre entre emploi type</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_RAISON; ?></code> : texte simple </li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_MISSION; ?></code> <span class="icon icon-obligatoire"></span> : Liste des missions (séparateur <code>|</code>) créées via l’import. Exemple : Mission 1 | Mission 2</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_ACTIVITE; ?></code> : Liste des activités (séparateur <code>|</code>) créées via l’import. Exemple : Activité 1 | Activité 2</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_COMPETENCE; ?></code> : identifiant des compétences importées dans EMC2 (séparateur <code>|</code>). Peut contenir différents référentiels ; par exemple <code>REFERENS3-0002|REFERENS-0004|RMFP-487</code></li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_APPLICATION; ?></code> : intitulé exact des applications déjà connues dans EMC2.</li>
+                    <li>Module "Contexte et environnement"
+                        <ul>
+                            <li> En-tête de la colonne : le libellé exact du champ </li>
+                            <li> Valeur : le libellé niveau de maîtrise associée ; par exemple Modéré, Fort</li>
+                        </ul>
+                    <li>Module "Tendances d'évolution"
+                    <ul>
+                        <li> En-tête de la colonne : le libellé exact du champ</li>
+                        <li> Valeur : texte simple</li>
+                    </ul>
+                </ul>
+
 
             <strong><u>Remarques :</u></strong>
             <ul>
                 <li>Le fichier importé doit être enregistré en <strong style="color:red;">CSV UTF8</strong> (et non CSV).</li>
+                <li> <span class="icon icon-obligatoire"></span> indique un champ obligatoire </li>
                 <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent).</li>
                 <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
-                <li>Pour REFERENS3 le séparateur est <code>|</code>.</li>
+                <li>Pour EMC2 et REFERENS3 le séparateur est <code>|</code>.</li>
                 <li>Pour RMFP le séparateur est le saut de ligne.</li>
             </ul>
 
@@ -172,15 +204,7 @@ $this->headTitle("Importation des fiches métiers");
 <!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp.csv">-->
 <!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
 <!--            --><?php //endif; ?>
-            <a href="../exemples/trame_csv/import_fichemetier_emc2.csv">
-                <span class="icon icon-csv"></span> Télécharger la trame vierge au format EMC2
-            </a>
-            <br>
-            <br>
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_referens3.csv">
-                <span class="icon icon-csv"></span> Le référentiel des fiches métiers REFERENS3</a><br>
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/referentiel/fichemetier_rmfp.csv">
-                <span class="icon icon-csv"></span> Le référentiel des fiches métiers RMFP</a><br>
+
 
 
 
@@ -221,7 +245,7 @@ $this->headTitle("Importation des fiches métiers");
     <div class="card" style="padding: 0.25rem">
         <div class="row">
             <div class="col-md-8">
-                <h3> <span class="badge"><?php echo $fiche->getReference(); ?></span> <?php echo $fiche->getLibelle(); ?> </h3>
+                <h3> <?php echo $fiche->printReference(); ?> <?php echo $fiche->getLibelle(); ?> </h3>
                 <?php if ($fiche->getRaison()) : ?>
                     <strong>Raison d'être :</strong> <?php echo $fiche->getRaison(); ?>
                 <?php endif; ?>
@@ -293,26 +317,29 @@ $this->headTitle("Importation des fiches métiers");
     </div>
 
     <?php $applications = $fiche->getApplicationCollection(); ?>
+    <strong>Applications</strong>
     <ul>
     <?php foreach ($applications as $application) : ?>
-        <strong>Applications</strong>
+
         <li><?php echo $application->getLibelle(); ?></li>
     <?php endforeach; ?>
     </ul>
 
+<!--    <strong> Tendances d'évolution  </strong> <br>-->
     <?php foreach ($fiche->getTendances() as $tendance) : ?>
         <strong><?php echo $tendance->getType()->getLibelle(); ?></strong>
         <?php echo $tendance->getTexte(); ?>
         <br>
     <?php endforeach; ?>
 
-        <?php foreach ($fiche->getThematiques() as $thematique) : ?>
-            <strong><?php echo $thematique->getType()->getLibelle(); ?></strong>
-            <?php echo $thematique->getNiveauMaitrise()->getLibelle(); ?>
-            <?php if ($thematique->getComplement()) : ?>
-                <br> <?php echo $thematique->getComplement(); ?>
-            <?php endif; ?>
-            <br>
-        <?php endforeach; ?>
+<!--    <strong> Contexte et environnement de travail </strong> <br>-->
+    <?php foreach ($fiche->getThematiques() as $thematique) : ?>
+        <strong><?php echo $thematique->getType()->getLibelle(); ?></strong>
+        <?php echo $thematique->getNiveauMaitrise()?->getLibelle(); ?>
+        <?php if ($thematique->getComplement()) : ?>
+            <br> <?php echo $thematique->getComplement(); ?>
+        <?php endif; ?>
+        <br>
+    <?php endforeach; ?>
     </div>
 <?php endforeach; ?>

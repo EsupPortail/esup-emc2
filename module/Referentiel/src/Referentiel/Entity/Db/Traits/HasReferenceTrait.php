@@ -34,7 +34,7 @@ trait HasReferenceTrait
     {
         $referentiel = $this->getReferentiel();
         $label  = ($referentiel?$referentiel->getLibelleCourt():"Aucun référentiel");
-        $label .= " - ";
+        $label .= "-";
         $label .= ($this->getReference()??"Aucune référence");
         $span = "<span class='badge' style='background:".($referentiel?$referentiel->getCouleur():"grey")."'>" . $label . "</span>";
 

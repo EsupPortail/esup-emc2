@@ -126,8 +126,8 @@ class ImportController extends AbstractActionController
 
     // HEADER EMC2 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const HEADER_EMC2_CODE = "Code";
-    const HEADER_EMC2_LIBELLE = "Intitulé";
+    const HEADER_EMC2_CODE = "Id";
+    const HEADER_EMC2_LIBELLE = "Intitulé de la fiche métier";
     const HEADER_EMC2_RAISON = "Raison d'être";
     const HEADER_EMC2_MISSION = "Missions";
     const HEADER_EMC2_ACTIVITE = "Activités";
@@ -137,8 +137,8 @@ class ImportController extends AbstractActionController
     const HEADER_EMC2_SPECIALITE_CODE = "Code de la spécialité";
     const HEADER_EMC2_FAMILLE_LIBELLE = "Libellé de la famille professionnelle";
     const HEADER_EMC2_FAMILLE_POSITION = "Position de la famille professionnelle";
-    const HEADER_EMC2_APPLICATION = "Identifiants applications";
-    const HEADER_EMC2_COMPETENCE = "Identifiants compétences";
+    const HEADER_EMC2_APPLICATION = "Applications";
+    const HEADER_EMC2_COMPETENCE = "Compétences";
 
 
     // HEADER SUPPLEMENTAIRE ///////////////////////////////////////////////////////////////////////////////////////////
@@ -210,6 +210,8 @@ class ImportController extends AbstractActionController
             $referentiel = $this->getReferentielService()->getReferentiel($referentielId);
 
             if ($mode === 'import') {
+                $info[] = "Importation terminée.";
+
                 // recuperation des nouvelles familles professionnelles
                 foreach ($fiches as $fiche) {
                     if ($fiche->getFamilleProfessionnelle() and $fiche->getFamilleProfessionnelle()->getCorrespondance() and $fiche->getFamilleProfessionnelle()->getCorrespondance()->getId() === null) {
@@ -355,6 +357,7 @@ class ImportController extends AbstractActionController
             $header = fgetcsv($csvFile, null, ";");
             // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $header = array_map("trim", $header);
             $nbElements = count($header);
 
             foreach ($colonnesObligatoires as $colonne) {
@@ -502,6 +505,7 @@ class ImportController extends AbstractActionController
             $header = fgetcsv($csvFile, null, ";");
             // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $header = array_map("trim", $header);
             $nbElements = count($header);
 
 
@@ -642,6 +646,7 @@ class ImportController extends AbstractActionController
             $header = fgetcsv($csvFile, null, ";");
             // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
             $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+            $header = array_map("trim", $header);
             $nbElements = count($header);
 
             foreach ($colonnesObligatoires as $colonne) {
@@ -658,14 +663,14 @@ class ImportController extends AbstractActionController
                 $raws[] = $item;
             }
 
-            $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
-            if ($referentiel === null) {
-                $referentiel = new Referentiel();
-                $referentiel->setLibelleCourt('EMC2');
-                $referentiel->setLibelleLong('Référentiel interne à EMC2');
-                $referentiel->setCouleur("#37689B");
-                $this->getReferentielService()->create($referentiel);
-            }
+//            $referentiel = $this->getReferentielService()->getReferentielByLibelleCourt('EMC2');
+//            if ($referentiel === null) {
+//                $referentiel = new Referentiel();
+//                $referentiel->setLibelleCourt('EMC2');
+//                $referentiel->setLibelleLong('Référentiel interne à EMC2');
+//                $referentiel->setCouleur("#37689B");
+//                $this->getReferentielService()->create($referentiel);
+//            }
 
             if (empty($error)) {
                 $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
@@ -784,7 +789,7 @@ class ImportController extends AbstractActionController
             if ($famille === null) {
                 $famille = new FamilleProfessionnelle();
                 $famille->setLibelle($raw[$HEADER_FAMILLE_LIBELLE]);
-                $famille->setPosition((isset($raw[$HEADER_FAMILLE_POSITION]) and $raw[$HEADER_FAMILLE_POSITION] !== "") ? $raw[$HEADER_FAMILLE_POSITION] : null);
+                $famille->setPosition(($HEADER_FAMILLE_POSITION !== null AND isset($raw[$HEADER_FAMILLE_POSITION]) and $raw[$HEADER_FAMILLE_POSITION] !== "") ? $raw[$HEADER_FAMILLE_POSITION] : null);
 
                 $specialiteType = $raw[$HEADER_SPECIALITE_TYPE] ?? null;
                 $specialiteCode = $raw[$HEADER_SPECIALITE_CODE] ?? null;
@@ -801,7 +806,7 @@ class ImportController extends AbstractActionController
                 $famille->setCorrespondance($specialite);
             } else {
                 if ($famille->getLibelle() !== $raw[$HEADER_FAMILLE_LIBELLE]) $warning[] = "Le libellé de la famille est différent [FamilleProfessionnelle:" . $famille->getLibelle() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_LIBELLE] . " ]";
-                if ($famille->getPosition() != $raw[$HEADER_FAMILLE_POSITION]) $warning[] = "La position de la famille " . $famille->getLibelle() . " est différente [FamilleProfessionnelle:" . $famille->getPosition() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_POSITION] . " ]";
+                if ($HEADER_FAMILLE_POSITION !== null AND $famille->getPosition() != $raw[$HEADER_FAMILLE_POSITION]) $warning[] = "La position de la famille " . $famille->getLibelle() . " est différente [FamilleProfessionnelle:" . $famille->getPosition() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_POSITION] . " ]";
                 if ($famille->getCorrespondance() !== ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] ?? null))
                     $warning[] = "La spécialité de la famille " . $famille->getLibelle() . " est différente [Spécialité:" . $famille->getCorrespondance()?->getId() . " &ne; Fichier:" . ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_LIBELLE]] ?? null)?->getId() . " ]";
             }
@@ -869,10 +874,10 @@ class ImportController extends AbstractActionController
         }
     }
 
-    public function readCodesEmploiType(FicheMetier &$fiche, ?string $data, array &$warning): void
+    public function readCodesEmploiType(FicheMetier &$fiche, string $data, array &$warning): void
     {
-        if (isset($raw[ImportController::HEADER_CODE_EMPLOITYPE]) and trim($raw[ImportController::HEADER_CODE_EMPLOITYPE]) != '') {
-            $fiche->setCodesEmploiType(trim($raw[ImportController::HEADER_CODE_EMPLOITYPE]));
+        if (trim($data) != '') {
+            $fiche->setCodesEmploiType(trim(trim($data)));
         }
     }
 
@@ -955,16 +960,17 @@ class ImportController extends AbstractActionController
         }
         $fiche->clearCompetences();
         foreach ($competenceIds as $competenceId) {
-            if (isset($dictionnaireFicheMetierCompetence[$competenceId])) {
-                $fiche->addCompetenceElement($dictionnaireFicheMetierCompetence[$competenceId]);
+            $id = trim($competenceId);
+            if (isset($dictionnaireFicheMetierCompetence[$id])) {
+                $fiche->addCompetenceElement($dictionnaireFicheMetierCompetence[$id]);
             } else {
-                $competence = $dictionnaireCompetence[$competenceId] ?? null;
+                $competence = $dictionnaireCompetence[$id] ?? null;
                 if ($competence !== null) {
                     $element = new CompetenceElement();
                     $element->setCompetence($competence);
                     $fiche->addCompetenceElement($element);
                 } else {
-                    $warning[] = "[" . $competenceId . "] compétence non trouvée.";
+                    $warning[] = "[" . $id . "] compétence non trouvée.";
                 }
             }
         }
@@ -973,6 +979,7 @@ class ImportController extends AbstractActionController
     public function readTendances(FicheMetier &$fiche, array $raw, array &$dictionnaireTendance, array &$warning): void
     {
         $tendances = $fiche->getTendances();
+        $fiche->clearTendances();
         foreach ($tendances as $tendance) {
             $dictionnaireFicheMetierTendance[$tendance->getType()->getLibelle()] = $tendance;
         }
@@ -994,7 +1001,7 @@ class ImportController extends AbstractActionController
     public function readThematiques(FicheMetier &$fiche, array $raw, array &$dictionnaireThematique, array &$dictionnaireNiveau, array &$warning): void
     {
         $thematiques = $fiche->getThematiques();
-        $fiche->clearTendances();
+        $fiche->clearThematique();
         foreach ($thematiques as $thematique) {
             $dictionnaireFicheMetierThematique[$thematique->getType()->getLibelle()] = $thematique;
         }
@@ -1007,9 +1014,14 @@ class ImportController extends AbstractActionController
                     $element = new ThematiqueElement();
                     $element->setType($type);
                 }
-                $niveau = $dictionnaireNiveau[$raw[$libelle]];
-                $element->setNiveauMaitrise($niveau);
-                $fiche->addThematique($element);
+                $niveau = $dictionnaireNiveau[$raw[$libelle]]??null;
+                if ($raw[$libelle] !== "" and $niveau === null) {
+                    $warning[] = "Le niveau de Contexte [" . $raw[$libelle] . "] n'existe pas.";
+                }
+                if ($niveau !== null) {
+                    $element->setNiveauMaitrise($niveau);
+                    $fiche->addThematique($element);
+                }
             }
         }
     }

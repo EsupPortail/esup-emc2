@@ -42,42 +42,38 @@ use UnicaenEtat\Entity\Db\EtatType;
                         </div>
                         <!-- ETAT -->
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="etat">État de la fiche :</label>
-                                <br>
-                                <select id="etat" name="etat" class="selectpicker">
-                                    <option value=""> Tous les états</option>
-                                    <?php foreach ($etatTypes as $etatType) : ?>
-                                        <option
-                                                value="<?php echo $etatType->getId(); ?>"
-                                                data-content='<?php echo $this->etattype($etatType); ?> <?php echo str_replace("'", "", $etatType->getLibelle()); ?>'
-                                                <?php if ($etatType->getId() === $params['etat']) echo " selected "; ?>
-                                        >
-                                            <?php echo $etatType->getLibelle(); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
+                            <label for="etat">État de la fiche :</label>
+                            <br>
+                            <select id="etat" name="etat" class="selectpicker">
+                                <option value=""> Tous les états</option>
+                                <?php foreach ($etatTypes as $etatType) : ?>
+                                    <option
+                                            value="<?php echo $etatType->getId(); ?>"
+                                            data-content='<?php echo $this->etattype($etatType); ?> <?php echo str_replace("'", "", $etatType->getLibelle()); ?>'
+                                            <?php if ($etatType->getId() === $params['etat']) echo " selected "; ?>
+                                    >
+                                        <?php echo $etatType->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <!-- CODE FONCTION -->
                         <?php if ($displayCodeFonction) : ?>
                             <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="codefonction">Code fonction :</label>
-                                    <br>
-                                    <select id="codefonction" name="codefonction" class="selectpicker">
-                                        <option value=""> Tous les codes fonctions</option>
-                                        <?php foreach ($codesFonctions as $codefonction) : ?>
-                                            <option
-                                                    value="<?php echo $codefonction->getId(); ?>"
-                                                    data-content='<code><?php echo $codefonction->computeCode(); ?></code>'
-                                                    <?php if ($codefonction->getId() == $params['codefonction']) echo " selected "; ?>
-                                            >
-                                                <?php echo $codefonction->computeCode(); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
+                                <label for="codefonction">Code fonction :</label>
+                                <br>
+                                <select id="codefonction" name="codefonction" class="selectpicker">
+                                    <option value=""> Tous les codes fonctions</option>
+                                    <?php foreach ($codesFonctions as $codefonction) : ?>
+                                        <option
+                                                value="<?php echo $codefonction->getId(); ?>"
+                                                data-content='<code><?php echo $codefonction->computeCode(); ?></code>'
+                                                <?php if ($codefonction->getId() == $params['codefonction']) echo " selected "; ?>
+                                        >
+                                            <?php echo $codefonction->computeCode(); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -100,7 +96,7 @@ use UnicaenEtat\Entity\Db\EtatType;
 
 
 <script>
-    $('button#clear').click(function(e) {
+    $('button#clear').click(function (e) {
         e.preventDefault();
         console.log("Clicked");
         window.location.href = '?';

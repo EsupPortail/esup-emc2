@@ -68,9 +68,15 @@ class CorrespondanceService {
     public function getCorrespondancesAsOptions(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=false) : array
     {
         $correspondances = $this->getCorrespondances($champ, $ordre, $avecAgent);
+        usort($correspondances, function (Correspondance $a, Correspondance $b) {
+           if ($a->getType() !== $b->getType()) return $a->getType()->getCode() <=> $b->getType()->getCode();
+           if ($a->getCategorie() !== $b->getCategorie()) return $a->getCategorie() <=> $b->getCategorie();
+           if ($a->getLibelleLong() !== $b->getLibelleLong()) return $a->getLibelleLong() <=> $b->getLibelleLong();
+           return $a->getId() <=> $b->getId();
+        });
         $options = [];
         foreach($correspondances as $correspondance) {
-            $options[$correspondance->getId()] = (($correspondance->getType())?$correspondance->getType()->getLibelleCourt():""). " ". $correspondance->getLibelleCourt() . " - " . $correspondance->getLibelleLong();
+            $options[$correspondance->getId()] = $this->optionify($correspondance);
         }
         return $options;
     }
@@ -142,7 +148,7 @@ class CorrespondanceService {
         return $result;
     }
 
-
+    /** FACADE ********************************************************************************************************/
 
     public function createWith(string $typeCode, string $correspondanceCode, string $libelle, bool $persist = true): ?Correspondance
     {
@@ -173,5 +179,24 @@ class CorrespondanceService {
             $dictionnaire[$tabId] = $specialite;
         }
         return $dictionnaire;
+    }
+
+    public function optionify(Correspondance $correspondance) : array
+    {
+        $label  = $correspondance->getLibelleLong();
+        $label .= " <code>";
+        $label .= $correspondance->getType()?->getCode() . " ";
+        $label .= $correspondance->getCategorie();
+        $label .= "</code>";
+
+        $this_option = [
+            'value' => $correspondance->getId(),
+            'attributes' => [
+                'data-content' =>
+                    $label
+            ],
+            'label' => $correspondance->getLibelleLong(),
+        ];
+        return $this_option;
     }
 }
