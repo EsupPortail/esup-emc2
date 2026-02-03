@@ -1,5 +1,46 @@
 <?php
 
+use Agent\Entity\Db\AgentPoste;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use EmploiRepere\Entity\Db\EmploiRepere;
+
 /**
  * @see \EmploiRepere\Controller\EmploiRepereController::afficherAction()
+ * @var EmploiRepere $emploi
+ * @var AgentPoste[] $agentsPostes
  */
+
+$canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER))
+?>
+
+<h2>Description de l'emploi repère </h2>
+
+<dl class="row">
+    <dt class="col-md-4"> Libellé</dt>
+    <dd class="col-md-8"> <?php echo $emploi->getLibelle(); ?> </dd>
+    <dt class="col-md-4"> Code</dt>
+    <dd class="col-md-8"> <code><?php echo $emploi->getCode(); ?></code> </dd>
+</dl>
+
+<h2> Codes fonctions et fiche metier</h2>
+<ul>
+    <?php foreach ($emploi->getCodesFonctionsFichesMetiers() as $codesFonctionsFonctions): ?>
+    <li>
+        <code>
+        <?php echo $codesFonctionsFonctions->getCodeFonction()->computeCode(); ?>
+        </code>
+        :
+        <?php echo $codesFonctionsFonctions->getFicheMetier()->getLibelle(); ?>
+        <?php echo $codesFonctionsFonctions->getFicheMetier()->printReference("lien", $this->url('fiche-metier/afficher', ['fiche-metier' => $codesFonctionsFonctions->getFicheMetier()->getId()], [], true), $canAfficherFicheMetier); ?>
+    </li>
+    <?php endforeach; ?>
+</ul>
+
+<h2> Postes liés </h2>
+
+<ul>
+<?php foreach ($agentsPostes as $agentPoste): ?>
+    <li><?php echo $agentPoste->getLibelle(); ?></li>
+<?php endforeach; ?>
+</ul>
+

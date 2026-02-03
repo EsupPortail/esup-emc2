@@ -90,7 +90,8 @@ class EmploiRepereController extends  AbstractActionController {
 
 
         return new ViewModel([
-            'emploiRepere' => $emploi,
+            'title' => "Affichage de l'emploi repère <strong>".$emploi->getCode()."</strong>",
+            'emploi' => $emploi,
             'agentsPostes' => $agentsPostes,
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -47,6 +48,7 @@ class FicheMetierController extends AbstractActionController
 {
     use ActiviteElementServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use AgentPosteServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use EmploiRepereServiceAwareTrait;
@@ -920,10 +922,27 @@ EOS;
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
+        $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+        $agents = [];
+        foreach ($emplois as $emploi) {
+            foreach ($emploi->getCodesFonctionsFichesMetiers() as $couple) {
+                $codeFonction = $couple->getCodeFonction();
+                $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($codeFonction);
+                foreach ($postes as $poste) {
+                    $agents[$poste->getAgent()->getId()] = [
+                        "agent" => $poste->getAgent(),
+                        'numero' => $poste->getCode(),
+                        'intitulé' => $poste->getLibelle(), 'code-fonction' => $codeFonction, 'poste' => $poste];
+                }
+            }
+        }
+
+
         return new ViewModel([
             'title' => "Liste des agents ayant la fiche métier <strong>" . $fichemetier->getLibelle() . "</strong>",
             'fichemetier' => $fichemetier,
             'fichespostes' => $fichespostes,
+            'agentsTableaux' => $agents,
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Agent\Service\AgentPoste\AgentPosteService;
 use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieForm;
@@ -48,6 +49,7 @@ class FicheMetierControllerFactory
         /**
          * @var ActiviteElementService $activiteElementService
          * @var AgentService $agentService
+         * @var AgentPosteService $agentPosteService
          * @var CodeFonctionService $codeFonctionService
          * @var CompetenceTypeService $competenceTypeService
          * @var EmploiRepereService $emploiRepereService
@@ -65,6 +67,7 @@ class FicheMetierControllerFactory
          */
         $activiteElementService = $container->get(ActiviteElementService::class);
         $agentService = $container->get(AgentService::class);
+        $agentPosteService = $container->get(AgentPosteService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $emploiRepereService = $container->get(EmploiRepereService::class);
@@ -110,6 +113,7 @@ class FicheMetierControllerFactory
         $controller = new FicheMetierController();
         $controller->setActiviteElementService($activiteElementService);
         $controller->setAgentService($agentService);
+        $controller->setAgentPosteService($agentPosteService);
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setEmploiRepereService($emploiRepereService);

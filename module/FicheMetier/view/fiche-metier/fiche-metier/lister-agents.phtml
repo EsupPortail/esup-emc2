@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
+use EmploiRepere\Entity\Db\EmploiRepere;
 use FicheMetier\Entity\Db\FicheMetier;
 use FichePoste\Provider\Privilege\FichePostePrivileges;
 
@@ -9,10 +10,12 @@ use FichePoste\Provider\Privilege\FichePostePrivileges;
  * @see \FicheMetier\Controller\FicheMetierController::listerAgentsAction()
  * @var FicheMetier $fichemetier
  * @var FichePoste[] $fichespostes
+ * @var array[] $agentsTableaux
  */
 
 ?>
 
+<h2> Liste des agents depuis les fiches poste </h2>
 
 <table class="table table-condensed table-hover" id="listing">
     <thead>
@@ -72,10 +75,49 @@ use FichePoste\Provider\Privilege\FichePostePrivileges;
     </tbody>
 </table>
 
+<?php if (!empty($agentsTableaux)) : ?>
+
+    <h2> Liste des agents depuis les emplois repères </h2>
+
+    <table class="table table-condensed" id="emplois">
+        <thead>
+        <tr>
+            <th> Agent </th>
+            <th> Numéro de poste </th>
+            <th> Libellé du poste</th>
+            <th> Code Fonction </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($agentsTableaux as $item) : ?>
+            <tr>
+                <td>
+                    <?php $agent = $item['agent']??null; ?>
+                    <?php if ($agent) : ?>
+                        <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>" target="_blank">
+                            <?php echo $item['agent']->getDenomination(); ?>
+                        </a>
+                    <?php endif; ?>
+                </td>
+                <td><?php echo $item['numero']??"Non précisé"; ?> </td>
+                <td><?php echo $item['intitulé']??"Non précisé"; ?> </td>
+                <td><code><?php echo $item['code-fonction']->computeCode(); ?></code></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
 
 <script>
     $(function() {
         $("#listing").DataTable({
+            info: true,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+        });
+        $("#emplois").DataTable({
             info: true,
             autoWidth: false,
             language: {
