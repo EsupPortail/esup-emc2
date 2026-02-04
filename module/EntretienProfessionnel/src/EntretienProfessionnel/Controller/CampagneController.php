@@ -36,10 +36,7 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenIndicateur\Entity\Db\Categorie;
-use UnicaenIndicateur\Entity\Db\Indicateur;
-use UnicaenIndicateur\Service\Categorie\CategorieServiceAwareTrait;
-use UnicaenIndicateur\Service\Indicateur\IndicateurServiceAwareTrait;
+use UnicaenIndicateur\Service\HasIndicateurs\HasIndicateursServiceAwareTrait;
 use UnicaenParametre\Exception\ParametreNotFoundException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -52,9 +49,8 @@ class CampagneController extends AbstractActionController
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
-    use CategorieServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
-    use IndicateurServiceAwareTrait;
+    use HasIndicateursServiceAwareTrait;
     use MacroServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -122,21 +118,20 @@ class CampagneController extends AbstractActionController
                     $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
                 }
 
-                $categorie = new Categorie();
-                $categorie->setCode("CAMP" . $campagne->getId());
-                $categorie->setLibelle("Indicateurs liés à la campagne".$campagne->getAnnee());
-                $this->getCategorieService()->create($categorie);
-                $indicateur = new Indicateur();
-                $indicateur->setCode($categorie->getCode() . "_TEST");
-                $indicateur->setTitre("Indicateur de test");
-                $indicateur->setCategorie($categorie);
-                $indicateur->setViewId('mv_indicateur_' . strtolower($indicateur->getCode()));
-                $indicateur->setRequete('select * from entretienprofessionnel e');
-                $indicateur->setRolesAutorises('Tous les rôles');
-                $this->getIndicateurService()->create($indicateur);
-                $this->getIndicateurService()->refresh($indicateur);
-                $campagne->addIndicateur($indicateur);
-                $this->getCampagneService()->update($campagne);
+                $listing = [
+                    [
+                        'code' => 'CAMP_' . $campagne->getId(),
+                        'libelle' => "Indicateurs liés à la campagne " . $campagne->getAnnee(),
+                        'indicateurs' => [
+                            ['code' => 'EP', 'libelle' => "Liste des entretiens professionnels", "requete" => "select e.* from entretienprofessionnel e join public.entretienprofessionnel_campagne ec on e.campagne_id = ec.id where ec.id = :campagne"],
+                            ['code' => 'AUTRE', 'libelle' => "Autre", "requete" => "select * from unicaen_utilisateur_role"],
+                        ],
+                    ],
+                ];
+
+                $log = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
+                if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
+
             }
         }
 
@@ -217,7 +212,16 @@ class CampagneController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getCampagneService()->delete($campagne);
+            if ($data["reponse"] === "oui") {
+
+                //nettoyage des indicateurs associés
+                $this->getHasIndicateursService()->retirerIndicateurs($campagne);
+
+                //nettoyage des événements todo ???
+
+
+                $this->getCampagneService()->delete($campagne);
+            }
             exit();
         }
 
