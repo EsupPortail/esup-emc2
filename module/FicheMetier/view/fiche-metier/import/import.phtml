@@ -160,6 +160,7 @@ $this->headTitle("Importation des fiches métiers");
                     <?php if ($displayCodeFonction): ?>
                         <li><code><?php echo ImportController::HEADER_EMC2_FAMILLE_POSITION; ?></code> : Correspond à la position de la FAP dans la spécialité et utilisée dans le code fonction (fonctionnalité AMU). </li>
                     <?php endif; ?>
+                    <li><code><?php echo ImportController::HEADER_EMC2_CATEGORIE; ?></code> : Code de la <a href="<?php echo $this->url('categorie',[],[],true); ?>" target="_blank">catégorie</a> ; par exemple <code>A</code>, <code>B</code></li>
                     <li><code><?php echo ImportController::HEADER_EMC2_NIVEAU_CARRIERE; ?></code> : étiquette du <a href="<?php echo $this->url('niveau',[],[],true); ?>" target="_blank">niveau de carrière</a> ; par exemple <code>TECH</code>, <code>IGE</code></li>
                     <?php if ($displayCodeFonction): ?>
                         <li><code><?php echo ImportController::HEADER_CODE_FONCTION; ?></code> : créé si non existant, attention le <a href="<?php echo $this->url('niveau-fonction',[],[],true); ?>" target="_blank">niveau de fonction</a> doit exister.</li>
@@ -252,6 +253,7 @@ $this->headTitle("Importation des fiches métiers");
             </div>
             <div class="col-md-4">
                 <?php if ($fiche->getNiveauCarriere()): ?> <strong>Niveau de carrière</strong> <?php echo $fiche->getNiveauCarriere()->getLibelle(); ?> <br> <?php endif; ?>
+                <?php if ($fiche->getCategorie()): ?> <strong>Catégorie</strong> <?php echo $fiche->getCategorie()->getLibelle(); ?> <br> <?php endif; ?>
                 <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <br> <?php endif; ?>
                 <?php if ($fiche->getCodesEmploiType()): ?> <strong>Codes emploi type</strong> <?php echo $fiche->getCodesEmploiType(); ?> <br> <?php endif; ?>
                 <?php if ($fiche->getFamilleProfessionnelle()): ?>

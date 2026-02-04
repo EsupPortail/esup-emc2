@@ -3,8 +3,10 @@
 namespace FicheMetier\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\Categorie;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\FamilleProfessionnelle;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Carriere\Service\CorrespondanceType\CorrespondanceTypeServiceAwareTrait;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
@@ -54,6 +56,7 @@ class ImportController extends AbstractActionController
     use ActiviteElementServiceAwareTrait;
     use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
+    use CategorieServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -131,6 +134,7 @@ class ImportController extends AbstractActionController
     const HEADER_EMC2_RAISON = "Raison d'être";
     const HEADER_EMC2_MISSION = "Missions";
     const HEADER_EMC2_ACTIVITE = "Activités";
+    const HEADER_EMC2_CATEGORIE = "Catégorie";
     const HEADER_EMC2_NIVEAU_CARRIERE = "Niveau de carrière";
     const HEADER_EMC2_SPECIALITE_TYPE = "Type de la spécialité";
     const HEADER_EMC2_SPECIALITE_LIBELLE = "Libellé de la spécialité";
@@ -228,6 +232,12 @@ class ImportController extends AbstractActionController
                 foreach ($fiches as $fiche) {
                     if ($fiche->getCodeFonction() and $fiche->getCodeFonction()->getId() === null) {
                         $this->getCodeFonctionService()->create($fiche->getCodeFonction());
+                    }
+                }
+
+                foreach ($fiches as $fiche) {
+                    if ($fiche->getCategorie() and $fiche->getCategorie()->getId() === null) {
+                        $this->getCategorieService()->create($fiche->getCategorie());
                     }
                 }
 
@@ -375,6 +385,7 @@ class ImportController extends AbstractActionController
 
             if (empty($error)) {
                 $dictionnaireNiveauCarriere = $this->getNiveauService()->generateDictionnaire();
+                $dictionnaireCategorie = $this->getCategorieService()->generateDictionnaire();
                 $dictionnaireFamille = $this->getFamilleProfessionnelleService()->generateDictionnaire('libelle');
                 $dictionnaireFamilleProfessionnelle = $this->getFamilleProfessionnelleService()->generateDictionnaire('code');
                 $dictionnaireSpecialite = $this->getCorrespondanceService()->generateDictionnaire('code');
@@ -411,6 +422,7 @@ class ImportController extends AbstractActionController
 
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_REFERENS3, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU] ?? "", $dictionnaireNiveauCarriere, $warning);
+                        $this->readCategorie($fiche, $raw[self::HEADER_REFERENS3_CATEGORIE], $dictionnaireCategorie, $warning);
                         $this->readMissions($fiche, $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "", "|", $referentiel);
                         $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
@@ -675,6 +687,7 @@ class ImportController extends AbstractActionController
             if (empty($error)) {
                 $dictionnaireCodeFonction = $this->getCodeFonctionService()->generateDictionnaire();
                 $dictionnaireApplication = $this->getApplicationService()->generateDictionnaire();
+                $dictionnaireCategorie = $this->getCategorieService()->generateDictionnaire('code');
                 $dictionnaireCompetence = $this->getCompetenceService()->generateCompleteDictionnaire();
                 $dictionnaireTendance = $this->getTendanceTypeService()->generateTendanceDictionnaire();
                 $dictionnaireThematique = $this->getThematiqueTypeService()->generateThematiqueDictionnaire();
@@ -711,6 +724,7 @@ class ImportController extends AbstractActionController
 
                         $this->readRaison($fiche, $raw[self::HEADER_EMC2_RAISON] ?? "", $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_EMC2_NIVEAU_CARRIERE] ?? "", $dictionnaireNiveauCarriere, $warning);
+                        $this->readCategorie($fiche, $raw[ImportController::HEADER_EMC2_CATEGORIE], $dictionnaireCategorie, $warning);
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_EMC2, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE] ?? "", "|", $referentiel);
@@ -820,6 +834,21 @@ class ImportController extends AbstractActionController
         if ($niveau === null and trim($data) !== '') $warning[] = "Le niveau de carrière [" . $data . "] est inconnu";
         $fiche->setNiveauCarriere($niveau);
 
+    }
+
+
+    public function readCategorie(FicheMetier &$fiche, string $data, array& $dictionnaireCategorie, array& $warning): void
+    {
+        $libelle = trim($data);
+        if ($libelle === "") return;
+
+        $categorie = $dictionnaireCategorie[$libelle] ?? null;
+        if ($categorie === null) {
+            $categorie = new Categorie();
+            $categorie->setCode($libelle);
+            $categorie->setLibelle($libelle);
+        }
+        $fiche->setCategorie($categorie);
     }
 
     public function readMissions(FicheMetier &$fiche, ?string $data, string $separator, Referentiel $referentiel): void

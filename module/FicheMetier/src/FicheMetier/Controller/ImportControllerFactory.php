@@ -34,7 +34,6 @@ use UnicaenParametre\Service\Parametre\ParametreService;
 
 class ImportControllerFactory
 {
-
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -73,6 +72,7 @@ class ImportControllerFactory
         $activiteElementService = $container->get(ActiviteElementService::class);
         $applicationService = $container->get(ApplicationService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
+        $categorieService = $container->get(CategorieService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -101,6 +101,7 @@ class ImportControllerFactory
         $controller->setActiviteElementService($activiteElementService);
         $controller->setApplicationService($applicationService);
         $controller->setApplicationElementService($applicationElementService);
+        $controller->setCategorieService($categorieService);
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceService($competenceService);
         $controller->setCompetenceElementService($competenceElementService);

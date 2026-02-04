@@ -136,4 +136,20 @@ class CategorieService
         return $categorie;
     }
 
+    /** @return Categorie[] */
+    public function generateDictionnaire(string $discriminant = 'libelle'): array
+    {
+        $categories = $this->getCategories();
+        $dictionnaire = [];
+        foreach ($categories as $categorie) {
+            $tabId = match($discriminant) {
+                'libelle' => $categorie->getLibelle(),
+                'code' => $categorie->getCode(),
+                default => $categorie->getId(),
+            };
+            $dictionnaire[$tabId] = $categorie;
+        }
+        return $dictionnaire;
+    }
+
 }
