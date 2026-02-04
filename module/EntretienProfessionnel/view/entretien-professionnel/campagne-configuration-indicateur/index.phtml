@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::indexAction()
+ * @var CampagneConfigurationIndicateur[] $campagneConfigurationIndicateurs
+ */
+
+use EntretienProfessionnel\Entity\Db\CampagneConfigurationIndicateur;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+
+$this->headTitle("Configuration des indicateurs de campagne");
+
+$canAjouter = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
+$canAfficher = $canAjouter;
+$canModifier = $canAjouter;
+$canHistoriser = $canAjouter;
+$canSupprimer = $canAjouter;
+
+?>
+
+<h1 class="page-header">
+    Configuration des indicateurs de campagne
+</h1>
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/ajouter', [], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter un indicateur
+    </a>
+<?php endif; ?>
+
+<br>
+
+<?php if (empty($campagneConfigurationIndicateurs)) : ?>
+    <em> Aucun indicateur </em>
+<?php else : ?>
+<table class="table table-condensed" id="indicateurs">
+    <thead>
+    <tr>
+        <th> Identification </th>
+        <th> Requête</th>
+        <th class="action"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($campagneConfigurationIndicateurs as $campagneConfigurationIndicateur) : ?>
+        <tr class="<?php if ($campagneConfigurationIndicateur->estHistorise()) echo " historise "; ?>">
+            <td>
+                <code> <?php echo $campagneConfigurationIndicateur->getCode(); ?> </code>
+                <br>
+                <?php echo $campagneConfigurationIndicateur->getLibelle(); ?>
+            </td>
+            <td>
+                <?php echo $campagneConfigurationIndicateur->prettyprint(); ?>
+            </td>
+            <td class="action">
+                <?php if ($canModifier): ?>
+                    <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/modifier', ['campagne-configuration-indicateur' => $campagneConfigurationIndicateur->getId()], [], true); ?>"
+                       class="action primary ajax-modal" data-event="modification">
+                        <span class="icon icon-modifier"></span>
+                        Modifier
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistoriser): ?>
+                    <br>
+                    <?php if ($campagneConfigurationIndicateur->estNonHistorise()) : ?>
+                        <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/historiser', ['campagne-configuration-indicateur' => $campagneConfigurationIndicateur->getId()], [], true); ?>"
+                           class="action warning">
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
+                    <?php else : ?>
+                        <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/restaurer', ['campagne-configuration-indicateur' => $campagneConfigurationIndicateur->getId()], [], true); ?>"
+                           class="action warning">
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer): ?>
+                    <br>
+                    <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/supprimer', ['campagne-configuration-indicateur' => $campagneConfigurationIndicateur->getId()], [], true); ?>"
+                       class="action danger ajax-modal" data-event="modification">
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('table#indicateurs').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [2], orderable: false }
+            ]
+        });
+    });
+
+</script>
