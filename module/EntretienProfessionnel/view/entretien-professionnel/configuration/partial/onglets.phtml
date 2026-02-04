@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @var string $current;
+ */
+
+?>
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::indexAction() */ ?>
+    <button class="nav-link" id="recopies-tab"
+            data-bs-toggle="tab" data-bs-target="#recopies"
+            type="button" role="tab" aria-controls="recopies" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('configuration', [],[], true); ?>'"
+    >
+        Recopies
+    </button>
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::indexAction() */ ?>
+    <button class="nav-link" id="indicateurs-tab"
+            data-bs-toggle="tab" data-bs-target="#indicateurs"
+            type="button" role="tab" aria-controls="indicateurs" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur', [],[], true); ?>'"
+    >
+        Indicateurs
+    </button>
+</div>
+
+<script>
+    $('button[aria-controls="<?php echo $current; ?>"]').addClass('active');
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

@@ -18,9 +18,11 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
     {
         $campagneConfigurationIndicateurs = $this->getCampagneConfigurationIndicateurService()->getCampagneConfigurationIndicateurs(true);
 
-        return new ViewModel([
+        $vm =  new ViewModel([
             'campagneConfigurationIndicateurs' => $campagneConfigurationIndicateurs,
         ]);
+        $vm->setTemplate('entretien-professionnel/configuration/index-indicateurs');
+        return $vm;
     }
 
     public function ajouterAction() : ViewModel

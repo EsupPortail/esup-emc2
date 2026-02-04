@@ -20,12 +20,30 @@ $canReappliquer = $this->isAllowed(ConfigurationPrivileges::getResourceId(Config
 
 $canGererRecopie = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
 
+$canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AFFICHER));
+
 $this->headTitle("Configuration des entretiens professionnels");
 ?>
 
-<h1 class="page-header">
-    Configuration des entretiens professionnels
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Configuration des campagnes d'entretien professionnel
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canIndexCampagne) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\CampagneController::indexAction() */ ?>
+            <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
+               class="btn btn-primary float-end">
+                <span class="icon icon-listing"></span>
+                Accéder aux campagnes
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php echo $this->partial('partial/onglets', ['current' => 'recopies'], [], true); ?>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 

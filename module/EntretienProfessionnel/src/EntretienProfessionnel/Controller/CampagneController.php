@@ -21,6 +21,7 @@ use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurServiceAwareTrait;
@@ -49,6 +50,7 @@ class CampagneController extends AbstractActionController
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use CampagneConfigurationIndicateurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use HasIndicateursServiceAwareTrait;
     use MacroServiceAwareTrait;
@@ -122,12 +124,15 @@ class CampagneController extends AbstractActionController
                     [
                         'code' => 'CAMP_' . $campagne->getId(),
                         'libelle' => "Indicateurs liés à la campagne " . $campagne->getAnnee(),
-                        'indicateurs' => [
-                            ['code' => 'EP', 'libelle' => "Liste des entretiens professionnels", "requete" => "select e.* from entretienprofessionnel e join public.entretienprofessionnel_campagne ec on e.campagne_id = ec.id where ec.id = :campagne"],
-                            ['code' => 'AUTRE', 'libelle' => "Autre", "requete" => "select * from unicaen_utilisateur_role"],
-                        ],
+                        'indicateurs' => [],
                     ],
                 ];
+
+                $indicateurs = $this->getCampagneConfigurationIndicateurService()->getCampagneConfigurationIndicateurs();
+                foreach ($indicateurs as $indicateur) {
+                    $item = ['code' => $indicateur->getCode(), 'libelle' => $indicateur->getLibelle(), "requete" => $indicateur->getRequete()];
+                    $listing[0]['indicateurs'][] = $item;
+                }
 
                 $log = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
                 if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
