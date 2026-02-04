@@ -43,13 +43,14 @@ foreach ($entretiens as $etat => $liste) {
     <div class="col-md-4">
         <?php /** @see \EntretienProfessionnel\Controller\CampagneController::indexAction() */ ?>
         <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
-           class="btn btn-primary">
+           class="btn btn-primary float-end">
             <span class="icon icon-listing"></span>
             Accéder aux campagnes
         </a>
     </div>
 </div>
 
+<?php echo $this->partial('partial/onglets', ['campagne' => $campagne, 'current' => 'informations'], [], true); ?>
 
 
 <!-- INFORMATIONS ----------------------------------------------------------------------------------------------------->

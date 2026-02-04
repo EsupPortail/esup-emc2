@@ -28,6 +28,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'indicateurs',
                         'extraire',
                         'tester-eligibilite',
                         'notifier-avancement-autorite',
@@ -172,6 +173,17 @@ return [
                                         /** @see CampagneController::afficherAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'afficher',
+                                    ],
+                                ],
+                            ],
+                            'indicateurs' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/indicateurs/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::indicateursAction() */
+                                        'action'     => 'indicateurs',
                                     ],
                                 ],
                             ],

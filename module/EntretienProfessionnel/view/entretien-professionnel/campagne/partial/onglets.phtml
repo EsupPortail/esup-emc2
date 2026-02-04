@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @var Campagne $campagne
+ * @var string $current
+ */
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+?>
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneController::afficherAction() */ ?>
+    <button class="nav-link" id="informations-tab"
+            data-bs-toggle="tab" data-bs-target="#informations"
+            type="button" role="tab" aria-controls="informations" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/afficher', ['campagne' => $campagne->getId()],[], true); ?>'"
+    >
+        Informations
+    </button>
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneController::indicateursAction() */ ?>
+    <button class="nav-link" id="indicateurs-tab"
+            data-bs-toggle="tab" data-bs-target="#indicateurs"
+            type="button" role="tab" aria-controls="indicateurs" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/indicateurs', ['campagne' => $campagne->getId()],[], true); ?>'"
+    >
+        Indicateurs
+    </button>
+</div>
+
+<script>
+    $('button[aria-controls="<?php echo $current; ?>"]').addClass('active');
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

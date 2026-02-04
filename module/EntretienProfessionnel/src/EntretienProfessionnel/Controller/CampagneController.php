@@ -36,6 +36,10 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenIndicateur\Entity\Db\Categorie;
+use UnicaenIndicateur\Entity\Db\Indicateur;
+use UnicaenIndicateur\Service\Categorie\CategorieServiceAwareTrait;
+use UnicaenIndicateur\Service\Indicateur\IndicateurServiceAwareTrait;
 use UnicaenParametre\Exception\ParametreNotFoundException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -48,7 +52,9 @@ class CampagneController extends AbstractActionController
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use CategorieServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use IndicateurServiceAwareTrait;
     use MacroServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -115,6 +121,22 @@ class CampagneController extends AbstractActionController
                     $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
                     $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
                 }
+
+                $categorie = new Categorie();
+                $categorie->setCode("CAMP" . $campagne->getId());
+                $categorie->setLibelle("Indicateurs liés à la campagne".$campagne->getAnnee());
+                $this->getCategorieService()->create($categorie);
+                $indicateur = new Indicateur();
+                $indicateur->setCode($categorie->getCode() . "_TEST");
+                $indicateur->setTitre("Indicateur de test");
+                $indicateur->setCategorie($categorie);
+                $indicateur->setViewId('mv_indicateur_' . strtolower($indicateur->getCode()));
+                $indicateur->setRequete('select * from entretienprofessionnel e');
+                $indicateur->setRolesAutorises('Tous les rôles');
+                $this->getIndicateurService()->create($indicateur);
+                $this->getIndicateurService()->refresh($indicateur);
+                $campagne->addIndicateur($indicateur);
+                $this->getCampagneService()->update($campagne);
             }
         }
 
@@ -642,6 +664,17 @@ class CampagneController extends AbstractActionController
 
 
     /** VUES STRATEGIQUES *********************************************************************************************/
+
+    public function indicateursAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $indicateurs = $campagne->getIndicateurs();
+
+        return new ViewModel([
+            'campagne' => $campagne,
+            'indicateurs' => $indicateurs,
+        ]);
+    }
 
     public function progressionParStructuresAction(): ViewModel
     {

@@ -404,4 +404,5 @@ class CampagneService
         }
         return [$obligatoires, $facultatifs, $raison];
     }
+
 }

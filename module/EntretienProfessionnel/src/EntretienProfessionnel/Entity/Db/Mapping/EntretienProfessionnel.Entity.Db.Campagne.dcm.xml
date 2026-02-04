@@ -27,6 +27,17 @@
 
         <one-to-many target-entity="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" mapped-by="campagne" field="entretiens"/>
 
+        <many-to-many field="indicateurs" target-entity="UnicaenIndicateur\Entity\Db\Indicateur">
+            <join-table name="entretienprofessionnel_campagne_indicateur">
+                <join-columns>
+                    <join-column name="campagne_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="indicateur_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation" type="datetime" column="histo_creation"/>
         <field name="histoModification" type="datetime" column="histo_modification"/>

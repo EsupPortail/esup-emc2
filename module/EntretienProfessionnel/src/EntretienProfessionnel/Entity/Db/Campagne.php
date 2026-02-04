@@ -6,14 +6,18 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use UnicaenAutoform\Entity\Db\Formulaire;
+use UnicaenIndicateur\Entity\Interface\HasIndicateursInterface;
+use UnicaenIndicateur\Entity\Trait\HasIndicateursTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
+class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndicateursInterface {
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
+    use HasIndicateursTrait;
 
     private ?int $id = -1;
     private ?string $annee = null;
@@ -24,6 +28,10 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
 
     private ?Formulaire $formulaireCREP = null;
     private ?Formulaire $formulaireCREF = null;
+
+    public function __construct() {
+        $this->indicateurs = new ArrayCollection();
+    }
 
     public function getId() : ?int
     {
