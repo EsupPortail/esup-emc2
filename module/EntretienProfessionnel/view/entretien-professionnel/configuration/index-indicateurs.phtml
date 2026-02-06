@@ -42,6 +42,8 @@ $canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagneP
 
 <?php echo $this->partial('partial/onglets', ['current' => 'indicateurs'], [], true); ?>
 
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 <?php if ($canAjouter) : ?>
     <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::ajouterAction() */ ?>
     <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/ajouter', [], [], true); ?>"
