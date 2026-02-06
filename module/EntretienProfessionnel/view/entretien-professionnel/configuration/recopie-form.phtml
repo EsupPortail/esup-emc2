@@ -1,0 +1,92 @@
+<?php
+
+use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurationRecopieForm;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::ajouterAction()
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::modifierAction()
+ * @var CampagneConfigurationRecopieForm $form
+ */
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $('select#champ-from').parent().hide();
+    $('select#champ-to').parent().hide();
+
+    async function generateSelect(formulaireId) {
+        let url = "<?php echo $this->url("formulairechamps", [], ['force_canonical' => true], true); ?>" + "/" + formulaireId;
+        return await $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json"
+        });
+    }
+
+    async function manageChampForm(e) {
+        let value = $('select#formulaire-from').val();
+        if (value !== '') {
+            const data = await generateSelect(value);
+
+            data.forEach(group => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = group.label;
+
+                group.options.forEach(opt => {
+                    const option = new Option(opt.text, opt.value);
+                    optgroup.appendChild(option);
+                });
+
+                document.getElementById('champ-from').appendChild(optgroup);
+            });
+
+            $('select#champ-from').parent().show();
+        } else {
+            $('select#champ-from').parent().hide();
+        }
+    }
+
+    async function manageChampTo(e) {
+        let value = $('select#formulaire-to').val();
+        // console.log("changement select formulaire-form ... ["+ value +"]");
+        if (value !== '') {
+            // console.log("peuplement select");
+            const data = await generateSelect(value);
+            // console.log(data);
+
+            data.forEach(group => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = group.label;
+
+                group.options.forEach(opt => {
+                    const option = new Option(opt.text, opt.value);
+                    optgroup.appendChild(option);
+                });
+
+                document.getElementById('champ-to').appendChild(optgroup);
+            });
+
+            // console.log("affichage du select pour les champ-from");
+            $('select#champ-to').parent().show();
+
+            // todo
+        } else {
+            // console.log("masquage du select pour les champ-from");
+            $('select#champ-to').parent().hide();
+        }
+    }
+
+    manageChampForm();
+    manageChampTo();
+
+    $(function() {
+        $('select#formulaire-from').on('change', function(e) {
+            manageChampForm(e);
+        });
+        $('select#formulaire-to').on('change', function(e) {
+            manageChampTo(e);
+        });
+    });
+</script>
