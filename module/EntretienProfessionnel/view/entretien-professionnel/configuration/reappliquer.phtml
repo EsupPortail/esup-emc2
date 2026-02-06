@@ -1,0 +1,31 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::reappliquerAction()
+ * @var Campagne[] $campagnes
+ */
+
+?>
+
+<form method="post" action="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/reappliquer', [], [], true); ?>">
+    <label for="campagne">
+        Campagne <span class="icon icon-obligatoire"></span>:
+    </label>
+    <select id="campagne" name="campagne">
+        <option value=""> Sélectionner une campagne ... </option>
+        <?php foreach ($campagnes as $campagne) : ?>
+            <option value="<?php echo $campagne->getId(); ?>">
+                <?php echo $campagne->getAnnee(); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <button class="btn btn-primary">
+        Réappliquer sur la campagne
+    </button>
+</form>
+
+<script>
+    $('select').selectpicker();
+</script>

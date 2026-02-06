@@ -15,6 +15,7 @@ $canAfficher = $canAjouter;
 $canModifier = $canAjouter;
 $canHistoriser = $canAjouter;
 $canSupprimer = $canAjouter;
+$canReappliquer = $canAjouter;
 
 $canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AFFICHER));
 
@@ -48,6 +49,15 @@ $canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagneP
     >
         <span class="icon icon-ajouter"></span>
         Ajouter un indicateur
+    </a>
+<?php endif; ?>
+<?php if ($canReappliquer) : ?>
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::reappliquerAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/reappliquer', [], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-refresh"></span>
+        Ré-appliquer pour une campagne
     </a>
 <?php endif; ?>
 

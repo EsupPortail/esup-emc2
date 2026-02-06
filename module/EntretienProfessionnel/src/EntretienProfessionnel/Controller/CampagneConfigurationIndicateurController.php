@@ -4,15 +4,22 @@ namespace EntretienProfessionnel\Controller;
 
 use EntretienProfessionnel\Entity\Db\CampagneConfigurationIndicateur;
 use EntretienProfessionnel\Form\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurFormAwareTrait;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use UnicaenIndicateur\Service\HasIndicateurs\HasIndicateursServiceAwareTrait;
 
 class CampagneConfigurationIndicateurController extends AbstractActionController
 {
+    use CampagneServiceAwareTrait;
     use CampagneConfigurationIndicateurServiceAwareTrait;
+    use HasIndicateursServiceAwareTrait;
     use CampagneConfigurationIndicateurFormAwareTrait;
+
+    /** @method FlashMessenger flashMessenger() */
 
     public function indexAction() : ViewModel
     {
@@ -118,6 +125,34 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
                 'action' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration', ["campagne-configuration-indicateur" => $configuration->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    public function reappliquerAction(): ViewModel
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $campagneId = $data['campagne'];
+            $campagne = $this->getCampagneService()->getCampagne($campagneId);
+
+            if ($campagne !== null) {
+                // vidage des indicateurs
+                $this->getHasIndicateursService()->retirerIndicateurs($campagne);
+
+                $listing = $this->getCampagneConfigurationIndicateurService()->generateGenerationArray($campagne);
+                $log = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
+                if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
+            }
+        }
+
+        $campagnes = $this->getCampagneService()->getCampagnes();
+        $vm = new ViewModel([
+           'title' => "Ré-application des indicateurs associés aux campagnes",
+           'campagnes' => $campagnes,
+        ]);
+        $vm->setTemplate('entretien-professionnel/configuration/reappliquer');
         return $vm;
     }
 }

@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Service\CampagneConfigurationIndicateur;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\CampagneConfigurationIndicateur;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
@@ -79,5 +80,24 @@ class CampagneConfigurationIndicateurService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
+
+    public function generateGenerationArray(Campagne $campagne): array
+    {
+        $indicateurs = $this->getCampagneConfigurationIndicateurs();
+        $listing = [
+            [
+                'code' => 'CAMP_' . $campagne->getId(),
+                'libelle' => "Indicateurs liés à la campagne " . $campagne->getAnnee(),
+                'indicateurs' => [],
+            ],
+        ];
+        foreach ($indicateurs as $indicateur) {
+            $item = ['code' => $indicateur->getCode(), 'libelle' => $indicateur->getLibelle(), "requete" => $indicateur->getRequete()];
+            $listing[0]['indicateurs'][] = $item;
+        }
+        return $listing;
     }
 }

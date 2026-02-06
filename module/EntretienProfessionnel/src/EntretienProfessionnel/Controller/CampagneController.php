@@ -120,20 +120,7 @@ class CampagneController extends AbstractActionController
                     $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
                 }
 
-                $listing = [
-                    [
-                        'code' => 'CAMP_' . $campagne->getId(),
-                        'libelle' => "Indicateurs liés à la campagne " . $campagne->getAnnee(),
-                        'indicateurs' => [],
-                    ],
-                ];
-
-                $indicateurs = $this->getCampagneConfigurationIndicateurService()->getCampagneConfigurationIndicateurs();
-                foreach ($indicateurs as $indicateur) {
-                    $item = ['code' => $indicateur->getCode(), 'libelle' => $indicateur->getLibelle(), "requete" => $indicateur->getRequete()];
-                    $listing[0]['indicateurs'][] = $item;
-                }
-
+                $listing = $this->getCampagneConfigurationIndicateurService()->generateGenerationArray($campagne);
                 $log = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
                 if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
 

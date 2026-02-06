@@ -28,6 +28,7 @@ return [
                         'historiser',
                         'restaurer',
                         'supprimer',
+                        'reappliquer',
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_MODIFIER
@@ -102,6 +103,16 @@ return [
                                             'defaults' => [
                                                 /** @see CampagneConfigurationIndicateurController::supprimerAction() */
                                                 'action' => 'supprimer',
+                                            ],
+                                        ],
+                                    ],
+                                    'reappliquer' => [
+                                        'type' => Literal::class,
+                                        'options' => [
+                                            'route' => '/reappliquer',
+                                            'defaults' => [
+                                                /** @see CampagneConfigurationIndicateurController::reappliquerAction() */
+                                                'action' => 'reappliquer',
                                             ],
                                         ],
                                     ],
