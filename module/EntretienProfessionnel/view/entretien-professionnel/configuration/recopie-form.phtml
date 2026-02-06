@@ -27,9 +27,11 @@ use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurati
 
     async function manageChampForm(e) {
         let value = $('select#formulaire-from').val();
+
         if (value !== '') {
             const data = await generateSelect(value);
 
+            $('select#champ-from').empty();
             data.forEach(group => {
                 const optgroup = document.createElement('optgroup');
                 optgroup.label = group.label;
@@ -56,6 +58,7 @@ use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurati
             const data = await generateSelect(value);
             // console.log(data);
 
+            $('select#champ-to').empty();
             data.forEach(group => {
                 const optgroup = document.createElement('optgroup');
                 optgroup.label = group.label;

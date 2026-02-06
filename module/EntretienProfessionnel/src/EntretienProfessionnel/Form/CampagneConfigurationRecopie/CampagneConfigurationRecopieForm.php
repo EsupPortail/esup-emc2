@@ -53,7 +53,7 @@ class CampagneConfigurationRecopieForm extends Form
             'options' => [
                 'label' => "Champ à recopier <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
-                'value_options' => [],
+                'value_options' => $this->getChampService()->getChampsAsOptions(),
                 'empty_option' => "Choisissez un champ ...",
             ],
             'attributes' => [
@@ -81,7 +81,7 @@ class CampagneConfigurationRecopieForm extends Form
             'options' => [
                 'label' => "Champ à remplir <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
-                'value_options' => [],
+                'value_options' => $this->getChampService()->getChampsAsOptions(),
                 'empty_option' => "Choisissez un champ ...",
             ],
             'attributes' => [
@@ -105,11 +105,11 @@ class CampagneConfigurationRecopieForm extends Form
         ]);
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'formulaire'              => [ 'required' => true, ],
-            'formulaire-from'         => [ 'required' => false, ],
-            'champ-from'              => [ 'required' => true, ],
+            'type'                  => [ 'required' => true, ],
+            'formulaire-from'       => [ 'required' => false, ],
+            'champ-from'            => [ 'required' => true, ],
             'formulaire-to'         => [ 'required' => false, ],
-            'champ-to'              => [ 'required' => false, ],
+            'champ-to'              => [ 'required' => true, ],
         ]));
     }
 }
