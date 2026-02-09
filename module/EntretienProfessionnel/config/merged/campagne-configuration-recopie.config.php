@@ -12,6 +12,7 @@ use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieService;
 use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieServiceFactory;
 use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -23,10 +24,10 @@ return [
                     'action' => [
                         'index',
                         'ajouter',
-//                        'modifier',
-//                        'historiser',
-//                        'restaurer',
-//                        'supprimer',
+                        'modifier',
+                        'historiser',
+                        'restaurer',
+                        'supprimer',
                         'verifier',
                     ],
                     'privileges' => [
@@ -65,46 +66,46 @@ return [
                                             ],
                                         ],
                                     ],
-//                                    'modifier' => [
-//                                        'type' => Segment::class,
-//                                        'options' => [
-//                                            'route' => '/modifier/:campagne-configuration-indicateur',
-//                                            'defaults' => [
-//                                                /** @see CampagneConfigurationIndicateurController::modifierAction() */
-//                                                'action' => 'modifier',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                    'historiser' => [
-//                                        'type' => Segment::class,
-//                                        'options' => [
-//                                            'route' => '/historiser/:campagne-configuration-indicateur',
-//                                            'defaults' => [
-//                                                /** @see CampagneConfigurationIndicateurController::historiserAction() */
-//                                                'action' => 'historiser',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                    'restaurer' => [
-//                                        'type' => Segment::class,
-//                                        'options' => [
-//                                            'route' => '/restaurer/:campagne-configuration-indicateur',
-//                                            'defaults' => [
-//                                                /** @see CampagneConfigurationIndicateurController::restaurerAction() */
-//                                                'action' => 'restaurer',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                    'supprimer' => [
-//                                        'type' => Segment::class,
-//                                        'options' => [
-//                                            'route' => '/supprimer/:campagne-configuration-indicateur',
-//                                            'defaults' => [
-//                                                /** @see CampagneConfigurationIndicateurController::supprimerAction() */
-//                                                'action' => 'supprimer',
-//                                            ],
-//                                        ],
-//                                    ],
+                                    'modifier' => [
+                                        'type' => Segment::class,
+                                        'options' => [
+                                            'route' => '/modifier/:campagne-configuration-recopie',
+                                            'defaults' => [
+                                                /** @see CampagneConfigurationRecopieController::modifierAction() */
+                                                'action' => 'modifier',
+                                            ],
+                                        ],
+                                    ],
+                                    'historiser' => [
+                                        'type' => Segment::class,
+                                        'options' => [
+                                            'route' => '/historiser/:campagne-configuration-recopie',
+                                            'defaults' => [
+                                                /** @see CampagneConfigurationRecopieController::historiserAction() */
+                                                'action' => 'historiser',
+                                            ],
+                                        ],
+                                    ],
+                                    'restaurer' => [
+                                        'type' => Segment::class,
+                                        'options' => [
+                                            'route' => '/restaurer/:campagne-configuration-recopie',
+                                            'defaults' => [
+                                                /** @see CampagneConfigurationRecopieController::restaurerAction() */
+                                                'action' => 'restaurer',
+                                            ],
+                                        ],
+                                    ],
+                                    'supprimer' => [
+                                        'type' => Segment::class,
+                                        'options' => [
+                                            'route' => '/supprimer/:campagne-configuration-recopie',
+                                            'defaults' => [
+                                                /** @see CampagneConfigurationRecopieController::supprimerAction() */
+                                                'action' => 'supprimer',
+                                            ],
+                                        ],
+                                    ],
                                     'verifier' => [
                                         'type' => Literal::class,
                                         'options' => [

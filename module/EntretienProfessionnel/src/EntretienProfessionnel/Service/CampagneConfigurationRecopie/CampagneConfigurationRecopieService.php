@@ -60,7 +60,7 @@ class CampagneConfigurationRecopieService
     public function getCampagneConfigurationRecopie(?int $id): ?CampagneConfigurationRecopie
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('recopie.id = :id')->setParameter('id', $id)
+            ->andWhere('configuration.id = :id')->setParameter('id', $id)
         ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();

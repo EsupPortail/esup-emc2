@@ -15,7 +15,9 @@ class CampagneConfigurationRecopieHydrator implements HydratorInterface {
         /** @var CampagneConfigurationRecopie $object */
         $data = [
             'type' => $object->getFormulaire(),
+            'formulaire-from' => $object->getFrom()?->getCategorie()?->getFormulaire()?->getId(),
             'champ-from' => $object->getFrom()?->getId(),
+            'formulaire-to' => $object->getTo()?->getCategorie()?->getFormulaire()?->getId(),
             'champ-to' => $object->getTo()?->getId(),
             'description' => $object->getDescription(),
         ];

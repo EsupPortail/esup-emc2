@@ -1,11 +1,13 @@
 <?php
 
+use EntretienProfessionnel\Entity\Db\CampagneConfigurationRecopie;
 use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurationRecopieForm;
 
 /**
  * @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::ajouterAction()
  * @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::modifierAction()
  * @var CampagneConfigurationRecopieForm $form
+ * @var CampagneConfigurationRecopie $recopie
  */
 
 ?>
@@ -25,7 +27,7 @@ use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurati
         });
     }
 
-    async function manageChampForm(e) {
+    async function manageChampForm(id) {
         let value = $('select#formulaire-from').val();
 
         if (value !== '') {
@@ -42,6 +44,7 @@ use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurati
                 });
 
                 document.getElementById('champ-from').appendChild(optgroup);
+                if (id !== undefined) $('select#champ-from option[value='+id+']').prop('selected', true);
             });
 
             $('select#champ-from').parent().show();
@@ -50,7 +53,7 @@ use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurati
         }
     }
 
-    async function manageChampTo(e) {
+    async function manageChampTo(id) {
         let value = $('select#formulaire-to').val();
         // console.log("changement select formulaire-form ... ["+ value +"]");
         if (value !== '') {
@@ -69,6 +72,7 @@ use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurati
                 });
 
                 document.getElementById('champ-to').appendChild(optgroup);
+                if (id !== undefined) $('select#champ-to option[value=' + id + ']').prop('selected', true);
             });
 
             // console.log("affichage du select pour les champ-from");
@@ -81,15 +85,15 @@ use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurati
         }
     }
 
-    manageChampForm();
-    manageChampTo();
-
     $(function() {
-        $('select#formulaire-from').on('change', function(e) {
-            manageChampForm(e);
+        $('select#formulaire-from').on('change', function() {
+            manageChampForm();
         });
-        $('select#formulaire-to').on('change', function(e) {
-            manageChampTo(e);
+        $('select#formulaire-to').on('change', function() {
+            manageChampTo();
         });
+
+        manageChampForm(<?php echo $recopie->getFrom()?->getId(); ?>);
+        manageChampTo(<?php echo $recopie->getTo()?->getId(); ?>);
     });
 </script>

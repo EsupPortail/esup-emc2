@@ -6,6 +6,7 @@ use EntretienProfessionnel\Entity\Db\CampagneConfigurationRecopie;
 use EntretienProfessionnel\Form\CampagneConfigurationRecopie\CampagneConfigurationRecopieFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieServiceAwareTrait;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
@@ -51,13 +52,86 @@ class CampagneConfigurationRecopieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => "Ajout d'une recopie",
             'form' => $form,
+            'recopie' => $recopie,
         ]);
         $vm->setTemplate('entretien-professionnel/configuration/recopie-form');
         return $vm;
     }
 
+    public function modifierAction(): ViewModel
+    {
+        $recopie = $this->getCampagneConfigurationRecopieService()->getRequestedCampagneConfigurationRecopie($this);
+        $form = $this->getCampagneConfigurationRecopieForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/configuration-recopie/modifier', ['campagne-configuration-recopie' => $recopie->getId()], [], true));
+        $form->bind($recopie);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getCampagneConfigurationRecopieService()->create($recopie);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier la recopie",
+            'form' => $form,
+            'recopie' => $recopie,
+        ]);
+        $vm->setTemplate('entretien-professionnel/configuration/recopie-form');
+        return $vm;
+    }
+
+    public function historiserAction(): Response
+    {
+        $recopie = $this->getCampagneConfigurationRecopieService()->getRequestedCampagneConfigurationRecopie($this);
+        $this->getCampagneConfigurationRecopieService()->historise($recopie);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+
+        return $this->redirect()->toRoute('entretien-professionnel/campagne/configuration-recopie', [], [], true);
+    }
+
+    public function restaurerAction(): Response
+    {
+        $recopie = $this->getCampagneConfigurationRecopieService()->getRequestedCampagneConfigurationRecopie($this);
+        $this->getCampagneConfigurationRecopieService()->restore($recopie);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+
+        return $this->redirect()->toRoute('entretien-professionnel/campagne/configuration-recopie', [], [], true);
+    }
+
+    public function supprimerAction() : ViewModel
+    {
+        $recopie = $this->getCampagneConfigurationRecopieService()->getRequestedCampagneConfigurationRecopie($this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getCampagneConfigurationRecopieService()->delete($recopie);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($recopie !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la configuration/recopie ",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration-recopie/supprimer', ["campagne-configuration-recopie" => $recopie->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     public function verifierAction() : ViewModel
     {
+        //il faut une campagne ...
 
     }
 

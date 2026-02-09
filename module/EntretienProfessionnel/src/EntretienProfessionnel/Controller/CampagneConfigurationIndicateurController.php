@@ -91,7 +91,7 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
 
-        return $this->redirect()->toRoute('entretien-professionnel/campagne/configuration', [], ['fragment' => 'indicateurs'], true);
+        return $this->redirect()->toRoute('entretien-professionnel/campagne/configuration-indicateur', [], ['fragment' => 'indicateurs'], true);
     }
 
     public function restaurerAction() : Response
@@ -102,7 +102,7 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
 
-        return $this->redirect()->toRoute('entretien-professionnel/campagne/configuration', [], ['fragment' => 'indicateurs'], true);
+        return $this->redirect()->toRoute('entretien-professionnel/campagne/configuration-indicateur', [], ['fragment' => 'indicateurs'], true);
     }
 
     public function supprimerAction() : ViewModel
@@ -122,7 +122,7 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
             $vm->setVariables([
                 'title' => "Suppression de la configuration/indicateur " . $configuration->getCode(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration', ["campagne-configuration-indicateur" => $configuration->getId()], [], true),
+                'action' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration-indicateur/supprimer', ["campagne-configuration-indicateur" => $configuration->getId()], [], true),
             ]);
         }
         return $vm;
@@ -152,7 +152,7 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
            'title' => "Ré-application des indicateurs associés aux campagnes",
            'campagnes' => $campagnes,
         ]);
-        $vm->setTemplate('entretien-professionnel/configuration/reappliquer');
+        $vm->setTemplate('entretien-professionnel/configuration/reappliquer-indicateur');
         return $vm;
     }
 }

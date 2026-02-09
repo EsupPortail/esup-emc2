@@ -6,6 +6,7 @@ use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 use UnicaenAutoform\Service\Champ\ChampServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 
@@ -107,7 +108,24 @@ class CampagneConfigurationRecopieForm extends Form
         $this->setInputFilter((new Factory())->createInputFilter([
             'type'                  => [ 'required' => true, ],
             'formulaire-from'       => [ 'required' => false, ],
-            'champ-from'            => [ 'required' => true, ],
+            'champ-from'            => [
+                'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "Les types des deux champs sont incompatibles",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            $from = $this->getChampService()->getChamp($context['champ-from']);
+                            $to   = $this->getChampService()->getChamp($context['champ-to']);
+                            if ($from?->getType() !== $to?->getType()) return false;
+                            return true;
+                        },
+                        //'break_chain_on_failure' => true,
+                    ],
+                ]],
+            ],
             'formulaire-to'         => [ 'required' => false, ],
             'champ-to'              => [ 'required' => true, ],
         ]));
