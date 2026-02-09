@@ -138,12 +138,24 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
             $campagne = $this->getCampagneService()->getCampagne($campagneId);
 
             if ($campagne !== null) {
+                $success = null; $warning = null; $error = null;
+
                 // vidage des indicateurs
                 $this->getHasIndicateursService()->retirerIndicateurs($campagne);
 
                 $listing = $this->getCampagneConfigurationIndicateurService()->generateGenerationArray($campagne);
-                $log = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
-                if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
+                $warning = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
+
+
+                $vm = new ViewModel([
+                    'title' => "Ré-application des indicateurs associés aux campagnes",
+                    'reponse' => "Ré-application effectuée",
+                    'success' => $success,
+                    'error' => $error,
+                    'warning' => $warning,
+                ]);
+                $vm->setTemplate('default/reponse');
+                return $vm;
             }
         }
 
