@@ -91,7 +91,7 @@ class CampagneConfigurationRecopieService
 
     /** FACADE ********************************************************************************************************/
 
-    public function verifierTypes() : string
+    public function verifierTypes() : ?string
     {
         $log = "";
         $recopies = $this->getCampagneConfigurationRecopies();
@@ -99,7 +99,7 @@ class CampagneConfigurationRecopieService
             $verif = $this->verifierType($recopie);
             if ($verif !== true) $log .= "Les types des champ pour la recopie <strong>". $recopie->getFrom()->getLibelle() . " &Rightarrow; ". $recopie->getTo()->getLibelle(). "</strong> sont incompatibles (<code>".$recopie->getFrom()->getType()->getLibelle()."</code>&ne;<code>".$recopie->getTo()->getType()->getLibelle()."</code>)";
         }
-        return $log;
+        return ($log === "")?null:$log;
     }
 
     public function verifierType(CampagneConfigurationRecopie $recopie): bool|string
@@ -110,7 +110,7 @@ class CampagneConfigurationRecopieService
         return true;
     }
 
-    public function verifierExistences(Campagne $campagne): string
+    public function verifierFormulaire(Campagne $campagne): string|null
     {
         $precedente = $campagne->getPrecede();
         if ($precedente === null)  return "La campagne <strong>". $campagne->getAnnee()."</strong> fait suite à aucune campagne ; aucune recopie ne pourra donc être faite.<br>";
@@ -122,7 +122,12 @@ class CampagneConfigurationRecopieService
         if ($curCREP === null) return "Le formulaire du CREP de la campagne courante <strong>". $campagne->getAnnee()."</strong> n'est pas déclaré ; aucune recopie ne pourra donc être faite.<br>";
         $curCREF = $campagne->getFormulaireCREF();
         if ($curCREF === null) return "Le formulaire du CREF de la campagne courante <strong>". $campagne->getAnnee()."</strong> n'est pas déclaré ; aucune recopie ne pourra donc être faite.<br>";
+        return null;
+    }
 
+    public function verifierExistences(Campagne $campagne): string|null
+    {
+        $precedente = $campagne->getPrecede();
 
         $log = "";
         $recopies = $this->getCampagneConfigurationRecopies();
@@ -144,7 +149,7 @@ class CampagneConfigurationRecopieService
             if (! $formulaireTo->hasChamp($champTo)) $log .= "Le champ \"". $champTo->getLibelle() . "\" n'est pas présent dans le ".$formulaire." de la campagne courante <strong>". $campagne->getAnnee()."</strong> ; cette recopie sera ignorée.<br>";
         }
 
-        return $log;
+        return $log === ""?null: $log;
     }
 }
 

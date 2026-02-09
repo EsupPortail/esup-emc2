@@ -3,6 +3,7 @@
 /**
  * @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::indexAction()
  * @var CampagneConfigurationRecopie[] $campagneConfigurationRecopies
+ * @var ?string $verificationTypes
  */
 
 use EntretienProfessionnel\Entity\Db\CampagneConfigurationRecopie;
@@ -42,7 +43,12 @@ $canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagneP
 
 <?php echo $this->partial('partial/onglets', ['current' => 'recopies'], [], true); ?>
 
-<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+<?php if ($verificationTypes !== null): ?>
+    <div class="alert alert-warning text-warning">
+        <span class="icon icon-warning"></span>
+        <?php echo $verificationTypes; ?>
+    </div>
+<?php endif; ?>
 
 <?php if ($canAjouter) : ?>
     <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::ajouterAction() */ ?>
@@ -56,7 +62,7 @@ $canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagneP
 <?php if ($canReappliquer) : ?>
     <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::verifierAction() */ ?>
     <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-recopie/verifier', [], [], true); ?>"
-       class="btn btn-primary ajax-modal" data-event="modification"
+       class="btn btn-primary ajax-modal"
     >
         <span class="icon icon-refresh"></span>
         Vérifier les recopies
