@@ -684,4 +684,38 @@ class EntretienProfessionnelController extends AbstractActionController
                 throw new RuntimeException("Rôle [".$role->getRoleId()."] non prévu");
         }
     }
+
+    public function reinitialiserAction(): ViewModel
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $formulaire = $this->params()->fromRoute('formulaire');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $instance = ($formulaire==='CREP')?$entretien->getFormulaireInstance():$entretien->getFormationInstance();
+                if ($instance) {
+                    $this->getFormulaireInstanceService()->historise($instance);
+                }
+                $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($entretien !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Réinitialisation du ".$formulaire." de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
+                'text' => "La réinitialisation effacera les saisies et ré-effectuera les recopies. Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/reinitialiser', ["entretien" => $entretien->getId(), "formulaire" => $formulaire], [], true),
+            ]);
+        }
+        return $vm;
+
+
+
+    }
 }

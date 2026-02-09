@@ -208,6 +208,16 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
+        <?php if ($canModifierEP) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::reinitialiserAction() */ ?>
+            <a href="<?php echo $this->url('entretien-professionnel/reinitialiser',['entretien-professionnel' => $entretien->getId(), 'formulaire' => 'CREP'],[], true); ?>"
+               class="btn btn-warning ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-refresh"></span>
+                Ré-initialiser le CREP
+            </a>
+        <?php endif; ?>
+
         <?php echo $this->partial('partial/crep', ['entretien' => $entretien, 'crep' => $crep, 'fichePoste' => $ficheposte, 'user' => $user, 'role' => $role, 'source' => 'renseignerAction']); ?>
     </div>
 
@@ -222,6 +232,16 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
                 <p> Par conséquent, vous ne pouvez plus modifier le compte-rendu d'entretien professionnel.</p>
             </div>
+        <?php endif; ?>
+
+        <?php if ($canModifierEP) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::reinitialiserAction() */ ?>
+            <a href="<?php echo $this->url('entretien-professionnel/reinitialiser',['entretien-professionnel' => $entretien->getId(), 'formulaire' => 'CREF'],[], true); ?>"
+               class="btn btn-warning ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-refresh"></span>
+                Ré-initialiser le CREF
+            </a>
         <?php endif; ?>
 
         <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null, 'connectedUser' => $user, 'role' => $role, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>

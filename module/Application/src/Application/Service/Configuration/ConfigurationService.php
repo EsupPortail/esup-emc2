@@ -118,28 +118,4 @@ class ConfigurationService
         return $fiche;
     }
 
-    /** CONFIGURATION ENTRETIEN PRO ***********************************************************************************/
-
-    public function getConfigurationsEntretienProfessionnel(): array
-    {
-        $qb = $this->getObjectManager()->getRepository(ConfigurationEntretienProfessionnel::class)->createQueryBuilder('configuration')
-            ->andWhere('configuration.histoDestruction IS NULL');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    public function getConfigurationEntretienProfessionnel(?int $id): ?ConfigurationEntretienProfessionnel
-    {
-        $qb = $this->getObjectManager()->getRepository(ConfigurationEntretienProfessionnel::class)->createQueryBuilder('configuration')
-            ->andWhere('configuration.id = :id')
-            ->setParameter('id', $id);
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ConfigurationEntretienProfessionnel partagent le même id [" . $id . "]", 0, $e);
-        }
-        return $result;
-    }
 }

@@ -4,12 +4,14 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 
 /**
  * @see \EntretienProfessionnel\Controller\CampagneConfigurationIndicateurController::reappliquerAction()
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::verifierAction()
  * @var Campagne[] $campagnes
+ * @var string $url
  */
 
 ?>
 
-<form method="post" action="<?php echo $this->url('entretien-professionnel/campagne/configuration-indicateur/reappliquer', [], [], true); ?>">
+<form method="post" action="<?php echo $url; ?>">
     <label for="campagne">
         Campagne <span class="icon icon-obligatoire"></span>:
     </label>

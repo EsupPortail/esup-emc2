@@ -11,19 +11,18 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 
+/** @method FlashMessenger flashMessenger() */
 class CampagneConfigurationRecopieController extends AbstractActionController
 {
     use CampagneServiceAwareTrait;
     use CampagneConfigurationRecopieServiceAwareTrait;
     use CampagneConfigurationRecopieFormAwareTrait;
 
-    /** @method FlashMessenger flashMessenger() */
-
     public function indexAction(): ViewModel
     {
         $campagneConfigurationRecopies = $this->getCampagneConfigurationRecopieService()->getCampagneConfigurationRecopies(true);
-        $log = $this->getCampagneConfigurationRecopieService()->verifierTypes();
-        if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
+//        $log = $this->getCampagneConfigurationRecopieService()->verifierTypes();
+//        if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
 
         $vm =  new ViewModel([
             'campagneConfigurationRecopies' => $campagneConfigurationRecopies,
@@ -131,7 +130,40 @@ class CampagneConfigurationRecopieController extends AbstractActionController
 
     public function verifierAction() : ViewModel
     {
-        //il faut une campagne ...
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $campagneId = $data['campagne'];
+            $campagne = $this->getCampagneService()->getCampagne($campagneId);
+
+            if ($campagne !== null) {
+                $ok = true;
+                $log = $this->getCampagneConfigurationRecopieService()->verifierTypes();
+                if ($log !== '') {
+                    $this->flashMessenger()->addWarningMessage($log);
+                    $ok = false;
+                }
+                $log = $this->getCampagneConfigurationRecopieService()->verifierExistences($campagne);
+                if ($log !== '') {
+                    $this->flashMessenger()->addWarningMessage($log);
+                    $ok = false;
+                }
+
+                if ($ok) {
+                    $this->flashMessenger()->addSuccessMessage("Les copies sont bien paramétrées pour la campagne ".$campagne->getAnnee());
+                }
+            }
+        }
+
+        $campagnes = $this->getCampagneService()->getCampagnes();
+        $vm = new ViewModel([
+            'title' => "Ré-application des indicateurs associés aux campagnes",
+            'campagnes' => $campagnes,
+            'url' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration-recopie/verifier', [], [], true),
+        ]);
+        $vm->setTemplate('entretien-professionnel/configuration/selectionner-campagne');
+        return $vm;
 
     }
 

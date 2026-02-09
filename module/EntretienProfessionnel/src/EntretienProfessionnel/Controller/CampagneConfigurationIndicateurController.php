@@ -151,8 +151,9 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
         $vm = new ViewModel([
            'title' => "Ré-application des indicateurs associés aux campagnes",
            'campagnes' => $campagnes,
+           'url' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration-indicateur/reappliquer', [], [], true),
         ]);
-        $vm->setTemplate('entretien-professionnel/configuration/reappliquer-indicateur');
+        $vm->setTemplate('entretien-professionnel/configuration/selectionner-campagne');
         return $vm;
     }
 }

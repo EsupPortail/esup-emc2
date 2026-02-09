@@ -7,14 +7,6 @@
 ?>
 
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::indexAction() */ ?>
-    <button class="nav-link" id="recopies_old-tab"
-            data-bs-toggle="tab" data-bs-target="#recopies_old"
-            type="button" role="tab" aria-controls="recopies_old" aria-selected="true"
-            onclick="location.href='<?php echo $this->url('configuration', [],[], true); ?>'"
-    >
-        Recopies OLD
-    </button>
     <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::indexAction() */ ?>
     <button class="nav-link" id="recopies-tab"
             data-bs-toggle="tab" data-bs-target="#recopies"

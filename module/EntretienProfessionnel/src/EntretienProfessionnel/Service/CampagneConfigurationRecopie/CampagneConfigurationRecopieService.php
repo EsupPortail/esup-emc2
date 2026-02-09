@@ -5,9 +5,11 @@ namespace EntretienProfessionnel\Service\CampagneConfigurationRecopie;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\CampagneConfigurationRecopie;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
+use UnicaenAutoform\Entity\Db\Formulaire;
 
 class CampagneConfigurationRecopieService
 {
@@ -108,6 +110,41 @@ class CampagneConfigurationRecopieService
         return true;
     }
 
+    public function verifierExistences(Campagne $campagne): string
+    {
+        $precedente = $campagne->getPrecede();
+        if ($precedente === null)  return "La campagne <strong>". $campagne->getAnnee()."</strong> fait suite à aucune campagne ; aucune recopie ne pourra donc être faite.<br>";
+        $oldCREP = $precedente->getFormulaireCREP();
+        if ($oldCREP === null) return "Le formulaire du CREP de la campagne précédente <strong>". $campagne->getAnnee()."</strong> n'est pas déclaré ; aucune recopie ne pourra donc être faite.<br>";
+        $oldCREF = $precedente->getFormulaireCREF();
+        if ($oldCREF === null) return "Le formulaire du CREF de la campagne précédente <strong>". $campagne->getAnnee()."</strong> n'est pas déclaré ; aucune recopie ne pourra donc être faite.<br>";
+        $curCREP = $campagne->getFormulaireCREP();
+        if ($curCREP === null) return "Le formulaire du CREP de la campagne courante <strong>". $campagne->getAnnee()."</strong> n'est pas déclaré ; aucune recopie ne pourra donc être faite.<br>";
+        $curCREF = $campagne->getFormulaireCREF();
+        if ($curCREF === null) return "Le formulaire du CREF de la campagne courante <strong>". $campagne->getAnnee()."</strong> n'est pas déclaré ; aucune recopie ne pourra donc être faite.<br>";
 
+
+        $log = "";
+        $recopies = $this->getCampagneConfigurationRecopies();
+        foreach ($recopies as $recopie) {
+            $formulaire = $recopie->getFormulaire();
+            $formulaireFrom = match($formulaire) {
+                'CREP' => $precedente->getFormulaireCREP(),
+                'CREF' => $precedente->getFormulaireCREF(),
+                default => null,
+            };
+            $formulaireTo = match($formulaire) {
+                'CREP' => $campagne->getFormulaireCREP(),
+                'CREF' => $campagne->getFormulaireCREF(),
+                default => null,
+            };
+            $champFrom = $recopie->getFrom();
+            $champTo = $recopie->getTo();
+            if (! $formulaireFrom->hasChamp($champFrom)) $log .= "Le champ \"". $champFrom->getLibelle() . "\" n'est pas présent dans le ".$formulaire." de la campagne précédente <strong>". $precedente->getAnnee()."</strong> ; cette recopie sera ignorée.<br>";
+            if (! $formulaireTo->hasChamp($champTo)) $log .= "Le champ \"". $champTo->getLibelle() . "\" n'est pas présent dans le ".$formulaire." de la campagne courante <strong>". $campagne->getAnnee()."</strong> ; cette recopie sera ignorée.<br>";
+        }
+
+        return $log;
+    }
 }
 

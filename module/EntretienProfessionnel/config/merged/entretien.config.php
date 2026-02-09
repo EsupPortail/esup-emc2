@@ -120,6 +120,7 @@ return [
                     'action' => [
                         'creer',
                         'modifier',
+                        'reinitialiser',
                     ],
                     'privileges' => EntretienproPrivileges::ENTRETIENPRO_CONVOQUER,
                     'assertion' => EntretienProfessionnelAssertion::class,
@@ -296,6 +297,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'modifier',
+                            ],
+                        ],
+                    ],
+                    'reinitialiser' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/reinitialiser/:entretien-professionnel/:formulaire',
+                            'defaults' => [
+                                /** @see EntretienProfessionnelController::reinitialiserAction() */
+                                'action'     => 'reinitialiser',
                             ],
                         ],
                     ],
