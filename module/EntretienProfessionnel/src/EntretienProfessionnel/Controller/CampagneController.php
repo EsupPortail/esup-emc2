@@ -500,7 +500,7 @@ class CampagneController extends AbstractActionController
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
@@ -514,37 +514,27 @@ class CampagneController extends AbstractActionController
         [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
-        $finalises = [];
-        $encours = [];
-        foreach ($entretiens as $entretien) {
-            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
-                $finalises[] = $entretien;
-            } else {
-                $encours[] = $entretien;
-            }
-        }
+//        $finalises = [];
+//        $encours = [];
+//        foreach ($entretiens as $entretien) {
+//            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+//                $finalises[] = $entretien;
+//            } else {
+//                $encours[] = $entretien;
+//            }
+//        }
 
-        $last = $this->getCampagneService()->getLastCampagne();
-        $campagnes = $this->getCampagneService()->getCampagnesActives();
-        if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) {
-            return $a->getDateDebut() <=> $b->getDateDebut();
-        });
 
         return new ViewModel([
-            'campagne' => $campagne,
-            'campagnes' => $campagnes,
-            'structure' => $structure,
-            'structures' => $structures,
             'agents' => $agents,
 
             'entretiens' => $entretiens,
-            'encours' => $encours,
-            'finalises' => $finalises,
+//            'encours' => $encours,
+//            'finalises' => $finalises,
 
             'obligatoires' => $obligatoires,
-            'facultatifs' => $facultatifs,
-            'raison' => $raison,
+//            'facultatifs' => $facultatifs,
+//            'raison' => $raison,
         ]);
     }
 
