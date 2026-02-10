@@ -119,12 +119,18 @@ class FicheMetierController extends AbstractActionController
         $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
-        $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+
+        $emplois = null; $postes = null;
+        if ($this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_EMPLOIREPERE)) {
+            $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+            $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($fichemetier->getCodeFonction());
+        }
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
             'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
             'emplois' => $emplois,
+            'postes' => $postes,
             'missions' => $missions,
             'activites' => $activites,
             'competences' => $competences,
@@ -191,7 +197,12 @@ class FicheMetierController extends AbstractActionController
         $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
-        $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+
+        $emplois = null; $postes = null;
+        if ($this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_EMPLOIREPERE)) {
+            $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+            $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($fichemetier->getCodeFonction());
+        }
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
@@ -199,6 +210,7 @@ class FicheMetierController extends AbstractActionController
             'missions' => $missions,
             'activites' => $activites,
             'emplois' => $emplois,
+            'postes' => $postes,
             'competences' => $competences,
             'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,

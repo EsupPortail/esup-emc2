@@ -1,0 +1,45 @@
+<?php
+
+use Agent\Entity\Db\AgentPoste;
+
+/**
+ * @var AgentPoste[] $postes
+ */
+
+$lPostes = [];
+if ($postes !== null) {
+    foreach ($postes as $poste) {
+        $lPostes[$poste->getLibelle()] = $poste->getLibelle();
+    }
+    usort($lPostes, function (string $a, string $b) { return $a <=> $b; });
+}
+?>
+
+
+<!--<div class="card">-->
+<!--    <div class="card-header bg-default">-->
+<!--        <h2> Intitulés des postes </h2>-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--        --><?php //if (empty($lPostes)): ?><!-- : ?>-->
+<!--            Aucun poste associé à cette fiche métier-->
+<!--        --><?php //else : ?>
+<!--            <ul>-->
+<!--                --><?php //foreach ($lPostes as $lPoste) : ?>
+<!--                    <li> --><?php //echo $lPoste; ?><!--</li>-->
+<!--                --><?php //endforeach; ?>
+<!--            </ul>-->
+<!--        --><?php //endif; ?>
+<!--    </div>-->
+<!--</div>-->
+
+<h3> Intitulés des postes </h3>
+<?php if (empty($lPostes)): ?> : ?>
+    Aucun poste associé à cette fiche métier
+<?php else : ?>
+    <ul>
+        <?php foreach ($lPostes as $lPoste) : ?>
+            <li> <?php echo $lPoste; ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

@@ -1,5 +1,6 @@
 <?php
 
+use Agent\Entity\Db\AgentPoste;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\CompetenceType;
 use EmploiRepere\Entity\Db\EmploiRepere;
@@ -10,9 +11,11 @@ use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \FicheMetier\Controller\FicheMetierController::afficherAction()
+ * @see \FicheMetier\Controller\FicheMetierController::modifierAction()
  * @var FicheMetier $fiche
  * @var CompetenceType[] $types
  * @var EmploiRepere[] $emplois
+ * @var AgentPoste[] $postes
  * @var array $competences
  * @var array $competencesSpecifiques
  * @var array $applications
@@ -44,6 +47,13 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
     <div class="col-md-8">
         <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_TITRE]) || $parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() !== "false") : ?>
             <?php echo $this->partial('partial/titre',   ['fichemetier' => $fiche, 'titre' => $titre, 'mode' => $mode ],  [], true); ?>
+        <?php endif; ?>
+
+        <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]) || $parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]->getValeur() !== "false") : ?>
+            <div class="card bg-default" style="padding: 1rem; padding-bottom: 0; margin-top: 1rem;">
+            <?php echo $this->partial('partial/emploi-repere',   ['emplois' => $emplois, 'mode' => $mode ],  [], true); ?>
+            <?php echo $this->partial('partial/intitule-poste',   ['postes' => $postes, 'mode' => $mode ],  [], true); ?>
+            </div>
         <?php endif; ?>
     </div>
     <div class="col-md-4">
@@ -97,9 +107,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 </div>
 </div>
 
-<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]) || $parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/emploi-repere',   ['emplois' => $emplois, 'mode' => $mode ],  [], true); ?>
-<?php endif; ?>
+
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/raison',   ['fichemetier' => $fiche, 'mode' => $mode ],  [], true); ?>
