@@ -41,7 +41,6 @@ class EntretienProfessionnelFormFactory {
         $form = new EntretienProfessionnelForm();
         $form->setCampagneService($campagneService);
         $form->setUrlAgent($urlAgent);
-//        $form->setUrlResponsable($urlReponsable);
         $form->setHydrator($hydrator);
         $form->init();
 
