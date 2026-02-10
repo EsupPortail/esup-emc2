@@ -62,7 +62,7 @@ class NotificationService extends \Application\Service\Notification\Notification
         return implode(',', $emails);
     }
 
-    /** Retourne l'adresse du reponsable de l'entretien professionnel */
+    /** Retourne l'adresse du responsable de l'entretien professionnel */
     public function getEmailResponsable(?EntretienProfessionnel $entretienProfessionnel): ?string
     {
         $emails = [];

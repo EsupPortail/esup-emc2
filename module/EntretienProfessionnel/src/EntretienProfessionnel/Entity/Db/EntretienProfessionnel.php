@@ -247,7 +247,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $agent === $this->getAgent();
     }
 
-    public function isReponsable(?Agent $agent) : bool
+    public function isResponsable(?Agent $agent) : bool
     {
         return $agent === $this->getResponsable();
     }

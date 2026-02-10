@@ -79,7 +79,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $structures = $entretienProfessionnel->getAgent()->getStructures();
         $this->predicats = [
             'isAgentEntretien'          => $entretienProfessionnel->isAgent($connectedAgent),
-            'isResponsableEntretien'    => $entretienProfessionnel->isReponsable($connectedAgent),
+            'isResponsableEntretien'    => $entretienProfessionnel->isResponsable($connectedAgent),
             'isResponsableStructure'    => ($role->getRoleId() === RoleProvider::RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
             'isAutoriteStructure'       => $this->getStructureService()->isAutoriteS($structures, $connectedAgent),
             'isSuperieureHierarchique'  => $connectedAgent !== null && $this->getAgentSuperieurService()->isSuperieur($entretienProfessionnel->getAgent(), $connectedAgent),
