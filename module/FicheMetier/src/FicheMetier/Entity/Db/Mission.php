@@ -24,7 +24,7 @@ class Mission implements HistoriqueAwareInterface,
     const MISSION_PRINCIPALE_HEADER_LIBELLE = 'Libellé';
     const MISSION_PRINCIPALE_HEADER_DESCRIPTION = 'Description';
     const MISSION_PRINCIPALE_HEADER_FAMILLES = 'Familles professionnelles';
-    const MISSION_PRINCIPALE_HEADER_NIVEAU = 'Niveau';
+    const MISSION_PRINCIPALE_HEADER_NIVEAU = 'Niveau de carrière';
     const MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE = 'Codes Emploi Type';
     const MISSION_PRINCIPALE_HEADER_CODES_FONCTION = 'Codes Fonction';
 
