@@ -100,7 +100,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         <div class="alert alert-warning">
             <strong>
                 <span class="icon icon-attention"></span>
-                La date de l'entretien professionnel n'est pas encore dépassé.
+                La date de l'entretien professionnel n'est pas encore dépassée.
             </strong>
 
             <p>
@@ -160,11 +160,11 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         <div class="alert alert-info">
             <strong><span class="icon icon-information"></span> L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant exprimer des observations.</strong>
             <br/><br/>
-            Une fois les observations faites, en validant l'agent :
+            Une fois les observations faites, la validation :
             <ul>
-                <li> fige ses observations ;</li>
-                <li> notifie son responsable d'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) des observations apportées ;</li>
-                <li> notifie ses autorités hiérarchiques pour validation auprès d'eux de l'entretien professionnel.</li>
+                <li> fige les observations de l'agent ;</li>
+                <li> notifie le responsable d'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) des observations apportées ;</li>
+                <li> notifie les autorités hiérarchiques pour qu'ils valident à leur tour.</li>
             </ul>
             Ces observations sont facultatives et l'agent peut exprimer le fait de ne pas vouloir faire d'observation.
             <br/><br/>
@@ -243,7 +243,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                         data-event="modification"
                 >
                     <span class="icon icon-checked"></span>
-                    Je clôs la phase d'émission d'observations
+                    Je clos la phase d'expression des observations
                 </a>
             <?php else : ?>
                 <a
@@ -291,10 +291,9 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         <div class="alert alert-info">
             <strong><span class="icon icon-information"></span> L'autorité hiérarchique de l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut valider l'entretien professionnel.</strong>
             <br/><br/>
-            Une fois cette validation faite :
-            <ul>
-                <li> notifie l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) de la validation.</li>
-            </ul>
+            La validation notifie l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>).
+            <br>
+            <br>
 
             Liste des personnes pouvant valider en tant qu'autorité hiérarchique :
             <ul>
@@ -373,7 +372,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
 
             Ce visa :
             <ul>
-                <li> clôture l'entretien professionnel ; </li>
+                <li> clôt l'entretien professionnel ; </li>
                 <li> permet l'ouverture des procédures de recours (hors de cette application). </li>
             </ul>
         </div>

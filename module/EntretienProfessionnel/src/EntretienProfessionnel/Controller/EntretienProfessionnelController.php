@@ -209,7 +209,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     } catch (Exception $e) {
                         throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
                     }
-                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
 
                 $this->getEntretienProfessionnelService()->initialiser($entretien);
@@ -261,7 +261,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     } catch (Exception $e) {
                         throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
                     }
-                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
 
 
@@ -487,15 +487,15 @@ class EntretienProfessionnelController extends AbstractActionController
                 $text .= "Cette validation figera les comptes-rendus d'entretien et de formation de " . $entretien->getAgent()->getDenomination(true) . ".<br>";
                 $text .= "La validation ouvre la période de ".$parametre." jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
             case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:
-                $title = "Validation des observations (ou de l'absence de observations) de l'agent·e";
+                $title = "Validation des observations de l'agent·e";
                 $text = "<p>";
                 $text .= "Cette validation figera les observations si elles ont été faites.<br>";
                 $text .= "La validation ouvre la possibilité aux autorités hiérachiques de valider à leur tour cet entretien.";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
             case EntretienProfessionnelValidations::VALIDATION_DRH :
                 $title = "Validation de l'autorité hiérarchique";
@@ -503,14 +503,14 @@ class EntretienProfessionnelController extends AbstractActionController
                 $text .= "Cette validation vaut pour visa de la lecture de l'entretien professionnel de " . $entretien->getAgent()->getDenomination(true) . ".<br>";
                 $text .= "La validation ouvre la possibilité à " . $entretien->getAgent()->getDenomination(true) . " de finaliser son entretien.";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
             case EntretienProfessionnelValidations::VALIDATION_AGENT :
-                $title = "Validation de l'agent·e";
+                $title = "Visa de l'agent·e";
                 $text = "<p>";
                 $text .= "Cette validation finalise l'entretien professionnel de " . $entretien->getAgent()->getDenomination(true) . ".";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
         }
 
