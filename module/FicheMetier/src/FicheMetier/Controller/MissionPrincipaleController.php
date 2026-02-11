@@ -443,8 +443,8 @@ class MissionPrincipaleController extends AbstractActionController
                             }
 
                             /** NIVEAUX *******************************************************************************/
-                            if (isset($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
-                                $niveau = explode(":", $json[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
+                            if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
+                                $niveau = explode(":", $raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
                                 if (count($niveau) === 1) {
                                     $niv = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
                                     if ($niv === null) {
@@ -497,9 +497,10 @@ class MissionPrincipaleController extends AbstractActionController
                             //niveaux
                             if ($mission->getNiveau()) {
                                 $this->getNiveauEnveloppeService()->create($mission->getNiveau());
-                            } else  {
-                                $this->getNiveauEnveloppeService()->update($mission->getNiveau());
                             }
+//                            } else  {
+//                                $this->getNiveauEnveloppeService()->update($mission->getNiveau());
+//                            }
                             //mission
                             if ($mission->getId() === null) {
                                 $this->getMissionPrincipaleService()->create($mission);
