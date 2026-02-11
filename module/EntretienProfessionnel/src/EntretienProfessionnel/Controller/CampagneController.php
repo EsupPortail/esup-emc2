@@ -511,30 +511,13 @@ class CampagneController extends AbstractActionController
         }
 
 
-        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents);
+        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
-//        $finalises = [];
-//        $encours = [];
-//        foreach ($entretiens as $entretien) {
-//            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
-//                $finalises[] = $entretien;
-//            } else {
-//                $encours[] = $entretien;
-//            }
-//        }
-
 
         return new ViewModel([
-            'agents' => $agents,
-
             'entretiens' => $entretiens,
-//            'encours' => $encours,
-//            'finalises' => $finalises,
-
             'obligatoires' => $obligatoires,
-//            'facultatifs' => $facultatifs,
-//            'raison' => $raison,
         ]);
     }
 

@@ -12,6 +12,7 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
  * @var array $options
  */
 
+$debug = false;
 $mode = 'div';
 $array = false;
 if (isset($options['mode'])) $mode = $options['mode'];
@@ -70,6 +71,7 @@ $nbValiderObservation = count($validerObservation);
 $nbValiderSuperieur = count($validerSuperieur);
 $nbEncours = count($encours);
 $nbSans = count($sans);
+
 
 //cette bizarrerie permet de gérer le cas où on fournit pas de liste d'agents (comme sur l'ecran d'avancement global)
 if (!empty($agents)) {
@@ -203,3 +205,30 @@ if ($nbTotal !== 0) {
         margin-right: 2rem;
     }
 </style>
+
+
+<?php if ($debug) : ?>
+<div class="row">
+    <div class="col-md-6">
+        <h4> Entretiens</h4>
+        <ol>
+        <?php foreach ($entretiens as $entretien): ?>
+            <li>
+                <?php echo $entretien->getAgent()->getDenomination(); ?>
+                <?php echo $this->etatinstance($entretien->getEtatActif()); ?>
+            </li>
+        <?php endforeach; ?>
+        </ol>
+    </div>
+    <div class="col-md-6">
+        <h4> Agents ayant obligations </h4>
+        <ol>
+            <?php foreach ($agents as $agent): ?>
+                <li>
+                    <?php echo $agent->getDenomination(); ?>
+                </li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+</div>
+<?php endif; ?>

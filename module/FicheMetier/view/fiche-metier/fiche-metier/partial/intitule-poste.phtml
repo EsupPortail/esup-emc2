@@ -16,30 +16,64 @@ if ($postes !== null) {
 ?>
 
 
-<!--<div class="card">-->
-<!--    <div class="card-header bg-default">-->
-<!--        <h2> Intitulés des postes </h2>-->
-<!--    </div>-->
-<!--    <div class="card-body">-->
-<!--        --><?php //if (empty($lPostes)): ?><!-- : ?>-->
-<!--            Aucun poste associé à cette fiche métier-->
-<!--        --><?php //else : ?>
-<!--            <ul>-->
-<!--                --><?php //foreach ($lPostes as $lPoste) : ?>
-<!--                    <li> --><?php //echo $lPoste; ?><!--</li>-->
-<!--                --><?php //endforeach; ?>
-<!--            </ul>-->
-<!--        --><?php //endif; ?>
-<!--    </div>-->
-<!--</div>-->
+<div class="card">
+    <div class="card-header bg-default">
+        <h2> Intitulés des postes </h2>
+    </div>
+    <div class="card-body">
+        <?php if (empty($lPostes)): ?> : ?>
+            Aucun poste associé à cette fiche métier
+        <?php else : ?>
+            <table class="table table-condensed" id="postes">
+                <thead>
+                <tr>
+                    <th class="col-md-10"> Libellé </th>
+                    <th class="col-md-2 action"> Action </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($lPostes as $lPoste) : ?>
+                    <tr>
+                        <td> <?php echo $lPoste; ?> </td>
+                        <td>
+<!--                            --><?php //if ($canVoirEmploiRepere) : ?>
+<!--                                <a href="" class="action secondary">-->
+<!--                                    <span class="icon icon-voir"></span>-->
+<!--                                    Afficher-->
+<!--                                </a>-->
+<!--                            --><?php //endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
 
-<h3> Intitulés des postes </h3>
-<?php if (empty($lPostes)): ?> : ?>
-    Aucun poste associé à cette fiche métier
-<?php else : ?>
-    <ul>
-        <?php foreach ($lPostes as $lPoste) : ?>
-            <li> <?php echo $lPoste; ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+            <script>
+                $(document).ready(function() {
+                    $("table#postes").DataTable( {
+                        'autoWidth' : false,
+                        'searching' : true,
+                        'info' : false,
+                        language: {
+                            url: '/js/datatables_fr.json'
+                        },
+                        columnDefs: [
+                            {targets: [1], orderable: false}
+                        ]
+                    });
+                });
+            </script>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!--<h3> Intitulés des postes </h3>-->
+<?php //if (empty($lPostes)): ?><!-- : ?>-->
+<!--    Aucun poste associé à cette fiche métier-->
+<?php //else : ?>
+<!--    <ul>-->
+<!--        --><?php //foreach ($lPostes as $lPoste) : ?>
+<!--            <li> --><?php //echo $lPoste; ?><!--</li>-->
+<!--        --><?php //endforeach; ?>
+<!--    </ul>-->
+<?php //endif; ?>

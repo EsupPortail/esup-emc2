@@ -1,39 +1,65 @@
 <?php
 
 use EmploiRepere\Entity\Db\EmploiRepere;
+use EmploiRepere\Provider\Privilege\EmploireperePrivileges;
 
 /**
  * @var EmploiRepere[] $emplois
  */
 
+$canVoirEmploiRepere = $this->isAllowed(EmploireperePrivileges::getResourceId(EmploireperePrivileges::EMPLOIREPERE_AFFICHER));
+
 ?>
 
+<div class="card">
+    <div class="card-header bg-default">
+        <h2> Emploi-repères </h2>
+    </div>
+    <div class="card-body">
+        <?php if (empty($emplois)) : ?>
+            Aucun emploi-repère lié à cette fiche métier
+        <?php else : ?>
+            <table class="table table-condensed" id="emplois">
+                <thead>
+                    <tr>
+                        <th class="col-md-8"> Libellé </th>
+                        <th class="col-md-2"> Code </th>
+                        <th class="col-md-2 action"> Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($emplois as $emploi) : ?>
+                        <tr>
+                            <td> <?php echo $emploi->getLibelle(); ?> </td>
+                            <td> <code><?php echo $emploi->getCode(); ?></code> </td>
+                            <td>
+                                <?php if ($canVoirEmploiRepere) : ?>
+                                    <a href="" class="action secondary">
+                                        <span class="icon icon-voir"></span>
+                                        Afficher
+                                    </a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
 
-<!--<div class="card">-->
-<!--    <div class="card-header bg-default">-->
-<!--        <h2> Emploi-repères </h2>-->
-<!--    </div>-->
-<!--    <div class="card-body">-->
-<!--        --><?php //if (empty($emplois)) : ?>
-<!--            Aucun emploi-repère lié à cette fiche métier-->
-<!--        --><?php //else : ?>
-<!--            <ul>-->
-<!--                --><?php //foreach ($emplois as $emploi) : ?>
-<!--                    <li> --><?php //echo $emploi->getLibelle(); ?><!-- <code>--><?php //echo $emploi->getCode(); ?><!-- </code></li>-->
-<!--                --><?php //endforeach; ?>
-<!--            </ul>-->
-<!--        --><?php //endif; ?>
-<!--    </div>-->
-<!--</div>-->
-<h3> Emploi-repères </h3>
-<?php if (empty($emplois)) : ?>
-    Aucun emploi-repère lié à cette fiche métier
-<?php else : ?>
-    <ul>
-        <?php foreach ($emplois as $emploi) : ?>
-            <li> <?php echo $emploi->getLibelle(); ?> <code><?php echo $emploi->getCode(); ?> </code></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
-
-
+            <script>
+                $(document).ready(function() {
+                    $("table#emplois").DataTable( {
+                        'autoWidth' : false,
+                        'searching' : true,
+                        'info' : false,
+                        language: {
+                            url: '/js/datatables_fr.json'
+                        },
+                        columnDefs: [
+                            {targets: [2], orderable: false}
+                        ]
+                    });
+                });
+            </script>
+        <?php endif; ?>
+    </div>
+</div>
