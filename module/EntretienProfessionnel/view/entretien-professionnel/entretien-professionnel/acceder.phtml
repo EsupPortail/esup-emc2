@@ -208,7 +208,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php if ($canModifierEP) : ?>
+        <?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER)) : ?>
             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::reinitialiserAction() */ ?>
             <a href="<?php echo $this->url('entretien-professionnel/reinitialiser',['entretien-professionnel' => $entretien->getId(), 'formulaire' => 'CREP'],[], true); ?>"
                class="btn btn-warning ajax-modal" data-event="modification"
@@ -234,7 +234,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php if ($canModifierEP) : ?>
+        <?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER)) : ?>
             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::reinitialiserAction() */ ?>
             <a href="<?php echo $this->url('entretien-professionnel/reinitialiser',['entretien-professionnel' => $entretien->getId(), 'formulaire' => 'CREF'],[], true); ?>"
                class="btn btn-warning ajax-modal" data-event="modification"

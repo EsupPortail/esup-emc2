@@ -38,6 +38,7 @@ return [
                             EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
                             EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
                             EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER,
+                            EntretienproPrivileges::ENTRETIENPRO_REINITIALISER,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH,
@@ -123,6 +124,14 @@ return [
                         'reinitialiser',
                     ],
                     'privileges' => EntretienproPrivileges::ENTRETIENPRO_CONVOQUER,
+                    'assertion' => EntretienProfessionnelAssertion::class,
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'reinitialiser',
+                    ],
+                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_REINITIALISER,
                     'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [

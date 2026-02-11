@@ -162,6 +162,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $predicats = $this->computePredicats($entretien, $agent, $role);
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER :
+            case EntretienproPrivileges::ENTRETIENPRO_REINITIALISER :
                 /** Attention ceci est pour utiliser afin d'ouvrir la voie lors de recours */
                 $recours = $entretien->getRecoursActif();
                 if ($recours and $recours->isEntretienModifiable()) {
@@ -274,6 +275,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             'creer' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER),
             'modifier', 'historiser', 'restaurer' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER),
             'acceder' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER),
+            'reinitialiser' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER),
             default => true,
         };
     }

@@ -672,6 +672,7 @@ class EntretienProfessionnelController extends AbstractActionController
     public function reinitialiserAction(): ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $campagne = $entretien->getCampagne();
         $formulaire = $this->params()->fromRoute('formulaire');
 
         $request = $this->getRequest();
@@ -681,6 +682,10 @@ class EntretienProfessionnelController extends AbstractActionController
                 $instance = ($formulaire==='CREP')?$entretien->getFormulaireInstance():$entretien->getFormationInstance();
                 if ($instance) {
                     $this->getFormulaireInstanceService()->historise($instance);
+                    $formulaireType = ($formulaire==='CREP'?$campagne->getFormulaireCREP():$campagne->getFormulaireCREF());
+                    $entretien_instance = $this->getFormulaireInstanceService()->createInstance($formulaireType->getCode());
+                    $entretien->setFormulaireInstance($entretien_instance);
+                    $this->getEntretienProfessionnelService()->update($entretien);
                 }
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
 
