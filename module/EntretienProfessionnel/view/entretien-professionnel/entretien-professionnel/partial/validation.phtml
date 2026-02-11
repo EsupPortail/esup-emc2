@@ -109,7 +109,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         </div>
     <?php else : ?>
         <?php if ($validationResponsable !== null) : ?>
-        <?php echo $this->validationAfficher($validationResponsable); ?>
+        <?php echo $this->validationAfficher($validationResponsable, ['genre' => 'M']); ?>
 
         <?php if ($canValiderResponsable and $validationObservation === null and $validationHierarchie === null) : ?>
                     <a
@@ -228,7 +228,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         <?php endif; ?>
 
         <?php if ($validationObservation) : ?>
-            <?php echo $this->validationAfficher($validationObservation); ?>
+            <?php echo $this->validationAfficher($validationObservation, ['nombre' => 'P']); ?>
         <?php endif; ?>
     </div>
 
@@ -331,7 +331,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
     <?php endif; ?>
 
     <?php if ($validationHierarchie !== null) : ?>
-        <?php echo $this->validationAfficher($validationHierarchie); ?>
+        <?php echo $this->validationAfficher($validationHierarchie, ['genre' => 'M']); ?>
         <?php if ($canValiderAutorite AND $validationAgent === null) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
