@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Agent\Entity\Db\AgentPoste;
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Entity\Db\Interface\HasFamilleProfessionnelleInterface;
 use Carriere\Entity\Db\Interface\HasNiveauCarriereInterface;
@@ -17,6 +18,7 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use EmploiRepere\Entity\Db\EmploiRepere;
 use FicheMetier\Entity\Db\Interface\HasActivitesInterface;
 use FicheMetier\Entity\Db\Interface\HasMissionsPrincipalesInterface;
 use FicheMetier\Entity\Db\Trait\HasActivitesTrait;
@@ -60,6 +62,12 @@ class FicheMetier implements
     /** @var array Bricolage pour affiches les types non renseignés */
     private array $tendancesTypes = [];
     private array $thematiquesTypes = [];
+
+    /** Bricolages pour  l'exportation des fiches metiers en PDF */
+    /** @var EmploiRepere[] $emploisReperes */
+    private array $emploisReperes = [];
+    /** @var AgentPoste[] $agentsPostes */
+    private array $agentsPostes = [];
 
     public function setTendancesTypes(array $tendancesTypes): void
     {
@@ -505,6 +513,62 @@ EOS;
         return $codes;
     }
 
+    /** @return EmploiRepere[] */
+    public function getEmploisReperes(): array
+    {
+        return $this->emploisReperes;
+    }
+
+    public function clearEmploisReperes(): void
+    {
+        $this->emploisReperes = [];
+    }
+
+    public function addEmploiRepere(EmploiRepere $emploiRepere): void
+    {
+        $this->emploisReperes[] = $emploiRepere;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringCodesEmploiRepere(): string
+    {
+        if (empty($this->emploisReperes)) return "Aucun emploi-repère associé à cette fiche.";
+        $texte = "<ul>";
+        foreach ($this->emploisReperes as $emploi) {
+            $texte .= "<li>" . $emploi->getLibelle() . " <code>" . $emploi->getCode(). "</code></li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    /** @return AgentPoste[] */
+    public function getAgentsPostes(): array
+    {
+        return $this->agentsPostes;
+    }
+
+    public function clearAgentPoste(): void
+    {
+        $this->agentsPostes = [];
+    }
+
+    public function addAgentPoste(AgentPoste $agentPoste): void
+    {
+        $this->agentsPostes[] = $agentPoste;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringAgentsPostes(): string
+    {
+        if (empty($this->agentsPostes)) return "Aucun poste associé à cette fiche.";
+        $texte = "<ul>";
+        foreach ($this->agentsPostes as $poste) {
+            $texte .= "<li>" . $poste->getLibelle() ." </li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
     public function getMissionByReference(?Referentiel $referentiel, ?string $reference): ?MissionElement
     {
         foreach ($this->missions as $mission) {
@@ -512,5 +576,7 @@ EOS;
         }
         return null;
     }
+
+
 
 }
