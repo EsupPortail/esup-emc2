@@ -453,13 +453,13 @@ class NotificationService extends \Application\Service\Notification\Notification
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::MODIFICATIONS_APPORTEES_AUX_CRS, $vars);
         $mail_array = [];
-        foreach ($this->getEmailAgent($entretien) as $mail) {
+        foreach (explode(',',$this->getEmailAgent($entretien)) as $mail) {
             $mail_array[] = $mail;
         }
-        foreach ($this->getEmailSuperieursHierarchiques($entretien) as $mail) {
+        foreach (explode(',',$this->getEmailSuperieursHierarchiques($entretien)) as $mail) {
             $mail_array[] = $mail;
         }
-        foreach ($this->getEmailAutoritesHierarchiques($entretien) as $mail) {
+        foreach (explode(',',$this->getEmailAutoritesHierarchiques($entretien)) as $mail) {
             $mail_array[] = $mail;
         }
         $mail_array = array_unique($mail_array);
