@@ -38,6 +38,7 @@ use RuntimeException;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use UnicaenAutoform\Service\Formulaire\FormulaireService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementServiceAwareTrait;
@@ -202,15 +203,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                if ($delai) {
-                    try {
-                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
-                    } catch (Exception $e) {
-                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
-                    }
-                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
-                }
+                $this->checkDelaiConvocation($entretien);
 
                 $this->getEntretienProfessionnelService()->initialiser($entretien);
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
@@ -254,16 +247,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                if ($delai) {
-                    try {
-                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
-                    } catch (Exception $e) {
-                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
-                    }
-                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
-                }
-
+                $this->checkDelaiConvocation($entretien);
 
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
@@ -714,8 +698,20 @@ class EntretienProfessionnelController extends AbstractActionController
             ]);
         }
         return $vm;
+    }
 
+    /** Fonctions auxilaires / Factoorisation *************************************************************************/
 
-
+    public function checkDelaiConvocation(EntretienProfessionnel $entretien) : void
+    {
+        $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
+        if ($delai) {
+            try {
+                $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
+            } catch (Exception $e) {
+                throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
+            }
+            if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+        }
     }
 }
