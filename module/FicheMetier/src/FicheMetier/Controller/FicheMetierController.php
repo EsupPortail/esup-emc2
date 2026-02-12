@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -62,6 +63,7 @@ class FicheMetierController extends AbstractActionController
     use CodeFonctionFormAwareTrait;
     use CodeEmploiTypeFormAwareTrait;
     use FicheMetierIdentificationFormAwareTrait;
+    use ModifierLibelleFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;

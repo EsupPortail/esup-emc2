@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
@@ -80,6 +81,7 @@ class FicheMetierControllerFactory
          * @var CodeEmploiTypeForm $codeEmploiTypeForm
          * @var CodeFonctionForm $codeFonctionForm
          * @var FicheMetierIdentificationForm $ficheMetierIdentificationForm
+         * @var ModifierLibelleForm $modifierLibelleForm
          * @var RaisonForm $raisonForm
          * @var SelectionApplicationForm $selectionnerApplicationForm
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
@@ -92,6 +94,7 @@ class FicheMetierControllerFactory
         $codeEmploiTypeForm = $container->get('FormElementManager')->get(CodeEmploiTypeForm::class);
         $codeFonctionForm = $container->get('FormElementManager')->get(CodeFonctionForm::class);
         $ficheMetierIdentificationForm = $container->get('FormElementManager')->get(FicheMetierIdentificationForm::class);
+        $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerActivitesForm = $container->get('FormElementManager')->get(SelectionnerActivitesForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -120,6 +123,7 @@ class FicheMetierControllerFactory
         $controller->setCodeEmploiTypeForm($codeEmploiTypeForm);
         $controller->setCodeFonctionForm($codeFonctionForm);
         $controller->setFicheMetierIdentificationForm($ficheMetierIdentificationForm);
+        $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setRaisonForm($raisonForm);
         $controller->setSelectionnerActivitesForm($selectionnerActivitesForm);
         $controller->setSelectionApplicationForm($selectionnerApplicationForm);
