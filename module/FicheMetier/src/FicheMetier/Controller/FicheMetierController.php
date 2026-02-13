@@ -107,8 +107,6 @@ class FicheMetierController extends AbstractActionController
         $missions = $fichemetier->getMissions();
         $activites = $fichemetier->getActivites();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
-        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
-        $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
 
         $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes();
@@ -120,15 +118,19 @@ class FicheMetierController extends AbstractActionController
         foreach ($this->getCompetenceTypeService()->getCompetencesTypes(true) as $type) {
             $types[$type->getCode()] = $type;
         }
+        $dictionnaire = [];
+        foreach ($types as $type) {
+            $dictionnaire[$type->getCode()] = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $types[$type->getCode()],true);
+        }
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
             'types' => $types,
             'missions' => $missions,
             'activites' => $activites,
-            'competences' => $competences,
-            'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
+            'competences' => $dictionnaire,
+            'competencesSpecifiques' => $dictionnaire[CompetenceType::CODE_SPECIFIQUE],
             'tendancesTypes' => $tendancesTypes,
             'tendancesElements' => $tendancesElements,
             'thematiquestypes' => $thematiquestypes,
@@ -183,7 +185,6 @@ class FicheMetierController extends AbstractActionController
         $missions = $fichemetier->getMissions();
         $activites = $fichemetier->getActivites();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
-        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
 
         $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes();
         $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
