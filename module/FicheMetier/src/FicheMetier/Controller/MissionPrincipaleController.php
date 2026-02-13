@@ -362,207 +362,209 @@ class MissionPrincipaleController extends AbstractActionController
                 $error[] = "Aucun référentiel sélectionné";
             }
 
-            $csvFile = fopen($filepath, "r");
-            // lecture du header + position colonne
-            if ($csvFile !== false) {
-                $header = fgetcsv($csvFile, null, ";");
-                // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
-                $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
-                $nbElements = count($header);
+            if (empty($error)) {
+                $csvFile = fopen($filepath, "r");
+                // lecture du header + position colonne
+                if ($csvFile !== false) {
+                    $header = fgetcsv($csvFile, null, ";");
+                    // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+                    $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+                    $nbElements = count($header);
 
-                foreach ($colonnesObligatoires as $colonne) {
-                    if (!in_array($colonne, $header)) $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> est absente.";
-                }
-
-                $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
-                if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
-
-
-                $raws = [];
-                while (($row = fgetcsv($csvFile, null, ';')) !== false) {
-                    $item = [];
-                    for ($position = 0; $position < $nbElements; ++$position) {
-                        $item[$header[$position]] = $row[$position];
+                    foreach ($colonnesObligatoires as $colonne) {
+                        if (!in_array($colonne, $header)) $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> est absente.";
                     }
-                    $raws[] = $item;
-                }
 
-                if (empty($error)) {
-                    $ligne = 1;
-                    foreach ($raws as $raw) {
-                        $ligne++;
+                    $referentiel = $this->getReferentielService()->getReferentiel($data['referentiel']);
+                    if ($referentiel === null) $error[] = "Le référentiel n'a pas pu être récupéré.";
 
-                        /** Check des valeurs obligatoires **/
-                        $allGood = true;
-                        foreach ($colonnesObligatoires as $colonne) {
-                            if (trim($raw[$colonne]) === "") {
-                                $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne " . $ligne . " a été ignorée";
-                                $allGood = false;
-                            }
+
+                    $raws = [];
+                    while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                        $item = [];
+                        for ($position = 0; $position < $nbElements; ++$position) {
+                            $item[$header[$position]] = $row[$position];
                         }
+                        $raws[] = $item;
+                    }
 
-                        if ($allGood) {
-                            $idOrig = trim($raw[Mission::MISSION_PRINCIPALE_HEADER_ID]);
-                            $libelle = trim($raw[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]);
+                    if (empty($error)) {
+                        $ligne = 1;
+                        foreach ($raws as $raw) {
+                            $ligne++;
 
-                            $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByReference($referentiel, $idOrig);
-                            if ($mission === null) {
-                                $mission = new Mission();
-                                $mission->setReferentiel($referentiel);
-                                $mission->setReference($idOrig);
-                            }
-                            $mission->setLibelle($libelle);
-
-                            if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION])) {
-                                $description = $raw[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION] ?? trim($raw[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]);
-                                $mission->setDescription($description !== '' ? $description : null);
-                            }
-                            if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE])) {
-                                $codeEmploiType = $raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE] ?? trim($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]);
-                                $mission->setCodesFicheMetier($codeEmploiType !== '' ? $codeEmploiType : null);
-                            }
-                            if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION])) {
-                                $codeFonction = $raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION] ?? trim($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]);
-                                $mission->setCodesFonction($codeFonction !== '' ? $codeFonction : null);
+                            /** Check des valeurs obligatoires **/
+                            $allGood = true;
+                            foreach ($colonnesObligatoires as $colonne) {
+                                if (trim($raw[$colonne]) === "") {
+                                    $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne " . $ligne . " a été ignorée";
+                                    $allGood = false;
+                                }
                             }
 
-                            /* FAMILLE PROFESSIONNELLE ***********************************************************************************/
-                            if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) and trim($raw[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) !== '') {
-                                $mission->clearFamillesProfessionnelles();
-                                $famillesString = explode($separateur, $raw[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]);
-                                foreach ($famillesString as $familleString) {
-                                    $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($familleString));
-                                    if ($famille === null) {
+                            if ($allGood) {
+                                $idOrig = trim($raw[Mission::MISSION_PRINCIPALE_HEADER_ID]);
+                                $libelle = trim($raw[Mission::MISSION_PRINCIPALE_HEADER_LIBELLE]);
+
+                                $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByReference($referentiel, $idOrig);
+                                if ($mission === null) {
+                                    $mission = new Mission();
+                                    $mission->setReferentiel($referentiel);
+                                    $mission->setReference($idOrig);
+                                }
+                                $mission->setLibelle($libelle);
+
+                                if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION])) {
+                                    $description = $raw[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION] ?? trim($raw[Mission::MISSION_PRINCIPALE_HEADER_DESCRIPTION]);
+                                    $mission->setDescription($description !== '' ? $description : null);
+                                }
+                                if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE])) {
+                                    $codeEmploiType = $raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE] ?? trim($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_EMPLOITYPE]);
+                                    $mission->setCodesFicheMetier($codeEmploiType !== '' ? $codeEmploiType : null);
+                                }
+                                if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION])) {
+                                    $codeFonction = $raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION] ?? trim($raw[Mission::MISSION_PRINCIPALE_HEADER_CODES_FONCTION]);
+                                    $mission->setCodesFonction($codeFonction !== '' ? $codeFonction : null);
+                                }
+
+                                /* FAMILLE PROFESSIONNELLE ***********************************************************************************/
+                                if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) and trim($raw[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]) !== '') {
+                                    $mission->clearFamillesProfessionnelles();
+                                    $famillesString = explode($separateur, $raw[Mission::MISSION_PRINCIPALE_HEADER_FAMILLES]);
+                                    foreach ($famillesString as $familleString) {
+                                        $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelleByLibelle(trim($familleString));
+                                        if ($famille === null) {
 //                                        $famille = new FamilleProfessionnelle();
 //                                        $famille->setLibelle(trim($familleString));
-                                        $warning[] = "La famille professionnelle [" . trim($familleString) . "] n'existe pas (ligne " . $ligne . ").";
-                                    } else {
-                                        if (!$mission->hasFamilleProfessionnelle($famille)) $mission->addFamilleProfessionnelle($famille);
-                                    }
-                                }
-                            }
-
-                            /** NIVEAUX *******************************************************************************/
-                            if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
-                                $niveau = explode(":", $raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
-                                if (count($niveau) === 1) {
-                                    $niv = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
-                                    if ($niv === null) {
-                                        $debugs['warning'][] = "Le niveau [" . trim($niveau[0]) . "] n'existe pas (ligne " . $ligne . ").";
-                                    } else {
-                                        $niveau_ = new NiveauEnveloppe();
-                                        $niveau_->setBorneInferieure($niv);
-                                        $niveau_->setBorneSuperieure($niv);
-                                        $mission->setNiveau($niveau_);
-                                    }
-                                }
-                                if (count($niveau) === 2) {
-                                    $inf = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
-                                    if ($inf === null) {
-                                        $debugs['warning'][] = "Le niveau [" . trim($niveau[0]) . "] n'existe pas (ligne " . $ligne . ").";
-                                    }
-                                    $sup = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[1]));
-                                    if ($sup === null) {
-                                        $debugs['warning'][] = "Le niveau [" . trim($niveau[1]) . "] n'existe pas (ligne " . $ligne . ").";
-                                    }
-                                    if ($inf !== null and $sup !== null) {
-                                        $niveau_ = new NiveauEnveloppe();
-                                        if ($inf->getNiveau() > $sup->getNiveau()) {
-                                            $niveau_->setBorneInferieure($sup);
-                                            $niveau_->setBorneSuperieure($inf);
+                                            $warning[] = "La famille professionnelle [" . trim($familleString) . "] n'existe pas (ligne " . $ligne . ").";
+                                        } else {
+                                            if (!$mission->hasFamilleProfessionnelle($famille)) $mission->addFamilleProfessionnelle($famille);
                                         }
-                                        $niveau_->setBorneInferieure($inf);
-                                        $niveau_->setBorneSuperieure($sup);
-                                        $mission->setNiveau($niveau_);
                                     }
                                 }
+
+                                /** NIVEAUX *******************************************************************************/
+                                if (isset($raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) and trim($raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]) !== '') {
+                                    $niveau = explode(":", $raw[Mission::MISSION_PRINCIPALE_HEADER_NIVEAU]);
+                                    if (count($niveau) === 1) {
+                                        $niv = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
+                                        if ($niv === null) {
+                                            $debugs['warning'][] = "Le niveau [" . trim($niveau[0]) . "] n'existe pas (ligne " . $ligne . ").";
+                                        } else {
+                                            $niveau_ = new NiveauEnveloppe();
+                                            $niveau_->setBorneInferieure($niv);
+                                            $niveau_->setBorneSuperieure($niv);
+                                            $mission->setNiveau($niveau_);
+                                        }
+                                    }
+                                    if (count($niveau) === 2) {
+                                        $inf = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[0]));
+                                        if ($inf === null) {
+                                            $debugs['warning'][] = "Le niveau [" . trim($niveau[0]) . "] n'existe pas (ligne " . $ligne . ").";
+                                        }
+                                        $sup = $this->getNiveauService()->getNiveauByEtiquette(trim($niveau[1]));
+                                        if ($sup === null) {
+                                            $debugs['warning'][] = "Le niveau [" . trim($niveau[1]) . "] n'existe pas (ligne " . $ligne . ").";
+                                        }
+                                        if ($inf !== null and $sup !== null) {
+                                            $niveau_ = new NiveauEnveloppe();
+                                            if ($inf->getNiveau() > $sup->getNiveau()) {
+                                                $niveau_->setBorneInferieure($sup);
+                                                $niveau_->setBorneSuperieure($inf);
+                                            }
+                                            $niveau_->setBorneInferieure($inf);
+                                            $niveau_->setBorneSuperieure($sup);
+                                            $mission->setNiveau($niveau_);
+                                        }
+                                    }
+                                }
+
+                                $mission->setSourceString(json_encode($raw));
+
+                                $missions[] = $mission;
                             }
-
-                            $mission->setSourceString(json_encode($raw));
-
-                            $missions[] = $mission;
                         }
-                    }
 
-                    if ($mode === 'import') {
-                        $info[] = "Importation terminée.";
+                        if ($mode === 'import') {
+                            $info[] = "Importation terminée.";
 
-                        $role = $this->getUserService()->getConnectedRole();
-                        $allowedMission = $this->getPrivilegeService()->checkPrivilege(MissionPrincipalePrivileges::MISSIONPRINCIPALE_AFFICHER, $role);
-                        $allowedFicheMetier = $this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_AFFICHER, $role);
-                        $allowedReferentiel = $this->getPrivilegeService()->checkPrivilege(ReferentielPrivileges::REFERENTIEL_AFFICHER, $role);
+                            $role = $this->getUserService()->getConnectedRole();
+                            $allowedMission = $this->getPrivilegeService()->checkPrivilege(MissionPrincipalePrivileges::MISSIONPRINCIPALE_AFFICHER, $role);
+                            $allowedFicheMetier = $this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_AFFICHER, $role);
+                            $allowedReferentiel = $this->getPrivilegeService()->checkPrivilege(ReferentielPrivileges::REFERENTIEL_AFFICHER, $role);
 
 
-                        foreach ($missions as $mission) {
-                            //niveaux
-                            if ($mission->getNiveau()) {
-                                $this->getNiveauEnveloppeService()->create($mission->getNiveau());
-                            }
+                            foreach ($missions as $mission) {
+                                //niveaux
+                                if ($mission->getNiveau()) {
+                                    $this->getNiveauEnveloppeService()->create($mission->getNiveau());
+                                }
 //                            } else  {
 //                                $this->getNiveauEnveloppeService()->update($mission->getNiveau());
 //                            }
-                            //mission
-                            if ($mission->getId() === null) {
-                                $this->getMissionPrincipaleService()->create($mission);
-                            } else {
-                                $this->getMissionPrincipaleService()->update($mission);
-                            }
-
-                            // Gestion des codes emploi type ///////////////////////////////////////////////////////
-                            $codesFicheMetier = explode($separateur, $mission->getCodesFicheMetier() ?? "");
-                            $codesFicheMetier = array_map('trim', $codesFicheMetier);
-                            $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) {
-                                return $a !== '';
-                            });
-                            foreach ($codesFicheMetier as $codeFicheMetier) {
-                                $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
-                                if ($fichemetier === null) {
-                                    $message = "Aucune fiche métier identifiée " . $codeFicheMetier . " dans le référentiel ";
-                                    $message .= $referentiel ? $referentiel->printReference("lien", $this->url()->fromRoute("referentiel", [], [], true), $allowedReferentiel) : "<span class='badge' style='background: grey;'>Aucun référentiel</span>";
-                                    $message .= ". ";
-                                    $message .= "La mission principale \"" . $mission->getLibelle() . "\" ";
-                                    $message .= $mission->printReference("modal", $this->url()->fromRoute('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true), $allowedMission);
-                                    $message .= " ne sera pas ajoutée.";
-                                    $warning[] = $message;
+                                //mission
+                                if ($mission->getId() === null) {
+                                    $this->getMissionPrincipaleService()->create($mission);
                                 } else {
-                                    if (!$fichemetier->hasMission($mission)) {
-                                        $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
-                                        $message = "La mission principale \"" . $mission->getLibelle() . "\" ";
-                                        $message .= $mission->printReference("modal", $this->url()->fromRoute('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true), $allowedMission);
-                                        $message .= " a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
-                                        $message .= $fichemetier->printReference("lien", $this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true), $allowedFicheMetier);
-                                        $info[] = $message;
-                                    }
+                                    $this->getMissionPrincipaleService()->update($mission);
                                 }
-                            }
 
-                            // Gestion des codes fonction //////////////////////////////////////////////////////////
-                            $codesFonction = explode('|', $mission->getCodesFonction() ?? "");
-                            $codesFonction = array_map('trim', $codesFonction);
-                            $codesFonction = array_filter($codesFonction, function (string $a) {
-                                return $a !== '';
-                            });
-                            foreach ($codesFonction as $codeFonction) {
-                                $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
-                                if ($codeFonction_ === null) {
-                                    $message = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
-                                    $message .= "La mission principale \"" . $mission->getLibelle() . "\" ";
-                                    $message .= $mission->printReference("modal", $this->url()->fromRoute('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true), $allowedMission);
-                                    $message .= " ne peut pas être ajoutée.";
-                                    $warning[] = $message;
-                                } else {
-                                    $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
-                                    if (empty($fichesmetiers)) {
-                                        $warning[] = "Aucune fiche métier utilise le code fonction <code>" . $codeFonction . "</code> ; la mission principale ne sera ajoutée à aucune fiche métier.";
-                                    }
-                                    foreach ($fichesmetiers as $fichemetier) {
+                                // Gestion des codes emploi type ///////////////////////////////////////////////////////
+                                $codesFicheMetier = explode($separateur, $mission->getCodesFicheMetier() ?? "");
+                                $codesFicheMetier = array_map('trim', $codesFicheMetier);
+                                $codesFicheMetier = array_filter($codesFicheMetier, function (string $a) {
+                                    return $a !== '';
+                                });
+                                foreach ($codesFicheMetier as $codeFicheMetier) {
+                                    $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
+                                    if ($fichemetier === null) {
+                                        $message = "Aucune fiche métier identifiée " . $codeFicheMetier . " dans le référentiel ";
+                                        $message .= $referentiel ? $referentiel->printReference("lien", $this->url()->fromRoute("referentiel", [], [], true), $allowedReferentiel) : "<span class='badge' style='background: grey;'>Aucun référentiel</span>";
+                                        $message .= ". ";
+                                        $message .= "La mission principale \"" . $mission->getLibelle() . "\" ";
+                                        $message .= $mission->printReference("modal", $this->url()->fromRoute('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true), $allowedMission);
+                                        $message .= " ne sera pas ajoutée.";
+                                        $warning[] = $message;
+                                    } else {
                                         if (!$fichemetier->hasMission($mission)) {
                                             $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
                                             $message = "La mission principale \"" . $mission->getLibelle() . "\" ";
                                             $message .= $mission->printReference("modal", $this->url()->fromRoute('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true), $allowedMission);
-                                            $message .= "a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
+                                            $message .= " a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
                                             $message .= $fichemetier->printReference("lien", $this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true), $allowedFicheMetier);
                                             $info[] = $message;
+                                        }
+                                    }
+                                }
+
+                                // Gestion des codes fonction //////////////////////////////////////////////////////////
+                                $codesFonction = explode('|', $mission->getCodesFonction() ?? "");
+                                $codesFonction = array_map('trim', $codesFonction);
+                                $codesFonction = array_filter($codesFonction, function (string $a) {
+                                    return $a !== '';
+                                });
+                                foreach ($codesFonction as $codeFonction) {
+                                    $codeFonction_ = $this->getCodeFonctionService()->getCodeFonctionByCode($codeFonction);
+                                    if ($codeFonction_ === null) {
+                                        $message = "Le code fonction <code>" . $codeFonction . "</code> n’existe pas. ";
+                                        $message .= "La mission principale \"" . $mission->getLibelle() . "\" ";
+                                        $message .= $mission->printReference("modal", $this->url()->fromRoute('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true), $allowedMission);
+                                        $message .= " ne peut pas être ajoutée.";
+                                        $warning[] = $message;
+                                    } else {
+                                        $fichesmetiers = $this->getFicheMetierService()->getFichesMetiersByCodeFonction($codeFonction);
+                                        if (empty($fichesmetiers)) {
+                                            $warning[] = "Aucune fiche métier utilise le code fonction <code>" . $codeFonction . "</code> ; la mission principale ne sera ajoutée à aucune fiche métier.";
+                                        }
+                                        foreach ($fichesmetiers as $fichemetier) {
+                                            if (!$fichemetier->hasMission($mission)) {
+                                                $this->getMissionElementService()->addMissionElement($fichemetier, $mission);
+                                                $message = "La mission principale \"" . $mission->getLibelle() . "\" ";
+                                                $message .= $mission->printReference("modal", $this->url()->fromRoute('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true), $allowedMission);
+                                                $message .= "a été ajoutée à la fiche métier \"" . $fichemetier->getLibelle() . "\" ";
+                                                $message .= $fichemetier->printReference("lien", $this->url()->fromRoute('fiche-metier/afficher', ['fiche-metier' => $fichemetier->getId()], [], true), $allowedFicheMetier);
+                                                $info[] = $message;
+                                            }
                                         }
                                     }
                                 }

@@ -315,6 +315,7 @@ class FicheMetierController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-etat', ['fiche-metier' => $fichemetier->getId()], [], true));
         $form->bind($fichemetier);
         $form->reinit(FicheMetierEtats::TYPE);
+        $form->get('bouton')->setLabel('Valider');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -347,6 +348,7 @@ class FicheMetierController extends AbstractActionController
         $form = $this->getCodeFonctionForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true));
         $form->bind($codeFonction);
+        $form->get('creer')->setLabel('Valider');
 
         $request = $this->getRequest();
         if ($request->isPost()) {

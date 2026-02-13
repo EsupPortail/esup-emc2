@@ -299,7 +299,7 @@ class ImportController extends AbstractActionController
                         $fiche->addActivite($activite);
                     }
 
-                    $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_VALIDE, FicheMetierEtats::TYPE);
+                    $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_REDACTION, FicheMetierEtats::TYPE);
                     $this->getFicheMetierService()->update($fiche);
                 }
             }
