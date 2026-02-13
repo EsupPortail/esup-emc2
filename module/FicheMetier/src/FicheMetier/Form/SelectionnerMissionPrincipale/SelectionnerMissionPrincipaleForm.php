@@ -20,7 +20,6 @@ class SelectionnerMissionPrincipaleForm extends Form
             'options' => [
                 'label' => "Mission·s principale·s <span class='icon icon-obligation' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
-                'empty_option' => "Sélectionner une ou plusieurs missions principales",
                 'value_options' => $this->getMissionPrincipaleService()->getMissionsPrincipalesAsOptions(),
             ],
             'attributes' => [

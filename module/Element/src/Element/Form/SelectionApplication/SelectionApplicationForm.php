@@ -20,7 +20,6 @@ class SelectionApplicationForm extends Form {
             'name' => 'applications',
             'options' => [
                 'label' => "Applications associées :",
-                'empty_option' => "Sélectionner la ou les applications ...",
                 'value_options' => $this->getApplicationService()->getApplicationsAsOptions(),
             ],
             'attributes' => [

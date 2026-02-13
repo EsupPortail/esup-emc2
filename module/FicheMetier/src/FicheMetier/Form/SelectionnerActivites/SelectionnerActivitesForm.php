@@ -20,7 +20,6 @@ class SelectionnerActivitesForm extends Form
             'options' => [
                 'label' => "Activité·s <span class='icon icon-obligation' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
-                'empty_option' => "Sélectionner une ou plusieurs activités",
                 'value_options' => $this->getActiviteService()->getActivitesAsOptions(),
             ],
             'attributes' => [

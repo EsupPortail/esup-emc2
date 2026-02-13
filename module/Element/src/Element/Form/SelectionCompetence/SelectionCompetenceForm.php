@@ -37,7 +37,6 @@ class SelectionCompetenceForm extends Form {
             'name' => 'competences',
             'options' => [
                 'label' => "Compétences associées :",
-                'empty_option' => "Sélectionner la ou les compétences ...",
                 'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [
