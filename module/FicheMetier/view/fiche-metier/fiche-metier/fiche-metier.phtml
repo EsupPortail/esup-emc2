@@ -9,12 +9,14 @@ use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \FicheMetier\Controller\FicheMetierController::afficherAction()
+ * @see \FicheMetier\Controller\FicheMetierController::modifierAction()
  * @var FicheMetier $fiche
  * @var CompetenceType[] $types
  * @var array $competences
  * @var array $competencesSpecifiques
  * @var array $applications
  * @var array $missions
+ * @var array $dictionnaire
  * @var ActiviteElement[] $activites
  * @var array $tendancesTypes
  * @var array $tendancesElements
@@ -218,7 +220,10 @@ if ($mode === 'edition-fiche-metier') {
             <?php foreach($types as $type): ?>
                 <?php if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE): ?>
                     <div id="competence_<?php echo str_replace(" ","_",$type->getCode()); ?>">
-                        <h3><?php echo $type->getLibelle(); ?> </h3>
+                        <?php
+                            $liste = $competences[$type->getCode()];
+                            echo $this->partial('partial/bloc-competences', ['fichemetier' => $fiche, 'type' => $type, 'competences' => $liste, 'mode' => $mode ]);
+                        ?>
                     </div>
                 <?php endif; ?>
             <?php endforeach; ?>
@@ -228,7 +233,36 @@ if ($mode === 'edition-fiche-metier') {
 
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/competences-specifiques',            ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode ],       [], true); ?>
+    <div class="card info">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-7">
+                    <h2>
+                        <span class="icon competence"></span>
+                        Compétences spécifiques
+                    </h2>
+                </div>
+                <div class="col-md-5">
+                    <div class="float-end">
+                        <?php if ($actions['modifier'] === true) : ?>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesSpecifiquesAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                               class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-competences"
+                               data-competence-type="<?php echo CompetenceType::CODE_SPECIFIQUE; ?>"
+                            >
+                                <span class="icon icon-lister"></span>
+                                Gérer les compétences
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" style="color:rgb(80,80,80);" id="competence_SPEC">
+            <?php echo $this->partial('partial/bloc-competences-specifiques', ['fichemetier' => $fiche, 'type' => $types[CompetenceType::CODE_SPECIFIQUE], 'competences' => $competencesSpecifiques, 'mode' => $mode ]); ?>
+        </div>
+    </div>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) || $parametres[FicheMetierParametres::DISPLAY_APPLICATION]->getValeur() !== "false") : ?>
@@ -332,8 +366,8 @@ if ($mode === 'edition-fiche-metier') {
             }
         });
 
-        types.forEach(function (type) {
-            refreshCompetences(type);
-        });
+        // types.forEach(function (type) {
+        //     refreshCompetences(type);
+        // });
     });
 </script>

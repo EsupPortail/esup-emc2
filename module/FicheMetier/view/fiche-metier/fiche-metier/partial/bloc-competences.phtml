@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesAction()
+ * @var FicheMetier $fichemetier
+ * @var array $competences
+ * @var CompetenceType $type
+ * @var string $mode
+ */
+
+use Element\Entity\Db\CompetenceType;
+use FicheMetier\Entity\Db\FicheMetier;
+
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
+
+?>
+
+<?php /** @see \Element\View\Helper\CompetenceTypeArrayViewHelper */ ?>
+<?php echo $this->competenceTypeArray($competences, $type,  $fichemetier,
+        ($mode === 'edition-fiche-metier'?"modification":"affichage"),
+        ['table-id' => str_replace(" ","_",
+                $type->getLibelle()),
+                'title' => $type->getLibelle()]); ?>

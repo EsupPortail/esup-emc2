@@ -24,7 +24,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 <script>
     function refreshRaison() {
         <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshRaisonAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-raison", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ],['force_canonical' => true]); ?>";
+        let url = "<?php echo $this->url("fiche-metier/refresh-raison", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode],['force_canonical' => true]); ?>";
         console.log("refreshing raison");
         $.ajax({
             type: "POST",
