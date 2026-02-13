@@ -50,6 +50,7 @@ return [
                         'refresh-applications',
                         'refresh-competences',
                         'refresh-missions',
+                        'refresh-raison',
                         'exporter',
                     ],
                     'privileges' => [
@@ -499,6 +500,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::refreshMissionsAction() */
                                 'action' => 'refresh-missions',
+                            ],
+                        ],
+                    ],
+                    'refresh-raison' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/refresh-raison/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshRaisonAction() */
+                                'action' => 'refresh-raison',
                             ],
                         ],
                     ],

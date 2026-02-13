@@ -1,0 +1,55 @@
+<?php
+
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Entity\Db\FicheMetier;
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::refreshRaisonAction()
+ * @var FicheMetier $fichemetier
+ * @var string $mode
+ */
+
+$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+?>
+
+
+<?php if ($fichemetier->getRaison() !== null) : ?>
+    <?php echo $fichemetier->getRaison(); ?>
+<?php else :?>
+    Aucune raison de fournie
+<?php endif; ?>
+
+
+
+<script>
+    function refreshRaison() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshRaisonAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-raison", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ],['force_canonical' => true]); ?>";
+        console.log("refreshing raison");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("#raison_view").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("#raison_view").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
+    $(".raison-ajax").on("click", function (event) {
+        let url = $(this).data("url");
+        $("#raison_view").addClass('refreshing');
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function () {
+                    refreshRaison();
+                }
+        });
+    });
+</script>

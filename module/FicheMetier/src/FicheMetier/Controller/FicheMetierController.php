@@ -799,6 +799,19 @@ EOS;
 
     /** ACTIONS POUR LE RAFRAICHISSEMENT SUR PLACE ********************************************************************/
 
+    public function refreshRaisonAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $mode = $this->params()->fromRoute('mode');
+
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-raison');
+        return $vm;
+    }
+
     public function refreshMissionsAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -810,14 +823,13 @@ EOS;
             'missions' => $missions,
             'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/refresh-missions');
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-mission');
         return $vm;
     }
 
     public function refreshActivitesAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        // TODO via le services ???
         $activites = $fichemetier->getActivites();
         $mode = $this->params()->fromRoute('mode');
 
@@ -826,7 +838,7 @@ EOS;
             'activites' => $activites,
             'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/refresh-activites');
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-activite');
         return $vm;
     }
 
@@ -842,7 +854,7 @@ EOS;
             'applications' => $applications,
             'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/refresh-applications');
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-applications');
         return $vm;
     }
 

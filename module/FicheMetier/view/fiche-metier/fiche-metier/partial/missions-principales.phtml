@@ -13,26 +13,3 @@ use FicheMetier\Entity\Db\Mission;
 $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 ?>
 
-<div class="card info">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-md-6"><h2> Missions principales </h2></div>
-            <div class="col-md-6">
-                <div class="float-end">
-                    <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
-                            <?php /** @see FicheMetierController::gererMissionsPrincipalesAction() */ ?>
-                            <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                               data-event="refresh-missions"
-                               href="<?php echo $this->url('fiche-metier/gerer-missions-principales', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
-                                <span class="icon icon-listing"></span>
-                                Gérer les missions
-                            </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card-body" style="color:rgb(80,80,80);" id="missions_view">
-        Chargement des missions principales
-    </div>
-</div>

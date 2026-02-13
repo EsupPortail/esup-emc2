@@ -36,6 +36,11 @@ $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(
 $canAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
 ?>
 
 <div class="row">
@@ -96,15 +101,87 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 </div>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/raison',   ['fichemetier' => $fiche, 'mode' => $mode ],  [], true); ?>
+    <div class="card">
+        <div class="card-header bg-default">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>Raison d'être du métier dans l'établissement</h3>
+                </div>
+                <div class="col-md-4">
+                    <?php if ($canModifier AND $mode === 'edition-fiche-metier' ) : ?>
+                        <div class="float-end">
+                            <?php /** @see FicheMetierController::modifierRaisonAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/modifier-raison', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                               class="btn btn-primary ajax-modal"  style="margin: 0 0.5rem;"
+                               data-event="refresh-raison"
+                            >
+                                <span class="icon icon-editer"></span>
+                                Modifier la raison
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" style="color:rgb(80,80,80);" id="raison_view">
+            <?php echo $this->partial('partial/bloc-raison', ['fichemetier' => $fiche, 'mode' => $mode ]); ?>
+        </div>
+    </div>
+
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_MISSION]) || $parametres[FicheMetierParametres::DISPLAY_MISSION]->getValeur() !== "false") : ?>
    <?php echo $this->partial('partial/missions-principales',   ['fichemetier' => $fiche, 'missionsprincipales' => $missions, 'mode' => $mode ],  [], true); ?>
+
+    <div class="card info">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6"><h2> Missions principales </h2></div>
+                <div class="col-md-6">
+                    <div class="float-end">
+                        <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
+                            <?php /** @see FicheMetierController::gererMissionsPrincipalesAction() */ ?>
+                            <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-missions"
+                               href="<?php echo $this->url('fiche-metier/gerer-missions-principales', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-listing"></span>
+                                Gérer les missions
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" style="color:rgb(80,80,80);" id="missions_view">
+            <?php echo $this->partial('partial/bloc-mission', ['fichemetier' => $fiche, 'missions' => $missions, 'mode' => $mode ]); ?>
+        </div>
+    </div>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_ACTIVITE]) || $parametres[FicheMetierParametres::DISPLAY_ACTIVITE]->getValeur() !== "false") : ?>
-    <?php echo $this->partial('partial/activites',   ['fichemetier' => $fiche, 'activites' => $activites, 'mode' => $mode ],  [], true); ?>
+<div class="card info">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6"><h2> Activités </h2></div>
+            <div class="col-md-6">
+                <div class="float-end">
+                    <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
+                        <?php /** @see FicheMetierController::gererActivitesAction() */ ?>
+                        <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                           data-event="refresh-activites"
+                           href="<?php echo $this->url('fiche-metier/gerer-activites', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                            <span class="icon icon-listing"></span>
+                            Gérer les activités
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:rgb(80,80,80);" id="activites_view">
+        <?php echo $this->partial('partial/bloc-activite', ['fichemetier' => $fiche, 'activites' => $activites, 'mode' => $mode ]); ?>
+    </div>
+</div>
 <?php endif; ?>
 
 <!-- COMPETENCES STANDARDS -------------------------------------------------------------------------------------------->
@@ -150,13 +227,45 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 <?php endif; ?>
 
 
-
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]) || $parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE]->getValeur() !== "false") : ?>
     <?php echo $this->partial('partial/competences-specifiques',            ['fichemetier' => $fiche, 'competences' => $competencesSpecifiques, 'mode' => $mode ],       [], true); ?>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) || $parametres[FicheMetierParametres::DISPLAY_APPLICATION]->getValeur() !== "false") : ?>
-    <div id="neue_applications">
+    <div class="card info">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-7">
+                    <h2>
+                        <span class="icon application"></span>
+                        Applications
+                    </h2>
+                </div>
+                <div class="col-md-5">
+                    <div class="float-end">
+                        <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueApplicationsAction() */ ?>
+                        <a href="<?php echo $this->url('graphique/applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
+                        >
+                            <span class="icon icon-diagramme"></span>
+                            Afficher les applications
+                        </a>
+
+                        <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::gererApplicationsAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/gerer-applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                               class="btn btn-primary ajax-modal" data-event="refresh-applications">
+                                <span class="icon icon-lister"></span>
+                                Gérer les applications
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" style="color:rgb(80,80,80);" id="applications_view">
+            <?php echo $this->partial('partial/bloc-applications', ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode ]); ?>
+        </div>
     </div>
 <?php endif; ?>
 
@@ -171,60 +280,6 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 
 
 <script>
-    function refreshApplications() {
-        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshApplicationsAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-applications", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
-        console.log("refreshing applications");
-        $.ajax({
-            type: "POST",
-            url: url,
-            beforeSend:
-                function () {
-                    $("#neue_applications div.card-body").addClass('refreshing');
-                },
-            success:
-                function (retour) {
-                    $("#neue_applications").html(retour).removeClass('refreshing');
-                }
-        });
-    }
-
-    function refreshMissions() {
-        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshMissionsAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-missions", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
-        console.log("refreshing missions principales");
-        $.ajax({
-            type: "POST",
-            url: url,
-            beforeSend:
-                function () {
-                    $("#missions_view").addClass('refreshing');
-                },
-            success:
-                function (retour) {
-                    $("#missions_view").html(retour).removeClass('refreshing');
-                }
-        });
-    }
-
-    function refreshActivites() {
-        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshActivitesAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-activites", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
-        console.log("refreshing activites");
-        $.ajax({
-            type: "POST",
-            url: url,
-            beforeSend:
-                function () {
-                    $("#activites_view").addClass('refreshing');
-                },
-            success:
-                function (retour) {
-                    $("#activites_view").html(retour).removeClass('refreshing');
-                }
-        });
-    }
-
     function refreshCompetences(type) {
         <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesAction() */ ?>
         let url = "<?php echo $this->url("fiche-metier/refresh-competences", ['fiche-metier' => $fiche->getId(), 'mode' => $mode ]); ?>";
@@ -250,9 +305,12 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getCode())."'"; }, $types)); ?>];
 
         $("body")
-            .on("modification", function (event) {
+        .on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        }).on("refresh-raison", function (event) {
+                event.div.modal('hide');
+                refreshRaison();
         }).on("refresh-activites", function (event) {
             event.div.modal('hide');
             refreshActivites();
@@ -274,9 +332,6 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             }
         });
 
-        refreshMissions();
-        refreshActivites();
-        refreshApplications();
         types.forEach(function (type) {
             refreshCompetences(type);
         });

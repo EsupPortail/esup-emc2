@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierController::refreshMissionsAction()
+ * @var FicheMetier $fichemetier
+ * @var MissionElement[] $missions
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\MissionElement;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
+
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
+
+$canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+?>
+
+<?php if (empty($missions)): ?>
+    <span class="missing-data"> Aucune mission </span>
+<?php else : ?>
+    <ul>
+        <?php foreach ($missions as $mission) : ?>
+            <li> <?php echo $mission->getMission()->getLibelle(); ?>
+                <?php if ($mode === "edition-fiche-metier" AND $canModifier) : ?>
+                    <small>
+                        <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerMissionAction() */ ?>
+                        <span class="missions-ajax action primary "
+                              data-url="<?php echo $this->url('fiche-metier/bouger-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId(), 'direction' => '-1'], [], true); ?>"
+                        >
+                        <span class="icon icon-monter"></span>
+                        Monter
+                    </span>
+                        <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerMissionAction() */ ?>
+                        <span class="missions-ajax action primary "
+                              data-url="<?php echo $this->url('fiche-metier/bouger-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId(), 'direction' => '1'], [], true); ?>"
+                        >
+                        <span class="icon icon-descendre"></span>
+                        Descendre
+                    </span>
+                        <?php /** @see \FicheMetier\Controller\FicheMetierController::retirerMissionAction() */ ?>
+                        <span class="missions-ajax action danger "
+                              data-url="<?php echo $this->url('fiche-metier/retirer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId()], [], true); ?>"
+                        >
+                        <span class="icon icon-unchecked" ></span>
+                        Retirer
+                    </span>
+                    </small>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+
+<script>
+    function refreshMissions() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshMissionsAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-missions", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ]); ?>";
+        console.log("refreshing activites");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    $("#missions_view").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    $("#missions_view").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
+    $(".missions-ajax").on("click", function (event) {
+        let url = $(this).data("url");
+        $("#missions_view").addClass('refreshing');
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function () {
+                    refreshMissions();
+                }
+        });
+    });
+</script>
