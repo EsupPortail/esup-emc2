@@ -801,19 +801,17 @@ EOS;
 
     public function refreshRaisonAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $mode = $this->params()->fromRoute('mode');
 
-        $vm = new ViewModel([
+        return new ViewModel([
             'fichemetier' => $fichemetier,
-            'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-raison');
-        return $vm;
     }
 
     public function refreshMissionsAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $missions = $fichemetier->getMissions();
         $mode = $this->params()->fromRoute('mode');
@@ -829,6 +827,7 @@ EOS;
 
     public function refreshActivitesAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $activites = $fichemetier->getActivites();
         $mode = $this->params()->fromRoute('mode');
@@ -845,6 +844,7 @@ EOS;
 
     public function refreshApplicationsAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $mode = $this->params()->fromRoute('mode');
@@ -860,6 +860,7 @@ EOS;
 
     public function refreshCompetencesAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
 //        $typeLibelle = str_replace("_"," ", $this->params()->fromRoute('type'));
