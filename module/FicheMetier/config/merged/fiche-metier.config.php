@@ -49,6 +49,7 @@ return [
                         'refresh-activites',
                         'refresh-applications',
                         'refresh-competences',
+                        'refresh-competences-specifiques',
                         'refresh-missions',
                         'refresh-raison',
                         'exporter',
@@ -490,6 +491,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::refreshCompetencesAction() */
                                 'action' => 'refresh-competences',
+                            ],
+                        ],
+                    ],
+                    'refresh-competences-specifiques' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/refresh-competences-specifiques/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshCompetencesSpecifiquesAction() */
+                                'action' => 'refresh-competences-specifiques',
                             ],
                         ],
                     ],

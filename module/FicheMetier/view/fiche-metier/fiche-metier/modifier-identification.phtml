@@ -21,7 +21,11 @@ use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationForm;
 <?php echo $this->formControlGroup($form->get('submit')); ?>
 <?php echo $this->form()->closeTag(); ?>
 
-
+<style>
+input#identifiant    {
+        margin-top: 5px;
+    }
+</style>
 <script>
     $(document).ready(function () {
         $('select:not(.select2)').selectpicker();

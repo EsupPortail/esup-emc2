@@ -170,16 +170,18 @@ $this->headTitle("Importation des fiches métiers");
                     <li><code><?php echo ImportController::HEADER_EMC2_ACTIVITE; ?></code> : Liste des activités (séparateur <code>|</code>). Exemple : Activité 1 | Activité 2</li>
                     <li><code><?php echo ImportController::HEADER_EMC2_COMPETENCE; ?></code> : identifiant des compétences de tous types importées dans EMC2 (séparateur <code>|</code>). Peut contenir différents référentiels ; par exemple <code>REFERENS3-0002|REFERENS-0004|RMFP-487</code></li>
                     <li><code><?php echo ImportController::HEADER_EMC2_APPLICATION; ?></code> : intitulé exact des applications déjà connues dans EMC2.</li>
-                    <li>Module "Contexte et environnement"
+                    <li>Module "Contexte et environnement" <br>
+                        Pour importer les données liés aux champs de ce module, créez une colonne par champ existant dans le back-office
                         <ul>
-                            <li> En-tête de la colonne : le libellé exact du champ </li>
-                            <li> Valeur : le libellé niveau de maîtrise associée ; par exemple Modéré, Fort</li>
+                            <li>En-tête de la colonne : le libellé exact du champ</li>
+                            <li>Valeur : le libellé niveau de maîtrise associée ; par exemple Modéré, Fort</li>
                         </ul>
-                    <li>Module "Tendances d'évolution"
-                    <ul>
-                        <li> En-tête de la colonne : le libellé exact du champ</li>
-                        <li> Valeur : texte simple</li>
-                    </ul>
+                    <li> Module "Tendances d'évolution"<br>
+                        Pour importer les données liés aux champs de ce module, créez une colonne par champ existant dans le back-office
+                        <ul>
+                            <li>En-tête de la colonne : le libellé exact du champ</li>
+                            <li>Valeur : texte simpleModule "Contexte et environnement"</li>
+                        </ul>
                 </ul>
 
 
@@ -192,21 +194,6 @@ $this->headTitle("Importation des fiches métiers");
                 <li>Pour EMC2 et REFERENS3 le séparateur est <code>|</code>.</li>
                 <li>Pour RMFP le séparateur est le saut de ligne.</li>
             </ul>
-
-<!--            --><?php //if ($displayCodeFonction) : ?>
-<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_referens3_codefonction.csv">-->
-<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>-->
-<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp_codefonction.csv">-->
-<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
-<!--            --><?php //else : ?>
-<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_referens3.csv">-->
-<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format REFERENS3</a><br>-->
-<!--                <a href="--><?php //echo $this->url('home',[],['force_canonical' => true], true); ?><!--exemples/trame_csv/import_fichesmetiers_rmfp.csv">-->
-<!--                    <span class="icon icon-csv"></span> Télécharger la trame vierge au format RMFP</a>-->
-<!--            --><?php //endif; ?>
-
-
-
 
         </div>
     </div>

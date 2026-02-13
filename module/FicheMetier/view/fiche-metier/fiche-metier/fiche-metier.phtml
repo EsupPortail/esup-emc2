@@ -248,7 +248,7 @@ if ($mode === 'edition-fiche-metier') {
                             <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesSpecifiquesAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/gerer-competences-specifiques', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                               data-event="refresh-competences"
+                               data-event="refresh-competences-specifiques"
                                data-competence-type="<?php echo CompetenceType::CODE_SPECIFIQUE; ?>"
                             >
                                 <span class="icon icon-lister"></span>
@@ -355,6 +355,8 @@ if ($mode === 'edition-fiche-metier') {
             event.div.modal('hide');
             refreshApplications();
         }).on("refresh-competences", function (event) {
+
+        }).on("refresh-competences-specifiques", function (event) {
             event.div.modal('hide');
             let type = event.a.data('competence-type');
             if (type !== undefined) {

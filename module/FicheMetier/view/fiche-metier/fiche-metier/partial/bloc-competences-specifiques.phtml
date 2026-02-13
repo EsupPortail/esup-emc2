@@ -25,3 +25,39 @@ if ($mode === 'edition-fiche-metier') {
         ['table-id' => str_replace(" ","_",
                 $type->getLibelle()),
                 'title' => $type->getLibelle()]); ?>
+
+
+<script>
+    function refreshCompetencesSpecifiques() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesSpecifiquesAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-competences-specifiques", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ], ['force_canonical' => true]); ?>";
+        console.log("refreshing compétences spécifiques");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    console.log(url);
+                    $("#competence_SPEC").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    console.log(retour);
+                    $("#competence_SPEC").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
+    $(".competence_SPEC").on("click", function (event) {
+        let url = $(this).data("url");
+        $("#competence_SPEC").addClass('refreshing');
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function () {
+                    refreshApplications();
+                }
+        });
+    });
+</script>

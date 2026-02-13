@@ -147,7 +147,7 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = new FicheMetier();
 
-        $form = $this->getModifierLibelleForm();
+        $form = $this->getFicheMetierIdentificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter', [], [], true));
         $form->bind($fiche);
 
@@ -167,7 +167,7 @@ class FicheMetierController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('fiche-metier/modifier-identification');
         $vm->setVariables([
             'title' => "Ajout d'une fiche metier",
             'form' => $form,
