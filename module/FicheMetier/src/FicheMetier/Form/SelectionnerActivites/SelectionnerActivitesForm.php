@@ -18,7 +18,7 @@ class SelectionnerActivitesForm extends Form
             'type' => Select::class,
             'name' => 'activites',
             'options' => [
-                'label' => "Activité·s <span class='icon icon-obligation' title='Champ obligatoire'></span> :",
+                'label' => "Activité·s - sélection multiples possible :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => $this->getActiviteService()->getActivitesAsOptions(),
             ],

@@ -19,7 +19,7 @@ class SelectionApplicationForm extends Form {
             'type' => Select::class,
             'name' => 'applications',
             'options' => [
-                'label' => "Applications associées :",
+                'label' => "Applications associées  - sélection multiples possible :",
                 'value_options' => $this->getApplicationService()->getApplicationsAsOptions(),
             ],
             'attributes' => [
