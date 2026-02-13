@@ -43,6 +43,13 @@ if ($mode === 'edition-fiche-metier') {
     $actions['modifier'] = true;
     $actions['supprimer'] = true;
 }
+
+$competenceNonSpecifiques = [];
+foreach ($types as $type) {
+    if ($type->getCode() !== CompetenceType::CODE_SPECIFIQUE) {
+        $competenceNonSpecifiques[] = $type;
+    }
+}
 ?>
 
 <div class="row">
@@ -336,7 +343,7 @@ if ($mode === 'edition-fiche-metier') {
     }
 
     $(function() {
-        let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getCode())."'"; }, $types)); ?>];
+        let types = [ <?php echo implode(", ", array_map(function (CompetenceType $type) { return "'".str_replace(" ","_",$type->getCode())."'"; }, $competenceNonSpecifiques)); ?>];
 
         $("body")
         .on("modification", function (event) {
@@ -355,17 +362,19 @@ if ($mode === 'edition-fiche-metier') {
             event.div.modal('hide');
             refreshApplications();
         }).on("refresh-competences", function (event) {
-
-        }).on("refresh-competences-specifiques", function (event) {
             event.div.modal('hide');
             let type = event.a.data('competence-type');
             if (type !== undefined) {
                 refreshCompetences(type);
-            } else {
+            }
+            else {
                 types.forEach(function (type) {
                     refreshCompetences(type);
                 });
             }
+        }).on("refresh-competences-specifiques", function (event) {
+            event.div.modal('hide');
+            refreshCompetencesSpecifiques();
         });
 
         // types.forEach(function (type) {
