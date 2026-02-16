@@ -129,7 +129,7 @@ $canIndex = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivilege
                 <li> <code><?php echo Activite::ACTIVITE_HEADER_ID; ?></code> <span class="icon icon-obligatoire"></span> Identifiant de l'activité dans le référentiel</li>
                 <li> <code><?php echo Activite::ACTIVITE_HEADER_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> le libellé de l'activité</li>
 <!--                <li> <code>--><?php //echo Activite::ACTIVITE_HEADER_DESCRIPTION; ?><!--</code> la description de l'activité</li>-->
-                <li><code><?php echo Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE; ?></code> : la liste des codes des fiches métiers incluant l'activité,
+                <li><code><?php echo Activite::ACTIVITE_HEADER_CODES_EMPLOITYPE; ?></code> : la liste des codes emplois types (référentiels) incluant l'activité,
                     <?php if ($displayCodeFonction) : ?>
                 <li><code><?php echo Activite::ACTIVITE_HEADER_CODES_FONCTION; ?></code> : la liste des codes des "fonctions" incluant l'activité.</li>
                 <?php endif; ?>

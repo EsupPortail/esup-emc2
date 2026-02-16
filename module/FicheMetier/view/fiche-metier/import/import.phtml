@@ -151,10 +151,10 @@ $this->headTitle("Importation des fiches métiers");
 
                 Pour la trame EMC2 :
                 <ul>
-                    <li><code><?php echo ImportController::HEADER_EMC2_CODE; ?></code> <span class="icon icon-obligatoire"></span> : identifiant unique de la fiche métier</li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span> </li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_TYPE; ?></code> : <a href="<?php echo $this->url('carriere/correspondance-type',[],[],true); ?>" target="_blank">Code associé au type de la spécialité</a> ; par exemple <code>BAP</code>, <code>CNU</code></li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_CODE; ?></code> : <a href="<?php echo $this->url('correspondance',[],[],true); ?>" target="_blank">Code de la spécialité</a> ; par exemple <code>A</code>, <code>37</code> </li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_CODE; ?></code> <span class="icon icon-obligatoire"></span> : identifiant unique de la fiche métier.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_LIBELLE; ?></code> <span class="icon icon-obligatoire"></span>.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_TYPE; ?></code> : <a href="<?php echo $this->url('carriere/correspondance-type',[],[],true); ?>" target="_blank">Code associé au type de la spécialité</a> ; par exemple <code>BAP</code>, <code>CNU</code>.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_CODE; ?></code> : <a href="<?php echo $this->url('correspondance',[],[],true); ?>" target="_blank">Code de la spécialité</a> ; par exemple <code>A</code>, <code>37</code>.</li>
                     <li><code><?php echo ImportController::HEADER_EMC2_SPECIALITE_LIBELLE; ?></code> : créée si non connue et cohérente avec la famille professionnelle.</li>
                     <li><code><?php echo ImportController::HEADER_EMC2_FAMILLE_LIBELLE; ?></code> : la <a href="<?php echo $this->url('famille-professionnelle',[],[],true); ?>" target="_blank">famille professionnelle</a> est créée si non existante.</li>
                     <?php if ($displayCodeFonction): ?>
@@ -163,24 +163,24 @@ $this->headTitle("Importation des fiches métiers");
                     <?php if ($displayCodeFonction): ?>
                         <li><code><?php echo ImportController::HEADER_CODE_FONCTION; ?></code> : créé si non existant, attention le <a href="<?php echo $this->url('niveau-fonction',[],[],true); ?>" target="_blank">niveau de fonction</a> doit exister.</li>
                     <?php endif; ?>
-                    <li><code><?php echo ImportController::HEADER_CODE_EMPLOITYPE; ?></code> : texte permettant de faire le lien vers d'autre entre emploi type</li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_NIVEAU_CARRIERE; ?></code> : étiquette du <a href="<?php echo $this->url('niveau',[],[],true); ?>" target="_blank">niveau de carrière</a> ; par exemple <code>TECH</code>, <code>IGE</code></li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_RAISON; ?></code> : texte simple </li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_MISSION; ?></code> <span class="icon icon-obligatoire"></span> : Liste des missions (séparateur <code>|</code>). Exemple : Mission 1 | Mission 2</li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_ACTIVITE; ?></code> : Liste des activités (séparateur <code>|</code>). Exemple : Activité 1 | Activité 2</li>
-                    <li><code><?php echo ImportController::HEADER_EMC2_COMPETENCE; ?></code> : identifiant des compétences de tous types importées dans EMC2 (séparateur <code>|</code>). Peut contenir différents référentiels ; par exemple <code>REFERENS3-0002|REFERENS-0004|RMFP-487</code></li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_NIVEAU_CARRIERE; ?></code> : étiquette du <a href="<?php echo $this->url('niveau',[],[],true); ?>" target="_blank">niveau de carrière</a> ; par exemple <code>TECH</code>, <code>IGE</code>.</li>
+                    <li><code><?php echo ImportController::HEADER_CODE_EMPLOITYPE; ?></code> : la liste des codes emplois types (référentiels). </li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_RAISON; ?></code> : texte simple. </li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_MISSION; ?></code> <span class="icon icon-obligatoire"></span> : Liste des missions (séparateur <code>|</code>). Exemple : Mission 1 | Mission 2.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_ACTIVITE; ?></code> : Liste des activités (séparateur <code>|</code>). Exemple : Activité 1 | Activité 2.</li>
+                    <li><code><?php echo ImportController::HEADER_EMC2_COMPETENCE; ?></code> : identifiant des compétences de tous types importées dans EMC2 (séparateur <code>|</code>). Peut contenir différents référentiels ; par exemple <code>REFERENS3-0002|REFERENS-0004|RMFP-487</code>.</li>
                     <li><code><?php echo ImportController::HEADER_EMC2_APPLICATION; ?></code> : intitulé exact des applications déjà connues dans EMC2.</li>
                     <li>Module "Contexte et environnement" <br>
-                        Pour importer les données liés aux champs de ce module, créez une colonne par champ existant dans le back-office
+                        Pour importer les données liées aux champs de ce module, créez une colonne par champ existant dans le <a href="<?php echo $this->url('fiche-metier/thematique-type', [], [], true); ?>" target="_blank">back-office</a>
                         <ul>
-                            <li>En-tête de la colonne : le libellé exact du champ</li>
-                            <li>Valeur : le libellé niveau de maîtrise associée ; par exemple Modéré, Fort</li>
+                            <li>En-tête de la colonne : le libellé exact du champ.</li>
+                            <li>Valeur : le libellé niveau de maîtrise associée ; par exemple Modéré, Fort.</li>
                         </ul>
                     <li> Module "Tendances d'évolution"<br>
-                        Pour importer les données liés aux champs de ce module, créez une colonne par champ existant dans le back-office
+                        Pour importer les données liées aux champs de ce module, créez une colonne par champ existant dans le <a href="<?php echo $this->url('fiche-metier/tendance-type', [], [], true); ?>" target="_blank">back-office</a>
                         <ul>
-                            <li>En-tête de la colonne : le libellé exact du champ</li>
-                            <li>Valeur : texte simpleModule "Contexte et environnement"</li>
+                            <li>En-tête de la colonne : le libellé exact du champ.</li>
+                            <li>Valeur : texte simple.</li>
                         </ul>
                 </ul>
 

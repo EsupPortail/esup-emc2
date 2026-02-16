@@ -132,30 +132,26 @@ $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(Compe
             Le fichier csv doit être constitué des colonnes suivantes :
             <ul>
                 <li><code><?php echo Competence::COMPETENCE_HEADER_ID; ?></code> <span
-                            class="icon icon-obligatoire"></span> l'identifiant unique de la compétence,
+                            class="icon icon-obligatoire"></span> : l'identifiant unique de la compétence.
                 </li>
                 <li><code><?php echo Competence::COMPETENCE_HEADER_LIBELLE; ?></code> <span
-                            class="icon icon-obligatoire"></span> le libellé de la compétence,
+                            class="icon icon-obligatoire"></span> : le libellé de la compétence.
                 </li>
-                <li><code><?php echo Competence::COMPETENCE_HEADER_TYPE; ?></code> <span
-                            class="icon icon-obligatoire"></span>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_TYPE; ?></code>: <span
+                            class="icon icon-obligatoire"></span> :
                     le <a href="<?php echo $this->url('element/competence-type', [], [], true); ?>" target="_blank">type de la compétence</a>
-                    ; par exemple Compétence comportementale, Connaissance
+                    ; par exemple Compétence comportementale, Connaissance.
                 </li>
-                <li><code><?php echo Competence::COMPETENCE_HEADER_THEME; ?></code> le thème associé à la compétence,
+                <li><code><?php echo Competence::COMPETENCE_HEADER_THEME; ?></code> : le thème associé à la compétence.
                 </li>
-                <li><code><?php echo Competence::COMPETENCE_HEADER_DEFINITION; ?></code> la définition associée à la
-                    compétence,
+                <li><code><?php echo Competence::COMPETENCE_HEADER_DEFINITION; ?></code> : la définition associée à la compétence.
                 </li>
-                <li><code><?php echo Competence::COMPETENCE_HEADER_DISCIPLINE; ?></code> colonne pour les compétences
-                    spécifiques uniquement - laisser vide pour les compétences "normales",
+                <li><code><?php echo Competence::COMPETENCE_HEADER_DISCIPLINE; ?></code> : la colonne pour les compétences spécifiques uniquement - laisser vide pour les compétences "normales".
                 </li>
-                <li><code><?php echo Competence::COMPETENCE_HEADER_SYNONYMES; ?></code> la liste des libellés synonymes.
-                <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE; ?></code> la liste des codes
-                    emploi-types devant avoir la compétence.
+                <li><code><?php echo Competence::COMPETENCE_HEADER_SYNONYMES; ?></code> : la liste des libellés synonymes.</li>
+                <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE; ?></code> : la liste des codes emplois types (référentiels) incluant la compétence.</li>
                     <?php if ($displayCodeFonction) : ?>
-                <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_FONCTION; ?></code> la liste des codes
-                    fonctions devant avoir la compétence.
+                        <li><code><?php echo Competence::COMPETENCE_HEADER_CODES_FONCTION; ?></code> : la liste des codes fonctions devant avoir la compétence.</li>
                     <?php endif; ?>
 
             </ul>
