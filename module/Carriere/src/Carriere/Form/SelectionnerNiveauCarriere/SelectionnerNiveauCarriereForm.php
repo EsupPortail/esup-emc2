@@ -35,7 +35,7 @@ class SelectionnerNiveauCarriereForm extends Form
             'type' => Button::class,
             'name' => 'submit',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer ',
+                'label' => 'Valider',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

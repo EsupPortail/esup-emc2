@@ -20,7 +20,7 @@ class RaisonForm extends Form
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control',
+                'class' => 'tinymce',
                 'id' => 'raison',
             ]
         ]);
@@ -30,7 +30,7 @@ class RaisonForm extends Form
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer',
+                'label' => 'Valider',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var array $applications
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\FicheMetier;
+
+?>
+
+<?php /** @see \Element\View\Helper\ApplicationsViewHelper */ ?>
+<?php echo $this->applications($applications, $fichemetier, ($mode === 'edition-fiche-metier'?"modification":"affichage")); ?>
+
+
+
+<script>
+    function refreshApplications() {
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshApplicationsAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/refresh-applications", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ], ['force_canonical' => true]); ?>";
+        console.log("refreshing applications");
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    console.log(url);
+                    $("#applications_view").addClass('refreshing');
+                },
+            success:
+                function (retour) {
+                    console.log(retour);
+                    $("#applications_view").html(retour).removeClass('refreshing');
+                }
+        });
+    }
+
+    $(".applications-ajax").on("click", function (event) {
+        let url = $(this).data("url");
+        $("#applications_view").addClass('refreshing');
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function () {
+                    refreshApplications();
+                }
+        });
+    });
+</script>

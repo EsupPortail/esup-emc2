@@ -19,8 +19,7 @@ class SelectionApplicationForm extends Form {
             'type' => Select::class,
             'name' => 'applications',
             'options' => [
-                'label' => "Applications associées :",
-                'empty_option' => "Sélectionner la ou les applications ...",
+                'label' => "Applications associées  - sélection multiples possible :",
                 'value_options' => $this->getApplicationService()->getApplicationsAsOptions(),
             ],
             'attributes' => [
@@ -35,7 +34,7 @@ class SelectionApplicationForm extends Form {
             'type' => Button::class,
             'name' => 'enregistrer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer',
+                'label' => 'Valider',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

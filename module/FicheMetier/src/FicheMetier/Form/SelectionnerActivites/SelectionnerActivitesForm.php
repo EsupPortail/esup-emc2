@@ -18,9 +18,8 @@ class SelectionnerActivitesForm extends Form
             'type' => Select::class,
             'name' => 'activites',
             'options' => [
-                'label' => "Activité·s <span class='icon icon-obligation' title='Champ obligatoire'></span> :",
+                'label' => "Activité·s - sélection multiples possible :",
                 'label_options' => ['disable_html_escape' => true,],
-                'empty_option' => "Sélectionner une ou plusieurs activités",
                 'value_options' => $this->getActiviteService()->getActivitesAsOptions(),
             ],
             'attributes' => [
@@ -36,7 +35,7 @@ class SelectionnerActivitesForm extends Form
             'type' => Button::class,
             'name' => 'enregistrer',
             'options' => [
-                'label' => '<i class="fas fa-clone"></i> Sélectionner',
+                'label' => 'Valider',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

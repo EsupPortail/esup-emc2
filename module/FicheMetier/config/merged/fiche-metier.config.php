@@ -49,7 +49,9 @@ return [
                         'refresh-activites',
                         'refresh-applications',
                         'refresh-competences',
+                        'refresh-competences-specifiques',
                         'refresh-missions',
+                        'refresh-raison',
                         'exporter',
                     ],
                     'privileges' => [
@@ -514,6 +516,16 @@ return [
                             ],
                         ],
                     ],
+                    'refresh-competences-specifiques' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/refresh-competences-specifiques/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshCompetencesSpecifiquesAction() */
+                                'action' => 'refresh-competences-specifiques',
+                            ],
+                        ],
+                    ],
                     'refresh-missions' => [
                         'type' => Segment::class,
                         'options' => [
@@ -521,6 +533,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::refreshMissionsAction() */
                                 'action' => 'refresh-missions',
+                            ],
+                        ],
+                    ],
+                    'refresh-raison' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/refresh-raison/:fiche-metier/:mode',
+                            'defaults' => [
+                                /** @see FicheMetierController::refreshRaisonAction() */
+                                'action' => 'refresh-raison',
                             ],
                         ],
                     ],

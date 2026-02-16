@@ -3,6 +3,7 @@
 namespace FicheMetier\Controller;
 
 use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
+use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -67,6 +68,7 @@ class FicheMetierController extends AbstractActionController
     use CodeFonctionFormAwareTrait;
     use CodeEmploiTypeFormAwareTrait;
     use FicheMetierIdentificationFormAwareTrait;
+    use ModifierLibelleFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -111,8 +113,6 @@ class FicheMetierController extends AbstractActionController
         $missions = $fichemetier->getMissions();
         $activites = $fichemetier->getActivites();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
-        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
-        $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
 
         $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes();
@@ -125,17 +125,25 @@ class FicheMetierController extends AbstractActionController
             $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
             $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($fichemetier->getCodeFonction());
         }
+        $types = [];
+        foreach ($this->getCompetenceTypeService()->getCompetencesTypes(true) as $type) {
+            $types[$type->getCode()] = $type;
+        }
+        $dictionnaire = [];
+        foreach ($types as $type) {
+            $dictionnaire[$type->getCode()] = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $types[$type->getCode()],true);
+        }
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
-            'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
+            'types' => $types,
             'emplois' => $emplois,
             'postes' => $postes,
             'missions' => $missions,
             'activites' => $activites,
-            'competences' => $competences,
-            'competencesSpecifiques' => $competencesSpecifiques,
             'applications' => $applications,
+            'competences' => $dictionnaire,
+            'competencesSpecifiques' => $dictionnaire[CompetenceType::CODE_SPECIFIQUE],
             'tendancesTypes' => $tendancesTypes,
             'tendancesElements' => $tendancesElements,
             'thematiquestypes' => $thematiquestypes,
@@ -152,7 +160,7 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = new FicheMetier();
 
-        $form = $this->getModifierLibelleForm();
+        $form = $this->getFicheMetierIdentificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter', [], [], true));
         $form->bind($fiche);
 
@@ -172,7 +180,7 @@ class FicheMetierController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('fiche-metier/modifier-identification');
         $vm->setVariables([
             'title' => "Ajout d'une fiche metier",
             'form' => $form,
@@ -190,13 +198,20 @@ class FicheMetierController extends AbstractActionController
         $missions = $fichemetier->getMissions();
         $activites = $fichemetier->getActivites();
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
-        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
-        $competencesSpecifiques = $this->getFicheMetierService()->getCompetencesSpecifiquesDictionnaires($fichemetier, true);
 
         $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes();
         $tendancesElements = $this->getTendanceElementService()->getTendancesElementsByFicheMetier($fichemetier);
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
+
+        $types = [];
+        foreach ($this->getCompetenceTypeService()->getCompetencesTypes(true) as $type) {
+            $types[$type->getCode()] = $type;
+        }
+        $dictionnaire = [];
+        foreach ($types as $type) {
+            $dictionnaire[$type->getCode()] = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $types[$type->getCode()],true);
+        }
 
         $emplois = null; $postes = null;
         if ($this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_EMPLOIREPERE)) {
@@ -206,13 +221,13 @@ class FicheMetierController extends AbstractActionController
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
-            'types' => $this->getCompetenceTypeService()->getCompetencesTypes(true, 'ordre', 'ASC'),
+            'types' => $types,
             'missions' => $missions,
             'activites' => $activites,
             'emplois' => $emplois,
             'postes' => $postes,
-            'competences' => $competences,
-            'competencesSpecifiques' => $competencesSpecifiques,
+            'competences' => $dictionnaire,
+            'competencesSpecifiques' => $dictionnaire[CompetenceType::CODE_SPECIFIQUE],
             'applications' => $applications,
             'tendancesTypes' => $tendancesTypes,
             'tendancesElements' => $tendancesElements,
@@ -334,6 +349,7 @@ class FicheMetierController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-etat', ['fiche-metier' => $fichemetier->getId()], [], true));
         $form->bind($fichemetier);
         $form->reinit(FicheMetierEtats::TYPE);
+        $form->get('bouton')->setLabel('Valider');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -366,6 +382,7 @@ class FicheMetierController extends AbstractActionController
         $form = $this->getCodeFonctionForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-code-fonction', ['fiche-metier' => $fichemetier->getId()], [], true));
         $form->bind($codeFonction);
+        $form->get('creer')->setLabel('Valider');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -857,8 +874,23 @@ EOS;
 
     /** ACTIONS POUR LE RAFRAICHISSEMENT SUR PLACE ********************************************************************/
 
+    public function refreshRaisonAction(): ViewModel
+    {
+        $this->layout()->setTerminal(true);
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $mode = $this->params()->fromRoute('mode');
+
+        $vm =  new ViewModel([
+            'fichemetier' => $fichemetier,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-raison');
+        return $vm;
+    }
+
     public function refreshMissionsAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $missions = $fichemetier->getMissions();
         $mode = $this->params()->fromRoute('mode');
@@ -868,14 +900,14 @@ EOS;
             'missions' => $missions,
             'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/refresh-missions');
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-mission');
         return $vm;
     }
 
     public function refreshActivitesAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        // TODO via le services ???
         $activites = $fichemetier->getActivites();
         $mode = $this->params()->fromRoute('mode');
 
@@ -884,13 +916,14 @@ EOS;
             'activites' => $activites,
             'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/refresh-activites');
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-activite');
         return $vm;
     }
 
 
     public function refreshApplicationsAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $mode = $this->params()->fromRoute('mode');
@@ -900,32 +933,43 @@ EOS;
             'applications' => $applications,
             'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/refresh-applications');
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-applications');
         return $vm;
     }
 
-    public function refreshCompetencesAction(): ViewModel
+    public function refreshCompetencesSpecifiquesAction(): ViewModel
     {
+        $this->layout()->setTerminal(true);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-
-//        $typeLibelle = str_replace("_"," ", $this->params()->fromRoute('type'));
-//        $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($typeLibelle);
-        $typeCode = str_replace("_", " ", $this->params()->fromRoute('type'));
-        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($typeCode);
-
-        if ($type == null) {
-            throw new RuntimeException("Aucun type de compétences avec le code [" . $typeCode . "]", -1);
-        }
-
-        $competences = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $type, true);
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode(CompetenceType::CODE_SPECIFIQUE);
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $type,true);
+        $mode = $this->params()->fromRoute('mode');
 
         $vm = new ViewModel([
             'fichemetier' => $fichemetier,
             'competences' => $competences,
             'type' => $type,
-            'mode' => $this->params()->fromRoute('mode'),
+            'mode' => $mode,
         ]);
-        $vm->setTemplate('fiche-metier/refresh-competences');
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-competences-specifiques');
+        return $vm;
+    }
+
+    public function refreshCompetencesAction(): ViewModel
+    {
+        $this->layout()->setTerminal(true);
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($this->params()->fromRoute('type'));
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $type,true);
+        $mode = $this->params()->fromRoute('mode');
+
+        $vm = new ViewModel([
+            'fichemetier' => $fichemetier,
+            'competences' => $competences,
+            'type' => $type,
+            'mode' => $mode,
+        ]);
+        $vm->setTemplate('fiche-metier/fiche-metier/partial/bloc-competences');
         return $vm;
     }
 

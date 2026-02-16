@@ -18,9 +18,8 @@ class SelectionnerMissionPrincipaleForm extends Form
             'type' => Select::class,
             'name' => 'missions',
             'options' => [
-                'label' => "Mission·s principale·s <span class='icon icon-obligation' title='Champ obligatoire'></span> :",
+                'label' => "Mission·s principale·s - sélection multiples possible :",
                 'label_options' => ['disable_html_escape' => true,],
-                'empty_option' => "Sélectionner une ou plusieurs missions principales",
                 'value_options' => $this->getMissionPrincipaleService()->getMissionsPrincipalesAsOptions(),
             ],
             'attributes' => [
@@ -36,7 +35,7 @@ class SelectionnerMissionPrincipaleForm extends Form
             'type' => Button::class,
             'name' => 'enregistrer',
             'options' => [
-                'label' => '<i class="fas fa-clone"></i> Sélectionner',
+                'label' => 'Valider',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

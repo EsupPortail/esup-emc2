@@ -36,8 +36,7 @@ class SelectionCompetenceForm extends Form {
             'type' => Select::class,
             'name' => 'competences',
             'options' => [
-                'label' => "Compétences associées :",
-                'empty_option' => "Sélectionner la ou les compétences ...",
+                'label' => "Compétences associées - sélection multiples possible  :",
                 'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [
@@ -52,7 +51,7 @@ class SelectionCompetenceForm extends Form {
             'type' => Button::class,
             'name' => 'enregistrer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer',
+                'label' => 'Valider',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
