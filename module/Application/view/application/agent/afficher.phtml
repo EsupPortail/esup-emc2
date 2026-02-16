@@ -81,6 +81,8 @@ if ($agent !== null) {
         <strong><?php echo $agent->getDenomination(); ?></strong>
     </h1>
 
+    <?php echo $this->aideAgentCampagne($agent); ?>
+
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <?php if (!isset($parametres[AgentParametres::ONGLET_INFORMATIONS]) || $parametres[AgentParametres::ONGLET_INFORMATIONS]->getValeur() !== "false") : ?>
             <button class="nav-link active" id="informations-tab"

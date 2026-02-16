@@ -395,3 +395,7 @@ span.missing-data {
     color:gray;
     font-style: italic;
 }
+
+.text-warning {
+    color: var(--bs-warning) !important;
+}
