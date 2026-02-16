@@ -31,10 +31,12 @@ class AideAgentCampagneViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
+        $entretien = null;
+
         $infos = [];
         if ($campagne === null) {
             $actives = $this->getCampagneService()->getCampagnesActives();
-            $campagne = current($actives);
+            $campagne = current($actives)?current($actives):null;
         }
         if ($campagne !== null) {
             $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
@@ -44,9 +46,11 @@ class AideAgentCampagneViewHelper extends AbstractHelper
             $infos['raison'] = $raison;
             $infos['delai-observation'] = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT);
 
-            $date = DateTime::createFromFormat('Y-m-d H:i:s', $entretien->getDateEntretien()->format('Y-m-d H:i:s'));
-            $date->add(new DateInterval('P'.$infos['delai-observation'].'D'));
-            $infos['limite-observation'] = $date;
+            $date = ($entretien)?DateTime::createFromFormat('Y-m-d H:i:s', $entretien->getDateEntretien()->format('Y-m-d H:i:s')):null;
+            if ($date) {
+                $date->add(new DateInterval('P'.$infos['delai-observation'].'D'));
+                $infos['limite-observation'] = $date;
+            }
 
             if ($entretien AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) {
                 $urlService = $this->getUrlService();

@@ -23,7 +23,7 @@ $estDepasseObservation = ($entretien and (new DateTime() >= $infos['limite-obser
 ?>
 
 <?php if ($campagne !== null) : ?>
-    <div class="card">
+    <div class="card" id="aide-agent-campagne">
         <div class="card-header bg-default">
             Campagne d'entretien professionnelle <?php echo $campagne->getAnnee(); ?>
         </div>
@@ -65,10 +65,8 @@ $estDepasseObservation = ($entretien and (new DateTime() >= $infos['limite-obser
                     <div class="row">
                         <div class="col-md-1"><span class="icon icon-attention"></span></div>
                         <div class="col-md-11">
-                            <strong>Vous n'avez pas encore d'entretien professionnel de planifier pour cette
-                                campagne.</strong><br>
-                            Une de vos supérieur·es hiérarchiques direct·es vous proposera une date dans les prochaines
-                            semaines.
+                            <strong>Vous n'avez pas encore d'entretien professionnel de planifié pour cette campagne.</strong><br>
+                            Une de vos supérieur·es hiérarchiques direct·es vous proposera une date prochainement.
                         </div>
                     </div>
                 </div>
@@ -93,7 +91,8 @@ $estDepasseObservation = ($entretien and (new DateTime() >= $infos['limite-obser
                         vous fournissant un lien pour accepter les dates de votre entretien.
                         <br>
                         Vous pouvez-aussi accepter celui-ci en cliquant sur le lien suivant : <a
-                                href="<?php echo $infos['url-acceptation']; ?>" class="ajax-modal" data-event="modification"> lien d'acception de
+                                href="<?php echo $infos['url-acceptation']; ?>" class="ajax-modal"
+                                data-event="modification"> lien d'acception de
                             l'entretien professionnel </a>
                     </div>
                 <?php endif; ?>
@@ -103,7 +102,9 @@ $estDepasseObservation = ($entretien and (new DateTime() >= $infos['limite-obser
                         Vous avez accepté votre entretien professionnel.
                         <br>
                         <strong>Prochain étape :</strong>
-                        vous avez jusqu'à votre entretien pour préparer et pré-saisir les compte-rendus.
+                        vous avez jusqu'à votre entretien pour préparer et pré-saisir les compte-rendus : <a
+                                href="<?php echo $infos['url-entretien']; ?>" target="_blank"> lien vers
+                            l'entretien professionnel </a>.
                         <br>
                         <span class="icon icon-attention"></span> Une fois l'entretien commencé seul le responsable de l'entretien pourra modifier celui-ci.
                     <?php else: ?>
@@ -164,9 +165,14 @@ $estDepasseObservation = ($entretien and (new DateTime() >= $infos['limite-obser
 
 <script>
     $(function () {
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
+        $(document).on('hide.bs.modal', '.modal', function () {
+            window.parent.location.reload();
         });
     });
 </script>
+
+<style>
+    div#aide-agent-campagne{
+        margin-bottom: 1rem;
+    }
+</style>
