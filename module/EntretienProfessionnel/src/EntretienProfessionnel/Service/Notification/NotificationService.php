@@ -178,8 +178,21 @@ class NotificationService extends \Application\Service\Notification\Notification
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ENVOI, $vars);
+        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
+        return $mail;
+    }
+
+    public function triggerEnvoiRendezVous(EntretienProfessionnel $entretien): ?Mail
+    {
+        $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_INVITATION, $vars);
         $ics = $this->getIcsService()->generateInvitation($entretien);
-        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel', $ics);
+        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(), 'EntretienProfessionnel', $ics);
         if ($mail) {
             $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);

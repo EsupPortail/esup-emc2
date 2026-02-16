@@ -368,7 +368,7 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->restore($entretien);
-        $this->getNotificationService()->triggerConvocationDemande($entretien);
+        //$this->getNotificationService()->triggerConvocationDemande($entretien);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
@@ -602,6 +602,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
             $this->getEntretienProfessionnelService()->update($entretien);
 
+            $this->getNotificationService()->triggerEnvoiRendezVous($entretien);
             $this->getNotificationService()->triggerConvocationAcceptation($entretien);
         }
 
