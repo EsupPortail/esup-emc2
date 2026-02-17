@@ -7,13 +7,14 @@
 
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FicheMetier\Entity\Db\MissionElement;
 
 $fichemetier = $fiche->getFicheType();
 $ficheposte = $fiche->getFichePoste();
 
 $agent = $ficheposte->getAgent();
 
-$activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->getActivites());
+$activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->getMissions());
 ?>
 
 <div class="card panel-info">
@@ -67,6 +68,10 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
         <?php
             //TODO retirer les missions retirées
             $missions  = $fichemetier->getMissions();
+            $missionsConservees = $fiche->getMissions()?explode(";",$fiche->getMissions()):[];
+            $missions = array_filter($missions, function (MissionElement $mission) use ($missionsConservees) {
+                return in_array($mission->getMission()->getId(), $missionsConservees);
+            });
         ?>
         <?php if (!empty($missions)) : ?>
             <h3> Missions </h3>

@@ -195,7 +195,7 @@ trait FichePosteMacroTrait {
             $texte .= " (".$supplement.")";
             $texte .= "</h3>";
 
-            $ids = explode(";",$ficheTypeExterne->getActivites());
+            $ids = explode(";",$ficheTypeExterne->getMissions());
             foreach ($ids as $id) {
                 foreach ($ficheMetier->getMissions() as $activiteType) {
                     $mission = $activiteType->getMission();
@@ -235,7 +235,7 @@ trait FichePosteMacroTrait {
             $texte .= " (".$supplement.")";
             $texte .= "</h3>";
 
-            $ids = explode(";",$ficheTypeExterne->getActivites());
+            $ids = explode(";",$ficheTypeExterne->getMissions());
             foreach ($ids as $id) {
                 $texte .= "<ul>";
                 foreach ($ficheMetier->getMissions() as $activiteType) {

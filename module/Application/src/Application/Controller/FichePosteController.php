@@ -499,7 +499,7 @@ class FichePosteController extends AbstractActionController
                     $tab[] = $mission->getMission()->getId();
                 }
                 $text = implode(";", $tab);
-                $ficheTypeExterne->setActivites($text);
+                $ficheTypeExterne->setMissions($text);
                 $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
             }
         }
@@ -583,7 +583,7 @@ class FichePosteController extends AbstractActionController
                 if ($value === 'on') $result[] = $key;
             }
             $result = implode(";", $result);
-            $ficheTypeExterne->setActivites($result);
+            $ficheTypeExterne->setMissions($result);
             $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
         }
 
