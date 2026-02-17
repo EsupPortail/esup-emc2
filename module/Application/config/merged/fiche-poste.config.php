@@ -127,6 +127,7 @@ return [
                         'modifier-fiche-metier',
                         'modifier-repartition',
                         'selectionner-activite',
+                        'selectionner-mission',
 
                         'selectionner-applications-retirees',
                         'selectionner-competences-retirees',
@@ -458,8 +459,19 @@ return [
                         'options' => [
                             'route' => '/selectionner-activite/:fiche-poste/:fiche-type-externe',
                             'defaults' => [
-                                'controller' => FichePosteController::class,
+                                /** @see FichePosteController::selectionnerActiviteAction() */
                                 'action' => 'selectionner-activite',
+                            ],
+                        ],
+                    ],
+                    'selectionner-mission' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route' => '/selectionner-mission/:fiche-poste/:fiche-type-externe',
+                            'defaults' => [
+                                /** @see FichePosteController::selectionnerMissionAction() */
+                                'action' => 'selectionner-mission',
                             ],
                         ],
                     ],

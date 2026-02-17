@@ -567,7 +567,8 @@ class FichePosteController extends AbstractActionController
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fichePoste->getId()], [], true);
     }
 
-    public function selectionnerActiviteAction(): ViewModel
+
+    public function selectionnerMissionAction(): ViewModel
     {
         $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this);
         $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
@@ -584,6 +585,33 @@ class FichePosteController extends AbstractActionController
             }
             $result = implode(";", $result);
             $ficheTypeExterne->setMissions($result);
+            $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
+        }
+
+        return new ViewModel([
+            'title' => 'Liste des missions de la fiche métier <br/> <strong>' . $ficheTypeExterne->getFicheType()->getLibelle() . '</strong>',
+            'fichePoste' => $fichePoste,
+            'ficheTypeExterne' => $ficheTypeExterne,
+        ]);
+    }
+
+    public function selectionnerActiviteAction(): ViewModel
+    {
+        $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this);
+        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
+        $ficheTypeExterne = $this->getFichePosteService()->getFicheTypeExterne($ficheTypeExterneId);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            $result = [];
+            foreach ($data as $key => $value) {
+                if ($value === 'on') $result[] = $key;
+            }
+            $result = implode(";", $result);
+            $ficheTypeExterne->setActivites($result);
             $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
         }
 

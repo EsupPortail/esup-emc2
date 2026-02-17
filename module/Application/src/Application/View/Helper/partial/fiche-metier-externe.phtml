@@ -7,6 +7,7 @@
 
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\MissionElement;
 
 $fichemetier = $fiche->getFicheType();
@@ -57,16 +58,24 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
         <?php endif; ?>
     </div>
     <div class="card-body">
-<!--        --><?php //if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
-<!--            --><?php ///** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
-<!--            <a href="--><?php //echo $this->url("fiche-poste/selectionner-activite", ["fiche-poste" => $ficheposte->getId(), "fiche-type-externe" => $fiche->getId()], [], true); ?><!--"-->
-<!--               class="ajax-modal btn btn-primary" data-event="modification"-->
-<!--            >-->
-<!--                Sélectionner des activités-->
-<!--            </a>-->
-<!--        --><?php //endif; ?>
+
+        <div class="row">
+            <div class="col-md-8">
+                <h3> Missions </h3>
+            </div>
+            <div class="col-md-4">
+            <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+                <?php /** @see \Application\Controller\FichePosteController::selectionnerMissionAction() */ ?>
+                <a href="<?php echo $this->url("fiche-poste/selectionner-mission", ["fiche-poste" => $ficheposte->getId(), "fiche-type-externe" => $fiche->getId()], [], true); ?>"
+                   class="float-end ajax-modal btn btn-primary" data-event="modification"
+                >
+                    Sélectionner des missions
+                </a>
+            <?php endif; ?>
+            </div>
+        </div>
+
         <?php
-            //TODO retirer les missions retirées
             $missions  = $fichemetier->getMissions();
             $missionsConservees = $fiche->getMissions()?explode(";",$fiche->getMissions()):[];
             $missions = array_filter($missions, function (MissionElement $mission) use ($missionsConservees) {
@@ -74,24 +83,45 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
             });
         ?>
         <?php if (!empty($missions)) : ?>
-            <h3> Missions </h3>
             <ul>
             <?php foreach ($missions as $mission) : ?>
                 <li><?php echo $mission->getMission()->getLibelle(); ?></li>
             <?php endforeach; ?>
             </ul>
+        <?php else: ?>
+            <span class="missing-data">Aucune mission</span>
         <?php endif; ?>
 
         <?php
-            //TODO retirer les activités retirées
-            $activites  = $fichemetier->getActivites(); ?>
+            $activites  = $fichemetier->getActivites();
+            $activitesConservees = $fiche->getActivites()?explode(";",$fiche->getActivites()):[];
+            $activites = array_filter($activites, function (ActiviteElement $activite) use ($activitesConservees) {
+                return in_array($activite->getActivite()->getId(), $activitesConservees);
+            });
+        ?>
+        <div class="row">
+            <div class="col-md-8">
+                <h3> Activités </h3>
+            </div>
+            <div class="col-md-4">
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+                    <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
+                    <a href="<?php echo $this->url("fiche-poste/selectionner-activite", ["fiche-poste" => $ficheposte->getId(), "fiche-type-externe" => $fiche->getId()], [], true); ?>"
+                       class="float-end ajax-modal btn btn-primary" data-event="modification"
+                    >
+                        Sélectionner des activités
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
         <?php if (!empty($activites)) : ?>
-            <h3> Activités </h3>
             <ul>
                 <?php foreach ($activites as $activite) : ?>
                     <li><?php echo $activite->getActivite()->getLibelle(); ?></li>
                 <?php endforeach; ?>
             </ul>
+        <?php else: ?>
+            <span class="missing-data">Aucune activité</span>
         <?php endif; ?>
     </div>
 </div>

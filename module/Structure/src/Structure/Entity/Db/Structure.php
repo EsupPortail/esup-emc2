@@ -319,7 +319,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, HasContac
     {
         $structure = $this;
         $texte = "";
-        if ($structure->getRepriseResumeMere()) {
+        if ($structure->getRepriseResumeMere() AND $structure !== $structure->getParent()) {
             $texte .= $structure->getParent()->toStringResume();
         }
         if ($structure->getDescription() !== null and trim($structure->getDescription() !== '')) {

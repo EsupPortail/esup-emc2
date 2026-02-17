@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @see \Application\Controller\FichePosteController::selectionnerActiviteAction()
+ * @see \Application\Controller\FichePosteController::selectionnerMissionAction()
  * @var FichePoste $fichePoste
  * @var FicheTypeExterne $ficheTypeExterne
  */
@@ -9,25 +9,25 @@
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 
-$idActivites = explode(";",$ficheTypeExterne->getActivites()??"");
+$idActivites = explode(";",$ficheTypeExterne->getMissions()??"");
 ?>
 
 <span id="tous_cocher" class="faux-bouton action">   Tous cocher</span>
 <span id="tous_decocher" class="faux-bouton action"> Tous décocher</span>
 
-<form method="post" action="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true); ?>">
+<form method="post" action="<?php echo $this->url('fiche-poste/selectionner-mission', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true); ?>">
 
-    <?php $activites = $ficheTypeExterne->getFicheType()->getActivites() ; ?>
-    <?php foreach ($activites as $activite) : ?>
+    <?php $missions = $ficheTypeExterne->getFicheType()->getMissions() ; ?>
+    <?php foreach ($missions as $mission) : ?>
         <div class="form-group">
             <div class="checkbox">
                 <label>
                     <input type="checkbox"
-                           id="<?php echo $activite->getActivite()->getId(); ?>"
-                           name="<?php echo $activite->getActivite()->getId(); ?>"
-                           <?php if (in_array($activite->getActivite()->getId(), $idActivites)) echo " checked "; ?>
+                           id="<?php echo $mission->getMission()->getId(); ?>"
+                           name="<?php echo $mission->getMission()->getId(); ?>"
+                           <?php if (in_array($mission->getMission()->getId(), $idActivites)) echo " checked "; ?>
                     >
-                    <?php echo $activite->getActivite()->getLibelle(); ?>
+                    <?php echo $mission->getMission()->getLibelle(); ?>
                 </label>
             </div>
     <?php endforeach; ?>

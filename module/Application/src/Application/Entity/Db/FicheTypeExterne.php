@@ -21,6 +21,8 @@ class FicheTypeExterne {
     private ?FicheMetier $ficheType = null;
     private ?int $quotite = null;
     private bool $estPrincipale = false;
+
+    private ?string $activites = null;
     // Liste des identifiants des missions conservées pour la fiche de poste
     private ?string $missions = null;
 
@@ -83,6 +85,16 @@ class FicheTypeExterne {
         $this->missions = $missions;
     }
 
+    public function getActivites(): ?string
+    {
+        return $this->activites;
+    }
+
+    public function setActivites(?string $activites): void
+    {
+        $this->activites = $activites;
+    }
+
     /**
      * @return FicheTypeExterne
      */
@@ -93,6 +105,7 @@ class FicheTypeExterne {
         $result->setQuotite($this->getQuotite());
         $result->setPrincipale($this->getPrincipale());
         $result->setMissions($this->getMissions());
+        $result->setActivites($this->getActivites());
         //todo clone la repartition
         return $result;
     }
