@@ -86,8 +86,9 @@ class FichePosteController extends AbstractActionController
         foreach ($fiches as $fiche) {
             if (isset($fiche['fiche_principale']) and $fiche['agent_id'] !== null and $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
             else {
-                if ($fiche['agent_id'] === null and $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
-                else $fichesIncompletes[] = $fiche;
+//                if ($fiche['agent_id'] === null and $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
+//                else
+                    $fichesIncompletes[] = $fiche;
             }
         }
 

@@ -24,6 +24,9 @@ $canAfficherEntretien = true;
     ); ?>
 
     <br/>
+
+    <?php if (isset($intranet) AND $intranet!== null AND trim($intranet) !== ''): ?>
     <div class="alert alert-info">
-        <span class="icon icon-attention"></span> Vous pouvez retrouvez sur l'intranet les documents vous permettant de préparer votre entretien : <?php echo $intranet; ?>.
+        <span class="icon icon-attention"></span> Vous pouvez retrouver sur l'intranet les documents vous permettant de préparer votre entretien : <?php echo $intranet; ?>.
     </div>
+    <?php endif; ?>
