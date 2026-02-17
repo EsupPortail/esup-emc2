@@ -185,6 +185,8 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
         </div>
     </div>
 
+
+
     <?php if ($principal) echo $this->ficheMetierExterne($principal, ['mode' => 'edition-fiche-poste']);  ?>
     <?php foreach ($fichesMetiers as $ficheType) : ?>
         <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'edition-fiche-poste']);  ?>

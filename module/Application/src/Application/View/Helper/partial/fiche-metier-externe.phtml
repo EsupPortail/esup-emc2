@@ -56,21 +56,37 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
         <?php endif; ?>
     </div>
     <div class="card-body">
-        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
-            <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
-            <a href="<?php echo $this->url("fiche-poste/selectionner-activite", ["fiche-poste" => $ficheposte->getId(), "fiche-type-externe" => $fiche->getId()], [], true); ?>"
-               class="ajax-modal btn btn-primary" data-event="modification"
-            >
-                Sélectionner des activités
-            </a>
-        <?php endif; ?>
+<!--        --><?php //if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+<!--            --><?php ///** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
+<!--            <a href="--><?php //echo $this->url("fiche-poste/selectionner-activite", ["fiche-poste" => $ficheposte->getId(), "fiche-type-externe" => $fiche->getId()], [], true); ?><!--"-->
+<!--               class="ajax-modal btn btn-primary" data-event="modification"-->
+<!--            >-->
+<!--                Sélectionner des activités-->
+<!--            </a>-->
+<!--        --><?php //endif; ?>
         <?php
-
-//            foreach ($fichemetier->getMissions() as $mission) {
-//                if (in_array("" . $mission->getMission()->getId(), $activitesConservees)) {
-//                    echo $this->activite($mission, $options['mode'], ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte]);
-//                }
-//            }
+            //TODO retirer les missions retirées
+            $missions  = $fichemetier->getMissions();
         ?>
+        <?php if (!empty($missions)) : ?>
+            <h3> Missions </h3>
+            <ul>
+            <?php foreach ($missions as $mission) : ?>
+                <li><?php echo $mission->getMission()->getLibelle(); ?></li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <?php
+            //TODO retirer les activités retirées
+            $activites  = $fichemetier->getActivites(); ?>
+        <?php if (!empty($activites)) : ?>
+            <h3> Activités </h3>
+            <ul>
+                <?php foreach ($activites as $activite) : ?>
+                    <li><?php echo $activite->getActivite()->getLibelle(); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
     </div>
 </div>
