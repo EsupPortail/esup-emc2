@@ -15,7 +15,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 <form method="post" action="<?php echo $url; ?>">
     <label for="activite"> Mission additionnelle : </label>
     <?php
-    /** @see  \Application\Controller\ActiviteController::rechercherActiviteAction() */
+    /** @see  \FicheMetier\Controller\MissionPrincipaleController::rechercherAction() */
     $structureF = new SearchAndSelect('activite');
     $structureF
         ->setAutocompleteSource($this->url('mission-principale/rechercher'))
