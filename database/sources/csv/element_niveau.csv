@@ -1,15 +1,16 @@
 'type';'libelle';'niveau';'description'
-Application,Apprenti,2,null
-Competence,Expert,5,null
-Application,Confirmé,4,null
-Contexte et environnement de travail,Modéré·e,2,null
-Contexte et environnement de travail,Aucun·e,0,null
-Application,Débutant,1,null
-Contexte et environnement de travail,Fort·e,3,null
-Competence,Confirmé,4,null
-Contexte et environnement de travail,Faible,1,null
-Application,Intermédiaire,3,null
-Application,Expert,5,null
-Competence,Débutant,1,null
-Competence,Apprenti,2,null
-Competence,Intermédiaire,3,null
+"Application","Débutant","1",null
+"Application","Apprenti","2",null
+"Application","Intermédiaire","3",null
+"Application","Confirmé","4",null
+"Application","Expert","5",null
+"Competence","Débutant","1",null
+"Competence","Expert","5",null
+"Competence","Confirmé","4",null
+"Competence","Intermédiaire","3",null
+"Competence","Apprenti","2",null
+"Contexte et environnement de travail","Faible","1",null
+"Contexte et environnement de travail","Aucun","0",null
+"Contexte et environnement de travail","Modéré","2",null
+"Contexte et environnement de travail","Fort","3",null
+
