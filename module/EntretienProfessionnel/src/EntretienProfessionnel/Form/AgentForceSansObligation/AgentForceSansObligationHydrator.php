@@ -19,7 +19,7 @@ class AgentForceSansObligationHydrator implements HydratorInterface {
         /** @var AgentForceSansObligation $object */
         $data = [
             'agentsearch'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
-            'structureseach'  => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
+            'structuresearch'  => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
             'campagne'  => ($object->getCampagne())?$object->getCampagne()->getId():null,
             'type'      => $object->getType(),
             'raison'    => $object->getRaison(),
