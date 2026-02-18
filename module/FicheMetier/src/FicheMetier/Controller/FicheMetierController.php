@@ -132,9 +132,11 @@ class FicheMetierController extends AbstractActionController
         foreach ($types as $type) {
             $dictionnaire[$type->getCode()] = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $types[$type->getCode()],true);
         }
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'fichespostes' => $fichespostes,
             'types' => $types,
             'emplois' => $emplois,
             'postes' => $postes,

@@ -15,6 +15,10 @@
         <field name="type"     column="type"     length="9999" />
         <field name="raison"   column="raison"     length="9999" nullable="true"/>
 
+        <many-to-one field="structure" target-entity="Structure\Entity\Db\Structure">
+            <join-column name="structure_id"/>
+        </many-to-one>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     />
         <field name="histoModification" type="datetime"                 column="histo_modification" />

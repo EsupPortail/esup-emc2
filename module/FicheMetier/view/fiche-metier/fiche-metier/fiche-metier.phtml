@@ -1,6 +1,7 @@
 <?php
 
 use Agent\Entity\Db\AgentPoste;
+use Application\Entity\Db\FichePoste;
 use Element\Entity\Db\CompetenceType;
 use EmploiRepere\Entity\Db\EmploiRepere;
 use FicheMetier\Entity\Db\ActiviteElement;
@@ -16,6 +17,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var CompetenceType[] $types
  * @var EmploiRepere[] $emplois
  * @var AgentPoste[] $postes
+ * @var FichePoste[] $fichespostes
  * @var array $competences
  * @var array $competencesSpecifiques
  * @var array $applications
@@ -116,7 +118,13 @@ foreach ($types as $type) {
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]) || $parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]->getValeur() !== "false") : ?>
         <?php echo $this->partial('partial/emploi-repere',   ['emplois' => $emplois, 'mode' => $mode ],  [], true); ?>
+<?php endif; ?>
+
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_INTITULE]) || $parametres[FicheMetierParametres::DISPLAY_INTITULE]->getValeur() !== "false") : ?>
         <?php echo $this->partial('partial/intitule-poste',   ['postes' => $postes, 'mode' => $mode ],  [], true); ?>
+<?php endif; ?>
+<?php if (!isset($parametres[FicheMetierParametres::DISPLAY_FICHEPOSTE]) || $parametres[FicheMetierParametres::DISPLAY_FICHEPOSTE]->getValeur() !== "false") : ?>
+        <?php echo $this->partial('partial/fiche-poste',   ['fichemetier' => $fiche, 'fichespostes' => $fichespostes, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>

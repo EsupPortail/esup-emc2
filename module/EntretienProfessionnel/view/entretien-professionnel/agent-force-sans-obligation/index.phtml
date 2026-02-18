@@ -48,6 +48,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
         <tr>
             <th> Agent·e </th>
             <th> Campagne </th>
+            <th> Structure </th>
             <th> Type </th>
             <th> Est justifiée </th>
             <th class="action"> Action </th>
@@ -58,6 +59,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
             <?php
                 $agent = $agentForceSansObligation->getAgent();
                 $campagne = $agentForceSansObligation->getCampagne();
+                $structure = $agentForceSansObligation->getStructure();
              ?>
         <tr class="<?php if ($agentForceSansObligation->estHistorise()) echo " historise "; ?>">
             <td data-order="<?php echo $agent->getNomUsuel()." ".$agent->getPrenom(); ?>">
@@ -66,6 +68,9 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
             </td>
             <td data-order="<?php echo $campagne->getAnnee(); ?>">
                 <?php echo $campagne->getAnnee(); ?>
+            </td>
+            <td>
+                <?php echo $structure?$structure->getLibelleLong():"Aucune"; ?>
             </td>
             <td>
                 <?php echo AgentForceSansObligation::FORCAGE_ARRAY[$agentForceSansObligation->getType()]; ?>
@@ -87,7 +92,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('entretien-professionnel/agent-avec-forcage/afficher', ['agent-force-sans-obligation' => $agentForceSansObligation->getId()], [], true); ?>"
-                       class="ajax-modal">
+                       class="ajax-modal action secondary">
                             <span class="icon icon-voir"></span>
                             Afficher
                     </a>
@@ -96,7 +101,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
                     <br>
                     <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('entretien-professionnel/agent-avec-forcage/modifier', ['agent-force-sans-obligation' => $agentForceSansObligation->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
+                       class="ajax-modal action primary" data-event="modification">
                         <span class="icon icon-editer"></span>
                         Modifier
                     </a>
@@ -106,14 +111,14 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
                     <?php if ($agentForceSansObligation->estNonHistorise()) : ?>
                         <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('entretien-professionnel/agent-avec-forcage/historiser', ['agent-force-sans-obligation' => $agentForceSansObligation->getId()], [], true); ?>"
-                           >
+                           class="action warning">
                             <span class="icon icon-historiser"></span>
                             Historiser
                         </a>
                     <?php else : ?>
                         <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::restaurerAction() */ ?>
                         <a href="<?php echo $this->url('entretien-professionnel/agent-avec-forcage/restaurer', ['agent-force-sans-obligation' => $agentForceSansObligation->getId()], [], true); ?>"
-                           >
+                           class="action warning" >
                             <span class="icon icon-restaurer"></span>
                             Restaurer
                         </a>
@@ -123,11 +128,9 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
                     <br>
                     <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('entretien-professionnel/agent-avec-forcage/supprimer', ['agent-force-sans-obligation' => $agentForceSansObligation->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="text-danger">
-                            <span class="icon icon-unchecked"></span>
-                            Supprimer
-                        </span>
+                       class="ajax-modal action danger" data-event="modification">
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
                     </a>
                 <?php endif; ?>
 

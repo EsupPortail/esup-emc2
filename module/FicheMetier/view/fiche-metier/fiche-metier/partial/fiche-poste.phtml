@@ -1,0 +1,73 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+use FicheMetier\Entity\Db\FicheMetier;
+use FichePoste\Provider\Privilege\FichePostePrivileges;
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var FichePoste[] $fichespostes
+ */
+
+?>
+
+
+<div class="card">
+    <div class="card-header bg-default">
+        <h2> Fiches de poste associées </h2>
+    </div>
+    <div class="card-body">
+        <?php if (empty($fichespostes)): ?>
+            Aucune fiche de poste active associée référençant cette fiche métier
+        <?php else : ?>
+
+            <table class="table table-condensed" id="fichespostes">
+                <thead>
+                <tr>
+                    <th data-type="string" class="col-md-6"> Agent </th>
+                    <th data-type="num" class="col-md-2"> Quotité </th>
+                    <th data-type="num" class="col-md-2"> État </th>
+                    <th class="col-md-2 action"> Action </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($fichespostes as $ficheposte) : ?>
+                    <tr>
+                        <td data-order="<?php echo $ficheposte?->getAgent()->getDenomination(); ?>"> <?php echo $ficheposte->getAgent()->getDenomination(true); ?> </td>
+                        <td> <?php echo $ficheposte->getQuotiteComposition($fichemetier); ?></td>
+                        <td data-order="<?php echo $ficheposte->getEtatActif()?->getType()->getOrdre(); ?>"> <?php echo $this->etatinstance($ficheposte->getEtatActif()); ?> </td>
+                        <td>
+                            <?php if ($this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_AFFICHER)): ?>
+                                <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-poste/afficher',['fiche-poste' => $ficheposte->getId()] ,[], true); ?>" class="action secondary"
+                                   target="_blank">
+                                    <span class="icon icon-voir"></span>
+                                    Afficher
+                                </a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <script>
+                $(document).ready(function() {
+                    $("table#fichespostes").DataTable( {
+                        'autoWidth' : false,
+                        'searching' : true,
+                        'info' : false,
+                        language: {
+                            url: '/js/datatables_fr.json'
+                        },
+                        columnDefs: [
+                            {targets: [2], orderable: false}
+                        ]
+                    });
+                });
+            </script>
+        <?php endif; ?>
+    </div>
+</div>
+
+

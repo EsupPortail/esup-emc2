@@ -43,6 +43,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     private ?int $nbi = null;
     private ?DateTime $finValidite = null;
 
+    /** @var FicheTypeExterne */
     private Collection $fichesMetiers;
     private Collection $descriptionsRetirees;
     private Collection $applicationsRetirees;
