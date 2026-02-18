@@ -16,10 +16,10 @@
  * @var FicheMetier[] $fiches
  */
 
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\Competence;
 use FicheMetier\Controller\ImportController;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use Referentiel\Entity\Db\Referentiel;
 
 $canFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));

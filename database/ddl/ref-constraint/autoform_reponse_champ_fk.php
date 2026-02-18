@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_autoform_champ',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'autoform_champ_id_uindex',
+    'index'       => 'autoform_champ_pk',
     'columns'     => [
         'champ' => 'id',
     ],

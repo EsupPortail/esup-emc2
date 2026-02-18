@@ -21,7 +21,6 @@ use Application\Form\Rifseep\RifseepHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceFactory;
@@ -186,14 +185,6 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
-
-                            'fiches' => [
-                                'label' => 'Gestion des fiches',
-                                'route' => 'fiche-metier',
-                                'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX),
-                                'order' => 2030,
-                                'dropdown-header' => true,
-                            ],
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
                                 'route' => 'fiche-poste',

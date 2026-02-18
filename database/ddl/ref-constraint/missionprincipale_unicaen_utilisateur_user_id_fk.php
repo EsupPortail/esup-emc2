@@ -5,11 +5,11 @@
 return [
     'schema'      => 'public',
     'name'        => 'missionprincipale_unicaen_utilisateur_user_id_fk',
-    'table'       => 'missionprincipale',
+    'table'       => 'missionprincipale_old',
     'rtable'      => 'unicaen_utilisateur_user',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',
-    'index'       => 'unicaen_utilisateur_user_pkey',
+    'index'       => 'user_pkey',
     'columns'     => [
         'histo_modificateur_id' => 'id',
     ],

@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_autoform_validation',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'validation_id_uindex',
+    'index'       => 'validation_pk',
     'columns'     => [
         'validation' => 'id',
     ],

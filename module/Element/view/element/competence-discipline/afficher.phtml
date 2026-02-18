@@ -6,11 +6,11 @@
  * @var FicheMetier[] $fichesMetiers
  */
 
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceDiscipline;
 use Element\Provider\Privilege\CompetencePrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 
 $canAfficherCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
 $canAfficherFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));

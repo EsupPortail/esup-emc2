@@ -495,6 +495,7 @@ return [
         'raw',
         'codes_emploi_type',
         'codes_fonction',
+        'synonymes',
     ],
     'element_competence_element'                         => [
         'id',
@@ -615,8 +616,6 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
         'date_en_poste',
-        'formulaire_crep_id',
-        'formulaire_cref_id',
     ],
     'entretienprofessionnel_critere_competence'          => [
         'id',
@@ -729,8 +728,8 @@ return [
         'lien_web',
         'lien_pdf',
         'niveau_carriere_id',
-        'categorie_id',
         'codes_emploi_type',
+        'expertise',
     ],
     'fichemetier_application'                            => [
         'fichemetier_id',
@@ -848,6 +847,7 @@ return [
         'quotite',
         'principale',
         'activites',
+        'missions',
     ],
     'ficheposte_fichemetier_domaine'                     => [
         'id',
@@ -867,6 +867,7 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'old_mission_id',
     ],
     'ficheposte_specificite'                             => [
         'id',
@@ -1054,6 +1055,7 @@ return [
         'reference',
         'codes_fonction',
         'description',
+        'old_id',
     ],
     'missionprincipale_activite'                         => [
         'id',
@@ -1672,6 +1674,7 @@ return [
         'reference',
         'codes_fiche_metier',
         'codes_fonction',
+        'old_id',
     ],
     'activite_application'                               => [
         'activite_id',
@@ -2529,6 +2532,7 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'fichemetier_id',
     ],
     'emploirepere_emploirepere'                          => [
         'id',
@@ -2565,6 +2569,50 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'fichemetier_id',
+    ],
+    'activite_old'                                       => [
+        'id',
+        'histo_creation',
+        'histo_modification',
+        'histo_destruction',
+        'histo_createur_id',
+        'histo_modificateur_id',
+        'histo_destructeur_id',
+        'niveaux_id',
+        'referentiel_id',
+        'reference',
+    ],
+    'fichemetier_activite_old'                           => [
+        'id',
+        'fiche_id',
+        'activite_id',
+        'position',
+    ],
+    'fichemetier_code_emploitype'                        => [
+        'id',
+        'fichemetier_id',
+        'fonction_code',
+        'complement',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+    ],
+    'missionprincipale_old'                              => [
+        'id',
+        'libelle',
+        'niveau_id',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+        'referentiel_id',
+        'reference',
     ],
 ];
 

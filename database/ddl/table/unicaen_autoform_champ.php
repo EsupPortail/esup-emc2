@@ -50,7 +50,7 @@ return [
             'name'        => 'element',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
-            'length'      => 64,
+            'length'      => 256,
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,

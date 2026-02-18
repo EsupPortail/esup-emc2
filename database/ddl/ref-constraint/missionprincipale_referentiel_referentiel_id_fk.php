@@ -5,7 +5,7 @@
 return [
     'schema'      => 'public',
     'name'        => 'missionprincipale_referentiel_referentiel_id_fk',
-    'table'       => 'missionprincipale',
+    'table'       => 'missionprincipale_old',
     'rtable'      => 'referentiel_referentiel',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',

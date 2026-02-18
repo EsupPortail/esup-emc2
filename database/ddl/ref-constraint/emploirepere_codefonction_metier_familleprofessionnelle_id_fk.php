@@ -8,7 +8,7 @@ return [
     'table'       => 'emploirepere_codefonction',
     'rtable'      => 'metier_familleprofessionnelle',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'CASCADE',
+    'delete_rule' => 'NO ACTION',
     'index'       => 'metier_famille_pk',
     'columns'     => [
         'famille_professionnelle_id' => 'id',
