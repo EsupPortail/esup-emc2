@@ -558,29 +558,50 @@ class Agent implements
 
     /** SANS OBLIGATION ***********************************************************************************************/
 
-    public function isForceExclus(Campagne $campagne): bool
+    /**
+     * @var Campagne $campagne
+     * @var ?Structure[] $structures
+     * @return bool
+     */
+    public function isForceExclus(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_EXCLUS) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_EXCLUS) {
+                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+            }
         }
         return false;
     }
 
-    public function isForceSansObligation(Campagne $campagne): bool
+    /**
+     * @var Campagne $campagne
+     * @var ?Structure[] $structures
+     * @return bool
+     */
+    public function isForceSansObligation(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_SANS_OBLIGATION) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_SANS_OBLIGATION) {
+                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+            }
         }
         return false;
     }
 
-    public function isForceAvecObligation(Campagne $campagne): bool
+    /**
+     * @var Campagne $campagne
+     * @var ?Structure[] $structures
+     * @return bool
+     */
+    public function isForceAvecObligation(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_AVEC_OBLIGATION) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_AVEC_OBLIGATION) {
+                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+            }
         }
         return false;
     }

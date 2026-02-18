@@ -319,14 +319,14 @@ class CampagneService
             $raison[$agent->getId()] = "<ul>";
 
             // EXLCUSION ///////////////////////////////////////////////////////////////////////////////////////////////
-            if ($agent->isForceExclus($campagne)) {
+            if ($agent->isForceExclus($campagne, $structures)) {
                 continue;
             }
 
             /** NOTE À PROPOS DU FORCAGE ET DES REGLES D'EXCLUSION
              * On priorise ici le forçage ; on shinte les exclusions si il y a forçage.
              */
-            if (!$agent->isForceAvecObligation($campagne)) {
+            if (!$agent->isForceAvecObligation($campagne, $structures)) {
                 // Exclusion CORPS //
                 $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateEnPoste());
                 if ($result[0] === true) continue;
@@ -348,7 +348,7 @@ class CampagneService
 
             // FILTRAGE ////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if ($agent->isForceSansObligation($campagne)) {
+            if ($agent->isForceSansObligation($campagne, $structures)) {
                 $raison[$agent->getId()] .= "<li>Forcé·e sans obligation</li>";
                 $kept = false;
             }
@@ -394,7 +394,7 @@ class CampagneService
                 $raison[$agent->getId()] .= "<li>Corps invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
             }
 
-            if ($agent->isForceAvecObligation($campagne)) {
+            if ($agent->isForceAvecObligation($campagne, $structures)) {
                 $raison[$agent->getId()] .= "<li>Forcé·e avec obligation</li>";
                 $kept = true;
             }
