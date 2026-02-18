@@ -6,9 +6,9 @@
  * @var string $mode
  */
 
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 
 $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 ?>

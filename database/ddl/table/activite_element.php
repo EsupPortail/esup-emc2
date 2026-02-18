@@ -34,6 +34,18 @@ return [
             'position'    => 3,
             'commentaire' => NULL,
         ],
+        'fichemetier_id'        => [
+            'name'        => 'fichemetier_id',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 11,
+            'commentaire' => 'sert pour la reprise de données (peut être supprimée par la suite)',
+        ],
         'histo_createur_id'     => [
             'name'        => 'histo_createur_id',
             'type'        => 'int',

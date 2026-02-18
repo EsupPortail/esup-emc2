@@ -418,7 +418,7 @@ EOS;
                 }
 
                 //provenant des activités
-                $keptActivites = explode(";", $fichemetiertype->getActivites());
+                $keptActivites = explode(";", $fichemetiertype->getMissions());
             }
         }
 
@@ -493,7 +493,7 @@ EOS;
         /** Recuperation des fiches metiers */
         foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
-            $activitesId = explode(';', $ficheTypeExterne->getActivites());
+            $activitesId = explode(';', $ficheTypeExterne->getMissions());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
                 $dictionnaire[$id]["object"] = $metierTypeActivite;
@@ -519,7 +519,7 @@ EOS;
         foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $fichesMetiers[] = $ficheMetier;
-            $activitesId = explode(';', $ficheTypeExterne->getActivites());
+            $activitesId = explode(';', $ficheTypeExterne->getMissions());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
                 if (in_array($id, $activitesId)) {
@@ -565,7 +565,7 @@ EOS;
         foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $fichesMetiers[] = $ficheMetier;
-            $activitesId = explode(';', $ficheTypeExterne->getActivites());
+            $activitesId = explode(';', $ficheTypeExterne->getMissions());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
                 if (in_array($id, $activitesId)) {

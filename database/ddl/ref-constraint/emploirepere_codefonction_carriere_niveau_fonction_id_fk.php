@@ -8,7 +8,7 @@ return [
     'table'       => 'emploirepere_codefonction',
     'rtable'      => 'carriere_niveau_fonction',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'CASCADE',
+    'delete_rule' => 'NO ACTION',
     'index'       => 'carriere_niveau_fonction_pk',
     'columns'     => [
         'niveau_fonction_id' => 'id',

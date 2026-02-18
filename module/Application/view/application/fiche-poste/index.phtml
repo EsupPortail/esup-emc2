@@ -7,9 +7,6 @@ use Application\Provider\Privilege\FichePostePrivileges;
 /**
  * @see FichePosteController::indexAction()
  * @var FichePoste[] $fiches
- * @var FichePoste[] $fichesIncompletes
- * @var FichePoste[] $fichesVides
- * @var FichePoste[] $fichesCompletes
  */
 
 $this->headTitle('Index des fiches de postes');
@@ -29,35 +26,8 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
 </h1>
 
 
-<h2>
-    Fiches complètes
-    <span class="badge">
-        <?php echo count($fichesCompletes); ?>
-    </span>
-</h2>
+<?php echo $this->fichesPostesAsArray($fiches, null, ['id' => 'fichescompletes']); ?>
 
-<?php echo $this->fichesPostesAsArray($fichesCompletes, null, ['id' => 'fichescompletes']); ?>
-
-<h2>
-    Fiches incomplètes
-    <span class="badge">
-        <?php echo count($fichesIncompletes); ?>
-    </span>
-</h2>
-
-<?php echo $this->fichesPostesAsArray($fichesIncompletes, null, ['id' => 'fichesincompletes']); ?>
-
-<h2>
-    Fiches vides
-    <span class="badge">
-        <?php echo count($fichesVides); ?>
-    </span>
-</h2>
-
-<?php echo $this->fichesPostesAsArray($fichesVides, null, ['id' => 'fichesvides']); ?>
-
-
-<?php $ficheId=791; ?>
 
 <script>
     function setActions(ficheId) {

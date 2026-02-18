@@ -1,13 +1,16 @@
 'role_id';'libelle';'case';'description'
-"Agent","Agent","t","null"
-"Responsable de structure","Responsable de structure","t","null"
-"Gestionnaire de structure","Gestionnaire de structure","t","null"
-"Observateur·trice de la structure","Observateur·trice (Structure)","t","Observateur·trice limité·e au périmètre d'une structrure"
-"Supérieur·e hiérarchique direct·e","Supérieur·e hiérarchique direct·e","t","null"
-"Autorité hiérarchique","Autorité hiérarchique","t","null"
+"Autorité hiérarchique","Autorité hiérarchique","t",""
 "Observateur·trice (Entretien Professionnel)","Observateur·trice (Entretien Professionnel)","t","Rôle permettant de visualiser des entretiens professionnels pour lesquels on a été nommé·e observateur·trice"
-"Administrateur·trice fonctionnel·le","Administrateur·trice fonctionnel·le","f","null"
-"Observateur·trice","Observateur·trice","f","null"
-"Directeur·trice des ressources humaines","Directeur·trice des ressources humaines","f","null"
-"Gestionnaire des entretiens professionnels","Gestionnaire des entretiens professionnels","f","null"
-"Administrateur·trice technique","Administrateur·trice technique","f","null"
+"Observateur·trice de la structure","Observateur·trice (Structure)","t","Observateur·trice limité·e au périmètre d'une structrure"
+"Délégué·e pour entretien professionnel","Délégué·e pour entretien professionnel","t",null
+"Administrateur·trice technique","Administrateur·trice technique","f",null
+"Supérieur·e hiérarchique direct·e","Supérieur·e hiérarchique direct·e","t",null
+"Observateur·trice (indicateurs)","Observateur·trice (indicateurs)","f",""
+"Gestionnaire des entretiens professionnels","Gestionnaire des entretiens professionnels","f",null
+"Gestionnaire de structure","Gestionnaire de structure","t",null
+"Agent","Agent","t",null
+"Observateur·trice","Observateur·trice","f",null
+"Administrateur·trice fonctionnel·le","Administrateur·trice fonctionnel·le","f",null
+"Responsable de structure","Responsable de structure","t",null
+"Directeur·trice des ressources humaines","Directeur·trice des ressources humaines","f",null
+

@@ -190,6 +190,18 @@ return [
             'position'    => 12,
             'commentaire' => NULL,
         ],
+        'synonymes'             => [
+            'name'        => 'synonymes',
+            'type'        => 'clob',
+            'bdd-type'    => 'text',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 18,
+            'commentaire' => NULL,
+        ],
         'theme_id'              => [
             'name'        => 'theme_id',
             'type'        => 'int',

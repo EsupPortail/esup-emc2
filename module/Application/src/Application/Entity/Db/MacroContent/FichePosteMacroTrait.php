@@ -6,6 +6,8 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceType;
+use FicheMetier\Entity\Db\ActiviteElement;
+use FicheMetier\Entity\Db\MissionElement;
 
 trait FichePosteMacroTrait {
 
@@ -184,37 +186,65 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
-        $descriptionsRetirees = array_map(function (FicheposteActiviteDescriptionRetiree $a) { return $a->getActivite()->getId(); }, $ficheposte->getDescriptionsRetirees());
 
-        $texte = "";
-        foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
-            $ficheMetier = $ficheTypeExterne->getFicheType();
-            $texte .= "<h3>";
-            $texte .= $ficheMetier->getLibelle();
-            $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
-            $texte .= " (".$supplement.")";
-            $texte .= "</h3>";
+        $texte = "<h3>Fiches métiers</h3>";
 
-            $ids = explode(";",$ficheTypeExterne->getActivites());
-            foreach ($ids as $id) {
-                foreach ($ficheMetier->getMissions() as $activiteType) {
-                    $mission = $activiteType->getMission();
-                    if ($mission->getId() === (int) $id) {
-                        $texte .= "<span class='activite-libelle'>". $mission->getLibelle() . "</span>";
-
-//                        $texte .= "<ul>";
-//                        foreach ($mission->getActivites() as $activite) {
-//                            if (!in_array($activite->getId(), $descriptionsRetirees)) {
-//                                $texte .= "<li>" . $activite->getLibelle() . "</li>";
-//                            }
-//                        }
-//                        $texte .= "</ul>";
-
-                        break;
-                    }
-                }
-            }
+        $texte .= "<ul>";
+        $fichesmetiers = $ficheposte->getFichesMetiers();
+        foreach ($fichesmetiers as $fichemetier) {
+            $texte .= "<li>";
+            $texte .= $fichemetier->getFicheType()->getLibelle() . " (".$fichemetier->getQuotite() ."%";
+            if ($fichemetier->getPrincipale()) $texte .= " - fiche métier principale";
+            $texte .= ")";
+            $texte .= "</li>";
         }
+        $texte .= "</ul>";
+
+        $texte .= "<h3>Missions</h3>";
+
+        $missions = [];
+        foreach ($fichesmetiers as $fichemetier) {
+            $missions_  = $fichemetier->getFicheType()->getMissions();
+            $missionsConservees = $fichemetier->getMissions()?explode(";",$fichemetier->getMissions()):[];
+            $missions_ = array_filter($missions_, function (MissionElement $mission) use ($missionsConservees) {
+                return in_array($mission->getMission()->getId(), $missionsConservees);
+            });
+            foreach ($missions_ as $mission) { $missions[] = $mission; }
+        }
+
+        if (empty($missions)) {
+            $texte .= "Aucune mission renseignée";
+        } else {
+            $texte .= "<ul>";
+            foreach ($missions as $mission) {
+                $texte .= "<li>".$mission->getMission()->getLibelle()."</li>";
+            }
+            $texte .= "</ul>";
+        }
+
+
+        $texte .= "<h3>Activités</h3>";
+
+        $activites = [];
+        foreach ($fichesmetiers as $fichemetier) {
+            $activites_  = $fichemetier->getFicheType()->getActivites();
+            $activitesConservees = $fichemetier->getActivites()?explode(";",$fichemetier->getActivites()):[];
+            $activites_ = array_filter($activites_, function (ActiviteElement $activite) use ($activitesConservees) {
+                return in_array($activite->getActivite()->getId(), $activitesConservees);
+            });
+            foreach ($activites_ as $activite) { $activites[] = $activite; }
+        }
+
+        if (empty($activites)) {
+            $texte .= "Aucune activité renseignée";
+        } else {
+            $texte .= "<ul>";
+            foreach ($activites as $activite) {
+                $texte .= "<li>".$activite->getActivite()->getLibelle()."</li>";
+            }
+            $texte .= "</ul>";
+        }
+
         return $texte;
     }
 
@@ -235,7 +265,7 @@ trait FichePosteMacroTrait {
             $texte .= " (".$supplement.")";
             $texte .= "</h3>";
 
-            $ids = explode(";",$ficheTypeExterne->getActivites());
+            $ids = explode(";",$ficheTypeExterne->getMissions());
             foreach ($ids as $id) {
                 $texte .= "<ul>";
                 foreach ($ficheMetier->getMissions() as $activiteType) {

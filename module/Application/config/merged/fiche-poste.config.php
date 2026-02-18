@@ -21,7 +21,6 @@ use Application\Form\Rifseep\RifseepHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceFactory;
@@ -127,6 +126,7 @@ return [
                         'modifier-fiche-metier',
                         'modifier-repartition',
                         'selectionner-activite',
+                        'selectionner-mission',
 
                         'selectionner-applications-retirees',
                         'selectionner-competences-retirees',
@@ -185,14 +185,6 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
-
-                            'fiches' => [
-                                'label' => 'Gestion des fiches',
-                                'route' => 'fiche-metier',
-                                'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX),
-                                'order' => 2030,
-                                'dropdown-header' => true,
-                            ],
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
                                 'route' => 'fiche-poste',
@@ -458,8 +450,19 @@ return [
                         'options' => [
                             'route' => '/selectionner-activite/:fiche-poste/:fiche-type-externe',
                             'defaults' => [
-                                'controller' => FichePosteController::class,
+                                /** @see FichePosteController::selectionnerActiviteAction() */
                                 'action' => 'selectionner-activite',
+                            ],
+                        ],
+                    ],
+                    'selectionner-mission' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route' => '/selectionner-mission/:fiche-poste/:fiche-type-externe',
+                            'defaults' => [
+                                /** @see FichePosteController::selectionnerMissionAction() */
+                                'action' => 'selectionner-mission',
                             ],
                         ],
                     ],

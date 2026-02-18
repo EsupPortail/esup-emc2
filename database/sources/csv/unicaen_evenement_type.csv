@@ -1,6 +1,8 @@
 'code';'libelle';'description';'parametres';'recursion'
-"rappel_entretienpro","Rappel de l'entretien professionnel","Rappel à J-4 de l'entretien professionnel","entretien","null"
+"rappel_entretienpro","Rappel de l'entretien professionnel","Rappel à J-4 de l'entretien professionnel","entretien",null
 "rappel_campagne","Rappel de l'avancement de la campagne","Mail envoyé périodiquement lors de la campagne aux responsables de structures pour leur rappeler l'état d'avancement de la campagne","campagne","P4W"
-"rappel_pas_observation_entretienpro","Rappel en cas où il n'y a pas d'observation","Rappel en cas où il n'y a pas d'observation","entretien","null"
+"rappel_pas_observation_entretienpro","Rappel en cas où il n'y a pas d'observation","Rappel en cas où il n'y a pas d'observation","entretien",null
+"RGPD_renderer","Nettoyage de la table des Rendus du module UnicaenRenderer","La table devient rapidement très lourde et doit être purgée des rendus  de plus de 1 mois.",null,"P1W"
+"rappel_info_structure","Rappel associé aux responsabilités des structures","Notification vers les structures de la liste des gestionnaires et responsables pour vérification",null,"P6M"
 "rappel_campagne_autorite","Rappel avancement campagne EP [Autorité hiérachique]","Rappel avancement campagne EP [Autorité hiérachique]","campagne","P4W"
-"rappel_campagne_superieur","Rappel avancement campagne EP [Supérieur·e hiérachique]","Rappel avancement campagne EP [Supérieur·e hiérachique]","campagne","P2W"
+"rappel_campagne_superieur","Rappel avancement campagne EP [Supérieur·e hiérachique]","Rappel avancement campagne EP [Supérieur·e hiérachique]","campagne","P4W"

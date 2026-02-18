@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @see \Application\Controller\FichePosteController::selectionnerActiviteAction()
  * @var FichePoste $fichePoste
  * @var FicheTypeExterne $ficheTypeExterne
  */
@@ -8,7 +9,7 @@
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 
-$idActivites = explode(";",$ficheTypeExterne->getActivites());
+$idActivites = explode(";",$ficheTypeExterne->getActivites()??"");
 ?>
 
 <span id="tous_cocher" class="faux-bouton action">   Tous cocher</span>
@@ -16,17 +17,17 @@ $idActivites = explode(";",$ficheTypeExterne->getActivites());
 
 <form method="post" action="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true); ?>">
 
-    <?php $missions = $ficheTypeExterne->getFicheType()->getMissions() ; ?>
-    <?php foreach ($missions as $mission) : ?>
+    <?php $activites = $ficheTypeExterne->getFicheType()->getActivites() ; ?>
+    <?php foreach ($activites as $activite) : ?>
         <div class="form-group">
             <div class="checkbox">
                 <label>
                     <input type="checkbox"
-                           id="<?php echo $mission->getMission()->getId(); ?>"
-                           name="<?php echo $mission->getMission()->getId(); ?>"
-                           <?php if (in_array($mission->getMission()->getId(), $idActivites)) echo " checked "; ?>
+                           id="<?php echo $activite->getActivite()->getId(); ?>"
+                           name="<?php echo $activite->getActivite()->getId(); ?>"
+                           <?php if (in_array($activite->getActivite()->getId(), $idActivites)) echo " checked "; ?>
                     >
-                    <?php echo $mission->getMission()->getLibelle(); ?>
+                    <?php echo $activite->getActivite()->getLibelle(); ?>
                 </label>
             </div>
     <?php endforeach; ?>

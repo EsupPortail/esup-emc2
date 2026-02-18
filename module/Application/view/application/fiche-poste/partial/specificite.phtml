@@ -63,9 +63,11 @@ $date = new DateTime();
                 </div>
             </div>
 
+            <ul>
             <?php foreach ($missionsAdditionnelles as $missionAdditionnelle) : ?>
                 <?php echo $this->specificiteActivite($missionAdditionnelle, ['fiche' => $fiche, 'mode' => $mode]); ?>
             <?php endforeach; ?>
+            </ul>
         <?php endif; ?>
 
     </div>

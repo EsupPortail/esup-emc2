@@ -24,90 +24,17 @@ $agent = $missionAdditionnelle->getFicheposte()->getAgent();
 $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent):null;
 ?>
 
-<div class="card">
-    <div class="card-header delta_<?php echo $delta; ?>">
-        <div class="row">
-            <div class="col-md-9">
-                <h3><?php echo $mission->getLibelle(); ?>
-                    <?php if ($delta AND $delta !== 0) : ?>
-                        <span class="icon icon-attention" title="Il existe un écart de <?php echo $delta; ?> niveau(x) entre l'agent et l'activité"></span>
-                    <?php endif; ?>
-                </h3>
-            </div>
-            <?php if($mode === 'edition') : ?>
-                <div class="col-md-3 action">
-                    <?php if ($canGererActivite) : ?>
-                        <?php /** @see \Application\Controller\SpecificiteController::gererActiviteAction() */ ?>
-                        <a href="<?php echo $this->url('specificite/gerer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon icon-listing"></span>
-                            Sélectionner des activités
-                        </a>
-                    <?php endif; ?>
-                    <br>
-                    <?php if ($canRetirerActivite) : ?>
-                        <?php /** @see \Application\Controller\SpecificiteController::retirerActiviteAction() */ ?>
-                        <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        >
+<li>
+    <?php echo $missionAdditionnelle->getMission()->getLibelle(); ?>
+    <?php if ($canRetirerActivite) : ?>
+        <?php /** @see \Application\Controller\SpecificiteController::retirerActiviteAction() */ ?>
+        <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>"
+           class="ajax-modal" data-event="modification"
+        >
                             <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
                             Retirer
                             </span>
-                        </a>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-        <br/>
-    </div>
-    <div class="card-body">
-        <div class="row">
-        <div class="col-md-8">
-            <div class="activite-description">
-                Description de l'activité :
-<!--                <ul>-->
-<!--                    --><?php //foreach ($activites as $activite) : ?>
-<!--                        --><?php //if (!isset($retraits[$activite->getId()])) : ?>
-<!--                            <li>-->
-<!--                                --><?php //echo $activite->getLibelle(); ?>
-<!--                            </li>-->
-<!--                        --><?php //endif; ?>
-<!--                    --><?php //endforeach; ?>
-<!--                </ul>-->
-            </div>
-        </div>
-        <div class="col-md-4" style="margin-top: 0.5rem;">
-
-            <?php
-//                $metiers = [];
-//                foreach ($mission->getListeFicheMetier() as $ficheMetier) {
-//                    $metier = $ficheMetier->getFicheMetier()->getMetier();
-//                    $metiers[$metier->getId()] = $metier;
-//                }
-            ?>
-            <div class="card panel-default">
-                <div class="card-header">
-                    Métiers associés
-                </div>
-                <div class="card-body">
-                    <?php $count = 0; ?>
-                    <ul>
-<!--                        --><?php //foreach ($metiers as $metier) : ?>
-<!--                            <li>-->
-<!--                                --><?php //$count++; ?>
-<!--                                --><?php //echo $metier->getLibelle(); ?>
-<!--                                --><?php //foreach ($metier->getReferences() as $reference) : ?>
-<!--                                    <span class="badge" style="background-color: #dfc4b2"><a href="--><?php //echo $reference->getUrl(); ?><!--"> --><?php //echo $reference->getTitre(); ?><!-- </a></span>-->
-<!--                                --><?php //endforeach; ?>
-<!--                            </li>-->
-<!--                        --><?php //endforeach; ?>
-<!--                        --><?php //if ($count === 0) echo "Aucun"; ?>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-</div>
+        </a>
+    <?php endif; ?>
+</li>

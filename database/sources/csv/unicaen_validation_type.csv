@@ -6,3 +6,5 @@
 "ENTRETIEN_AGENT","Validation de l'agent d'un entretien professionnel","false"
 "ENTRETIEN_HIERARCHIE","Validation de la DRH d'un entretien professionnel","false"
 "ENTRETIEN_OBSERVATION","Validation des observations","false"
+
+
