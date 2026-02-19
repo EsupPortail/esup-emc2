@@ -45,7 +45,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
     /** @var FicheTypeExterne */
     private Collection $fichesMetiers;
-    private Collection $descriptionsRetirees;
     private Collection $applicationsRetirees;
     private Collection $competencesRetirees;
     private Collection $missionsAdditionnelles;
@@ -58,7 +57,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function __construct()
     {
         $this->fichesMetiers = new ArrayCollection();
-        $this->descriptionsRetirees = new ArrayCollection();
         $this->applicationsRetirees = new ArrayCollection();
         $this->competencesRetirees = new ArrayCollection();
         $this->missionsAdditionnelles = new ArrayCollection();
@@ -205,40 +203,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         $this->codeFonction = $codeFonction;
     }
 
-
-    /** Descriptions Retirées ******************************************************************************************/
-
-    /** @return FicheposteActiviteDescriptionRetiree[] */
-    public function getDescriptionsRetirees(): array
-    {
-        return $this->descriptionsRetirees->toArray();
-    }
-
-    public function getDescriptionsRetireesByFicheMetierAndActivite(FicheMetier $fichemetier, Mission $activite): array
-    {
-        $result = [];
-        foreach ($this->getDescriptionsRetirees() as $descriptionsRetiree) {
-            if ($descriptionsRetiree->getFicheMetier() === $fichemetier and $descriptionsRetiree->getMission() === $activite) {
-                $result[] = $descriptionsRetiree;
-            }
-        }
-        return $result;
-    }
-
-    public function addDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description): void
-    {
-        $this->descriptionsRetirees->add($description);
-    }
-
-    public function removeDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description): void
-    {
-        $this->descriptionsRetirees->removeElement($description);
-    }
-
-    public function clearDescriptionsRetirees(): void
-    {
-        $this->descriptionsRetirees->clear();
-    }
 
     /** Competences Retirées ******************************************************************************************/
 

@@ -22,8 +22,6 @@ use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
 use Application\Provider\Privilege\FichePostePrivileges;
-use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
-use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceFactory;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceFactory;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
@@ -131,7 +129,6 @@ return [
                         'selectionner-applications-retirees',
                         'selectionner-competences-retirees',
                         'selectionner-formations-retirees',
-                        'selectionner-descriptions-retirees',
 
                         'modifier-code-fonction',
                     ],
@@ -521,18 +518,6 @@ return [
                             ],
                         ],
                     ],
-                    'selectionner-descriptions-retirees' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route' => '/selectionner-descriptions-retirees/:fiche-poste/:fiche-metier/:mission-principale',
-                            'defaults' => [
-                                /** @see FichePosteController::selectionnerDescriptionsRetireesAction() */
-                                'controller' => FichePosteController::class,
-                                'action' => 'selectionner-descriptions-retirees',
-                            ],
-                        ],
-                    ],
                 ],
             ],
         ],
@@ -542,7 +527,6 @@ return [
         'factories' => [
             FichePosteAssertion::class => FichePosteAssertionFactory::class,
 
-            ActivitesDescriptionsRetireesService::class => ActivitesDescriptionsRetireesServiceFactory::class,
             ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
             FichePosteService::class => FichePosteServiceFactory::class,
