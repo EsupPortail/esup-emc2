@@ -3,7 +3,6 @@
 namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceType;
 use FicheMetier\Entity\Db\ActiviteElement;

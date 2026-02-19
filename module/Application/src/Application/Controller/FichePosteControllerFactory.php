@@ -6,7 +6,6 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
-use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentPoste\AgentPosteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
@@ -64,7 +63,6 @@ class FichePosteControllerFactory
         $structureService = $container->get(StructureService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
-        $activitesDescriptionsRetireesService = $container->get(ActivitesDescriptionsRetireesService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -90,7 +88,6 @@ class FichePosteControllerFactory
 
         $controller = new FichePosteController();
 
-        $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesService);
         $controller->setAgentService($agentService);
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setAgentPosteService($agentPosteService);

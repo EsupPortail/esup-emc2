@@ -5,14 +5,12 @@ namespace Application\Controller;
 use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
-use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -51,7 +49,6 @@ class FichePosteController extends AbstractActionController
     /** Trait utilitaire */
 
     /** Service **/
-    use ActivitesDescriptionsRetireesServiceAwareTrait;
     use AgentServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use AgentPosteServiceAwareTrait;
@@ -704,56 +701,6 @@ class FichePosteController extends AbstractActionController
             'title' => "Sélection des compétences pour la fiche de poste",
             'ficheposte' => $ficheposte,
             'competences' => $competences,
-        ]);
-    }
-
-    /** Descriprition conservées **************************************************************************************/
-
-    public function selectionnerDescriptionsRetireesAction(): ViewModel
-    {
-        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
-
-        /**
-         * @var FicheposteActiviteDescriptionRetiree[] $retirees
-         */
-        $activites = $fichemetier->getActivites();
-        $retirees = $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $mission);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-
-            foreach ($activites as $description) {
-                $found = null;
-                foreach ($retirees as $retiree) {
-                    if ($retiree->getHistoDestruction() === null and $retiree->getActivite() === $description) {
-                        $found = $retiree;
-                    }
-                }
-                $checked = (isset($data[$description->getId()]) and $data[$description->getId()] === "on");
-
-                if ($found !== null and $checked) $this->getActivitesDescriptionsRetireesService()->delete($found);
-                if ($found === null and !$checked) {
-                    $item = new FicheposteActiviteDescriptionRetiree();
-                    $item->setFichePoste($ficheposte);
-                    $item->setFicheMetier($fichemetier);
-                    $item->setMission($mission);
-                    $this->getActivitesDescriptionsRetireesService()->create($item);
-                }
-            }
-            exit();
-        }
-
-        return new ViewModel([
-            'title' => "Sélection de sous-activité pour l'activité [" . $mission->getLibelle() . "]",
-            'ficheposte' => $ficheposte,
-            'fichemetier' => $fichemetier,
-            'mission' => $mission,
-            'activites' => $activites,
-            'retirees' => $retirees,
         ]);
     }
 
