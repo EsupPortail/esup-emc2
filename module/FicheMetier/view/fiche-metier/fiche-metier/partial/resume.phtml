@@ -99,38 +99,6 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-5"> Niveau de carrière </dt>
-    <dd class="col-md-7">
-        <?php if ($fichemetier->getNiveauCarriere() === null) : ?>
-            <span class="missing-data">Aucun niveau associé</span>
-        <?php else : ?>
-            <?php echo $fichemetier->getNiveauCarriere()->getLibelle(); ?>
-<!--            --><?php //if ($fichemetier->getNiveauCarriere()->getCategorie()): ?>
-<!--                (--><?php //echo $fichemetier->getNiveauCarriere()->getCategorie()->getLibelle(); ?><!--)-->
-<!--            --><?php //endif; ?>
-        <?php endif; ?>
-        <br> <!-- // todo : retirer ce br copium -->
-        <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
-            <?php /** @see FicheMetierController::modifierNiveauCarriereAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/modifier-niveau-carriere', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-               class="ajax-modal action primary" data-event="modification"
-            >
-                <small>
-                    <span class="icon icon-editer"></span>
-                    Modifier
-                </small>
-            </a>
-            <?php /** @see FicheMetierController::supprimerNiveauCarriereAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/supprimer-niveau-carriere', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-               class="action danger"
-            >
-                <small>
-                    <span class="icon icon-unchecked"></span>
-                    Supprimer
-                </small>
-            </a>
-        <?php endif; ?>
-    </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-5"> Code Fonction</dt>
         <dd class="col-md-7">
