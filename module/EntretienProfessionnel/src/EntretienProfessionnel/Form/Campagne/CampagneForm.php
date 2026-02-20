@@ -106,6 +106,22 @@ class CampagneForm extends Form
                 'id'                => 'date_en_poste',
             ]
         ]);
+        //DEBUT (DATE)
+        $this->add([
+            'name' => 'date_fixe',
+            'type' => Date::class,
+            'options' => [
+                'label' => "Date fixante <span class='icon icon-information' title=\"Si renseigné les affectations et les responsabilités seront considérées à cette date plutôt que sur la période de la campagne.\"></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+//                'format' => 'd/m/Y'
+            ],
+            'attributes' => [
+                'id'                => 'date_fixe',
+            ]
+        ]);
         //PRECEDE (SELECT)
         $this->add([
             'name' => 'precede',
@@ -185,6 +201,7 @@ class CampagneForm extends Form
             'date_debut' => [  'required' => true,   ],
             'date_fin' =>   [  'required' => true,   ],
             'date_en_poste' =>   [  'required' => true,   ],
+            'date_fixe' =>   [  'required' => false,   ],
             'date_circulaire' =>   [  'required' => false,   ],
             'precede' =>    [  'required' => false,  ],
             'formulaire_crep' =>    [  'required' => true,  ],

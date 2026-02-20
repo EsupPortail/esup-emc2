@@ -105,6 +105,14 @@ foreach ($entretiens as $etat => $liste) {
                             -
                         <?php endif; ?>
                     </dd>
+                    <dt class="col-md-4"> Date fixante </dt>
+                    <dd class="col-md-8">
+                        <?php if ($campagne->getDateFixe()) : ?>
+                            <?php echo $campagne->getDateFixe()->format('d/m/y'); ?>
+                        <?php else : ?>
+                            -
+                        <?php endif; ?>
+                    </dd>
                 </dl>
             </div>
         </div>

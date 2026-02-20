@@ -178,9 +178,9 @@ class EntretienProfessionnelController extends AbstractActionController
             return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien-professionnel" => $entretien->getId()], [], true);
         }
 
-        $superieurs = array_map(function (AgentSuperieur $a) {
+        $superieurs = array_map(function (AgentSuperieur $a) use ($campagne) {
             return $a->getSuperieur();
-        }, $agent->getSuperieurs());
+        }, $agent->getSuperieurs($campagne->getDateFixe()));
         $entretien = new EntretienProfessionnel();
         $entretien->setCampagne($campagne);
         $entretien->setAgent($agent);

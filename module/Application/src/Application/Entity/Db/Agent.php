@@ -781,7 +781,7 @@ class Agent implements
     /** AUTORITES ET SUPERIEURS *****************************************************************************/
 
     /** @return AgentAutorite[] */
-    public function getAutorites(bool $histo = false): array
+    public function getAutorites(?Datetime $date = null, bool $histo = false): array
     {
         /** @var AgentAutorite[] $result */
         $result = $this->autorites->toArray();
@@ -808,7 +808,7 @@ class Agent implements
     }
 
     /** @return AgentSuperieur[] */
-    public function getSuperieurs(bool $histo = false): array
+    public function getSuperieurs(?DateTime $date = null, bool $histo = false): array
     {
         /** @var AgentSuperieur[] $result */
         $result = $this->superieurs->toArray();
@@ -822,12 +822,12 @@ class Agent implements
                 ($a->getSourceId() !== "EMC2")
             );
         });
-        $result = array_filter($result, function (AgentSuperieur $a) {
-            return $a->estEnCours();
+        $result = array_filter($result, function (AgentSuperieur $a) use ($date){
+            return $a->estEnCours($date);
         });
         if ($histo === false) {
-            $result = array_filter($result, function (AgentSuperieur $a) {
-                return $a->estNonHistorise();
+            $result = array_filter($result, function (AgentSuperieur $a) use ($date) {
+                return $a->estNonHistorise($date);
             });
         }
         return $result;

@@ -13,6 +13,7 @@
         <field name="dateFin" column="date_fin" type="datetime"/>
         <field name="dateCirculaire" column="date_circulaire" type="datetime"/>
         <field name="dateEnPoste" column="date_en_poste" type="datetime" nullable="true"/>
+        <field name="dateFixe" column="date_fixe" type="datetime" nullable="true"/>
 
         <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne" field="precede">
             <join-column name="precede_id"/>

@@ -24,6 +24,7 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
     private ?Campagne $precede = null;
     private ?DateTime $dateCirculaire = null;
     private ?DateTime $dateEnPoste = null;
+    private ?DateTime $dateFixe = null;
     private Collection $entretiens;
 
     private ?Formulaire $formulaireCREP = null;
@@ -85,6 +86,16 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
     public function setDateEnPoste(?DateTime $dateEnPoste): void
     {
         $this->dateEnPoste = $dateEnPoste;
+    }
+
+    public function getDateFixe(): ?DateTime
+    {
+        return $this->dateFixe;
+    }
+
+    public function setDateFixe(?DateTime $dateFixe): void
+    {
+        $this->dateFixe = $dateFixe;
     }
 
     /**

@@ -24,6 +24,7 @@ class  CampagneHydrator implements HydratorInterface {
             'date_fin' => $object->getDateFin()?->format('Y-m-d'),
             'date_circulaire' => $object->getDateCirculaire()?$object->getDateCirculaire()->format('Y-m-d'):null,
             'date_en_poste' => $object->getDateEnPoste()?$object->getDateEnPoste()->format('Y-m-d'):null,
+            'date_fixe' => $object->getDateFixe()?$object->getDateFixe()->format('Y-m-d'):null,
             'precede' => $object->getPrecede()?$object->getPrecede()->getId():null,
             'formulaire_crep' => $object->getFormulaireCREP()?->getId(),
             'formulaire_cref' => $object->getFormulaireCREF()?->getId(),
@@ -47,6 +48,8 @@ class  CampagneHydrator implements HydratorInterface {
         if ($date_circulaire === false) $date_circulaire = null;
         $date_en_poste   = (isset($data['date_en_poste']))?   DateTime::createFromFormat('Y-m-d H:i:s',$data['date_en_poste']. ' 08:00:00'):null;
         if ($date_en_poste === false) $date_en_poste = null;
+        $date_fixe   = (isset($data['date_fixe']))?   DateTime::createFromFormat('Y-m-d H:i:s',$data['date_fixe']. ' 08:00:00'):null;
+        if ($date_fixe === false) $date_fixe = null;
         $precede = (isset($data['precede']) AND $data['precede'] !== '')?$this->getCampagneService()->getCampagne($data['precede']):null;
 
         $formulaireCrep = (isset($data['formulaire_crep']) AND $data['formulaire_crep'] !== "") ? $this->getFormulaireService()->getFormulaire($data['formulaire_crep']):null;
@@ -57,6 +60,7 @@ class  CampagneHydrator implements HydratorInterface {
         $object->setDateFin($date_fin);
         $object->setDateCirculaire($date_circulaire);
         $object->setDateEnPoste($date_en_poste);
+        $object->setDateFixe($date_fixe);
         $object->setPrecede($precede);
 
         $object->setFormulaireCREP($formulaireCrep);

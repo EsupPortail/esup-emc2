@@ -432,7 +432,7 @@ class CampagneController extends AbstractActionController
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
@@ -500,7 +500,7 @@ class CampagneController extends AbstractActionController
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
@@ -536,7 +536,7 @@ class CampagneController extends AbstractActionController
                 $autoriteId = $data['agent-sas']['id'];
                 $autorite = $this->getAgentService()->getAgent($autoriteId);
             }
-            $listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
+            $listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
 
             if (!empty($listing)) {
                 $mail = $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite);
@@ -581,7 +581,7 @@ class CampagneController extends AbstractActionController
                 $superieurId = $data['agent-sas']['id'];
                 $superieur = $this->getAgentService()->getAgent($superieurId);
             }
-            $listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
+            $listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
 
             if (!empty($listing)) {
                 $mail = $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur);
@@ -648,7 +648,7 @@ class CampagneController extends AbstractActionController
     public function progressionParStructuresAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateDebut());
+        $structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateFixe()??$campagne->getDateDebut());
 
         return new ViewModel([
             'campagne' => $campagne,
