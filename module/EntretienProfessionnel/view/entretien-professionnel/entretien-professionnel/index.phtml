@@ -5,6 +5,7 @@
  * @var Campagne[] $campagnes
  * @var EntretienProfessionnel[] $entretiens
  * @var EtatType[] $etats
+ * @var ?string $error
  *
  * @var array $params
  */
@@ -35,6 +36,13 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 <?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => $params], [], true); ?>
+
+<?php if ($error !== null) : ?>
+    <div class="alert alert-danger">
+        <span class="icon icon-unchecked"></span>
+        <?php echo $error; ?>
+    </div>
+<?php endif; ?>
 
 <?php if ($params === null or $params === []) : ?>
     <div class="alert alert-info">

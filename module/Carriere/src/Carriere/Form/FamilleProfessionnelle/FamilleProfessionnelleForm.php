@@ -39,7 +39,7 @@ class FamilleProfessionnelleForm extends Form
                 'label' => "Spécialité <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => ['disable_html_escape' => true,],
                 'empty_option' => 'Sélectionner une spécialité',
-                'value_options' => $this->getCorrespondanceService()->getCorrespondancesAsOptions(),
+                'value_options' => $this->getCorrespondanceService()->getCorrespondancesAsOptions('categorie', 'ASC', false, true),
             ],
             'attributes' => [
                 'id' => 'specialite',

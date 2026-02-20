@@ -4,6 +4,7 @@
  * @see \Application\Controller\AgentController::indexAction()
  * @var Agent[] $agents
  * @var array $params
+ * @var ?string $error
  */
 
 use Application\Entity\Db\Agent;
@@ -46,8 +47,14 @@ $nbAgent = count($agents);
 <!--            <h3> Filtrage </h3>-->
             <?php echo $this->partial('partial/filtre', ['params' => $params], [], true); ?>
         </div>
-
     </div>
+
+    <?php if ($error) : ?>
+        <div class="alert alert-danger">
+            <span class="icon icon-unchecked"></span>
+            <?php echo $error; ?>
+        </div>
+    <?php endif; ?>
 
     <?php if ($params === null or $params === []) : ?>
         <div class="alert alert-info">

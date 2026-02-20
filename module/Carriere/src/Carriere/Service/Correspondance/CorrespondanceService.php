@@ -65,7 +65,7 @@ class CorrespondanceService {
         return $result;
     }
 
-    public function getCorrespondancesAsOptions(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=false) : array
+    public function getCorrespondancesAsOptions(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=false, bool $ouvert = false) : array
     {
         $correspondances = $this->getCorrespondances($champ, $ordre, $avecAgent);
         usort($correspondances, function (Correspondance $a, Correspondance $b) {
@@ -74,10 +74,15 @@ class CorrespondanceService {
            if ($a->getLibelleLong() !== $b->getLibelleLong()) return $a->getLibelleLong() <=> $b->getLibelleLong();
            return $a->getId() <=> $b->getId();
         });
+        if ($ouvert === true) {
+            $correspondances = array_filter($correspondances, function (Correspondance $correspondance) { return $correspondance->estEnCours();});
+        }
+
         $options = [];
         foreach($correspondances as $correspondance) {
             $options[$correspondance->getId()] = $this->optionify($correspondance);
         }
+
         return $options;
     }
 

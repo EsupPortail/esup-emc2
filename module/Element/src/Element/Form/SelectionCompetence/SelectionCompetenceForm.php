@@ -36,7 +36,7 @@ class SelectionCompetenceForm extends Form {
             'type' => Select::class,
             'name' => 'competences',
             'options' => [
-                'label' => "Compétences associées - sélection multiples possible  :",
+                'label' => "Compétences associées - sélection multiple possible  :",
                 'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [

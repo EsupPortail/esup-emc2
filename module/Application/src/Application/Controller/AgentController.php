@@ -98,23 +98,37 @@ class AgentController extends AbstractActionController
     public function indexAction(): ViewModel|Response
     {
         $params = $this->params()->fromQuery();
+        $error = null;
         $agents = [];
         if ($params !== null) {
             if (isset($params['type']) and $params['type'] === 'acceder') {
                 $agentId = $params['agent-sas']['id'] ?? null;
                 if ($agentId) return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentId], [], true);
                 $agentLabel = $params['agent-sas']['label'] ?? null;
-                $agents = $this->getAgentService()->getAgentsLargeByTerm($agentLabel);
+
+                if ($agentId === null OR $agentId === "") {
+                    $agents = [];
+                    $error = "Veuillez sélectionner un agent dans la liste des propositions. ";
+                } else {
+                    $agents = $this->getAgentService()->getAgentsLargeByTerm($agentLabel);
+                }
                 if (count($agents) === 1) return $this->redirect()->toRoute('agent/afficher', ['agent' => current($agents)->getId()], [], true);
             }
-            if (empty($agents) and isset($params['type']) and $params['type'] === 'filtrer') {
-                $agents = $this->getAgentService()->getAgentsWithFiltre($params);
+            if (isset($params['type']) and $params['type'] === 'filtrer') {
+                $a=1;
+                if ($params['denomination'] === "" AND $params['structure-filtre']['id'] === "") {
+                    $agents = [];
+                    $error = "Veuillez préciser la dénomination de l'agent ou une structure";
+                } else {
+                    $agents = $this->getAgentService()->getAgentsWithFiltre($params);
+                }
             }
         }
 
         return new ViewModel([
             'agents' => $agents,
             'params' => $params,
+            'error' => $error,
         ]);
     }
 
