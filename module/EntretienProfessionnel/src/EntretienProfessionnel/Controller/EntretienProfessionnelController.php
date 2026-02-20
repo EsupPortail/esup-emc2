@@ -77,9 +77,15 @@ class EntretienProfessionnelController extends AbstractActionController
     public function indexAction(): ViewModel
     {
         $params = $this->params()->fromQuery();
+        $error = null;
         $entretiens = [];
         if ($params !== null and !empty($params)) {
-            $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsWithFiltre($params);
+            if ($params['campagne'] !== "" OR $params['etat'] !== "" OR $params['structure-filtre']['id'] !== "" OR $params['agent-filtre']['id'] !== "" OR $params['responsable-filtre']['id'] !== "") {
+                $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsWithFiltre($params);
+            } else {
+                $entretiens = [];
+                $error = "Veuillez au moins spécifier au moins un critère de recherche.";
+            }
         }
 
         return new ViewModel([
@@ -87,6 +93,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'params' => $params,
             'campagnes' => $this->getCampagneService()->getCampagnes(),
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode('ENTRETIEN_PROFESSIONNEL'),
+            'error' => $error,
         ]);
     }
 
