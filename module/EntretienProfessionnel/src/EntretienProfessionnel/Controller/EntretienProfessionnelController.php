@@ -187,7 +187,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
         $superieurs = array_map(function (AgentSuperieur $a) use ($campagne) {
             return $a->getSuperieur();
-        }, $agent->getSuperieurs($campagne->getDateFixe()));
+        }, $agent->getSuperieurs());
         $entretien = new EntretienProfessionnel();
         $entretien->setCampagne($campagne);
         $entretien->setAgent($agent);

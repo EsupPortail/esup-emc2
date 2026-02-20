@@ -23,14 +23,17 @@ $raison = (isset($options['raison']))?$options['raison']:[];
 <table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">
     <thead>
         <tr>
-            <th data-type="string"> Dénomination </th>
-            <th> Affectation·s </th>
-            <th> Grade·s </th>
+            <th class="col-md-4" data-type="string"> Dénomination </th>
+            <th class="col-md-4"> Affectation·s </th>
             <?php if ($canAction) : ?>
-            <th class="action">
-                Actions
-            </th>
+                <th class="col-md-3"> Grade·s </th>
+                <th class="col-md-1 action">
+                    Action
+                </th>
+            <?php else: ?>
+                <th class="col-md-4"> Grade·s </th>
             <?php endif; ?>
+
         </tr>
     </thead>
     <tbody>
@@ -85,6 +88,7 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                     <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                     <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank"
+                       class="action secondary"
                     >
                         <span class="icon icon-user"></span>
                         Afficher
@@ -101,7 +105,7 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
                     <a
                         href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['agent' => $agent->getId()]], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
+                        class="ajax-modal action primary" data-event="modification"
                     >
                         <span class="icon icon-ajouter"></span>
                         Convoquer
