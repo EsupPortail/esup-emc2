@@ -518,7 +518,7 @@ class MissionPrincipaleController extends AbstractActionController
                                 foreach ($codesFicheMetier as $codeFicheMetier) {
                                     $fichemetier = $this->getFicheMetierService()->getFicheMetierByReferentielAndCode($referentiel, $codeFicheMetier);
                                     if ($fichemetier === null) {
-                                        $message = "Aucune fiche métier identifiée " . $codeFicheMetier . " dans le référentiel ";
+                                        $message = "Aucune fiche métier comprenant le code emploi type ".$codeFicheMetier." n'existe dans le référentiel ";
                                         $message .= $referentiel ? $referentiel->printReference("lien", $this->url()->fromRoute("referentiel", [], [], true), $allowedReferentiel) : "<span class='badge' style='background: grey;'>Aucun référentiel</span>";
                                         $message .= ". ";
                                         $message .= "La mission principale \"" . $mission->getLibelle() . "\" ";
