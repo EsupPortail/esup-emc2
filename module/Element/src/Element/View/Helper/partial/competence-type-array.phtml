@@ -21,7 +21,7 @@ use FichePoste\Provider\Privilege\FichePostePrivileges;
 
 $debug = false;
 
-$tableId = 'competence_' . str_replace(" ", "_", $type->getLibelle());
+$tableId = 'competence_type_' . $type?->getId();
 
 $canAfficherCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
 

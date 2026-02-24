@@ -81,7 +81,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
 
         <h3> <strong>Discipline : <?php echo $d->getLibelle(); ?></strong> </h3>
 
-        <table class="table table-condensed datatable" id="<?php echo str_replace(" ", "_", $d->getLibelle()) ?>">
+        <table class="table table-condensed datatable" id="<?php echo "spec_discipline_".$d->getId(); ?>">
             <thead>
             <tr>
                 <th class="col-md-4"> Libellé</th>
@@ -179,7 +179,7 @@ usort($discipline, function (CompetenceDiscipline $a, CompetenceDiscipline $b) {
 <script>
     $(function () {
         <?php foreach ($discipline as $d): ?>
-            $('table#<?php echo str_replace(" ", "_", $d->getLibelle()); ?>').DataTable({
+            $('table#<?php echo "spec_discipline_".$d->getId(); ?>').DataTable({
                 paging: false,
                 info: false,
                 autoWidth: false,
