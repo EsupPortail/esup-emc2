@@ -14,6 +14,7 @@ use Application\Provider\Parametre\AgentParametres;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenParametre\Entity\Db\Parametre;
+use UnicaenUtilisateur\Entity\Db\User;
 
 /**
  * @see Application\Controller\AgentController::afficherAction()
@@ -36,6 +37,7 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var AgentMobilite[] $mobilites
  * @var Parametre[] $parametres
  * @var ChaineAssertion $chaineAssertion
+ * @var User $connectedUser
  *
  */
 
@@ -81,7 +83,9 @@ if ($agent !== null) {
         <strong><?php echo $agent->getDenomination(); ?></strong>
     </h1>
 
-    <?php echo $this->aideAgentCampagne($agent); ?>
+    <?php if ($connectedUser === $agent->getUtilisateur()) : ?>
+        <?php echo $this->aideAgentCampagne($agent); ?>
+    <?php endif; ?>
 
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <?php if (!isset($parametres[AgentParametres::ONGLET_INFORMATIONS]) || $parametres[AgentParametres::ONGLET_INFORMATIONS]->getValeur() !== "false") : ?>
