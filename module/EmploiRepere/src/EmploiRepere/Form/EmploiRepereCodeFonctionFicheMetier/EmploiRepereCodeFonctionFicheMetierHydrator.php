@@ -18,7 +18,7 @@ class EmploiRepereCodeFonctionFicheMetierHydrator implements HydratorInterface
     {
         /** @var EmploiRepereCodeFonctionFicheMetier $object */
         $data = [
-            'emploi-repere' => $object?->getEmploiRepere()?->getId(),
+//            'emploi-repere' => $object?->getEmploiRepere()?->getId(),
             'code-fonction' => $object?->getCodeFonction()?->getId(),
             'fiche-metier' => $object?->getFicheMetier()?->getId(),
         ];
@@ -27,12 +27,12 @@ class EmploiRepereCodeFonctionFicheMetierHydrator implements HydratorInterface
 
     public function hydrate(array $data, object $object): object
     {
-        $emploiRepere = (isset($data['emploi-repere'])) ? $this->getEmploiRepereService()->getEmploiRepere($data['emploi-repere']) : null;
+//        $emploiRepere = (isset($data['emploi-repere'])) ? $this->getEmploiRepereService()->getEmploiRepere($data['emploi-repere']) : null;
         $codeFonction = (isset($data['code-fonction'])) ? $this->getCodeFonctionService()->getCodeFonction($data['code-fonction']) : null;
         $ficheMetier = (isset($data['fiche-metier'])) ? $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']) : null;
 
         /** @var EmploiRepereCodeFonctionFicheMetier $object */
-        $object->setEmploiRepere($emploiRepere);
+//        $object->setEmploiRepere($emploiRepere);
         $object->setCodeFonction($codeFonction);
         $object->setFicheMetier($ficheMetier);
         return $object;

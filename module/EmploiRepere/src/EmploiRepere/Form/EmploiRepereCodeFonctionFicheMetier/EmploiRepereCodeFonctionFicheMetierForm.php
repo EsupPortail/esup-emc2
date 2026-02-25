@@ -19,21 +19,21 @@ class EmploiRepereCodeFonctionFicheMetierForm extends Form
     public function init(): void
     {
         //select (ER)
-        $this->add([
-            'type' => Select::class,
-            'name' => 'emploi-repere',
-            'options' => [
-                'label' => "Emploi-Repère :",
-                'empty_option' => "Sélectionner un emploi-repère",
-                'value_options' =>
-                    $this->getEmploiRepereService()->getEmploisReperesAsOptions(),
-            ],
-            'attributes' => [
-                'id' => 'emploi-repere',
-                'class' => 'bootstrap-selectpicker show-tick',
-                'data-live-search' => 'true',
-            ],
-        ]);
+//        $this->add([
+//            'type' => Select::class,
+//            'name' => 'emploi-repere',
+//            'options' => [
+//                'label' => "Emploi-Repère :",
+//                'empty_option' => "Sélectionner un emploi-repère",
+//                'value_options' =>
+//                    $this->getEmploiRepereService()->getEmploisReperesAsOptions(),
+//            ],
+//            'attributes' => [
+//                'id' => 'emploi-repere',
+//                'class' => 'bootstrap-selectpicker show-tick hidden',
+//                'data-live-search' => 'true',
+//            ],
+//        ]);
 
         //select (CF)
         $this->add([
@@ -59,10 +59,10 @@ class EmploiRepereCodeFonctionFicheMetierForm extends Form
                 'label' => "Fiche Métier :",
                 'empty_option' => "Sélectionner un fiche métier",
                 'value_options' =>
-                    $this->getFicheMetierService()->getFichesMetiersAsOptionGroup(),
+                    $this->getFicheMetierService()->getFichesMetiersAsOptions(),
             ],
             'attributes' => [
-                'id' => 'fiche métier',
+                'id' => 'fiche-metier',
                 'class' => 'bootstrap-selectpicker show-tick',
                 'data-live-search' => 'true',
             ],
@@ -85,7 +85,7 @@ class EmploiRepereCodeFonctionFicheMetierForm extends Form
 
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'emploi-repere'          => [ 'required' => true, ],
+//            'emploi-repere'          => [ 'required' => true, ],
             'code-fonction'          => [ 'required' => true, ],
             'fiche-metier'           => [ 'required' => true, ],
         ]));

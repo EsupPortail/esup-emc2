@@ -594,7 +594,18 @@ class FicheMetierService
         if (!$withHisto) $qb = $qb->andWhere('ficheMetier.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
 
+    public function getFichesMetiersByCodeFonctionId(int $idCodeFonction, bool $withHisto = false): array
+    {
+        $codeFonction = $this->getCodeFonctionService()->getCodeFonction($idCodeFonction);
+        if ($codeFonction === null) return [];
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ficheMetier.codeFonction = :codeFonction')->setParameter('codeFonction', $codeFonction);
+        if (!$withHisto) $qb = $qb->andWhere('ficheMetier.histoDestruction IS NULL');
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /** @return FicheMetier[] */
@@ -615,6 +626,17 @@ class FicheMetierService
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function getFichesMetiersAsOptions(): array
+    {
+        $fichemetiers = $this->getFichesMetiers();
+
+        $options = [];
+        foreach ($fichemetiers as $fichemetier) {
+            $options[$fichemetier->getId()] = $fichemetier->getLibelle();
+        }
+        return $options;
     }
 
 }

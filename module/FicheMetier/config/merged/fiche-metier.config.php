@@ -49,6 +49,7 @@ return [
                         'refresh-missions',
                         'refresh-raison',
                         'exporter',
+                        'fetch-fiches-metiers-by-code-fonction'
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AFFICHER,
@@ -179,6 +180,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::afficherAction() */
                                 'action' => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'fetch-fiches-metiers-by-code-fonction' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/fetch-fiches-metiers-by-code-fonction[/:code]',
+                            'defaults' => [
+                                /** @see FicheMetierController::fetchFichesMetiersByCodeFonctionAction() */
+                                'action' => 'fetch-fiches-metiers-by-code-fonction',
                             ],
                         ],
                     ],

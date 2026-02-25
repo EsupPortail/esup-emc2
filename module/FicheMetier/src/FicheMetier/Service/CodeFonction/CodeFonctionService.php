@@ -153,13 +153,17 @@ class CodeFonctionService
         return $dictionnaire;
     }
 
-    public function getCodesFonctionsAsOptions(): array
+    public function getCodesFonctionsAsOptions(string $index = 'id'): array
     {
         $codesFonctions = $this->getCodesFonctions();
 
         $options = [];
         foreach ($codesFonctions as $codeFonction) {
-            $options[$codeFonction->getId()] = $codeFonction->computeCode();
+            $indexCode = match ($index) {
+                'id' => $codeFonction->getId(),
+                'code' => $codeFonction->getCode(),
+            };
+            $options[$indexCode] = $codeFonction->computeCode();
         }
         return $options;
     }

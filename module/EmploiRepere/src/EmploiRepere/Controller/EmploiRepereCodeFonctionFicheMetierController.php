@@ -21,6 +21,7 @@ class EmploiRepereCodeFonctionFicheMetierController extends AbstractActionContro
         $emploiRepere = $this->getEmploiRepereService()->getRequestedEmploiRepere($this);
 
         $ercffm = new EmploiRepereCodeFonctionFicheMetier();
+        $ercffm->setEmploiRepere($emploiRepere);
         $form = $this->getEmploiRepereCodeFonctionFicheMetierForm();
         $form->setAttribute('action', $this->url()->fromRoute('emploi-repere/emploi-repere-code-fonction-fiche-metier/ajouter', ['emploi-repere' => $emploiRepere->getId()], [], true));
         $form->bind($ercffm);
@@ -39,7 +40,7 @@ class EmploiRepereCodeFonctionFicheMetierController extends AbstractActionContro
             'title' => "Ajout d'un couple code fonction / fiche métier",
             'form' => $form,
         ]);
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('emploi-repere/formulaire-codefonction-fichemetier');
         return $vm;
     }
 
@@ -65,7 +66,7 @@ class EmploiRepereCodeFonctionFicheMetierController extends AbstractActionContro
             'title' => "Modification d'un couple code fonction / fiche métier",
             'form' => $form,
         ]);
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('emploi-repere/formulaire-codefonction-fichemetier');
         return $vm;
     }
 

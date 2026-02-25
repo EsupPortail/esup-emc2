@@ -36,9 +36,9 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
 <table class="table table-condensed" id="emploisreperes">
     <thead>
         <tr>
-            <th class="col-md-6" data-column-id="Libellé"> Libellé </th>
-            <th class="col-md-2" data-column-id="Code"> Code </th>
-            <th class="col-md-2" data-column-id="Codes fonctions associés"> Codes fonctions associés</th>
+            <th class="col-md-3" data-column-id="Libellé"> Libellé </th>
+            <th class="col-md-1" data-column-id="Code"> Code </th>
+            <th class="col-md-6" data-column-id="Codes fonctions associés"> Codes fonctions associés</th>
             <th class="col-md-2 action" data-column-id="Action"> Action </th>
         </tr>
     </thead>
@@ -60,7 +60,7 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
                     <?php /** @var EmploiRepereCodeFonctionFicheMetier $association */ ?>
                     <?php foreach ($associations as $association) : ?>
                         <code><?php echo $association->getCodeFonction()->computeCode(); ?></code>
-                        <?php echo $association->getFicheMetier()->getLibelle(); ?><br>
+                        <?php echo $association->getFicheMetier()->getLibelle(); ?>
                         <?php if ($canModifier) : ?>
                             <?php /** @see \EmploiRepere\Controller\EmploiRepereCodeFonctionFicheMetierController::modifierAction() */ ?>
                             <a href="<?php echo $this->url('emploi-repere/emploi-repere-code-fonction-fiche-metier/modifier', ['emploi-repere-code-fonction-fiche-metier' => $association->getId()], [], true); ?>"
@@ -72,9 +72,9 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
                                 <span class="icon icon-unchecked"></span> Supprimer
                             </a>
                         <?php endif; ?>
+                        <br>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <br>
                 <?php if ($canModifier) : ?>
                     <?php /** @see \EmploiRepere\Controller\EmploiRepereCodeFonctionFicheMetierController::ajouterAction() */ ?>
                     <a href="<?php echo $this->url('emploi-repere/emploi-repere-code-fonction-fiche-metier/ajouter', ['emploi-repere' => $emploiRepere->getId()], [], true); ?>"
@@ -82,7 +82,6 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
                         <span class="icon icon-ajouter"></span> Ajouter
                     </a>
                 <?php endif; ?>
-
             </td>
             <td class="action" data-column-id="Action">
                 <?php if ($canAfficher) : ?>
@@ -97,7 +96,7 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
                     <br>
                     <?php /** @see \EmploiRepere\Controller\EmploiRepereController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('emploi-repere/modifier', ['emploi-repere' => $emploiRepere->getId()], [], true); ?>"
-                       class="action primary">
+                       class="action primary ajax-modal" data-event="modification">
                         <span class="icon icon-edit"></span>
                         Modifier
                     </a>

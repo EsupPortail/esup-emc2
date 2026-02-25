@@ -219,9 +219,11 @@ class FicheMetierController extends AbstractActionController
             $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
             $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($fichemetier->getCodeFonction());
         }
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'fichespostes' => $fichespostes,
             'types' => $types,
             'missions' => $missions,
             'activites' => $activites,
@@ -1001,5 +1003,23 @@ EOS;
             'fichespostes' => $fichespostes,
             'agentsTableaux' => $agents,
         ]);
+    }
+
+
+    public function fetchFichesMetiersByCodeFonctionAction(): JsonModel
+    {
+        $code = $this->params()->fromRoute('code');
+        $fiches = $this->getFicheMetierService()->getFichesMetiersByCodeFonctionId($code);
+
+        $result = [];
+        foreach ($fiches as $fichemetier) {
+            $result[$fichemetier->getId()] = $fichemetier->getLibelle();
+        }
+        $jm = new JsonModel($result);
+        $jm->setTerminal(true);
+        return $jm;
+
+
+
     }
 }

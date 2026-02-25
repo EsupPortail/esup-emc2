@@ -35,6 +35,7 @@ class AgentPosteService
     /** @return AgentPoste[] */
     public function getAgentsPostesByCodeFonction(?CodeFonction $codeFonction): array
     {
+        if ($codeFonction === null) return [];
         $code = $codeFonction->computeCode();
         $qb = $this->createQueryBuilder()
             ->andWhere('poste.codeFonction = :code')->setParameter('code', $code)
