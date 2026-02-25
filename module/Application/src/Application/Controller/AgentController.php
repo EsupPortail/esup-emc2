@@ -184,7 +184,7 @@ class AgentController extends AbstractActionController
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
             'chaineAssertion' => $this->chaineAssertion,
-            'user' => $this->getUserService()->getConnectedUser(),
+            'connectedUser' => $this->getUserService()->getConnectedUser(),
         ]);
     }
 
