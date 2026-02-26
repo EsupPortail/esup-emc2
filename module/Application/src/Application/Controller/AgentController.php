@@ -598,6 +598,10 @@ class AgentController extends AbstractActionController
             }, $chaines);
         }
 
-        return $agents;
+        $result = [];
+        foreach ($agents as $agent) {
+            $result[$agent->getId()] = $agent;
+        }
+        return $result;
     }
 }
