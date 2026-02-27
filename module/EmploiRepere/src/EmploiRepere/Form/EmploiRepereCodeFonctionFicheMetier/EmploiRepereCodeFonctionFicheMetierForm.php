@@ -2,17 +2,21 @@
 
 namespace EmploiRepere\Form\EmploiRepereCodeFonctionFicheMetier;
 
+use EmploiRepere\Entity\Db\EmploiRepereCodeFonctionFicheMetier;
 use EmploiRepere\Service\EmploiRepere\EmploiRepereServiceAwareTrait;
+use EmploiRepere\Service\EmploiRepereCodeFonctionFicheMetier\EmploiRepereCodeFonctionFicheMetierServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 
 class EmploiRepereCodeFonctionFicheMetierForm extends Form
 {
     use EmploiRepereServiceAwareTrait;
+    use EmploiRepereCodeFonctionFicheMetierServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
 
@@ -86,10 +90,29 @@ class EmploiRepereCodeFonctionFicheMetierForm extends Form
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
 //            'emploi-repere'          => [ 'required' => true, ],
-            'code-fonction'          => [ 'required' => true, ],
-            'fiche-metier'           => [ 'required' => true, ],
+            'code-fonction' => ['required' => true,],
+            'fiche-metier' => [
+                'required' => true,
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "La fiche métier est déjà associée",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                /** @var EmploiRepereCodeFonctionFicheMetier $ercffm */
+                                $ercffm = $this->getObject();
+                                $emploirepere = $ercffm->getEmploiRepere();
+                                $fiche = $this->getFicheMetierService()->getFicheMetier($value);
+                                $has = $this->getEmploiRepereCodeFonctionFicheMetierService()->hasFicheMetier($emploirepere, $fiche);
+                                return !$has;
+                            },
+                        ],
+                    ],
+                ],
+            ],
         ]));
-
 
 
     }

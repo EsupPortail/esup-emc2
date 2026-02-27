@@ -5,7 +5,9 @@ namespace EmploiRepere\Service\EmploiRepereCodeFonctionFicheMetier;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use EmploiRepere\Entity\Db\EmploiRepere;
 use EmploiRepere\Entity\Db\EmploiRepereCodeFonctionFicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
@@ -63,5 +65,14 @@ class EmploiRepereCodeFonctionFicheMetierService {
 
     /** FACADE ****************************************************************************/
 
+    public function hasFicheMetier(EmploiRepere $emploiRepere, ?FicheMetier $fiche): bool
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('ercffm.emploiRepere = :emploirepere')->setParameter('emploirepere', $emploiRepere)
+            ->andWhere('ercffm.ficheMetier = :fichemetier')->setParameter('fichemetier', $fiche)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return !empty($result);
+    }
 
 }
