@@ -147,7 +147,9 @@ class AgentService
 
         $qb = $this->createQueryBuilder();
         if ($enlarge === true) {
-            $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent');
+            $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+//                ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')->andWhere('affection.deleted_on IS NULL')
+            ;
         }
         $qb = $qb->andWhere('agent.id = :id')
             ->setParameter('id', $id);
@@ -279,52 +281,67 @@ EOS;
      */
     public function getAgentsByStructures(array $structures, ?DateTime $dateDebut = null, ?DateTime $dateFin = null, bool $withJoin = true): array
     {
+        // semble beaucoup plus rapide comme cela !!!
         if ($dateDebut === null) $dateDebut = new DateTime();
-        $structuresId = [];
+        if ($dateFin === null) $dateFin = new DateTime();
+        $agents = [];
         foreach ($structures as $structure) {
-            if (is_array($structure)) {
-                $structure = $structure[0];
+            $affectations = $structure->getAffectations();
+            foreach ($affectations as $affectation) {
+                if (!$affectation->isDeleted() AND $affectation->estEnCoursIntervale($dateDebut, $dateFin)) {
+                    $agent = $affectation->getAgent();
+                    $agents[$agent->getId()] = $agent;
+                }
             }
-            $structuresId[] = $structure?->getId();
         }
-        $params = ['dateDebut' => $dateDebut?->format('Y-m-d'), 'dateFin' => $dateFin?->format('Y-m-d'), 'structures' => $structuresId];
-
-        $sql = <<<EOS
-select DISTINCT a.c_individu as c_individu
-from agent a
-join agent_carriere_affectation aca on a.c_individu = aca.agent_id
-where
-    aca.deleted_on IS NULL
-    and aca.structure_id in (:structures)
-EOS;
-        if ($dateDebut and $dateFin) {
-            $sql .= <<<EOS
-and tsrange(aca.date_debut, aca.date_fin) && tsrange(:dateDebut, :dateFin)
-EOS;
-        }
-        if ($dateDebut and !$dateFin) {
-            $sql .= <<<EOS
-and aca.date_debut <= :dateDebut and (aca.date_fin IS NULL OR aca.date_fin >= :dateDebut)
-EOS;
-        }
-
-        try {
-            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params, ['structures' => ArrayParameterType::INTEGER]);
-            try {
-                $tmp = $res->fetchAllAssociative();
-            } catch (DRV_Exception $e) {
-                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
-            }
-        } catch (DBA_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
-        }
-        $ids = [];
-        foreach ($tmp as $row) {
-            $ids[] = $row['c_individu'];
-        }
-
-        $agents = $this->getAgentsByIds($ids);
         return $agents;
+
+//        if ($dateDebut === null) $dateDebut = new DateTime();
+//        $structuresId = [];
+//        foreach ($structures as $structure) {
+//            if (is_array($structure)) {
+//                $structure = $structure[0];
+//            }
+//            $structuresId[] = $structure?->getId();
+//        }
+//        $params = ['dateDebut' => $dateDebut?->format('Y-m-d'), 'dateFin' => $dateFin?->format('Y-m-d'), 'structures' => $structuresId];
+//
+//        $sql = <<<EOS
+//select DISTINCT a.c_individu as c_individu
+//from agent a
+//join agent_carriere_affectation aca on a.c_individu = aca.agent_id
+//where
+//    aca.deleted_on IS NULL
+//    and aca.structure_id in (:structures)
+//EOS;
+//        if ($dateDebut and $dateFin) {
+//            $sql .= <<<EOS
+//and tsrange(aca.date_debut, aca.date_fin) && tsrange(:dateDebut, :dateFin)
+//EOS;
+//        }
+//        if ($dateDebut and !$dateFin) {
+//            $sql .= <<<EOS
+//and aca.date_debut <= :dateDebut and (aca.date_fin IS NULL OR aca.date_fin >= :dateDebut)
+//EOS;
+//        }
+//
+//        try {
+//            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params, ['structures' => ArrayParameterType::INTEGER]);
+//            try {
+//                $tmp = $res->fetchAllAssociative();
+//            } catch (DRV_Exception $e) {
+//                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+//            }
+//        } catch (DBA_Exception $e) {
+//            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+//        }
+//        $ids = [];
+//        foreach ($tmp as $row) {
+//            $ids[] = $row['c_individu'];
+//        }
+//
+//        $agents = $this->getAgentsByIds($ids);
+//        return $agents;
     }
 
     /**

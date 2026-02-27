@@ -63,7 +63,8 @@ trait HasPeriodeTrait {
 
     public function estEnCoursIntervale(?DateTime $dateDebut = null, ?DateTime $dateFin = null) : bool
     {
-        return max($this->dateDebut, $dateDebut) <= min($this->dateFin, $dateFin);
+        $now = new DateTime();
+        return max($this->dateDebut??$now, $dateDebut??$now) <= min($this->dateFin??$now, $dateFin??$now);
     }
 
 

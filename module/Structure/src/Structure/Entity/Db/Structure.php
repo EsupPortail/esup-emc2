@@ -2,6 +2,7 @@
 
 namespace Structure\Entity\Db;
 
+use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
@@ -70,6 +71,13 @@ class Structure implements ResourceInterface, HasDescriptionInterface, HasContac
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
+        $this->affectations = new ArrayCollection();
+    }
+
+    /** @return  AgentAffectation[] */
+    public function getAffectations(): array
+    {
+        return $this->affectations->toArray();
     }
 
     public function getId(): string

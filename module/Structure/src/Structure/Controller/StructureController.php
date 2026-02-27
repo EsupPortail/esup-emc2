@@ -165,12 +165,6 @@ class StructureController extends AbstractActionController {
         $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgents($allAgents);
         $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgents($allAgents);
 
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
-        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
-        if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
-
         try {
             $emailAssistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
         } catch (Exception $e) {
@@ -190,10 +184,10 @@ class StructureController extends AbstractActionController {
             'superieurs' => $superieurs,
             'autorites' => $autorites,
 
-            'campagnes' => $campagnes,
-            'campagnesFutures' => $campagnesFutures,
+//            'campagnes' => $campagnes,
+//            'campagnesFutures' => $campagnesFutures,
             'emailAssistance' => $emailAssistance,
-            'debug' => null,
+            'debug' => $debug,
         ]);
     }
 
