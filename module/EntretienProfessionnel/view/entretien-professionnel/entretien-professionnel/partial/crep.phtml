@@ -58,6 +58,32 @@ $data = $crep->buildResponseDictionnary();
 ?>
 
 <?php if ($canRenseigner) : ?>
+
+    <?php if ($entretien->getFormulaireInstance()->getFormulaire()->getId() !== $entretien->getCampagne()->getFormulaireCREP()->getId()) : ?>
+        <div class="alert alert-danger">
+            Le formulaire du CREP a changé depuis la création de l'entretien professionnel.
+
+            <br>
+            Debug :
+            <ul>
+                <li>Entretien Id: <?php echo $entretien->getFormulaireInstance()->getFormulaire()->getId(); ?> Code:<?php echo $entretien->getFormulaireInstance()->getFormulaire()->getCode(); ?></li>
+                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getId(); ?> Code:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getCode(); ?></li>
+            </ul>
+        </div>
+    <?php endif; ?>
+    <?php if ($entretien->getFormulaireInstance()->getHistoModification() > $entretien->getCampagne()->getFormulaireCREP()->getHistoModification()) : ?>
+        <div class="alert alert-danger">
+            Le formulaire du CREP a été mis à jour depuis la création de l'entretien professionnel.
+
+            <br>
+            Debug :
+            <ul>
+                <li>Entretien Id: <?php echo $entretien->getFormulaireInstance()->getHistoModification()->format('d/m/Y H:i:s'); ?> </li>
+                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getHistoModification()->format('d/m/Y H:i:s'); ?> </li>
+            </ul>
+        </div>
+    <?php endif; ?>
+
     <?php
     /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
     $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);

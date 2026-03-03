@@ -307,6 +307,9 @@ class EntretienProfessionnelController extends AbstractActionController
 
         $crep = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormulaireInstance()->getId());
         $cref = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormationInstance()->getId());
+//        $crep = $entretien->getFormulaireInstance();
+//        $cref = $entretien->getFormationInstance();
+
         $observateurs = $this->getObservateurService()->getObservateursByEntretienProfessionnel($entretien);
 
         [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
