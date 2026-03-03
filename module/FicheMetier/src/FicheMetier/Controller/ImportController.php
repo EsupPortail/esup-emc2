@@ -422,7 +422,7 @@ class ImportController extends AbstractActionController
 
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_REFERENS3, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU] ?? "", $dictionnaireNiveauCarriere, $warning);
-                        $this->readCategorie($fiche, $raw[self::HEADER_REFERENS3_CATEGORIE], $dictionnaireCategorie, $warning);
+                        $this->readCategorie($fiche, $raw[self::HEADER_REFERENS3_CATEGORIE] ?? "", $dictionnaireCategorie, $warning);
                         $this->readMissions($fiche, $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "", "|", $referentiel);
                         $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
@@ -724,7 +724,7 @@ class ImportController extends AbstractActionController
 
                         $this->readRaison($fiche, $raw[self::HEADER_EMC2_RAISON] ?? "", $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_EMC2_NIVEAU_CARRIERE] ?? "", $dictionnaireNiveauCarriere, $warning);
-                        $this->readCategorie($fiche, $raw[ImportController::HEADER_EMC2_CATEGORIE], $dictionnaireCategorie, $warning);
+                        $this->readCategorie($fiche, $raw[ImportController::HEADER_EMC2_CATEGORIE] ?? "", $dictionnaireCategorie, $warning);
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_EMC2, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE] ?? "", "|", $referentiel);
