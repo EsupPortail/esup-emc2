@@ -928,6 +928,26 @@ class Agent implements
         return false;
     }
 
+    public function hasGradeActif(?DateTime $date = null): bool
+    {
+        if ($date === null) $date = new DateTime();
+        $grades = $this->getGrades();
+        foreach ($grades as $grade) {
+            if ($grade->getDateDebut() <= $date AND ($grade->getDateFin() === NULL OR $grade->getDateFin() >= $date)) return true;
+        }
+        return false;
+    }
+
+    public function hasStatutActif(?DateTime $date = null): bool
+    {
+        if ($date === null) $date = new DateTime();
+        $statuts = $this->getStatuts();
+        foreach ($statuts as $statut) {
+            if ($statut->getDateDebut() <= $date AND ($statut->getDateFin() === NULL OR $statut->getDateFin() >= $date)) return true;
+        }
+        return false;
+    }
+
     public function hasCorps(?Corps $corps): bool
     {
         $gradesActifs = $this->getGradesActifs();

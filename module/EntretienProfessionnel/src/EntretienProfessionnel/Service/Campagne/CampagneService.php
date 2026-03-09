@@ -332,6 +332,10 @@ class CampagneService
                 // Si on ne fait pas ce test alors dans le cas vide les agents passent les tests suivants (car ils n'ont pas d'affectation, ils n'ont pas d'affectations incohérentes).
                 $result = $agent->hasAffectationActive($campagne->getDateEnPoste());
                 if ($result === false) continue;
+                $result = $agent->hasGradeActif($campagne->getDateEnPoste());
+                if ($result === false) continue;
+                $result = $agent->hasStatutActif($campagne->getDateEnPoste());
+                if ($result === false) continue;
 
                 // Exclusion AFFECTATIONS //
                 $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateEnPoste(), $structures);
