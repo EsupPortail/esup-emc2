@@ -921,8 +921,11 @@ class Agent implements
     public function hasAffectationActive(?DateTime $date = null): bool
     {
         if ($date === null) $date = new DateTime();
+        $date->setTime(12, 0, 0);
         $affectations = $this->getAffectations();
         foreach ($affectations as $affectation) {
+            $affectation->getDateDebut()?->setTime(12, 0, 0);
+            $affectation->getDateFin()?->setTime(12, 0, 0);
             if ($affectation->getDateDebut() <= $date AND ($affectation->getDateFin() === NULL OR $affectation->getDateFin() >= $date)) return true;
         }
         return false;
@@ -931,8 +934,11 @@ class Agent implements
     public function hasGradeActif(?DateTime $date = null): bool
     {
         if ($date === null) $date = new DateTime();
+        $date->setTime(12, 0, 0);
         $grades = $this->getGrades();
         foreach ($grades as $grade) {
+            $grade->getDateDebut()?->setTime(12, 0, 0);
+            $grade->getDateFin()?->setTime(12, 0, 0);
             if ($grade->getDateDebut() <= $date AND ($grade->getDateFin() === NULL OR $grade->getDateFin() >= $date)) return true;
         }
         return false;
@@ -941,8 +947,11 @@ class Agent implements
     public function hasStatutActif(?DateTime $date = null): bool
     {
         if ($date === null) $date = new DateTime();
+        $date->setTime(12, 0, 0);
         $statuts = $this->getStatuts();
         foreach ($statuts as $statut) {
+            $statut->getDateDebut()?->setTime(12, 0, 0);
+            $statut->getDateFin()?->setTime(12, 0, 0);
             if ($statut->getDateDebut() <= $date AND ($statut->getDateFin() === NULL OR $statut->getDateFin() >= $date)) return true;
         }
         return false;

@@ -89,7 +89,7 @@ class CampagneController extends AbstractActionController
     {
         $campagne = new Campagne();
         $campagne->setAnnee(CampagneService::getAnneeScolaire());
-        $campagne->setDateEnPoste(DateTime::createFromFormat('Y-m-d', (new DateTime('now'))->format('Y') . "-01-01"));
+        $campagne->setDateEnPoste(DateTime::createFromFormat('Y-m-d H:i:s', (new DateTime('now'))->format('Y') . "-01-01 08:00:00"));
 
         $form = $this->getCampagneForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/ajouter', [], [], true));
