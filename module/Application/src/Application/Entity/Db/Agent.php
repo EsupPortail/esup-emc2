@@ -918,13 +918,12 @@ class Agent implements
         return false;
     }
 
-    public function hasAffectationActive(?DateTime $dateDebut = null, ?DateTime $dateFin = null): bool
+    public function hasAffectationActive(?DateTime $date = null): bool
     {
+        if ($date === null) $date = new DateTime();
         $affectations = $this->getAffectations();
         foreach ($affectations as $affectation) {
-            $dateDebut = $dateDebut??$affectation->getDateDebut();
-            $dateFin = $dateFin??$affectation->getDateFin()??$affectation->getDateDebut();
-            if (max($affectation->getDateDebut(), $dateDebut <= min($affectation->getDateFin(), $dateFin))) return true;
+            if ($affectation->getDateDebut() <= $date AND ($affectation->getDateFin() === NULL OR $affectation->getDateFin() >= $date)) return true;
         }
         return false;
     }

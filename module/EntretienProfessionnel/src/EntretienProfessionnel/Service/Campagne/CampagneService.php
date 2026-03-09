@@ -327,12 +327,18 @@ class CampagneService
              * On priorise ici le forçage ; on shinte les exclusions si il y a forçage.
              */
             if (!$agent->isForceAvecObligation($campagne)) {
-                // Exclusion CORPS //
-                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateEnPoste());
-                if ($result[0] === true) continue;
+
+                // Avoir AFFECTATIONS // À la demande de Marine les agents qui n'ont pas d'affectation à la date de prise de poste sont exclus de la campagne.
+                // Si on ne fait pas ce test alors dans le cas vide les agents passent les tests suivants (car ils n'ont pas d'affectation, ils n'ont pas d'affectations incohérentes).
+                $result = $agent->hasAffectationActive($campagne->getDateEnPoste());
+                if ($result === false) continue;
 
                 // Exclusion AFFECTATIONS //
                 $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateEnPoste(), $structures);
+                if ($result[0] === true) continue;
+
+                // Exclusion CORPS //
+                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateEnPoste());
                 if ($result[0] === true) continue;
 
                 // Exclusion STATUTS //
@@ -358,7 +364,6 @@ class CampagneService
                 $raison[$agent->getId()] .= "<li>Sans 'contrat long'</li>";
             }
 
-            // Filtrage AFFECTATIONS //
             $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION],$campagne->getDateEnPoste(), $structures);
             if ($result[0] === true)
             {
@@ -385,7 +390,7 @@ class CampagneService
                 $raison[$agent->getId()] .= "<li>Emploi-type invalide  (à la date du ".$campagne->getDateEnPoste()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
             }
 
-            // Filtrage EMPLOI-TYPE //
+            // Filtrage CORPS //
             $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],$campagne->getDateEnPoste());
             if ($result[0] === true)
             {
