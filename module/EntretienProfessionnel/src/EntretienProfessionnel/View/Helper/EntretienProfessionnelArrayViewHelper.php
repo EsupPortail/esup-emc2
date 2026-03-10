@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\View\Helper;
 
+use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
@@ -19,6 +20,14 @@ class EntretienProfessionnelArrayViewHelper extends AbstractHelper
     protected array $entretiens;
     protected array $options;
 
+    public ?EntretienProfessionnelAssertion $assertion = null;
+
+    public function setAssertion(?EntretienProfessionnelAssertion $assertion): void
+    {
+        $this->assertion = $assertion;
+    }
+
+
     public function __invoke(array $entretiens, array $options = [])
     {
         $this->entretiens = $entretiens;
@@ -28,7 +37,11 @@ class EntretienProfessionnelArrayViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('entretien-professionnel-array', ['entretiens' => $this->entretiens, 'options' => $this->options]);
+        return $view->partial('entretien-professionnel-array', [
+            'assertion' => $this->assertion,
+            'entretiens' => $this->entretiens,
+            'options' => $this->options
+        ]);
     }
 
     public function __toString()
@@ -37,6 +50,6 @@ class EntretienProfessionnelArrayViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('entretien-professionnel-array', ['entretiens' => $this->entretiens, 'options' => $this->options]);
+        return $view->partial('entretien-professionnel-array', ['assertion' => $this->assertion, 'entretiens' => $this->entretiens, 'options' => $this->options]);
     }
 }

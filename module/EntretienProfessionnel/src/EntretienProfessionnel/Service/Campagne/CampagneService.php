@@ -10,14 +10,20 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneAgentStatut;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
+use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
+use UnicaenApp\Form\Element\Date;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
@@ -26,6 +32,8 @@ class CampagneService
     use ProvidesObjectManager;
     use AgentServiceAwareTrait;
     use AgentForceSansObligationServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
+    use StructureAgentForceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -308,18 +316,21 @@ class CampagneService
 
     public function trierAgents(Campagne $campagne, array $agents, ?array $structures = null): array
     {
+        $exclus = [];
         $obligatoires = [];
         $facultatifs = [];
         $raison = [];
 
         $parametres = $this->getParametreService()->getParametresByCategorieCode(EntretienProfessionnelParametres::TYPE);
-
+        $strDatePriseDePoste = $campagne->getDateEnPoste()->format('d/m/Y');
         /** @var Agent $agent */
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
 
             // EXLCUSION ///////////////////////////////////////////////////////////////////////////////////////////////
             if ($agent->isForceExclus($campagne, $structures)) {
+                $exclus[$agent->getId()] = $agent;
+                $raison[$agent->getId()] = "Forcé exclus";
                 continue;
             }
 
@@ -331,27 +342,59 @@ class CampagneService
                 // Avoir AFFECTATIONS // À la demande de Marine les agents qui n'ont pas d'affectation à la date de prise de poste sont exclus de la campagne.
                 // Si on ne fait pas ce test alors dans le cas vide les agents passent les tests suivants (car ils n'ont pas d'affectation, ils n'ont pas d'affectations incohérentes).
                 $result = $agent->hasAffectationActive($campagne->getDateEnPoste());
-                if ($result === false) continue;
+                if ($result === false) {
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Sans affectation à la date du ".$strDatePriseDePoste;
+                    continue;
+                }
                 $result = $agent->hasGradeActif($campagne->getDateEnPoste());
-                if ($result === false) continue;
+                if ($result === false) {
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Sans grade à la date du ".$strDatePriseDePoste;
+                    continue;
+                }
                 $result = $agent->hasStatutActif($campagne->getDateEnPoste());
-                if ($result === false) continue;
+                if ($result === false) {
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Sans statut à la date du ".$strDatePriseDePoste;
+                    continue;
+                }
 
                 // Exclusion AFFECTATIONS //
                 $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateEnPoste(), $structures);
-                if ($result[0] === true) continue;
+                if ($result[0] === true) {
+                    $explication = implode(", ",$result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Affectation excluante  à la date du ".$strDatePriseDePoste. "(".$explication.")";
+                    continue;
+                }
 
                 // Exclusion CORPS //
                 $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateEnPoste());
-                if ($result[0] === true) continue;
+                if ($result[0] === true) {
+                    $explication = implode(", ",$result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Corps excluant à la date du ".$strDatePriseDePoste. "(".$explication.")";
+                    continue;
+                }
 
                 // Exclusion STATUTS //
                 $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateEnPoste());
-                if ($result[0] === true) continue;
+                if ($result[0] === true) {
+                    $explication = implode(", ",$result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Statut excluant à la date du ".$strDatePriseDePoste. "(".$explication.")";
+                    continue;
+                }
 
                 // Exclusion EMPLOI-TYPE //
                 $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS], $campagne->getDateEnPoste());
-                if ($result[0] === true) continue;
+                if ($result[0] === true) {
+                    $explication = implode(", ",$result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Emploi-Type excluant  à la date du ".$strDatePriseDePoste. "(".$explication.")";
+                    continue;
+                }
             }
 
             $kept = true;
@@ -411,7 +454,84 @@ class CampagneService
             if ($kept) $obligatoires[$agent->getId()] = $agent; else $facultatifs[$agent->getId()] = $agent;
             $raison[$agent->getId()] .= "</ul>";
         }
-        return [$obligatoires, $facultatifs, $raison];
+        return [$obligatoires, $facultatifs, $raison, $exclus];
+    }
+
+    public function refreshStatut(Campagne $campagne, Structure $structure): void
+    {
+        // calcul de la liste des structures
+        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+
+        // calcul de la liste des agents
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agentsForces = array_map(function (StructureAgentForce $agentForce) {
+            return $agentForce->getAgent();
+        }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
+        foreach ($agentsForces as $agentForce) {
+            if (!in_array($agentForce, $agents)) {
+                $agents[] = $agentForce;
+            }
+        }
+        [$obligatoires, $facultatifs, $raison, $exclus] = $this->trierAgents($campagne, $agents, $structures);
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+
+
+        // purje ???
+        $date = new DateTime();
+        $statuts = [];
+        foreach ($obligatoires as $obligatoire) {
+            $statut = new CampagneAgentStatut();
+            $statut->setCampagne($campagne);
+            $statut->setAgent($obligatoire);
+            $statut->setStructure($structure);
+            $statut->setStatut(CampagneAgentStatut::OBLIGATOIRE);
+            $statut->setRaison($raison[$obligatoire->getId()]??null);
+            $statut->setRefreshDate($date);
+            $statut->setEntretienProfessionnel($entretiens[$obligatoire->getId()]??null);
+            $statuts[] = $statut;
+        }
+        foreach ($facultatifs as $facultatif) {
+            $statut = new CampagneAgentStatut();
+            $statut->setCampagne($campagne);
+            $statut->setAgent($facultatif);
+            $statut->setStructure($structure);
+            $statut->setStatut(CampagneAgentStatut::FACULTATIF);
+            $statut->setRaison($raison[$facultatif->getId()]??null);
+            $statut->setRefreshDate($date);
+            $statut->setEntretienProfessionnel($entretiens[$facultatif->getId()]??null);
+            $statuts[] = $statut;
+        }
+        foreach ($exclus as $exclu) {
+            $statut = new CampagneAgentStatut();
+            $statut->setCampagne($campagne);
+            $statut->setAgent($exclu);
+            $statut->setStructure($structure);
+            $statut->setStatut(CampagneAgentStatut::EXCLUS);
+            $statut->setRaison($raison[$exclu->getId()]??null);
+            $statut->setRefreshDate($date);
+            $statut->setEntretienProfessionnel($entretiens[$exclu->getId()]??null);
+            $statuts[] = $statut;
+        }
+
+        foreach ($statuts as $statut) {
+            $this->getObjectManager()->persist($statut);
+            $this->getObjectManager()->flush($statut);
+        }
+    }
+
+    /** @return CampagneAgentStatut[] */
+    public function getCampagneAgentStatut($campagne, $structure) : array
+    {
+        $qb = $this->getObjectManager()->getRepository(CampagneAgentStatut::class)->createQueryBuilder('cas')
+            ->join('cas.structure', 'structure')->addSelect('structure')
+            ->join('cas.campagne', 'campagne')->addSelect('campagne')
+            ->join('cas.agent', 'agent')->addSelect('agent')
+            ->leftjoin('cas.entretienProfessionnel', 'entretienProfessionnel')->addSelect('entretienProfessionnel')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
     }
 
 }

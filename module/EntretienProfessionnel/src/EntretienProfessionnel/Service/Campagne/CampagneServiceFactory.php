@@ -5,10 +5,12 @@ namespace EntretienProfessionnel\Service\Campagne;
 use Application\Service\Agent\AgentService;
 use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationService;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -25,26 +27,32 @@ class CampagneServiceFactory
     {
         /**
          * @var EntityManager $entityManager
+         * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var AgentService $agentService
          * @var AgentForceSansObligationService $agentForceService
          * @var EtatTypeService $etatTypeService
          * @var ParametreService $parametreService
          * @var StructureService $structureService
+         * @var StructureAgentForceService $structureAgentForceService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
         $agentForceService = $container->get(AgentForceSansObligationService::class);
+        $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $parametreService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
+        $structureAgentForceService = $container->get(StructureAgentForceService::class);
 
         $service = new CampagneService();
         $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
         $service->setAgentForceSansObligationService($agentForceService);
+        $service->setEntretienProfessionnelService($entretienProfessionnelService);
         $service->setEtatTypeService($etatTypeService);
         $service->setParametreService($parametreService);
         $service->setStructureService($structureService);
+        $service->setStructureAgentForceService($structureAgentForceService);
         return $service;
     }
 }
