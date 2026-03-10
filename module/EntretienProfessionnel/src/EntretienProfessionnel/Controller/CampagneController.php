@@ -348,13 +348,19 @@ class CampagneController extends AbstractActionController
         $entretiens = $campagne->getEntretiensProfessionnels();
         foreach ($entretiens as $entretien) $agents[$entretien->getAgent()->getId()] = $entretien->getAgent();
 
-        $headers = ['Identifiant', 'Prénom', 'Nom', 'Affectations', 'Supérieur·es', 'Autorités', 'Responsable d\'entretien', 'Validation du responsable', 'Validation de l\'autorité', 'Validation de l\'agent'];
+        $headers = [
+            'Identifiant',
+            'Prénom', 'Nom', 'Matricule SIHAM Agent', 'Affectations',
+            'Supérieur·es', 'Autorités',
+            'Responsable d\'entretien', 'Matricule SIHAM Responsable',
+            'Validation du responsable', 'Validation de l\'autorité', 'Validation de l\'agent'];
         $resume = [];
         foreach ($agents as $agent) {
             $resume[$agent->getId()] = [
                 'Identifiant' => '',
                 'Prénom' => $agent->getPrenom(),
                 'Nom' => $agent->getNomUsuel() ?? $agent->getNomFamille(),
+                'Matricule SIHAM Agent' => $agent->getRefBySource('SIHAM')?->getIdSource(),
                 'Affectations' => implode("\n", array_map(function (AgentAffectation $a) {
                     return $a->getStructure()->getLibelleLong();
                 }, $agent->getAffectationsActifs($campagne->getDateDebut()))),
@@ -365,6 +371,7 @@ class CampagneController extends AbstractActionController
                     return $a->getAutorite()->getDenomination();
                 }, $agent->getAutorites())),
                 'Responsable d\'entretien' => '',
+                'Matricule SIHAM Responsable' => '',
                 'Validation du responsable' => '',
                 'Validation de l\'autorité' => '',
                 'Validation de l\'agent' => '',
@@ -375,6 +382,7 @@ class CampagneController extends AbstractActionController
             if ($entretien->estNonHistorise()) {
                 $resume[$entretien->getAgent()->getId()]['Identifiant'] = $entretien->getId();
                 $resume[$entretien->getAgent()->getId()]['Responsable d\'entretien'] = $entretien->getResponsable()->getDenomination();
+                $resume[$entretien->getAgent()->getId()]['Matricule SIHAM Responsable'] = $entretien->getResponsable()->getRefBySource('SIHAM')?->getIdSource();
                 $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
                 if ($validationResponsable) $resume[$entretien->getAgent()->getId()]['Validation du responsable'] = $validationResponsable->getHistoCreation()->format('d/m/Y à H:i');
                 $validationAutorite = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH);
