@@ -191,11 +191,11 @@ class Agent implements
         return $this->refs->toArray();
     }
 
-    public function getRefBySource(string $source): ?AgentRef
+    public function getRefBySource(string $source, bool $actif = true): ?AgentRef
     {
         /** @var AgentRef $ref */
         foreach ($this->refs as $ref) {
-            if ($ref->getSource() === $source AND !$ref->isDeleted()) return $ref;
+            if ($ref->getSource() === $source AND (!$actif OR !$ref->isDeleted())) return $ref;
         }
         return null;
     }
