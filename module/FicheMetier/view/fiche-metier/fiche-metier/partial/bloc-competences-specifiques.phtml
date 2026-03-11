@@ -19,6 +19,12 @@ if ($mode === 'edition-fiche-metier') {
 
 ?>
 
+<?php if ($type === null) : ?>
+    <div class="alert alert-danger">
+        <span class="icon icon-unchecked"></span>
+        Aucun type de compétence ne porte le code <code>SPEC</code>.
+    </div>
+<?php else : ?>
 <?php /** @see \Element\View\Helper\CompetenceDisciplineArrayViewHelper */ ?>
 <?php echo $this->competenceDisciplineArray($competences, $type,  $fichemetier,
         ($mode === 'edition-fiche-metier'?"modification":"affichage"),
@@ -27,37 +33,39 @@ if ($mode === 'edition-fiche-metier') {
                 'title' => $type->getLibelle()]); ?>
 
 
-<script>
-    function refreshCompetencesSpecifiques() {
-        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesSpecifiquesAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-competences-specifiques", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ], ['force_canonical' => true]); ?>";
-        console.log("refreshing compétences spécifiques");
-        $.ajax({
-            type: "POST",
-            url: url,
-            beforeSend:
-                function () {
-                    console.log(url);
-                    $("#competence_SPEC").addClass('refreshing');
-                },
-            success:
-                function (retour) {
-                    console.log(retour);
-                    $("#competence_SPEC").html(retour).removeClass('refreshing');
-                }
-        });
-    }
+    <script>
+        function refreshCompetencesSpecifiques() {
+            <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshCompetencesSpecifiquesAction() */ ?>
+            let url = "<?php echo $this->url("fiche-metier/refresh-competences-specifiques", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ], ['force_canonical' => true]); ?>";
+            console.log("refreshing compétences spécifiques");
+            $.ajax({
+                type: "POST",
+                url: url,
+                beforeSend:
+                    function () {
+                        console.log(url);
+                        $("#competence_SPEC").addClass('refreshing');
+                    },
+                success:
+                    function (retour) {
+                        console.log(retour);
+                        $("#competence_SPEC").html(retour).removeClass('refreshing');
+                    }
+            });
+        }
 
-    $(".competence_SPEC").on("click", function (event) {
-        let url = $(this).data("url");
-        $("#competence_SPEC").addClass('refreshing');
-        $.ajax({
-            type: "POST",
-            url: url,
-            success:
-                function () {
-                    refreshApplications();
-                }
+        $(".competence_SPEC").on("click", function (event) {
+            let url = $(this).data("url");
+            $("#competence_SPEC").addClass('refreshing');
+            $.ajax({
+                type: "POST",
+                url: url,
+                success:
+                    function () {
+                        refreshApplications();
+                    }
+            });
         });
-    });
-</script>
+    </script>
+
+<?php endif; ?>

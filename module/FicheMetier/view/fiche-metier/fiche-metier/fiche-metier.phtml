@@ -267,7 +267,7 @@ foreach ($types as $type) {
             </div>
         </div>
         <div class="card-body" style="color:rgb(80,80,80);" id="competence_SPEC">
-            <?php echo $this->partial('partial/bloc-competences-specifiques', ['fichemetier' => $fiche, 'type' => $types[CompetenceType::CODE_SPECIFIQUE], 'competences' => $competencesSpecifiques, 'mode' => $mode ]); ?>
+            <?php echo $this->partial('partial/bloc-competences-specifiques', ['fichemetier' => $fiche, 'type' => $types[CompetenceType::CODE_SPECIFIQUE]??null, 'competences' => $competencesSpecifiques, 'mode' => $mode ]); ?>
         </div>
     </div>
 <?php endif; ?>
