@@ -9,7 +9,7 @@ use EmploiRepere\Provider\Privilege\EmploireperePrivileges;
  * @var EmploiRepere[] $emploisReperes
  */
 
-$this->headTitle('Emploi-repères');
+$this->headTitle('Emplois repères');
 
 
 $canAjouter = $this->isAllowed(EmploireperePrivileges::getResourceId(EmploireperePrivileges::EMPLOIREPERE_AJOUTER));
@@ -21,7 +21,7 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
 ?>
 
 <h1 class="page-header">
-    Emploi-repères
+    Emplois repères
 </h1>
 
 <?php if ($canAjouter) : ?>
@@ -29,7 +29,7 @@ $canSupprimer = $this->isAllowed(EmploireperePrivileges::getResourceId(Emploirep
     <a href="<?php echo $this->url('emploi-repere/ajouter', [], [], true); ?>"
        class="btn btn-primary ajax-modal" data-event="modification">
         <span class="icon icon-ajouter"></span>
-        Ajouter un emploi-repère
+        Ajouter un emploi repère
     </a>
 <?php endif; ?>
 

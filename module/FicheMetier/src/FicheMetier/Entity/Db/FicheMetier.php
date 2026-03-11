@@ -532,7 +532,7 @@ EOS;
     /** @noinspection PhpUnused */
     public function toStringCodesEmploiRepere(): string
     {
-        if (empty($this->emploisReperes)) return "Aucun emploi-repère associé à cette fiche.";
+        if (empty($this->emploisReperes)) return "Aucun emploi repère associé à cette fiche.";
         $texte = "<ul>";
         foreach ($this->emploisReperes as $emploi) {
             $texte .= "<li>" . $emploi->getLibelle() . " <code>" . $emploi->getCode(). "</code></li>";

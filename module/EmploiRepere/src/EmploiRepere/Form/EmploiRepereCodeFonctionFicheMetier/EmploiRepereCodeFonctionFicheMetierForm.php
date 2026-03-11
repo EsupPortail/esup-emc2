@@ -27,8 +27,8 @@ class EmploiRepereCodeFonctionFicheMetierForm extends Form
 //            'type' => Select::class,
 //            'name' => 'emploi-repere',
 //            'options' => [
-//                'label' => "Emploi-Repère :",
-//                'empty_option' => "Sélectionner un emploi-repère",
+//                'label' => "Emploi repère :",
+//                'empty_option' => "Sélectionner un emploi repère",
 //                'value_options' =>
 //                    $this->getEmploiRepereService()->getEmploisReperesAsOptions(),
 //            ],

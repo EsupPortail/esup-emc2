@@ -87,7 +87,7 @@ return [
                     'gestion' => [
                         'pages' => [
                             'emplois-reperes' => [
-                                'label' => 'Emplois-repères',
+                                'label' => 'Emplois repères',
                                 'route' => 'emploi-repere',
                                 'resource' => PrivilegeController::getResourceId(EmploiRepereController::class, 'index'),
                                 'order'    => 2044,
