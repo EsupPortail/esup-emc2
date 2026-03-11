@@ -445,13 +445,13 @@ EOS;
     public function toStringCategorie(): string
     {
         if ($this->getCategorie()) return $this->getCategorie()->getLibelle();
-        return "Non précisée";
+        return "Aucune catégorie associée";
     }
 
     /** @noinspection PhpUnused */
     public function toStringNiveauCarriere(): string
     {
-        if ($this->getNiveauCarriere() === null) return "Non précisé";
+        if ($this->getNiveauCarriere() === null) return "Aucune niveau associé";
         return $this->getNiveauCarriere()->getLibelle();
     }
 

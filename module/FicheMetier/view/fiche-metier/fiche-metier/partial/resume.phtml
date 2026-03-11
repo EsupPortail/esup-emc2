@@ -73,7 +73,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     <dt class="col-md-5"> Catégorie  </dt>
     <dd class="col-md-7">
         <?php if ($fichemetier->getCategorie() === null) : ?>
-            <span class="missing-data">Aucune catégorie associé</span>
+            <span class="missing-data">Aucune catégorie associée</span>
         <?php else : ?>
             <?php echo $fichemetier->getCategorie()->getLibelle(); ?>
         <?php endif; ?>
