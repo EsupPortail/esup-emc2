@@ -71,7 +71,7 @@ $data = $crep->buildResponseDictionnary();
             </ul>
         </div>
     <?php endif; ?>
-    <?php if ($entretien->getFormulaireInstance()->getHistoModification() > $entretien->getCampagne()->getFormulaireCREP()->getHistoModification()) : ?>
+    <?php if ($entretien->getFormulaireInstance()->getHistoModification() < $entretien->getCampagne()->getFormulaireCREP()->getHistoModification()) : ?>
         <div class="alert alert-danger">
             Le formulaire du CREP a été mis à jour depuis la création de l'entretien professionnel.
 

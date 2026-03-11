@@ -88,7 +88,7 @@ class AgentForceSansObligationForm extends Form
             'type' => Textarea::class,
             'name' => 'raison',
             'options' => [
-                'label' => "Raison de la sortie de la campagne d'entretien professionnel ",
+                'label' => "Raison de l'exception",
             ],
             'attributes' => [
                 'id' => 'raison',
