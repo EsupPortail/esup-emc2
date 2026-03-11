@@ -206,7 +206,7 @@ class FicheMetierController extends AbstractActionController
             'missions' => $missions,
             'activites' => $activites,
             'competences' => $dictionnaire,
-            'competencesSpecifiques' => $dictionnaire[CompetenceType::CODE_SPECIFIQUE],
+            'competencesSpecifiques' => $dictionnaire[CompetenceType::CODE_SPECIFIQUE]??[],
             'applications' => $applications,
             'tendancesTypes' => $tendancesTypes,
             'tendancesElements' => $tendancesElements,
