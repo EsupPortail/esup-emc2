@@ -15,7 +15,7 @@ use EntretienProfessionnel\Provider\Privilege\AgentforcesansobligationPrivileges
  * @var ?string $forcage
  */
 
-$this->headTitle("Agent·es avec forçage d'entretien professionnel");
+$this->headTitle("Exceptions pour les entretiens professionnels ");
 
 /** TODO prevoir de changer cela avec les assertions */
 $canAfficher = $this->isAllowed(AgentforcesansobligationPrivileges::getResourceId(AgentforcesansobligationPrivileges::AGENTFORCESANSOBLIGATION_AFFICHER));
@@ -26,7 +26,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
 ?>
 
 <h1 class="page-header">
-    Agent·es avec forçage d'entretien professionnel
+    Exceptions pour les entretiens professionnels
 </h1>
 
 <?php if ($canAjouter) : ?>
@@ -34,7 +34,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
     <a href="<?php echo $this->url('entretien-professionnel/agent-avec-forcage/ajouter', [], [], true); ?>"
        class="ajax-modal btn btn-primary" data-event="modification">
         <span class="icon icon-ajouter"></span>
-        Ajouter un forçage
+        Ajouter une exception
     </a>
 <?php endif; ?>
 
@@ -49,7 +49,7 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
             <th> Agent·e </th>
             <th> Campagne </th>
             <th> Structure </th>
-            <th> Type </th>
+            <th> Type d'exception </th>
             <th> Est justifiée </th>
             <th class="action"> Action </th>
         </tr>

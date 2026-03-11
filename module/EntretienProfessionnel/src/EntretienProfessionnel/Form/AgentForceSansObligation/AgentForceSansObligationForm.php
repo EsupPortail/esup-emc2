@@ -60,7 +60,7 @@ class AgentForceSansObligationForm extends Form
             ],
         ]);
         //structure
-        $structure = new SearchAndSelect('structuresearch', ['label' => "Structure <span class='icon icon-information' title='Ne saisir que pour restreindre ce blocage à une structure donnée.'></span>:"]);
+        $structure = new SearchAndSelect('structuresearch', ['label' => "Structure <span class='icon icon-information' title='Si une structure est saissie alors l&apos;exception sera limitée au périmètre de cette structure. L&apos;agent·e ne sera pas soumis·e à cette exception dans ses autres structures d&apos;affectation.'></span>:"]);
         $structure
             ->setAutocompleteSource($this->urlStructure)
             ->setSelectionRequired()
@@ -75,7 +75,7 @@ class AgentForceSansObligationForm extends Form
             'type' => Radio::class,
             'name' => 'type',
             'options' => [
-                'label' => "Type de forçage  <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Type d'exception  <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => AgentForceSansObligation::FORCAGE_ARRAY,
             ],
@@ -92,7 +92,7 @@ class AgentForceSansObligationForm extends Form
             ],
             'attributes' => [
                 'id' => 'raison',
-                'class' => 'type2',
+                'class' => 'tinymce',
             ],
         ]);
         //button

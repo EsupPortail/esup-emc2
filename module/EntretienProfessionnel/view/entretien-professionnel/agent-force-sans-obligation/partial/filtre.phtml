@@ -17,7 +17,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 <div class="card card-default">
     <div class="card-header">
         <span class="icon icon-filtrer"></span>
-        Filtre de recherche des forçages
+        Filtre de recherche des exceptions
     </div>
     <div class="card-body">
 
@@ -44,7 +44,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="forcage"> Type de forçage : </label>
+                            <label for="forcage"> Type d'exception : </label>
                             <select id="forcage" name="forcage" class="selectpicker">
                                 <option value=""> Peu importe</option>
                                 <?php foreach (AgentForceSansObligation::FORCAGE_ARRAY as $id => $libelle): ?>
