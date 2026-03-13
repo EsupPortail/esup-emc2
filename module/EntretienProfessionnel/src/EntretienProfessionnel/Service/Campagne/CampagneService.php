@@ -137,7 +137,7 @@ class CampagneService
     /** @return Campagne[] */
     public function getCampagnesActives(?DateTime $date = null): array
     {
-        $qb = $this->createQueryBuilder();
+        $qb = $this->createQueryBuilder()->andWhere('campagne.histoDestruction IS NULL');
         $qb = Campagne::decorateWithActif($qb, 'campagne', $date);
         $result = $qb->getQuery()->getResult();
         return $result;

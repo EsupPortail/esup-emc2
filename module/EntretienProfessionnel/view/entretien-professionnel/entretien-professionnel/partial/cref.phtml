@@ -42,9 +42,7 @@ $agent  = $entretien->getAgent();
     $data = $cref->buildResponseDictionnary();
 ?>
 
-
-<?php if ($canRenseigner) : ?>
-
+<?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER)) : ?>
     <?php if ($entretien->getFormationInstance()->getFormulaire()->getId() !== $entretien->getCampagne()->getFormulaireCREF()->getId()) : ?>
         <div class="alert alert-danger">
             Le formulaire du CREP a changé depuis la création de l'entretien professionnel.
@@ -69,6 +67,18 @@ $agent  = $entretien->getAgent();
             </ul>
         </div>
     <?php endif; ?>
+
+
+    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::reinitialiserAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/reinitialiser',['entretien-professionnel' => $entretien->getId(), 'formulaire' => 'CREF'],[], true); ?>"
+       class="btn btn-warning ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-refresh"></span>
+        Remise à zéro et réapplication des copies pour le CREF
+    </a>
+<?php endif; ?>
+
+<?php if ($canRenseigner) : ?>
 
     <?php
     /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */

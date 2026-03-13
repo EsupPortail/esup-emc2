@@ -8,6 +8,7 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
@@ -46,12 +47,12 @@ class AideAgentCampagneViewHelper extends AbstractHelper
             $infos['raison'] = $raison;
             $infos['delai-observation'] = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT);
 
-            $date = ($entretien)?DateTime::createFromFormat('Y-m-d H:i:s', $entretien->getDateEntretien()->format('Y-m-d H:i:s')):null;
-            if ($date) {
-                $date->add(new DateInterval('P'.$infos['delai-observation'].'D'));
-                $infos['limite-observation'] = $date;
+            $validations = $entretien->getValidations();
+            $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE)?->getHistoCreation();
+            if ($validationResponsable) {
+                $validationResponsable->add(new DateInterval('P'.$infos['delai-observation'].'D'));
+                $infos['limite-observation'] = $validationResponsable;
             }
-
             if ($entretien AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) {
                 $urlService = $this->getUrlService();
                 $urlService->setVariables(['entretien' => $entretien]);

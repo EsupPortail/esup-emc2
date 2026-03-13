@@ -7,6 +7,10 @@ use FicheMetier\Entity\Db\FicheMetier;
 
 class EmploiRepereCodeFonctionFicheMetier {
 
+    /**
+     * Le triplet est dû à un sur-design
+     * TODO simplifier quand on aura le temps
+     **/
     private ?int $id = null;
     private ?EmploiRepere $emploiRepere = null;
     private ?CodeFonction $codeFonction = null;

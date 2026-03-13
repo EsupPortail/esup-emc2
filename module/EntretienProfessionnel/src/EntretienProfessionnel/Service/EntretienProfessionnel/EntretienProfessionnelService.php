@@ -315,7 +315,8 @@ class EntretienProfessionnelService
             ->setParameter('agent', $agent)
             ->andWhere('entretien.campagne = :campagne')
             ->setParameter('campagne', $campagne)
-            ->andWhere('entretien.histoDestruction IS NULL');
+            ->andWhere('entretien.histoDestruction IS NULL')
+        ;
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();

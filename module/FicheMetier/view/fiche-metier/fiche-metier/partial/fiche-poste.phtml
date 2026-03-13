@@ -24,6 +24,7 @@ use FichePoste\Provider\Privilege\FichePostePrivileges;
             <table class="table table-condensed" id="fichespostes">
                 <thead>
                 <tr>
+                    <th data-type="string" class="col-md-6"> Intitulé du poste </th>
                     <th data-type="string" class="col-md-6"> Agent </th>
                     <th data-type="num" class="col-md-2"> Quotité </th>
                     <th data-type="num" class="col-md-2"> État </th>
@@ -33,6 +34,19 @@ use FichePoste\Provider\Privilege\FichePostePrivileges;
                 <tbody>
                 <?php foreach ($fichespostes as $ficheposte) : ?>
                     <tr>
+                        <td>
+                            <?php if ($ficheposte->getLibelle()) : ?>
+                                <?php echo $ficheposte->getLibelle(); ?>
+                            <?php else : ?>
+                                <?php
+                                    if ($ficheposte->getFicheTypeExternePrincipale()) {
+                                        echo $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
+                                    } else {
+                                        echo "Aucune fiche métier principale";
+                                    }
+                                ?>
+                            <?php endif; ?>
+                        </td>
                         <td data-order="<?php echo $ficheposte?->getAgent()->getDenomination(); ?>"> <?php echo $ficheposte->getAgent()->getDenomination(true); ?> </td>
                         <td> <?php echo $ficheposte->getQuotiteComposition($fichemetier); ?></td>
                         <td data-order="<?php echo $ficheposte->getEtatActif()?->getType()->getOrdre(); ?>"> <?php echo $this->etatinstance($ficheposte->getEtatActif()); ?> </td>
