@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use UnicaenAutoform\Entity\Db\Formulaire;
 use UnicaenIndicateur\Entity\Interface\HasIndicateursInterface;
 use UnicaenIndicateur\Entity\Trait\HasIndicateursTrait;
+use UnicaenRenderer\Entity\Db\Template;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -29,6 +30,9 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
 
     private ?Formulaire $formulaireCREP = null;
     private ?Formulaire $formulaireCREF = null;
+    private ?Template $templateCREP = null;
+    private ?Template $templateCREF = null;
+
 
     public function __construct() {
         $this->indicateurs = new ArrayCollection();
@@ -124,6 +128,26 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
     public function setFormulaireCREF(?Formulaire $formulaireCREF): void
     {
         $this->formulaireCREF = $formulaireCREF;
+    }
+
+    public function getTemplateCREP(): ?Template
+    {
+        return $this->templateCREP;
+    }
+
+    public function setTemplateCREP(?Template $templateCREP): void
+    {
+        $this->templateCREP = $templateCREP;
+    }
+
+    public function getTemplateCREF(): ?Template
+    {
+        return $this->templateCREF;
+    }
+
+    public function setTemplateCREF(?Template $templateCREF): void
+    {
+        $this->templateCREF = $templateCREF;
     }
 
     /** prédicats *****************************************************************************************************/

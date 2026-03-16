@@ -7,10 +7,12 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 
 class  CampagneHydrator implements HydratorInterface {
     use CampagneServiceAwareTrait;
     use FormulaireServiceAwareTrait;
+    use TemplateServiceAwareTrait;
 
     /**
      * @param Campagne $object
@@ -18,6 +20,7 @@ class  CampagneHydrator implements HydratorInterface {
      */
     public function extract($object): array
     {
+        /** @var Campagne $object */
         $data = [
             'annee' => $object->getAnnee(),
             'date_debut' => $object->getDateDebut()?->format('Y-m-d'),
@@ -28,6 +31,8 @@ class  CampagneHydrator implements HydratorInterface {
             'precede' => $object->getPrecede()?$object->getPrecede()->getId():null,
             'formulaire_crep' => $object->getFormulaireCREP()?->getId(),
             'formulaire_cref' => $object->getFormulaireCREF()?->getId(),
+            'template_crep' => $object->getTemplateCREP()?->getId(),
+            'template_cref' => $object->getTemplateCREF()?->getId(),
         ];
         return $data;
     }
@@ -54,6 +59,8 @@ class  CampagneHydrator implements HydratorInterface {
 
         $formulaireCrep = (isset($data['formulaire_crep']) AND $data['formulaire_crep'] !== "") ? $this->getFormulaireService()->getFormulaire($data['formulaire_crep']):null;
         $formulaireCref = (isset($data['formulaire_cref']) AND $data['formulaire_cref'] !== "") ? $this->getFormulaireService()->getFormulaire($data['formulaire_cref']):null;
+        $templateCrep = (isset($data['template_crep']) AND $data['template_crep'] !== "") ? $this->getTemplateService()->getTemplate($data['template_crep']):null;
+        $templateCref = (isset($data['template_cref']) AND $data['template_cref'] !== "") ? $this->getTemplateService()->getTemplate($data['template_cref']):null;
 
         $object->setAnnee($annee);
         $object->setDateDebut($date_debut);
@@ -65,6 +72,8 @@ class  CampagneHydrator implements HydratorInterface {
 
         $object->setFormulaireCREP($formulaireCrep);
         $object->setFormulaireCREF($formulaireCref);
+        $object->setTemplateCREP($templateCrep);
+        $object->setTemplateCREF($templateCref);
 
         return $object;
     }

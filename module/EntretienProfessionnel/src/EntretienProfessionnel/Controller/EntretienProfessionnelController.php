@@ -7,6 +7,7 @@ use Application\Controller\IndexController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Provider\Parametre\GlobalParametres;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
@@ -556,6 +557,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function exporterCrepAction(): string
     {
+        $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
+
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
         if (!empty($facultatif)) {
@@ -567,19 +570,37 @@ class EntretienProfessionnelController extends AbstractActionController
             'agent' => $entretien->getAgent(),
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREP, $vars);
+        $template = $entretien->getCampagne()?->getTemplateCREF();
+        if ($template === null) {
+            $message = "Aucun template associé aux CREP pour cette campagne. Veuillez contacter l'assistance : <a href='".$assistance."'>".$assistance."</a>.";
+            throw new RuntimeException($message, -1);
+        }
+        $rendu = $this->getRenduService()->generateRenduByTemplate($template, $vars);
         return PdfExporter::generatePdf($rendu->getSujet(), $rendu->getSujet(), $rendu->getCorps());
     }
 
     public function exporterCrefAction(): string
     {
+        $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
+
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
+        if (!empty($facultatif)) {
+            $entretien->setStatut("facultatif");
+        }
+
         $vars = [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREF, $vars);
+
+        $template = $entretien->getCampagne()?->getTemplateCREF();
+        if ($template === null) {
+            $message = "Aucun template associé aux CREF pour cette campagne. Veuillez contacter l'assistance : <a href='".$assistance."'>".$assistance."</a>.";
+            throw new RuntimeException($message, -1);
+        }
+        $rendu = $this->getRenduService()->generateRenduByTemplate($template, $vars);
         return PdfExporter::generatePdf($rendu->getSujet(), $rendu->getSujet(), $rendu->getCorps());
     }
 

@@ -129,7 +129,7 @@ class CampagneController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('entretien-professionnel/campagne/formulaire');
         $vm->setVariables([
             'title' => "Ajout d'une campagne d'entretien professionnel",
             'form' => $form,
@@ -169,7 +169,7 @@ class CampagneController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('entretien-professionnel/campagne/formulaire');
         $vm->setVariables([
             'title' => "Modification d'une campagne d'entretien professionnel",
             'form' => $form,

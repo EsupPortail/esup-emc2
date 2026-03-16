@@ -8,6 +8,7 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireService;
+use UnicaenRenderer\Service\Template\TemplateService;
 
 class CampagneHydratorFactory {
 
@@ -22,13 +23,16 @@ class CampagneHydratorFactory {
         /**
          * @var CampagneService $campagneService
          * @var FormulaireService $formulaireService
+         * @var TemplateService $templateService
          */
         $campagneService = $container->get(CampagneService::class);
         $formulaireService = $container->get(FormulaireService::class);
+        $templateService = $container->get(TemplateService::class);
 
         $hydrator = new CampagneHydrator();
         $hydrator->setCampagneService($campagneService);
         $hydrator->setFormulaireService($formulaireService);
+        $hydrator->setTemplateService($templateService);
         return $hydrator;
     }
 }

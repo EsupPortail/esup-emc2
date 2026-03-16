@@ -25,6 +25,12 @@
         <many-to-one target-entity="UnicaenAutoform\Entity\Db\Formulaire" field="formulaireCREF">
             <join-column name="formulaire_cref_id"/>
         </many-to-one>
+        <many-to-one target-entity="UnicaenRenderer\Entity\Db\Template" field="templateCREP">
+            <join-column name="template_crep_id"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenRenderer\Entity\Db\Template" field="templateCREF">
+            <join-column name="template_cref_id"/>
+        </many-to-one>
 
         <one-to-many target-entity="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" mapped-by="campagne" field="entretiens"/>
 
