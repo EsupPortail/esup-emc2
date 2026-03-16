@@ -483,6 +483,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         $mots = explode(";", $motsClefs);
         $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
+//        if ($texte === '' ) return "<span style='color:grey; font-style: italic;'>Aucune information saisie</span>";
         return str_replace("_"," ",$texte);
     }
 
