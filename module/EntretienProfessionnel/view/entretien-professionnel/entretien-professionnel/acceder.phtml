@@ -161,6 +161,8 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
     </div>
 <?php endif; ?>
 
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
     <button class="nav-link active" id="formulaire-tab"
             data-bs-toggle="tab" data-bs-target="#formulaire"

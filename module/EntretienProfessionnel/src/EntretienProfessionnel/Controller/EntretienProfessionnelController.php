@@ -306,10 +306,15 @@ class EntretienProfessionnelController extends AbstractActionController
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
         $crep = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormulaireInstance()->getId());
+        if ($crep === null) {
+            $this->getEntretienProfessionnelService()->initialiser($entretien, 'CREP');
+            $this->flashMessenger()->addWarningMessage("Le CREP a été réinitialisé");
+        }
         $cref = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormationInstance()->getId());
-//        $crep = $entretien->getFormulaireInstance();
-//        $cref = $entretien->getFormationInstance();
-
+        if ($cref === null) {
+            $this->getEntretienProfessionnelService()->initialiser($entretien, 'CREF');
+            $this->flashMessenger()->addWarningMessage("Le CREF a été réinitialisé");
+        }
         $observateurs = $this->getObservateurService()->getObservateursByEntretienProfessionnel($entretien);
 
         [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
