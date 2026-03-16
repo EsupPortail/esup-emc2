@@ -570,7 +570,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'agent' => $entretien->getAgent(),
             'campagne' => $entretien->getCampagne(),
         ];
-        $template = $entretien->getCampagne()?->getTemplateCREF();
+        $template = $entretien->getCampagne()?->getTemplateCREP();
         if ($template === null) {
             $message = "Aucun template associé aux CREP pour cette campagne. Veuillez contacter l'assistance : <a href='".$assistance."'>".$assistance."</a>.";
             throw new RuntimeException($message, -1);
