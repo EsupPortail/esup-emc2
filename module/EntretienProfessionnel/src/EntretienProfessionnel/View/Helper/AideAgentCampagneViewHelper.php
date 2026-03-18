@@ -47,8 +47,7 @@ class AideAgentCampagneViewHelper extends AbstractHelper
             $infos['raison'] = $raison;
             $infos['delai-observation'] = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT);
 
-            $validations = $entretien->getValidations();
-            $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE)?->getHistoCreation();
+            $validationResponsable = $entretien?->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE)?->getHistoCreation();
             if ($validationResponsable) {
                 $validationResponsable->add(new DateInterval('P'.$infos['delai-observation'].'D'));
                 $infos['limite-observation'] = $validationResponsable;
