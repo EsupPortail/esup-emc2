@@ -52,7 +52,7 @@ class AideAgentCampagneViewHelper extends AbstractHelper
                 $validationResponsable->add(new DateInterval('P'.$infos['delai-observation'].'D'));
                 $infos['limite-observation'] = $validationResponsable;
             }
-            if ($entretien AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) {
+            if ($entretien?->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) {
                 $urlService = $this->getUrlService();
                 $urlService->setVariables(['entretien' => $entretien]);
                 $infos['url-acceptation'] = $urlService->getUrlEntretienAccepter(false);
