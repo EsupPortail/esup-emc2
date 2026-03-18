@@ -719,13 +719,24 @@ class EntretienProfessionnelController extends AbstractActionController
                 $instance = ($formulaire==='CREP')?$entretien->getFormulaireInstance():$entretien->getFormationInstance();
                 if ($instance) {
                     $this->getFormulaireInstanceService()->historise($instance);
-                    $formulaireType = ($formulaire==='CREP'?$campagne->getFormulaireCREP():$campagne->getFormulaireCREF());
-                    $entretien_instance = $this->getFormulaireInstanceService()->createInstance($formulaireType->getCode());
-                    $entretien->setFormulaireInstance($entretien_instance);
-                    $this->getEntretienProfessionnelService()->update($entretien);
-                }
-                $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+                    switch ($formulaire) {
+                        case 'CREP':
+                            $formulaireType = $campagne->getFormulaireCREP();
+                            $entretien_instance = $this->getFormulaireInstanceService()->createInstance($formulaireType->getCode());
+                            $entretien->setFormulaireInstance($entretien_instance);
+                            $this->getEntretienProfessionnelService()->update($entretien);
+                            $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+                            break;
+                        case 'CREF':
+                            $formulaireType = $campagne->getFormulaireCREF();
+                            $entretien_instance = $this->getFormulaireInstanceService()->createInstance($formulaireType->getCode());
+                            $entretien->setFormationInstance($entretien_instance);
+                            $this->getEntretienProfessionnelService()->update($entretien);
+                            $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+                            break;
 
+                    }
+                }
             }
             exit();
         }

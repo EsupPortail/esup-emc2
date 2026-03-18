@@ -45,17 +45,17 @@ $agent  = $entretien->getAgent();
 <?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER)) : ?>
     <?php if ($entretien->getFormationInstance()->getFormulaire()->getId() !== $entretien->getCampagne()->getFormulaireCREF()->getId()) : ?>
         <div class="alert alert-danger">
-            Le formulaire du CREP a changé depuis la création de l'entretien professionnel.
+            Le formulaire du CREF a changé depuis la création de l'entretien professionnel.
 
             <br>
             Debug :
             <ul>
-                <li>Entretien Id: <?php echo $entretien->getFormationInstance()->getFormulaire()->getId(); ?> Code:<?php echo $entretien->getFormulaireInstance()->getFormulaire()->getCode(); ?></li>
-                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getId(); ?> Code:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getCode(); ?></li>
+                <li>Entretien Id: <?php echo $entretien->getFormationInstance()->getFormulaire()->getId(); ?> Code:<?php echo $entretien->getFormationInstance()->getFormulaire()->getCode(); ?></li>
+                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREF()->getId(); ?> Code:<?php echo $entretien->getCampagne()->getFormulaireCREF()->getCode(); ?></li>
             </ul>
         </div>
     <?php endif; ?>
-    <?php if ($entretien->getFormationInstance()->getHistoModification() > $entretien->getCampagne()->getFormulaireCREF()->getHistoModification()) : ?>
+    <?php if ($entretien->getFormationInstance()->getHistoModification() < $entretien->getCampagne()->getFormulaireCREF()->getHistoModification()) : ?>
         <div class="alert alert-danger">
             Le formulaire du CREF a été mis à jour depuis la création de l'entretien professionnel.
 
