@@ -399,3 +399,24 @@ span.missing-data {
 .text-warning {
     color: var(--bs-warning) !important;
 }
+
+/** TODO  a migrer dans autoform ***/
+
+div.autoform-categorie {
+    margin-bottom: 1rem;
+}
+
+div.autoform-texte {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: lightgoldenrodyellow;
+}
+
+span.input-libelle {
+    color: darkblue;
+    font-weight : bolder;
+}
+span.input-sublibelle {
+    color: darkgreen;
+    font-weight : bold;
+}
