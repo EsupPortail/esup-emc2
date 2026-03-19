@@ -145,8 +145,10 @@ class NotificationService extends \Application\Service\Notification\Notification
         }
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_DAC, $vars);
         $mailDac = $this->getMailService()->sendMail($mail_DAC, $rendu->getSujet(), $rendu->getCorps(), 'EntretienProfessionnel');
-        $mailDac->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mailDac);
+        if ($mailDac) {
+            $mailDac->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mailDac);
+        }
 
         return $mailDac;
     }
@@ -165,8 +167,10 @@ class NotificationService extends \Application\Service\Notification\Notification
         }
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_BIATSS, $vars);
         $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-        $mailBiats->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mailBiats);
+        if ($mailBiats) {
+            $mailBiats->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mailBiats);
+        }
 
         return $mailBiats;
     }
@@ -246,26 +250,41 @@ class NotificationService extends \Application\Service\Notification\Notification
     public function triggerObservations(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
+        $emailsAutorites = $this->getEmailAutoritesHierarchiques($entretien);
+        $emailsResponsable = $this->getEmailResponsable($entretien);
 
         if ($entretien->hasObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN)
             || $entretien->hasObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE)
             || $entretien->hasObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_FORMATION)
             ) {
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_OBSERVATION, $vars);
-            $mail = $this->getMailService()->sendMail($this->getEmailAutoritesHierarchiques($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
+
+
+            if ($emailsAutorites) {
+                $mail = $this->getMailService()->sendMail($emailsAutorites, $rendu->getSujet(), $rendu->getCorps(), 'EntretienProfessionnel');
+                if ($mail) {
+                    $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+                    $this->getMailService()->update($mail);
+                }
+            }
 
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_OBSERVATION_TRANSMISSION, $vars);
-            $mail = $this->getMailService()->sendMail($this->getEmailResponsable($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
+            if ($emailsResponsable) {
+                $mail = $this->getMailService()->sendMail($emailsResponsable, $rendu->getSujet(), $rendu->getCorps(), 'EntretienProfessionnel');
+                if ($mail) {
+                    $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+                    $this->getMailService()->update($mail);
+                }
+            }
         } else {
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_PAS_D_OBSERVATION, $vars);
-            $mail = $this->getMailService()->sendMail($this->getEmailAutoritesHierarchiques($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-            if ($mail) {
-                $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-                $this->getMailService()->update($mail);
+
+            if ($emailsAutorites) {
+                $mail = $this->getMailService()->sendMail($emailsAutorites, $rendu->getSujet(), $rendu->getCorps(), 'EntretienProfessionnel');
+                if ($mail) {
+                    $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+                    $this->getMailService()->update($mail);
+                }
             }
         }
         return $mail;
@@ -295,7 +314,6 @@ class NotificationService extends \Application\Service\Notification\Notification
             $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
         }
-
         return $mail;
     }
 
@@ -361,8 +379,10 @@ class NotificationService extends \Application\Service\Notification\Notification
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT_SUPERIEUR, $vars);
         $mail = $this->getMailService()->sendMail($superieur->getEmail(), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()),'EntretienProfessionnel');
-        $mail->setMotsClefs(["CAMPAGNE_" . $campagne->getId(), "CAMPAGNE_AVANCEMENT", "DATE_" . (new DateTime())->format('d/m/Y')]);
-        $this->getMailService()->update($mail);
+        if ($mail) {
+            $mail->setMotsClefs(["CAMPAGNE_" . $campagne->getId(), "CAMPAGNE_AVANCEMENT", "DATE_" . (new DateTime())->format('d/m/Y')]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
@@ -403,8 +423,11 @@ class NotificationService extends \Application\Service\Notification\Notification
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT_AUTORITE, $vars);
         $mail = $this->getMailService()->sendMail($autorite->getEmail(), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()),'EntretienProfessionnel');
-        $mail->setMotsClefs(["CAMPAGNE_" . $campagne->getId(), "CAMPAGNE_AVANCEMENT", "DATE_" . (new DateTime())->format('d/m/Y')]);
-        $this->getMailService()->update($mail);
+        if ($mail) {
+            $mail->setMotsClefs(["CAMPAGNE_" . $campagne->getId(), "CAMPAGNE_AVANCEMENT", "DATE_" . (new DateTime())->format('d/m/Y')]);
+            $this->getMailService()->update($mail);
+        }
+
         return $mail;
     }
 
@@ -422,9 +445,10 @@ class NotificationService extends \Application\Service\Notification\Notification
         $corps = $rendu->getCorps();
         $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
         $mail = $this->getMailService()->sendMail($superieur->getEmail(), $rendu->getSujet(), $corps,'EntretienProfessionnel');
-        $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
@@ -440,8 +464,10 @@ class NotificationService extends \Application\Service\Notification\Notification
         $corps = $rendu->getCorps();
         $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
         $mail = $this->getMailService()->sendMail($autorite->getEmail(), $rendu->getSujet(), $corps,'EntretienProfessionnel');
-        $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        if ($mail) {
+            $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
 
         return $mail;
     }
@@ -452,8 +478,10 @@ class NotificationService extends \Application\Service\Notification\Notification
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_AGENT, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-        $mail->setMotsClefs([$entretien->getCampagne()->generateTag(), $entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->getCampagne()->generateTag(), $entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
 
         return $mail;
     }
@@ -479,8 +507,10 @@ class NotificationService extends \Application\Service\Notification\Notification
         $mails  = implode(",", $mail_array);
 
         $mail = $this->getMailService()->sendMail($mails, $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
-        $mail->setMotsClefs([$entretien->getCampagne()->generateTag(), $entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->getCampagne()->generateTag(), $entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
