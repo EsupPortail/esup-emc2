@@ -103,7 +103,8 @@ $date_depassee = (($isAgent) and ($now > $date));
     <?php if ($canAfficher) : ?>
         <?php
             /** @see \UnicaenAutoform\View\Helper\InstanceAsTextHelper::render() */
-            echo $this->instanceAsText()->render($crep, $entretien->getDateEntretien(), null, true);
+//            echo $this->instanceAsText()->render($crep, $entretien->getDateEntretien(), null, true);
+            echo $this->instanceAsText()->render($crep, null, null, true);
         ?>
 
 

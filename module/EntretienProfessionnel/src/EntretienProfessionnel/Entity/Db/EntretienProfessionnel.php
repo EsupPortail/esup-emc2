@@ -283,7 +283,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         /** @var Agent $agent */
         $agent = $this->getResponsable();
-        if ($agent->getNomUsuel() === null) return "Aucun nom d'usage";
+        if ($agent->getNomUsuel() === null OR trim($agent->getNomUsuel()) === '') return "<span class='missing-data'>Aucun nom d'usage</span>";
         return $agent->getNomUsuel();
     }
 
@@ -292,7 +292,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         /** @var Agent $agent */
         $agent = $this->getResponsable();
-        if ($agent->getNomFamille() === null) return "Aucun nom de famille";
+        if ($agent->getNomFamille() === null OR trim($agent->getNomFamille()) === '') return "<span class='missing-data'> Aucun nom de famille </span>";
         return $agent->getNomFamille();
     }
 
@@ -301,7 +301,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         /** @var Agent $agent */
         $agent = $this->getResponsable();
-        if ($agent->getPrenom() === null) return "Aucun prénom";
+        if ($agent->getPrenom() === null OR trim($agent->getPrenom()) === '') return "<span class='missing-data'> Aucun prénom </span>";
         return $agent->getPrenom();
     }
 
@@ -506,6 +506,11 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringCompetencesTechniques() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.1']);
+        $texte = "<span class='input-libelle'>Compétences professionnelles et technicité :</span> ";
+        if ($reponses === null || $reponses === "") {
+            $texte .= "<span class='missing-data'> Aucune réponse </span>";
+            return $texte;
+        }
         $items = explode(";",$reponses);
         $texte = "<ul>";
         foreach ($items as $item) {
@@ -543,8 +548,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringActiviteService() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.2']);
+        $texte = "<span class='input-libelle'>Contributions aux activités du service :</span> ";
+        if ($reponses === null || $reponses === "") {
+            $texte .= "<span class='missing-data'> Aucune réponse </span>";
+            return $texte;
+        }
         $items = explode(";",$reponses);
-        $texte = "<ul>";
+        $texte .= "<ul>";
         foreach ($items as $item) {
             switch ((int) $item) {
                 case 1:
@@ -586,8 +596,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringCompetencesPersonnelles() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.3']);
+        $texte = "<span class='input-libelle'>Capacités professionnelles et relationnelles :</span> ";
+        if ($reponses === null || $reponses === "") {
+            $texte .= "<span class='missing-data'> Aucune réponse </span>";
+            return $texte;
+        }
         $items = explode(";",$reponses);
-        $texte = "<ul>";
+        $texte .= "<ul>";
         foreach ($items as $item) {
             switch ((int) $item) {
             case 1 :
@@ -611,8 +626,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @noinspection PhpUnused */
     public function toStringEncadrementConduite() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.4']);
+        $texte = "<span class='input-libelle'>Aptitude à l’encadrement et/ou à la conduite de projets :</span> ";
+        if ($reponses === null || $reponses === "") {
+            $texte .= "<span class='missing-data'> Aucune réponse </span>";
+            return $texte;
+        }
         $items = explode(";",$reponses);
-        $texte = "<ul>";
+        $texte .= "<ul>";
         foreach ($items as $item) {
             switch ((int) $item) {
                 case 1 :

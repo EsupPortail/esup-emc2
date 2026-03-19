@@ -18,24 +18,22 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        if ($agent->getPrenom()) return $agent->getPrenom();
-        return "Aucun prénom de renseigné";
+        if ($agent->getPrenom() AND trim($agent->getPrenom()) !== '') return $agent->getPrenom();
+        return "<span class='missing-data'>Aucun prénom de renseigné</span>";
     }
 
     public function toStringNomUsage() : string
     {
-        /** @var Agent $agent */
         $agent = $this;
-        if ($agent->getNomUsuel()) return $agent->getNomUsuel();
-        return "Aucun nom d'usage de renseigné";
+        if ($agent->getNomUsuel() AND trim($agent->getNomUsuel()) !== '') return $agent->getNomUsuel();
+        return "<span class='missing-data'>Aucun nom d'usage de renseigné</span>";
     }
 
     public function toStringNomFamille() : string
     {
-        /** @var Agent $agent */
         $agent = $this;
-        if ($agent->getNomFamille()) return $agent->getNomFamille();
-        return "Aucun nom de famille de renseigné";
+        if ($agent->getNomFamille() AND trim($agent->getNomFamille()) !== '') return $agent->getNomFamille();
+        return "<span class='missing-data'>Aucun nom de famille de renseigné</span>";
     }
 
     /**
@@ -328,7 +326,7 @@ trait AgentMacroTrait
         $agent = $this;
         $grades = ($agent->getGradesActifs())?$agent->getGradesActifs():null;
 
-        if ($grades === null) return "";
+        if ($grades === null) return "<span class='missing-data'>Aucun corps-grade connu</span>";
 
         $texte = "";
         foreach ($grades as $grade) {
@@ -343,7 +341,7 @@ trait AgentMacroTrait
         $agent = $this;
         $fiche = $agent->getFichePosteBest();
 
-        if ($fiche === null) return "Aucune fiche de poste EMC2";
+        if ($fiche === null) return "<span class='missing-data'>Aucune fiche de poste EMC2</span>";
         $metier  = $fiche->getLibelleMetierPrincipal();
         $complement = $fiche->getLibelle();
 
@@ -402,6 +400,7 @@ trait AgentMacroTrait
         $agent = $this;
         $echelons = $agent->getEchelonsActifs();
 
+        if (empty($echelons)) return "<span class='missing-data'>Aucun échelon connu</span>";
         $texte = implode("<br>", array_map(function (AgentEchelon $a) { return $a->getEchelon();}, $echelons));
         return $texte;
     }
@@ -412,6 +411,7 @@ trait AgentMacroTrait
         $agent = $this;
         $echelons = $agent->getEchelonsActifs();
 
+        if (empty($echelons)) return "<span class='missing-data'>Aucun échelon connu</span>";
         $texte = implode("<br>", array_map(function (AgentEchelon $a) { return $a->getDateDebutToString();}, $echelons));
         return $texte;
     }

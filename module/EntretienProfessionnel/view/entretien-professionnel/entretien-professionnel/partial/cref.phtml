@@ -92,7 +92,8 @@ $agent  = $entretien->getAgent();
     <?php if ($canAfficher) : ?>
         <?php
             /** @see \UnicaenAutoform\View\Helper\InstanceAsTextHelper::render() */
-            echo $this->instanceAsText()->render($cref, $entretien->getDateEntretien(), null, true);
+//            echo $this->instanceAsText()->render($cref, $entretien->getDateEntretien(), null, true);
+            echo $this->instanceAsText()->render($cref, null, null, true);
         ?>
 
         <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND  $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
