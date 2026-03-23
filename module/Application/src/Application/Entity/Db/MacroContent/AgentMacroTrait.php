@@ -56,6 +56,7 @@ trait AgentMacroTrait
         /** @var Agent $agent */
         $agent = $this;
         $affecations = $agent->getAffectationsActifs();
+        if (empty($affectations)) return 'Aucune affectation active';
         $texte  = "<ul>";
         foreach ($affecations as $affectation) {
             $texte .= "<li>";
@@ -87,6 +88,7 @@ trait AgentMacroTrait
         /** @var Agent $agent */
         $agent = $this;
         $statuts = $agent->getStatutsActifs();
+        if (empty($statuts)) return 'Aucune statut actif';
 //        $texte  = "<ul>";
         $texte  = "";
         foreach ($statuts as $statut) {
@@ -120,6 +122,7 @@ trait AgentMacroTrait
         /** @var Agent $agent */
         $agent = $this;
         $grades = $agent->getGradesActifs();
+        if (empty($grades)) return 'Aucune grade actif';
 //        $texte  = "<ul>";
         $texte  = "";
         foreach ($grades as $grade) {
