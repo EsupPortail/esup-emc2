@@ -349,7 +349,7 @@ return [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/progression-par-structures/:campagne',
+                                    'route'    => '/progression-par-structures/:campagne[/:structure]',
                                     'defaults' => [
                                         /** @see CampagneController::progressionParStructuresAction() */
                                         'controller' => CampagneController::class,

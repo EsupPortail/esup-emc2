@@ -1,6 +1,7 @@
 <?php
 
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 
@@ -8,6 +9,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @see \EntretienProfessionnel\Controller\CampagneController::progressionParStructuresAction()
  * @var Campagne $campagne
  * @var Structure[] $structures
+ * @var CampagneProgressionStructure[] $progressions
  */
 
 $this->headTitle("Progression par structures de niveau 2");
@@ -52,8 +54,66 @@ $canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(Structur
                     <?php echo $structure->getType()->getLibelle(); ?>
                 <?php endif; ?>
             </td>
-            <td class="progression"
-                id="progression_<?php echo $campagne->getId(); ?>_<?php echo $structure->getId(); ?>"> TO BE LOADED ...
+            <td>
+                <?php if (!isset($progressions[$structure->getId()])) : ?>
+                    Aucune donnée pour cette structure
+                <?php else: ?>
+                    <?php
+                        $progression = $progressions[$structure->getId()];
+                        $nbTotal = $progression->getNbTotal();
+                        $nbValiderAgent = $progression->getNbComplet(); $ratioAgent = 0;
+                        $nbValiderAutorite = $progression->getNbAutorite(); $ratioAutorite = 0;
+                        $nbValiderObservation = $progression->getNbObservation(); $ratioObservation = 0;
+                        $nbValiderSuperieur = $progression->getNbSuperieur(); $ratioSuperieur = 0;
+                        $nbEncours = $progression->getNbPlanifier();
+                        $nbSans = $progression->getNbManquant();
+
+
+                        // duplicata du VH
+                        if ($nbTotal !== 0) {
+                        $ratioAgent = $nbValiderAgent / $nbTotal * 100.0;
+                        $ratioAutorite = $nbValiderAutorite / $nbTotal * 100.0;
+                        $ratioSuperieur = $nbValiderSuperieur / $nbTotal * 100.0;
+                        $ratioObservation = $nbValiderObservation / $nbTotal * 100.0;
+                        //    $ratioPlanifie = count($encours) / $nbTotal * 100.0;
+                        $ratioPlanifie = $nbEncours / $nbTotal * 100.0;
+                        $ratioSans = 100.0 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie + $ratioObservation);
+                        }
+                    ?>
+
+                    <div class="progress">
+                        <?php if ($ratioAgent > 0) : ?>
+                            <div class="progress-bar entretien-agent" role="progressbar" style="width: <?php echo $ratioAgent; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                                 title="Entretiens complétés <?php echo $nbValiderAgent; ?>/<?php echo $nbTotal; ?>">
+                                <?php echo round($ratioAgent); ?>%</div>
+                        <?php endif; ?>
+                        <?php if ($ratioAutorite > 0) : ?>
+                            <div class="progress-bar entretien-autorite" role="progressbar" style="width: <?php echo $ratioAutorite; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                                 title="Entretiens validés par l'autorité hiérarchique <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
+                                <?php echo round($ratioAutorite); ?>%</div>
+                        <?php endif; ?>
+                        <?php if ($ratioObservation > 0) : ?>
+                            <div class="progress-bar entretien-observation" role="progressbar" style="width: <?php echo $ratioObservation; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                                 title="Entretiens avec des observations émises par l'agent·e <?php echo $nbValiderObservation; ?>/<?php echo $nbTotal; ?>">
+                                <?php echo round($ratioObservation); ?>%</div>
+                        <?php endif; ?>
+                        <?php if ($ratioSuperieur > 0) : ?>
+                            <div class="progress-bar entretien-superieur" role="progressbar" style="width: <?php echo $ratioSuperieur; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                                 title="Entretiens validés par le ou la supérieure hierarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
+                                <?php echo round($ratioSuperieur); ?>%</div>
+                        <?php endif; ?>
+                        <?php if ($ratioPlanifie > 0) : ?>
+                            <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                                 title="Entretiens planifiés <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
+                                <?php echo round($ratioPlanifie); ?>%</div>
+                        <?php endif; ?>
+                        <?php if ($ratioSans > 0) : ?>
+                            <div class="progress-bar sans"   role="progressbar" style="width: <?php echo $ratioSans; ?>%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                                 title="Entretiens non planifiés <?php echo $nbSans; ?>/<?php echo $nbTotal; ?>">
+                                <?php echo round($ratioSans); ?>%</div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -63,64 +123,4 @@ $canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(Structur
 <h2> Légende </h2>
 
 <?php echo $this->campagneAvancement([], [], null, ['only-legende' => true]); ?>
-
-<script>
-    let base_url = "<?php echo $this->url('entretien-professionnel/campagne/structure-progression'); ?>";
-    let maxConcurrent = 5;
-    let currentConcurrent = 0;
-
-    function traiterStructure(campagne_id, structure_id) {
-        let id = "progression_" + campagne_id + "_" + structure_id;
-        $.ajax({
-            type: "POST",
-            url: base_url + "/" + campagne_id + "/" + structure_id,
-            beforeSend:
-                function () {
-                    $("td#" + id).html("Chargement en cours ...");
-                },
-            success:
-                function (retour) {
-                    currentConcurrent--;
-                    $("td#" + id).html(retour);
-                }
-        });
-    }
-
-    function traiter(campagne_id, structures_id, process) {
-        if (currentConcurrent < maxConcurrent) {
-            currentConcurrent++;
-            traiterStructure(campagne_id, structures_id.pop());
-        }
-        if (structures_id.length === 0) {
-            clearInterval(process);
-        }
-    }
-
-    $(function () {
-        let structures_id = [];
-        let campagne_id = null;
-        $('td.progression').each(function (index, cell) {
-            let id = cell.id;
-            let structure_id = id.split('_')[2];
-            campagne_id = id.split('_')[1];
-            structures_id.push(structure_id);
-        });
-        console.log(structures_id.length + " structures à traiter");
-
-        const process = setInterval(() => traiter(campagne_id, structures_id, process), 500);
-
-
-        $('table#progression').dataTable({
-            paging: false,
-            info: false,
-            autoWidth: false,
-            language: {
-                "url": "/js/datatables_fr.json",
-            },
-            columnDefs: [
-                {targets: [2], orderable: false}
-            ]
-        });
-    });
-</script>
 

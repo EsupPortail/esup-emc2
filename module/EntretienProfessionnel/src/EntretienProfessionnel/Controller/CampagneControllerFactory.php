@@ -10,6 +10,7 @@ use Application\Service\Macro\MacroService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurService;
+use EntretienProfessionnel\Service\CampagneProgressionStructure\CampagneProgressionStructureService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
@@ -43,6 +44,7 @@ class CampagneControllerFactory extends AbstractActionController
          * @var AgentSuperieurService $agentSuperieurService
          * @var CampagneService $campagneService
          * @var CampagneConfigurationIndicateurService $campagneConfigurationIndicateurService
+         * @var CampagneProgressionStructureService $campagneProgressionStructureService
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var HasIndicateursService $hasIndicateursService
          * @var MacroService $macroService
@@ -61,6 +63,7 @@ class CampagneControllerFactory extends AbstractActionController
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $campagneConfigurationIndicateurService = $container->get(CampagneConfigurationIndicateurService::class);
+        $campagneProgressionStructureService = $container->get(CampagneProgressionStructureService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $hasIndicateursService = $container->get(HasIndicateursService::class);
         $macroService = $container->get(MacroService::class);
@@ -87,6 +90,7 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setCampagneService($campagneService);
         $controller->setCampagneConfigurationIndicateurService($campagneConfigurationIndicateurService);
+        $controller->setCampagneProgressionStructureService($campagneProgressionStructureService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setHasIndicateursService($hasIndicateursService);
         $controller->setMacroService($macroService);

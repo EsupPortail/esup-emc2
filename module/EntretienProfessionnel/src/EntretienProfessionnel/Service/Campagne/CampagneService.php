@@ -534,4 +534,9 @@ class CampagneService
 
     }
 
+    public function computeProgressionStructure(Campagne $campagne, Structure $structure) : array
+    {
+
+    }
+
 }
