@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 
@@ -16,6 +17,8 @@ use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
  * @var EntretienProfessionnel[] $entretiensAutorite
  * @var EntretienProfessionnel[] $entretiensAgent
  * @var EntretienProfessionnel[] $entretiensCompletes
+ *
+ * @var CampagneProgressionStructure $progression
  */
 
 
@@ -153,32 +156,8 @@ foreach ($entretiens as $etat => $liste) {
 
         <h2> Entretiens de la campagne </h2>
 
-<!--        --><?php //$listes = []; ?>
-<!--        --><?php //foreach ($entretiens as $etat => $array): ?>
-<!--            --><?php //foreach ($entretiens as $agent => $e): ?>
-<!--                --><?php
-//                    $nb = count($array);
-//                    if ($nb === 1) $listes[] = current($e);
-//                ?>
-<!--            --><?php //endforeach; ?>
-<!--        --><?php //endforeach; ?>
+        <?php echo $this->partial('entretien-professionnel/campagne/progression-structure', ['campagne' => $campagne, 'structure' => null, 'progression' => $progression, 'debug' => false, 'legende' => true, 'titre' => false]); ?>
 
-        <?php echo $this->campagneAvancement($entretiens, [], $nbAgents,  ['array' => true]); ?>
-
-<!--        <div class="row">-->
-<!--            <div class="col-md-8">-->
-<!--                <dl class="row">-->
-<!--                    <dt class="col-md-5"> Attente validation responsable : </dt>-->
-<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensResponsable); ?><!--</dd>-->
-<!--                    <dt class="col-md-5"> Attente validation autorité : </dt>-->
-<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensAutorite); ?><!--</dd>-->
-<!--                    <dt class="col-md-5"> Attente validation agent : </dt>-->
-<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensAgent); ?><!--</dd>-->
-<!--                    <dt class="col-md-5"> Entretiens complets : </dt>-->
-<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensCompletes); ?><!--</dd>-->
-<!--                </dl>-->
-<!--            </div>-->
-<!--            <div class="col-md-4">-->
 
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-superieur', ['campagne' => $campagne->getId()], [], true); ?>"

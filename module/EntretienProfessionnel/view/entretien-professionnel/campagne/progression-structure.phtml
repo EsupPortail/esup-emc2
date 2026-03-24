@@ -9,10 +9,13 @@ use Structure\Entity\Db\Structure;
  * @var Campagne $campagne
  * @var Structure $structure
  * @var CampagneProgressionStructure $progression
+ * @var bool $debug
+ * @var bool $titre
  */
 
-$debug = true;
-$displayLegende = true;
+$debug = $debug??false;
+$displayLegende = $legende??false;
+$displayTitre = isset($titre)?$titre:true;
 $onlyLegende = false;
 $mode = 'div';
 
@@ -39,14 +42,17 @@ if ($nbTotal !== 0) {
 }
 ?>
 
-<h1 class="page-header">
-    Affichage de l'avancement de la campagne <?php echo $campagne->getDate(); ?> <br>
-    pour la structure <?php echo $structure->getLibelleLong(); ?>
-</h1>
+<?php if ($displayTitre) : ?>
+    <h1 class="page-header">
+        Affichage de l'avancement de la campagne <?php echo $campagne->getDate(); ?> <br>
+        pour la structure <?php echo $structure?->getLibelleLong(); ?>
+    </h1>
+<?php endif; ?>
 
 
 
 <?php if ($mode === 'div' AND !$onlyLegende) : ?>
+    <span class="alert alert-info">NEUE</span>
     <?php if ($nbTotal !== 0) : ?>
         <div class="progress">
             <?php if ($ratioAgent > 0) : ?>

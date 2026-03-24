@@ -82,13 +82,16 @@ class CampagneController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $agents = $this->getCampagneService()->getAgentsEligibles($campagne);
+        //$agents = $this->getCampagneService()->getAgentsEligibles($campagne);
+        $structure = $this->getStructureService()->getStructureByCode('UNIV');
+        $progression = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
 
         return new ViewModel([
             'campagne' => $campagne,
             'agents' => [],//$this->getCampagneService()->getAgentsEligibles($campagne),
-            'nbAgents' => count($agents),
+            'nbAgents' => 0,//count($agents),
             'entretiens' => $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, true),
+            'progression' => $progression,
         ]);
     }
 
@@ -432,7 +435,6 @@ class CampagneController extends AbstractActionController
      */
     public function structureAction(): ViewModel
     {
-
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
         $structure = $this->getStructureService()->getRequestedStructure($this);
@@ -440,7 +442,6 @@ class CampagneController extends AbstractActionController
         if ($structure === null) {
             throw new RuntimeException("Aucune structure de trouvée.");
         }
-
 //         $this->getCampagneService()->refreshStatut($campagne, $structure);
 
 
@@ -510,7 +511,8 @@ class CampagneController extends AbstractActionController
 //            return $a->getDateDebut() <=> $b->getDateDebut();
 //        });
 
-            $campagnes = $this->getCampagneService()->getCampagnes();
+        $campagnes = $this->getCampagneService()->getCampagnes();
+        $progression = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
 
         /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
         $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne, 'structure' => $structure];
@@ -525,6 +527,7 @@ class CampagneController extends AbstractActionController
             'selecteur' => $selecteur,
             'structures' => $structures,
             'agents' => $agents,
+            'progression' => $progression,
 
             'entretiens' => $entretiens,
             'encours' => $encours,

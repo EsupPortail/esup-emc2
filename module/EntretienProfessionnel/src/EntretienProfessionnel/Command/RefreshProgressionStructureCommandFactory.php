@@ -9,13 +9,13 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 
-class RefreshProgressionCommandFactory {
+class RefreshProgressionStructureCommandFactory {
 
     /**
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): RefreshProgressionCommand
+    public function __invoke(ContainerInterface $container): RefreshProgressionStructureCommand
     {
         /**
          * @var CampagneService $campagneService
@@ -26,7 +26,7 @@ class RefreshProgressionCommandFactory {
         $campagneProgressionStructureService = $container->get(CampagneProgressionStructureService::class);
         $structureService = $container->get(StructureService::class);
 
-        $command = new RefreshProgressionCommand();
+        $command = new RefreshProgressionStructureCommand();
         $command->setCampagneService($campagneService);
         $command->setCampagneProgressionStructureService($campagneProgressionStructureService);
         $command->setStructureService($structureService);

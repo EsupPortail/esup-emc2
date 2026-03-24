@@ -90,6 +90,7 @@ class CampagneProgressionStructureService
     public function getCampagneProgressionStructureByCampagneAndStructure(Campagne $campagne, Structure $structure): ?CampagneProgressionStructure
     {
         $qb = $this->createQueryBuilder()
+            ->andWhere('cps.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('cps.structure = :structure')->setParameter('structure', $structure)
             ->andWhere('cps.histoDestruction IS NULL');
         try {

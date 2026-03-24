@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use Structure\Entity\Db\Structure;
@@ -13,6 +14,7 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var Campagne $campagne
  * @var Campagne[] $campagnes
  * @var Campagne[] $campagnesFutures
+ * @var CampagneProgressionStructure $progression
  *
  * @var Structure $structure
  * @var Structure[] $structures
@@ -70,7 +72,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </div>
     <div class="col-md-6">
         <h3> Complétion de la campagne</h3>
-        <?php echo $this->campagneAvancement($entretiens, $obligatoires); ?>
+<!--        --><?php //echo $this->campagneAvancement($entretiens, $obligatoires); ?>
+        <?php echo $this->partial('entretien-professionnel/campagne/progression-structure', ['campagne' => $campagne, 'structure' => $structure, 'progression' => $progression, 'debug' => false, 'legende' => true, 'titre' => false]); ?>
     </div>
 </div>
 

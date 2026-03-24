@@ -15,7 +15,7 @@ use UnicaenIndicateur\Service\Abonnement\AbonnementServiceAwareTrait;
 use UnicaenIndicateur\Service\Indicateur\IndicateurServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 
-class RefreshProgressionCommand extends Command
+class RefreshProgressionStructureCommand extends Command
 {
     use CampagneServiceAwareTrait;
     use StructureServiceAwareTrait;

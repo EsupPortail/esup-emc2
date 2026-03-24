@@ -1,8 +1,8 @@
 <?php
 
 
-use EntretienProfessionnel\Command\RefreshProgressionCommand;
-use EntretienProfessionnel\Command\RefreshProgressionCommandFactory;
+use EntretienProfessionnel\Command\RefreshProgressionStructureCommand;
+use EntretienProfessionnel\Command\RefreshProgressionStructureCommandFactory;
 
 return [
     'bjyauthorize' => [
@@ -12,7 +12,7 @@ return [
 
     'laminas-cli' => [
         'commands' => [
-            'entretien-professionnel:refresh-progression' => RefreshProgressionCommand::class,
+            'entretien-professionnel:refresh-progression-structure' => RefreshProgressionStructureCommand::class,
         ],
     ],
 
@@ -22,7 +22,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            RefreshProgressionCommand::class => RefreshProgressionCommandFactory::class,
+            RefreshProgressionStructureCommand::class => RefreshProgressionStructureCommandFactory::class,
         ],
     ],
 
