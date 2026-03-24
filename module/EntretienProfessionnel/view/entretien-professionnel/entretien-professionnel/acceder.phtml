@@ -37,6 +37,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\Observateur;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use FicheMetier\Entity\Db\FicheMetier;
 use UnicaenFichier\Entity\Db\Fichier;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
@@ -63,6 +64,8 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RE
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) or $depasseObs) $step = 2;
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)) $step = 3;
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) $step = 4;
+
+
 
 ?>
 
@@ -145,10 +148,15 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             <!--            <li> avoir le droit de renseigner les comptes-rendus -->
             <?php //echo ($canModifierEP)?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?><!-- </li>-->
         </ul>
+
     </div>
 <?php endif; ?>
 
-<?php $canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER); ?>
+<?php
+    $canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
+    $cannotVisualiser = ($role->getRoleId() === Agent::ROLE_AGENT AND ($now > $entretien->getDateFin() AND $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null));
+?>
+
 <?php if ($canRenseigner) : ?>
     <div class="alert alert-success">
         <span class="icon icon-checked"></span>
@@ -210,7 +218,13 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/crep', ['entretien' => $entretien, 'crep' => $crep, 'fichePoste' => $ficheposte, 'user' => $user, 'role' => $role, 'source' => 'renseignerAction']); ?>
+        <?php if ($cannotVisualiser) : ?>
+            <div class="alert alert-info">
+                Vous ne pourrez visualiser ce compte-rendu qu'une fois celui-ci validé par votre supérieur·e hiérarchique direct·e.
+            </div>
+        <?php else : ?>
+            <?php echo $this->partial('partial/crep', ['entretien' => $entretien, 'crep' => $crep, 'fichePoste' => $ficheposte, 'user' => $user, 'role' => $role, 'source' => 'renseignerAction']); ?>
+        <?php endif; ?>
     </div>
 
     <div id="formations" class="tab-pane">
@@ -225,7 +239,13 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null, 'connectedUser' => $user, 'role' => $role, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php if ($cannotVisualiser) : ?>
+            <div class="alert alert-info">
+                Vous ne pourrez visualiser ce compte-rendu qu'une fois celui-ci validé par votre supérieur·e hiérarchique direct·e.
+            </div>
+        <?php else : ?>
+            <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null, 'connectedUser' => $user, 'role' => $role, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php endif; ?>
     </div>
 
     <!--            --><?php //if ($displayAcquis === true) : ?>

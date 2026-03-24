@@ -12,6 +12,7 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Parametre\AgentParametres;
 use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -38,6 +39,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var Parametre[] $parametres
  * @var ChaineAssertion $chaineAssertion
  * @var User $connectedUser
+ * @var Campagne[] $campagnesActives
  *
  */
 
@@ -84,7 +86,9 @@ if ($agent !== null) {
     </h1>
 
     <?php if ($connectedUser === $agent->getUtilisateur()) : ?>
-        <?php echo $this->aideAgentCampagne($agent); ?>
+        <?php foreach ($campagnesActives as $campagne) : ?>
+            <?php echo $this->aideAgentCampagne($agent, $campagne); ?>
+        <?php endforeach; ?>
     <?php endif; ?>
 
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
