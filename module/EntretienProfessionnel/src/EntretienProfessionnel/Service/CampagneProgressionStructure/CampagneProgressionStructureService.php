@@ -65,8 +65,7 @@ class CampagneProgressionStructureService
     {
         $qb = $this->getObjectManager()->getRepository(CampagneProgressionStructure::class)->createQueryBuilder('cps')
             ->join('cps.campagne', 'campagne')->addSelect('campagne')
-            ->join('cps.structure', 'structure')->addSelect('structure')
-        ;
+            ->join('cps.structure', 'structure')->addSelect('structure');
         return $qb;
     }
 
@@ -75,8 +74,7 @@ class CampagneProgressionStructureService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('cps.campagne = :campagne')->setParameter('campagne', $campagne)
-            ->andWhere('cps.histoDestruction IS NULL')
-        ;
+            ->andWhere('cps.histoDestruction IS NULL');
         return $qb->getQuery()->getResult();
     }
 
@@ -85,8 +83,7 @@ class CampagneProgressionStructureService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('cps.structure = :structure')->setParameter('structure', $structure)
-            ->andWhere('cps.histoDestruction IS NULL')
-        ;
+            ->andWhere('cps.histoDestruction IS NULL');
         return $qb->getQuery()->getResult();
     }
 
@@ -94,12 +91,11 @@ class CampagneProgressionStructureService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('cps.structure = :structure')->setParameter('structure', $structure)
-            ->andWhere('cps.histoDestruction IS NULL')
-        ;
+            ->andWhere('cps.histoDestruction IS NULL');
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".CampagneProgressionStructure::class."] actif portent sur la même campagne [Campagne:".$campagne->getId()."] et la même structure [Structure:".$structure->getId()."].", -1 , $e);
+            throw new RuntimeException("Plusieurs [" . CampagneProgressionStructure::class . "] actif portent sur la même campagne [Campagne:" . $campagne->getId() . "] et la même structure [Structure:" . $structure->getId() . "].", -1, $e);
         }
         return $result;
     }
@@ -109,8 +105,7 @@ class CampagneProgressionStructureService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('cps.structure in (:structures)')->setParameter('structures', $structures)
-            ->andWhere('cps.histoDestruction IS NULL')
-        ;
+            ->andWhere('cps.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
 
         $array = [];
@@ -148,7 +143,12 @@ class CampagneProgressionStructureService
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
 
         // comptage des entretiens
-        $validerSuperieur = []; $validerObservation = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
+        $validerSuperieur = [];
+        $validerObservation = [];
+        $validerAutorite = [];
+        $validerAgent = [];
+        $encours = [];
+        $sans = [];
 
         foreach ($entretiens as $entretien) {
             if ($entretien->getEtatActif() === null) {
