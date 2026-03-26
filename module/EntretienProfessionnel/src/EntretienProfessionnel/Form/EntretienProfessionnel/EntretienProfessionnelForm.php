@@ -138,14 +138,14 @@ class EntretienProfessionnelForm extends Form {
             'type' => Number::class,
             'name' => 'duree',
             'options' => [
-                'label' => "Durée estimée de l'entretien (en heure) <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> <span class='icon icon-information' title='Donnée utilisée pour le rendez-vous'></span> :",
+                'label' => "Durée estimée de l'entretien (heure en décimale) <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> <span class='icon icon-information' title='Donnée utilisée pour le rendez-vous'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'duree',
                 'min' => 0.5,
                 'step' => '0.25',
-                'placeholder' => 'Saisissez une durée décimale (par ex. : 1.75)',
+                'placeholder' => 'Saisissez une durée décimale (par ex. : 0.5, 1, 1.75, etc)',
             ],
         ]);
         // button
