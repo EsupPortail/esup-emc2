@@ -143,7 +143,7 @@ class EntretienProfessionnelForm extends Form {
             ],
             'attributes' => [
                 'id' => 'duree',
-                'min' => 1,
+                'min' => 0.5,
                 'step' => '0.25',
                 'placeholder' => 'Saisissez une durée décimale (par ex. : 1.75)',
             ],
