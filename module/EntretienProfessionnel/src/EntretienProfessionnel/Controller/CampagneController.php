@@ -430,7 +430,6 @@ class CampagneController extends AbstractActionController
      */
     public function structureAction(): ViewModel
     {
-
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
         $structure = $this->getStructureService()->getRequestedStructure($this);
@@ -444,12 +443,7 @@ class CampagneController extends AbstractActionController
 
 
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-
-        // récupération des agents selon les critères de la structure
-// TODO ticket #63688
-// $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
-
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));

@@ -24,6 +24,8 @@ use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use Structure\Service\Type\TypeService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Rendu\RenduService;
+use UnicaenRenderer\Service\Template\TemplateService;
 
 class StructureControllerFactory {
 
@@ -47,9 +49,11 @@ class StructureControllerFactory {
          * @var FichePosteService $fichePosteService
          * @var ObservateurService $observateurService
          * @var ParametreService $parametreService
+         * @var RenduService $renduService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
+         * @var TemplateService $templateService
          * @var TypeService $typeService
          */
         $agentService = $container->get(AgentService::class);
@@ -63,9 +67,11 @@ class StructureControllerFactory {
         $fichePosteService = $container->get(FichePosteService::class);
         $observateurService = $container->get(ObservateurService::class);
         $parametreService = $container->get(ParametreService::class);
+        $renduService = $container->get(RenduService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
+        $templateService = $container->get(TemplateService::class);
         $typeService = $container->get(TypeService::class);
 
         /**
@@ -90,9 +96,11 @@ class StructureControllerFactory {
         $controller->setFichePosteService($fichePosteService);
         $controller->setObservateurService($observateurService);
         $controller->setParametreService($parametreService);
+        $controller->setRenduService($renduService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
+        $controller->setTemplateService($templateService);
         $controller->setTypeService($typeService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);

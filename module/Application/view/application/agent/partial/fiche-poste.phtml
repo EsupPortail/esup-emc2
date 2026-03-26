@@ -49,6 +49,13 @@ $structure = ($affectation)?$affectation->getStructure():null;
     </div>
 </div>
 
+<?php if ($template): ?>
+    <div class="alert alert-info" style="margin-top: 0.5rem;">
+        <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+        <?php echo $template->getCorps(); ?>
+    </div>
+<?php endif; ?>
+
 <div>
     <div class="alert alert-info">
         <span class="icon icon-attention"></span> Seules les fiches de postes validées sont visualisables par les agents.

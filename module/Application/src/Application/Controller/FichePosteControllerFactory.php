@@ -25,6 +25,7 @@ use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
+use UnicaenRenderer\Service\Template\TemplateService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
 class FichePosteControllerFactory
@@ -52,6 +53,7 @@ class FichePosteControllerFactory
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          * @var SpecificitePosteService $specificitePosteService
+         * @var TemplateService $templateService
          * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
@@ -68,6 +70,7 @@ class FichePosteControllerFactory
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
+        $templateService = $container->get(TemplateService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         /**
@@ -101,6 +104,7 @@ class FichePosteControllerFactory
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
+        $controller->setTemplateService($templateService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setValidationInstanceService($validationInstanceService);
 

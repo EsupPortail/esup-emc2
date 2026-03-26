@@ -15,6 +15,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenParametre\Entity\Db\Parametre;
+use UnicaenRenderer\Entity\Db\Template;
 use UnicaenUtilisateur\Entity\Db\User;
 
 /**
@@ -31,6 +32,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentGrade[] $grades
  * @var AgentQuotite|null $quotite
  * @var AgentEchelon[] $echelons
+ * @var Template $template
  *
  * @var array $applications
  * @var string $intranet
@@ -154,7 +156,7 @@ if ($agent !== null) {
 
                 <div id="fiches" class="tab-pane " role="tabpanel">
                     <?php echo $this->partial('partial/fiche-poste',
-                        ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
+                        ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits, 'template' => $template], []); ?>
                 </div>
 
             <?php endif; ?>
