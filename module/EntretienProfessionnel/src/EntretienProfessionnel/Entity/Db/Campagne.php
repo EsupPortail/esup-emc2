@@ -8,6 +8,7 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use RuntimeException;
 use UnicaenAutoform\Entity\Db\Formulaire;
 use UnicaenIndicateur\Entity\Interface\HasIndicateursInterface;
 use UnicaenIndicateur\Entity\Trait\HasIndicateursTrait;
@@ -137,6 +138,20 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
     public function setTemplateCREF(?Template $templateCREF): void
     {
         $this->templateCREF = $templateCREF;
+    }
+
+    public function getDateSituation(): DateTime
+    {
+        $dateSituation = null;
+        if (!$this->estCommence()) $dateSituation = $this->getDateDebut();
+        if ($this->estEnCours()) $dateSituation = new DateTime();
+        if ($this->estFini()) $dateSituation = $this->getDateFin();
+
+        if ($dateSituation === null) {
+            throw new RuntimeException("La date de situation n'a pu être déterminée pour la campagne #".$campagne->getId()." [".$campagne->getAnnee()."]");
+        }
+
+        return $dateSituation;
     }
 
     /** prédicats *****************************************************************************************************/
