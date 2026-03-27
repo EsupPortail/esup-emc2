@@ -28,29 +28,14 @@ class IcsService
         $titre = "Entretien professionnel de " . $agentDenomination . " pour la campagne " . $e->getCampagne()->getAnnee();
         $description = $titre . " - Responsable d'entretien professionnel :" . $responsableDenomination;
         $createdAt = $now->format('Ymd') . "T" . $now->format('His') . "Z";
-        $startAt = $debut->format('Ymd') . "T" . $debut->format('His'). "Z";
-        $endAt = $fin->format('Ymd') . "T" . $fin->format('His'). "Z";
+        $startAt = $debut->format('Ymd') . "T" . $debut->format('His');
+        $endAt = $fin->format('Ymd') . "T" . $fin->format('His');
 
         $ics = <<<EOS
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//EMC2//NONSGML v1.0//EN
 METHOD:REQUEST
-BEGIN:VTIMEZONE
-TZID:Europe/Paris
-BEGIN:STANDARD
-DTSTART:20241029T030000
-TZOFFSETFROM:+0200
-TZOFFSETTO:+0100
-TZNAME:CET
-END:STANDARD
-BEGIN:DAYLIGHT
-DTSTART:20260330T020000
-TZOFFSETFROM:+0100
-TZOFFSETTO:+0200
-TZNAME:CEST
-END:DAYLIGHT
-END:VTIMEZONE
 BEGIN:VEVENT
 UID:$uid
 DTSTAMP:$createdAt
