@@ -93,7 +93,7 @@ class EmploiRepereForm extends Form {
                             if ($this->getObject()->getId() === null) {
                                 return $emploirepere === null;
                             } else {
-                                return $emploirepere->getId() === $this->getObject()->getId();
+                                return ($emploirepere === null OR $emploirepere->getId() === $this->getObject()->getId());
                             }
                         },
                     ],

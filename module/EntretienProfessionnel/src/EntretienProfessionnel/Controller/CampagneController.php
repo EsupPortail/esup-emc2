@@ -438,10 +438,6 @@ class CampagneController extends AbstractActionController
             throw new RuntimeException("Aucune structure de trouvée.");
         }
 
-//         $this->getCampagneService()->refreshStatut($campagne, $structure);
-
-
-
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
@@ -452,7 +448,6 @@ class CampagneController extends AbstractActionController
                 $agents[] = $agentForce;
             }
         }
-
 
         [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
 
@@ -484,6 +479,8 @@ class CampagneController extends AbstractActionController
 //        }
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+
+
         $finalises = [];
         $encours = [];
         foreach ($entretiens as $entretien) {
