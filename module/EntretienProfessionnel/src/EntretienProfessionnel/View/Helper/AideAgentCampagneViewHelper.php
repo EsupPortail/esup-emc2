@@ -44,7 +44,7 @@ class AideAgentCampagneViewHelper extends AbstractHelper
             [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($campagne,[$agent]);
             $infos['obligatoire'] = $obligatoire;
             $infos['facultatif'] = $facultatif;
-            $infos['raison'] = $raison;
+            $infos['raison'] = $raison[$agent->getId()];
             $infos['delai-observation'] = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT);
 
             $validationResponsable = $entretien?->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE)?->getHistoCreation();
