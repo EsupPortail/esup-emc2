@@ -430,7 +430,6 @@ class CampagneController extends AbstractActionController
      */
     public function structureAction(): ViewModel
     {
-
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
         $structure = $this->getStructureService()->getRequestedStructure($this);
@@ -439,17 +438,9 @@ class CampagneController extends AbstractActionController
             throw new RuntimeException("Aucune structure de trouvée.");
         }
 
-//         $this->getCampagneService()->refreshStatut($campagne, $structure);
-
-
-
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
-        // récupération des agents selon les critères de la structure
-// TODO ticket #63688
-// $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
-
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
@@ -458,7 +449,6 @@ class CampagneController extends AbstractActionController
                 $agents[] = $agentForce;
             }
         }
-
 
         [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
 
@@ -490,6 +480,8 @@ class CampagneController extends AbstractActionController
 //        }
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+
+
         $finalises = [];
         $encours = [];
         foreach ($entretiens as $entretien) {
