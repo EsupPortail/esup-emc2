@@ -81,6 +81,8 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
 $width = '22rem';
 if (isset($options['affichages']) AND isset($options['affichages']['width'])) $width = $options['affichages']['width'];
 
+
+
 ?>
 
 <table class="table table-condensed table-hover datatable"
@@ -95,7 +97,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <th class="col-md-2"> Agent </th>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
-            <th class="col-md-2"> Responsable </th>
+            <th class="col-md-2"> Situation hiérarchique </th>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <th class="col-md-2"> Structure </th>
@@ -119,6 +121,8 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
     <tbody>
     <?php foreach ($entretiens as $entretien) : ?>
         <?php
+            $dateEntretienAsString = $entretien->getDateEntretien()->format('d/m/Y');
+            $agent = $entretien->getAgent();
         //todo l'assertion merde
         $canConvoquer = (
                 ($entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
@@ -134,7 +138,39 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <td  data-order="<?php echo $entretien->getAgent()->getDenomination(); ?>"> <?php echo $entretien->getAgent()->getDenomination(false, true, true); ?> </td>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
-            <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>"> <?php echo $entretien->getResponsable()->getDenomination(false, true, true); ?> </td>
+            <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>">
+                Responsable :
+                <ul><li><?php echo $entretien->getResponsable()->getDenomination(false, true, true); ?></li></ul>
+                Supérieur·es :
+                <?php $superieurs = $agent->getSuperieurs($entretien->getDateEntretien()); ?>
+                <?php if (empty($superieurs)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun·e supérieur·e connu à la date du <?php echo $dateEntretienAsString; ?>
+                    </span>
+                    <br>
+                <?php else: ?>
+                <ul>
+                    <?php foreach ($superieurs as $superieur) : ?>
+                        <li><?php echo $superieur->getSuperieur()->getDenomination(); ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                Autorités :
+                <?php $autorites = $agent->getAutorites($entretien->getDateEntretien()); ?>
+                <?php if (empty($autorites)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucune autorité connue à la date du <?php echo $dateEntretienAsString; ?>
+                    </span>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($autorites as $autorite) : ?>
+                            <li><?php echo $autorite->getAutorite()->getDenomination(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </td>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <td>

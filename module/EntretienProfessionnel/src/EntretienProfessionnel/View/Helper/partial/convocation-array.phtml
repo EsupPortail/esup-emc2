@@ -44,10 +44,15 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
 
 ?>
 
+<div class="alert alert-info" style="margin-top: .5rem;">
+    Date de situation considérée : <?php echo $dateSituationAsString; ?>
+</div>
+
 <table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">
     <thead>
         <tr>
-            <th class="col-md-4" data-type="string"> Dénomination </th>
+            <th class="col-md-2" data-type="string"> Dénomination </th>
+            <th class="col-md-2" data-type="string"> Situation hiérarchique </th>
             <th class="col-md-4"> Affectation·s </th>
             <?php if ($canAction) : ?>
                 <th class="col-md-3"> Grade·s </th>
@@ -73,6 +78,37 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                 <?php endif; ?>
             </td>
             <td>
+                Supérieur·es :
+                <?php $superieurs = $agent->getSuperieurs($dateSituation); ?>
+                <?php if (empty($superieurs)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun·e supérieur·e connu à la date du <?php echo $dateSituationAsString; ?>
+                    </span>
+                    <br>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($superieurs as $superieur) : ?>
+                            <li><?php echo $superieur->getSuperieur()->getDenomination(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                Autorités :
+                <?php $autorites = $agent->getAutorites($dateSituation); ?>
+                <?php if (empty($autorites)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucune autorité connue à la date du <?php echo $dateSituationAsString; ?>
+                    </span>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($autorites as $autorite) : ?>
+                            <li><?php echo $autorite->getAutorite()->getDenomination(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </td>
+            <td>
                 <?php $affectations = $agent->getAffectationsActifs($dateSituation); ?>
                 <?php if (empty($affectations)) : ?>
                     <span class="text-warning">
@@ -81,7 +117,11 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                     </span>
                 <?php else : ?>
                     <?php foreach ($affectations as $affectation) : ?>
-                         <?php echo $affectation->getStructure()->getLibelleLong(); ?> <br/>
+                         <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                        <br>
+                        <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                        &rightarrow;
+                        <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </td>
@@ -101,7 +141,12 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                             </span>
                         </span>
                         <?php else : ?>
-                            <?php echo $grade->getGrade()->getLibelleLong(); ?> <br/>
+                            <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                            <br>
+                            <?php echo $grade->getDateDebut()?$grade->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                            &rightarrow;
+                            <?php echo $grade->getDateFin()?$grade->getDateFin()->format('d/m/Y'):" ---- "; ?>
+
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
