@@ -39,6 +39,28 @@ foreach ($facultatifs as $facultatif) {
     if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
 }
 
+
+// filtrage des avant en affectation invalide à la date de situation de la campagne pour les agents sans entretien
+$dateSituation = $campagne->getDateSituation();
+$sansObligatoires = array_filter($sansObligatoires,
+    function(Agent $agent) use ($dateSituation, $structures) {
+        $affectations = $agent->getAffectationsActifs($dateSituation);
+        foreach ($affectations as $affectation) {
+            if (in_array($affectation->getStructure(), $structures)) return true;
+        }
+        return false;
+    }
+);
+$sansFacultatifs = array_filter($sansFacultatifs,
+        function(Agent $agent) use ($dateSituation, $structures) {
+            $affectations = $agent->getAffectationsActifs($dateSituation);
+            foreach ($affectations as $affectation) {
+                if (in_array($affectation->getStructure(), $structures)) return true;
+            }
+            return false;
+        }
+);
+
 $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));
 
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() . " - " . $structure->getLibelleLong())
