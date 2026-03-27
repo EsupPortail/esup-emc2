@@ -187,7 +187,7 @@ class StructureController extends AbstractActionController {
 //            'campagnes' => $campagnes,
 //            'campagnesFutures' => $campagnesFutures,
             'emailAssistance' => $emailAssistance,
-            'debug' => $debug,
+            'debug' => null,
         ]);
     }
 
