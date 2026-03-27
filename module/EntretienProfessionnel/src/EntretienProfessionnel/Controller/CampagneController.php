@@ -449,7 +449,7 @@ class CampagneController extends AbstractActionController
             }
         }
 
-        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
+        [$obligatoires, $facultatifs, $raison, $exclus] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
 
 
 //        $agents = [];

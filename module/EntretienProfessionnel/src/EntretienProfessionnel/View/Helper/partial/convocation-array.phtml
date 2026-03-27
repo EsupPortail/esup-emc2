@@ -122,6 +122,7 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                         <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
                         &rightarrow;
                         <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
+                        <br>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </td>
@@ -146,7 +147,7 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                             <?php echo $grade->getDateDebut()?$grade->getDateDebut()->format('d/m/Y'):" ---- "; ?>
                             &rightarrow;
                             <?php echo $grade->getDateFin()?$grade->getDateFin()->format('d/m/Y'):" ---- "; ?>
-
+                            <br>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
