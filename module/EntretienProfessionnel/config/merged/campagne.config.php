@@ -14,6 +14,8 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceFactory;
 use EntretienProfessionnel\View\Helper\AideAgentCampagneViewHelper;
 use EntretienProfessionnel\View\Helper\AideAgentCampagneViewHelperFactory;
+use EntretienProfessionnel\View\Helper\CampagneAvancementCacheViewHelper;
+use EntretienProfessionnel\View\Helper\CampagneAvancementCacheViewHelperFactory;
 use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
 use EntretienProfessionnel\View\Helper\CampagneInformationViewHelper;
 use Structure\Provider\Privilege\StructurePrivileges;
@@ -391,9 +393,11 @@ return [
         ],
         'factories' => [
             AideAgentCampagneViewHelper::class => AideAgentCampagneViewHelperFactory::class,
+            CampagneAvancementCacheViewHelper::class => CampagneAvancementCacheViewHelperFactory::class,
         ],
         'aliases' => [
             'aideAgentCampagne' => AideAgentCampagneViewHelper::class,
+            'campagneAvancementCache' => CampagneAvancementCacheViewHelper::class,
         ]
     ],
 

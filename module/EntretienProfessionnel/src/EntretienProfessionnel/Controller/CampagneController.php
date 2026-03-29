@@ -7,6 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -74,23 +75,31 @@ class CampagneController extends AbstractActionController
     {
         $campagnes = $this->getCampagneService()->getCampagnes(true);
 
+        $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
+        $structure = $this->getStructureService()->getStructureByCode($code);
+
+        $progressions = [];
+        foreach ($campagnes as $campagne) {
+            $progressions[$campagne->getId()] = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
+        }
+
+
         return new ViewModel([
             'campagnes' => $campagnes,
+            'progressions' => $progressions,
         ]);
     }
 
     public function afficherAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        //$agents = $this->getCampagneService()->getAgentsEligibles($campagne);
-        $structure = $this->getStructureService()->getStructureByCode('UNIV');
+        $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
+        $structure = $this->getStructureService()->getStructureByCode($code);
         $progression = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
 
         return new ViewModel([
             'campagne' => $campagne,
-            'agents' => [],//$this->getCampagneService()->getAgentsEligibles($campagne),
-            'nbAgents' => 0,//count($agents),
-            'entretiens' => $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, true),
+            'structure' => $structure,
             'progression' => $progression,
         ]);
     }
@@ -449,9 +458,6 @@ class CampagneController extends AbstractActionController
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-// TODO ticket #63688
-// $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
-
         $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();

@@ -5,19 +5,12 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+use Structure\Entity\Db\Structure;
 
 /**
  * @see \EntretienProfessionnel\Controller\CampagneController::afficherAction()
  * @var Campagne $campagne
-// * @var Agent[] $agents
- * @var int $nbAgents
- * @var EntretienProfessionnel[] $entretiens
- *
- * @var EntretienProfessionnel[] $entretiensResponsable
- * @var EntretienProfessionnel[] $entretiensAutorite
- * @var EntretienProfessionnel[] $entretiensAgent
- * @var EntretienProfessionnel[] $entretiensCompletes
- *
+ * @var Structure $structure
  * @var CampagneProgressionStructure $progression
  */
 
@@ -29,11 +22,6 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee());
 $canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
 
 $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doivent passer un entretien professionnel.";
-
-$nbEntretiens = 0;
-foreach ($entretiens as $etat => $liste) {
-    $nbEntretiens += count($liste);
-}
 
 ?>
 
@@ -125,9 +113,9 @@ foreach ($entretiens as $etat => $liste) {
             <div class="col-md-8">
                 <dl class="row">
                     <dt class="col-md-5"> Nombre d'agent <span class="icon icon-information" title="<?php echo $condition; ?>>"></span>: </dt>
-                    <dd class="col-md-7"> <?php echo $nbAgents; ?></dd>
+                    <dd class="col-md-7"> <?php echo $progression?->getNbTotal(); ?></dd>
                     <dt class="col-md-5"> Nombre d'entretien :  </dt>
-                    <dd class="col-md-7"> <?php echo $nbEntretiens; ?> </dd>
+                    <dd class="col-md-7"> <?php echo $progression?->getNbEntretiens(); ?> </dd>
                 </dl>
             </div>
             <div class="col-md-4">
@@ -156,7 +144,7 @@ foreach ($entretiens as $etat => $liste) {
 
         <h2> Entretiens de la campagne </h2>
 
-        <?php echo $this->partial('entretien-professionnel/campagne/progression-structure', ['campagne' => $campagne, 'structure' => null, 'progression' => $progression, 'debug' => false, 'legende' => true, 'titre' => false]); ?>
+        <?php echo $this->campagneAvancementCache($campagne, $progression->getStructure(), $progression, []); ?>
 
 
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>

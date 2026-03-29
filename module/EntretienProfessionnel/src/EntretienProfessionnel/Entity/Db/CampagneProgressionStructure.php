@@ -133,5 +133,17 @@ class CampagneProgressionStructure implements HistoriqueAwareInterface
     {
         $this->date = $date;
     }
+
+    public function getNbEntretiens(): int
+    {
+        $nb = 0;
+        $nb += $this->getNbComplet();
+        $nb += $this->getNbAutorite();
+        $nb += $this->getNbObservation();
+        $nb += $this->getNbSuperieur();
+        $nb += $this->getNbPlanifier();
+
+        return $nb;
+    }
 }
 

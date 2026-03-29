@@ -3,8 +3,10 @@
 /**
  * @see \EntretienProfessionnel\Controller\CampagneController::indexAction()
  * @var Campagne[] $campagnes
+ * @var CampagneProgressionStructure[] $progressions
  */
 
+use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 
@@ -67,7 +69,13 @@ $this->headTitle("Campagnes d'entretien professionnel");
             <td> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?> </td>
             <td> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?> </td>
             <td> <?php echo ($campagne->getPrecede())?$campagne->getPrecede()->getAnnee():"---"; ?> </td>
-            <td> <?php echo count($campagne->getEntretiensProfessionnels()); ?> </td>
+            <td>
+                <?php if (!isset($progressions[$campagne->getId()])) : ?>
+                    <span class="missing-data"> N.C. </span>
+                <?php else : ?>
+                    <?php echo $progressions[$campagne->getId()]->getNbEntretiens(); ?>
+                <?php endif; ?>
+            </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
