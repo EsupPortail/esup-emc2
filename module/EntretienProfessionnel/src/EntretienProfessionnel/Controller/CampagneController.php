@@ -478,7 +478,21 @@ class CampagneController extends AbstractActionController
 //            }
 //        }
 
+
+        $dateSituation = $campagne->getDateSituation();
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+//        $entretiens = array_filter($entretiens,
+//            function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
+//                $agent = $entretien->getAgent();
+////                $affectations = $agent->getAffectationsActifs($dateSituation);
+//                $affectations = $agent->getAffectationsActifs($entretien->getDateEntretien());
+//                foreach ($affectations as $affectation) {
+//                    if (in_array($affectation->getStructure(), $structures)) {
+//                        return true;
+//                    }
+//                }
+//                return false;
+//        });
 
 
         $finalises = [];
@@ -521,7 +535,7 @@ class CampagneController extends AbstractActionController
 
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
-//            'exclus' => $exclus,
+            'exclus' => $exclus,
             'raison' => $raison,
 
             'templates' => $templates,

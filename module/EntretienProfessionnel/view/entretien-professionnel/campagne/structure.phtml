@@ -3,6 +3,7 @@
 use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use Structure\Entity\Db\Structure;
 use UnicaenRenderer\Entity\Db\Rendu;
@@ -21,6 +22,7 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var Agent[] $agents
  * @var Agent[] $obligatoires
  * @var Agent[] $facultatifs
+ * @var Agent[] $exclus
  *
  * @var EntretienProfessionnel[] $entretiens
  * @var EntretienProfessionnel[] $encours
@@ -39,27 +41,28 @@ foreach ($facultatifs as $facultatif) {
     if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
 }
 
-
-// filtrage des avant en affectation invalide à la date de situation de la campagne pour les agents sans entretien
-$dateSituation = $campagne->getDateSituation();
-$sansObligatoires = array_filter($sansObligatoires,
-    function(Agent $agent) use ($dateSituation, $structures) {
-        $affectations = $agent->getAffectationsActifs($dateSituation);
-        foreach ($affectations as $affectation) {
-            if (in_array($affectation->getStructure(), $structures)) return true;
-        }
-        return false;
-    }
-);
-$sansFacultatifs = array_filter($sansFacultatifs,
-        function(Agent $agent) use ($dateSituation, $structures) {
-            $affectations = $agent->getAffectationsActifs($dateSituation);
+        $dateSituation = $campagne->getDateSituation();
+        $entretiens = array_filter($entretiens,
+        function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
+            $agent = $entretien->getAgent();
+//                $affectations = $agent->getAffectationsActifs($dateSituation);
+            $affectations = $agent->getAffectationsActifs($entretien->getDateEntretien());
             foreach ($affectations as $affectation) {
-                if (in_array($affectation->getStructure(), $structures)) return true;
+                if (in_array($affectation->getStructure(), $structures)) {
+                    return true;
+                }
             }
             return false;
+        });
+        $finalises = [];
+        $encours = [];
+        foreach ($entretiens as $entretien) {
+            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $finalises[] = $entretien;
+            } else {
+                $encours[] = $entretien;
+            }
         }
-);
 
 $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));
 
@@ -151,6 +154,21 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raison]); ?>
 <?php endif; ?>
 
+<?php if (!empty($exclus)) : ?>
+    <h2>
+        Agent·es exclu·es de la campagne
+        <span class="badge"> <?php echo count($exclus); ?> </span>
+    </h2>
+
+<ul>
+    <?php foreach ($exclus as $agent) : ?>
+        <li>
+            <?php echo $agent->getDenomination(); ?>
+            <span class='icon icon-information' title="<?php echo $raison[$agent->getId()]; ?>"></span>
+        </li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
 
 <script>
     $('button#campagne-tab').addClass('active');

@@ -323,6 +323,7 @@ class CampagneService
 
         $parametres = $this->getParametreService()->getParametresByCategorieCode(EntretienProfessionnelParametres::TYPE);
         $strDatePriseDePoste = $campagne->getDateEnPoste()->format('d/m/Y');
+        $strDateSituation = $campagne->getDateSituation()->format('d/m/Y');
         /** @var Agent $agent */
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
@@ -339,12 +340,33 @@ class CampagneService
              */
             if (!$agent->isForceAvecObligation($campagne, $structures)) {
 
-                // Avoir AFFECTATIONS // À la demande de Marine les agents qui n'ont pas d'affectation à la date de prise de poste sont exclus de la campagne.
+                // Avoir AFFECTATIONS à la date de prise de poste // À la demande de Marine les agents qui n'ont pas d'affectation à la date de prise de poste sont exclus de la campagne.
                 // Si on ne fait pas ce test alors dans le cas vide les agents passent les tests suivants (car ils n'ont pas d'affectation, ils n'ont pas d'affectations incohérentes).
                 $result = $agent->hasAffectationActive($campagne->getDateEnPoste());
                 if ($result === false) {
                     $exclus[$agent->getId()] = $agent;
                     $raison[$agent->getId()] = "Sans affectation à la date du ".$strDatePriseDePoste;
+                    continue;
+                }
+                // Avoir AFFECTATIONS à la date de situation de la campagne // À la demande Julien //
+                $affectationValide = false;
+                $affectations = $agent->getAffectationsActifs($campagne->getDateSituation());
+                foreach ($affectations as $affectation) {
+                    if (in_array($affectation->getStructure(), $structures)) {
+                        $affectationValide = true;
+                        break;
+                    }
+                }
+                if ($affectationValide === false) {
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Sans affectation dans une des structures considérées à la date du ".$strDateSituation;
+                    continue;
+                }
+
+                $result = $agent->hasAffectationActive($campagne->getDateSituation());
+                if ($result === false) {
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] = "Sans affectation à la date du ".$strDateSituation;
                     continue;
                 }
                 $result = $agent->hasGradeActif($campagne->getDateEnPoste());
