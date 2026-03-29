@@ -775,4 +775,15 @@ class CampagneController extends AbstractActionController
             'progressions' => $progressions
         ]);
     }
+
+    public function refreshStructureProgressionAction(): Response
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $this->getCampagneProgressionStructureService()->refresh($campagne, $structure);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour === null) throw new RuntimeException("Aucune adresse de retour post-rafraichissement",-1);
+        return $this->redirect()->toUrl($retour);
+    }
 }

@@ -43,6 +43,7 @@ $displayLegende = (!isset($options['display-legende']) || $options['display-lege
     }
     ?>
 
+<div>
     <div class="progress">
         <?php if ($nbValiderAgent > 0) : ?>
             <div class="progress-bar entretien-agent" role="progressbar" style="width: <?php echo $ratioAgent; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
@@ -77,13 +78,21 @@ $displayLegende = (!isset($options['display-legende']) || $options['display-lege
     </div>
     <div class="float-end" style="margin-bottom: .5rem;">
         <small style="color:grey">
+            <?php /** @see \EntretienProfessionnel\Controller\CampagneController::refreshStructureProgressionAction() */ ?>
+            <a href="<?php echo $this->url('entretien-professionnel/campagne/refresh-structure-progression', ['campagne' => $campagne->getId(), 'structure' => $structure->getId()], ['query' => ['retour' => $this->url(null, [], [], true)]] , true); ?>"
+               class="action primary">
+                <span class="icon icon-refresh"></span> Mettre à jour
+            </a>
         Dernier rafraichissement :  <?php echo $progression->getDate()?$progression->getDate()->format('d/m/Y à H:i'):'Données non calculées';?>
         </small>
     </div>
+</div>
+<br>
+<br>
 <?php endif; ?>
 
 <?php if ($displayLegende) : ?>
-    <div style="margin-top:1rem;">
+    <div >
         <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens complétés <br/>
         <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par l'autorité hiérarchique <br/>
         <span class="legende entretien-observation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens avec des observations de l'agent·e<br/>

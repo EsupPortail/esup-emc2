@@ -106,6 +106,7 @@ class CampagneProgressionStructureService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('cps.structure in (:structures)')->setParameter('structures', $structures)
+            ->andWhere('cps.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('cps.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
 
@@ -189,7 +190,6 @@ class CampagneProgressionStructureService
         $nbTotal = $nbValiderAgent + $nbValiderAutorite + $nbValiderObservation + $nbValiderSuperieur + $nbEncours + $nbSans;
 
         $old = $this->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
-        if ($old) $this->historise($old);
 
         $progression = new CampagneProgressionStructure();
         $progression->setCampagne($campagne);
@@ -203,6 +203,8 @@ class CampagneProgressionStructureService
         $progression->setNbTotal($nbTotal);
         $progression->setDate($date);
         $this->create($progression);
+
+        if ($old) $this->historise($old);
     }
 
 }

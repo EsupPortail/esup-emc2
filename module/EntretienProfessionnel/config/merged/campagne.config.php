@@ -49,6 +49,7 @@ return [
                     'action' => [
                         'structure',
                         'structure-progression',
+                        'refresh-structure-progression'
                     ],
                     'privileges' => [
 //                        CampagnePrivileges::CAMPAGNE_AFFICHER_STRUCTURE,
@@ -224,6 +225,18 @@ return [
                                         /** @see CampagneController::structureProgressionAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'structure-progression',
+                                    ],
+                                ],
+                            ],
+                            'refresh-structure-progression' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/refresh-structure-progression[/:campagne/:structure]',
+                                    'defaults' => [
+                                        /** @see CampagneController::refreshStructureProgressionAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'refresh-structure-progression',
                                     ],
                                 ],
                             ],
