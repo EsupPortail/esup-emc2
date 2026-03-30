@@ -312,6 +312,7 @@ return [
             'error/403' => realpath('./module/Application/view/error/403.phtml'),
             'error/404' => realpath('./module/Application/view/error/404.phtml'),
         ],
+        'exception_template' => 'error/exception',
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],

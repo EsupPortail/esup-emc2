@@ -14,6 +14,7 @@ $canModifier    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
 $canHistoriser  = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_HISTORISER));
 $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_DETRUIRE));
 
+$this->headTitle("Campagnes d'entretien professionnel");
 ?>
 
 <div class="row">
@@ -36,7 +37,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
         <br>
             <a
                     <?php /** @see \Application\Controller\ConfigurationController::indexAction() */ ?>
-                    href="<?php echo $this->url('configuration', [], [], true); ?>"
+                    href="<?php echo $this->url('entretien-professionnel/campagne/configuration-recopie', [], [], true); ?>"
                     class="btn btn-secondary"
             >
                 <span class="icon icon-gerer"></span>

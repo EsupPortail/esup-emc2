@@ -51,7 +51,6 @@ class MissionPrincipaleHydrator implements HydratorInterface
             if ($famille) $object->addFamilleProfessionnelle($famille);
         }
         if ($borneInferieure AND $borneSuperieure) {
-            //traitement de l'enveloppe de niveau
             if ($object->getNiveau()) {
                 $object->getNiveau()->setBorneInferieure($borneInferieure);
                 $object->getNiveau()->setBorneSuperieure($borneSuperieure);

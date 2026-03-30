@@ -37,7 +37,6 @@ class NotificationService
             return $a->getEmail();
         }, $users);
         return implode(',', $mails);
-
     }
 
 }

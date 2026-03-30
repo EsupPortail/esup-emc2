@@ -1,0 +1,79 @@
+<?php
+
+use Agent\Entity\Db\AgentAffectation;
+use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::afficherAction()
+ * @var AgentForceSansObligation $agentForceSansObligation
+ * @var Agent $agent
+ * @var Campagne $campagne
+ * @var AgentAffectation[] $affectations
+ *
+ */
+
+?>
+
+<h2> Situation de l'agent·e concerné·e</h2>
+<dl class='row'>
+    <dt class="col-md-4"> Agent </dt>
+    <dd class="col-md-8"> <?php echo $agent->getDenomination(true); ?> </dd>
+    <dt class="col-md-4"> Affectation à la date de début de la campagne </dt>
+    <dd class="col-md-8">
+        <?php if (empty($affectations)) : ?>
+            Aucune affectation
+        <?php else : ?>
+            <ul>
+                <?php foreach ($affectations as $affectation) : ?>
+                    <li>
+                        <?php $structure = $affectation->getStructure(); ?>
+                        <?php if ($structure->getNiv2() AND $structure !== $structure->getNiv2()) : ?>
+                            <?php echo $structure->getNiv2()->getLibelleCourt(); ?> >
+                        <?php endif; ?>
+                        <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                        <?php if ($affectation->isPrincipale()) : ?>
+                            <span class='badge' style="background: darkgreen;">Principale</span>
+                        <?php endif; ?>
+                        <?php if ($affectation->isHierarchique()) : ?>
+                            <span class='badge' style="background: darkslategrey;">Hiérarchique</span>
+                        <?php endif; ?>
+                        <?php if ($affectation->isFonctionnelle()) : ?>
+                            <span class='badge' style="background: darkred;">Fonctionnelle</span>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+</dl>
+
+<h2> Campagne concernée</h2>
+
+<dl class='row'>
+    <dt class="col-md-4"> Année de la campagne </dt>
+    <dd class="col-md-8"> <?php echo $campagne->getAnnee(); ?> </dd>
+    <dt class="col-md-4"> Date de début de la campagne </dt>
+    <dd class="col-md-8"> <?php echo $campagne->getDateDebut()?$campagne->getDateDebut()->format('d/m/Y'):"Aucune date"; ?> </dd>
+    <dt class="col-md-4"> Date de fin de la campagne </dt>
+    <dd class="col-md-8"> <?php echo $campagne->getDateFin()?$campagne->getDateFin()->format('d/m/Y'):"Aucune date"; ?> </dd>
+    <dt class="col-md-4"> Date de prise de poste </dt>
+    <dd class="col-md-8"> <?php echo $campagne->getDateEnPoste()?$campagne->getDateEnPoste()->format('d/m/Y'):"Aucune date"; ?> </dd>
+</dl>
+
+<h2> Exception </h2>
+
+<dl class='row'>
+    <dt class="col-md-4"> Type d'exception </dt>
+    <dd class="col-md-8"> <?php echo AgentForceSansObligation::FORCAGE_ARRAY[$agentForceSansObligation->getType()]??"inconnu"; ?> </dd>
+    <dt class="col-md-4"> Structure </dt>
+    <dd class="col-md-8"> <?php echo $agentForceSansObligation->getStructure()?$agentForceSansObligation->getStructure()->getLibelleLong():"Aucune structure"; ?> </dd>
+    <dt class="col-md-4"> Raison </dt>
+    <dd class="col-md-8"> <?php echo $agentForceSansObligation->getRaison()?$agentForceSansObligation->getRaison():"Aucune raison fournie"; ?> </dd>
+    <dt class="col-md-4"> Déclaration de l'exception </dt>
+    <dd class="col-md-8">
+        <?php echo $agentForceSansObligation->getHistoCreation()?("Le ".$campagne->getHistoCreation()->format('d/m/Y à H:i')):"Aucune date"; ?>
+        par <?php echo $agentForceSansObligation->getHistoCreateur()?$agentForceSansObligation->getHistoCreateur():"aucune information sur le créateur de l'exception"; ?>
+    </dd>
+</dl>

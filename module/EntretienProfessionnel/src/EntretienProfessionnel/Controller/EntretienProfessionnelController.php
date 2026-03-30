@@ -7,6 +7,7 @@ use Application\Controller\IndexController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Provider\Parametre\GlobalParametres;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
@@ -38,6 +39,7 @@ use RuntimeException;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use UnicaenAutoform\Service\Formulaire\FormulaireService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementServiceAwareTrait;
@@ -184,7 +186,7 @@ class EntretienProfessionnelController extends AbstractActionController
             return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien-professionnel" => $entretien->getId()], [], true);
         }
 
-        $superieurs = array_map(function (AgentSuperieur $a) {
+        $superieurs = array_map(function (AgentSuperieur $a) use ($campagne) {
             return $a->getSuperieur();
         }, $agent->getSuperieurs());
         $entretien = new EntretienProfessionnel();
@@ -209,15 +211,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                if ($delai) {
-                    try {
-                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
-                    } catch (Exception $e) {
-                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
-                    }
-                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
-                }
+                $this->checkDelaiConvocation($entretien);
 
                 $this->getEntretienProfessionnelService()->initialiser($entretien);
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
@@ -261,16 +255,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
-                if ($delai) {
-                    try {
-                        $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
-                    } catch (Exception $e) {
-                        throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
-                    }
-                    if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
-                }
-
+                $this->checkDelaiConvocation($entretien);
 
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
@@ -322,7 +307,15 @@ class EntretienProfessionnelController extends AbstractActionController
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
         $crep = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormulaireInstance()->getId());
+        if ($crep === null) {
+            $this->getEntretienProfessionnelService()->initialiser($entretien, 'CREP');
+            $this->flashMessenger()->addWarningMessage("Le CREP a été réinitialisé");
+        }
         $cref = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormationInstance()->getId());
+        if ($cref === null) {
+            $this->getEntretienProfessionnelService()->initialiser($entretien, 'CREF');
+            $this->flashMessenger()->addWarningMessage("Le CREF a été réinitialisé");
+        }
         $observateurs = $this->getObservateurService()->getObservateursByEntretienProfessionnel($entretien);
 
         [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
@@ -391,7 +384,7 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->restore($entretien);
-        $this->getNotificationService()->triggerConvocationDemande($entretien);
+        //$this->getNotificationService()->triggerConvocationDemande($entretien);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
@@ -494,15 +487,15 @@ class EntretienProfessionnelController extends AbstractActionController
                 $text .= "Cette validation figera les comptes-rendus d'entretien et de formation de " . $entretien->getAgent()->getDenomination(true) . ".<br>";
                 $text .= "La validation ouvre la période de ".$parametre." jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
             case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:
-                $title = "Validation des observations (ou de l'absence de observations) de l'agent·e";
+                $title = "Validation des observations de l'agent·e";
                 $text = "<p>";
                 $text .= "Cette validation figera les observations si elles ont été faites.<br>";
                 $text .= "La validation ouvre la possibilité aux autorités hiérachiques de valider à leur tour cet entretien.";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
             case EntretienProfessionnelValidations::VALIDATION_DRH :
                 $title = "Validation de l'autorité hiérarchique";
@@ -510,14 +503,14 @@ class EntretienProfessionnelController extends AbstractActionController
                 $text .= "Cette validation vaut pour visa de la lecture de l'entretien professionnel de " . $entretien->getAgent()->getDenomination(true) . ".<br>";
                 $text .= "La validation ouvre la possibilité à " . $entretien->getAgent()->getDenomination(true) . " de finaliser son entretien.";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
             case EntretienProfessionnelValidations::VALIDATION_AGENT :
-                $title = "Validation de l'agent·e";
+                $title = "Visa de l'agent·e";
                 $text = "<p>";
                 $text .= "Cette validation finalise l'entretien professionnel de " . $entretien->getAgent()->getDenomination(true) . ".";
                 $text .= "</p>";
-                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
         }
 
@@ -564,6 +557,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function exporterCrepAction(): string
     {
+        $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
+
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
         if (!empty($facultatif)) {
@@ -575,19 +570,37 @@ class EntretienProfessionnelController extends AbstractActionController
             'agent' => $entretien->getAgent(),
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREP, $vars);
+        $template = $entretien->getCampagne()?->getTemplateCREP();
+        if ($template === null) {
+            $message = "Aucun template associé aux CREP pour cette campagne. Veuillez contacter l'assistance : <a href='".$assistance."'>".$assistance."</a>.";
+            throw new RuntimeException($message, -1);
+        }
+        $rendu = $this->getRenduService()->generateRenduByTemplate($template, $vars);
         return PdfExporter::generatePdf($rendu->getSujet(), $rendu->getSujet(), $rendu->getCorps());
     }
 
     public function exporterCrefAction(): string
     {
+        $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
+
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
+        if (!empty($facultatif)) {
+            $entretien->setStatut("facultatif");
+        }
+
         $vars = [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREF, $vars);
+
+        $template = $entretien->getCampagne()?->getTemplateCREF();
+        if ($template === null) {
+            $message = "Aucun template associé aux CREF pour cette campagne. Veuillez contacter l'assistance : <a href='".$assistance."'>".$assistance."</a>.";
+            throw new RuntimeException($message, -1);
+        }
+        $rendu = $this->getRenduService()->generateRenduByTemplate($template, $vars);
         return PdfExporter::generatePdf($rendu->getSujet(), $rendu->getSujet(), $rendu->getCorps());
     }
 
@@ -625,6 +638,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
             $this->getEntretienProfessionnelService()->update($entretien);
 
+            $this->getNotificationService()->triggerEnvoiRendezVous($entretien);
             $this->getNotificationService()->triggerConvocationAcceptation($entretien);
         }
 
@@ -689,6 +703,68 @@ class EntretienProfessionnelController extends AbstractActionController
                 return $this->redirect()->toRoute('home', [], [], true);
             default:
                 throw new RuntimeException("Rôle [".$role->getRoleId()."] non prévu");
+        }
+    }
+
+    public function reinitialiserAction(): ViewModel
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $campagne = $entretien->getCampagne();
+        $formulaire = $this->params()->fromRoute('formulaire');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $instance = ($formulaire==='CREP')?$entretien->getFormulaireInstance():$entretien->getFormationInstance();
+                if ($instance) {
+                    $this->getFormulaireInstanceService()->historise($instance);
+                    switch ($formulaire) {
+                        case 'CREP':
+                            $formulaireType = $campagne->getFormulaireCREP();
+                            $entretien_instance = $this->getFormulaireInstanceService()->createInstance($formulaireType->getCode());
+                            $entretien->setFormulaireInstance($entretien_instance);
+                            $this->getEntretienProfessionnelService()->update($entretien);
+                            $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+                            break;
+                        case 'CREF':
+                            $formulaireType = $campagne->getFormulaireCREF();
+                            $entretien_instance = $this->getFormulaireInstanceService()->createInstance($formulaireType->getCode());
+                            $entretien->setFormationInstance($entretien_instance);
+                            $this->getEntretienProfessionnelService()->update($entretien);
+                            $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+                            break;
+
+                    }
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($entretien !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Réinitialisation du ".$formulaire." de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
+                'text' => "La réinitialisation effacera les saisies et ré-effectuera les recopies. Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/reinitialiser', ["entretien" => $entretien->getId(), "formulaire" => $formulaire], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** Fonctions auxilaires / Factoorisation *************************************************************************/
+
+    public function checkDelaiConvocation(EntretienProfessionnel $entretien) : void
+    {
+        $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
+        if ($delai) {
+            try {
+                $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
+            } catch (Exception $e) {
+                throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
+            }
+            if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
         }
     }
 }

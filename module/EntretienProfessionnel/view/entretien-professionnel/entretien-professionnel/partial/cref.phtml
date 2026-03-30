@@ -42,8 +42,44 @@ $agent  = $entretien->getAgent();
     $data = $cref->buildResponseDictionnary();
 ?>
 
+<?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER)) : ?>
+    <?php if ($entretien->getFormationInstance()->getFormulaire()->getId() !== $entretien->getCampagne()->getFormulaireCREF()->getId()) : ?>
+        <div class="alert alert-danger">
+            Le formulaire du CREF a changé depuis la création de l'entretien professionnel.
+
+            <br>
+            Debug :
+            <ul>
+                <li>Entretien Id: <?php echo $entretien->getFormationInstance()->getFormulaire()->getId(); ?> Code:<?php echo $entretien->getFormationInstance()->getFormulaire()->getCode(); ?></li>
+                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREF()->getId(); ?> Code:<?php echo $entretien->getCampagne()->getFormulaireCREF()->getCode(); ?></li>
+            </ul>
+        </div>
+    <?php endif; ?>
+    <?php if ($entretien->getFormationInstance()->getHistoModification() < $entretien->getCampagne()->getFormulaireCREF()->getHistoModification()) : ?>
+        <div class="alert alert-danger">
+            Le formulaire du CREF a été mis à jour depuis la création de l'entretien professionnel.
+
+            <br>
+            Debug :
+            <ul>
+                <li>Entretien Id: <?php echo $entretien->getFormationInstance()->getHistoModification()->format('d/m/Y H:i:s'); ?> </li>
+                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREF()->getHistoModification()->format('d/m/Y H:i:s'); ?> </li>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+
+    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::reinitialiserAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/reinitialiser',['entretien-professionnel' => $entretien->getId(), 'formulaire' => 'CREF'],[], true); ?>"
+       class="btn btn-warning ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-refresh"></span>
+        Remise à zéro et réapplication des copies pour le CREF
+    </a>
+<?php endif; ?>
 
 <?php if ($canRenseigner) : ?>
+
     <?php
     /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
     $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false, 'fragment' => 'formations'], true);
@@ -54,7 +90,11 @@ $agent  = $entretien->getAgent();
     ?>
 <?php else : ?>
     <?php if ($canAfficher) : ?>
-        <?php echo $this->instanceAsText()->render($cref, $entretien->getDateEntretien()); ?>
+        <?php
+            /** @see \UnicaenAutoform\View\Helper\InstanceAsTextHelper::render() */
+//            echo $this->instanceAsText()->render($cref, $entretien->getDateEntretien(), null, true);
+            echo $this->instanceAsText()->render($cref, null, null, true);
+        ?>
 
         <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND  $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
             <div class="alert alert-info">

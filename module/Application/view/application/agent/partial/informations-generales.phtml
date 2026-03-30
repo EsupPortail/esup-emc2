@@ -146,7 +146,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
                                 Ajouter une autorité
                             </a>
                         <?php endif; ?>
-                        <?php $autorites = $agent->getAutorites($canModifierChaineGerer || $canModifierChaineSynchroniser); ?>
+                        <?php $autorites = $agent->getAutorites(null, $canModifierChaineGerer || $canModifierChaineSynchroniser); ?>
                         <?php usort($autorites, function (AgentAutorite $a, AgentAutorite $b) {
                             return $a->getAutorite()->getDenomination() <=> $b->getAutorite()->getDenomination();
                         }); ?>
@@ -228,7 +228,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
                                 Ajouter un·e supérieur·e
                             </a>
                         <?php endif; ?>
-                        <?php $superieures = $agent->getSuperieurs($canModifierChaineGerer || $canModifierChaineSynchroniser); ?>
+                        <?php $superieures = $agent->getSuperieurs(null,$canModifierChaineGerer || $canModifierChaineSynchroniser); ?>
                         <?php usort($superieures, function (AgentSuperieur $a, AgentSuperieur $b) {
                             return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination();
                         }); ?>

@@ -567,29 +567,50 @@ class Agent implements
 
     /** SANS OBLIGATION ***********************************************************************************************/
 
-    public function isForceExclus(Campagne $campagne): bool
+    /**
+     * @var Campagne $campagne
+     * @var ?Structure[] $structures
+     * @return bool
+     */
+    public function isForceExclus(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_EXCLUS) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_EXCLUS) {
+                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+            }
         }
         return false;
     }
 
-    public function isForceSansObligation(Campagne $campagne): bool
+    /**
+     * @var Campagne $campagne
+     * @var ?Structure[] $structures
+     * @return bool
+     */
+    public function isForceSansObligation(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_SANS_OBLIGATION) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_SANS_OBLIGATION) {
+                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+            }
         }
         return false;
     }
 
-    public function isForceAvecObligation(Campagne $campagne): bool
+    /**
+     * @var Campagne $campagne
+     * @var ?Structure[] $structures
+     * @return bool
+     */
+    public function isForceAvecObligation(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_AVEC_OBLIGATION) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_AVEC_OBLIGATION) {
+                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+            }
         }
         return false;
     }
@@ -769,7 +790,7 @@ class Agent implements
     /** AUTORITES ET SUPERIEURS *****************************************************************************/
 
     /** @return AgentAutorite[] */
-    public function getAutorites(bool $histo = false): array
+    public function getAutorites(?Datetime $date = null, bool $histo = false): array
     {
         /** @var AgentAutorite[] $result */
         $result = $this->autorites->toArray();
@@ -796,7 +817,7 @@ class Agent implements
     }
 
     /** @return AgentSuperieur[] */
-    public function getSuperieurs(bool $histo = false): array
+    public function getSuperieurs(?DateTime $date = null, bool $histo = false): array
     {
         /** @var AgentSuperieur[] $result */
         $result = $this->superieurs->toArray();
@@ -810,12 +831,12 @@ class Agent implements
                 ($a->getSourceId() !== "EMC2")
             );
         });
-        $result = array_filter($result, function (AgentSuperieur $a) {
-            return $a->estEnCours();
+        $result = array_filter($result, function (AgentSuperieur $a) use ($date){
+            return $a->estEnCours($date);
         });
         if ($histo === false) {
-            $result = array_filter($result, function (AgentSuperieur $a) {
-                return $a->estNonHistorise();
+            $result = array_filter($result, function (AgentSuperieur $a) use ($date) {
+                return $a->estNonHistorise($date);
             });
         }
         return $result;

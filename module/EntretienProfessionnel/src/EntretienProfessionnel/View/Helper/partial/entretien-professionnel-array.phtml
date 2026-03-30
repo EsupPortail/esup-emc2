@@ -1,12 +1,20 @@
 <?php
 
+use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 
+
+/**
+ * N.B. : La situation des agents est fixée à la date des entretiens professionnels
+ * Dans ce tableau on affiche seulement l'affectation
+ */
+
 /**
  * @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper
  * @var EntretienProfessionnel[] $entretiens
+ * @var EntretienProfessionnelAssertion $assertion
  * @var array $options
  */
 
@@ -112,7 +120,6 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
     <?php foreach ($entretiens as $entretien) : ?>
         <?php
         //todo l'assertion merde
-//        $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
         $canConvoquer = (
                 ($entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
              && $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
@@ -137,9 +144,16 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                     <?php foreach ($affectations as $affectation) : ?>
                         <?php if (!$first) echo '<br/>'; else $first = false; ?>
                         <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                        <br>
+                        <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                        &rightarrow;
+                        <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    Aucune structure
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucune affectation à la date <?php echo $entretien->getDateEntretien()->format("d/m/Y"); ?>
+                    </span>
                 <?php endif; ?>
             </td>
         <?php endif; ?>

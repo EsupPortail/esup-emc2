@@ -83,7 +83,7 @@ update unicaen_parametre_parametre set valeur='!MCF;!PROF UNIV' where code='TEMO
 INSERT INTO unicaen_observation_observation_type (code, libelle, categorie)
 VALUES
     ('OBS_EP_AGENT_ENTRETIEN', 'Observations sur l''entretien professionnel émises par l''agent à propos de l''entretien lui-même', 'Entretien professionnel'),
-    ('OBS_EP_AGENT_PERSPECTIVE', 'Observations sur l''entretien professionnel émises par l''agent à propos de les prespectives', 'Entretien professionnel'),
+    ('OBS_EP_AGENT_PERSPECTIVE', 'Observations sur l''entretien professionnel émises par l''agent à propos des perspectives', 'Entretien professionnel'),
     ('OBS_EP_AGENT_FORMATION', 'Observations sur l''entretien de formation émises par l''agent à propos des formations', 'Entretien professionnel'),
     ('OBS_EP_AGENT_FINALE', 'Observations finales de l''agent en fin de circuit de l''entretien professionnel', 'Entretien professionnel'),
     ('OBS_EP_AUTORITE', 'Observations sur l''entretien professionnel émises par l''autorité hiérarchique de l''agent', 'Entretien professionnel')

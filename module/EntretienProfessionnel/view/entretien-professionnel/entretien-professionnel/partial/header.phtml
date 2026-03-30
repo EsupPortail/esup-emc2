@@ -142,11 +142,45 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
             </div>
         </div>
 
+        <!-- INFORMATIONS --------------------------------------------------------------------------------------------->
+        <div class="card">
+            <div class="card-header bg-default">
+                Informations complémentaires
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-md-4"> Responsable </dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getResponsable()->getDenomination(); ?> </dd>
+                    <?php if ($entretien->getCampagne()) : ?>
+                        <dt class="col-md-4"> Année </dt>
+                        <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?> </dd>
+                    <?php endif; ?>
+                    <dt class="col-md-4"> Date </dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
+                    <dt class="col-md-4"> Lieu </dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getLieu(); ?> </dd>
+                    <dt class="col-md-4"> État </dt>
+                    <dd class="col-md-8">
+                        <?php echo $this->etatinstance($entretien->getEtatActif()); ?>
+                    </dd>
+                </dl>
+
+                <?php $mention = $entretien->mentionFacultatif(); ?>
+                <?php if ($mention !== "") : ?>
+                    <span class="text-info">
+                        <span class="icon icon-info"></span>
+                        <?php echo $mention; ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        </div>
+
 
     </div>
     <div class="col-md-6">
 
         <!-- LIENS ---------------------------------------------------------------------------------------------------->
+        <?php if (!empty($documents)) : ?>
         <div class="card">
             <div class="card-header bg-default">
                 Documents utiles
@@ -159,6 +193,7 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                 </ul>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- Observateurs --------->
         <?php if ($canAfficherObservateurs) : ?>
@@ -223,48 +258,8 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
             </div>
         </div>
         <?php endif; ?>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6">
-
-        <!-- INFORMATIONS --------------------------------------------------------------------------------------------->
-        <div class="card">
-            <div class="card-header bg-default">
-                Informations complémentaires
-            </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-md-4"> Responsable </dt>
-                    <dd class="col-md-8"> <?php echo $entretien->getResponsable()->getDenomination(); ?> </dd>
-                    <?php if ($entretien->getCampagne()) : ?>
-                        <dt class="col-md-4"> Année </dt>
-                        <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?> </dd>
-                    <?php endif; ?>
-                    <dt class="col-md-4"> Date </dt>
-                    <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
-                    <dt class="col-md-4"> Lieu </dt>
-                    <dd class="col-md-8"> <?php echo $entretien->getLieu(); ?> </dd>
-                    <dt class="col-md-4"> État </dt>
-                    <dd class="col-md-8">
-                        <?php echo $this->etatinstance($entretien->getEtatActif()); ?>
-                    </dd>
-                </dl>
-
-                <?php $mention = $entretien->mentionFacultatif(); ?>
-                <?php if ($mention !== "") : ?>
-                    <span class="text-info">
-                        <span class="icon icon-info"></span>
-                        <?php echo $mention; ?>
-                    </span>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-
-    <!-- VALIDATIONS -------------------------------------------------------------------------------------------------->
-    <div class="col-md-6">
+        <!--Validation -->
         <div class="card">
             <div class="card-header bg-default">
                 Validation de l'entretien
@@ -325,4 +320,5 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
             </div>
         </div>
     </div>
+
 </div>

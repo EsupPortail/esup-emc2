@@ -50,7 +50,9 @@ $modules = [
     'Structure',
     'EntretienProfessionnel',
     'Carriere',
+    'EmploiRepere',
     'FicheMetier',
+
     'FichePoste',
 
     'Element',

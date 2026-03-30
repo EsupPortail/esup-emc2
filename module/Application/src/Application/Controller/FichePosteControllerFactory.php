@@ -2,12 +2,12 @@
 
 namespace Application\Controller;
 
+use Agent\Service\AgentPoste\AgentPosteService;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Agent\AgentService;
-use Application\Service\AgentPoste\AgentPosteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;

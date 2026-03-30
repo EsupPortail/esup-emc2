@@ -16,33 +16,35 @@ use UnicaenUtilisateur\Entity\Db\Role;
 
 <?php if ($entretien === null) : ?>
     <div class="alert alert-danger">
-        Aucun entretien professionnel de remonté pour le token <?php echo $token; ?>
+        Votre lien d'acceptation n'est pas valide.
 
         <br/>
 
-        Le problème peut-être lié au fait que :
+        Le problème peut être lié au fait que :
         <ul>
-            <li> vous avez déjà accepter votre entretien, </li>
-            <li> l'entretien est déjà passé, </li>
-            <li> l'entretien a été effacé, </li>
+            <li> vous avez déjà accepté votre entretien (et votre jeton <?php echo $token; ?> a déjà été utilisé ; </li>
+            <li> l'entretien est déjà passé ; </li>
+            <li> l'entretien a été annulé. </li>
         </ul>
     </div>
 <?php else : ?>
 
     <?php if ($depassee) : ?>
         <div class="alert alert-warning">
-            <p> Le délai d'accepation de l'entretien professionnel est maintenant dépassé. </p>
-            <p> Vous pouvez encore accepter celui-ci ; mais votre responsable d'entretien peut maintenant refuser celui-ci.</p>
+            <p> Le délai d'acceptation de l'entretien professionnel est maintenant dépassé. </p>
+            <p> Vous pouvez encore l'accepter ; mais votre responsable d'entretien professionnel peut maintenant le refuser.</p>
         </div>
     <?php endif; ?>
 
     <div class="alert alert-success">
-        <p> Vous venez d'accepter votre entretien professionnel qui se déroule le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </p>
-        <p> Vous pouvez dorénavant commencer à consulter vos entretiens professionnels
+        <p> Vous venez d'accepter votre entretien professionnel qui se déroule le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?>. </p>
+        <p> Vous pouvez dorénavant commencer à consulter votre entretien professionnel
             <?php if ($role->getRoleId() === RoleProvider::AGENT) : ?>
                 en suivant le lien :
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::indexAgentAction() */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/index-agent'); ?>">Accéder à mes entretiens professionnels</a>.
+            <?php else: ?>
+            .
             <?php endif; ?>
         </p>
     </div>

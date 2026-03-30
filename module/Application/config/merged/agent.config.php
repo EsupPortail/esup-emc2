@@ -26,12 +26,9 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
-use Application\Service\AgentPoste\AgentPosteService;
-use Application\Service\AgentPoste\AgentPosteServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
-use Application\View\Helper\AgentViewHelper;
 use Application\View\Helper\AgentViewHelperFactory;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Laminas\Router\Http\Literal;
@@ -447,7 +444,6 @@ return [
 
             AgentService::class => AgentServiceFactory::class,
             AgentMissionSpecifiqueService::class => AgentMissionSpecifiqueServiceFactory::class,
-            AgentPosteService::class => AgentPosteServiceFactory::class,
             AgentQuotiteService::class => AgentQuotiteServiceFactory::class,
             AgentStatutService::class => AgentStatutServiceFactory::class,
         ],

@@ -13,6 +13,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneAgentStatut;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
@@ -21,6 +22,7 @@ use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurServiceAwareTrait;
@@ -36,6 +38,7 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenIndicateur\Service\HasIndicateurs\HasIndicateursServiceAwareTrait;
 use UnicaenParametre\Exception\ParametreNotFoundException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -48,7 +51,9 @@ class CampagneController extends AbstractActionController
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use CampagneConfigurationIndicateurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use HasIndicateursServiceAwareTrait;
     use MacroServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -115,11 +120,16 @@ class CampagneController extends AbstractActionController
                     $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
                     $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
                 }
+
+                $listing = $this->getCampagneConfigurationIndicateurService()->generateGenerationArray($campagne);
+                $log = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
+                if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
+
             }
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('entretien-professionnel/campagne/formulaire');
         $vm->setVariables([
             'title' => "Ajout d'une campagne d'entretien professionnel",
             'form' => $form,
@@ -159,7 +169,7 @@ class CampagneController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('entretien-professionnel/campagne/formulaire');
         $vm->setVariables([
             'title' => "Modification d'une campagne d'entretien professionnel",
             'form' => $form,
@@ -195,7 +205,16 @@ class CampagneController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getCampagneService()->delete($campagne);
+            if ($data["reponse"] === "oui") {
+
+                //nettoyage des indicateurs associés
+                $this->getHasIndicateursService()->retirerIndicateurs($campagne);
+
+                //nettoyage des événements todo ???
+
+
+                $this->getCampagneService()->delete($campagne);
+            }
             exit();
         }
 
@@ -415,14 +434,13 @@ class CampagneController extends AbstractActionController
         if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
-
         if ($structure === null) {
             throw new RuntimeException("Aucune structure de trouvée.");
         }
+
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
-        // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
@@ -432,10 +450,38 @@ class CampagneController extends AbstractActionController
             }
         }
 
-
         [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
 
+
+//        $agents = [];
+//        $obligatoires = [];
+//        $facultatifs = [];
+//        $exclus = [];
+//        $raison = [];
+//        $statuts = $this->getCampagneService()->getCampagneAgentStatut($campagne, $structure);
+//
+//        $entretiens = [];
+//        foreach ($statuts as $statut) {
+//            $agent = $statut->getAgent();
+//            $agents[$agent->getId()] = $agent;
+//            $raison[$agent->getId()] = $statut->getRaison();
+//            if ($statut->getStatut() === CampagneAgentStatut::OBLIGATOIRE) {
+//                $obligatoires[$agent->getId()] = $agent;
+//            }
+//            if ($statut->getStatut() === CampagneAgentStatut::FACULTATIF) {
+//                $facultatifs[$agent->getId()] = $agent;
+//            }
+//            if ($statut->getStatut() === CampagneAgentStatut::EXCLUS) {
+//                $exclus[$agent->getId()] = $agent;
+//            }
+//            if ($statut->getEntretienProfessionnel()) {
+//                $entretiens[$agent->getId()] = $statut->getEntretienProfessionnel();
+//            }
+//        }
+
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+
+
         $finalises = [];
         $encours = [];
         foreach ($entretiens as $entretien) {
@@ -476,6 +522,7 @@ class CampagneController extends AbstractActionController
 
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
+//            'exclus' => $exclus,
             'raison' => $raison,
 
             'templates' => $templates,
@@ -490,7 +537,9 @@ class CampagneController extends AbstractActionController
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
+// TODO ticket #63688
+        //$agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
@@ -501,40 +550,13 @@ class CampagneController extends AbstractActionController
         }
 
 
-        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents);
+        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
-        $finalises = [];
-        $encours = [];
-        foreach ($entretiens as $entretien) {
-            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
-                $finalises[] = $entretien;
-            } else {
-                $encours[] = $entretien;
-            }
-        }
-
-        $last = $this->getCampagneService()->getLastCampagne();
-        $campagnes = $this->getCampagneService()->getCampagnesActives();
-        if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) {
-            return $a->getDateDebut() <=> $b->getDateDebut();
-        });
 
         return new ViewModel([
-            'campagne' => $campagne,
-            'campagnes' => $campagnes,
-            'structure' => $structure,
-            'structures' => $structures,
-            'agents' => $agents,
-
             'entretiens' => $entretiens,
-            'encours' => $encours,
-            'finalises' => $finalises,
-
             'obligatoires' => $obligatoires,
-            'facultatifs' => $facultatifs,
-            'raison' => $raison,
         ]);
     }
 
@@ -553,6 +575,8 @@ class CampagneController extends AbstractActionController
                 $autoriteId = $data['agent-sas']['id'];
                 $autorite = $this->getAgentService()->getAgent($autoriteId);
             }
+// TODO ticket #63688
+            //$listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
             $listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
 
             if (!empty($listing)) {
@@ -598,6 +622,8 @@ class CampagneController extends AbstractActionController
                 $superieurId = $data['agent-sas']['id'];
                 $superieur = $this->getAgentService()->getAgent($superieurId);
             }
+// TODO ticket #63688
+            //$listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
             $listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
 
             if (!empty($listing)) {
@@ -651,9 +677,22 @@ class CampagneController extends AbstractActionController
 
     /** VUES STRATEGIQUES *********************************************************************************************/
 
+    public function indicateursAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $indicateurs = $campagne->getIndicateurs();
+
+        return new ViewModel([
+            'campagne' => $campagne,
+            'indicateurs' => $indicateurs,
+        ]);
+    }
+
     public function progressionParStructuresAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+// TODO ticket #63688
+        //$structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateFixe()??$campagne->getDateDebut());
         $structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateDebut());
 
         return new ViewModel([

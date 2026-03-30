@@ -2,14 +2,17 @@
 
 namespace FicheMetier\Controller;
 
+use Agent\Service\AgentPoste\AgentPosteService;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
+use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieForm;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereForm;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\CompetenceType\CompetenceTypeService;
+use EmploiRepere\Service\EmploiRepere\EmploiRepereService;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
 use FicheMetier\Form\CodeFonction\CodeFonctionForm;
 use FicheMetier\Form\FicheMetierIdentification\FicheMetierIdentificationForm;
@@ -47,8 +50,10 @@ class FicheMetierControllerFactory
         /**
          * @var ActiviteElementService $activiteElementService
          * @var AgentService $agentService
+         * @var AgentPosteService $agentPosteService
          * @var CodeFonctionService $codeFonctionService
          * @var CompetenceTypeService $competenceTypeService
+         * @var EmploiRepereService $emploiRepereService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
@@ -63,8 +68,10 @@ class FicheMetierControllerFactory
          */
         $activiteElementService = $container->get(ActiviteElementService::class);
         $agentService = $container->get(AgentService::class);
+        $agentPosteService = $container->get(AgentPosteService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
+        $emploiRepereService = $container->get(EmploiRepereService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
@@ -86,6 +93,7 @@ class FicheMetierControllerFactory
          * @var SelectionApplicationForm $selectionnerApplicationForm
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
          * @var SelectionEtatForm $selectionnerEtatForm
+         * @var SelectionnerCategorieForm $selectionnerCategorieForm
          * @var SelectionnerActivitesForm $selectionnerActivitesForm
          * @var SelectionnerFamilleProfessionnelleForm $selectionnerFamilleProfesionnelleForm
          * @var SelectionnerMissionPrincipaleForm $selectionnerMissionPrincipaleForm
@@ -99,6 +107,7 @@ class FicheMetierControllerFactory
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
+        $selectionnerCategorieForm = $container->get('FormElementManager')->get(SelectionnerCategorieForm::class);
         $selectionnerFamilleProfesionnelleForm = $container->get('FormElementManager')->get(SelectionnerFamilleProfessionnelleForm::class);
         $selectionnerMissionPrincipaleForm = $container->get('FormElementManager')->get(SelectionnerMissionPrincipaleForm::class);
         $selectionnerNiveauCarriereForm = $container->get('FormElementManager')->get(SelectionnerNiveauCarriereForm::class);
@@ -107,8 +116,10 @@ class FicheMetierControllerFactory
         $controller = new FicheMetierController();
         $controller->setActiviteElementService($activiteElementService);
         $controller->setAgentService($agentService);
+        $controller->setAgentPosteService($agentPosteService);
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceTypeService($competenceTypeService);
+        $controller->setEmploiRepereService($emploiRepereService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setMissionElementService($missionElementService);
@@ -127,6 +138,7 @@ class FicheMetierControllerFactory
         $controller->setRaisonForm($raisonForm);
         $controller->setSelectionnerActivitesForm($selectionnerActivitesForm);
         $controller->setSelectionApplicationForm($selectionnerApplicationForm);
+        $controller->setSelectionnerCategorieForm($selectionnerCategorieForm);
         $controller->setSelectionCompetenceForm($selectionnerCompetenceForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);
         $controller->setSelectionnerFamilleProfessionnelleForm($selectionnerFamilleProfesionnelleForm);

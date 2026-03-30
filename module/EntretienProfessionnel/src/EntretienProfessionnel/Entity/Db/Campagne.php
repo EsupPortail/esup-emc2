@@ -6,13 +6,19 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use UnicaenAutoform\Entity\Db\Formulaire;
+use UnicaenIndicateur\Entity\Interface\HasIndicateursInterface;
+use UnicaenIndicateur\Entity\Trait\HasIndicateursTrait;
+use UnicaenRenderer\Entity\Db\Template;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
+class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndicateursInterface {
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
+    use HasIndicateursTrait;
 
     private ?int $id = -1;
     private ?string $annee = null;
@@ -20,6 +26,16 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     private ?DateTime $dateCirculaire = null;
     private ?DateTime $dateEnPoste = null;
     private Collection $entretiens;
+
+    private ?Formulaire $formulaireCREP = null;
+    private ?Formulaire $formulaireCREF = null;
+    private ?Template $templateCREP = null;
+    private ?Template $templateCREF = null;
+
+
+    public function __construct() {
+        $this->indicateurs = new ArrayCollection();
+    }
 
     public function getId() : ?int
     {
@@ -81,6 +97,46 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     public function getEntretiensProfessionnels() : array
     {
         return $this->entretiens->toArray();
+    }
+
+    public function getFormulaireCREP(): ?Formulaire
+    {
+        return $this->formulaireCREP;
+    }
+
+    public function setFormulaireCREP(?Formulaire $formulaireCREP): void
+    {
+        $this->formulaireCREP = $formulaireCREP;
+    }
+
+    public function getFormulaireCREF(): ?Formulaire
+    {
+        return $this->formulaireCREF;
+    }
+
+    public function setFormulaireCREF(?Formulaire $formulaireCREF): void
+    {
+        $this->formulaireCREF = $formulaireCREF;
+    }
+
+    public function getTemplateCREP(): ?Template
+    {
+        return $this->templateCREP;
+    }
+
+    public function setTemplateCREP(?Template $templateCREP): void
+    {
+        $this->templateCREP = $templateCREP;
+    }
+
+    public function getTemplateCREF(): ?Template
+    {
+        return $this->templateCREF;
+    }
+
+    public function setTemplateCREF(?Template $templateCREF): void
+    {
+        $this->templateCREF = $templateCREF;
     }
 
     /** prédicats *****************************************************************************************************/

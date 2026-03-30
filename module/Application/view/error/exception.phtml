@@ -1,0 +1,38 @@
+<?php
+/**
+ * @var Exception $exception
+*/
+
+?>
+
+<div class="alert alert-danger">
+    <h1> Action impossible </h1>
+
+    <p class="lead">
+        <?php echo $exception->getMessage(); ?>
+    </p>
+</div>
+
+<?php if ($exception->getCode() !== -1) : ?>
+    <hr>
+    <h2>Détail de l'exception </h2>
+
+    <?php echo $exception->getFile(); ?>:<?php echo $exception->getLine(); ?>
+    <br>
+
+    <?php foreach (explode("\n", $exception->getTraceAsString()) as $line): ?>
+        <?php echo $line; ?><br>
+    <?php endforeach; ?>
+
+    <?php while($exception->getPrevious()) : ?>
+        <h2>Précédente exception </h2>
+        <?php $exception = $exception->getPrevious(); ?>
+        <?php echo $exception->getMessage(); ?>
+        <?php foreach ($exception->getTrace() as $trace): ?>
+            <?php echo $trace; ?>
+        <?php endforeach; ?>
+
+    <?php endwhile; ?>
+<?php endif; ?>
+
+

@@ -15,6 +15,7 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHyd
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHydratorFactory;
 use EntretienProfessionnel\View\Helper\ConvocationArrayViewHelper;
 use EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper;
+use EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Laminas\Router\Http\Literal;
@@ -38,6 +39,7 @@ return [
                             EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
                             EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
                             EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER,
+                            EntretienproPrivileges::ENTRETIENPRO_REINITIALISER,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH,
@@ -120,8 +122,17 @@ return [
                     'action' => [
                         'creer',
                         'modifier',
+                        'reinitialiser',
                     ],
                     'privileges' => EntretienproPrivileges::ENTRETIENPRO_CONVOQUER,
+                    'assertion' => EntretienProfessionnelAssertion::class,
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'reinitialiser',
+                    ],
+                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_REINITIALISER,
                     'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [
@@ -299,6 +310,17 @@ return [
                             ],
                         ],
                     ],
+                    'reinitialiser' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/reinitialiser/:entretien-professionnel/:formulaire',
+                            'defaults' => [
+                                /** @see EntretienProfessionnelController::reinitialiserAction() */
+                                'action'     => 'reinitialiser',
+                            ],
+                        ],
+                    ],
                     'exporter-crep' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
@@ -454,8 +476,14 @@ return [
     'view_helpers' => [
         'invokables' => [
             'convocationArray' => ConvocationArrayViewHelper::class,
-            'entretienProfessionnelArray' => EntretienProfessionnelArrayViewHelper::class,
+
         ],
+        'factories' => [
+            EntretienProfessionnelArrayViewHelper::class => EntretienProfessionnelArrayViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'entretienProfessionnelArray' => EntretienProfessionnelArrayViewHelper::class,
+        ]
     ],
 
 

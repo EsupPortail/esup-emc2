@@ -49,6 +49,7 @@ return [
                         'refresh-missions',
                         'refresh-raison',
                         'exporter',
+                        'fetch-fiches-metiers-by-code-fonction'
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AFFICHER,
@@ -102,6 +103,8 @@ return [
 
                         'modifier-famille-professionnelle',
                         'supprimer-famille-professionnelle',
+                        'modifier-categorie',
+                        'supprimer-categorie',
                         'modifier-niveau-carriere',
                         'supprimer-niveau-carriere',
                         'modifier-code-fonction',
@@ -177,6 +180,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::afficherAction() */
                                 'action' => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'fetch-fiches-metiers-by-code-fonction' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/fetch-fiches-metiers-by-code-fonction[/:code]',
+                            'defaults' => [
+                                /** @see FicheMetierController::fetchFichesMetiersByCodeFonctionAction() */
+                                'action' => 'fetch-fiches-metiers-by-code-fonction',
                             ],
                         ],
                     ],
@@ -287,6 +300,26 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::modifierRaisonAction() */
                                 'action' => 'modifier-raison',
+                            ],
+                        ],
+                    ],
+                    'modifier-categorie' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-categorie/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierCategorieAction() */
+                                'action'     => 'modifier-categorie',
+                            ],
+                        ],
+                    ],
+                    'supprimer-categorie' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-categorie/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::supprimerCategorieAction() */
+                                'action'     => 'supprimer-categorie',
                             ],
                         ],
                     ],

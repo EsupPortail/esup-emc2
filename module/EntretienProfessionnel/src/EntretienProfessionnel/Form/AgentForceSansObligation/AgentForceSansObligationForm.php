@@ -23,11 +23,19 @@ class AgentForceSansObligationForm extends Form
         $this->urlAgent = $url;
     }
 
+
+    private ?string $urlStructure = null;
+
+    public function setUrlStructure(string $url): void
+    {
+        $this->urlStructure = $url;
+    }
+
     public function init(): void
     {
         //agent
         //Agent
-        $agent = new SearchAndSelect('agentsearch', ['label' => "Agent <span class='icon icon-obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+        $agent = new SearchAndSelect('agentsearch', ['label' => "Agent <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired()
@@ -51,11 +59,23 @@ class AgentForceSansObligationForm extends Form
                 'id' => 'campagne',
             ],
         ]);
+        //structure
+        $structure = new SearchAndSelect('structuresearch', ['label' => "Structure <span class='icon icon-information' title='Si une structure est saisie alors l&apos;exception sera limitée au périmètre de cette structure. L&apos;agent·e ne sera pas soumis·e à cette exception dans ses autres structures d&apos;affectation.'></span>:"]);
+        $structure
+            ->setAutocompleteSource($this->urlStructure)
+            ->setSelectionRequired()
+            ->setLabelOption('disable_html_escape',true)
+            ->setAttributes([
+                'id' => 'structuresearch',
+                'placeholder' => "Nom de la structure ...",
+            ]);
+        $this->add($structure);
+        //type
         $this->add([
             'type' => Radio::class,
             'name' => 'type',
             'options' => [
-                'label' => "Type de forçage  <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Type d'exception <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => ['disable_html_escape' => true,],
                 'value_options' => AgentForceSansObligation::FORCAGE_ARRAY,
             ],
@@ -68,11 +88,11 @@ class AgentForceSansObligationForm extends Form
             'type' => Textarea::class,
             'name' => 'raison',
             'options' => [
-                'label' => "Raison de la sortie de la campagne d'entretien professionnel ",
+                'label' => "Raison de l'exception",
             ],
             'attributes' => [
                 'id' => 'raison',
-                'class' => 'type2',
+                'class' => 'tinymce',
             ],
         ]);
         //button
@@ -93,6 +113,7 @@ class AgentForceSansObligationForm extends Form
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
             'agentsearch' => ['required' => true,],
+            'structuresearch' => ['required' => false,],
             'campagne' => ['required' => true,],
             'raison' => ['required' => false,],
         ]));

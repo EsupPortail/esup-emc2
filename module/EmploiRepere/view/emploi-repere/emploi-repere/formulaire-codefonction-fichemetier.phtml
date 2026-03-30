@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @see \EmploiRepere\Controller\EmploiRepereCodeFonctionFicheMetierController::ajouterAction()
+ * @see \EmploiRepere\Controller\EmploiRepereCodeFonctionFicheMetierController::modifierAction()
+ * @var EmploiRepereCodeFonctionFicheMetierForm $form
+ */
+
+use EmploiRepere\Form\EmploiRepereCodeFonctionFicheMetier\EmploiRepereCodeFonctionFicheMetierForm;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+
+    function manageFicheMetier() {
+        let codefonction_value = $('select#code-fonction').val();
+
+        if (codefonction_value === undefined || codefonction_value === '') {
+            $('select#fiche-metier').parent().hide();
+            return;
+        }
+        // requetage de la liste des fiches métiers ayant ce code fonction
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::fetchFichesMetiersByCodeFonctionAction() */ ?>
+        let url = "<?php echo $this->url("fiche-metier/fetch-fiches-metiers-by-code-fonction"); ?>" + "/" + codefonction_value;
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function() {
+                    //masquer les fiches métiers
+                    $('select#fiche-metier').parent().hide();
+                },
+            success:
+                function (retour) {
+                    //vider les options
+                    // $('select#fiche-metier').find('option:not(:first)').remove();
+                    $('select#fiche-metier').find('option').remove();
+                    //mettre les actions
+                    $.each(retour, function(index, value) {
+                        $('select#fiche-metier').append(new Option(value, index, false, false));
+                    });
+                    //afficher
+                    $('select#fiche-metier').parent().show();
+                }
+        });
+    }
+
+    $(function() {
+        manageFicheMetier();
+        $('select#code-fonction').on('change', function() {
+            manageFicheMetier();
+        });
+
+    });
+</script>

@@ -1,0 +1,185 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+
+
+/**
+ * @see \EntretienProfessionnel\View\Helper\AideAgentCampagneViewHelper
+ * @var Agent $agent
+ * @var ?Campagne $campagne
+ * @var ?EntretienProfessionnel $entretien
+ * @var array $infos
+ * @var array $options
+ */
+
+$displayCaractereObligatoire = true;
+$displayInformationsCampagne = true;
+
+$estDepasseEntretien = ($entretien and (new DateTime() >= $entretien->getDateEntretien()));
+$estDepasseObservation = ($entretien and isset($infos['limite-observation']) and (new DateTime() >= $infos['limite-observation']));
+?>
+
+<?php if ($campagne !== null) : ?>
+    <div class="card" id="aide-agent-campagne">
+        <div class="card-header bg-default">
+            Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+        </div>
+        <div class="card-body">
+
+                <?php if ($displayInformationsCampagne) : ?>
+                        À propos de la campagne :
+                        <dl class="row">
+                            <dt class="col-md-2"> Date de début :</dt>
+                            <dd class="col-md-10"> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>
+                            <dt class="col-md-2"> Date de fin :</dt>
+                            <dd class="col-md-10"> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?>
+                        </dl>
+                <?php endif; ?>
+
+                <?php if ($displayCaractereObligatoire) : ?>
+                        <?php if (!empty($infos['obligatoire'])) : ?>
+                            Vous devez passer un entretien professionnel pour cette campagne.
+                        <?php endif; ?>
+                        <?php if (!empty($infos['facultatif'])) : ?>
+                            Vous pouvez passer un entretien professionnel pour cette campagne.
+                            <span class="icon icon-info" title="<?php echo $infos['raison']; ?>"></span>
+                        <?php endif; ?>
+                        <?php if (empty($infos['obligatoire']) and empty($infos['facultatif'])) : ?>
+                            Vous ne devez pas passer d'entretien professionnel pour cette campagne.
+                            <span class="icon icon-info" title="<?php echo $infos['raison']; ?>"></span>
+                        <?php endif; ?>
+                <?php endif; ?>
+
+            <br>
+            <br>
+
+            <?php if ($entretien === null) : ?>
+
+
+                <div class="alert alert-warning">
+                        <span class="icon icon-attention"></span>
+                        <strong>Vous n'avez pas encore d'entretien professionnel de planifié pour cette campagne.</strong><br>
+                        Un·e de vos supérieur·es hiérarchiques direct·es vous proposera une date prochainement.
+                </div>
+            <?php else : ?>
+                <?php $etat = $entretien->getEtatActif(); ?>
+
+                <div>
+                    <?php if (!$estDepasseEntretien) : ?>
+                        Votre entretien professionnel est planifié pour le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> (lieu: <?php echo $entretien->getLieu(); ?>).
+                    <?php else: ?>
+                        Votre entretien professionnel s'est déroulé le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> (lieu: <?php echo $entretien->getLieu(); ?>).
+                    <?php endif; ?>
+                </div>
+
+                <br>
+
+                <?php if ($etat->getType()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) : ?>
+                    <div class="alert alert-warning">
+                        <strong><span class="icon icon-attention"></span> Vous n'avez pas encore accepté votre convocation.</strong>
+                        <br>
+                        Lors de votre convocation, vous avez reçu un courrier électronique, vous rappelant le cadre et
+                        vous fournissant un lien pour accepter les dates de votre entretien.
+                        <br>
+                        Vous pouvez-aussi accepter celui-ci en cliquant sur le lien suivant : <a
+                                href="<?php echo $infos['url-acceptation']; ?>" class="ajax-modal"
+                                data-event="modification"> lien d'acception de
+                            l'entretien professionnel </a>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($etat->getType()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) : ?>
+                    <?php if (new DateTime() < $entretien->getDateEntretien()) : ?>
+                        <strong>Dernière action :</strong> vous avez accepté votre entretien professionnel.
+                        <br>
+                        <strong>Prochaine étape :</strong>
+                        vous avez jusqu'à votre entretien pour préparer et pré-saisir les comptes rendus : <a
+                                href="<?php echo $infos['url-entretien']; ?>" target="_blank"> préparer mon entretien </a>.
+                        <br>
+
+                        <div class="alert alert-info" style="margin-top: 0.5rem;">
+                            <span class="icon icon-info"></span> Une fois l'entretien commencé seul le responsable de l'entretien pourra modifier celui-ci.
+                        </div>
+                    <?php else: ?>
+                        <strong>Dernière action :</strong> votre entretien a eu lieu.
+                        <br>
+                        <strong>Prochaine étape :</strong>
+                        après la validation du responsable, vous aurez <?php echo $infos['delai-observation']; ?> jours pour exprimer vos observations.
+
+                        <div class="alert alert-info" style="margin-top: 0.5rem;">
+                            <span class="icon icon-info"></span> Vous serez prévenu·e par courrier électronique lors de la validation des comptes rendus par votre responsable.
+                        </div>
+
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if (
+                        $etat->getType()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE
+                ) : ?>
+                    <?php if (!$estDepasseObservation) : ?>
+                        <strong>Dernière action :</strong> votre responsable a validé votre entretien professionnel.
+                        <br>
+                        <strong>Prochaine étape :</strong>
+                        vous avez jusqu'au <?php echo $infos['limite-observation']->format('d/m/Y à H:i'); ?> pour exprimer vos observations :
+                        <a href="<?php echo $infos['url-entretien']; ?>#validation" target="_blank"> exprimer mes observations</a>.
+                        <br>
+                        <div class="alert alert-info" style="margin-top: 0.5rem;">
+                            <span class="icon icon-info"></span>
+                            Une fois ce délai dépassé, votre entretien sera transmis à votre autorité pour validation.
+                        </div>
+                    <?php else: ?>
+                        <strong>Dernière action :</strong> le délai pour émettre vos observations est dépassé.
+                        <br>
+                        <strong>Prochaine étape :</strong>
+                        après la validation de votre autorité hiérarchique, vous pourrez viser l'entretien et finaliser celui-ci.
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($etat->getType()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) : ?>
+                    <strong>Dernière action :</strong> vous avez validé vos observations.
+                    <br>
+                    <strong>Prochaine étape :</strong>
+                    après la validation de votre autorité hiérarchique, vous pourrez viser l'entretien et le finaliser.
+                    <br>
+                <?php endif; ?>
+
+                <?php if ($etat->getType()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE) : ?>
+                    <strong>Dernière action :</strong> votre autorité hiérarchique a validé votre entretien professionnel.
+                    <br>
+                    <strong>Prochaine étape :</strong>
+                    vous pouvez viser votre entretien professionnel pour le finaliser : <a
+                            href="<?php echo $infos['url-entretien']; ?>#validation" target="_blank"> viser mon entretien </a>.
+                    <br>
+
+                    <div class="alert alert-info" style="margin-top: 0.5rem;">
+                        <span class="icon icon-info"></span> En cas de litige, votre visa est nécessaire pour initier les démarches auprès de la DRH.
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($etat->getType()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT) : ?>
+                    <div class="alert alert-success">
+                        <span class="icon icon-checked"></span>
+                        Votre entretien professionnel est finalisé.
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif ?>
+
+<script>
+    $(function () {
+        $(document).on('hide.bs.modal', '.modal', function () {
+            window.parent.location.reload();
+        });
+    });
+</script>
+
+<style>
+    div#aide-agent-campagne{
+        margin-bottom: 1rem;
+    }
+</style>

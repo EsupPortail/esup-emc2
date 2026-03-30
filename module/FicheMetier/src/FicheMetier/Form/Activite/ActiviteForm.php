@@ -64,7 +64,7 @@ class ActiviteForm extends Form
             'type' => Text::class,
             'name' => 'identifiant',
             'options' => [
-                'label' => "Identifiant dans le référentiel <span class='icon icon-information' title='Si aucun identifiant de renseigné, EMC2 donnera une valeur numérique à la mission.'></span>:",
+                'label' => "Identifiant dans le référentiel <span class='icon icon-information' title='Si aucun identifiant de renseigné, EMC2 donnera une valeur numérique à l&apos;activité.'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [

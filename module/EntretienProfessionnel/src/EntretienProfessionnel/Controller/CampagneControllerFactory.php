@@ -9,6 +9,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\Macro\MacroService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
+use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
@@ -21,6 +22,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
+use UnicaenIndicateur\Service\HasIndicateurs\HasIndicateursService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
@@ -40,7 +42,9 @@ class CampagneControllerFactory extends AbstractActionController
          * @var AgentAutoriteService $agentAutoriteService
          * @var AgentSuperieurService $agentSuperieurService
          * @var CampagneService $campagneService
+         * @var CampagneConfigurationIndicateurService $campagneConfigurationIndicateurService
          * @var EntretienProfessionnelService $entretienProfessionnelService
+         * @var HasIndicateursService $hasIndicateursService
          * @var MacroService $macroService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
@@ -56,7 +60,9 @@ class CampagneControllerFactory extends AbstractActionController
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
+        $campagneConfigurationIndicateurService = $container->get(CampagneConfigurationIndicateurService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
+        $hasIndicateursService = $container->get(HasIndicateursService::class);
         $macroService = $container->get(MacroService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -80,7 +86,9 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setAgentAutoriteService($agentAutoriteService);
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setCampagneService($campagneService);
+        $controller->setCampagneConfigurationIndicateurService($campagneConfigurationIndicateurService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
+        $controller->setHasIndicateursService($hasIndicateursService);
         $controller->setMacroService($macroService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);

@@ -5,7 +5,6 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -15,6 +14,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
+use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieServiceAwareTrait;
 use Exception;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Ramsey\Uuid\Uuid;
@@ -31,7 +31,7 @@ class EntretienProfessionnelService
 {
     use AgentServiceAwareTrait;
     use ProvidesObjectManager;
-    use ConfigurationServiceAwareTrait;
+    use CampagneConfigurationRecopieServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -286,12 +286,16 @@ class EntretienProfessionnelService
     {
         $agent = $entretien->getAgent();
         $date = $entretien->getDateEntretien();
+        $campagne = $entretien->getCampagne();
+        $precedenteCampagne = $campagne->getPrecede();
+
+        if ($precedenteCampagne === null) { return null; }
 
         $qb = $this->createQueryBuilder()
-            ->andWhere('entretien.agent = :agent')
-            ->andWhere('entretien.dateEntretien < :date')
-            ->setParameter('agent', $agent)
-            ->setParameter('date', $date)
+            ->andWhere('entretien.agent = :agent')->setParameter('agent', $agent)
+            ->andWhere('entretien.dateEntretien < :date')->setParameter('date', $date)
+            ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $precedenteCampagne)
+            ->andWhere('entretien.histoDestruction IS NULL')
             ->orderBy('entretien.dateEntretien', 'DESC');
         $result = $qb->getQuery()->getResult();
 
@@ -311,7 +315,8 @@ class EntretienProfessionnelService
             ->setParameter('agent', $agent)
             ->andWhere('entretien.campagne = :campagne')
             ->setParameter('campagne', $campagne)
-            ->andWhere('entretien.histoDestruction IS NULL');
+            ->andWhere('entretien.histoDestruction IS NULL')
+        ;
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -351,25 +356,29 @@ class EntretienProfessionnelService
         return $entretien;
     }
 
-    public function recopiePrecedent(EntretienProfessionnel $entretien): EntretienProfessionnel
+    public function recopiePrecedent(EntretienProfessionnel $entretien, ?string $formulaire_ = null): EntretienProfessionnel
     {
         $previous = $this->getPreviousEntretienProfessionnel($entretien);
         if ($previous) {
-            $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
+            $recopies = $this->getCampagneConfigurationRecopieService()->getCampagneConfigurationRecopies();
             foreach ($recopies as $recopie) {
-                [$form, $ids] = explode('|', $recopie->getValeur());
-                [$from, $to] = explode(';', $ids);
-                $previousFormulaire = null; $currentFormulaire = null;
-                if ($form === 'CREP') {
-                    $previousFormulaire = $previous->getFormulaireInstance();
-                    $currentFormulaire = $entretien->getFormulaireInstance();
-                }
-                if ($form === 'CREF') {
-                    $previousFormulaire = $previous->getFormationInstance();
-                    $currentFormulaire = $entretien->getFormationInstance();
-                }
-                if ($previousFormulaire !== null && $currentFormulaire !== null) {
-                    $this->getFormulaireInstanceService()->recopie($previousFormulaire, $currentFormulaire, $from, $to);
+                $formulaire = $recopie->getFormulaire();
+                if ($formulaire_ === null OR $formulaire === $formulaire_) {
+                    $from = $recopie->getFrom();
+                    $to = $recopie->getTo();
+                    $previousFormulaire = null;
+                    $currentFormulaire = null;
+                    if ($formulaire === 'CREP') {
+                        $previousFormulaire = $previous->getFormulaireInstance();
+                        $currentFormulaire = $entretien->getFormulaireInstance();
+                    }
+                    if ($formulaire === 'CREF') {
+                        $previousFormulaire = $previous->getFormationInstance();
+                        $currentFormulaire = $entretien->getFormationInstance();
+                    }
+                    if ($previousFormulaire !== null && $currentFormulaire !== null) {
+                        $this->getFormulaireInstanceService()->recopie($previousFormulaire, $currentFormulaire, $from?->getId(), $to?->getId());
+                    }
                 }
             }
         }
@@ -397,14 +406,29 @@ class EntretienProfessionnelService
      * @param EntretienProfessionnel $entretien
      * @return EntretienProfessionnel
      */
-    public function initialiser(EntretienProfessionnel $entretien): EntretienProfessionnel
+    public function initialiser(EntretienProfessionnel $entretien, ?string $formulaire = null): EntretienProfessionnel
     {
-        $entretien_instance = $this->getFormulaireInstanceService()->createInstance('CREP');
-        $formation_instance = $this->getFormulaireInstanceService()->createInstance('CREF');
-        $entretien->setFormulaireInstance($entretien_instance);
-        $entretien->setFormationInstance($formation_instance);
-        $this->create($entretien);
-        $this->recopiePrecedent($entretien);
+        $campagne = $entretien->getCampagne();
+
+        if ($formulaire === null OR $formulaire === 'CREP') {
+            $crep = $campagne->getFormulaireCREP();
+            $entretien_instance = $this->getFormulaireInstanceService()->createInstance($crep->getCode());
+            $entretien->setFormulaireInstance($entretien_instance);
+        }
+        if ($formulaire === null OR $formulaire === 'CREF') {
+            $cref = $campagne->getFormulaireCREF();
+            $formation_instance = $this->getFormulaireInstanceService()->createInstance($cref->getCode());
+            $entretien->setFormationInstance($formation_instance);
+        }
+
+        if ($formulaire === null) {
+            $this->create($entretien);
+        } else {
+            $this->update($entretien);
+        }
+
+
+        $this->recopiePrecedent($entretien, $formulaire);
         return $entretien;
     }
 

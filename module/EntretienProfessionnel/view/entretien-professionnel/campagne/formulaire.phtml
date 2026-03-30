@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::ajouterAction()
+ * @see \EntretienProfessionnel\Controller\CampagneController::modifierAction()
+ * @var CampagneForm $form
+ */
+
+use EntretienProfessionnel\Form\Campagne\CampagneForm;
+
+//'formulaire_crep' =>    [  'required' => true, ],
+//'formulaire_cref' =>    [  'required' => true, ],
+//'template_crep' =>    [  'required' => true, ],
+//'template_cref' =>    [  'required' => true, ],
+
+?>
+
+<?php echo $this->form()->openTag($form); ?>
+
+
+<!--<h4> Description </h4>-->
+
+<h3> Description </h3>
+<div class="row">
+    <div class="col-md-6"> <?php echo $this->formControlGroup($form->get('annee')); ?> </div>
+    <div class="col-md-6"> <?php echo $this->formControlGroup($form->get('precede')); ?> </div>
+</div>
+<h3> Dates associées</h3>
+<div class="row">
+    <div class="col-md-4"> <?php echo $this->formControlGroup($form->get('date_debut')); ?> </div>
+    <div class="col-md-4"> <?php echo $this->formControlGroup($form->get('date_fin')); ?> </div>
+    <div class="col-md-4"> <?php echo $this->formControlGroup($form->get('date_circulaire')); ?> </div>
+    <div class="col-md-12"> <?php echo $this->formControlGroup($form->get('date_en_poste')); ?> </div>
+</div>
+<h3> Formulaires et templates </h3>
+<div class="row">
+    <div class="col-md-6"> <?php echo $this->formControlGroup($form->get('formulaire_crep')); ?> </div>
+    <div class="col-md-6"> <?php echo $this->formControlGroup($form->get('template_crep')); ?> </div>
+    <div class="col-md-6"> <?php echo $this->formControlGroup($form->get('formulaire_cref')); ?> </div>
+    <div class="col-md-6"> <?php echo $this->formControlGroup($form->get('template_cref')); ?> </div>
+</div>
+
+
+<?php echo $this->formControlGroup($form->get('submit')); ?>
+<?php echo $this->form()->closeTag(); ?>
+
+
+
+<script>
+    $(function() {
+        $('select').selectpicker();
+    });
+</script>

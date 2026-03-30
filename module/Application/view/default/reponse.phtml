@@ -2,17 +2,36 @@
 
 /**
  * @var string $reponse
+ * @var ?string $info
+ * @var ?string $error
+ * @var ?string $warning
+ * @var ?string $success
  */
 
 ?>
 
-<?php if (isset($reponse)) : ?>
-    <?php echo $reponse; ?>
+<?php if (isset($success)) : ?>
+    <div class="alert alert-success text-success">
+        <span class="icon icon-checked"></span>
+        <?php echo $success; ?>
+    </div>
 <?php endif; ?>
 
+
 <?php if (isset($error)) : ?>
-    <div class="alert alert-error text-danger">
+    <div class="alert alert-danger text-danger">
         <span class="icon icon-unchecked"></span>
         <?php echo $error; ?>
     </div>
+<?php endif; ?>
+
+<?php if (isset($warning)) : ?>
+    <div class="alert alert-warning text-warning">
+        <span class="icon icon-attention"></span>
+        <?php echo $warning; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($reponse)) : ?>
+    <?php echo $reponse; ?>
 <?php endif; ?>

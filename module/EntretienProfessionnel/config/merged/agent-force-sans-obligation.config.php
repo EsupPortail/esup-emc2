@@ -110,7 +110,7 @@ return [
                                     'route' => '/afficher/:agent-force-sans-obligation',
                                     'defaults' => [
                                         /** @see AgentForceSansObligationController::afficherAction() */
-                                        'action' => 'modifier',
+                                        'action' => 'afficher',
                                     ],
                                 ],
                             ],
@@ -168,7 +168,7 @@ return [
                     'gestion' => [
                         'pages' => [
                             'agent-force' => [
-                                'label' => "Agent·es avec forçage d'entretien professionnel",
+                                'label' => "Exceptions",
                                 'route' => 'entretien-professionnel/agent-avec-forcage',
                                 'resource' => PrivilegeController::getResourceId(AgentForceSansObligationController::class, 'index'),
                                 'order' => 3100,

@@ -48,8 +48,15 @@ class AgentForceSansObligationController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $agentForceSansObligation = $this->getAgentForceSansObligationService()->getRequestedAgentForceSansObligation($this);
+        $agent = $agentForceSansObligation->getAgent();
+        $campagne = $agentForceSansObligation->getCampagne();
+        $affectations = $agent->getAffectations($campagne->getDateDebut());
         return new ViewModel([
+            'title' => "Exception à un entretien professionnel",
             'agentForceSansObligation' => $agentForceSansObligation,
+            'agent' => $agent,
+            'campagne' => $campagne,
+            'affectations' => $affectations,
         ]);
     }
 
@@ -71,7 +78,7 @@ class AgentForceSansObligationController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Ajouter un·e agent·e sans obligation d'entretien professionnel",
+            'title' => "Ajouter une exception d'entretien professionnel",
             'form' => $form
         ]);
         $vm->setTemplate('default/default-form');
@@ -96,7 +103,7 @@ class AgentForceSansObligationController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Modifier un·e agent·e sans obligation d'entretien professionnel",
+            'title' => "Modifier l'exception d'entretien professionnel",
             'form' => $form
         ]);
         $vm->setTemplate('default/default-form');
@@ -139,7 +146,7 @@ class AgentForceSansObligationController extends AbstractActionController
         if ($agentForceSansObligation !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du forçage pour [" . $agentForceSansObligation->getAgent()->getDenomination() . "] et la campagne [" . $agentForceSansObligation->getCampagne()->getAnnee() . "]",
+                'title' => "Suppression de l'exception pour [" . $agentForceSansObligation->getAgent()->getDenomination() . "] et la campagne [" . $agentForceSansObligation->getCampagne()->getAnnee() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/agent-avec-forcage/supprimer', ["agent-force-sans-obligation" => $agentForceSansObligation->getId()], [], true),
             ]);

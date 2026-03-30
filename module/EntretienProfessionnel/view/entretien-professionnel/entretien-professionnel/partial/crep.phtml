@@ -53,9 +53,42 @@ $date_depassee = (($isAgent) and ($now > $date));
 <?php endif; ?>
 
 
-<?php
-$data = $crep->buildResponseDictionnary();
-?>
+<?php $data = $crep->buildResponseDictionnary(); ?>
+
+<?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER)) : ?>
+    <?php if ($entretien->getFormulaireInstance()->getFormulaire()->getId() !== $entretien->getCampagne()->getFormulaireCREP()->getId()) : ?>
+        <div class="alert alert-danger">
+            Le formulaire du CREP a changé depuis la création de l'entretien professionnel.
+
+            <br>
+            Debug :
+            <ul>
+                <li>Entretien Id: <?php echo $entretien->getFormulaireInstance()->getFormulaire()->getId(); ?> Code:<?php echo $entretien->getFormulaireInstance()->getFormulaire()->getCode(); ?></li>
+                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getId(); ?> Code:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getCode(); ?></li>
+            </ul>
+        </div>
+    <?php endif; ?>
+    <?php if ($entretien->getFormulaireInstance()->getHistoModification() < $entretien->getCampagne()->getFormulaireCREP()->getHistoModification()) : ?>
+        <div class="alert alert-danger">
+            Le formulaire du CREP a été mis à jour depuis la création de l'entretien professionnel.
+
+            <br>
+            Debug :
+            <ul>
+                <li>Entretien Id: <?php echo $entretien->getFormulaireInstance()->getHistoModification()->format('d/m/Y H:i:s'); ?> </li>
+                <li>Campagne Id:<?php echo $entretien->getCampagne()->getFormulaireCREP()->getHistoModification()->format('d/m/Y H:i:s'); ?> </li>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::reinitialiserAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/reinitialiser',['entretien-professionnel' => $entretien->getId(), 'formulaire' => 'CREP'],[], true); ?>"
+       class="btn btn-warning ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-refresh"></span>
+        Remise à zéro et réapplication des copies pour le CREP
+    </a>
+<?php endif; ?>
 
 <?php if ($canRenseigner) : ?>
     <?php
@@ -68,7 +101,12 @@ $data = $crep->buildResponseDictionnary();
     ?>
 <?php else : ?>
     <?php if ($canAfficher) : ?>
-        <?php echo $this->instanceAsText()->render($crep, $entretien->getDateEntretien()); ?>
+        <?php
+            /** @see \UnicaenAutoform\View\Helper\InstanceAsTextHelper::render() */
+//            echo $this->instanceAsText()->render($crep, $entretien->getDateEntretien(), null, true);
+            echo $this->instanceAsText()->render($crep, null, null, true);
+        ?>
+
 
         <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
             <div class="alert alert-info">

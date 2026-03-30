@@ -70,6 +70,35 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
     </dd>
+    <dt class="col-md-5"> Catégorie  </dt>
+    <dd class="col-md-7">
+        <?php if ($fichemetier->getCategorie() === null) : ?>
+            <span class="missing-data">Aucune catégorie associée</span>
+        <?php else : ?>
+            <?php echo $fichemetier->getCategorie()->getLibelle(); ?>
+        <?php endif; ?>
+        <br> <!-- // todo : retirer ce br copium -->
+        <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
+            <?php /** @see FicheMetierController::modifierCategorieAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/modifier-categorie', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="ajax-modal action primary" data-event="modification"
+            >
+                <small>
+                    <span class="icon icon-editer"></span>
+                    Modifier
+                </small>
+            </a>
+            <?php /** @see FicheMetierController::supprimerCategorieAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/supprimer-categorie', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+               class="action danger"
+            >
+                <small>
+                    <span class="icon icon-unchecked"></span>
+                    Supprimer
+                </small>
+            </a>
+        <?php endif; ?>
+    </dd>
     <?php if (!isset($parametres[FicheMetierParametres::CODE_FONCTION]) || $parametres[FicheMetierParametres::CODE_FONCTION]->getValeur() !== "false") : ?>
         <dt class="col-md-5"> Code Fonction</dt>
         <dd class="col-md-7">

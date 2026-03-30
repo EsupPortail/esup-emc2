@@ -3,6 +3,7 @@
 namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
+use Structure\Entity\Db\Structure;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -20,6 +21,7 @@ class AgentForceSansObligation implements HistoriqueAwareInterface {
 
     private ?int $id = null;
     private ?Agent $agent = null;
+    private ?Structure $structure = null;
     private ?Campagne $campagne = null;
     private ?string $type = null;
     private ?string $raison = null;
@@ -48,6 +50,17 @@ class AgentForceSansObligation implements HistoriqueAwareInterface {
     {
         $this->campagne = $campagne;
     }
+
+    public function getStructure(): ?Structure
+    {
+        return $this->structure;
+    }
+
+    public function setStructure(?Structure $structure): void
+    {
+        $this->structure = $structure;
+    }
+
 
     public function getType(): ?string
     {

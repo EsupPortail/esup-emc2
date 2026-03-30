@@ -9,10 +9,14 @@ use Laminas\Form\Element\Date;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 
 class CampagneForm extends Form
 {
     use CampagneServiceAwareTrait;
+    use FormulaireServiceAwareTrait;
+    use TemplateServiceAwareTrait;
 
     public function init(): void
     {
@@ -93,7 +97,7 @@ class CampagneForm extends Form
             'name' => 'date_en_poste',
             'type' => Date::class,
             'options' => [
-                'label' => "Date pour prise de poste <span class='icon icon-information' title=\"L'agent·e doit être en poste à la date donnée\"></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Date à laquelle sera considérée la situation de l'agent pour déterminer le caractère obligatoire des entretiens <span class='icon icon-information' title=\"Les affectations, statuts et grades sont examinés à cette date.\"></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
@@ -122,15 +126,91 @@ class CampagneForm extends Form
                 'data-live-search'  => 'true',
             ]
         ]);
+
+        /** Gestion du CREP et du CREF ********************************************************************************/
+
+        $this->add([
+            'name' => 'formulaire_crep',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Formulaire pour la partie CREP <span class="icon icon-obligatoire"></span> : ',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => "Sélectionner un formulaire ... ",
+                'value_options' => $this->getFormulaireService()->getFormulairesAsOptions(),
+            ],
+            'attributes' => [
+                'id'                => 'formulaire_crep',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ]
+        ]);
+        $this->add([
+            'name' => 'template_crep',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Template pour la partie CREP <span class="icon icon-obligatoire"></span> : ',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => "Sélectionner un template ... ",
+                'value_options' => $this->getTemplateService()->getTemplatesAsOptions(),
+            ],
+            'attributes' => [
+                'id'                => 'formulaire_crep',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ]
+        ]);
+        $this->add([
+            'name' => 'formulaire_cref',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Formulaire pour la partie CREF  <span class="icon icon-obligatoire"></span> : ',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => "Sélectionner un formulaire ... ",
+                'value_options' => $this->getFormulaireService()->getFormulairesAsOptions(),
+            ],
+            'attributes' => [
+                'id'                => 'formulaire_cref',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ]
+        ]);
+        $this->add([
+            'name' => 'template_cref',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Template pour la partie CREF <span class="icon icon-obligatoire"></span> : ',
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => "Sélectionner un template ... ",
+                'value_options' => $this->getTemplateService()->getTemplatesAsOptions(),
+            ],
+            'attributes' => [
+                'id'                => 'formulaire_cref',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ]
+        ]);
+
+        /** Autre *****************************************************************************************************/
+
         //SUBMIT
         $this->add([
             'type' => Button::class,
-            'name' => 'bouton',
+            'name' => 'submit',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -145,6 +225,10 @@ class CampagneForm extends Form
             'date_en_poste' =>   [  'required' => true,   ],
             'date_circulaire' =>   [  'required' => false,   ],
             'precede' =>    [  'required' => false,  ],
+            'formulaire_crep' =>    [  'required' => true, ],
+            'formulaire_cref' =>    [  'required' => true, ],
+            'template_crep' =>    [  'required' => true, ],
+            'template_cref' =>    [  'required' => true, ],
         ]));
     }
 }

@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Doctrine\ORM\EntityManager;
+use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -27,7 +28,7 @@ class EntretienProfessionnelServiceFactory
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
-         * @var ConfigurationService $configurationService
+         * @var CampagneConfigurationRecopieService $configurationRecopieService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var ParametreService $parametreService
          * @var StructureService $structureService
@@ -36,7 +37,7 @@ class EntretienProfessionnelServiceFactory
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
-        $configurationService = $container->get(ConfigurationService::class);
+        $configurationRecopieService = $container->get(CampagneConfigurationRecopieService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $parametreService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
@@ -46,7 +47,7 @@ class EntretienProfessionnelServiceFactory
         $service = new EntretienProfessionnelService();
         $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
-        $service->setConfigurationService($configurationService);
+        $service->setCampagneConfigurationRecopieService($configurationRecopieService);
         $service->setFormulaireInstanceService($formulaireInstanceService);
         $service->setParametreService($parametreService);
         $service->setStructureService($structureService);

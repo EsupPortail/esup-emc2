@@ -1,0 +1,47 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use UnicaenIndicateur\Entity\Db\Indicateur;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::indicateursAction()
+ * @var Campagne $campagne
+ * @var Indicateur[] $indicateurs
+ */
+
+if ($campagne === null) {
+    throw new RuntimeException("Aucune campagne fournie", -1);
+}
+
+$this->headTitle("Indicateurs associés à la campagne " . $campagne->getAnnee());
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::indexAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
+           class="btn btn-primary float-end">
+            <span class="icon icon-listing"></span>
+            Accéder aux campagnes
+        </a>
+    </div>
+</div>
+
+<?php echo $this->partial('partial/onglets', ['campagne' => $campagne, 'current' => 'indicateurs'], [], true); ?>
+
+<?php if (empty($indicateurs)) : ?>
+    <span class="missing-data">
+        Aucun indicateur pour la campagne <?php echo $campagne->getAnnee(); ?>
+    </span>
+<?php else : ?>
+    <?php
+    /** @see \UnicaenIndicateur\View\Helper\IndicateursViewHelper */
+    echo $this->indicateurs($indicateurs, []);
+    ?>
+<?php endif; ?>

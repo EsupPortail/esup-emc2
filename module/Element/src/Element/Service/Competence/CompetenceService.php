@@ -94,6 +94,7 @@ class CompetenceService
         $qb = $this->createQueryBuilder();
         if ($type !== null) $qb = $qb->where('competence.type = :type')->setParameter('type', $type);
         if (!$withHisto) $qb = $qb->andWhere('competence.histoDestruction IS NULL');
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -153,7 +154,6 @@ class CompetenceService
 
     public function getCompetencesAsGroupOptions(?CompetenceType $type = null): array
     {
-        $a = 1;
         if ($type === null) {
             $competences = $this->getCompetences();
             $competences = array_filter($competences, function (Competence $competence) {

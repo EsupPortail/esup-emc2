@@ -2,16 +2,19 @@
 
 namespace FicheMetier\Controller;
 
+use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieFormAwareTrait;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormAwareTrait;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use EmploiRepere\Service\EmploiRepere\EmploiRepereServiceAwareTrait;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeFormAwareTrait;
@@ -36,7 +39,6 @@ use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
-use RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -46,8 +48,10 @@ class FicheMetierController extends AbstractActionController
 {
     use ActiviteElementServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use AgentPosteServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
+    use EmploiRepereServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
@@ -69,6 +73,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SelectionnerActivitesFormAwareTrait;
+    use SelectionnerCategorieFormAwareTrait;
     use SelectionnerFamilleProfessionnelleFormAwareTrait;
     use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
@@ -114,6 +119,11 @@ class FicheMetierController extends AbstractActionController
         $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
         $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
 
+        $emplois = null; $postes = null;
+        if ($this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_EMPLOIREPERE)) {
+            $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+            $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($fichemetier->getCodeFonction());
+        }
         $types = [];
         foreach ($this->getCompetenceTypeService()->getCompetencesTypes(true) as $type) {
             $types[$type->getCode()] = $type;
@@ -122,10 +132,14 @@ class FicheMetierController extends AbstractActionController
         foreach ($types as $type) {
             $dictionnaire[$type->getCode()] = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $types[$type->getCode()],true);
         }
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'fichespostes' => $fichespostes,
             'types' => $types,
+            'emplois' => $emplois,
+            'postes' => $postes,
             'missions' => $missions,
             'activites' => $activites,
             'applications' => $applications,
@@ -200,11 +214,21 @@ class FicheMetierController extends AbstractActionController
             $dictionnaire[$type->getCode()] = $this->getFicheMetierService()->getCompetencesDictionnairesByType($fichemetier, $types[$type->getCode()],true);
         }
 
+        $emplois = null; $postes = null;
+        if ($this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_EMPLOIREPERE)) {
+            $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+            $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($fichemetier->getCodeFonction());
+        }
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
+
         $vm = new ViewModel([
             'fiche' => $fichemetier,
+            'fichespostes' => $fichespostes,
             'types' => $types,
             'missions' => $missions,
             'activites' => $activites,
+            'emplois' => $emplois,
+            'postes' => $postes,
             'competences' => $dictionnaire,
             'competencesSpecifiques' => $dictionnaire[CompetenceType::CODE_SPECIFIQUE]??[],
             'applications' => $applications,
@@ -501,6 +525,45 @@ class FicheMetierController extends AbstractActionController
         $vm->setTemplate('default/default-form');
         return $vm;
     }
+
+    public function modifierCategorieAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerCategorieForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-categorie', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner la catégorie statutaire",
+            'fichemetier' => $fichemetier,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function supprimerCategorieAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fichemetier->setCategorie(null);
+        $this->getFicheMetierService()->update($fichemetier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
 
     public function modifierNiveauCarriereAction(): ViewModel
     {
@@ -918,10 +981,45 @@ EOS;
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $fichespostes = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
+        $emplois = $this->getEmploiRepereService()->getEmploiRepereByFicheMetier($fichemetier);
+        $agents = [];
+        foreach ($emplois as $emploi) {
+            foreach ($emploi->getCodesFonctionsFichesMetiers() as $couple) {
+                $codeFonction = $couple->getCodeFonction();
+                $postes = $this->getAgentPosteService()->getAgentsPostesByCodeFonction($codeFonction);
+                foreach ($postes as $poste) {
+                    $agents[$poste->getAgent()->getId()] = [
+                        "agent" => $poste->getAgent(),
+                        'numero' => $poste->getCode(),
+                        'intitulé' => $poste->getLibelle(), 'code-fonction' => $codeFonction, 'poste' => $poste];
+                }
+            }
+        }
+
+
         return new ViewModel([
             'title' => "Liste des agents ayant la fiche métier <strong>" . $fichemetier->getLibelle() . "</strong>",
             'fichemetier' => $fichemetier,
             'fichespostes' => $fichespostes,
+            'agentsTableaux' => $agents,
         ]);
+    }
+
+
+    public function fetchFichesMetiersByCodeFonctionAction(): JsonModel
+    {
+        $code = $this->params()->fromRoute('code');
+        $fiches = $this->getFicheMetierService()->getFichesMetiersByCodeFonctionId($code);
+
+        $result = [];
+        foreach ($fiches as $fichemetier) {
+            $result[$fichemetier->getId()] = $fichemetier->getLibelle();
+        }
+        $jm = new JsonModel($result);
+        $jm->setTerminal(true);
+        return $jm;
+
+
+
     }
 }
