@@ -144,7 +144,7 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
 
         <h2> Entretiens de la campagne </h2>
 
-        <?php echo $this->campagneAvancementCache($campagne, $progression->getStructure(), $progression, []); ?>
+        <?php echo $this->campagneAvancementCache($campagne, $progression->getStructure(), $progression, ['can-refresh' => false]); ?>
 
 
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>

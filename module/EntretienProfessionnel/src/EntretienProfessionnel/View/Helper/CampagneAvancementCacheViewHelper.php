@@ -11,6 +11,12 @@ use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 use Structure\Entity\Db\Structure;
 
+/** Liste des options :
+ * display-legende ; permet d'afficher ou de masquer la légende (default : true)
+ * display-refresh-info ; permet d'afficher ou de masquer les informations à propos du dernier rafraichissement (default : true)
+ * can-refresh ; permet de bypasser le calcul du privilège pour l'action de rafraichissement (default : null)
+ */
+
 class CampagneAvancementCacheViewHelper extends AbstractHelper
 {
     use CampagneProgressionStructureServiceAwareTrait;

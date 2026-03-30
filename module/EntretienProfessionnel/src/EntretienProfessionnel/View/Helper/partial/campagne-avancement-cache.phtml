@@ -9,12 +9,21 @@
 
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use Structure\Entity\Db\Structure;
 
 /** debug */
 $debug = false;
 /** Traitement des options */
 $displayLegende = (!isset($options['display-legende']) || $options['display-legende'] !== false);
+$displayRefreshInfo = (!isset($options['display-refresh-info']) || $options['display-refresh-info'] !== false);
+
+$canRefresh = null;
+if (isset($options['can-refresh'])) {
+    $canRefresh = $options['can-refresh'] === true;
+} else {
+    $canRefresh = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AFFICHER));
+}
 
 ?>
 <?php if (!isset($progression)) : ?>
@@ -37,7 +46,6 @@ $displayLegende = (!isset($options['display-legende']) || $options['display-lege
         $ratioAutorite = $nbValiderAutorite / $nbTotal * 100.0;
         $ratioSuperieur = $nbValiderSuperieur / $nbTotal * 100.0;
         $ratioObservation = $nbValiderObservation / $nbTotal * 100.0;
-//    $ratioPlanifie = count($encours) / $nbTotal * 100.0;
         $ratioPlanifie = $nbEncours / $nbTotal * 100.0;
         $ratioSans = 100.0 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie + $ratioObservation);
     }
@@ -77,13 +85,17 @@ $displayLegende = (!isset($options['display-legende']) || $options['display-lege
         <?php endif; ?>
     </div>
     <div class="float-end" style="margin-bottom: .5rem;">
-        <small style="color:grey">
-            <?php /** @see \EntretienProfessionnel\Controller\CampagneController::refreshStructureProgressionAction() */ ?>
-            <a href="<?php echo $this->url('entretien-professionnel/campagne/refresh-structure-progression', ['campagne' => $campagne->getId(), 'structure' => $structure->getId()], ['query' => ['retour' => $this->url(null, [], [], true)]] , true); ?>"
-               class="action primary">
-                <span class="icon icon-refresh"></span> Mettre à jour
-            </a>
-        Dernier rafraichissement :  <?php echo $progression->getDate()?$progression->getDate()->format('d/m/Y à H:i'):'Données non calculées';?>
+        <small>
+            <?php if ($canRefresh) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::refreshStructureProgressionAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/refresh-structure-progression', ['campagne' => $campagne->getId(), 'structure' => $structure->getId()], ['query' => ['retour' => $this->url(null, [], [], true)]] , true); ?>"
+                   class="action primary">
+                    <span class="icon icon-refresh"></span> Mettre à jour
+                </a>
+            <?php endif; ?>
+            <?php if ($displayRefreshInfo) : ?>
+                Dernier rafraichissement :  <?php echo $progression->getDate()?$progression->getDate()->format('d/m/Y à H:i'):'Données non calculées';?>
+            <?php endif; ?>
         </small>
     </div>
 </div>

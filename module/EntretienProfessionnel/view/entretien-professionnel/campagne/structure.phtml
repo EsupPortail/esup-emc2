@@ -72,7 +72,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </div>
     <div class="col-md-6">
         <h3> Complétion de la campagne</h3>
-        <?php echo $this->campagneAvancementCache($campagne, $structure, $progression); ?>
+        <?php echo $this->campagneAvancementCache($campagne, $structure, $progression, ['can-refresh' => true]); ?>
 <!--        --><?php //echo $this->partial('entretien-professionnel/campagne/progression-structure', ['campagne' => $campagne, 'structure' => $structure, 'progression' => $progression, 'debug' => false, 'legende' => true, 'titre' => false]); ?>
     </div>
 </div>
