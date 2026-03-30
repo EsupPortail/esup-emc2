@@ -148,7 +148,7 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
         if ($this->estFini()) $dateSituation = $this->getDateFin();
 
         if ($dateSituation === null) {
-            throw new RuntimeException("La date de situation n'a pu être déterminée pour la campagne #".$campagne->getId()." [".$campagne->getAnnee()."]");
+            throw new RuntimeException("La date de situation n'a pu être déterminée pour la campagne #".$this->getId()." [".$this->getAnnee()."]");
         }
 
         return $dateSituation;

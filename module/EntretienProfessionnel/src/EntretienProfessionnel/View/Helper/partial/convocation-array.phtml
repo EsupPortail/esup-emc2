@@ -52,15 +52,15 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
     <thead>
         <tr>
             <th class="col-md-2" data-type="string"> Dénomination </th>
-            <th class="col-md-2" data-type="string"> Situation hiérarchique </th>
-            <th class="col-md-4"> Affectation·s </th>
+            <th class="col-md-2" data-type="string"> Supérieur·es </th>
+            <th class="col-md-2" data-type="string"> Autorités </th>
             <?php if ($canAction) : ?>
-                <th class="col-md-3"> Grade·s </th>
+                <th class="col-md-5"> Situation </th>
                 <th class="col-md-1 action">
                     Action
                 </th>
             <?php else: ?>
-                <th class="col-md-4"> Grade·s </th>
+                <th class="col-md-6"> Situation </th>
             <?php endif; ?>
 
         </tr>
@@ -78,7 +78,6 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                 <?php endif; ?>
             </td>
             <td>
-                Supérieur·es :
                 <?php $superieurs = $agent->getSuperieurs($dateSituation); ?>
                 <?php if (empty($superieurs)): ?>
                     <span class="text-warning">
@@ -93,7 +92,8 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-                Autorités :
+            </td>
+            <td>
                 <?php $autorites = $agent->getAutorites($dateSituation); ?>
                 <?php if (empty($autorites)): ?>
                     <span class="text-warning">
@@ -109,48 +109,58 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                 <?php endif; ?>
             </td>
             <td>
-                <?php $affectations = $agent->getAffectationsActifs($dateSituation); ?>
-                <?php if (empty($affectations)) : ?>
-                    <span class="text-warning">
-                        <span class="icon icon-attention"></span>
-                        Aucune affectation à la date du <?php echo $dateSituationAsString ?>
-                    </span>
-                <?php else : ?>
-                    <?php foreach ($affectations as $affectation) : ?>
-                         <?php echo $affectation->getStructure()->getLibelleLong(); ?>
-                        <br>
-                        <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
-                        &rightarrow;
-                        <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
-                        <br>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </td>
-            <td>
-                <?php $grades = $agent->getGradesActifs($dateSituation); ?>
-                <?php if (empty($grades)) : ?>
-                    <span class="text-warning">
-                        <span class="icon icon-attention"></span>
-                        Aucun grade à la date du <?php echo $dateSituationAsString; ?>
-                    </span>
-                <?php else : ?>
-                    <?php foreach ($grades as $grade) : ?>
-                        <?php if ($grade->getGrade() === null): ?>
-                        <span class="text-warning">
-                            <span class="icon icon-attention">
-                                Aucun grade
+                <dl class="row">
+                    <dt class="col-md-4"> Affectation·s </dt>
+                    <dd class="col-md-8">
+                        <?php $affectations = $agent->getAffectationsActifs($dateSituation); ?>
+                        <?php if (empty($affectations)) : ?>
+                            <span class="text-warning">
+                                <span class="icon icon-attention"></span>
+                                Aucune affectation à la date du <?php echo $dateSituationAsString ?>
                             </span>
-                        </span>
                         <?php else : ?>
-                            <?php echo $grade->getGrade()->getLibelleLong(); ?>
-                            <br>
-                            <?php echo $grade->getDateDebut()?$grade->getDateDebut()->format('d/m/Y'):" ---- "; ?>
-                            &rightarrow;
-                            <?php echo $grade->getDateFin()?$grade->getDateFin()->format('d/m/Y'):" ---- "; ?>
-                            <br>
+                            <?php foreach ($affectations as $affectation) : ?>
+                                 <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                                <br>
+                            <small>
+                                <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                                &rightarrow;
+                                <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
+                            </small>
+                                <br>
+                            <?php endforeach; ?>
                         <?php endif; ?>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    </dd>
+                    <dt class="col-md-4"> Grade·s</dt>
+                    <dd class="col-md-8">
+                        <?php $grades = $agent->getGradesActifs($dateSituation); ?>
+                        <?php if (empty($grades)) : ?>
+                            <span class="text-warning">
+                                <span class="icon icon-attention"></span>
+                                Aucun grade à la date du <?php echo $dateSituationAsString; ?>
+                            </span>
+                        <?php else : ?>
+                            <?php foreach ($grades as $grade) : ?>
+                                <?php if ($grade->getGrade() === null): ?>
+                                <span class="text-warning">
+                                    <span class="icon icon-attention">
+                                        Aucun grade
+                                    </span>
+                                </span>
+                                <?php else : ?>
+                                    <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                                    <br>
+                                <small>
+                                    <?php echo $grade->getDateDebut()?$grade->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                                    &rightarrow;
+                                    <?php echo $grade->getDateFin()?$grade->getDateFin()->format('d/m/Y'):" ---- "; ?>
+                                </small>
+                                    <br>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </dd>
+                </dl>
             </td>
             <?php if ($canAction) : ?>
             <td class="action">

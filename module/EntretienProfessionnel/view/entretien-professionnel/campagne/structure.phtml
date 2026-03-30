@@ -41,6 +41,7 @@ foreach ($facultatifs as $facultatif) {
     if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
 }
 
+/**
         $dateSituation = $campagne->getDateSituation();
         $entretiens = array_filter($entretiens,
         function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
@@ -63,6 +64,7 @@ foreach ($facultatifs as $facultatif) {
                 $encours[] = $entretien;
             }
         }
+ **/
 
 $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));
 
