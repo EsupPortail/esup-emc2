@@ -596,7 +596,9 @@ class CompetenceService
                 $oldLibelle = trim($item[$positionType]);
                 if (!isset($types[$oldLibelle])) {
                     $libelle = strtolower($oldLibelle);
-                    if (!isset($dictionnairesTypes[$libelle])) { throw new RuntimeException(("Le type de compétence [".$libelle."] n'existe pas sur la ligne ".implode(";", $item)),-1); }
+                    if (!isset($dictionnairesTypes[$libelle])) {
+                        throw new RuntimeException(("Le type de compétence [".$libelle."] n'existe pas.<br>Ligne considérée : <code>".implode(";", $item))."</code>",-1);
+                    }
                     $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($dictionnairesTypes[$libelle]);
                     if ($type === null and $libelle !== "") {
                         $type = new CompetenceType();
