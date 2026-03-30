@@ -1,0 +1,173 @@
+<?php
+
+/** @see \EntretienProfessionnel\View\Helper\CampagneAvancementCacheViewHelper
+ * @var ?Campagne $campagne
+ * @var ?Structure $structure
+ * @var ?CampagneProgressionStructure $progression
+ * @var array $options
+ */
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+use Structure\Entity\Db\Structure;
+
+/** debug */
+$debug = false;
+/** Traitement des options */
+$displayLegende = (!isset($options['display-legende']) || $options['display-legende'] !== false);
+$displayRefreshInfo = (!isset($options['display-refresh-info']) || $options['display-refresh-info'] !== false);
+
+$canRefresh = null;
+if (isset($options['can-refresh'])) {
+    $canRefresh = $options['can-refresh'] === true;
+} else {
+    $canRefresh = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AFFICHER));
+}
+
+?>
+<?php if (!isset($progression)) : ?>
+    Aucune donnée pour cette structure
+<?php else: ?>
+    <?php
+
+    $nbTotal = $progression->getNbTotal();
+    $nbValiderAgent = $progression->getNbComplet(); $ratioAgent = 0;
+    $nbValiderAutorite = $progression->getNbAutorite(); $ratioAutorite = 0;
+    $nbValiderObservation = $progression->getNbObservation(); $ratioObservation = 0;
+    $nbValiderSuperieur = $progression->getNbSuperieur(); $ratioSuperieur = 0;
+    $nbEncours = $progression->getNbPlanifier();
+    $nbSans = $progression->getNbManquant();
+
+
+// duplicata du VH
+    if ($nbTotal !== 0) {
+        $ratioAgent = $nbValiderAgent / $nbTotal * 100.0;
+        $ratioAutorite = $nbValiderAutorite / $nbTotal * 100.0;
+        $ratioSuperieur = $nbValiderSuperieur / $nbTotal * 100.0;
+        $ratioObservation = $nbValiderObservation / $nbTotal * 100.0;
+        $ratioPlanifie = $nbEncours / $nbTotal * 100.0;
+        $ratioSans = 100.0 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie + $ratioObservation);
+    }
+    ?>
+
+<div>
+    <div class="progress">
+        <?php if ($nbValiderAgent > 0) : ?>
+            <div class="progress-bar entretien-agent" role="progressbar" style="width: <?php echo $ratioAgent; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens complétés <?php echo $nbValiderAgent; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioAgent); ?>%</div>
+        <?php endif; ?>
+        <?php if ($nbValiderAutorite > 0) : ?>
+            <div class="progress-bar entretien-autorite" role="progressbar" style="width: <?php echo $ratioAutorite; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens validés par l'autorité hiérarchique <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioAutorite); ?>%</div>
+        <?php endif; ?>
+        <?php if ($nbValiderObservation > 0) : ?>
+            <div class="progress-bar entretien-observation" role="progressbar" style="width: <?php echo $ratioObservation; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens avec des observations émises par l'agent·e <?php echo $nbValiderObservation; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioObservation); ?>%</div>
+        <?php endif; ?>
+        <?php if ($nbValiderSuperieur > 0) : ?>
+            <div class="progress-bar entretien-superieur" role="progressbar" style="width: <?php echo $ratioSuperieur; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens validés par le ou la supérieure hierarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioSuperieur); ?>%</div>
+        <?php endif; ?>
+        <?php if ($nbEncours > 0) : ?>
+            <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens planifiés <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioPlanifie); ?>%</div>
+        <?php endif; ?>
+        <?php if ($nbSans > 0) : ?>
+            <div class="progress-bar sans"   role="progressbar" style="width: <?php echo $ratioSans; ?>%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens non planifiés <?php echo $nbSans; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioSans); ?>%</div>
+        <?php endif; ?>
+    </div>
+    <div class="float-end" style="margin-bottom: .5rem;">
+        <small>
+            <?php if ($canRefresh) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::refreshStructureProgressionAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/refresh-structure-progression', ['campagne' => $campagne->getId(), 'structure' => $structure->getId()], ['query' => ['retour' => $this->url(null, [], [], true)]] , true); ?>"
+                   class="action primary">
+                    <span class="icon icon-refresh"></span> Mettre à jour
+                </a>
+            <?php endif; ?>
+            <?php if ($displayRefreshInfo) : ?>
+                Dernier rafraichissement :  <?php echo $progression->getDate()?$progression->getDate()->format('d/m/Y à H:i'):'Données non calculées';?>
+            <?php endif; ?>
+        </small>
+    </div>
+</div>
+<br>
+<br>
+<?php endif; ?>
+
+<?php if ($displayLegende) : ?>
+    <div >
+        <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens complétés <br/>
+        <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par l'autorité hiérarchique <br/>
+        <span class="legende entretien-observation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens avec des observations de l'agent·e<br/>
+        <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par le ou la supérieur·e hiérarchique <br/>
+        <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens planifiés <br/>
+        <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens non planifiés <br/>
+    </div>
+<?php endif; ?>
+
+
+
+
+<?php if ($debug) : ?>
+    <div class="row">
+        <div class="col-md-6">
+            <h4> Entretiens</h4>
+            <ol>
+                <?php foreach ($entretiens as $entretien): ?>
+                    <li>
+                        <?php echo $entretien->getAgent()->getDenomination(); ?>
+                        <?php echo $this->etatinstance($entretien->getEtatActif()); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <h4> Agents ayant obligations </h4>
+            <ol>
+                <?php foreach ($agents as $agent): ?>
+                    <li>
+                        <?php echo $agent->getDenomination(); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
+    </div>
+<?php endif; ?>
+
+<style>
+    .sans {
+        background-color: #960000;
+    }
+    .planifie {
+        background-color: #ff6c0a;
+    }
+    .entretien-superieur {
+        background-color: #ffcc01;
+    }
+    .entretien-observation {
+        background-color: rgb(183,182,12);
+    }
+    .entretien-autorite {
+        background-color: rgb(110,161,23);
+    }
+    .entretien-agent {
+        background-color: rgb(34,139,34);
+    }
+
+    span.legende {
+        border:1px solid black;
+        border-radius: 0.25rem;
+        min-width: 3rem;
+        margin-right: 2rem;
+    }
+</style>
+

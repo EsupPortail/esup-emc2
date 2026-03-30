@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
@@ -14,6 +15,7 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var Campagne $campagne
  * @var Campagne[] $campagnes
  * @var Campagne[] $campagnesFutures
+ * @var CampagneProgressionStructure $progression
  *
  * @var Structure $structure
  * @var Structure[] $structures
@@ -97,7 +99,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </div>
     <div class="col-md-6">
         <h3> Complétion de la campagne</h3>
-        <?php echo $this->campagneAvancement($entretiens, $obligatoires); ?>
+        <?php echo $this->campagneAvancementCache($campagne, $structure, $progression, ['can-refresh' => true]); ?>
+<!--        --><?php //echo $this->partial('entretien-professionnel/campagne/progression-structure', ['campagne' => $campagne, 'structure' => $structure, 'progression' => $progression, 'debug' => false, 'legende' => true, 'titre' => false]); ?>
     </div>
 </div>
 
@@ -122,9 +125,15 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <?php echo $this->entretienProfessionnelArray($encours, ['affichages' => ['annee' => false], 'id' => 'encours', 'from-structure' => $structure->getId()]); ?>
 <?php endif; ?>
 
-<?php if (!empty($obligatoires)) : ?>
+<?php if (!empty($obligatoires) AND !empty($sansObligatoires)) : ?>
     <h2>
-        Agent·es en attente d'entretien professionnel
+        <?php if (!$campagne->estCommence()) : ?>
+            Agent·es qui devront passer un entretien professionnel
+        <?php elseif ($campagne->estFini()): ?>
+            Agent·es sans entretien professionnel, mais qui devaient en passer un
+        <?php else : ?>
+            Agent·es en attente d'entretien professionnel
+        <?php endif; ?>
         <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>
     <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien', 'raison' => $raison]); ?>

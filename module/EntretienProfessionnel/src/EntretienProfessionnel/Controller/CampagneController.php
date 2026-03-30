@@ -7,6 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -23,6 +24,7 @@ use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurServiceAwareTrait;
+use EntretienProfessionnel\Service\CampagneProgressionStructure\CampagneProgressionStructureServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurServiceAwareTrait;
@@ -52,6 +54,7 @@ class CampagneController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use CampagneConfigurationIndicateurServiceAwareTrait;
+    use CampagneProgressionStructureServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use HasIndicateursServiceAwareTrait;
     use MacroServiceAwareTrait;
@@ -72,21 +75,32 @@ class CampagneController extends AbstractActionController
     {
         $campagnes = $this->getCampagneService()->getCampagnes(true);
 
+        $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
+        $structure = $this->getStructureService()->getStructureByCode($code);
+
+        $progressions = [];
+        foreach ($campagnes as $campagne) {
+            $progressions[$campagne->getId()] = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
+        }
+
+
         return new ViewModel([
             'campagnes' => $campagnes,
+            'progressions' => $progressions,
         ]);
     }
 
     public function afficherAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $agents = $this->getCampagneService()->getAgentsEligibles($campagne);
+        $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
+        $structure = $this->getStructureService()->getStructureByCode($code);
+        $progression = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
 
         return new ViewModel([
             'campagne' => $campagne,
-            'agents' => [],//$this->getCampagneService()->getAgentsEligibles($campagne),
-            'nbAgents' => count($agents),
-            'entretiens' => $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, true),
+            'structure' => $structure,
+            'progression' => $progression,
         ]);
     }
 
@@ -437,7 +451,6 @@ class CampagneController extends AbstractActionController
         if ($structure === null) {
             throw new RuntimeException("Aucune structure de trouvée.");
         }
-
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
@@ -513,7 +526,8 @@ class CampagneController extends AbstractActionController
 //            return $a->getDateDebut() <=> $b->getDateDebut();
 //        });
 
-            $campagnes = $this->getCampagneService()->getCampagnes();
+        $campagnes = $this->getCampagneService()->getCampagnes();
+        $progression = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
 
         /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
         $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne, 'structure' => $structure];
@@ -528,6 +542,7 @@ class CampagneController extends AbstractActionController
             'selecteur' => $selecteur,
             'structures' => $structures,
             'agents' => $agents,
+            'progression' => $progression,
 
             'entretiens' => $entretiens,
             'encours' => $encours,
@@ -704,13 +719,80 @@ class CampagneController extends AbstractActionController
     public function progressionParStructuresAction(): ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-// TODO ticket #63688
-        //$structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateFixe()??$campagne->getDateDebut());
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $refresh = $this->params()->fromQuery('refresh');
+
+        if ($campagne === null) {
+            $campagneId = $this->params()->fromRoute('campagne');
+            throw new RuntimeException("Aucun campagne ne possède l'identifiant [".$campagneId."]",-1,0);
+        }
+
+        if ($structure !== null) {
+            // refresh si paramètres
+            if ($refresh === 'true') {
+                $date = new DateTime();
+                $this->getCampagneProgressionStructureService()->refresh($campagne, $structure, $date);
+            }
+
+            $progression = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
+
+            $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+
+            // récupération des agents
+            $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+            $agentsForces = array_map(function (StructureAgentForce $agentForce) {
+                return $agentForce->getAgent();
+            }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
+            foreach ($agentsForces as $agentForce) {
+                if (!in_array($agentForce, $agents)) {
+                    $agents[] = $agentForce;
+                }
+            }
+
+            // tris des agents
+            [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
+            // récupérations des entretiens
+            $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+
+
+            $vm = new ViewModel([
+                'campagne' => $campagne,
+                'structure' => $structure,
+                'progression' => $progression,
+                'entretiens' => $entretiens,
+                'agents' => $obligatoires,
+            ]);
+            $vm->setTemplate('entretien-professionnel/campagne/progression-structure');
+            return $vm;
+        }
+
         $structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateDebut());
+
+        // refresh si paramètres
+        if ($refresh === 'true') {
+            $date = new DateTime();
+            foreach ($structures as $structure) {
+                $this->getCampagneProgressionStructureService()->refresh($campagne, $structure, $date);
+            }
+        }
+
+        $progressions = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructures($campagne, $structures);
 
         return new ViewModel([
             'campagne' => $campagne,
             'structures' => $structures,
+            'progressions' => $progressions
         ]);
+    }
+
+    public function refreshStructureProgressionAction(): Response
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $this->getCampagneProgressionStructureService()->refresh($campagne, $structure);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour === null) throw new RuntimeException("Aucune adresse de retour post-rafraichissement",-1);
+        return $this->redirect()->toUrl($retour);
     }
 }

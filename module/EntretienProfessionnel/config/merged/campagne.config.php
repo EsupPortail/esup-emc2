@@ -14,6 +14,8 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceFactory;
 use EntretienProfessionnel\View\Helper\AideAgentCampagneViewHelper;
 use EntretienProfessionnel\View\Helper\AideAgentCampagneViewHelperFactory;
+use EntretienProfessionnel\View\Helper\CampagneAvancementCacheViewHelper;
+use EntretienProfessionnel\View\Helper\CampagneAvancementCacheViewHelperFactory;
 use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
 use EntretienProfessionnel\View\Helper\CampagneInformationViewHelper;
 use Structure\Provider\Privilege\StructurePrivileges;
@@ -47,6 +49,7 @@ return [
                     'action' => [
                         'structure',
                         'structure-progression',
+                        'refresh-structure-progression'
                     ],
                     'privileges' => [
 //                        CampagnePrivileges::CAMPAGNE_AFFICHER_STRUCTURE,
@@ -225,6 +228,18 @@ return [
                                     ],
                                 ],
                             ],
+                            'refresh-structure-progression' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/refresh-structure-progression[/:campagne/:structure]',
+                                    'defaults' => [
+                                        /** @see CampagneController::refreshStructureProgressionAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'refresh-structure-progression',
+                                    ],
+                                ],
+                            ],
                             'modifier' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
@@ -349,7 +364,7 @@ return [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/progression-par-structures/:campagne',
+                                    'route'    => '/progression-par-structures/:campagne[/:structure]',
                                     'defaults' => [
                                         /** @see CampagneController::progressionParStructuresAction() */
                                         'controller' => CampagneController::class,
@@ -391,9 +406,11 @@ return [
         ],
         'factories' => [
             AideAgentCampagneViewHelper::class => AideAgentCampagneViewHelperFactory::class,
+            CampagneAvancementCacheViewHelper::class => CampagneAvancementCacheViewHelperFactory::class,
         ],
         'aliases' => [
             'aideAgentCampagne' => AideAgentCampagneViewHelper::class,
+            'campagneAvancementCache' => CampagneAvancementCacheViewHelper::class,
         ]
     ],
 

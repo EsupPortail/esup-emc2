@@ -1,6 +1,7 @@
 <?php
 
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 
@@ -8,6 +9,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @see \EntretienProfessionnel\Controller\CampagneController::progressionParStructuresAction()
  * @var Campagne $campagne
  * @var Structure[] $structures
+ * @var CampagneProgressionStructure[] $progressions
  */
 
 $this->headTitle("Progression par structures de niveau 2");
@@ -17,7 +19,7 @@ $canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(Structur
 ?>
 
 <h1 class="page-header">
-    Progression par structures de niveau 2
+    Progression par structures de niveau 2 pour la campagne <?php echo $campagne->getAnnee(); ?> #<?php echo $campagne->getId(); ?>
 </h1>
 
 
@@ -52,8 +54,8 @@ $canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(Structur
                     <?php echo $structure->getType()->getLibelle(); ?>
                 <?php endif; ?>
             </td>
-            <td class="progression"
-                id="progression_<?php echo $campagne->getId(); ?>_<?php echo $structure->getId(); ?>"> TO BE LOADED ...
+            <td>
+                <?php echo $this->campagneAvancementCache($campagne, $structure, $progressions[$structure->getId()], ['display-legende' => false]); ?>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -62,65 +64,5 @@ $canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(Structur
 
 <h2> Légende </h2>
 
-<?php echo $this->campagneAvancement([], [], null, ['only-legende' => true]); ?>
-
-<script>
-    let base_url = "<?php echo $this->url('entretien-professionnel/campagne/structure-progression'); ?>";
-    let maxConcurrent = 5;
-    let currentConcurrent = 0;
-
-    function traiterStructure(campagne_id, structure_id) {
-        let id = "progression_" + campagne_id + "_" + structure_id;
-        $.ajax({
-            type: "POST",
-            url: base_url + "/" + campagne_id + "/" + structure_id,
-            beforeSend:
-                function () {
-                    $("td#" + id).html("Chargement en cours ...");
-                },
-            success:
-                function (retour) {
-                    currentConcurrent--;
-                    $("td#" + id).html(retour);
-                }
-        });
-    }
-
-    function traiter(campagne_id, structures_id, process) {
-        if (currentConcurrent < maxConcurrent) {
-            currentConcurrent++;
-            traiterStructure(campagne_id, structures_id.pop());
-        }
-        if (structures_id.length === 0) {
-            clearInterval(process);
-        }
-    }
-
-    $(function () {
-        let structures_id = [];
-        let campagne_id = null;
-        $('td.progression').each(function (index, cell) {
-            let id = cell.id;
-            let structure_id = id.split('_')[2];
-            campagne_id = id.split('_')[1];
-            structures_id.push(structure_id);
-        });
-        console.log(structures_id.length + " structures à traiter");
-
-        const process = setInterval(() => traiter(campagne_id, structures_id, process), 500);
-
-
-        $('table#progression').dataTable({
-            paging: false,
-            info: false,
-            autoWidth: false,
-            language: {
-                "url": "/js/datatables_fr.json",
-            },
-            columnDefs: [
-                {targets: [2], orderable: false}
-            ]
-        });
-    });
-</script>
+<?php echo $this->campagneAvancement([], [], null, ['only-legende' => true, 'can-refresh' => true]); ?>
 
