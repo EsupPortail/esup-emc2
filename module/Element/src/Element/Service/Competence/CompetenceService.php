@@ -493,6 +493,13 @@ class CompetenceService
             'compétence spécifique' => 'SPEC',
         ];
 
+        // on ajoute au bout les types déclarés en back-office
+        $typesConnues = $this->getCompetenceTypeService()->getCompetencesTypes();
+        foreach ($typesConnues as $type) {
+            $dictionnairesTypes[$type->getLibelle()] = $type->getCode();
+        }
+
+
         $handle = fopen($filepath, "r");
 
         /** Fetching the header ***************************************************************************************/
@@ -589,6 +596,7 @@ class CompetenceService
                 $oldLibelle = trim($item[$positionType]);
                 if (!isset($types[$oldLibelle])) {
                     $libelle = strtolower($oldLibelle);
+                    if (!isset($dictionnairesTypes[$libelle])) { throw new RuntimeException(("Le type de compétence [".$libelle."] n'existe pas sur la ligne ".implode(";", $item)),-1); }
                     $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($dictionnairesTypes[$libelle]);
                     if ($type === null and $libelle !== "") {
                         $type = new CompetenceType();
