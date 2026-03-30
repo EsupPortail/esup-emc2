@@ -38,7 +38,7 @@ class RefreshProgressionStructureCommand extends Command
 
         $io->title("Rafraichissement de la progression des campagnes d'entretien professionnel.");
 
-        $campagne = null;
+        $campagnes = [];
         if ($campagneId === null) {
             $campagnes = $this->getCampagneService()->getCampagnesActives();
             $message = "Aucune campagne de précisée";
@@ -47,13 +47,25 @@ class RefreshProgressionStructureCommand extends Command
             }
             $io->info($message);
         } else {
-            $campagne = $this->getCampagneService()->getCampagne($campagneId);
-            if ($campagne === null) {
-                $io->error("Aucune campagne identifiée #".$campagneId. ".");
-                return Command::FAILURE;
-            } else {
-                $message = "Rafraichissement de la campagne " . $campagne->getAnnee(). " #".$campagne->getId();
+            if ($campagneId === 'all') {
+                $message = "Rafraichissement de toutes les campagnes";
+                $campagnes = $this->getCampagneService()->getCampagnes();
+                foreach ($campagnes as $campagne) {
+                    $campagnes[] = $campagne;
+                    $message .= "\nCampagne : " . $campagne->getAnnee(). " #".$campagne->getId();
+                }
                 $io->info($message);
+
+            } else {
+                $campagne = $this->getCampagneService()->getCampagne($campagneId);
+                if ($campagne === null) {
+                    $io->error("Aucune campagne identifiée #" . $campagneId . ".");
+                    return Command::FAILURE;
+                } else {
+                    $message = "Rafraichissement de la campagne " . $campagne->getAnnee() . " #" . $campagne->getId();
+                    $io->info($message);
+                    $campagnes[] = $campagne;
+                }
             }
         }
 
@@ -78,10 +90,12 @@ class RefreshProgressionStructureCommand extends Command
         $position = 1;
 
         $start = microtime(true);
-        foreach ($structures as $structure) {
-            $io->text("Traitement [" . $position . "/". $nbStructure. "] ". $structure->getLibelleLong() . " #" . $structure->getId());
-            $this->getCampagneProgressionStructureService()->refresh($campagne, $structure);
-            $position++;
+        foreach ($campagnes as $campagne) {
+            foreach ($structures as $structure) {
+                $io->text("Traitement [" . $position . "/" . $nbStructure . "] " . $structure->getLibelleLong() . " #" . $structure->getId());
+                $this->getCampagneProgressionStructureService()->refresh($campagne, $structure);
+                $position++;
+            }
         }
         $end = microtime(true);
         $duration = $end - $start;
