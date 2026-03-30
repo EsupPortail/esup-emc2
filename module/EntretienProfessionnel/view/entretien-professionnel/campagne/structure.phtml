@@ -43,30 +43,30 @@ foreach ($facultatifs as $facultatif) {
     if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
 }
 
-/**
-        $dateSituation = $campagne->getDateSituation();
-        $entretiens = array_filter($entretiens,
-        function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
-            $agent = $entretien->getAgent();
+if (false) {
+    $dateSituation = $campagne->getDateSituation();
+    $entretiens = array_filter($entretiens,
+            function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
+                $agent = $entretien->getAgent();
 //                $affectations = $agent->getAffectationsActifs($dateSituation);
-            $affectations = $agent->getAffectationsActifs($entretien->getDateEntretien());
-            foreach ($affectations as $affectation) {
-                if (in_array($affectation->getStructure(), $structures)) {
-                    return true;
+                $affectations = $agent->getAffectationsActifs($entretien->getDateEntretien());
+                foreach ($affectations as $affectation) {
+                    if (in_array($affectation->getStructure(), $structures)) {
+                        return true;
+                    }
                 }
-            }
-            return false;
-        });
-        $finalises = [];
-        $encours = [];
-        foreach ($entretiens as $entretien) {
-            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
-                $finalises[] = $entretien;
-            } else {
-                $encours[] = $entretien;
-            }
+                return false;
+            });
+    $finalises = [];
+    $encours = [];
+    foreach ($entretiens as $entretien) {
+        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+            $finalises[] = $entretien;
+        } else {
+            $encours[] = $entretien;
         }
- **/
+    }
+}
 
 $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));
 

@@ -97,10 +97,10 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <th class="col-md-2"> Agent </th>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
-            <th class="col-md-2"> Situation hiérarchique </th>
+            <th class="col-md-2"> Responsable </th>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
-            <th class="col-md-2"> Structure </th>
+            <th class="col-md-2"> Affectation·s </th>
         <?php endif; ?>
         <?php if ($displayDate OR $displayLieu) : ?>
             <th data-type="num" class="col-md-2">
@@ -139,52 +139,26 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
             <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>">
-                Responsable :
-                <ul><li><?php echo $entretien->getResponsable()->getDenomination(false, true, true); ?></li></ul>
-                Supérieur·es :
-                <?php $superieurs = $agent->getSuperieurs($entretien->getDateEntretien()); ?>
-                <?php if (empty($superieurs)): ?>
-                    <span class="text-warning">
-                        <span class="icon icon-attention"></span>
-                        Aucun·e supérieur·e connu à la date du <?php echo $dateEntretienAsString; ?>
-                    </span>
-                    <br>
-                <?php else: ?>
-                <ul>
-                    <?php foreach ($superieurs as $superieur) : ?>
-                        <li><?php echo $superieur->getSuperieur()->getDenomination(); ?></li>
-                    <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-                Autorités :
-                <?php $autorites = $agent->getAutorites($entretien->getDateEntretien()); ?>
-                <?php if (empty($autorites)): ?>
-                    <span class="text-warning">
-                        <span class="icon icon-attention"></span>
-                        Aucune autorité connue à la date du <?php echo $dateEntretienAsString; ?>
-                    </span>
-                <?php else: ?>
-                    <ul>
-                        <?php foreach ($autorites as $autorite) : ?>
-                            <li><?php echo $autorite->getAutorite()->getDenomination(); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
+                <?php echo $entretien->getResponsable()->getDenomination(false, true, true); ?>
             </td>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <td>
-                <?php $affectations = $entretien->getAgent()->getAffectations($entretien->getDateEntretien()); ?>
+                <?php $affectations = $entretien->getAgent()->getAffectationsActifsSurPeriode($entretien->getCampagne()->getDateDebut(), $entretien->getCampagne()->getDateFin()); ?>
                 <?php if ($affectations !== null and !empty($affectations)) : ?>
-                    <?php $first = true; ?>
+                    <ul>
                     <?php foreach ($affectations as $affectation) : ?>
-                        <?php if (!$first) echo '<br/>'; else $first = false; ?>
+                        <li>
                         <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
                         <br>
-                        <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
-                        &rightarrow;
-                        <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
+                        <small>
+                            <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                            &rightarrow;
+                            <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
+                        </small>
+                        </li>
                     <?php endforeach; ?>
+                    </ul>
                 <?php else : ?>
                     <span class="text-warning">
                         <span class="icon icon-attention"></span>

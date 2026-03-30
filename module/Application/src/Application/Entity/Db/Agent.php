@@ -230,6 +230,24 @@ class Agent implements
         return $affectations;
     }
 
+
+    /** @return AgentAffectation[] */
+    public function getAffectationsActifsSurPeriode(?DateTime $dateDebut = null, ?DateTime $dateFin = null, ?array $structures = null): array
+    {
+        $affectations = [];
+        foreach ($this->getAffectations() as $affectation) {
+            if ($affectation->estEnCoursIntervale($dateDebut, $dateFin)) {
+                $affectations[] = $affectation;
+            }
+        }
+
+
+        if ($structures !== null) $affectations = array_filter($affectations, function (AgentAffectation $a) use ($structures) {
+            return in_array($a->getStructure(), $structures);
+        });
+        return $affectations;
+    }
+
     //TODO A reecrire car peut être multiple ...
     public function getAffectationPrincipale(?DateTime $date = null): ?AgentAffectation
     {
@@ -529,13 +547,15 @@ class Agent implements
     public function getDenomination(bool $prenomFirst = false, bool $nomCap = true, bool $nomBold = false): ?string
     {
         $prenom = $this->getPrenom();
-        $prenom = str_replace("É", "é", $prenom);
-        $prenom = str_replace("È", "è", $prenom);
+        if ($prenom !== null) {
+            $prenom = str_replace("É", "é", $prenom);
+            $prenom = str_replace("È", "è", $prenom);
+        }
         $nom = (($this->getNomUsuel()) ?? '<em>' . $this->getNomFamille() . '</em>');
         if ($nomCap) $nom = strtoupper($nom);
         if ($nomBold) $nom = "<strong>" . $nom . "</strong>";
         if ($prenomFirst) return trim(ucwords(strtolower($prenom), "- ") . ' ' . $nom);
-        return trim($nom . ' ' . ucwords(strtolower($prenom), "- "));
+        return trim($nom . ' ' . ucwords(strtolower($prenom??""), "- "));
 
     }
 
