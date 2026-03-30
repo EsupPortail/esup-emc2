@@ -7,6 +7,7 @@
  * @var Application[] $applications
  * @var AgentPoste[] $postes
  * @var Parametre[] $parametres
+ * @var Rendu $template
  */
 
 use Agent\Entity\Db\AgentPoste;
@@ -17,6 +18,7 @@ use Application\Provider\Privilege\FichePostePrivileges;
 use Element\Entity\Db\Competence;
 use Structure\Entity\Db\Structure;
 use UnicaenParametre\Entity\Db\Parametre;
+use UnicaenRenderer\Entity\Db\Rendu;
 
 $date = new DateTime();
 $this->headTitle("Fiche de poste #" . $fiche->getId());
@@ -48,6 +50,13 @@ $canExport   = $canAfficher;
         <?php endif; ?>
     </div>
 </div>
+
+<?php if ($template): ?>
+    <div class="alert alert-info" style="margin-top: 0.5rem;">
+        <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+        <?php echo $template->getCorps(); ?>
+    </div>
+<?php endif; ?>
 
 <?php echo $this->partial("partial/validations.phtml"); ?>
 

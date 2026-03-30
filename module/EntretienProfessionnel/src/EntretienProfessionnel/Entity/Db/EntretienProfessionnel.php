@@ -4,12 +4,14 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
+use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEvenement\Entity\HasEvenementsInterface;
@@ -53,6 +55,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?Campagne $campagne = null;
     private ?DateTime $dateEntretien = null;
     private ?string $lieu = null;
+    // Durée estimée en heure 1.5 => 1 heure et demi
     private ?float $dureeEstimee = null;
 
     private ?FormulaireInstance $formulaireInstance = null;
@@ -142,6 +145,20 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function setDureeEstimee(?float $dureeEstimee): void
     {
         $this->dureeEstimee = $dureeEstimee;
+    }
+
+    public function getDateFin(): ?DateTime
+    {
+        if ($this->dateEntretien === null) return null;
+        if ($this->dureeEstimee === null) return null;
+
+        $dateFin = DateTime::createFromFormat('Y-m-d H:i:s', $this->dateEntretien->format('Y-m-d H:i:s'));
+        try {
+            $dateFin->add(new DateInterval('PT' . $this->dureeEstimee . 'H'));
+        } catch (Exception $e) {
+            throw new RuntimeException("Impossible de calculer la date de fin de l'entretien professionnel #" . $this->getId(),-1,$e);
+        }
+        return $dateFin;
     }
 
     public function getStatut(): ?string

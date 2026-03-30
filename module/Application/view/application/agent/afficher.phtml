@@ -12,8 +12,10 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Parametre\AgentParametres;
 use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenParametre\Entity\Db\Parametre;
+use UnicaenRenderer\Entity\Db\Template;
 use UnicaenUtilisateur\Entity\Db\User;
 
 /**
@@ -30,6 +32,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentGrade[] $grades
  * @var AgentQuotite|null $quotite
  * @var AgentEchelon[] $echelons
+ * @var Template $template
  *
  * @var array $applications
  * @var string $intranet
@@ -38,6 +41,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var Parametre[] $parametres
  * @var ChaineAssertion $chaineAssertion
  * @var User $connectedUser
+ * @var Campagne[] $campagnesActives
  *
  */
 
@@ -84,7 +88,9 @@ if ($agent !== null) {
     </h1>
 
     <?php if ($connectedUser === $agent->getUtilisateur()) : ?>
-        <?php echo $this->aideAgentCampagne($agent); ?>
+        <?php foreach ($campagnesActives as $campagne) : ?>
+            <?php echo $this->aideAgentCampagne($agent, $campagne); ?>
+        <?php endforeach; ?>
     <?php endif; ?>
 
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -150,7 +156,7 @@ if ($agent !== null) {
 
                 <div id="fiches" class="tab-pane " role="tabpanel">
                     <?php echo $this->partial('partial/fiche-poste',
-                        ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
+                        ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits, 'template' => $template], []); ?>
                 </div>
 
             <?php endif; ?>

@@ -7,6 +7,7 @@ use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use UnicaenFichier\Entity\Db\Fichier;
+use UnicaenRenderer\Entity\Db\Template;
 
 
 /**
@@ -15,6 +16,7 @@ use UnicaenFichier\Entity\Db\Fichier;
  * @var Campagne|null $campagne
  * @var FichePoste[] $fichesDePoste
  * @var Fichier[] $fichesDePostePdf
+ * @var Template $template
  */
 
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
@@ -31,6 +33,13 @@ $date = new DateTime();
 <?php echo $this->partial('partial/onglets', ['current' => 'fiches-de-poste', 'campagne' => $campagne]); ?>
 
 <h1 class="page-header"> Liste des fiches de poste des Agent·es dont je suis responsable</h1>
+
+<?php if ($template): ?>
+    <div class="alert alert-info" style="margin-top: 0.5rem;">
+        <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+        <?php echo $template->getCorps(); ?>
+    </div>
+<?php endif; ?>
 
 <table class="table table-condensed table-hover datatable" id="fiches">
     <thead>

@@ -44,11 +44,12 @@ $estDepasseObservation = ($entretien and isset($infos['limite-observation']) and
                             Vous devez passer un entretien professionnel pour cette campagne.
                         <?php endif; ?>
                         <?php if (!empty($infos['facultatif'])) : ?>
-                            Vous pouvez passer un entretien professionnel pour cette campagne. <span
-                                    class="icon icon-info" title="<?php echo $infos['raison']; ?>"></span>
+                            Vous pouvez passer un entretien professionnel pour cette campagne.
+                            <span class="icon icon-info" title="<?php echo $infos['raison']; ?>"></span>
                         <?php endif; ?>
                         <?php if (empty($infos['obligatoire']) and empty($infos['facultatif'])) : ?>
                             Vous ne devez pas passer d'entretien professionnel pour cette campagne.
+                            <span class="icon icon-info" title="<?php echo $infos['raison']; ?>"></span>
                         <?php endif; ?>
                 <?php endif; ?>
 

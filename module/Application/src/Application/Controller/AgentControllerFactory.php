@@ -33,6 +33,7 @@ use UnicaenFichier\Service\Fichier\FichierService;
 use UnicaenFichier\Service\Nature\NatureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
+use UnicaenRenderer\Service\Template\TemplateService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -61,6 +62,7 @@ class AgentControllerFactory
          * @var FichierService $fichierService
          * @var ApplicationService $applicationService
          * @var StructureService $structureService
+         * @var TemplateService $templateService
          * @var UrlService $urlService
          * @var UserService $userService
          */
@@ -94,6 +96,7 @@ class AgentControllerFactory
         $fichePosteService = $container->get(FichePosteService::class);
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
+        $templateService = $container->get(TemplateService::class);
         $urlService = $container->get(UrlService::class);
         $userService = $container->get(UserService::class);
 
@@ -137,6 +140,7 @@ class AgentControllerFactory
         $controller->setFichePosteService($fichePosteService);
         $controller->setParametreService($parametreService);
         $controller->setRenduService($renduService);
+        $controller->setTemplateService($templateService);
         $controller->setUrlService($urlService);
         $controller->setUserService($userService);
 

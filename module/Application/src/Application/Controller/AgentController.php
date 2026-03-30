@@ -34,6 +34,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Exception;
+use FichePoste\Provider\Template\TextTemplates;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -48,6 +49,7 @@ use UnicaenFichier\Service\Fichier\FichierServiceAwareTrait;
 use UnicaenFichier\Service\Nature\NatureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\HasValidationsInterface;
@@ -69,6 +71,7 @@ class AgentController extends AbstractActionController
     use FichePosteServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use TemplateServiceAwareTrait;
     use UserServiceAwareTrait;
     use UrlServiceAwareTrait;
 
@@ -163,6 +166,11 @@ class AgentController extends AbstractActionController
 
         $mobilites = $this->getAgentMobiliteService()->getAgentsMobilitesByAgent($agent);
 
+        $template = null;
+        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
+        }
+
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
@@ -182,9 +190,12 @@ class AgentController extends AbstractActionController
 
             'mobilites' => $mobilites,
 
+            'template' => $template,
+
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
             'chaineAssertion' => $this->chaineAssertion,
             'connectedUser' => $this->getUserService()->getConnectedUser(),
+            'campagnesActives' => $this->getCampagneService()->getCampagnesActives(),
         ]);
     }
 
@@ -495,11 +506,17 @@ class AgentController extends AbstractActionController
         }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
 
+        $template = null;
+        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
+        }
+
         $vm = new ViewModel([
             'agents' => $agents,
             'campagne' => $campagne,
             'fichesDePoste' => $fichesDePoste,
-            'fichesDePostePdf' => $fichesDePostePdf
+            'fichesDePostePdf' => $fichesDePostePdf,
+            'template' => $template,
         ]);
         return $vm;
     }
@@ -516,16 +533,12 @@ class AgentController extends AbstractActionController
         $entretiensS = [];
         $entretiensR = [];
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
-// TODO ticket #63688
-            //$agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
-            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
             $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($connectedAgent, $campagne, false, false);
         }
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
-// TODO ticket #63688
-            //$agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
-            $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
             $entretiensR = [];
         }

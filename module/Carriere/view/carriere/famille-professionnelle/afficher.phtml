@@ -13,6 +13,15 @@ use Carriere\Entity\Db\FamilleProfessionnelle;
 <dl class="row">
     <dt class="col-md-4"> Famille professionnelle</dt>
     <dd class="col-md-8"> <?php echo $famille->getLibelle(); ?> </dd>
+    <dt class="col-md-4"> Spécialité</dt>
+    <dd class="col-md-8">
+        <?php if ($famille->getCorrespondance() === null) : ?>
+            <span class="missing-data">Aucune spécialité</span>
+        <?php else : ?>
+            <?php echo $famille->getCorrespondance()->getLibelleLong(); ?>
+            <code><?php echo $famille->getCorrespondance()->getCategorie(); ?></code>
+        <?php endif; ?>
+    </dd>
     <dt class="col-md-4"> Mission·s principale·s</dt>
     <dd class="col-md-8">
         <?php if (empty($missions)) : ?>

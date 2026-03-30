@@ -10,6 +10,7 @@
  * @var array $fichesDePoste
  * @var array $fichesDePostePdf
  * @var EtatType[] $etats
+ * @var Rendu $template
  */
 
 use Application\Entity\Db\Agent;
@@ -22,6 +23,7 @@ use UnicaenFichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenRenderer\Entity\Db\Rendu;
 
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
 $canExporterFichePoste      = $canVoirFichePoste;
@@ -35,6 +37,13 @@ $date = new DateTime();
 
 
 <?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'fiches-de-poste', 'selecteur' => $selecteur]); ?>
+
+<?php if ($template): ?>
+    <div class="alert alert-info" style="margin-top: 0.5rem;">
+        <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+        <?php echo $template->getCorps(); ?>
+    </div>
+<?php endif; ?>
 
 <table class="table table-condensed datatable">
     <thead>
@@ -269,6 +278,10 @@ $date = new DateTime();
 $(document).ready(function () {
     $("table.datatable").DataTable({
         'paging': false,
+        autoWidth: false,
+        language: {
+            "url": "/js/datatables_fr.json",
+        },
     });
 });
 

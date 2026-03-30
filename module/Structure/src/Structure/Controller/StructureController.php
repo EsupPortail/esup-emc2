@@ -22,6 +22,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Exception;
 use FichePoste\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Template\TextTemplates;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -40,8 +41,11 @@ use UnicaenApp\View\Model\CsvModel;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 
-class StructureController extends AbstractActionController {
+class StructureController extends AbstractActionController
+{
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
@@ -50,8 +54,10 @@ class StructureController extends AbstractActionController {
     use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
+    use TemplateServiceAwareTrait;
     use ObservateurServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use TypeServiceAwareTrait;
@@ -72,7 +78,7 @@ class StructureController extends AbstractActionController {
         $this->renderer = $renderer;
     }
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $params = $this->params()->fromQuery();
         if (empty($params)) {
@@ -89,7 +95,7 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
-    public function descriptionAction() : ViewModel
+    public function descriptionAction(): ViewModel
     {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
@@ -107,12 +113,14 @@ class StructureController extends AbstractActionController {
         $parent = $structure?->getParent();
         $filles = $structure?->getEnfants();
 
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
 
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -135,30 +143,30 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
-    public function agentsAction() : ViewModel
+    public function agentsAction(): ViewModel
     {
         $debug = "";
 
         $date_debut = new DateTime();
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
-        $debug .= "Récupération des informations de l'utilisateur : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
+        $debug .= "Récupération des informations de l'utilisateur : " . ((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes') . "<br>";
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-        $debug .= "Récupération des informations des structures : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
+        $debug .= "Récupération des informations des structures : " . ((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes') . "<br>";
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $debug .= "Récupération des informations des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
+        $debug .= "Récupération des informations des agents : " . ((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes') . "<br>";
         [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents, $structures);
-        $debug .= "Filtrage des agents : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
+        $debug .= "Filtrage des agents : " . ((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes') . "<br>";
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
 
-        $allAgents = array_merge($agents,$agentsForces);
+        $allAgents = array_merge($agents, $agentsForces);
 
         usort($agents, function (Agent $a, Agent $b) {
-           $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
-           $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
-           return $aaa <=> $bbb;
+            $aaa = ($a->getNomUsuel() ?? $a->getNomFamille()) . " " . $a->getPrenom();
+            $bbb = ($b->getNomUsuel() ?? $b->getNomFamille()) . " " . $b->getPrenom();
+            return $aaa <=> $bbb;
         });
 
         $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($allAgents);
@@ -168,9 +176,9 @@ class StructureController extends AbstractActionController {
         try {
             $emailAssistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
         } catch (Exception $e) {
-            throw new RuntimeException("Une erreur est survenu lors de la récupération du paramètre [".GlobalParametres::TYPE."|".GlobalParametres::EMAIL_ASSISTANCE."]",0,$e);
+            throw new RuntimeException("Une erreur est survenu lors de la récupération du paramètre [" . GlobalParametres::TYPE . "|" . GlobalParametres::EMAIL_ASSISTANCE . "]", 0, $e);
         }
-        $debug .= "Fin du traitement côté controller : ".((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes')  . "<br>";
+        $debug .= "Fin du traitement côté controller : " . ((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes') . "<br>";
 
         return new ViewModel([
             'structure' => $structure,
@@ -187,11 +195,11 @@ class StructureController extends AbstractActionController {
 //            'campagnes' => $campagnes,
 //            'campagnesFutures' => $campagnesFutures,
             'emailAssistance' => $emailAssistance,
-            'debug' => $debug,
+            'debug' => null,
         ]);
     }
 
-    public function missionsSpecifiquesAction() : ViewModel
+    public function missionsSpecifiquesAction(): ViewModel
     {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
@@ -200,11 +208,13 @@ class StructureController extends AbstractActionController {
 
         $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByStructures($structures, false);
 
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
 
         return new ViewModel([
             'structure' => $structure,
@@ -215,7 +225,7 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
-    public function fichesDePosteAction() : ViewModel
+    public function fichesDePosteAction(): ViewModel
     {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
@@ -224,13 +234,15 @@ class StructureController extends AbstractActionController {
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
         [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents, $structures);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $this->getStructureService()->getAgentsForces($structure));
+        $agentsForces = array_map(function (StructureAgentForce $a) {
+            return $a->getAgent();
+        }, $this->getStructureService()->getAgentsForces($structure));
 
         $allAgents = array_merge($conserver, $agentsForces);
 
         usort($allAgents, function (Agent $a, Agent $b) {
-            $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
-            $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
+            $aaa = ($a->getNomUsuel() ?? $a->getNomFamille()) . " " . $a->getPrenom();
+            $bbb = ($b->getNomUsuel() ?? $b->getNomFamille()) . " " . $b->getPrenom();
             return $aaa <=> $bbb;
         });
 
@@ -242,11 +254,18 @@ class StructureController extends AbstractActionController {
         }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
 
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
+
+        $template = null;
+        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
+        }
 
         return new ViewModel([
             'structure' => $structure,
@@ -258,20 +277,23 @@ class StructureController extends AbstractActionController {
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FichePosteEtats::TYPE),
+            'template' => $template,
         ]);
     }
 
-    public function extractionsAction() : ViewModel
+    public function extractionsAction(): ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
 
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
 
         return new ViewModel([
             'structure' => $structure,
@@ -283,12 +305,12 @@ class StructureController extends AbstractActionController {
 
     /** RESUME ********************************************************************************************************/
 
-    public function editerDescriptionAction() : ViewModel
+    public function editerDescriptionAction(): ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
         $form = $this->getHasDescriptionForm();
-        $form->setAttribute('action', $this->url()->fromRoute('structure/editer-description', ['structure' => $structure->getId()], [] , true));
+        $form->setAttribute('action', $this->url()->fromRoute('structure/editer-description', ['structure' => $structure->getId()], [], true));
         $form->bind($structure);
 
         /** @var Request $request */
@@ -310,10 +332,10 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
-    public function toggleResumeMereAction() : Response
+    public function toggleResumeMereAction(): Response
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $structure->setRepriseResumeMere(! $structure->getRepriseResumeMere());
+        $structure->setRepriseResumeMere(!$structure->getRepriseResumeMere());
         $this->getStructureService()->update($structure);
 
         $retour = $this->params()->fromQuery('retour');
@@ -323,7 +345,7 @@ class StructureController extends AbstractActionController {
 
     /** Fonctions de recherche ****************************************************************************************/
 
-    public function rechercherAction() : JsonModel
+    public function rechercherAction(): JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $structures = $this->getStructureService()->getStructuresByTerm($term);
@@ -333,7 +355,7 @@ class StructureController extends AbstractActionController {
         exit;
     }
 
-    public function rechercherWithStructureMereAction() : JsonModel
+    public function rechercherWithStructureMereAction(): JsonModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
@@ -351,7 +373,7 @@ class StructureController extends AbstractActionController {
 
     /** AGENTS FORCES *************************************************************************************************/
 
-    public function ajouterManuellementAgentAction() : ViewModel
+    public function ajouterManuellementAgentAction(): ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structureAgentForce = new StructureAgentForce();
@@ -360,7 +382,7 @@ class StructureController extends AbstractActionController {
         $form = $this->getSelectionAgentForm();
         /** @see AgentController::rechercherLargeAction() */
         $form->get('agent-sas')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
-        $form->setAttribute('action',$this->url()->fromRoute('structure/ajouter-manuellement-agent', ['structure' => $structure->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-manuellement-agent', ['structure' => $structure->getId()], [], true));
         $form->bind($structureAgentForce);
 
         $request = $this->getRequest();
@@ -382,7 +404,7 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
-    public function retirerManuellementAgentAction() : ViewModel
+    public function retirerManuellementAgentAction(): ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $structure = $this->getStructureService()->getRequestedStructure($this);
@@ -397,18 +419,18 @@ class StructureController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Retirer [".$structureAgentForce->getAgent()->getDenomination()."] de la structure [" . $structureAgentForce->getStructure()->getLibelleCourt() . "]",
-                'text' => "Le retrait est définitif, êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('structure/retirer-manuellement-agent', ["structure" => $structure->getId(), "agent" => $agent->getId()], [], true),
-            ]);
+        $vm->setTemplate('application/default/confirmation');
+        $vm->setVariables([
+            'title' => "Retirer [" . $structureAgentForce->getAgent()->getDenomination() . "] de la structure [" . $structureAgentForce->getStructure()->getLibelleCourt() . "]",
+            'text' => "Le retrait est définitif, êtes-vous sûr&middot;e de vouloir continuer ?",
+            'action' => $this->url()->fromRoute('structure/retirer-manuellement-agent', ["structure" => $structure->getId(), "agent" => $agent->getId()], [], true),
+        ]);
         return $vm;
     }
 
     /** FiCHE DE POSTE RECRUTEMENT ************************************************************************************/
 
-    public function ajouterFichePosteRecrutementAction() : Response
+    public function ajouterFichePosteRecrutementAction(): Response
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $fiche = new FichePoste();
@@ -421,7 +443,7 @@ class StructureController extends AbstractActionController {
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
     }
 
-    public function dupliquerFichePosteRecrutementAction() : ViewModel
+    public function dupliquerFichePosteRecrutementAction(): ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
@@ -449,7 +471,7 @@ class StructureController extends AbstractActionController {
         foreach ($fichesPostesAgent as $fichePoste) $fichespostes[$fichePoste->getId()] = $fichePoste;
         foreach ($fichesPostesRecrutement as $fichePoste) $fichespostes[$fichePoste->getId()] = $fichePoste;
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => 'Sélectionner la fiche de poste à dupliquer',
             'fichespostes' => $fichespostes,
             'url' => $this->url()->fromRoute('structure/dupliquer-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true),
@@ -463,14 +485,14 @@ class StructureController extends AbstractActionController {
     /**
      * Extraction du listing des agents et des fiches de poste associées
      */
-    public function extractionListingFichePosteAction() : CsvModel
+    public function extractionListingFichePosteAction(): CsvModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] = $structure;
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
 
-        $filename = "listing_fiche_poste_-_" . str_replace(" ","_",$structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
+        $filename = "listing_fiche_poste_-_" . str_replace(" ", "_", $structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
         $header = ["Agent", "Fiche metier principale", "Complement"];
 
         $result = [];
@@ -501,7 +523,7 @@ class StructureController extends AbstractActionController {
     /**
      * Extraction du listing des agents et des fiches de poste associées
      */
-    public function extractionListingMissionSpecifiqueAction() : CsvModel
+    public function extractionListingMissionSpecifiqueAction(): CsvModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);
@@ -509,7 +531,7 @@ class StructureController extends AbstractActionController {
         $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByStructures($structures, false);
 
 
-        $filename = "listing_mission_specifique-_" . str_replace(" ","_",$structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
+        $filename = "listing_mission_specifique-_" . str_replace(" ", "_", $structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
         $header = ["Agent", "Structure", "Mission", "Début de mission", "Fin de mission", "Volume"];
 
         $result = [];
@@ -517,8 +539,8 @@ class StructureController extends AbstractActionController {
             $agent = $mission->getAgent()->getDenomination();
             $structure = $mission->getStructure()->getLibelleLong();
             $libelle = $mission->getMission()->getLibelle();
-            $debut = ($mission->getDateDebut())?$mission->getDateDebut()->format('d/m/Y'):"";
-            $fin = ($mission->getDateFin())?$mission->getDateFin()->format('d/m/Y'):"";
+            $debut = ($mission->getDateDebut()) ? $mission->getDateDebut()->format('d/m/Y') : "";
+            $fin = ($mission->getDateFin()) ? $mission->getDateFin()->format('d/m/Y') : "";
             $volume = $mission->getDecharge();
             $result[] = [$agent, $structure, $libelle, $debut, $fin, $volume];
         }
@@ -532,7 +554,7 @@ class StructureController extends AbstractActionController {
         return $CSV;
     }
 
-    public function organigrammeAction() : ViewModel
+    public function organigrammeAction(): ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $agents[$structure->getId()] = $this->getAgentService()->getAgentsByStructures([$structure]);
@@ -560,7 +582,7 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
-    public function organigrammePdfAction() : string
+    public function organigrammePdfAction(): string
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $agents[$structure->getId()] = $this->getAgentService()->getAgentsByStructures([$structure]);
@@ -587,7 +609,7 @@ class StructureController extends AbstractActionController {
             $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
             return $pdf->export("temp.pdf");
         } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est survenu lors la génération du PDF",0,$e);
+            throw new RuntimeException("Un problème est survenu lors la génération du PDF", 0, $e);
         }
     }
 

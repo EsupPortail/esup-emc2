@@ -34,7 +34,8 @@ $canVoirEmploiRepere = $this->isAllowed(EmploireperePrivileges::getResourceId(Em
                             <td> <code><?php echo $emploi->getCode(); ?></code> </td>
                             <td>
                                 <?php if ($canVoirEmploiRepere) : ?>
-                                    <a href="" class="action secondary">
+                                    <?php /** @see \EmploiRepere\Controller\EmploiRepereController::afficherAction() */ ?>
+                                    <a href="<?php echo $this->url('emploi-repere/afficher', ['emploi-repere' => $emploi->getId()], [], true); ?>" class="action secondary ajax-modal">
                                         <span class="icon icon-voir"></span>
                                         Afficher
                                     </a>

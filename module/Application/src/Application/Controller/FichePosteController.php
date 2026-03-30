@@ -25,6 +25,7 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use FichePoste\Provider\Parametre\FichePosteParametres;
 use FichePoste\Provider\Template\PdfTemplate;
+use FichePoste\Provider\Template\TextTemplates;
 use FichePoste\Provider\Validation\FichePosteValidations;
 use FichePoste\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Http\Request;
@@ -41,6 +42,7 @@ use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
@@ -62,6 +64,7 @@ class FichePosteController extends AbstractActionController
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use TemplateServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
 
@@ -185,6 +188,11 @@ class FichePosteController extends AbstractActionController
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
+        $template = null;
+        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
+        }
+
         return new ViewModel([
             'title' => $titre,
             'fiche' => $fiche,
@@ -194,6 +202,7 @@ class FichePosteController extends AbstractActionController
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(FichePosteParametres::TYPE),
+            'template' => $template,
         ]);
     }
 
@@ -212,6 +221,10 @@ class FichePosteController extends AbstractActionController
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
+        $template = null;
+        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
+        }
 
         return new ViewModel([
             'ficheId' => $this->params()->fromRoute('fiche-poste'),
@@ -224,6 +237,7 @@ class FichePosteController extends AbstractActionController
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(FichePosteParametres::TYPE),
+            'template' => $template,
         ]);
     }
 

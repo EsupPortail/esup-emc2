@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * *** 27 mars 2026 ***
+ * Discussion à propos des dates à considérer dans ces tableaux.
+ * Les agents présentés ici n'ont pas encore d'entretien professionnel d'où le fait qu'ils soient convocable.
+ *
+ * Si la campagne n'a pas encore commencé, alors on utilise la date de début de campagne.
+ * Si la campagne est en cours, alors on utilise la date du jour.
+ * Si la campagne est terminée, alors on utilise la date de fin de la campagne
+ *
+ * Attention lorsque la campagne est en cours :
+ * * Marseille souhaite la date de jour
+ * * Montpellier souhaite la date de début de la campagne
+ * * Marine serait plus pour la date de prise de poste
+ *
+ *  Quid peut-on le rendre facilement paramétrable ?
+ *  1 - ajout d'une méthode dans la campagne pour retourner la date de situation à considérer
+ */
+
+
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -18,12 +37,22 @@ $canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivil
 $canAction = ($canAfficher OR $canConvoquer);
 
 $raison = (isset($options['raison']))?$options['raison']:[];
+
+
+$dateSituation = $campagne->getDateSituation();
+$dateSituationAsString = $dateSituation?->format('d/m/Y');
+
 ?>
+
+<div class="alert alert-info" style="margin-top: .5rem;">
+    Date de situation considérée : <?php echo $dateSituationAsString; ?>
+</div>
 
 <table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">
     <thead>
         <tr>
-            <th class="col-md-4" data-type="string"> Dénomination </th>
+            <th class="col-md-2" data-type="string"> Dénomination </th>
+            <th class="col-md-2" data-type="string"> Situation hiérarchique </th>
             <th class="col-md-4"> Affectation·s </th>
             <?php if ($canAction) : ?>
                 <th class="col-md-3"> Grade·s </th>
@@ -49,24 +78,60 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                 <?php endif; ?>
             </td>
             <td>
-                <?php $affectations = $agent->getAffectationsActifs($campagne->getDateDebut()); ?>
+                Supérieur·es :
+                <?php $superieurs = $agent->getSuperieurs($dateSituation); ?>
+                <?php if (empty($superieurs)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun·e supérieur·e connu à la date du <?php echo $dateSituationAsString; ?>
+                    </span>
+                    <br>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($superieurs as $superieur) : ?>
+                            <li><?php echo $superieur->getSuperieur()->getDenomination(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                Autorités :
+                <?php $autorites = $agent->getAutorites($dateSituation); ?>
+                <?php if (empty($autorites)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucune autorité connue à la date du <?php echo $dateSituationAsString; ?>
+                    </span>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($autorites as $autorite) : ?>
+                            <li><?php echo $autorite->getAutorite()->getDenomination(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php $affectations = $agent->getAffectationsActifs($dateSituation); ?>
                 <?php if (empty($affectations)) : ?>
                     <span class="text-warning">
                         <span class="icon icon-attention"></span>
-                        Aucune affectation à la date du <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>
+                        Aucune affectation à la date du <?php echo $dateSituationAsString ?>
                     </span>
                 <?php else : ?>
                     <?php foreach ($affectations as $affectation) : ?>
-                         <?php echo $affectation->getStructure()->getLibelleLong(); ?> <br/>
+                         <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                        <br>
+                        <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                        &rightarrow;
+                        <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
+                        <br>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </td>
             <td>
-                <?php $grades = $agent->getGradesActifs($campagne->getDateDebut()); ?>
+                <?php $grades = $agent->getGradesActifs($dateSituation); ?>
                 <?php if (empty($grades)) : ?>
                     <span class="text-warning">
                         <span class="icon icon-attention"></span>
-                        Aucun grade à la date du <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>
+                        Aucun grade à la date du <?php echo $dateSituationAsString; ?>
                     </span>
                 <?php else : ?>
                     <?php foreach ($grades as $grade) : ?>
@@ -77,7 +142,12 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                             </span>
                         </span>
                         <?php else : ?>
-                            <?php echo $grade->getGrade()->getLibelleLong(); ?> <br/>
+                            <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                            <br>
+                            <?php echo $grade->getDateDebut()?$grade->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                            &rightarrow;
+                            <?php echo $grade->getDateFin()?$grade->getDateFin()->format('d/m/Y'):" ---- "; ?>
+                            <br>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -97,7 +167,6 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                 <?php
                     $entretien = new EntretienProfessionnel(); $entretien->setAgent($agent);
                     $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
-//                    $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
                 ?>
                 <?php
                     if ($campagne->estEnCours() AND $canConvoquer) : ?>

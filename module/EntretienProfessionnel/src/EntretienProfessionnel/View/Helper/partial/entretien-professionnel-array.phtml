@@ -5,6 +5,12 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 
+
+/**
+ * N.B. : La situation des agents est fixée à la date des entretiens professionnels
+ * Dans ce tableau on affiche seulement l'affectation
+ */
+
 /**
  * @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper
  * @var EntretienProfessionnel[] $entretiens
@@ -75,6 +81,8 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
 $width = '22rem';
 if (isset($options['affichages']) AND isset($options['affichages']['width'])) $width = $options['affichages']['width'];
 
+
+
 ?>
 
 <table class="table table-condensed table-hover datatable"
@@ -89,7 +97,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <th class="col-md-2"> Agent </th>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
-            <th class="col-md-2"> Responsable </th>
+            <th class="col-md-2"> Situation hiérarchique </th>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <th class="col-md-2"> Structure </th>
@@ -113,8 +121,9 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
     <tbody>
     <?php foreach ($entretiens as $entretien) : ?>
         <?php
+            $dateEntretienAsString = $entretien->getDateEntretien()->format('d/m/Y');
+            $agent = $entretien->getAgent();
         //todo l'assertion merde
-//        $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
         $canConvoquer = (
                 ($entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
              && $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
@@ -129,7 +138,39 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <td  data-order="<?php echo $entretien->getAgent()->getDenomination(); ?>"> <?php echo $entretien->getAgent()->getDenomination(false, true, true); ?> </td>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
-            <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>"> <?php echo $entretien->getResponsable()->getDenomination(false, true, true); ?> </td>
+            <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>">
+                Responsable :
+                <ul><li><?php echo $entretien->getResponsable()->getDenomination(false, true, true); ?></li></ul>
+                Supérieur·es :
+                <?php $superieurs = $agent->getSuperieurs($entretien->getDateEntretien()); ?>
+                <?php if (empty($superieurs)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun·e supérieur·e connu à la date du <?php echo $dateEntretienAsString; ?>
+                    </span>
+                    <br>
+                <?php else: ?>
+                <ul>
+                    <?php foreach ($superieurs as $superieur) : ?>
+                        <li><?php echo $superieur->getSuperieur()->getDenomination(); ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                Autorités :
+                <?php $autorites = $agent->getAutorites($entretien->getDateEntretien()); ?>
+                <?php if (empty($autorites)): ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucune autorité connue à la date du <?php echo $dateEntretienAsString; ?>
+                    </span>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($autorites as $autorite) : ?>
+                            <li><?php echo $autorite->getAutorite()->getDenomination(); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </td>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <td>
@@ -139,9 +180,16 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                     <?php foreach ($affectations as $affectation) : ?>
                         <?php if (!$first) echo '<br/>'; else $first = false; ?>
                         <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                        <br>
+                        <?php echo $affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):" ---- "; ?>
+                        &rightarrow;
+                        <?php echo $affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):" ---- "; ?>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    Aucune structure
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucune affectation à la date <?php echo $entretien->getDateEntretien()->format("d/m/Y"); ?>
+                    </span>
                 <?php endif; ?>
             </td>
         <?php endif; ?>
@@ -164,7 +212,6 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         <?php if ($displayAction) : ?>
         <td class="action">
             <?php if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)) : ?>
-<!--            --><?php //if ($canAcceder ) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()],
@@ -176,7 +223,6 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 </a>
             <?php endif; ?>
             <?php if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)) : ?>
-<!--            --><?php //if ($canExporter) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>

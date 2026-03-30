@@ -451,14 +451,8 @@ class CampagneController extends AbstractActionController
         if ($structure === null) {
             throw new RuntimeException("Aucune structure de trouvée.");
         }
-//         $this->getCampagneService()->refreshStatut($campagne, $structure);
-
-
-
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-
-        // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
@@ -468,8 +462,7 @@ class CampagneController extends AbstractActionController
             }
         }
 
-
-        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
+        [$obligatoires, $facultatifs, $raison, $exclus] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
 
 
 //        $agents = [];
@@ -498,7 +491,23 @@ class CampagneController extends AbstractActionController
 //            }
 //        }
 
+
+        $dateSituation = $campagne->getDateSituation();
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+//        $entretiens = array_filter($entretiens,
+//            function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
+//                $agent = $entretien->getAgent();
+////                $affectations = $agent->getAffectationsActifs($dateSituation);
+//                $affectations = $agent->getAffectationsActifs($entretien->getDateEntretien());
+//                foreach ($affectations as $affectation) {
+//                    if (in_array($affectation->getStructure(), $structures)) {
+//                        return true;
+//                    }
+//                }
+//                return false;
+//        });
+
+
         $finalises = [];
         $encours = [];
         foreach ($entretiens as $entretien) {
@@ -541,7 +550,7 @@ class CampagneController extends AbstractActionController
 
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
-//            'exclus' => $exclus,
+            'exclus' => $exclus,
             'raison' => $raison,
 
             'templates' => $templates,

@@ -7,6 +7,7 @@
  */
 
 use Agent\Entity\Db\AgentAffectation;
+use Structure\Provider\Privilege\StructurePrivileges;
 
 $debug = false;
 
@@ -58,9 +59,18 @@ if ($affectation !== null) {
                     $texte .= $structure->getLibelleCourt();
                     $tooltip = "<strong>".$structure->getLibelleLong()."</strong>"; if ($niveau2) $tooltip .= "<br/> rattachée à <br/><strong>" . $niveau2->getLibelleLong() ."</strong>";
                 ?>
-                <span class="badge structure" title="<?php echo $tooltip; ?>" data-bs-toggle="tooltip" data-bs-html="true">
-                    <?php echo $texte; ?>
-                </span>
+                <?php if ($this->isAllowed($structure, StructurePrivileges::STRUCTURE_AFFICHER)) : ?>
+                    <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                    <a href="<?php echo $this->url("structure/description", ["structure" => $structure->getId()], [], true); ?>" target="_blank">
+                        <span class="badge structure" title="<?php echo $tooltip; ?>" data-bs-toggle="tooltip" data-bs-html="true">
+                            <?php echo $texte; ?>
+                        </span>
+                    </a>
+                <?php else : ?>
+                    <span class="badge structure" title="<?php echo $tooltip; ?>" data-bs-toggle="tooltip" data-bs-html="true">
+                        <?php echo $texte; ?>
+                    </span>
+                <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
     <?php endif; ?>
