@@ -21,7 +21,6 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee());
 
 $canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
 
-$condition = "Les agents titulaires ou contratuel en poste depuis XX mois doivent passer un entretien professionnel.";
 
 ?>
 
@@ -73,25 +72,33 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
             </div>
             <div class="col-md-6">
                 <dl class="row">
-                    <dt class="col-md-4"> Date de la circulaire </dt>
-                    <dd class="col-md-8">
+                    <dt class="col-md-5"> Date de la circulaire </dt>
+                    <dd class="col-md-7">
                         <?php if ($campagne->getDateCirculaire()): ?>
                             <?php echo $campagne->getDateCirculaire()->format('d/m/y'); ?>
                         <?php else : ?>
                             -
                         <?php endif; ?>
                     </dd>
-                    <dt class="col-md-4"> Date de début </dt>
-                    <dd class="col-md-8">
+                    <dt class="col-md-5"> Date de début </dt>
+                    <dd class="col-md-7">
                         <?php if ($campagne->getDateDebut()): ?>
                             <?php echo $campagne->getDateDebut()->format('d/m/y'); ?></dd>
                         <?php else : ?>
                             -
                         <?php endif; ?>
-                    <dt class="col-md-4"> Date de fin </dt>
-                    <dd class="col-md-8">
+                    <dt class="col-md-5"> Date de fin </dt>
+                    <dd class="col-md-7">
                         <?php if ($campagne->getDateFin()) : ?>
                             <?php echo $campagne->getDateFin()->format('d/m/y'); ?>
+                        <?php else : ?>
+                            -
+                        <?php endif; ?>
+                    </dd>
+                    <dt class="col-md-5"> Date de prise de poste </dt>
+                    <dd class="col-md-7">
+                        <?php if ($campagne->getDateEnPoste()) : ?>
+                            <?php echo $campagne->getDateEnPoste()->format('d/m/y'); ?>
                         <?php else : ?>
                             -
                         <?php endif; ?>
@@ -107,42 +114,42 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
         Complétion de la campagne
     </div>
     <div class="card-body">
-        <h2>Agents éligibles pour un entretien </h2>
+        <h2>Agent·es éligibles à un entretien </h2>
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <dl class="row">
-                    <dt class="col-md-5"> Nombre d'agent <span class="icon icon-information" title="<?php echo $condition; ?>>"></span>: </dt>
+                    <dt class="col-md-5"> Nombre d'agent·e <span class="icon icon-information" title="Agent·es répondant aux critères à la date de prise de poste"></span> </dt>
                     <dd class="col-md-7"> <?php echo $progression?->getNbTotal(); ?></dd>
-                    <dt class="col-md-5"> Nombre d'entretien :  </dt>
+                    <dt class="col-md-5"> Nombre d'entretien <span class="icon icon-information" title="Peu importe l'état de l'entretien professionnel">  </dt>
                     <dd class="col-md-7"> <?php echo $progression?->getNbEntretiens(); ?> </dd>
                 </dl>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::extraireAction() */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/campagne/extraire', ['campagne' => $campagne->getId()], [], true); ?>"
-                   class="btn btn-secondary"
+                   class="btn btn-secondary float-end"
                 >
                     <span class="icon icon-csv"></span>
                     Extraction de la campagne
                 </a>
-<!--                <a href=""-->
-<!--                   class="btn btn-primary disabled"-->
-<!--               >-->
-<!--                    <span class="icon icon-csv"></span>-->
-<!--                    Extraire la liste des agents-->
-<!--                </a>-->
-<!--                <a href=""-->
-<!--                   class="btn btn-primary disabled"-->
-<!--                   title="Seules les structures dont des entretiens sont manquants seront notifiées"-->
-<!--                >-->
-<!--                    <span class="icon icon-notifier"></span>-->
-<!--                    Notifier responsable de structure-->
-<!--                </a>-->
             </div>
         </div>
 
-        <h2> Entretiens de la campagne </h2>
+        <div class="row">
+            <div class="col-md-7">
+                <h2> Entretiens de la campagne </h2>
+            </div>
+            <div class="col-md-5">
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::progressionParStructuresAction() */ ?>
+                <a href="<?php echo $this->url("entretien-professionnel/campagne/progression-par-structures", ['campagne' => $campagne->getId()], [], true); ?>"
+                   class="btn btn-secondary float-end">
+                    <span class="icon icon-listing"></span>
+                    Basculer en vue par structures de niveau 2
+                </a>
+            </div>
+        </div>
+
 
         <?php echo $this->campagneAvancementCache($campagne, $progression->getStructure(), $progression, ['can-refresh' => false]); ?>
 

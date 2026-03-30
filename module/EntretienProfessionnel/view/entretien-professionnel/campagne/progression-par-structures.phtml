@@ -18,9 +18,23 @@ $canVoirStructure = $this->isAllowed(StructurePrivileges::getResourceId(Structur
 
 ?>
 
-<h1 class="page-header">
-    Progression par structures de niveau 2 pour la campagne <?php echo $campagne->getAnnee(); ?> #<?php echo $campagne->getId(); ?>
-</h1>
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Progression par structures de niveau 2
+            <br> Campagne <?php echo $campagne->getAnnee(); ?>
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::afficherAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne/afficher', ['campagne' => $campagne->getId()], [], true); ?>"
+           class="btn btn-secondary float-end"
+        >
+            <span class="icon icon-lister"></span>
+            Basculer en vue globale
+        </a>
+    </div>
+</div>
 
 
 <table class="table table-condensed datatable" id="progression">
