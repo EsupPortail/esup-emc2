@@ -98,6 +98,7 @@ class RefreshProgressionStructureCommand extends Command
                 $this->getCampagneProgressionStructureService()->refresh($campagne, $structure);
                 $position++;
             }
+            $io->text("");
         }
         $end = microtime(true);
         $duration = $end - $start;
