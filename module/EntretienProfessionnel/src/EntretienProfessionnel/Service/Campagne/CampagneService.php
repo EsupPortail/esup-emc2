@@ -349,12 +349,15 @@ class CampagneService
                     continue;
                 }
                 // Avoir AFFECTATIONS à la date de situation de la campagne // À la demande Julien //
-                $affectationValide = false;
-                $affectations = $agent->getAffectationsActifs($campagne->getDateSituation());
-                foreach ($affectations as $affectation) {
-                    if (in_array($affectation->getStructure(), $structures)) {
-                        $affectationValide = true;
-                        break;
+                $affectationValide = true;
+                if ($structures !== null) {
+                    $affectationValide = false;
+                    $affectations = $agent->getAffectationsActifs($campagne->getDateSituation());
+                    foreach ($affectations as $affectation) {
+                        if (in_array($affectation->getStructure(), $structures)) {
+                            $affectationValide = true;
+                            break;
+                        }
                     }
                 }
                 if ($affectationValide === false) {
