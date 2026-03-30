@@ -87,10 +87,12 @@ class RefreshProgressionStructureCommand extends Command
         }
 
         $nbStructure = count($structures);
-        $position = 1;
+
 
         $start = microtime(true);
         foreach ($campagnes as $campagne) {
+            $io->text("Traitement de la campagne " .$campagne->getAnnee(). " #".$campagne->getId());
+            $position = 1;
             foreach ($structures as $structure) {
                 $io->text("Traitement [" . $position . "/" . $nbStructure . "] " . $structure->getLibelleLong() . " #" . $structure->getId());
                 $this->getCampagneProgressionStructureService()->refresh($campagne, $structure);
