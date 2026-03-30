@@ -16,6 +16,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenRenderer\Entity\Db\Template;
+use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 
 /**
@@ -41,6 +42,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var Parametre[] $parametres
  * @var ChaineAssertion $chaineAssertion
  * @var User $connectedUser
+ * @var Role $connectedRole
  * @var Campagne[] $campagnesActives
  *
  */
@@ -87,7 +89,7 @@ if ($agent !== null) {
         <strong><?php echo $agent->getDenomination(); ?></strong>
     </h1>
 
-    <?php if ($connectedUser === $agent->getUtilisateur()) : ?>
+    <?php if ($connectedUser === $agent->getUtilisateur() AND $connectedRole === Agent::ROLE_AGENT) : ?>
         <?php foreach ($campagnesActives as $campagne) : ?>
             <?php echo $this->aideAgentCampagne($agent, $campagne); ?>
         <?php endforeach; ?>
