@@ -548,8 +548,8 @@ class EntretienProfessionnelService
     {
         $dictionnaire = [];
         foreach ($entretiens as $entretien) {
-            $etat = $entretien->getEtatActif()->getType()->getCode();
-            $dictionnaire[$etat][] = $entretien;
+            $etat = $entretien->getEtatActif()?->getType()->getCode();
+            if ($etat) $dictionnaire[$etat][] = $entretien;
         }
         return $dictionnaire;
     }
