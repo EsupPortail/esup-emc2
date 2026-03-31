@@ -324,7 +324,7 @@ class EntretienProfessionnelController extends AbstractActionController
         if (!empty($facultatif)) {
             $entretien->setStatut("facultatif");
         }
-
+œ
         return new ViewModel([
             'entretien' => $entretien,
 

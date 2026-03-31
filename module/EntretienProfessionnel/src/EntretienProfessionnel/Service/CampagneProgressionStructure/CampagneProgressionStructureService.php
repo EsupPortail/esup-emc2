@@ -140,7 +140,7 @@ class CampagneProgressionStructureService
         }
 
         // tris des agents
-        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
+        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, [], $structures);
         // récupérations des entretiens
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
 

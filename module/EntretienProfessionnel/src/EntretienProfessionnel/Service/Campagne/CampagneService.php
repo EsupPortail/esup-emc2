@@ -576,7 +576,7 @@ class CampagneService
                 $agents[] = $agentForce;
             }
         }
-        [$obligatoires, $facultatifs, $raison, $exclus] = $this->trierAgents($campagne, $agents, $structures);
+        [$obligatoires, $facultatifs, $raison, $exclus] = $this->trierAgents($campagne, $agents, [], $structures);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
 

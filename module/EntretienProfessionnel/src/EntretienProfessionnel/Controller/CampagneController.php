@@ -462,7 +462,7 @@ class CampagneController extends AbstractActionController
             }
         }
 
-        [$obligatoires, $facultatifs, $raison, $exclus] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
+        [$obligatoires, $facultatifs, $raison, $exclus] = $this->getCampagneService()->trierAgents($campagne, $agents, [],  $structures);
 
 
 //        $agents = [];
@@ -554,37 +554,6 @@ class CampagneController extends AbstractActionController
             'raison' => $raison,
 
             'templates' => $templates,
-        ]);
-    }
-
-    public function structureProgressionAction(): ViewModel
-    {
-        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-
-        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-
-        // récupération des agents selon les critères de la structure
-// TODO ticket #63688
-        //$agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
-        $agentsForces = array_map(function (StructureAgentForce $agentForce) {
-            return $agentForce->getAgent();
-        }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));
-        foreach ($agentsForces as $agentForce) {
-            if (!in_array($agentForce, $agents)) {
-                $agents[] = $agentForce;
-            }
-        }
-
-
-        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
-
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
-
-        return new ViewModel([
-            'entretiens' => $entretiens,
-            'obligatoires' => $obligatoires,
         ]);
     }
 
@@ -750,7 +719,7 @@ class CampagneController extends AbstractActionController
             }
 
             // tris des agents
-            [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, $structures);
+            [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, [], $structures);
             // récupérations des entretiens
             $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
 

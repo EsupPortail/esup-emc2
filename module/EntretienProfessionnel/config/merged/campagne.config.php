@@ -216,18 +216,6 @@ return [
                                     ],
                                 ],
                             ],
-                            'structure-progression' => [
-                                'type'  => Segment::class,
-                                'may_terminate' => true,
-                                'options' => [
-                                    'route'    => '/structure-progression[/:campagne/:structure]',
-                                    'defaults' => [
-                                        /** @see CampagneController::structureProgressionAction() */
-                                        'controller' => CampagneController::class,
-                                        'action'     => 'structure-progression',
-                                    ],
-                                ],
-                            ],
                             'refresh-structure-progression' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
