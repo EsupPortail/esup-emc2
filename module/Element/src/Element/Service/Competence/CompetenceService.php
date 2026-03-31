@@ -496,7 +496,7 @@ class CompetenceService
         // on ajoute au bout les types déclarés en back-office
         $typesConnues = $this->getCompetenceTypeService()->getCompetencesTypes();
         foreach ($typesConnues as $type) {
-            $dictionnairesTypes[$type->getLibelle()] = $type->getCode();
+            $dictionnairesTypes[strtolower($type->getLibelle())] = $type->getCode();
         }
 
 
@@ -592,20 +592,27 @@ class CompetenceService
 
         $types = [];
         if ($positionType !== false) {
+            $ligne = 1; // il faut échapper l'entête
             foreach ($data as $item) {
+                $ligne++;
                 $oldLibelle = trim($item[$positionType]);
                 if (!isset($types[$oldLibelle])) {
                     $libelle = strtolower($oldLibelle);
+
+                    $type = null;
                     if (!isset($dictionnairesTypes[$libelle])) {
-                        throw new RuntimeException(("Le type de compétence [".$libelle."] n'existe pas.<br>Ligne considérée : <code>".implode(";", $item))."</code>",-1);
+                        $warning[] = "Le type de compétence [" . $libelle . "] n'existe pas (ligne ".$ligne.")";
+                        //throw new RuntimeException(("Le type de compétence [".$libelle."] n'existe pas.<br>Ligne considérée : <code>".implode(";", $item))."</code>",0);
+                    } else {
+                        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($dictionnairesTypes[$libelle]);
+                        if ($type === null and $libelle !== "") {
+                            $type = new CompetenceType();
+                            $type->setLibelle($libelle);
+                            $info[] = "Nouveau type : " . $libelle;
+                        }
+                        $types[$dictionnairesTypes[$libelle]] = $type;
                     }
-                    $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($dictionnairesTypes[$libelle]);
-                    if ($type === null and $libelle !== "") {
-                        $type = new CompetenceType();
-                        $type->setLibelle($libelle);
-                        $info[] = "Nouveau type : " . $libelle;
-                    }
-                    $types[$dictionnairesTypes[$libelle]] = $type;
+
                 }
             }
         }
@@ -617,8 +624,10 @@ class CompetenceService
         if ($positionId !== false and $positionLibelle !== false and $positionType !== false) {
             $nLine = 1;
             foreach ($data as $item) {
+                $nLine++;
                 $id = $item[$positionId];
                 $competence = $this->getCompetenceByRefentiel($referentiel, $id);
+                $libelle = $item[$positionLibelle];
                 if ($competence === null and $libelle !== "") {
                     $competence = new Competence();
                 } else {
@@ -637,7 +646,8 @@ class CompetenceService
                 $competence->setReferentiel($referentiel);
                 $competence->setReference($id);
                 $competence->setLibelle(trim($item[$positionLibelle]));
-                $type = $types[$dictionnairesTypes[strtolower($item[$positionType])]];
+                $type = null;
+                if (isset($dictionnairesTypes[strtolower($item[$positionType])])) $type = $types[$dictionnairesTypes[strtolower($item[$positionType])]];
                 $competence->setType($type);
                 // facultatif
                 if ($positionTheme !== false) {
@@ -679,7 +689,7 @@ class CompetenceService
                 }
                 $raw = json_encode($raw, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                 $competence->setRaw($raw);
-                $competences[$nLine++] = $competence;
+                if ($competence->getType()) $competences[$nLine++] = $competence;
             }
 
             if ($mode === 'import') {
