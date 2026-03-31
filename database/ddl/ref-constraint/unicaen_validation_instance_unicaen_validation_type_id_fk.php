@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_validation_type',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'unicaen_validation_type_pk',
+    'index'       => 'unicaen_validation_type_id_uindex',
     'columns'     => [
         'type_id' => 'id',
     ],

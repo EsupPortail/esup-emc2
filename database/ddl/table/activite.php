@@ -126,7 +126,7 @@ return [
             'scale'       => NULL,
             'precision'   => 4,
             'nullable'    => FALSE,
-            'default'     => 'nextval(\'activite_id_seq1\'::regclass)',
+            'default'     => 'nextval(\'activite_id_seq\'::regclass)',
             'position'    => 1,
             'commentaire' => NULL,
         ],

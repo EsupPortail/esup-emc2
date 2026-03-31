@@ -3,7 +3,7 @@
 //@formatter:off
 
 return [
-    'agent'                                              => [
+    'agent'                                                    => [
         'c_individu',
         'utilisateur_id',
         'prenom',
@@ -26,7 +26,7 @@ return [
         'source_id',
         'id_orig',
     ],
-    'agent_carriere_affectation'                         => [
+    'agent_carriere_affectation'                               => [
         'id',
         'agent_id',
         'structure_id',
@@ -45,7 +45,7 @@ return [
         't_fonctionnelle',
         'quotite',
     ],
-    'agent_carriere_echelon'                             => [
+    'agent_carriere_echelon'                                   => [
         'id',
         'agent_id',
         'echelon',
@@ -60,7 +60,7 @@ return [
         'histo_modificateur_id',
         'histo_destructeur_id',
     ],
-    'agent_carriere_grade'                               => [
+    'agent_carriere_grade'                                     => [
         'id',
         'agent_id',
         'structure_id',
@@ -79,7 +79,7 @@ return [
         'histo_destructeur_id',
         'emploitype_id',
     ],
-    'agent_carriere_mobilite'                            => [
+    'agent_carriere_mobilite'                                  => [
         'id',
         'agent_id',
         'mobilite_id',
@@ -91,7 +91,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'agent_carriere_quotite'                             => [
+    'agent_carriere_quotite'                                   => [
         'id',
         'agent_id',
         'quotite',
@@ -107,7 +107,7 @@ return [
         'histo_destructeur_id',
         'modalite_de_service',
     ],
-    'agent_carriere_statut'                              => [
+    'agent_carriere_statut'                                    => [
         'id',
         'agent_id',
         'structure_id',
@@ -142,7 +142,7 @@ return [
         't_longue_maladie',
         't_postdoc',
     ],
-    'agent_ccc_accompagnement'                           => [
+    'agent_ccc_accompagnement'                                 => [
         'id',
         'agent_id',
         'cible_id',
@@ -160,7 +160,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'agent_ccc_ppp'                                      => [
+    'agent_ccc_ppp'                                            => [
         'id',
         'agent_id',
         'type',
@@ -180,7 +180,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'agent_ccc_stageobs'                                 => [
+    'agent_ccc_stageobs'                                       => [
         'id',
         'agent_id',
         'structure_id',
@@ -196,7 +196,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'agent_ccc_tutorat'                                  => [
+    'agent_ccc_tutorat'                                        => [
         'id',
         'agent_id',
         'cible_id',
@@ -213,23 +213,23 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'agent_element_application'                          => [
+    'agent_element_application'                                => [
         'agent_id',
         'application_element_id',
     ],
-    'agent_element_competence'                           => [
+    'agent_element_competence'                                 => [
         'agent_id',
         'competence_element_id',
     ],
-    'agent_element_formation'                            => [
+    'agent_element_formation'                                  => [
         'agent_id',
         'formation_element_id',
     ],
-    'agent_fichier'                                      => [
+    'agent_fichier'                                            => [
         'agent',
         'fichier',
     ],
-    'agent_hierarchie_autorite'                          => [
+    'agent_hierarchie_autorite'                                => [
         'id',
         'agent_id',
         'autorite_id',
@@ -246,7 +246,7 @@ return [
         'deleted_on',
         'source_id',
     ],
-    'agent_hierarchie_superieur'                         => [
+    'agent_hierarchie_superieur'                               => [
         'id',
         'agent_id',
         'superieur_id',
@@ -263,7 +263,7 @@ return [
         'deleted_on',
         'source_id',
     ],
-    'agent_missionspecifique'                            => [
+    'agent_missionspecifique'                                  => [
         'id',
         'agent_id',
         'mission_id',
@@ -279,7 +279,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'agent_poste'                                        => [
+    'agent_poste'                                              => [
         'agent_id',
         'code_poste',
         'intitule',
@@ -290,12 +290,13 @@ return [
         'id_source',
         'id',
         'code_fonction',
+        'code_emploi_type',
     ],
-    'agent_validation'                                   => [
+    'agent_validation'                                         => [
         'agent_id',
         'validation_instance_id',
     ],
-    'carriere_categorie'                                 => [
+    'carriere_categorie'                                       => [
         'id',
         'code',
         'libelle',
@@ -306,7 +307,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'carriere_corps'                                     => [
+    'carriere_corps'                                           => [
         'id',
         'lib_court',
         'lib_long',
@@ -323,7 +324,7 @@ return [
         'deleted_on',
         'superieur_as_autorite',
     ],
-    'carriere_correspondance'                            => [
+    'carriere_correspondance'                                  => [
         'id',
         'c_bap',
         'lib_court',
@@ -337,7 +338,7 @@ return [
         'deleted_on',
         'type_id',
     ],
-    'carriere_correspondance_type'                       => [
+    'carriere_correspondance_type'                             => [
         'id',
         'code',
         'libelle_court',
@@ -351,7 +352,7 @@ return [
         'source_id',
         'id_orig',
     ],
-    'carriere_emploitype'                                => [
+    'carriere_emploitype'                                      => [
         'id',
         'code',
         'libelle_court',
@@ -363,7 +364,7 @@ return [
         'deleted_on',
         'source_id',
     ],
-    'carriere_grade'                                     => [
+    'carriere_grade'                                           => [
         'id',
         'lib_court',
         'lib_long',
@@ -376,7 +377,7 @@ return [
         'updated_on',
         'deleted_on',
     ],
-    'carriere_mobilite'                                  => [
+    'carriere_mobilite'                                        => [
         'id',
         'code',
         'libelle',
@@ -388,7 +389,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'carriere_niveau'                                    => [
+    'carriere_niveau'                                          => [
         'id',
         'niveau',
         'libelle',
@@ -402,7 +403,7 @@ return [
         'label',
         'categorie_id',
     ],
-    'carriere_niveau_enveloppe'                          => [
+    'carriere_niveau_enveloppe'                                => [
         'id',
         'borne_inferieure_id',
         'borne_superieure_id',
@@ -415,7 +416,7 @@ return [
         'histo_destructeur_id',
         'description',
     ],
-    'configuration_entretienpro'                         => [
+    'configuration_entretienpro'                               => [
         'id',
         'operation',
         'valeur',
@@ -426,7 +427,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'configuration_fichemetier'                          => [
+    'configuration_fichemetier'                                => [
         'id',
         'operation',
         'entity_type',
@@ -438,7 +439,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'element_application'                                => [
+    'element_application'                                      => [
         'id',
         'libelle',
         'description',
@@ -452,7 +453,7 @@ return [
         'histo_destructeur_id',
         'theme_id',
     ],
-    'element_application_element'                        => [
+    'element_application_element'                              => [
         'id',
         'application_id',
         'commentaire',
@@ -466,7 +467,7 @@ return [
         'niveau_id',
         'clef',
     ],
-    'element_application_theme'                          => [
+    'element_application_theme'                                => [
         'id',
         'libelle',
         'ordre',
@@ -477,7 +478,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'element_competence'                                 => [
+    'element_competence'                                       => [
         'id',
         'libelle',
         'description',
@@ -497,7 +498,7 @@ return [
         'codes_fonction',
         'synonymes',
     ],
-    'element_competence_element'                         => [
+    'element_competence_element'                               => [
         'id',
         'competence_id',
         'commentaire',
@@ -511,7 +512,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'element_competence_referentiel'                     => [
+    'element_competence_referentiel'                           => [
         'id',
         'libelle_court',
         'libelle_long',
@@ -523,7 +524,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'element_competence_theme'                           => [
+    'element_competence_theme'                                 => [
         'id',
         'libelle',
         'histo_creation',
@@ -533,7 +534,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'element_competence_type'                            => [
+    'element_competence_type'                                  => [
         'id',
         'libelle',
         'ordre',
@@ -545,7 +546,7 @@ return [
         'histo_destructeur_id',
         'code',
     ],
-    'element_niveau'                                     => [
+    'element_niveau'                                           => [
         'id',
         'type',
         'libelle',
@@ -558,7 +559,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel'                             => [
+    'entretienprofessionnel'                                   => [
         'id',
         'agent',
         'responsable_id',
@@ -577,7 +578,7 @@ return [
         'histo_destructeur_id',
         'duree_estimee',
     ],
-    'entretienprofessionnel_agent_force'                 => [
+    'entretienprofessionnel_agent_force'                       => [
         'id',
         'agent_id',
         'campagne_id',
@@ -589,8 +590,9 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
         'type',
+        'structure_id',
     ],
-    'entretienprofessionnel_agent_force_sansobligation'  => [
+    'entretienprofessionnel_agent_force_sansobligation'        => [
         'id',
         'agent_id',
         'campagne_id',
@@ -602,7 +604,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_campagne'                    => [
+    'entretienprofessionnel_campagne'                          => [
         'id',
         'annee',
         'precede_id',
@@ -616,8 +618,12 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
         'date_en_poste',
+        'formulaire_crep_id',
+        'formulaire_cref_id',
+        'template_crep_id',
+        'template_cref_id',
     ],
-    'entretienprofessionnel_critere_competence'          => [
+    'entretienprofessionnel_critere_competence'                => [
         'id',
         'libelle',
         'histo_creation',
@@ -627,7 +633,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_critere_contribution'        => [
+    'entretienprofessionnel_critere_contribution'              => [
         'id',
         'libelle',
         'histo_creation',
@@ -637,7 +643,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_critere_encadrement'         => [
+    'entretienprofessionnel_critere_encadrement'               => [
         'id',
         'libelle',
         'histo_creation',
@@ -647,7 +653,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_critere_personnelle'         => [
+    'entretienprofessionnel_critere_personnelle'               => [
         'id',
         'libelle',
         'histo_creation',
@@ -657,15 +663,15 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_etat'                        => [
+    'entretienprofessionnel_etat'                              => [
         'entretien_id',
         'etat_id',
     ],
-    'entretienprofessionnel_evenement'                   => [
+    'entretienprofessionnel_evenement'                         => [
         'entretien_id',
         'evenement_id',
     ],
-    'entretienprofessionnel_observateur'                 => [
+    'entretienprofessionnel_observateur'                       => [
         'id',
         'entretien_id',
         'user_id',
@@ -677,11 +683,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_observation'                 => [
+    'entretienprofessionnel_observation'                       => [
         'entretien_id',
         'observation_id',
     ],
-    'entretienprofessionnel_observation_old'             => [
+    'entretienprofessionnel_observation_old'                   => [
         'id',
         'entretien_id',
         'observation_agent_entretien',
@@ -693,7 +699,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_recours'                     => [
+    'entretienprofessionnel_recours'                           => [
         'id',
         'entretien_id',
         'date_procedure',
@@ -706,11 +712,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_validation'                  => [
+    'entretienprofessionnel_validation'                        => [
         'entretien_id',
         'validation_id',
     ],
-    'fichemetier'                                        => [
+    'fichemetier'                                              => [
         'id',
         'histo_creation',
         'histo_createur_id',
@@ -730,24 +736,25 @@ return [
         'niveau_carriere_id',
         'codes_emploi_type',
         'expertise',
+        'categorie_id',
     ],
-    'fichemetier_application'                            => [
+    'fichemetier_application'                                  => [
         'fichemetier_id',
         'application_element_id',
     ],
-    'fichemetier_competence'                             => [
+    'fichemetier_competence'                                   => [
         'fichemetier_id',
         'competence_element_id',
     ],
-    'fichemetier_etat'                                   => [
+    'fichemetier_etat'                                         => [
         'fichemetier_id',
         'etat_id',
     ],
-    'fichemetier_mission'                                => [
+    'fichemetier_mission'                                      => [
         'fichemetier_id',
         'mission_element_id',
     ],
-    'fichemetier_thematique_element'                     => [
+    'fichemetier_thematique_element'                           => [
         'id',
         'fichemetier_id',
         'thematiquetype_id',
@@ -760,7 +767,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'fichemetier_thematique_type'                        => [
+    'fichemetier_thematique_type'                              => [
         'id',
         'code',
         'libelle',
@@ -774,7 +781,7 @@ return [
         'histo_destructeur_id',
         'ordre',
     ],
-    'ficheposte'                                         => [
+    'ficheposte'                                               => [
         'id',
         'libelle',
         'agent',
@@ -789,7 +796,7 @@ return [
         'histo_destructeur_id',
         'code_fonction',
     ],
-    'ficheposte_activitedescription_retiree'             => [
+    'ficheposte_activitedescription_retiree'                   => [
         'id',
         'ficheposte_id',
         'fichemetier_id',
@@ -802,7 +809,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'ficheposte_application_retiree'                     => [
+    'ficheposte_application_retiree'                           => [
         'id',
         'ficheposte_id',
         'application_id',
@@ -813,7 +820,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'ficheposte_competence_retiree'                      => [
+    'ficheposte_competence_retiree'                            => [
         'id',
         'ficheposte_id',
         'competence_id',
@@ -824,11 +831,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'ficheposte_etat'                                    => [
+    'ficheposte_etat'                                          => [
         'ficheposte_id',
         'etat_id',
     ],
-    'ficheposte_expertise'                               => [
+    'ficheposte_expertise'                                     => [
         'id',
         'ficheposte_id',
         'libelle',
@@ -840,7 +847,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'ficheposte_fichemetier'                             => [
+    'ficheposte_fichemetier'                                   => [
         'id',
         'fiche_poste',
         'fiche_type',
@@ -849,13 +856,13 @@ return [
         'activites',
         'missions',
     ],
-    'ficheposte_fichemetier_domaine'                     => [
+    'ficheposte_fichemetier_domaine'                           => [
         'id',
         'fichemetierexterne_id',
         'domaine_id',
         'quotite',
     ],
-    'ficheposte_missionsadditionnelles'                  => [
+    'ficheposte_missionsadditionnelles'                        => [
         'id',
         'ficheposte_id',
         'mission_id',
@@ -869,7 +876,7 @@ return [
         'histo_destructeur_id',
         'old_mission_id',
     ],
-    'ficheposte_specificite'                             => [
+    'ficheposte_specificite'                                   => [
         'id',
         'ficheposte_id',
         'specificite',
@@ -880,15 +887,15 @@ return [
         'moyens',
         'formations',
     ],
-    'ficheposte_validation'                              => [
+    'ficheposte_validation'                                    => [
         'ficheposte_id',
         'validation_id',
     ],
-    'fichereferentiel_competence'                        => [
+    'fichereferentiel_competence'                              => [
         'fiche_referentiel_id',
         'competence_element_id',
     ],
-    'fichereferentiel_fiche'                             => [
+    'fichereferentiel_fiche'                                   => [
         'id',
         'metier_id',
         'referentiel_id',
@@ -910,7 +917,7 @@ return [
         'histo_destructeur_id',
         'correspondance_statutaire',
     ],
-    'fichier_fichier'                                    => [
+    'fichier_fichier'                                          => [
         'id',
         'nom_original',
         'nom_stockage',
@@ -924,13 +931,13 @@ return [
         'type_mime',
         'taille',
     ],
-    'fichier_nature'                                     => [
+    'fichier_nature'                                           => [
         'id',
         'code',
         'libelle',
         'description',
     ],
-    'metier_domaine'                                     => [
+    'metier_domaine'                                           => [
         'id',
         'libelle',
         'type_fonction',
@@ -941,11 +948,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'metier_domaine_famille'                             => [
+    'metier_domaine_famille'                                   => [
         'domaine_id',
         'famille_id',
     ],
-    'metier_familleprofessionnelle'                      => [
+    'metier_familleprofessionnelle'                            => [
         'id',
         'libelle',
         'couleur',
@@ -958,7 +965,7 @@ return [
         'correspondance_id',
         'position',
     ],
-    'metier_metier'                                      => [
+    'metier_metier'                                            => [
         'id',
         'libelle_default',
         'niveau',
@@ -975,11 +982,11 @@ return [
         'referentiel_id',
         'reference',
     ],
-    'metier_metier_domaine'                              => [
+    'metier_metier_domaine'                                    => [
         'metier_id',
         'domaine_id',
     ],
-    'metier_reference'                                   => [
+    'metier_reference'                                         => [
         'id',
         'metier_id',
         'referentiel_id',
@@ -993,7 +1000,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'metier_referentiel'                                 => [
+    'metier_referentiel'                                       => [
         'id',
         'libelle_court',
         'libelle_long',
@@ -1006,7 +1013,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'mission_specifique'                                 => [
+    'mission_specifique'                                       => [
         'id',
         'libelle',
         'theme_id',
@@ -1019,7 +1026,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'mission_specifique_theme'                           => [
+    'mission_specifique_theme'                                 => [
         'id',
         'libelle',
         'histo_creation',
@@ -1029,7 +1036,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'mission_specifique_type'                            => [
+    'mission_specifique_type'                                  => [
         'id',
         'libelle',
         'histo_creation',
@@ -1039,7 +1046,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'missionprincipale'                                  => [
+    'missionprincipale'                                        => [
         'id',
         'libelle',
         'niveau_id',
@@ -1057,7 +1064,7 @@ return [
         'description',
         'old_id',
     ],
-    'missionprincipale_activite'                         => [
+    'missionprincipale_activite'                               => [
         'id',
         'mission_id',
         'libelle',
@@ -1069,19 +1076,19 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'missionprincipale_application'                      => [
+    'missionprincipale_application'                            => [
         'mission_id',
         'application_element_id',
     ],
-    'missionprincipale_competence'                       => [
+    'missionprincipale_competence'                             => [
         'mission_id',
         'competence_element_id',
     ],
-    'missionprincipale_domaine'                          => [
+    'missionprincipale_domaine'                                => [
         'mission_id',
         'domaine_id',
     ],
-    'structure'                                          => [
+    'structure'                                                => [
         'id',
         'code',
         'sigle',
@@ -1107,7 +1114,7 @@ return [
         'histo_destructeur_id',
         'niveau',
     ],
-    'structure_agent_force'                              => [
+    'structure_agent_force'                                    => [
         'id',
         'structure_id',
         'agent_id',
@@ -1118,11 +1125,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'structure_ficheposte'                               => [
+    'structure_ficheposte'                                     => [
         'structure_id',
         'ficheposte_id',
     ],
-    'structure_gestionnaire'                             => [
+    'structure_gestionnaire'                                   => [
         'id',
         'structure_id',
         'agent_id',
@@ -1138,7 +1145,7 @@ return [
         'histo_modificateur_id',
         'histo_destructeur_id',
     ],
-    'structure_observateur'                              => [
+    'structure_observateur'                                    => [
         'id',
         'structure_id',
         'utilisateur_id',
@@ -1150,7 +1157,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'structure_responsable'                              => [
+    'structure_responsable'                                    => [
         'id',
         'structure_id',
         'agent_id',
@@ -1166,7 +1173,7 @@ return [
         'histo_modificateur_id',
         'histo_destructeur_id',
     ],
-    'structure_type'                                     => [
+    'structure_type'                                           => [
         'id',
         'code',
         'libelle',
@@ -1180,7 +1187,7 @@ return [
         'histo_modificateur_id',
         'histo_destructeur_id',
     ],
-    'unicaen_aide_documentation_lien'                    => [
+    'unicaen_aide_documentation_lien'                          => [
         'id',
         'texte',
         'lien_texte',
@@ -1190,21 +1197,21 @@ return [
         'historisee',
         'role_ids',
     ],
-    'unicaen_aide_faq_question'                          => [
+    'unicaen_aide_faq_question'                                => [
         'id',
         'question',
         'reponse',
         'historisee',
         'ordre',
     ],
-    'unicaen_aide_glossaire_definition'                  => [
+    'unicaen_aide_glossaire_definition'                        => [
         'id',
         'terme',
         'definition',
         'alternatives',
         'historisee',
     ],
-    'unicaen_autoform_categorie'                         => [
+    'unicaen_autoform_categorie'                               => [
         'id',
         'code',
         'libelle',
@@ -1218,7 +1225,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_autoform_champ'                             => [
+    'unicaen_autoform_champ'                                   => [
         'id',
         'categorie',
         'code',
@@ -1237,7 +1244,7 @@ return [
         'histo_destructeur_id',
         'obligatoire',
     ],
-    'unicaen_autoform_formulaire'                        => [
+    'unicaen_autoform_formulaire'                              => [
         'id',
         'libelle',
         'description',
@@ -1249,7 +1256,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_autoform_formulaire_instance'               => [
+    'unicaen_autoform_formulaire_instance'                     => [
         'id',
         'formulaire',
         'histo_creation',
@@ -1259,7 +1266,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_autoform_formulaire_reponse'                => [
+    'unicaen_autoform_formulaire_reponse'                      => [
         'id',
         'instance',
         'champ',
@@ -1271,7 +1278,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_enquete_enquete'                            => [
+    'unicaen_enquete_enquete'                                  => [
         'id',
         'titre',
         'description',
@@ -1283,7 +1290,7 @@ return [
         'histo_destructeur_id',
         'code',
     ],
-    'unicaen_enquete_groupe'                             => [
+    'unicaen_enquete_groupe'                                   => [
         'id',
         'libelle',
         'description',
@@ -1297,7 +1304,7 @@ return [
         'enquete_id',
         'code',
     ],
-    'unicaen_enquete_instance'                           => [
+    'unicaen_enquete_instance'                                 => [
         'id',
         'enquete_id',
         'histo_creation',
@@ -1308,7 +1315,7 @@ return [
         'histo_destructeur_id',
         'validation',
     ],
-    'unicaen_enquete_question'                           => [
+    'unicaen_enquete_question'                                 => [
         'id',
         'libelle',
         'description',
@@ -1324,7 +1331,7 @@ return [
         'has_note',
         'has_commentaire',
     ],
-    'unicaen_enquete_reponse'                            => [
+    'unicaen_enquete_reponse'                                  => [
         'id',
         'instance_id',
         'question_id',
@@ -1337,7 +1344,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_etat_categorie'                             => [
+    'unicaen_etat_categorie'                                   => [
         'id',
         'code',
         'libelle',
@@ -1345,7 +1352,7 @@ return [
         'couleur',
         'ordre',
     ],
-    'unicaen_etat_instance'                              => [
+    'unicaen_etat_instance'                                    => [
         'id',
         'type_id',
         'histo_creation',
@@ -1357,7 +1364,7 @@ return [
         'complement',
         'infos',
     ],
-    'unicaen_etat_type'                                  => [
+    'unicaen_etat_type'                                        => [
         'id',
         'code',
         'libelle',
@@ -1366,13 +1373,13 @@ return [
         'couleur',
         'ordre',
     ],
-    'unicaen_evenement_etat'                             => [
+    'unicaen_evenement_etat'                                   => [
         'id',
         'code',
         'libelle',
         'description',
     ],
-    'unicaen_evenement_instance'                         => [
+    'unicaen_evenement_instance'                               => [
         'id',
         'nom',
         'description',
@@ -1387,13 +1394,13 @@ return [
         'date_fin',
         'mots_clefs',
     ],
-    'unicaen_evenement_journal'                          => [
+    'unicaen_evenement_journal'                                => [
         'id',
         'date_execution',
         'log',
         'etat_id',
     ],
-    'unicaen_evenement_type'                             => [
+    'unicaen_evenement_type'                                   => [
         'id',
         'code',
         'libelle',
@@ -1401,21 +1408,21 @@ return [
         'parametres',
         'recursion',
     ],
-    'unicaen_indicateur_abonnement'                      => [
+    'unicaen_indicateur_abonnement'                            => [
         'id',
         'user_id',
         'indicateur_id',
         'frequence',
         'dernier_envoi',
     ],
-    'unicaen_indicateur_categorie'                       => [
+    'unicaen_indicateur_categorie'                             => [
         'id',
         'code',
         'libelle',
         'ordre',
         'description',
     ],
-    'unicaen_indicateur_indicateur'                      => [
+    'unicaen_indicateur_indicateur'                            => [
         'id',
         'titre',
         'description',
@@ -1430,18 +1437,18 @@ return [
         'perimetre',
         'roles_autorises',
     ],
-    'unicaen_indicateur_tableau_indicateur'              => [
+    'unicaen_indicateur_tableau_indicateur'                    => [
         'tableau_id',
         'indicateur_id',
     ],
-    'unicaen_indicateur_tableaudebord'                   => [
+    'unicaen_indicateur_tableaudebord'                         => [
         'id',
         'titre',
         'description',
         'nb_column',
         'namespace',
     ],
-    'unicaen_mail_mail'                                  => [
+    'unicaen_mail_mail'                                        => [
         'id',
         'date_envoi',
         'status_envoi',
@@ -1455,7 +1462,7 @@ return [
         'attachment_paths',
         'reply_to',
     ],
-    'unicaen_observation_observation_instance'           => [
+    'unicaen_observation_observation_instance'                 => [
         'id',
         'type_id',
         'observation',
@@ -1466,7 +1473,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_observation_observation_type'               => [
+    'unicaen_observation_observation_type'                     => [
         'id',
         'code',
         'libelle',
@@ -1478,18 +1485,18 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_observation_observation_validation'         => [
+    'unicaen_observation_observation_validation'               => [
         'observation_instance_id',
         'validation_id',
     ],
-    'unicaen_parametre_categorie'                        => [
+    'unicaen_parametre_categorie'                              => [
         'id',
         'code',
         'libelle',
         'ordre',
         'description',
     ],
-    'unicaen_parametre_parametre'                        => [
+    'unicaen_parametre_parametre'                              => [
         'id',
         'categorie_id',
         'code',
@@ -1501,39 +1508,39 @@ return [
         'modifiable',
         'affichable',
     ],
-    'unicaen_privilege_categorie'                        => [
+    'unicaen_privilege_categorie'                              => [
         'id',
         'code',
         'libelle',
         'namespace',
         'ordre',
     ],
-    'unicaen_privilege_privilege'                        => [
+    'unicaen_privilege_privilege'                              => [
         'id',
         'categorie_id',
         'code',
         'libelle',
         'ordre',
     ],
-    'unicaen_privilege_privilege_role_linker'            => [
+    'unicaen_privilege_privilege_role_linker'                  => [
         'role_id',
         'privilege_id',
     ],
-    'unicaen_renderer_macro'                             => [
+    'unicaen_renderer_macro'                                   => [
         'id',
         'code',
         'description',
         'variable_name',
         'methode_name',
     ],
-    'unicaen_renderer_rendu'                             => [
+    'unicaen_renderer_rendu'                                   => [
         'id',
         'template_id',
         'date_generation',
         'sujet',
         'corps',
     ],
-    'unicaen_renderer_template'                          => [
+    'unicaen_renderer_template'                                => [
         'id',
         'code',
         'description',
@@ -1544,7 +1551,7 @@ return [
         'namespace',
         'engine',
     ],
-    'unicaen_utilisateur_role'                           => [
+    'unicaen_utilisateur_role'                                 => [
         'id',
         'role_id',
         'libelle',
@@ -1556,11 +1563,11 @@ return [
         'description',
         'displayed',
     ],
-    'unicaen_utilisateur_role_linker'                    => [
+    'unicaen_utilisateur_role_linker'                          => [
         'user_id',
         'role_id',
     ],
-    'unicaen_utilisateur_user'                           => [
+    'unicaen_utilisateur_user'                                 => [
         'id',
         'username',
         'display_name',
@@ -1570,7 +1577,7 @@ return [
         'password_reset_token',
         'last_role_id',
     ],
-    'unicaen_validation_instance'                        => [
+    'unicaen_validation_instance'                              => [
         'id',
         'type_id',
         'entity_class',
@@ -1584,7 +1591,7 @@ return [
         'justification',
         'refus',
     ],
-    'unicaen_validation_type'                            => [
+    'unicaen_validation_type'                                  => [
         'id',
         'code',
         'libelle',
@@ -1596,11 +1603,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'fichemetier_competence_specifique'                  => [
+    'fichemetier_competence_specifique'                        => [
         'fichemetier_id',
         'competence_element_id',
     ],
-    'unicaen_workflow_step'                              => [
+    'unicaen_workflow_step'                                    => [
         'id',
         'workflow_id',
         'code',
@@ -1612,17 +1619,17 @@ return [
         'template_id',
         'notification_activee',
     ],
-    'unicaen_workflow_workflow'                          => [
+    'unicaen_workflow_workflow'                                => [
         'id',
         'code',
         'libelle',
         'description',
     ],
-    'structure_contact'                                  => [
+    'structure_contact'                                        => [
         'structure_id',
         'contact_id',
     ],
-    'unicaen_autoform_champ_type'                        => [
+    'unicaen_autoform_champ_type'                              => [
         'code',
         'libelle',
         'description',
@@ -1632,7 +1639,7 @@ return [
         'example_libelle',
         'example_reponse',
     ],
-    'unicaen_contact_contact'                            => [
+    'unicaen_contact_contact'                                  => [
         'id',
         'type_id',
         'service',
@@ -1647,7 +1654,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'unicaen_contact_type'                               => [
+    'unicaen_contact_type'                                     => [
         'id',
         'code',
         'libelle',
@@ -1659,7 +1666,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'activite'                                           => [
+    'activite'                                                 => [
         'id',
         'histo_creation',
         'histo_modification',
@@ -1676,15 +1683,15 @@ return [
         'codes_fonction',
         'old_id',
     ],
-    'activite_application'                               => [
+    'activite_application'                                     => [
         'activite_id',
         'application_element_id',
     ],
-    'activite_competence'                                => [
+    'activite_competence'                                      => [
         'activite_id',
         'competence_element_id',
     ],
-    'activite_description'                               => [
+    'activite_description'                                     => [
         'id',
         'activite_id',
         'description',
@@ -1696,15 +1703,15 @@ return [
         'histo_destructeur_id',
         'ordre',
     ],
-    'activite_domaine'                                   => [
+    'activite_domaine'                                         => [
         'activite_id',
         'domaine_id',
     ],
-    'activite_formation'                                 => [
+    'activite_formation'                                       => [
         'activite_id',
         'formation_element_id',
     ],
-    'activite_libelle'                                   => [
+    'activite_libelle'                                         => [
         'id',
         'activite_id',
         'libelle',
@@ -1715,7 +1722,7 @@ return [
         'histo_destructeur_id',
         'histo_destruction',
     ],
-    'entretienprofessionnel_delegue'                     => [
+    'entretienprofessionnel_delegue'                           => [
         'id',
         'campagne_id',
         'agent_id',
@@ -1728,7 +1735,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_sursis'                      => [
+    'entretienprofessionnel_sursis'                            => [
         'id',
         'entretien_id',
         'sursis',
@@ -1740,15 +1747,15 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'fichemetier_activite'                               => [
+    'fichemetier_activite'                                     => [
         'fichemetier_id',
         'activite_element_id',
     ],
-    'fichemetier_formation'                              => [
+    'fichemetier_formation'                                    => [
         'fiche_metier_id',
         'formation_id',
     ],
-    'ficheposte_activite_specifique'                     => [
+    'ficheposte_activite_specifique'                           => [
         'id',
         'specificite_id',
         'activite_id',
@@ -1761,7 +1768,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'ficheposte_formation_retiree'                       => [
+    'ficheposte_formation_retiree'                             => [
         'id',
         'ficheposte_id',
         'formation_id',
@@ -1772,7 +1779,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'ficheprofil'                                        => [
+    'ficheprofil'                                              => [
         'id',
         'ficheposte_id',
         'contexte',
@@ -1793,7 +1800,7 @@ return [
         'adresse',
         'date_audition',
     ],
-    'fonction'                                           => [
+    'fonction'                                                 => [
         'id',
         'parent_id',
         'code',
@@ -1803,7 +1810,7 @@ return [
         'updated_on',
         'deleted_on',
     ],
-    'fonction_activite'                                  => [
+    'fonction_activite'                                        => [
         'id',
         'code',
         'libelle',
@@ -1815,7 +1822,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'fonction_destination'                               => [
+    'fonction_destination'                                     => [
         'id',
         'code',
         'libelle',
@@ -1826,7 +1833,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'fonction_libelle'                                   => [
+    'fonction_libelle'                                         => [
         'id',
         'fonction_id',
         'libelle',
@@ -1836,7 +1843,7 @@ return [
         'updated_on',
         'deleted_on',
     ],
-    'formation'                                          => [
+    'formation'                                                => [
         'id',
         'libelle',
         'description',
@@ -1860,7 +1867,7 @@ return [
         'action_type_id',
         'complement',
     ],
-    'formation_action_cout_previsionnel'                 => [
+    'formation_action_cout_previsionnel'                       => [
         'id',
         'action_id',
         'plan_id',
@@ -1873,11 +1880,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'formation_action_plan'                              => [
+    'formation_action_plan'                                    => [
         'action_id',
         'plan_id',
     ],
-    'formation_action_type'                              => [
+    'formation_action_type'                                    => [
         'id',
         'code',
         'libelle',
@@ -1889,7 +1896,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'formation_axe'                                      => [
+    'formation_axe'                                            => [
         'id',
         'libelle',
         'description',
@@ -1902,7 +1909,7 @@ return [
         'histo_destructeur_id',
         'couleur',
     ],
-    'formation_demande_externe'                          => [
+    'formation_demande_externe'                                => [
         'id',
         'agent_id',
         'libelle',
@@ -1930,31 +1937,31 @@ return [
         'justification_drh',
         'missions',
     ],
-    'formation_demande_externe_etat'                     => [
+    'formation_demande_externe_etat'                           => [
         'demande_id',
         'etat_id',
     ],
-    'formation_demande_externe_fichier'                  => [
+    'formation_demande_externe_fichier'                        => [
         'demande_id',
         'fichier_id',
     ],
-    'formation_demande_externe_gestionnaire'             => [
+    'formation_demande_externe_gestionnaire'                   => [
         'demande_externe_id',
         'gestionnaire_id',
     ],
-    'formation_demande_externe_observation'              => [
+    'formation_demande_externe_observation'                    => [
         'demande_id',
         'observation_instance_id',
     ],
-    'formation_demande_externe_session'                  => [
+    'formation_demande_externe_session'                        => [
         'demande_id',
         'session_id',
     ],
-    'formation_demande_externe_validation'               => [
+    'formation_demande_externe_validation'                     => [
         'demande_id',
         'validation_id',
     ],
-    'formation_domaine'                                  => [
+    'formation_domaine'                                        => [
         'id',
         'libelle',
         'description',
@@ -1967,7 +1974,7 @@ return [
         'histo_destructeur_id',
         'couleur',
     ],
-    'formation_element'                                  => [
+    'formation_element'                                        => [
         'id',
         'formation_id',
         'commentaire',
@@ -1979,7 +1986,7 @@ return [
         'histo_destructeur_id',
         'validation_id',
     ],
-    'formation_formateur'                                => [
+    'formation_formateur'                                      => [
         'id',
         'prenom',
         'nom',
@@ -1996,11 +2003,11 @@ return [
         'type',
         'user_id',
     ],
-    'formation_formateur_session'                        => [
+    'formation_formateur_session'                              => [
         'formateur_id',
         'session_id',
     ],
-    'formation_formation_abonnement'                     => [
+    'formation_formation_abonnement'                           => [
         'id',
         'formation_id',
         'agent_id',
@@ -2013,11 +2020,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'formation_formation_domaine'                        => [
+    'formation_formation_domaine'                              => [
         'formation_id',
         'domaine_id',
     ],
-    'formation_groupe'                                   => [
+    'formation_groupe'                                         => [
         'id',
         'libelle',
         'ordre',
@@ -2032,7 +2039,7 @@ return [
         'description',
         'axe_id',
     ],
-    'formation_inscription'                              => [
+    'formation_inscription'                                    => [
         'id',
         'agent_id',
         'stagiaire_id',
@@ -2056,15 +2063,15 @@ return [
         'precision_rqth',
         'enquete_instance_id',
     ],
-    'formation_inscription_etat'                         => [
+    'formation_inscription_etat'                               => [
         'inscription_id',
         'etat_id',
     ],
-    'formation_inscription_fichier'                      => [
+    'formation_inscription_fichier'                            => [
         'inscription_id',
         'fichier_id',
     ],
-    'formation_inscription_frais'                        => [
+    'formation_inscription_frais'                              => [
         'id',
         'inscription_id',
         'frais_repas',
@@ -2079,7 +2086,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'formation_instance'                                 => [
+    'formation_instance'                                       => [
         'id',
         'formation_id',
         'histo_creation',
@@ -2104,7 +2111,7 @@ return [
         'recette_ttc',
         'date_cloture_inscription',
     ],
-    'formation_instance_frais'                           => [
+    'formation_instance_frais'                                 => [
         'id',
         'inscrit_id',
         'frais_repas',
@@ -2119,7 +2126,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'formation_instance_inscrit'                         => [
+    'formation_instance_inscrit'                               => [
         'id',
         'instance_id',
         'agent_id',
@@ -2137,7 +2144,7 @@ return [
         'justification_refus',
         'validation_enquete',
     ],
-    'formation_lieu'                                     => [
+    'formation_lieu'                                           => [
         'id',
         'libelle',
         'batiment',
@@ -2150,15 +2157,15 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'formation_obtenue_application'                      => [
+    'formation_obtenue_application'                            => [
         'formation_id',
         'application_element_id',
     ],
-    'formation_obtenue_competence'                       => [
+    'formation_obtenue_competence'                             => [
         'formation_id',
         'competence_element_id',
     ],
-    'formation_plan_formation'                           => [
+    'formation_plan_formation'                                 => [
         'id',
         'libelle',
         'date_debut',
@@ -2171,7 +2178,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'formation_presence'                                 => [
+    'formation_presence'                                       => [
         'id',
         'journee_id',
         'inscription_id',
@@ -2188,7 +2195,7 @@ return [
         'statut',
         'inscrit_id',
     ],
-    'formation_seance'                                   => [
+    'formation_seance'                                         => [
         'id',
         'instance_id',
         'jour',
@@ -2211,23 +2218,23 @@ return [
         'lien',
         'lieu_id',
     ],
-    'formation_session_etat'                             => [
+    'formation_session_etat'                                   => [
         'session_id',
         'etat_id',
     ],
-    'formation_session_evenement'                        => [
+    'formation_session_evenement'                              => [
         'session_id',
         'evenement_instance_id',
     ],
-    'formation_session_gestionnaire'                     => [
+    'formation_session_gestionnaire'                           => [
         'session_id',
         'gestionnaire_id',
     ],
-    'formation_session_mail'                             => [
+    'formation_session_mail'                                   => [
         'session_id',
         'mail_id',
     ],
-    'formation_session_parametre'                        => [
+    'formation_session_parametre'                              => [
         'id',
         'mail',
         'evenement',
@@ -2240,7 +2247,7 @@ return [
         'histo_destructeur_id',
         'emargement',
     ],
-    'formation_stagiaire_externe'                        => [
+    'formation_stagiaire_externe'                              => [
         'id',
         'prenom',
         'nom',
@@ -2257,7 +2264,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'import_log'                                         => [
+    'import_log'                                               => [
         'id',
         'type',
         'name',
@@ -2268,7 +2275,7 @@ return [
         'has_problems',
         'success',
     ],
-    'lagaf_stagiaire'                                    => [
+    'lagaf_stagiaire'                                          => [
         'id',
         'nom',
         'prenom',
@@ -2277,7 +2284,7 @@ return [
         'octopus_id',
         'nstagiaire',
     ],
-    'poste'                                              => [
+    'poste'                                                    => [
         'id',
         'numero_poste',
         'bap_id',
@@ -2286,16 +2293,16 @@ return [
         'fonction',
         'structure_id',
     ],
-    'source'                                             => [
+    'source'                                                   => [
         'id',
         'code',
         'libelle',
         'importable',
     ],
-    'table_name'                                         => [
+    'table_name'                                               => [
         'id',
     ],
-    'unicaen_alerte_alerte'                              => [
+    'unicaen_alerte_alerte'                                    => [
         'id',
         'code',
         'title',
@@ -2304,14 +2311,14 @@ return [
         'duration',
         'dismissible',
     ],
-    'unicaen_alerte_alerte_planning'                     => [
+    'unicaen_alerte_alerte_planning'                           => [
         'id',
         'alerte_id',
         'start_date',
         'end_date',
         'severity',
     ],
-    'unicaen_autoform_validation'                        => [
+    'unicaen_autoform_validation'                              => [
         'id',
         'type',
         'histo_creation',
@@ -2327,13 +2334,13 @@ return [
         'informations',
         'reference',
     ],
-    'unicaen_autoform_validation_reponse'                => [
+    'unicaen_autoform_validation_reponse'                      => [
         'id',
         'validation',
         'reponse',
         'value',
     ],
-    'agent_ref'                                          => [
+    'agent_ref'                                                => [
         'id',
         'agent_id',
         'source',
@@ -2344,15 +2351,15 @@ return [
         'source_id',
         'id_orig',
     ],
-    'metier_metier_correspondance'                       => [
+    'metier_metier_correspondance'                             => [
         'metier_id',
         'correspondance_id',
     ],
-    'metier_metier_famille'                              => [
+    'metier_metier_famille'                                    => [
         'metier_id',
         'famille_id',
     ],
-    'fichemetier_tendance_element'                       => [
+    'fichemetier_tendance_element'                             => [
         'id',
         'fichemetier_id',
         'tendancetype_id',
@@ -2364,7 +2371,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'fichemetier_tendance_type'                          => [
+    'fichemetier_tendance_type'                                => [
         'id',
         'code',
         'libelle',
@@ -2378,11 +2385,11 @@ return [
         'histo_destructeur_id',
         'ordre',
     ],
-    'missionprincipale_familleprofessionnelle'           => [
+    'missionprincipale_familleprofessionnelle'                 => [
         'mission_id',
         'famille_id',
     ],
-    'carriere_niveau_fonction'                           => [
+    'carriere_niveau_fonction'                                 => [
         'id',
         'code',
         'libelle',
@@ -2394,7 +2401,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'element_competence_discipline'                      => [
+    'element_competence_discipline'                            => [
         'id',
         'libelle',
         'description',
@@ -2405,12 +2412,12 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'element_competence_synonyme'                        => [
+    'element_competence_synonyme'                              => [
         'id',
         'competence_id',
         'libelle',
     ],
-    'emploirepere'                                       => [
+    'emploirepere'                                             => [
         'id',
         'code',
         'libelle',
@@ -2422,7 +2429,7 @@ return [
         'histo_destructeur_id',
         'commentaire',
     ],
-    'emploirepere_codefonction'                          => [
+    'emploirepere_codefonction'                                => [
         'id',
         'niveau_fonction_id',
         'famille_professionnelle_id',
@@ -2434,7 +2441,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'emploirepere_fichemetier'                           => [
+    'emploirepere_fichemetier'                                 => [
         'id',
         'emploirepere_id',
         'fichemetier_id',
@@ -2449,7 +2456,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'emploirepere_mission'                               => [
+    'emploirepere_mission'                                     => [
         'id',
         'emploirepere_id',
         'mission_id',
@@ -2462,11 +2469,11 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'entretienprofessionnel_campagne_indicateur'         => [
+    'entretienprofessionnel_campagne_indicateur'               => [
         'campagne_id',
         'indicateur_id',
     ],
-    'referentiel_referentiel'                            => [
+    'referentiel_referentiel'                                  => [
         'id',
         'libelle_court',
         'libelle_long',
@@ -2479,7 +2486,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'ws_composante'                                      => [
+    'ws_composante'                                            => [
         'id',
         'libelle',
         'libelle_long',
@@ -2490,7 +2497,7 @@ return [
         'source_id',
         'id_orig',
     ],
-    'ws_test'                                            => [
+    'ws_test'                                                  => [
         'id',
         'title',
         'completed',
@@ -2500,7 +2507,7 @@ return [
         'source_id',
         'id_orig',
     ],
-    'unicaen_fichier_fichier'                            => [
+    'unicaen_fichier_fichier'                                  => [
         'id',
         'nom_original',
         'nom_stockage',
@@ -2514,14 +2521,14 @@ return [
         'type_mime',
         'taille',
     ],
-    'unicaen_fichier_nature'                             => [
+    'unicaen_fichier_nature'                                   => [
         'id',
         'code',
         'libelle',
         'description',
         'ordre',
     ],
-    'activite_element'                                   => [
+    'activite_element'                                         => [
         'id',
         'activite_id',
         'description',
@@ -2534,7 +2541,7 @@ return [
         'histo_destructeur_id',
         'fichemetier_id',
     ],
-    'emploirepere_emploirepere'                          => [
+    'emploirepere_emploirepere'                                => [
         'id',
         'code',
         'libelle',
@@ -2546,19 +2553,19 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'emploirepere_emploirepere_codefonction_fichemetier' => [
+    'emploirepere_emploirepere_codefonction_fichemetier'       => [
         'id',
         'emploirepere_id',
         'codefonction_id',
         'fichemetier_id',
     ],
-    'fichemetier_mission_old'                            => [
+    'fichemetier_mission_old'                                  => [
         'id',
         'fichemetier_id',
         'mission_id',
         'ordre',
     ],
-    'missionprincipale_element'                          => [
+    'missionprincipale_element'                                => [
         'id',
         'mission_id',
         'description',
@@ -2571,7 +2578,7 @@ return [
         'histo_destructeur_id',
         'fichemetier_id',
     ],
-    'activite_old'                                       => [
+    'activite_old'                                             => [
         'id',
         'histo_creation',
         'histo_modification',
@@ -2583,13 +2590,13 @@ return [
         'referentiel_id',
         'reference',
     ],
-    'fichemetier_activite_old'                           => [
+    'fichemetier_activite_old'                                 => [
         'id',
         'fiche_id',
         'activite_id',
         'position',
     ],
-    'fichemetier_code_emploitype'                        => [
+    'fichemetier_code_emploitype'                              => [
         'id',
         'fichemetier_id',
         'fonction_code',
@@ -2601,7 +2608,7 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
-    'missionprincipale_old'                              => [
+    'missionprincipale_old'                                    => [
         'id',
         'libelle',
         'niveau_id',
@@ -2613,6 +2620,59 @@ return [
         'histo_destructeur_id',
         'referentiel_id',
         'reference',
+    ],
+    'entretienprofessionnel_campagne_agent_statut'             => [
+        'id',
+        'campagne_id',
+        'structure_id',
+        'agent_id',
+        'statut',
+        'raison',
+        'date_refresh',
+    ],
+    'entretienprofessionnel_campagne_configuration_indicateur' => [
+        'id',
+        'code',
+        'libelle',
+        'requete',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+    ],
+    'entretienprofessionnel_campagne_configuration_recopie'    => [
+        'id',
+        'from_champ_id',
+        'to_champ_id',
+        'description',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+        'formulaire',
+    ],
+    'entretienprofessionnel_campagne_progression'              => [
+        'id',
+        'campagne_id',
+        'structure_id',
+        'nb_total',
+        'nb_complet',
+        'nb_autorite',
+        'nb_observation',
+        'nb_superieur',
+        'nb_planifier',
+        'nb_manquant',
+        'date_refresh',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
     ],
 ];
 

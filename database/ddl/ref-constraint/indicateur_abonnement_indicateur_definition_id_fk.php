@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_indicateur_indicateur',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'indicateur_pk',
+    'index'       => 'indicateur_id_uindex',
     'columns'     => [
         'indicateur_id' => 'id',
     ],

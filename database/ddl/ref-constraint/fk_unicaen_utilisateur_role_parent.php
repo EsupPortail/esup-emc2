@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_utilisateur_role',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',
-    'index'       => 'role_pkey',
+    'index'       => 'unicaen_utilisateur_role_pkey',
     'columns'     => [
         'parent_id' => 'id',
     ],

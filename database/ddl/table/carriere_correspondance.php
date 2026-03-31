@@ -14,7 +14,7 @@ return [
             'name'        => 'c_bap',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
-            'length'      => 10,
+            'length'      => 1024,
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,

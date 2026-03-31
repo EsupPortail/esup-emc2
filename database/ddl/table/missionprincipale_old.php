@@ -90,7 +90,7 @@ return [
             'scale'       => NULL,
             'precision'   => 4,
             'nullable'    => FALSE,
-            'default'     => 'nextval(\'missionprincipale_id_seq\'::regclass)',
+            'default'     => NULL,
             'position'    => 1,
             'commentaire' => NULL,
         ],
