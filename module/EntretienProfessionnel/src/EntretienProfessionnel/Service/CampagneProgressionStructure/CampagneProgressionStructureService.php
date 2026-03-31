@@ -129,7 +129,7 @@ class CampagneProgressionStructureService
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));

@@ -175,7 +175,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <?php foreach ($exclus as $agent) : ?>
         <li>
             <?php echo $agent->getDenomination(); ?>
-            <span class='icon icon-information' title="<?php echo $raison[$agent->getId()]; ?>"></span>
+            <span class='icon icon-information' title="<ul><?php echo $raison[$agent->getId()]; ?></ul>" data-bs-toggle="tooltip" data-bs-html="true"></span>
         </li>
     <?php endforeach; ?>
 </ul>

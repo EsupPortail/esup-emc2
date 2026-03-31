@@ -69,11 +69,9 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
     <?php foreach ($agents as $agent) : ?>
         <tr>
             <td data-order="<?php echo $agent->getDenomination(); ?>"> <?php echo $agent->getDenomination(false, true, true); ?>
-                <?php if (isset($raison[$agent->getId()]) AND trim($raison[$agent->getId()]) !== '<ul></ul>') : ?>
+                <?php if (isset($raison[$agent->getId()]) AND trim($raison[$agent->getId()]) !== '') : ?>
                     <span class="icon icon-information" data-bs-toggle="tooltip" data-bs-html="true"
-                          <?php if (isset($raison[$agent->getId()])) : ?>
-                            title="<?php echo $raison[$agent->getId()]; ?>"
-                          <?php endif; ?>
+                            title="<ul><?php echo $raison[$agent->getId()]; ?></ul>"
                     ></span>
                 <?php endif; ?>
             </td>

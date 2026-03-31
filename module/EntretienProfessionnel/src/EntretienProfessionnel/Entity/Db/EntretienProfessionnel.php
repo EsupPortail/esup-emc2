@@ -66,6 +66,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private Collection $observateurs;
 
     private ?string $token = null;
+    private ?DateTime $convocation = null;
     private ?DateTime $acceptation = null;
 
     /** Pour la mention facultatif */
@@ -216,6 +217,16 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         $this->token = $token;
         return $this;
+    }
+
+    public function getConvocation(): ?DateTime
+    {
+        return $this->convocation;
+    }
+
+    public function setConvocation(?DateTime $convocation): void
+    {
+        $this->convocation = $convocation;
     }
 
     public function getAcceptation() : ?DateTime

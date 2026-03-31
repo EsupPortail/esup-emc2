@@ -211,8 +211,8 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                $entretien->setConvocation(new DateTime());
                 $this->checkDelaiConvocation($entretien);
-
                 $this->getEntretienProfessionnelService()->initialiser($entretien);
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->update($entretien);
@@ -255,8 +255,10 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->checkDelaiConvocation($entretien);
+                // N.B. : on ne modifie pas la date de convocation pour le reste identique
+                // $entretien->setConvocation(new DateTime());
 
+                $this->checkDelaiConvocation($entretien);
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);

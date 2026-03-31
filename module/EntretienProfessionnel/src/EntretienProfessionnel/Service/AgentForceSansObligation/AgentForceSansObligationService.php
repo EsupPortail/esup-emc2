@@ -124,6 +124,17 @@ class AgentForceSansObligationService {
         return $agentForceSansObligation;
     }
 
+    /** @return AgentForceSansObligation[] */
+    public function getAgentsForcesSansObligationByCampagneAndAgentsAndType(Campagne $campagne, array $agents, string $type): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentForceSansObligation.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('agentForceSansObligation.campagne = :campagne')->setParameter('campagne', $campagne)
+            ->andWhere('agentForceSansObligation.type = :type')->setParameter('type', $type)
+            ->andWhere('agentForceSansObligation.histoDestruction IS NULL');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 
 
 }

@@ -652,4 +652,41 @@ EOS;
         }
         return $agents;
     }
+
+    /** FACADE ********************************************************************************************************/
+
+    /** @return Agent[] */
+    public function getAgentWithStatut(array $agents, string $statut, ?DateTime $date = null): array
+    {
+        $ids = [];
+        foreach ($agents as $agent) { $ids[] = $agent->getId(); }
+
+        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->join('agent.statuts', 'statut')->addSelect('statut')
+            ->andWhere('coalesce(statut.dateDebut, :date) <= :date')->setParameter('date', $date ?? new DateTime())
+            ->andWhere('statut.'.$statut.' = :oui')->setParameter('oui', 'O')
+            ->andWhere('agent.deletedOn IS NULL')->andWhere('statut.deletedOn IS NULL')
+            ->andWhere('agent.id in (:ids)')->setParameter('ids', $ids);
+            ;
+        $result = $qb->getQuery()->getResult();
+
+        $listing = [];
+        /** @var Agent $item */
+        foreach ($result as $item) {
+            $listing[$item->getId()] = $item;
+        }
+        return $listing;
+    }
+
+    /** @return Agent[] */
+    public function getAdministratifs(array $agents, ?DateTime $date = null): array
+    {
+        return $this->getAgentWithStatut($agents, 'administratif', $date);
+    }
+
+    /** @return Agent[] */
+    public function getFonctionnaires(array $agents, ?DateTime $date = null): array
+    {
+        return $this->getAgentWithStatut($agents, 'titulaire', $date);
+    }
 }
