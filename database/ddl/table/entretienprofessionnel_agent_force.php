@@ -130,6 +130,18 @@ return [
             'position'    => 4,
             'commentaire' => NULL,
         ],
+        'structure_id'          => [
+            'name'        => 'structure_id',
+            'type'        => 'string',
+            'bdd-type'    => 'character varying',
+            'length'      => 1024,
+            'scale'       => NULL,
+            'precision'   => NULL,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 12,
+            'commentaire' => NULL,
+        ],
         'type'                  => [
             'name'        => 'type',
             'type'        => 'string',

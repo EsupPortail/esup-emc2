@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_fichier_nature',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',
-    'index'       => 'fichier_nature_pk',
+    'index'       => 'unicaen_fichier_nature_id_uindex',
     'columns'     => [
         'nature' => 'id',
     ],

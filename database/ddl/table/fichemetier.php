@@ -10,6 +10,18 @@ return [
     'commentaire' => NULL,
     'sequence'    => 'fichemetier_id_seq',
     'columns'     => [
+        'categorie_id'          => [
+            'name'        => 'categorie_id',
+            'type'        => 'int',
+            'bdd-type'    => 'integer',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 4,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 20,
+            'commentaire' => NULL,
+        ],
         'code_fonction_id'      => [
             'name'        => 'code_fonction_id',
             'type'        => 'int',
