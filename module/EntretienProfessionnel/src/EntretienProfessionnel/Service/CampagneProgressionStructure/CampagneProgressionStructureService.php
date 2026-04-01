@@ -140,9 +140,8 @@ class CampagneProgressionStructureService
         }
 
         // tris des agents
-        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents, [], $structures);
-        // récupérations des entretiens
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+        [$obligatoires, $facultatifs, $raison, $exclus, $inStructures, $outStructures] = $this->getCampagneService()->trierAgents($campagne, $agents, $entretiens, $structures);
 
         // comptage des entretiens
         $validerSuperieur = [];
@@ -152,7 +151,7 @@ class CampagneProgressionStructureService
         $encours = [];
         $sans = [];
 
-        foreach ($entretiens as $entretien) {
+        foreach ($inStructures as $entretien) {
             if ($entretien->getEtatActif() === null) {
                 $encours[] = $entretien;
                 //throw new RuntimeException("L'entretien #".$entretien->getId()." na pas d'état actif");

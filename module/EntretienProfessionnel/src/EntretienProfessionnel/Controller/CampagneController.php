@@ -461,39 +461,10 @@ class CampagneController extends AbstractActionController
                 $agents[] = $agentForce;
             }
         }
-
-        [$obligatoires, $facultatifs, $raison, $exclus] = $this->getCampagneService()->trierAgents($campagne, $agents, [],  $structures);
-
-
-//        $agents = [];
-//        $obligatoires = [];
-//        $facultatifs = [];
-//        $exclus = [];
-//        $raison = [];
-//        $statuts = $this->getCampagneService()->getCampagneAgentStatut($campagne, $structure);
-//
-//        $entretiens = [];
-//        foreach ($statuts as $statut) {
-//            $agent = $statut->getAgent();
-//            $agents[$agent->getId()] = $agent;
-//            $raison[$agent->getId()] = $statut->getRaison();
-//            if ($statut->getStatut() === CampagneAgentStatut::OBLIGATOIRE) {
-//                $obligatoires[$agent->getId()] = $agent;
-//            }
-//            if ($statut->getStatut() === CampagneAgentStatut::FACULTATIF) {
-//                $facultatifs[$agent->getId()] = $agent;
-//            }
-//            if ($statut->getStatut() === CampagneAgentStatut::EXCLUS) {
-//                $exclus[$agent->getId()] = $agent;
-//            }
-//            if ($statut->getEntretienProfessionnel()) {
-//                $entretiens[$agent->getId()] = $statut->getEntretienProfessionnel();
-//            }
-//        }
-
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        [$obligatoires, $facultatifs, $raison, $exclus, $inStructures, $outStructures] = $this->getCampagneService()->trierAgents($campagne, $agents, $entretiens,  $structures);
 
         $dateSituation = $campagne->getDateSituation();
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
 //        $entretiens = array_filter($entretiens,
 //            function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
 //                $agent = $entretien->getAgent();
@@ -510,7 +481,7 @@ class CampagneController extends AbstractActionController
 
         $finalises = [];
         $encours = [];
-        foreach ($entretiens as $entretien) {
+        foreach ($inStructures as $entretien) {
             if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
                 $finalises[] = $entretien;
             } else {
@@ -544,13 +515,19 @@ class CampagneController extends AbstractActionController
             'agents' => $agents,
             'progression' => $progression,
 
-            'entretiens' => $entretiens,
-            'encours' => $encours,
-            'finalises' => $finalises,
 
+
+            // Agents
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
             'exclus' => $exclus,
+            // Entretiens
+            'inStructures' => $inStructures,
+            'outStructures' => $outStructures,
+            'encours' => $encours,
+            'finalises' => $finalises,
+
+            // explications
             'raison' => $raison,
 
             'templates' => $templates,

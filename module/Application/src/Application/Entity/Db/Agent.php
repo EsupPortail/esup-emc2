@@ -968,7 +968,8 @@ class Agent implements
         return false;
     }
 
-    public function hasAffectationActive(?DateTime $date = null): bool
+    /** @var Structure[] $structures */
+    public function hasAffectationActive(?DateTime $date = null, ?array $structures = null): bool
     {
         if ($date === null) $date = new DateTime();
         $date->setTime(12, 0, 0);
@@ -976,7 +977,10 @@ class Agent implements
         foreach ($affectations as $affectation) {
             $affectation->getDateDebut()?->setTime(12, 0, 0);
             $affectation->getDateFin()?->setTime(12, 0, 0);
-            if ($affectation->getDateDebut() <= $date AND ($affectation->getDateFin() === NULL OR $affectation->getDateFin() >= $date)) return true;
+            $inStructure = true;
+            if ($structures !== null) $inStructure = in_array($affectation->getStructure(), $structures);
+            if ($inStructure AND $affectation->getDateDebut() <= $date AND ($affectation->getDateFin() === NULL OR $affectation->getDateFin() >= $date)) return true;
+
         }
         return false;
     }

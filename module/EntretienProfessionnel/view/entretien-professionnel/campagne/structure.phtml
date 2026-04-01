@@ -26,6 +26,9 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var Agent[] $facultatifs
  * @var Agent[] $exclus
  *
+ * @var EntretienProfessionnel[] $inStructures
+ * @var EntretienProfessionnel[] $outStructures
+ *
  * @var EntretienProfessionnel[] $entretiens
  * @var EntretienProfessionnel[] $encours
  * @var EntretienProfessionnel[] $finalises
@@ -165,21 +168,45 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raison]); ?>
 <?php endif; ?>
 
-<?php if (!empty($exclus)) : ?>
-    <h2>
-        Agent·es exclu·es de la campagne
-        <span class="badge"> <?php echo count($exclus); ?> </span>
-    </h2>
+<div class="row">
+    <div class="col-md-6">
+        <?php if (!empty($exclus)) : ?>
+            <h2>
+                Agent·es exclu·es de la campagne
+                <span class="badge"> <?php echo count($exclus); ?> </span>
+            </h2>
 
-<ul>
-    <?php foreach ($exclus as $agent) : ?>
-        <li>
-            <?php echo $agent->getDenomination(); ?>
-            <span class='icon icon-information' title="<ul><?php echo $raison[$agent->getId()]; ?></ul>" data-bs-toggle="tooltip" data-bs-html="true"></span>
-        </li>
-    <?php endforeach; ?>
-</ul>
-<?php endif; ?>
+            <ul>
+                <?php foreach ($exclus as $agent) : ?>
+                    <li>
+                        <?php echo $agent->getDenomination(); ?>
+                        <span class='icon icon-information' title="<ul><?php echo $raison[$agent->getId()]; ?></ul>" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+    </div>
+    <div class="col-md-6">
+        <?php if (!empty($outStructures)) : ?>
+            <h2>
+                Agent·es avec entretiens ailleurs
+                <span class="badge"> <?php echo count($outStructures); ?> </span>
+            </h2>
+
+            <ul>
+                <?php foreach ($outStructures as $entretien) : ?>
+                    <?php $agent = $entretien->getAgent(); ?>
+                    <li>
+                        <?php echo $agent->getDenomination(); ?>
+                        <span class='icon icon-information' title="<ul><?php echo $raison[$agent->getId()]; ?></ul>" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+    </div>
+</div>
 
 <script>
     $('button#campagne-tab').addClass('active');

@@ -323,6 +323,8 @@ class CampagneService
      */
     public function trierAgents(Campagne $campagne, array $agents, ?array $entretiens = null, ?array $structures = null): array
     {
+        $inStructures = [];
+        $outStructures = [];
         $exclus = [];
         $obligatoires = [];
         $facultatifs = [];
@@ -340,7 +342,6 @@ class CampagneService
         // Si à la date de situation l'agent a le statut t_titulaire alors bypass de l'exclusion (non forcée)
         $fonctionnaires = $this->getAgentService()->getFonctionnaires($administratifs, $dateSituation);
 
-        $a=1;
         $strStructure = implode(', ', array_map(function (Structure $s) { return $s->getLibelleLong(); }, $structures));
 
         foreach ($agents as $agent) {
@@ -350,7 +351,6 @@ class CampagneService
             }
         }
 
-        /** @var Agent $agent */
         foreach ($administratifs as $agent) {
             $raison[$agent->getId()] = "";
 
@@ -366,11 +366,16 @@ class CampagneService
             }
 
             if (!$agent->isForceAvecObligation($campagne, $structures)) {
+                $result = $agent->hasAffectationActive($campagne->getDateSituation(), $structures);
+                if ($result === false) {
+                    $estExclus = true;
+                    $raison[$agent->getId()] .= "<li>Sans affectation dans les structures considérées à la date du " . $strDateSituation."</li>";
+                }
+
                 // Si non-fonctionnaire alors faire les tests d'exclusion
                 if (!isset($fonctionnaires[$agent->getId()])) {
-
-                    // Exclusion si l'agent n'est pas en poste (affectation/grade/statut) à  la date de prise de poste
-                    // NB: peut-être détournée pour vérifier l'ancienneté
+                    // Exclusion si l'agent n'est pas en poste (affectation/grade/statut) à la date de prise de poste
+                    // NB : peut-être détournée pour vérifier l'ancienneté
                     $result = $agent->hasAffectationActive($campagne->getDateEnPoste());
                     if ($result === false) {
                         $estExclus = true;
@@ -387,7 +392,7 @@ class CampagneService
                         $raison[$agent->getId()] .= "Sans statut à la date du " . $strDatePriseDePoste;
                     }
 
-                    // Utilisation des paramètres d'exclusion
+                    // Utilisation des paramètres d'exclusion à la date de situation
                     $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateSituation(), $structures, true);
                     if ($result[0] === true) {
                         $estExclus = true;
@@ -409,8 +414,6 @@ class CampagneService
                         $exclus[$agent->getId()] = $agent;
                         $raison[$agent->getId()] .= "Statut excluant à la date du " . $strDateSituation . " (" . $explication . ")";
                     }
-
-                    // Exclusion EMPLOI-TYPE //
                     $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS], $campagne->getDateSituation());
                     if ($result[0] === true) {
                         $estExclus = true;
@@ -500,7 +503,29 @@ class CampagneService
             }
         }
 
-        return [$obligatoires, $facultatifs, $raison, $exclus];
+        foreach ($entretiens as $entretien) {
+            $agent = $entretien->getAgent();
+            $affectations = $agent->getAffectationsActifs($entretien->getConvocation());
+            $isInStructures = false; $autres = [];
+            foreach ($affectations as $affectation) {
+                $autres[] = $affectation->getStructure()->getLibelleLong();
+                if (in_array($affectation->getStructure(), $structures)) {
+                    $isInStructures = true;
+                }
+            }
+            if (!$isInStructures) {
+                unset($obligatoires[$agent->getId()]);
+                unset($facultatifs[$agent->getId()]);
+                unset($exclus[$agent->getId()]);
+                $outStructures[$agent->getId()] = $entretien;
+                $raison[$agent->getId()] = "Entretien dans une autre structure [".implode(", ", $autres)."]";
+            } else {
+                $inStructures[$agent->getId()] = $entretien;
+
+            }
+        }
+
+        return [$obligatoires, $facultatifs, $raison, $exclus, $inStructures, $outStructures];
 
 
 
