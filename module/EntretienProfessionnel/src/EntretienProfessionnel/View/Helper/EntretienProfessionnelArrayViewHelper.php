@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\View\Helper;
 
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Laminas\View\Helper\AbstractHelper;

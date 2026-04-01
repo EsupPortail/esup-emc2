@@ -37,38 +37,14 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var Rendu[] $templates
  */
 
+// Filtrage des tableaux de convocations (obligatoires et facultatifs) retrait des agents ayant déjà un entretien
 $sansObligatoires = [];
 $sansFacultatifs = [];
 foreach ($obligatoires as $obligatoire) {
-    if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
+    if (!isset($inStructures[$obligatoire->getId()]) AND !isset($outStructures[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
 }
 foreach ($facultatifs as $facultatif) {
-    if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
-}
-
-if (false) {
-    $dateSituation = $campagne->getDateSituation();
-    $entretiens = array_filter($entretiens,
-            function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
-                $agent = $entretien->getAgent();
-//                $affectations = $agent->getAffectationsActifs($dateSituation);
-                $affectations = $agent->getAffectationsActifs($entretien->getDateEntretien());
-                foreach ($affectations as $affectation) {
-                    if (in_array($affectation->getStructure(), $structures)) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-    $finalises = [];
-    $encours = [];
-    foreach ($entretiens as $entretien) {
-        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
-            $finalises[] = $entretien;
-        } else {
-            $encours[] = $entretien;
-        }
-    }
+    if (!isset($inStructures[$facultatif->getId()]) AND !isset($outStructures[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
 }
 
 $canTemplateModifier = $this->isAllowed(DocumenttemplatePrivileges::getResourceId(DocumenttemplatePrivileges::DOCUMENTTEMPLATE_MODIFIER));

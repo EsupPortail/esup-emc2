@@ -107,7 +107,6 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <?php if ($displayDate): ?>Date<?php endif; ?>
                 <?php if ($displayDate AND $displayLieu): ?> et <?php endif; ?>
                 <?php if ($displayLieu): ?>Lieu<?php endif; ?>
-
             </th>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
@@ -144,7 +143,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <td>
-                <?php $affectations = $entretien->getAgent()->getAffectationsActifsSurPeriode($entretien->getCampagne()->getDateDebut(), $entretien->getCampagne()->getDateFin()); ?>
+                <?php $affectations = $entretien->getAgent()->getAffectationsActifs($entretien->getConvocation()); ?>
                 <?php if ($affectations !== null and !empty($affectations)) : ?>
                     <ul>
                     <?php foreach ($affectations as $affectation) : ?>

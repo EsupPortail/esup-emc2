@@ -382,7 +382,7 @@ class CampagneService
 
             if (!$agent->isForceAvecObligation($campagne, $structures)) {
 //                $result = isset($affectationDateSituation[$agent->getId()]);
-                $result = $agent->hasAffectationActive($campagne->getDateSituation(), $structures);
+                $result = $agent->hasAffectationActive($dateSituation, $structures);
                 if ($result === false) {
                     $estExclus = true;
                     $raison[$agent->getId()] .= "<li>Sans affectation dans les structures considérées à la date du " . $strDateSituation."</li>";
@@ -393,17 +393,17 @@ class CampagneService
                     // Exclusion si l'agent n'est pas en poste (affectation/grade/statut) à la date de prise de poste
                     // NB : peut-être détournée pour vérifier l'ancienneté
 //                    $result = isset($affectationDatePrisePoste[$agent->getId()]);
-                    $result = $agent->hasAffectationActive($campagne->getDateEnPoste());
+                    $result = $agent->hasAffectationActive($dateEnPoste);
                     if ($result === false) {
                         $estExclus = true;
                         $raison[$agent->getId()] .= "Sans affectation à la date du " . $strDatePriseDePoste;
                     }
-                    $result = $agent->hasGradeActif($campagne->getDateEnPoste());
+                    $result = $agent->hasGradeActif($dateEnPoste);
                     if ($result === false) {
                         $estExclus = true;
                         $raison[$agent->getId()] .= "Sans grade à la date du " . $strDatePriseDePoste;
                     }
-                    $result = $agent->hasStatutActif($campagne->getDateEnPoste());
+                    $result = $agent->hasStatutActif($dateEnPoste);
                     if ($result === false) {
                         $estExclus = true;
                         $raison[$agent->getId()] .= "Sans statut à la date du " . $strDatePriseDePoste;
