@@ -662,7 +662,7 @@ EOS;
 
             }
 
-            $result = $agent->isValideCorps($parametres[StructureParametres::AGENT_TEMOIN_CORPS],$now, null,false);
+            $result = $agent->isValideCorps($parametres[StructureParametres::AGENT_TEMOIN_CORPS],$now, false);
             if ($result[0] === true) {
                 $kept = false;
                 $explications = implode(", ", $result[1]);
