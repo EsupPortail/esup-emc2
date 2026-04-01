@@ -92,6 +92,24 @@ class AgentService
         return $result;
     }
 
+    public function getAgentFullJoin(int $agentId): Agent
+    {
+        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->join('agent.affectations', 'affectation')->addSelect('affectation')->andWhere('affectation.deletedOn IS NULL')
+            ->join('agent.grades', 'grade')->addSelect('grade')->andWhere('grade.deletedOn IS NULL')
+            ->join('agent.statuts', 'statut')->addSelect('statut')->andWhere('grade.deletedOn IS NULL')
+            ->join('affectation.structure', 'structure')->addSelect('structure')
+            ->andWhere('agent.id = :agentId')->setParameter('agentId', $agentId)
+            ->andWhere('agent.deletedOn IS NULL')
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Agent::class." partagent le même id [".$agentId."]");
+        }
+        return $result;
+    }
+
     /**
      * @param DateTime|null $debut
      * @param DateTime|null $fin
@@ -281,6 +299,16 @@ EOS;
      */
     public function getAgentsByStructures(array $structures, ?DateTime $dateDebut = null, ?DateTime $dateFin = null, bool $withJoin = true): array
     {
+//        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+//            ->join('agent.affectations', 'affectation')->addSelect('affectation')
+//            ->join('affectation.structure', 'structure')->addSelect('structure')
+//            ->andWhere('affectation.structure IN (:structures)')->setParameter('structures', $structures)
+//            ->andWhere("coalesce(affectation.dateDebut, '1900-01-01') <= :dateDebut")->setParameter('dateDebut', $dateDebut)
+//            ->andWhere("coalesce(affectation.dateFin, '2100-12-31') >= :dateFin")->setParameter('dateFin', $dateFin)
+//        ;
+//        $result = $qb->getQuery()->getResult();
+//        return $result;
+
         // semble beaucoup plus rapide comme cela !!!
         if ($dateDebut === null) $dateDebut = new DateTime();
         if ($dateFin === null) $dateFin = new DateTime();
@@ -290,6 +318,7 @@ EOS;
             foreach ($affectations as $affectation) {
                 if (!$affectation->isDeleted() AND $affectation->estEnCoursIntervale($dateDebut, $dateFin)) {
                     $agent = $affectation->getAgent();
+//                    $agent = $this->getAgentFullJoin($agent->getId());
                     $agents[$agent->getId()] = $agent;
                 }
             }

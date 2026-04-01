@@ -20,6 +20,7 @@
 
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -29,6 +30,7 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
  * @see \EntretienProfessionnel\View\Helper\ConvocationArrayViewHelper
  * @var Agent[] $agents
  * @var Campagne $campagne
+ * @var AgentSuperieur[] $superieurs
  * @var array $options[]
  */
 
@@ -76,8 +78,7 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                 <?php endif; ?>
             </td>
             <td>
-                <?php $superieurs = $agent->getSuperieurs($dateSituation); ?>
-                <?php if (empty($superieurs)): ?>
+                <?php if (empty($superieurs[$agent->getId()])) : ?>
                     <span class="text-warning">
                         <span class="icon icon-attention"></span>
                         Aucun·e supérieur·e connu à la date du <?php echo $dateSituationAsString; ?>
@@ -85,22 +86,21 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                     <br>
                 <?php else: ?>
                     <ul>
-                        <?php foreach ($superieurs as $superieur) : ?>
+                        <?php foreach ($superieurs[$agent->getId()] as $superieur) : ?>
                             <li><?php echo $superieur->getSuperieur()->getDenomination(); ?></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
             </td>
             <td>
-                <?php $autorites = $agent->getAutorites($dateSituation); ?>
-                <?php if (empty($autorites)): ?>
+                <?php if (empty($autorites[$agent->getId()])): ?>
                     <span class="text-warning">
                         <span class="icon icon-attention"></span>
                         Aucune autorité connue à la date du <?php echo $dateSituationAsString; ?>
                     </span>
                 <?php else: ?>
                     <ul>
-                        <?php foreach ($autorites as $autorite) : ?>
+                        <?php foreach ($autorites[$agent->getId()] as $autorite) : ?>
                             <li><?php echo $autorite->getAutorite()->getDenomination(); ?></li>
                         <?php endforeach; ?>
                     </ul>
@@ -110,14 +110,13 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                 <dl class="row">
                     <dt class="col-md-4"> Affectation·s </dt>
                     <dd class="col-md-8">
-                        <?php $affectations = $agent->getAffectationsActifs($dateSituation); ?>
-                        <?php if (empty($affectations)) : ?>
+                        <?php if (empty($affectations[$agent->getId()])) : ?>
                             <span class="text-warning">
                                 <span class="icon icon-attention"></span>
                                 Aucune affectation à la date du <?php echo $dateSituationAsString ?>
                             </span>
                         <?php else : ?>
-                            <?php foreach ($affectations as $affectation) : ?>
+                            <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
                                  <?php echo $affectation->getStructure()->getLibelleLong(); ?>
                                 <br>
                             <small>
@@ -131,14 +130,13 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                     </dd>
                     <dt class="col-md-4"> Grade·s</dt>
                     <dd class="col-md-8">
-                        <?php $grades = $agent->getGradesActifs($dateSituation); ?>
-                        <?php if (empty($grades)) : ?>
+                        <?php if (empty($grades[$agent->getId()])) : ?>
                             <span class="text-warning">
                                 <span class="icon icon-attention"></span>
                                 Aucun grade à la date du <?php echo $dateSituationAsString; ?>
                             </span>
                         <?php else : ?>
-                            <?php foreach ($grades as $grade) : ?>
+                            <?php foreach ($grades[$agent->getId()] as $grade) : ?>
                                 <?php if ($grade->getGrade() === null): ?>
                                 <span class="text-warning">
                                     <span class="icon icon-attention">
@@ -162,7 +160,8 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
             </td>
             <?php if ($canAction) : ?>
             <td class="action">
-                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+<!--                --><?php //if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                <?php if ($this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER))) : ?>
                     <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                     <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank"
@@ -174,7 +173,7 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                 <?php endif; ?>
                 <?php
                     $entretien = new EntretienProfessionnel(); $entretien->setAgent($agent);
-                    $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
+//                    $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
                 ?>
                 <?php
                     if ($campagne->estEnCours() AND $canConvoquer) : ?>

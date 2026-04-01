@@ -185,7 +185,8 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td class="action">
-            <?php if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)) : ?>
+<!--            --><?php //if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)) : ?>
+            <?php if ($canAcceder) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()],
@@ -196,7 +197,8 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                     Accéder
                 </a>
             <?php endif; ?>
-            <?php if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)) : ?>
+<!--            --><?php //if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)) : ?>
+            <?php if ($canExporter) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>

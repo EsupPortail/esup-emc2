@@ -2,7 +2,11 @@
 
 namespace EntretienProfessionnel\View\Helper;
 
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Entity\Db\Agent;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
@@ -16,6 +20,10 @@ use Laminas\View\Resolver\TemplatePathStack;
 
 class ConvocationArrayViewHelper extends AbstractHelper
 {
+    use AgentAffectationServiceAwareTrait;
+    use AgentGradeServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     /**
      * @param Agent[] $agents
      * @param Campagne $campagne
@@ -28,6 +36,14 @@ class ConvocationArrayViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('convocation-array', ['agents' => $agents, 'campagne' => $campagne, 'options' => $options]);
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
+        $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgents($agents);
+        $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents);
+        $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgents($agents);
+
+        return $view->partial('convocation-array', ['agents' => $agents, 'campagne' => $campagne,
+            'affectations' => $affectations, 'autorites' => $autorites, 'grades' => $grades, 'superieurs' => $superieurs,
+            'options' => $options
+        ]);
     }
 }

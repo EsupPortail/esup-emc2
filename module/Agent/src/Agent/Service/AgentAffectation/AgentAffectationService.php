@@ -157,4 +157,35 @@ EOS;
         }
         return !empty($tmp);
     }
+
+    /**
+     * @param Agent[] $agents
+     * @param DateTime $date
+     * @return array (AgentId => AgentAffectation[])
+     */
+    public function getAgentsAffectationsByAgentsAndDate(array $agents, DateTime $date, ?array $structures = null) : array
+    {
+        $qb = $this->getObjectManager()->getRepository(AgentAffectation::class)->createQueryBuilder('affectation')
+            ->join('affectation.agent', 'agent')->addSelect('agent')
+            ->join('affectation.structure', 'structure')->addSelect('structure')
+            ->andWhere('affectation.deletedOn IS NULL')
+            ->andWhere('affectation.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere("coalesce(affectation.dateDebut, '1900-01-01') <= :date")
+            ->andWhere("coalesce(affectation.dateFin, '2100-12-31') >= :date")
+            ->setParameter('date', $date)
+        ;
+        if ($structures)
+            $qb = $qb->andWhere('affectation.structure in (:structures)')->setParameter('structures', $structures);
+
+        $result = $qb->getQuery()->getResult();
+
+        $array = [];
+        foreach ($result as $agentAffectation) {
+            $array[$agentAffectation->getAgent()->getId()][] = $agentAffectation;
+        }
+//        foreach ($agents as $agent) {
+//            if (!isset($array[$agent->getId()])) $array[$agent->getId()] = [];
+//        }
+        return $array;
+    }
 }

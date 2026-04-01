@@ -14,6 +14,7 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFor
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHydrator;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHydratorFactory;
 use EntretienProfessionnel\View\Helper\ConvocationArrayViewHelper;
+use EntretienProfessionnel\View\Helper\ConvocationArrayViewHelperFactory;
 use EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper;
 use EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -474,14 +475,12 @@ return [
         ],
     ],
     'view_helpers' => [
-        'invokables' => [
-            'convocationArray' => ConvocationArrayViewHelper::class,
-
-        ],
         'factories' => [
+            ConvocationArrayViewHelper::class => ConvocationArrayViewHelperFactory::class,
             EntretienProfessionnelArrayViewHelper::class => EntretienProfessionnelArrayViewHelperFactory::class,
         ],
         'aliases' => [
+            'convocationArray' => ConvocationArrayViewHelper::class,
             'entretienProfessionnelArray' => EntretienProfessionnelArrayViewHelper::class,
         ]
     ],

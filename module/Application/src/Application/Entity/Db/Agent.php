@@ -969,11 +969,11 @@ class Agent implements
     }
 
     /** @var Structure[] $structures */
-    public function hasAffectationActive(?DateTime $date = null, ?array $structures = null): bool
+    public function hasAffectationActive(?DateTime $date = null, ?array $structures = null, ?array $affectations = null): bool
     {
         if ($date === null) $date = new DateTime();
         $date->setTime(12, 0, 0);
-        $affectations = $this->getAffectations();
+        $affectations = $affectations??$this->getAffectations();
         foreach ($affectations as $affectation) {
             $affectation->getDateDebut()?->setTime(12, 0, 0);
             $affectation->getDateFin()?->setTime(12, 0, 0);

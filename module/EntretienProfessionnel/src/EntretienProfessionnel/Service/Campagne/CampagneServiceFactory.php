@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Service\Campagne;
 
+use Agent\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\Agent\AgentService;
 use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationService;
@@ -29,6 +30,7 @@ class CampagneServiceFactory
          * @var EntityManager $entityManager
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var AgentService $agentService
+         * @var AgentAffectationService $agentAffectationService
          * @var AgentForceSansObligationService $agentForceService
          * @var EtatTypeService $etatTypeService
          * @var ParametreService $parametreService
@@ -37,6 +39,7 @@ class CampagneServiceFactory
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
+        $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentForceService = $container->get(AgentForceSansObligationService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
@@ -47,6 +50,7 @@ class CampagneServiceFactory
         $service = new CampagneService();
         $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
+        $service->setAgentAffectationService($agentAffectationService);
         $service->setAgentForceSansObligationService($agentForceService);
         $service->setEntretienProfessionnelService($entretienProfessionnelService);
         $service->setEtatTypeService($etatTypeService);
