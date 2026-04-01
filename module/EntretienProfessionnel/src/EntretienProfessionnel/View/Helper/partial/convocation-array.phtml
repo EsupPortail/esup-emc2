@@ -19,7 +19,11 @@
  */
 
 
+use Agent\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentStatut;
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -30,6 +34,10 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
  * @see \EntretienProfessionnel\View\Helper\ConvocationArrayViewHelper
  * @var Agent[] $agents
  * @var Campagne $campagne
+ * @var AgentAffectation[] $affectations
+ * @var AgentAutorite[] $autorites
+ * @var AgentGrade[] $grades
+ * @var AgentStatut[] $statuts
  * @var AgentSuperieur[] $superieurs
  * @var array $options[]
  */
@@ -154,6 +162,22 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
                                     <br>
                                 <?php endif; ?>
                             <?php endforeach; ?>
+                        <dt class="col-md-4"> Statut·s</dt>
+                        <dd class="col-md-8">
+                            <?php
+                                $temoins = [];
+                                foreach ($statuts[$agent->getId()]??[] as $statut) {
+                                    foreach (AgentStatut::TEMOINS as $temoin) {
+                                        if ($statut->getTemoin($temoin)) {
+                                            $temoins[$temoin] = $temoin;
+                                        }
+                                    }
+                                }
+                            ?>
+                            <?php foreach ($temoins as $temoin) : ?>
+                                <span class="badge"><?php echo $temoin; ?></span>
+                            <?php endforeach; ?>
+                        </dd>
                         <?php endif; ?>
                     </dd>
                 </dl>

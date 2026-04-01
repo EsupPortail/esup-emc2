@@ -10,6 +10,7 @@ use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
 
@@ -170,8 +171,8 @@ EOS;
             ->join('affectation.structure', 'structure')->addSelect('structure')
             ->andWhere('affectation.deletedOn IS NULL')
             ->andWhere('affectation.agent in (:agents)')->setParameter('agents', $agents)
-            ->andWhere("coalesce(affectation.dateDebut, '1900-01-01') <= :date")
-            ->andWhere("coalesce(affectation.dateFin, '2100-12-31') >= :date")
+            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= :date')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')
             ->setParameter('date', $date)
         ;
         if ($structures)
@@ -186,6 +187,30 @@ EOS;
 //        foreach ($agents as $agent) {
 //            if (!isset($array[$agent->getId()])) $array[$agent->getId()] = [];
 //        }
+        return $array;
+    }
+
+    /**
+     * @param EntretienProfessionnel[] $entretiens
+     * @return array (AgentId => AgentAffectation[])
+     */
+    public function getAgentsAffectationsByEntretiensProfessionnels(array $entretiens): array
+    {
+        $qb = $this->getObjectManager()->getRepository(AgentAffectation::class)->createQueryBuilder('affectation')
+            ->join('affectation.agent', 'agent')->addSelect('agent')
+            ->join('affectation.structure', 'structure')->addSelect('structure')
+            ->join(EntretienProfessionnel::class, 'ep', 'WITH', 'ep.agent = agent')
+            ->andWhere('affectation.deletedOn IS NULL')
+            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= ep.convocation')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >=  ep.convocation')
+            ->andWhere('ep IN (:entretiens)')->setParameter('entretiens', $entretiens)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $array = [];
+        foreach ($result as $agentAffectation) {
+            $array[$agentAffectation->getAgent()->getId()][] = $agentAffectation;
+        }
         return $array;
     }
 }

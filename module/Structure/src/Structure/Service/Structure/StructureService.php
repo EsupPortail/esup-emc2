@@ -647,7 +647,7 @@ EOS;
                 $raison[$agent->getId()] .= "<li>Emploi-type invalide (".$explications.")</li>";
             }
 
-            $result = $agent->isValideStatut($parametres[StructureParametres::AGENT_TEMOIN_STATUT],$now, null,false);
+            $result = $agent->isValideStatut($parametres[StructureParametres::AGENT_TEMOIN_STATUT],$now, false);
             if ($result[0] === true) {
                 $kept = false;
                 $explications = implode(", ", $result[1]);

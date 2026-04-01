@@ -1,5 +1,6 @@
 <?php
 
+use Agent\Entity\Db\AgentAffectation;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -15,6 +16,7 @@ use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations
  * @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper
  * @var EntretienProfessionnel[] $entretiens
  * @var EntretienProfessionnelAssertion $assertion
+ * @var AgentAffectation[] $affectations
  * @var array $options
  */
 
@@ -143,10 +145,9 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <td>
-                <?php $affectations = $entretien->getAgent()->getAffectationsActifs($entretien->getConvocation()); ?>
-                <?php if ($affectations !== null and !empty($affectations)) : ?>
+                <?php if (isset($affectations[$agent->getId()]) !== null and !empty($affectations[$agent->getId()])) : ?>
                     <ul>
-                    <?php foreach ($affectations as $affectation) : ?>
+                    <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
                         <li>
                         <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
                         <br>

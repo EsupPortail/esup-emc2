@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\View\Helper;
 
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
+use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -23,6 +24,7 @@ class ConvocationArrayViewHelper extends AbstractHelper
     use AgentAffectationServiceAwareTrait;
     use AgentGradeServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
+    use AgentStatutServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     /**
      * @param Agent[] $agents
@@ -39,10 +41,11 @@ class ConvocationArrayViewHelper extends AbstractHelper
         $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
         $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgents($agents);
         $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents);
+        $statuts = $this->getAgentStatutService()->getAgentStatutsByAgents($agents);
         $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgents($agents);
 
         return $view->partial('convocation-array', ['agents' => $agents, 'campagne' => $campagne,
-            'affectations' => $affectations, 'autorites' => $autorites, 'grades' => $grades, 'superieurs' => $superieurs,
+            'affectations' => $affectations, 'autorites' => $autorites, 'grades' => $grades, 'statuts' => $statuts, 'superieurs' => $superieurs,
             'options' => $options
         ]);
     }

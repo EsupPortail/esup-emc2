@@ -4,9 +4,7 @@ namespace EntretienProfessionnel\View\Helper;
 
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Laminas\View\Helper\AbstractHelper;
-use Laminas\View\Helper\Partial;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
@@ -15,9 +13,10 @@ use Laminas\View\Resolver\TemplatePathStack;
  * $options['affichages']['campagne' => Boolean, 'structure' => Boolean, 'agent' => Boolean, 'responsable' => Boolean, 'date' => Boolean, 'etat' => Boolean, 'action' => Boolean]
  * $options['droits']['afficher' => Boolean, 'renseigner' => Boolean, 'modifier' => Boolean, 'exporter' => Boolean, 'historiser' => Boolean, 'supprimer' => Boolean]
  */
-
 class EntretienProfessionnelArrayViewHelper extends AbstractHelper
 {
+    use AgentAffectationServiceAwareTrait;
+
     protected array $entretiens;
     protected array $options;
 
@@ -34,14 +33,18 @@ class EntretienProfessionnelArrayViewHelper extends AbstractHelper
         $this->entretiens = $entretiens;
         $this->options = $options;
 
+
         /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByEntretiensProfessionnels($entretiens);
+
         return $view->partial('entretien-professionnel-array', [
             'assertion' => $this->assertion,
             'entretiens' => $this->entretiens,
-            'options' => $this->options
+            'options' => $this->options,
+            'affectations' => $affectations,
         ]);
     }
 

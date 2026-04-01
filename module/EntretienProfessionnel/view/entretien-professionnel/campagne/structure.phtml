@@ -4,7 +4,6 @@ use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\CampagneProgressionStructure;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use Structure\Entity\Db\Structure;
 use UnicaenRenderer\Entity\Db\Rendu;
@@ -79,7 +78,6 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <div class="col-md-6">
         <h3> Complétion de la campagne</h3>
         <?php echo $this->campagneAvancementCache($campagne, $structure, $progression, ['can-refresh' => true]); ?>
-<!--        --><?php //echo $this->partial('entretien-professionnel/campagne/progression-structure', ['campagne' => $campagne, 'structure' => $structure, 'progression' => $progression, 'debug' => false, 'legende' => true, 'titre' => false]); ?>
     </div>
 </div>
 
@@ -148,7 +146,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <div class="col-md-6">
         <?php if (!empty($exclus)) : ?>
             <h2>
-                Agent·es exclu·es de la campagne
+                Agent·es exclu·es
                 <span class="badge"> <?php echo count($exclus); ?> </span>
             </h2>
 
@@ -166,7 +164,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <div class="col-md-6">
         <?php if (!empty($outStructures)) : ?>
             <h2>
-                Agent·es avec entretiens ailleurs
+                Entretiens hors structure
                 <span class="badge"> <?php echo count($outStructures); ?> </span>
             </h2>
 

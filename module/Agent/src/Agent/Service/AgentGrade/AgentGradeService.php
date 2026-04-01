@@ -29,6 +29,7 @@ class AgentGradeService {
             ->leftjoin('agentgrade.grade', 'grade')->addSelect('grade')
             ->leftjoin('agentgrade.corps', 'corps')->addSelect('corps')
             ->leftjoin('agentgrade.correspondance', 'correspondance')->addSelect('correspondance')
+            ->leftjoin('agentgrade.emploiType', 'emploitype')->addSelect('emploitype')
             ->andWhere('agentgrade.deletedOn IS NULL')
         ;
         return $qb;

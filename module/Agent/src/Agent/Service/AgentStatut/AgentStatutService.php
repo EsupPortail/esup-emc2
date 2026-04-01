@@ -4,6 +4,7 @@ namespace Agent\Service\AgentStatut;
 
 use Agent\Entity\Db\AgentStatut;
 use Application\Entity\Db\Agent;
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Structure\Entity\Db\Structure;
@@ -42,6 +43,34 @@ class AgentStatutService
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param ?DateTime $date
+     * @return array (AgentId => AgentStatut[])
+     */
+    public function getAgentStatutsByAgents(array $agents, ?DateTime $date = null): array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentstatut.agent in (:agents)')->setParameter('agents', $agents)
+            ->orderBy('agentstatut.dateDebut', 'DESC')
+            ->andWhere('agentstatut.dateDebut IS NULL OR agentstatut.dateDebut <= :date')
+            ->andWhere('agentstatut.dateFin IS NULL OR agentstatut.dateFin >= :date')
+            ->setParameter('date', $date)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+
+        $array = [];
+        foreach ($result as $statut) {
+            $agent = $statut->getAgent();
+            $array[$agent->getId()][] = $statut;
+        }
+
+        return $array;
     }
 
     /**

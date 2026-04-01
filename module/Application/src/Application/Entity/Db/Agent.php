@@ -441,7 +441,7 @@ class Agent implements
     }
 
     /** retourne un tableau [ ?bool, [explications]] */
-    public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
+    public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, bool $emptyResult = false, ?array $statuts = null): array
     {
         if ($parametre === null) return [null, ["Aucun paramètres"]];
         $valeurs = $parametre->getValeur();
@@ -452,7 +452,7 @@ class Agent implements
         $valeurs = explode(";", $valeurs);
 
         $count = [];
-        $statuts = $this->getStatutsActifs($date);
+        $statuts = $statuts??$this->getStatutsActifs($date);
         if (empty($statuts)) return [$emptyResult, ["Aucun statut"]];
 
         $match = [];
@@ -503,7 +503,7 @@ class Agent implements
     }
 
     /** retourne un tableau [ ?bool, [explications]] */
-    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null, bool $emptyResult = false): array
+    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, bool $emptyResult = false, ?array $grades = null): array
     {
         if ($parametre === null) return [null, ["Aucun paramètres"]];
         $valeurs = $parametre->getValeur();
@@ -514,7 +514,7 @@ class Agent implements
         $valeurs = explode(";", $valeurs);
 
         $count = [];
-        $grades = $this->getGradesActifs($date);
+        $grades = $grades??$this->getGradesActifs($date);
         if (empty($grades)) return [$emptyResult, ["Aucun corps"]];
 
         $match = [];

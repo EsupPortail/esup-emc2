@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\View\Helper;
 
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Agent\Service\AgentGrade\AgentGradeService;
+use Agent\Service\AgentStatut\AgentStatutService;
 use Application\Entity\Db\Agent;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
@@ -28,17 +29,20 @@ class ConvocationArrayViewHelperFactory extends AbstractHelper
          * @var AgentAffectationService $agentAffectationService
          * @var AgentAutoriteService $agentAutoriteService
          * @var AgentGradeService $agentGradeService
+         * @var AgentStatutService $agentStatutService
          * @var AgentSuperieurService $agentSuperieurService
          */
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentGradeService = $container->get(AgentGradeService::class);
+        $agentStatutService = $container->get(AgentStatutService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
 
         $helper = new ConvocationArrayViewHelper();
         $helper->setAgentAffectationService($agentAffectationService);
         $helper->setAgentAutoriteService($agentAutoriteService);
         $helper->setAgentGradeService($agentGradeService);
+        $helper->setAgentStatutService($agentStatutService);
         $helper->setAgentSuperieurService($agentSuperieurService);
 
         return $helper;
