@@ -352,7 +352,12 @@ class CampagneService
         // Si à la date de situation l'agent a le statut t_titulaire alors bypass de l'exclusion (non forcée)
         $fonctionnaires = $this->getAgentService()->getFonctionnaires($administratifs, $dateSituation);
 
-        $strStructure = implode(', ', array_map(function (Structure $s) { return $s->getLibelleLong(); }, $structures));
+        $strStructure = "Aucune structure";
+        if ($structures !== null) {
+            $strStructure = implode(', ', array_map(function (Structure $s) {
+                return $s->getLibelleLong();
+            }, $structures));
+        }
 
         foreach ($agents as $agent) {
             if (!isset($administratifs[$agent->getId()])) {
