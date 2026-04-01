@@ -520,25 +520,27 @@ class CampagneService
             }
         }
 
-        foreach ($entretiens as $entretien) {
-            $agent = $entretien->getAgent();
-            $affectations = $agent->getAffectationsActifs($entretien->getConvocation());
-            $isInStructures = false; $autres = [];
-            foreach ($affectations as $affectation) {
-                $autres[] = $affectation->getStructure()->getLibelleLong();
-                if (in_array($affectation->getStructure(), $structures)) {
-                    $isInStructures = true;
+        if ($entretiens !== null) {
+            foreach ($entretiens as $entretien) {
+                $agent = $entretien->getAgent();
+                $affectations = $agent->getAffectationsActifs($entretien->getConvocation());
+                $isInStructures = false;
+                $autres = [];
+                foreach ($affectations as $affectation) {
+                    $autres[] = $affectation->getStructure()->getLibelleLong();
+                    if (in_array($affectation->getStructure(), $structures)) {
+                        $isInStructures = true;
+                    }
                 }
-            }
-            if (!$isInStructures) {
-                unset($obligatoires[$agent->getId()]);
-                unset($facultatifs[$agent->getId()]);
-                unset($exclus[$agent->getId()]);
-                $outStructures[$agent->getId()] = $entretien;
-                $raison[$agent->getId()] = "Entretien dans une autre structure [".implode(", ", $autres)."]";
-            } else {
-                $inStructures[$agent->getId()] = $entretien;
-
+                if (!$isInStructures) {
+                    unset($obligatoires[$agent->getId()]);
+                    unset($facultatifs[$agent->getId()]);
+                    unset($exclus[$agent->getId()]);
+                    $outStructures[$agent->getId()] = $entretien;
+                    $raison[$agent->getId()] = "Entretien dans une autre structure [" . implode(", ", $autres) . "]";
+                } else {
+                    $inStructures[$agent->getId()] = $entretien;
+                }
             }
         }
 
