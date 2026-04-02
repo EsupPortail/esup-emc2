@@ -16,8 +16,7 @@ class IcsService
     {
         $now = new DateTime();
         $debut = $e->getDateEntretien();
-        $dureeEnMinute = $e->getDureeEstimee()*60;
-        $fin = DateTime::createFromFormat("YmdHis", $e->getDateEntretien()->format("YmdHis"))->add(new DateInterval('PT'.$dureeEnMinute.'M'));
+        $fin = $e->getDateFin();
         $lieu = $e->getLieu();
         $agentDenomination = trim($e->getAgent()->getDenomination());
         $agentEmail = $e->getAgent()->getEmail();
@@ -82,7 +81,7 @@ EOS;
     {
         $now = new DateTime();
         $debut = $e->getDateEntretien();
-        $fin = DateTime::createFromFormat("YmdHis", $e->getDateEntretien()->format("YmdHis"))->add(new DateInterval('PT2H'));
+        $fin = $e->getDateFin();
         $lieu = $e->getLieu();
         $agentDenomination = trim($e->getAgent()->getDenomination());
         $agentEmail = $e->getAgent()->getEmail();

@@ -155,7 +155,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
         $dateFin = DateTime::createFromFormat('Y-m-d H:i:s', $this->dateEntretien->format('Y-m-d H:i:s'));
         try {
-            $dateFin->add(new DateInterval('PT' . $this->dureeEstimee . 'H'));
+            $dateFin->add(new DateInterval('PT' . floor($this->dureeEstimee*60) . 'M'));
         } catch (Exception $e) {
             throw new RuntimeException("Impossible de calculer la date de fin de l'entretien professionnel #" . $this->getId(),-1,$e);
         }

@@ -49,8 +49,10 @@ class AideAgentCampagneViewHelper extends AbstractHelper
 
             $validationResponsable = $entretien?->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE)?->getHistoCreation();
             if ($validationResponsable) {
-                $validationResponsable->add(new DateInterval('P'.$infos['delai-observation'].'D'));
-                $infos['limite-observation'] = $validationResponsable;
+                if ($infos['delai-observation'] !== null) {
+                    $validationResponsable->add(new DateInterval('P' . $infos['delai-observation'] . 'D'));
+                    $infos['limite-observation'] = $validationResponsable;
+                } else  $infos['limite-observation'] = null;
             }
             if ($entretien?->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) {
                 $urlService = $this->getUrlService();
