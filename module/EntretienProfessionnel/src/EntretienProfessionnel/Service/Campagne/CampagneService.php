@@ -172,10 +172,6 @@ class CampagneService
         return $last;
     }
 
-    /**
-     * @return EntretienProfessionnel[]
-     * todo a mettre dans EPS
-     */
     public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats): array
     {
         $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
@@ -219,8 +215,18 @@ class CampagneService
             $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER),
         ];
 
+        $now = new DateTime();
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
-        return $entretiens;
+        $filtered = [];
+        foreach ($entretiens as $id => $entretiens_) {
+            $entretiens_ = array_filter($entretiens_, function (EntretienProfessionnel $entretien) use ($now) {
+                return $entretien->getDateFin() < $now;
+            });
+            if (!empty($entretiens_)) {
+                $filtered[$id] = $entretiens_;
+            }
+        }
+        return $filtered;
     }
 
     /**
@@ -230,7 +236,6 @@ class CampagneService
     public function getEntretiensEnAttenteAutorite(Campagne $campagne): array
     {
         $etats = [
-            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE),
             $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION),
         ];
 
