@@ -145,6 +145,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
 <div class="row">
     <div class="col-md-6">
         <?php if (!empty($exclus)) : ?>
+            <?php usort($exclus, function (Agent $a, Agent $b) { return $a->getDenomination() <=> $b->getDenomination(); }); ?>
             <h2>
                 Agent·es exclu·es
                 <span class="badge"> <?php echo count($exclus); ?> </span>
@@ -163,6 +164,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </div>
     <div class="col-md-6">
         <?php if (!empty($outStructures)) : ?>
+            <?php usort($outStructures, function (EntretienProfessionnel $a, EntretienProfessionnel $b) { return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination(); }); ?>
             <h2>
                 Entretiens hors structure
                 <span class="badge"> <?php echo count($outStructures); ?> </span>

@@ -366,26 +366,27 @@ class CampagneService
             }, $structures));
         }
 
-        foreach ($agents as $agent) {
-            if (!isset($administratifs[$agent->getId()])) {
-                $exclus[$agent->getId()] = $agent;
-                $raison[$agent->getId()] = "<li>L'agent n'a pas le statut <code>administratif</code> à la date du ".$strDateSituation ."</li>";
-            }
-        }
+//        // NB : Si on désactive ce truc, penser à modifier le foreach ci-après.
+//        foreach ($agents as $agent) {
+//            if (!isset($administratifs[$agent->getId()])) {
+//                $exclus[$agent->getId()] = $agent;
+//                $raison[$agent->getId()] = "<li>L'agent n'a pas le statut <code>administratif</code> à la date du ".$strDateSituation ."</li>";
+//            }
+//        }
 
-        foreach ($administratifs as $agent) {
+//        foreach ($administratifs as $agent) {
+        foreach ($agents as $agent) {
             $raison[$agent->getId()] = "";
 
             // EXCLUSION ///////////////////////////////////////////////////////////////////////////////////////////////
-
             $estExclus = false;
             $estFiltre = false;
 
-            if ($agent->isForceExclus($campagne, $structures)) {
-                $exclus[$agent->getId()] = $agent;
-                $raison[$agent->getId()] .= "Agent·e exclu·e de la campagne par une exception";
-                continue;
-            }
+//            if ($agent->isForceExclus($campagne, $structures)) {
+//                $exclus[$agent->getId()] = $agent;
+//                $raison[$agent->getId()] .= "<li>Agent·e exclu·e de la campagne par une exception</li>";
+//                continue;
+//            }
 
             if (!$agent->isForceAvecObligation($campagne, $structures)) {
 //                $result = isset($affectationDateSituation[$agent->getId()]);
@@ -403,50 +404,50 @@ class CampagneService
                     $result = $agent->hasAffectationActive($dateEnPoste);
                     if ($result === false) {
                         $estExclus = true;
-                        $raison[$agent->getId()] .= "Sans affectation à la date du " . $strDatePriseDePoste;
+                        $raison[$agent->getId()] .= "<li>Sans affectation à la date du " . $strDatePriseDePoste . "</li>";
                     }
 //                    $result = $agent->hasGradeActif($dateEnPoste);
                     $result = isset($gradesDatePoste[$agent->getId()]);
                     if ($result === false) {
                         $estExclus = true;
-                        $raison[$agent->getId()] .= "Sans grade à la date du " . $strDatePriseDePoste;
+                        $raison[$agent->getId()] .= "<li>Sans grade à la date du " . $strDatePriseDePoste . "</li>";
                     }
 //                    $result = $agent->hasStatutActif($dateEnPoste);
                     $result = isset($statutsDatePoste[$agent->getId()]);
                     if ($result === false) {
                         $estExclus = true;
-                        $raison[$agent->getId()] .= "Sans statut à la date du " . $strDatePriseDePoste;
+                        $raison[$agent->getId()] .= "<li>Sans statut à la date du " . $strDatePriseDePoste . "</li>";
                     }
+                }
 
-                    // Utilisation des paramètres d'exclusion à la date de situation
-                    $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateSituation(), $structures, true);
-                    if ($result[0] === true) {
-                        $estExclus = true;
-                        $explication = implode(", ", $result[1]);
-                        $exclus[$agent->getId()] = $agent;
-                        $raison[$agent->getId()] .= "<li>Affectation excluante  à la date du " . $strDateSituation . " (" . $explication . " dans les structures considérées [" . $strStructure . "])</li>";
-                    }
-                    $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateSituation(), false, $gradesDateSituation[$agent->getId()]??null);
-                    if ($result[0] === true) {
-                        $estExclus = true;
-                        $explication = implode(", ", $result[1]);
-                        $exclus[$agent->getId()] = $agent;
-                        $raison[$agent->getId()] .= "Corps excluant à la date du " . $strDateSituation . " (" . $explication . ")";
-                    }
-                    $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateSituation(), false, $statutsDateSituation[$agent->getId()]??null);
-                    if ($result[0] === true) {
-                        $estExclus = true;
-                        $explication = implode(", ", $result[1]);
-                        $exclus[$agent->getId()] = $agent;
-                        $raison[$agent->getId()] .= "Statut excluant à la date du " . $strDateSituation . " (" . $explication . ")";
-                    }
-                    $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS], $campagne->getDateSituation());
-                    if ($result[0] === true) {
-                        $estExclus = true;
-                        $explication = implode(", ", $result[1]);
-                        $exclus[$agent->getId()] = $agent;
-                        $raison[$agent->getId()] .= "Emploi-Type excluant  à la date du " . $strDatePriseDePoste . "(" . $explication . ")";
-                    }
+                // Utilisation des paramètres d'exclusion à la date de situation
+                $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateSituation(), $structures, true);
+                if ($result[0] === true) {
+                    $estExclus = true;
+                    $explication = implode(", ", $result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] .= "<li>Affectation excluante  à la date du " . $strDateSituation . " (" . $explication . " dans les structures considérées [" . $strStructure . "])</li>";
+                }
+                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateSituation(), false, $gradesDateSituation[$agent->getId()]??null);
+                if ($result[0] === true) {
+                    $estExclus = true;
+                    $explication = implode(", ", $result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] .= "Corps excluant à la date du " . $strDateSituation . " (" . $explication . ")";
+                }
+                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateSituation(), false, $statutsDateSituation[$agent->getId()]??null);
+                if ($result[0] === true) {
+                    $estExclus = true;
+                    $explication = implode(", ", $result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] .= "Statut excluant à la date du " . $strDateSituation . " (" . $explication . ")";
+                }
+                $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS], $campagne->getDateSituation());
+                if ($result[0] === true) {
+                    $estExclus = true;
+                    $explication = implode(", ", $result[1]);
+                    $exclus[$agent->getId()] = $agent;
+                    $raison[$agent->getId()] .= "Emploi-Type excluant  à la date du " . $strDateSituation . "(" . $explication . ")";
                 }
             }
 
@@ -507,8 +508,8 @@ class CampagneService
             }
         }
 
-        $forcages = $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagneAndAgentsAndType($campagne, $agents, AgentForceSansObligation::FORCE_SANS_OBLIGATION);
-        foreach ($forcages as $forcage) {
+        $exceptions = $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagneAndAgents($campagne, $agents);
+        foreach ($exceptions[AgentForceSansObligation::FORCE_SANS_OBLIGATION] as $forcage) {
             $agent = $forcage->getAgent();
             if (isset($exclus[$agent->getId()]) OR isset($obligatoires[$agent->getId()])) {
                 unset($exclus[$agent->getId()]);
@@ -517,9 +518,16 @@ class CampagneService
                 $raison[$agent->getId()] = '<li>Agent·e forcé·e sans obligation  dans la campagne par une exception</li>';
             }
         }
-
-        $forcages = $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagneAndAgentsAndType($campagne, $agents, AgentForceSansObligation::FORCE_AVEC_OBLIGATION);
-        foreach ($forcages as $forcage) {
+        foreach ($exceptions[AgentForceSansObligation::FORCE_EXCLUS] as $forcage) {
+            $agent = $forcage->getAgent();
+            if (isset($obligatoires[$agent->getId()]) OR isset($facultatifs[$agent->getId()])) {
+                unset($obligatoires[$agent->getId()]);
+                unset($facultatifs[$agent->getId()]);
+                $exclus[$agent->getId()] = $agent;
+                $raison[$agent->getId()] = '<li>Agent·e exclu·e dans la campagne par une exception</li>';
+            }
+        }
+        foreach ($exceptions[AgentForceSansObligation::FORCE_AVEC_OBLIGATION] as $forcage) {
             $agent = $forcage->getAgent();
             if (isset($exclus[$agent->getId()]) OR isset($facultatifs[$agent->getId()])) {
                 unset($exclus[$agent->getId()]);
@@ -528,6 +536,7 @@ class CampagneService
                 $raison[$agent->getId()] = '<li>Agent·e forcé·e avec obligation dans la campagne par une exception</li>';
             }
         }
+
 
         if ($entretiens !== null) {
             foreach ($entretiens as $entretien) {
@@ -576,7 +585,6 @@ class CampagneService
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
 
 
-        // purje ???
         $date = new DateTime();
         $statuts = [];
         foreach ($obligatoires as $obligatoire) {

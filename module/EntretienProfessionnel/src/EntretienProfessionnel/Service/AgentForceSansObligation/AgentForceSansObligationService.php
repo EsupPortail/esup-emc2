@@ -136,5 +136,25 @@ class AgentForceSansObligationService {
         return $result;
     }
 
+    /** @return AgentForceSansObligation[] */
+    public function getAgentsForcesSansObligationByCampagneAndAgents(Campagne $campagne, array $agents): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentForceSansObligation.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('agentForceSansObligation.campagne = :campagne')->setParameter('campagne', $campagne)
+            ->andWhere('agentForceSansObligation.histoDestruction IS NULL');
+        $result = $qb->getQuery()->getResult();
+
+        $dictionnaires = [];
+        $dictionnaires[AgentForceSansObligation::FORCE_EXCLUS] = [];
+        $dictionnaires[AgentForceSansObligation::FORCE_AVEC_OBLIGATION] = [];
+        $dictionnaires[AgentForceSansObligation::FORCE_SANS_OBLIGATION] = [];
+        /** @var AgentForceSansObligation $exception */
+        foreach ($result as $exception) {
+            $dictionnaires[$exception->getType()][$exception->getAgent()->getId()] = $exception;
+        }
+        return $dictionnaires;
+    }
+
 
 }
