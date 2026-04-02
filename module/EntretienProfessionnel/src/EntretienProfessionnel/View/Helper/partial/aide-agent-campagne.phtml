@@ -81,13 +81,15 @@ $estDepasseObservation = ($entretien and isset($infos['limite-observation']) and
                     <div class="alert alert-warning">
                         <strong><span class="icon icon-attention"></span> Vous n'avez pas encore accepté votre convocation.</strong>
                         <br>
-                        Lors de votre convocation, vous avez reçu un courrier électronique, vous rappelant le cadre et
-                        vous fournissant un lien pour accepter les dates de votre entretien.
+                        Vous avez reçu un mail de convocation contenant la date, l'heure et le lieu de votre entretien
+                        professionnel ainsi qu'un lien permettant d'accepter la convocation. Si vous n’êtes pas disponible
+                        à cette date, veuillez vous adresser à votre responsable d'entretien professionnel ou à votre
+                        responsable de structure pour convenir d’un autre RDV. Vous recevrez alors une nouvelle invitation.
                         <br>
-                        Vous pouvez-aussi accepter celui-ci en cliquant sur le lien suivant : <a
-                                href="<?php echo $infos['url-acceptation']; ?>" class="ajax-modal"
-                                data-event="modification"> lien d'acception de
-                            l'entretien professionnel </a>
+                        Vous pouvez également accepter votre convocation via le lien suivant :
+                        <a href="<?php echo $infos['url-acceptation']; ?>" class="ajax-modal" data-event="modification">
+                            lien d'acception de l'entretien professionnel
+                        </a>
                     </div>
                 <?php endif; ?>
 
