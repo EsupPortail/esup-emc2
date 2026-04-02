@@ -69,10 +69,12 @@ class CorrespondanceService {
     {
         $correspondances = $this->getCorrespondances($champ, $ordre, $avecAgent);
         usort($correspondances, function (Correspondance $a, Correspondance $b) {
-           if ($a->getType() !== $b->getType()) return $a->getType()->getCode() <=> $b->getType()->getCode();
-           if ($a->getCategorie() !== $b->getCategorie()) return $a->getCategorie() <=> $b->getCategorie();
-           if ($a->getLibelleLong() !== $b->getLibelleLong()) return $a->getLibelleLong() <=> $b->getLibelleLong();
-           return $a->getId() <=> $b->getId();
+            $codeTypeA = $a->getType()?$a->getType()->getCode():"Sans type";
+            $codeTypeB = $b->getType()?$b->getType()->getCode():"Sans type";
+            if ($codeTypeA !== $codeTypeB) return $codeTypeA <=> $codeTypeB;
+            if ($a->getCategorie() !== $b->getCategorie()) return $a->getCategorie() <=> $b->getCategorie();
+            if ($a->getLibelleLong() !== $b->getLibelleLong()) return $a->getLibelleLong() <=> $b->getLibelleLong();
+            return $a->getId() <=> $b->getId();
         });
         if ($ouvert === true) {
             $correspondances = array_filter($correspondances, function (Correspondance $correspondance) { return $correspondance->estEnCours();});
