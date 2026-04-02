@@ -105,7 +105,7 @@ class CorrespondanceService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Correcpondance partagent le même id [".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs [".Correspondance::class."] partagent le même id [".$id."]",0,$e);
         }
         return $result;
     }
