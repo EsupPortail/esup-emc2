@@ -2,6 +2,9 @@
 
 namespace Structure\Service\Structure;
 
+use Agent\Service\AgentAffectation\AgentAffectationService;
+use Agent\Service\AgentGrade\AgentGradeService;
+use Agent\Service\AgentStatut\AgentStatutService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -19,15 +22,24 @@ class StructureServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
+         * @var AgentAffectationService $agentAffectationService
+         * @var AgentGradeService $agentGradeService
+         * @var AgentStatutService $agentStatutService
          * @var ParametreService $parametreService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $agentAffectationService = $container->get(AgentAffectationService::class);
+        $agentGradeService = $container->get(AgentGradeService::class);
+        $agentStatutService = $container->get(AgentStatutService::class);
         $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
 
         $service = new StructureService();
         $service->setObjectManager($entityManager);
+        $service->setAgentAffectationService($agentAffectationService);
+        $service->setAgentGradeService($agentGradeService);
+        $service->setAgentStatutService($agentStatutService);
         $service->setParametreService($parametreService);
         $service->setUserService($userService);
 

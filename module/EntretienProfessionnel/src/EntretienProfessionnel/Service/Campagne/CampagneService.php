@@ -428,14 +428,14 @@ class CampagneService
                     $exclus[$agent->getId()] = $agent;
                     $raison[$agent->getId()] .= "<li>Affectation excluante  à la date du " . $strDateSituation . " (" . $explication . " dans les structures considérées [" . $strStructure . "])</li>";
                 }
-                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateSituation(), false, $gradesDateSituation[$agent->getId()]??null);
+                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS_EXCLUS], $campagne->getDateSituation(), false, $gradesDateSituation[$agent->getId()]??[]);
                 if ($result[0] === true) {
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
                     $exclus[$agent->getId()] = $agent;
                     $raison[$agent->getId()] .= "Corps excluant à la date du " . $strDateSituation . " (" . $explication . ")";
                 }
-                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateSituation(), false, $statutsDateSituation[$agent->getId()]??null);
+                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateSituation(), false, $statutsDateSituation[$agent->getId()]??[]);
                 if ($result[0] === true) {
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
@@ -476,7 +476,7 @@ class CampagneService
                     $raison[$agent->getId()] = "<li>Affectation invalide (à la date du ".$campagne->getDateSituation()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
                 }
 
-                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT],$campagne->getDateSituation(), false, $statutsDateSituation[$agent->getId()]??null);
+                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT],$campagne->getDateSituation(), false, $statutsDateSituation[$agent->getId()]??[]);
                 if ($result[0] === true)
                 {
                     $estFiltre = true;
@@ -492,7 +492,7 @@ class CampagneService
                     $raison[$agent->getId()] .= "<li>Emploi-type invalide (à la date du ".$campagne->getDateSituation()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
                 }
 
-                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],$campagne->getDateSituation(), false, $grades[$agent->getId()]??null);
+                $result = $agent->isValideCorps($parametres[EntretienProfessionnelParametres::TEMOIN_CORPS],$campagne->getDateSituation(), false, $grades[$agent->getId()]??[]);
                 if ($result[0] === true)
                 {
                     $estFiltre = true;

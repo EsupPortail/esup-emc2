@@ -3,6 +3,9 @@
 namespace Structure\Service\Structure;
 
 use Agent\Entity\Db\AgentAffectation;
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
+use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
@@ -29,6 +32,9 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class StructureService
 {
+    use AgentAffectationServiceAwareTrait;
+    use AgentGradeServiceAwareTrait;
+    use AgentStatutServiceAwareTrait;
     use ProvidesObjectManager;
     use UserServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -634,6 +640,10 @@ EOS;
         $now = new DateTime();
         $parametres = $this->getParametreService()->getParametresByCategorieCode(StructureParametres::TYPE);
 
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents, $now);
+        $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents, $now);
+        $statuts = $this->getAgentStatutService()->getAgentStatutsByAgents($agents, $now);
+
         /** @var Agent $agent */
         foreach ($agents as $agent) {
             $raison[$agent->getId()] = "<ul>";
@@ -647,7 +657,7 @@ EOS;
                 $raison[$agent->getId()] .= "<li>Emploi-type invalide (".$explications.")</li>";
             }
 
-            $result = $agent->isValideStatut($parametres[StructureParametres::AGENT_TEMOIN_STATUT],$now, false);
+            $result = $agent->isValideStatut($parametres[StructureParametres::AGENT_TEMOIN_STATUT],$now, false, $statuts[$agent->getId()]??[]);
             if ($result[0] === true) {
                 $kept = false;
                 $explications = implode(", ", $result[1]);
@@ -662,7 +672,7 @@ EOS;
 
             }
 
-            $result = $agent->isValideCorps($parametres[StructureParametres::AGENT_TEMOIN_CORPS],$now, false);
+            $result = $agent->isValideCorps($parametres[StructureParametres::AGENT_TEMOIN_CORPS],$now, false,$grades[$agent->getId()]??[]);
             if ($result[0] === true) {
                 $kept = false;
                 $explications = implode(", ", $result[1]);

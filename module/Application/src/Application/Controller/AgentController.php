@@ -462,18 +462,31 @@ class AgentController extends AbstractActionController
     public function mesAgentsAction(): ViewModel
     {
         $agents = $this->listerAgents();
+
         $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
         $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents);
+        $statuts = $this->getAgentStatutService()->getAgentStatutsByAgents($agents);
 
         $campagne = $this->getCampagneService()->getBestCampagne();
 
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
+        $obligations = [];
+        foreach($campagnes as $campagne_){
+                [$obligation] = $this->getCampagneService()->trierAgents($campagne_, $agents);
+                $obligations[$campagne_->getId()] = $obligation;
+        }
+
+
         $vm = new ViewModel([
             'agents' => $agents,
+
             'campagne' => $campagne,
-
-            'grades' => $grades,
             'affectations' => $affectations,
+            'grades' => $grades,
+            'statuts' => $statuts,
 
+            'campagnes' => $campagnes,
+            'obligations' => $obligations,
         ]);
         return $vm;
     }
