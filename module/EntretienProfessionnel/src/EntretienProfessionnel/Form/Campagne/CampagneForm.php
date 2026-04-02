@@ -97,7 +97,7 @@ class CampagneForm extends Form
             'name' => 'date_en_poste',
             'type' => Date::class,
             'options' => [
-                'label' => "Date à laquelle sera considérée la situation de l'agent pour déterminer le caractère obligatoire des entretiens <span class='icon icon-information' title=\"Les affectations, statuts et grades sont examinés à cette date.\"></span> <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Date à laquelle sera considérée la situation de l'agent pour déterminer le caractère obligatoire des entretiens :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
