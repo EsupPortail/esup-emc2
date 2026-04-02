@@ -109,7 +109,7 @@ $estDepasseObservation = ($entretien and isset($infos['limite-observation']) and
                         <strong>Dernière action :</strong> votre entretien a eu lieu.
                         <br>
                         <strong>Prochaine étape :</strong>
-                        après la validation du responsable, vous aurez <?php echo $infos['delai-observation']; ?> jours pour exprimer vos observations.
+                        après la validation du responsable, vous aurez <?php echo $infos['delai-observation']??"N.C."; ?> jours pour exprimer vos observations.
 
                         <div class="alert alert-info" style="margin-top: 0.5rem;">
                             <span class="icon icon-info"></span> Vous serez prévenu·e par courrier électronique lors de la validation des comptes rendus par votre responsable.
@@ -125,7 +125,7 @@ $estDepasseObservation = ($entretien and isset($infos['limite-observation']) and
                         <strong>Dernière action :</strong> votre responsable a validé votre entretien professionnel.
                         <br>
                         <strong>Prochaine étape :</strong>
-                        vous avez jusqu'au <?php echo $infos['limite-observation']->format('d/m/Y à H:i'); ?> pour exprimer vos observations :
+                        vous avez jusqu'au <?php echo $infos['limite-observation']?$infos['limite-observation']->format('d/m/Y à H:i'):"N.C."; ?> pour exprimer vos observations :
                         <a href="<?php echo $infos['url-entretien']; ?>#validation" target="_blank"> exprimer mes observations</a>.
                         <br>
                         <div class="alert alert-info" style="margin-top: 0.5rem;">
