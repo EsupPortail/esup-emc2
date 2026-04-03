@@ -346,9 +346,8 @@ class NotificationService extends \Application\Service\Notification\Notification
 
     public function triggerRappelCampagneSuperieur(Campagne $campagne, Agent $superieur): ?Mail
     {
-        $agents = array_map(function (AgentSuperieur $a) {
-            return $a->getAgent();
-        }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur));
+        $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateEnPoste(), $campagne->getDateFin());
+
         [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         $agents = $obligatoires;
@@ -388,9 +387,7 @@ class NotificationService extends \Application\Service\Notification\Notification
 
     public function triggerRappelCampagneAutorite(Campagne $campagne, Agent $autorite): ?Mail
     {
-        $agents = array_map(function (AgentAutorite $a) {
-            return $a->getAgent();
-        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite));
+        $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateEnPoste(), $campagne->getDateFin());
 
         [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);

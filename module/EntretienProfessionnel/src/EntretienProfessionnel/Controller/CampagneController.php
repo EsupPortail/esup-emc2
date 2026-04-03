@@ -551,7 +551,7 @@ class CampagneController extends AbstractActionController
                 $autoriteId = $data['agent-sas']['id'];
                 $autorite = $this->getAgentService()->getAgent($autoriteId);
             }
-            $listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
+            $listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateEnPoste(), $campagne->getDateFin());
 
             if (!empty($listing)) {
                 $mail = $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite);

@@ -139,32 +139,32 @@ if ($nbTotal !== 0) {
         <tr>
             <?php if ($ratioAgent > 0) : ?>
                 <td class="entretien-agent" style="border:1px solid black;width: <?php echo $ratioAgent; ?>%;">
-                    <?php echo round($ratioAgent); ?>%
+                    <?php echo round($ratioAgent); ?>% (<?php echo $nbValiderAgent."/".$nbTotal; ?>)
                 </td>
             <?php endif; ?>
             <?php if ($ratioAutorite > 0) : ?>
                 <td class="entretien-autorite" style="border:1px solid black;width: <?php echo $ratioAutorite; ?>%;">
-                    <?php echo round($ratioAutorite); ?>%
+                    <?php echo round($ratioAutorite); ?>% (<?php echo $nbValiderAutorite."/".$nbTotal; ?>)
                 </td>
             <?php endif; ?>
             <?php if ($ratioObservation > 0) : ?>
                 <td class="entretien-observation" style="border:1px solid black;width: <?php echo $ratioObservation; ?>%;">
-                    <?php echo round($ratioObservation); ?>%
+                    <?php echo round($ratioObservation); ?>% (<?php echo $nbValiderObservation."/".$nbTotal; ?>)
                 </td>
             <?php endif; ?>
             <?php if ($ratioSuperieur > 0) : ?>
                 <td class="entretien-superieur" style="border:1px solid black;width: <?php echo $ratioSuperieur; ?>%;">
-                    <?php echo round($ratioSuperieur); ?>%
+                    <?php echo round($ratioSuperieur); ?>% (<?php echo $nbValiderSuperieur."/".$nbTotal; ?>)
                 </td>
             <?php endif; ?>
             <?php if ($ratioPlanifie > 0) : ?>
                 <td class="planifie" style="border:1px solid black;width: <?php echo $ratioPlanifie; ?>%;">
-                    <?php echo round($ratioPlanifie); ?>%
+                    <?php echo round($ratioPlanifie); ?>% (<?php echo $nbEncours."/".$nbTotal; ?>)
                 </td>
             <?php endif; ?>
             <?php if ($ratioSans > 0) : ?>
                 <td class="sans" style="border:1px solid black;width: <?php echo $ratioSans; ?>%;">
-                    <?php echo round($ratioSans); ?>%
+                    <?php echo round($ratioSans); ?>% (<?php echo $nbSans."/".$nbTotal; ?>)
                 </td>
             <?php endif; ?>
         </tr>

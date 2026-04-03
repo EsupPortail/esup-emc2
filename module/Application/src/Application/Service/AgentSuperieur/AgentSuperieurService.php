@@ -141,11 +141,13 @@ class AgentSuperieurService
     public function getAgentsWithSuperieur(?Agent $superieur, DateTime $dateDebut = null, DateTime $dateFin = null): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agent.deletedOn IS NULL')
-            ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction >= :fin')
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
+            ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction >= :fin')
+            ->andWhere('agentsuperieur.deletedOn IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
+
             ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut < :fin')->setParameter('fin', $dateFin)
-            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin > :debut')->setParameter('debut', $dateDebut)
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin > :debut')->setParameter('debut', $dateDebut);
         ;
 
         $result = $qb->getQuery()->getResult();
