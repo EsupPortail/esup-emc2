@@ -596,9 +596,7 @@ class CampagneController extends AbstractActionController
                 $superieurId = $data['agent-sas']['id'];
                 $superieur = $this->getAgentService()->getAgent($superieurId);
             }
-// TODO ticket #63688
-            //$listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
-            $listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
+            $listing = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateEnPoste(), $campagne->getDateFin());
 
             if (!empty($listing)) {
                 $mail = $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur);

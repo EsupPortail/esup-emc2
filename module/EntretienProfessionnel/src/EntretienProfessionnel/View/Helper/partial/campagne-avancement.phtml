@@ -147,6 +147,11 @@ if ($nbTotal !== 0) {
                     <?php echo round($ratioAutorite); ?>%
                 </td>
             <?php endif; ?>
+            <?php if ($ratioObservation > 0) : ?>
+                <td class="entretien-observation" style="border:1px solid black;width: <?php echo $ratioObservation; ?>%;">
+                    <?php echo round($ratioObservation); ?>%
+                </td>
+            <?php endif; ?>
             <?php if ($ratioSuperieur > 0) : ?>
                 <td class="entretien-superieur" style="border:1px solid black;width: <?php echo $ratioSuperieur; ?>%;">
                     <?php echo round($ratioSuperieur); ?>%
