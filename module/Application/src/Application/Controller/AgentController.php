@@ -548,12 +548,12 @@ class AgentController extends AbstractActionController
         $entretiensR = [];
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
             $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
-            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
             $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($connectedAgent, $campagne, false, false);
         }
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
             $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
-            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
             $entretiensR = [];
         }
 
@@ -571,7 +571,7 @@ class AgentController extends AbstractActionController
         //manque le tri des agents !!!!
         [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
         $finalises = [];
         $encours = [];
         foreach ($entretiens as $entretien) {

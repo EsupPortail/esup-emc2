@@ -475,7 +475,7 @@ class CampagneController extends AbstractActionController
 
         $timing["agents data"] = microtime(true);
 
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
 
         $timing["entretiens data"] = microtime(true);
 

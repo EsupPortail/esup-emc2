@@ -346,15 +346,13 @@ class CampagneService
         $strDateSituation = $campagne->getDateSituation()->format('d/m/Y');
 
 
-//        /** Tentative de réduction du nombre de requêtes */
-//        $affectationDatePrisePoste = $this->getAgentAffectationService()->getAgentsAffectationsByAgentsAndDate($agents, $dateEnPoste);
-//        $affectationDateSituation = $this->getAgentAffectationService()->getAgentsAffectationsByAgentsAndDate($agents, $dateSituation, $structures);
-
+        $affectationDatePoste = $this->getAgentAffectationService()->getAgentsAffectationsByAgentsAndDate($agents, $dateEnPoste);
+        $affectationDateSituation = $this->getAgentAffectationService()->getAgentsAffectationsByAgentsAndDate($agents, $dateSituation, $structures);
 
         $statutsDateSituation = $this->getAgentStatutService()->getAgentStatutsByAgents($agents, $dateSituation);
-        $statutsDatePoste = $this->getAgentStatutService()->getAgentStatutsByAgents($agents, $dateEnPoste);
+//        $statutsDatePoste = $this->getAgentStatutService()->getAgentStatutsByAgents($agents, $dateEnPoste);
         $gradesDateSituation = $this->getAgentGradeService()->getAgentGradesByAgents($agents, $dateSituation);
-        $gradesDatePoste = $this->getAgentGradeService()->getAgentGradesByAgents($agents, $dateEnPoste);
+//        $gradesDatePoste = $this->getAgentGradeService()->getAgentGradesByAgents($agents, $dateEnPoste);
 
 
         // les fonctionnaires ne peuvent pas être exclus de la campagne
@@ -394,8 +392,9 @@ class CampagneService
 //            }
 
             if (!$agent->isForceAvecObligation($campagne, $structures)) {
-//                $result = isset($affectationDateSituation[$agent->getId()]);
-                $result = $agent->hasAffectationActive($dateSituation, $structures);
+                $result = isset($affectationDateSituation[$agent->getId()]);
+//                $result = $agent->hasAffectationActive($dateSituation, $structures, $affectationDateSituation[$agent->getId()]??[]);
+//                $result = $agent->hasAffectationActive($dateSituation, null, $affectationDateSituation[$agent->getId()]??[]);
                 if ($result === false) {
                     $estExclus = true;
                     $raison[$agent->getId()] .= "<li>Sans affectation dans les structures considérées à la date du " . $strDateSituation."</li>";
@@ -405,24 +404,23 @@ class CampagneService
                 if (!isset($fonctionnaires[$agent->getId()])) {
                     // Exclusion si l'agent n'est pas en poste (affectation/grade/statut) à la date de prise de poste
                     // NB : peut-être détournée pour vérifier l'ancienneté
-//                    $result = isset($affectationDatePrisePoste[$agent->getId()]);
-                    $result = $agent->hasAffectationActive($dateEnPoste);
+//                    $result = $agent->hasAffectationActive($dateEnPoste);
+                    $result = isset($affectationDatePoste[$agent->getId()]);
                     if ($result === false) {
                         $estExclus = true;
                         $raison[$agent->getId()] .= "<li>Sans affectation à la date du " . $strDatePriseDePoste . "</li>";
                     }
-//                    $result = $agent->hasGradeActif($dateEnPoste);
+                    /**
                     $result = isset($gradesDatePoste[$agent->getId()]);
                     if ($result === false) {
                         $estExclus = true;
                         $raison[$agent->getId()] .= "<li>Sans grade à la date du " . $strDatePriseDePoste . "</li>";
                     }
-//                    $result = $agent->hasStatutActif($dateEnPoste);
                     $result = isset($statutsDatePoste[$agent->getId()]);
                     if ($result === false) {
                         $estExclus = true;
                         $raison[$agent->getId()] .= "<li>Sans statut à la date du " . $strDatePriseDePoste . "</li>";
-                    }
+                    }**/
                 }
 
                 // Utilisation des paramètres d'exclusion à la date de situation
@@ -587,7 +585,7 @@ class CampagneService
         }
         [$obligatoires, $facultatifs, $raison, $exclus] = $this->trierAgents($campagne, $agents, [], $structures);
 
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
 
 
         $date = new DateTime();

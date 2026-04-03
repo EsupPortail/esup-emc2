@@ -497,7 +497,7 @@ class EntretienProfessionnelService
     }
 
     /** @return EntretienProfessionnel[] @desc [agentId => entretien] */
-    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false, bool $withAffectation = true): array
+    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false): array
     {
         if ($campagne === null) return [];
 
