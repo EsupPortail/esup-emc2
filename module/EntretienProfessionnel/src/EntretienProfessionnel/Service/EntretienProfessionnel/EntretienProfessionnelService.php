@@ -501,14 +501,15 @@ class EntretienProfessionnelService
     {
         if ($campagne === null) return [];
 
-        $qb = $this->createQueryBuilder($withAffectation)
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.responsable', 'responsable')->addSelect('responsable')
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
-            ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents);
-        //gestion de l'affectation en date de la campagne (pourquoi ?)
-//        $qb = $qb
-//            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= :dateDebut')->setParameter('dateDebut', $campagne->getDateDebut())
-//            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :dateFin')->setParameter('dateFin', $campagne->getDateFin())
-//        ;
+            ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents)
+        ;
+
+        $qb = $qb->leftJoin('agent.affectations', 'affectation')->addSelect('affectation');
+
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
@@ -525,9 +526,9 @@ class EntretienProfessionnelService
     public function getEntretiensProfessionnelsByCampagne(Campagne $campagne, bool $sortByEtat = false): array
     {
         $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->addSelect('agent')->leftjoin('entretien.agent', 'agent')
-            ->addSelect('responsable')->leftjoin('entretien.responsable', 'responsable')
-            ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
+            ->addSelect('agent')->join('entretien.agent', 'agent')
+            ->addSelect('responsable')->join('entretien.responsable', 'responsable')
+            ->addSelect('campagne')->join('entretien.campagne', 'campagne')
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.histoDestruction IS NULL')
         ;

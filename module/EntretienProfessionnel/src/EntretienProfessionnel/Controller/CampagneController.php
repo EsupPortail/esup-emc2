@@ -444,6 +444,7 @@ class CampagneController extends AbstractActionController
      */
     public function structureAction(): ViewModel
     {
+        $timing["début"] = microtime(true);
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
         $structure = $this->getStructureService()->getRequestedStructure($this);
@@ -451,7 +452,17 @@ class CampagneController extends AbstractActionController
         if ($structure === null) {
             throw new RuntimeException("Aucune structure de trouvée.");
         }
+
+        // sert pour le select sur l'onglet entretien professionnel
+        $campagnes = $this->getCampagneService()->getCampagnes();
+
+        $timing["base data"] = microtime(true);
+
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+
+        $timing["structure data"] = microtime(true);
+
+
         $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
@@ -461,23 +472,17 @@ class CampagneController extends AbstractActionController
                 $agents[] = $agentForce;
             }
         }
+
+        $timing["agents data"] = microtime(true);
+
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+
+        $timing["entretiens data"] = microtime(true);
+
+
         [$obligatoires, $facultatifs, $raison, $exclus, $inStructures, $outStructures] = $this->getCampagneService()->trierAgents($campagne, $agents, $entretiens,  $structures);
 
-        $dateSituation = $campagne->getDateSituation();
-//        $entretiens = array_filter($entretiens,
-//            function (EntretienProfessionnel $entretien) use ($dateSituation, $structures) {
-//                $agent = $entretien->getAgent();
-////                $affectations = $agent->getAffectationsActifs($dateSituation);
-//                $affectations = $agent->getAffectationsActifs($entretien->getDateEntretien());
-//                foreach ($affectations as $affectation) {
-//                    if (in_array($affectation->getStructure(), $structures)) {
-//                        return true;
-//                    }
-//                }
-//                return false;
-//        });
-
+        $timing["classement agent"] = microtime(true);
 
         $finalises = [];
         $encours = [];
@@ -489,16 +494,11 @@ class CampagneController extends AbstractActionController
             }
         }
 
-//        $last = $this->getCampagneService()->getLastCampagne();
-//        $campagnes = $this->getCampagneService()->getCampagnesActives();
-//        $campagnesFutures = $this->getCampagneService()->getCampagnesFutures();
-//        if ($last !== null) $campagnes[] = $last;
-//        usort($campagnes, function (Campagne $a, Campagne $b) {
-//            return $a->getDateDebut() <=> $b->getDateDebut();
-//        });
+        $timing["classement ep"] = microtime(true);
 
-        $campagnes = $this->getCampagneService()->getCampagnes();
         $progression = $this->getCampagneProgressionStructureService()->getCampagneProgressionStructureByCampagneAndStructure($campagne, $structure);
+
+        $timing["barre progression"] = microtime(true);
 
         /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
         $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne, 'structure' => $structure];
@@ -529,8 +529,10 @@ class CampagneController extends AbstractActionController
 
             // explications
             'raison' => $raison,
-
             'templates' => $templates,
+
+            //debug
+            'timing' => $timing,
         ]);
     }
 
@@ -549,8 +551,6 @@ class CampagneController extends AbstractActionController
                 $autoriteId = $data['agent-sas']['id'];
                 $autorite = $this->getAgentService()->getAgent($autoriteId);
             }
-// TODO ticket #63688
-            //$listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateFixe()??$campagne->getDateDebut(), $campagne->getDateFixe()??$campagne->getDateFin());
             $listing = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
 
             if (!empty($listing)) {

@@ -26,6 +26,7 @@ use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
 use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
+use Application\View\Helper\TimerViewHelper;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
@@ -303,6 +304,7 @@ return [
             'actionIcon' => ActionIconViewHelper::class,
             'synchroniserIcon' => SynchorniserIconViewHelper::class,
             'historiqueBloc' => HistoriqueBlocViewHelper::class,
+            'timer' => TimerViewHelper::class,
         ],
     ],
 

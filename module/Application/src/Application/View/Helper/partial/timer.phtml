@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @see \Application\View\Helper\TimerViewHelper
+ * @var  array $timing
+ * @var  bool $debug
+ * @var  array $options
+ */
+
+//PHP 8.5 $baseTime = array_first($timing);
+$baseTime = floor($timing[array_key_first($timing)]);
+?>
+
+
+<?php if ($debug) : ?>
+    <?php $last = 0; ?>
+    <table class="timer">
+        <thead>
+        <tr>
+            <th> Étape </th>
+            <th> Temps </th>
+            <th> Duration </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($timing as $etape => $time) : ?>
+            <?php
+                $passage = $time - $baseTime;
+                $duration = $passage - $last;
+                $last = $passage;
+            ?>
+            <tr>
+                <td class="text"> <?php echo $etape; ?> </td>
+                <td class="value"> <?php echo number_format($passage,3); ?> </td>
+                <td class="value"> <?php echo number_format($duration,3); ?> </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+
+<style>
+    table.timer {
+        border : 1px solid black;
+    }
+
+    table.timer th {
+        background: var(--unistrap-color-main);
+        padding: 0.25rem;
+        border : 1px solid black;
+    }
+
+    table.timer td.text {
+        text-align: left;
+        font-weight: bold;
+        padding: 0.25rem;
+        border : 1px solid black;
+        min-width: 20rem;
+    }
+
+    table.timer td.value {
+        text-align: right;
+        padding: 0.25rem;
+        border : 1px solid black;
+        min-width: 10rem;
+    }
+</style>

@@ -32,9 +32,15 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
  * @var EntretienProfessionnel[] $encours
  * @var EntretienProfessionnel[] $finalises
  * @var string[] $raison
- *
  * @var Rendu[] $templates
+ *
+ *
+ * $@var array $timing
  */
+
+$debug = true;
+$timing["partie phtml"] = microtime(true);
+
 
 // Filtrage des tableaux de convocations (obligatoires et facultatifs) retrait des agents ayant déjà un entretien
 $sansObligatoires = [];
@@ -81,6 +87,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </div>
 </div>
 
+<?php $timing["phtml infos"] = microtime(true); ?>
+
 <?php if (!empty($finalises)) : ?>
     <h2>
         Entretiens professionnels finalisés
@@ -91,6 +99,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <?php echo $this->entretienProfessionnelArray($finalises, ['affichages' => ['annee' => false], 'id' => 'complet', 'from-structure' => $structure->getId()]); ?>
 <?php endif; ?>
 
+<?php $timing["phtml EP finalisés"] = microtime(true); ?>
 
 <?php if (!empty($encours)) : ?>
     <h2>
@@ -101,6 +110,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     <?php /** @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper */ ?>
     <?php echo $this->entretienProfessionnelArray($encours, ['affichages' => ['annee' => false], 'id' => 'encours', 'from-structure' => $structure->getId()]); ?>
 <?php endif; ?>
+
+<?php $timing["phtml EP en cours"] = microtime(true); ?>
 
 <?php if (!empty($obligatoires) AND !empty($sansObligatoires)) : ?>
     <h2>
@@ -115,6 +126,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </h2>
     <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien', 'raison' => $raison]); ?>
 <?php endif; ?>
+
+<?php $timing["phtml convocations obligatoires"] = microtime(true); ?>
 
 <?php if (!empty($facultatifs)) : ?>
     <h2>
@@ -141,6 +154,8 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </div>
     <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raison]); ?>
 <?php endif; ?>
+
+<?php $timing["phtml convocations facultatifs"] = microtime(true); ?>
 
 <div class="row">
     <div class="col-md-6">
@@ -183,6 +198,11 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
 
     </div>
 </div>
+
+<?php $timing["phtml exception"] = microtime(true); ?>
+
+<?php echo $this->timer($timing); ?>
+
 
 <script>
     $('button#campagne-tab').addClass('active');
