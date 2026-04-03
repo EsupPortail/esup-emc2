@@ -1,0 +1,50 @@
+<?php
+
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+use Structure\Entity\Db\Structure;
+
+/**
+ * @var string $current /i\ onglet actif pour mise en forme
+ */
+
+?>
+
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <?php /** @see \Application\Controller\AgentHierarchieController::indexAction() */ ?>
+    <button class="nav-link" id="gestion-tab"
+            data-bs-toggle="tab" data-bs-target="#gestion"
+            type="button" role="tab" aria-controls="gestion" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('agent/hierarchie', [],[], true); ?>'"
+    >
+        Gestion des chaînes
+    </button>
+    <?php /** @see \Application\Controller\AgentHierarchieController::autoriteAction() */ ?>
+    <button class="nav-link" id="autorite-tab"
+            data-bs-toggle="tab" data-bs-target="#autorite"
+            type="button" role="tab" aria-controls="autorite" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('agent/hierarchie/autorite', [],[], true); ?>'"
+    >
+        Autorités hiérarchiques
+    </button>
+    <?php /** @see \Application\Controller\AgentHierarchieController::superieurAction() */ ?>
+    <button class="nav-link" id="superieur-tab"
+            data-bs-toggle="tab" data-bs-target="#superieur"
+            type="button" role="tab" aria-controls="superieur" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('agent/hierarchie/superieur', [],[], true); ?>'"
+    >
+        Supérieur·es hiérarchiques direct·es
+    </button>
+</div>
+
+<script>
+    $('button[aria-controls="<?php echo $current; ?>"]').addClass('active');
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

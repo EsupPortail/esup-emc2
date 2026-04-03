@@ -59,6 +59,8 @@ return [
                     'controller' => AgentHierarchieController::class,
                     'action' => [
                         'index',
+                        'autorite',
+                        'superieur',
                     ],
                     'privileges' => [
                         ChainePrivileges::CHAINE_INDEX
@@ -68,6 +70,7 @@ return [
                     'controller' => AgentHierarchieController::class,
                     'action' => [
                         'afficher',
+                        'afficher-chaine'
                     ],
                     'privileges' => [
                         ChainePrivileges::CHAINE_AFFICHER,
@@ -187,6 +190,18 @@ return [
                                 ],
                                 'may_terminate' => true,
                             ],
+                            'autorite' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/autorite',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::autoriteAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'autorite',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
                             'modifier' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -223,6 +238,18 @@ return [
                                 ],
                                 'may_terminate' => true,
                             ],
+                            'superieur' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/superieur',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::superieurAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'superieur',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
                             'supprimer' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -244,6 +271,18 @@ return [
                                         /** @see AgentHierarchieController::afficherAction(): */
                                         'controller' => AgentHierarchieController::class,
                                         'action'     => 'afficher',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'afficher-chaine' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher-chaine/:type/:agent',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::afficherChaineAction(): */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'afficher-chaine',
                                     ],
                                 ],
                                 'may_terminate' => true,

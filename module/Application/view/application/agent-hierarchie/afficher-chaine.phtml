@@ -1,0 +1,170 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
+use Application\Provider\Privilege\AgentPrivileges;
+
+/**
+ * @see \Application\Controller\AgentHierarchieController::afficherChaineAction()
+ * @var Agent $agent
+ * @var string $type
+ * @var AgentAutorite[]|AgentSuperieur[] $chaines
+ *
+ * @var string $appName
+ * @var AgentAutorite[]|AgentSuperieur[] $revoquees
+ * @var AgentAutorite[]|AgentSuperieur[] $historisees
+ * @var AgentAutorite[]|AgentSuperieur[] $terminees
+ * @var AgentAutorite[]|AgentSuperieur[] $encours
+ * @var AgentAutorite[]|AgentSuperieur[] $avenir
+ */
+
+$canAfficherAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+
+
+?>
+
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Chaînes valides</h2>
+        <h3>Passée</h3>
+
+        <?php usort($terminees, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+        <ul>
+        <?php foreach ($terminees as $chaine) : ?>
+            <?php $agent = $chaine->getAgent(); ?>
+            <li>
+                <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                <?php echo $agent->getDenomination(true); ?>
+                (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                &RightArrow;
+                <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+            </li>
+        <?php endforeach; ?>
+        </ul>
+
+        <h3>En cours</h3>
+
+        <?php usort($encours, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+        <ul>
+        <?php foreach ($encours as $chaine) : ?>
+            <?php $agent = $chaine->getAgent(); ?>
+            <li>
+                <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                <?php echo $agent->getDenomination(true); ?>
+                (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                &RightArrow;
+                <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+            </li>
+        <?php endforeach; ?>
+        </ul>
+
+        <h3>À venir</h3>
+
+        <?php usort($avenir, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+        <ul>
+            <?php foreach ($avenir as $chaine) : ?>
+                <?php $agent = $chaine->getAgent(); ?>
+                <li>
+                    <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                    <?php echo $agent->getDenomination(true); ?>
+                    (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+    </div>
+    <div class="col-md-6">
+
+            <h2>Chaînes revoquées</h2>
+            <span class="icon icon-info" title="Chaînes importées depuis le SIRH qui ont été manuellement révoquées depuis <?php echo $appName; ?>" style="cursor: help"> À propos de chaînes révoquées</span>
+            <?php usort($revoquees, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+                if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                    return $a->getDateDebut() <=> $b->getDateDebut();
+                }
+                return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+            });
+            ?>
+
+            <ul>
+                <?php foreach ($revoquees as $chaine) : ?>
+                    <?php $agent = $chaine->getAgent(); ?>
+                    <li>
+                        <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                        <?php echo $agent->getDenomination(true); ?>
+                        (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                        &RightArrow;
+                        <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                        <br>
+                        <em>revoquée le <?php echo $chaine->getHistoDestruction()->format('d/m/Y'); ?>
+                            par <?php echo $chaine->getHistoDestructeur()->getDisplayName(); ?></em>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+            <h2>Chaînes annulées</h2>
+            <?php usort($historisees, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
+                if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                    return $a->getDateDebut() <=> $b->getDateDebut();
+                }
+                return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+            });
+            ?>
+
+            <ul>
+                <?php foreach ($historisees as $chaine) : ?>
+                    <?php $agent = $chaine->getAgent(); ?>
+                    <li>
+                        <span class="badge"><?php echo $chaine->getSourceId(); ?></span>
+                        <?php echo $agent->getDenomination(true); ?>
+                        (<?php echo ($chaine->getDateDebut()) ? $chaine->getDateDebut()->format('d/m/Y') : "---"; ?>
+                        &RightArrow;
+                        <?php echo ($chaine->getDateFin()) ? $chaine->getDateFin()->format('d/m/Y') : "---"; ?>)
+                        <br>
+                        <em>annulée le <?php echo $chaine->getHistoDestruction()->format('d/m/Y'); ?>
+                            par <?php echo $chaine->getHistoDestructeur()->getDisplayName(); ?></em>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+    </div>
+</div>
+<!---->
+<?php //foreach ($chaines as $chaine): ?>
+<!--<div>-->
+<!--        --><?php //echo $chaine->getAgent()->getDenomination() ?>
+<!--        --><?php //if ($canAfficherAgent AND $this->isAllowed($chaine->getAgent(),AgentPrivileges::AGENT_AFFICHER )) : ?>
+<!--            <a href="--><?php //echo $this->url('agent/afficher', ['agent' => $chaine->getAgent()->getId()], [], true); ?><!--" class="action secondary" target="_blank">-->
+<!--                <span class="icon icon-voir"></span> Afficher-->
+<!--            </a>-->
+<!--        --><?php //endif; ?>
+<!--        <br>-->
+<!--        --><?php //echo $chaine->getDateDebut()?$chaine->getDateDebut()->format('d/m/Y'):" ---- " ?>
+<!--        &rightarrow;-->
+<!--        --><?php //echo $chaine->getDateFin()?$chaine->getDateFin()->format('d/m/Y'):" ---- " ?>
+<!--</div>-->
+<?php //endforeach; ?>
+
+
+

@@ -4,19 +4,22 @@
 
 use Application\Entity\Db\Agent;
 
-$this->headTitle("Gestion des chaînes hiérarchiques");
+$this->headTitle("Gestion des chaînes hiérarchiques - gestion");
 ?>
 
 <h1 class="page-header">
-    Gestion des chaînes hiérarchiques
+    Chaînes hiérarchiques
 </h1>
+
+<?php echo $this->partial('partial/onglet', ['current' => 'gestion']); ?>
+
 
 <h2> Extraction des chaînes hiérarchiques </h2>
 
-Extraction des chaînes hiérarchiques courrantes au format .csv avec :
+Extraction des chaînes hiérarchiques courantes au format .csv avec :
 <ul>
     <li>pour les supérieurs : <code>'agent', 'agent_id', 'superieur', 'superieur_id', 'structure·s d'affectation', 'debut', 'fin'</code></li>
-    <li>pour les autoritéss : <code>'agent', 'agent_id', 'autorite', 'autorite_id', 'structure·s d'affectation', 'debut', 'fin'</code></li>
+    <li>pour les autorités : <code>'agent', 'agent_id', 'autorite', 'autorite_id', 'structure·s d'affectation', 'debut', 'fin'</code></li>
 </ul>
 
 

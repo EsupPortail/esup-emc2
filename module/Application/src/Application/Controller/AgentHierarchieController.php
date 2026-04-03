@@ -10,6 +10,7 @@ use Application\Entity\Db\AgentSuperieur;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormAwareTrait;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormAwareTrait;
 use Application\Form\Chaine\ChaineFormAwareTrait;
+use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -22,6 +23,7 @@ use RuntimeException;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class AgentHierarchieController extends AbstractActionController
 {
@@ -29,6 +31,7 @@ class AgentHierarchieController extends AbstractActionController
     use AgentAutoriteServiceAwareTrait;
     use AgentRefServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
     use AgentHierarchieCalculFormAwareTrait;
     use AgentHierarchieImportationFormAwareTrait;
@@ -38,6 +41,94 @@ class AgentHierarchieController extends AbstractActionController
     {
         return new ViewModel([]);
     }
+
+    public function autoriteAction(): ViewModel
+    {
+        $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesCourants();
+
+        $chaines = [];
+        foreach ($autorites as $autorite) {
+            $agent = $autorite->getAutorite();
+            $chaines[$agent->getId()]['agent'] = $agent;
+            $chaines[$agent->getId()]['chaines'][] = $autorite;
+        }
+
+        return new ViewModel([
+            'chaines' => $chaines
+        ]);
+    }
+
+    public function superieurAction(): ViewModel
+    {
+        $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursCourants();
+
+        $chaines = [];
+        foreach ($superieurs as $superieur) {
+            $agent = $superieur->getSuperieur();
+            $chaines[$agent->getId()]['agent'] = $agent;
+            $chaines[$agent->getId()]['chaines'][] = $superieur;
+        }
+
+        return new ViewModel([
+            'chaines' => $chaines
+        ]);
+    }
+
+    public function afficherChaineAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $type = $this->params()->fromRoute('type');
+
+        $responsabilite = "inconnu";
+        $chaines = [];
+        if ($type === 'AUTORITE') {
+            $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent, true);
+            $responsabilite = "autorité hiérarchique";
+        }
+        if ($type === 'SUPERIEUR') {
+            $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent, true);
+            $responsabilite = "supérieur·e hiérarchique direct·e";
+        }
+
+        $now = new DateTime();
+
+        $revoquees = [];
+        $historisees = [];
+        $valides = [];
+        foreach ($chaines as $chaine) {
+            if ($chaine->getSourceId() !== 'EMC2' and $chaine->estHistorise()) {
+                $revoquees[] = $chaine;
+            } else {
+                if ($chaine->estHistorise()) {
+                    $historisees[] = $chaine;
+                } else {
+                    $valides[] = $chaine;
+                }
+            }
+        }
+
+        $terminees = []; $encours = []; $avenir = [];
+        foreach ($valides as $valide) {
+            if ($chaine->estFini($now)) $terminees[] = $valide;
+            if (!$chaine->estCommence()) $avenir[] = $valide;
+            if ($chaine->estEnCours()) $encours[] = $valide;
+        }
+
+        return new ViewModel([
+            'title' => "Affichage des responsabilités pour ".$agent->getDenomination(). " en tant que ".$responsabilite,
+            'agent' => $agent,
+            'type' => $type,
+            'chaines' => $chaines,
+
+            'appName' => $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::APP_NAME),
+            'revoquees' => $revoquees,
+            'historisees' => $historisees,
+            'terminees' => $terminees,
+            'encours' => $encours,
+            'avenir' => $avenir,
+        ]);
+    }
+
 
     public function afficherAction(): ViewModel
     {

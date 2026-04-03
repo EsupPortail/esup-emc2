@@ -142,7 +142,7 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
-            ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction >= :fin')
+            ->andWhere('agentsuperieur.histoDestruction IS NULL')
             ->andWhere('agentsuperieur.deletedOn IS NULL')
             ->andWhere('agent.deletedOn IS NULL')
 

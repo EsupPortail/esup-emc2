@@ -61,13 +61,6 @@ class AgentAutoriteService
     {
         $qb = $this->getObjectManager()->getRepository(AgentAutorite::class)->createQueryBuilder('agentautorite')
             ->join('agentautorite.agent', 'agent')->addSelect('agent')
-//            ->leftjoin ('agent.grades','agrade')->addSelect('agrade')
-//            ->leftjoin('agrade.bap', 'correspondance')->addSelect('correspondance')
-//            ->leftjoin('correspondance.type', 'ctype')->addSelect('ctype')
-//            ->leftJoin('agrade.grade', 'grade')->addSelect('grade')
-//            ->leftJoin('agrade.corps', 'corps')->addSelect('corps')
-//            ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
-//            ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
             ->join('agentautorite.autorite', 'autorite')->addSelect('autorite')
             ->andWhere('agentautorite.deletedOn IS NULL');
         return $qb;
@@ -158,7 +151,7 @@ class AgentAutoriteService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
-            ->andWhere('agentautorite.histoDestruction IS NULL OR agentautorite.histoDestruction >= :fin')
+            ->andWhere('agentautorite.histoDestruction IS NULL')
             ->andWhere('agentautorite.deletedOn IS NULL')
             ->andWhere('agent.deletedOn IS NULL')
 
