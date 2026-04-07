@@ -139,17 +139,7 @@ return [
                         AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                     ],
                 ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'valider-element',
-                        'revoquer-element',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_ELEMENT_VALIDER,
-                    ],
-                    'assertion' => AgentAssertion::class,
-                ],
+
                 /** NEW STUFFS CCC */
 
                 [
@@ -300,29 +290,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action' => 'ajouter-application',
-                            ],
-                        ],
-                    ],
-
-                    /** VALIDATION D'ELEMENT **************************************************************************/
-
-                    'valider-element' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/valider-element/:type/:id',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'valider-element',
-                            ],
-                        ],
-                    ],
-                    'revoquer-element' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/revoquer-element/:validation',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'revoquer-element',
                             ],
                         ],
                     ],
