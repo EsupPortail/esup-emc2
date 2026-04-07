@@ -6,6 +6,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Provider\Template\TextTemplates;
 use UnicaenFichier\Entity\Db\Fichier;
 use UnicaenRenderer\Entity\Db\Template;
 
@@ -16,6 +17,8 @@ use UnicaenRenderer\Entity\Db\Template;
  * @var Campagne|null $campagne
  * @var FichePoste[] $fichesDePoste
  * @var Fichier[] $fichesDePostePdf
+ *
+ * @var bool $displayBandeau
  * @var Template $template
  */
 
@@ -34,10 +37,14 @@ $date = new DateTime();
 
 <h1 class="page-header"> Liste des fiches de poste des Agent·es dont je suis responsable</h1>
 
-<?php if ($template): ?>
+<?php if ($displayBandeau): ?>
     <div class="alert alert-info" style="margin-top: 0.5rem;">
-        <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
-        <?php echo $template->getCorps(); ?>
+        <?php if ($template) : ?>
+            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+            <?php echo $template->getCorps(); ?>
+        <?php else : ?>
+            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 

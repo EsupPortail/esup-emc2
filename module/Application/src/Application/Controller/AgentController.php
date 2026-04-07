@@ -34,6 +34,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Exception;
+use FichePoste\Provider\Parametre\FichePosteParametres;
 use FichePoste\Provider\Template\TextTemplates;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -166,8 +167,9 @@ class AgentController extends AbstractActionController
 
         $mobilites = $this->getAgentMobiliteService()->getAgentsMobilitesByAgent($agent);
 
+        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 
@@ -190,6 +192,7 @@ class AgentController extends AbstractActionController
 
             'mobilites' => $mobilites,
 
+            'displayBandeau' => $displayBandeau,
             'template' => $template,
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
@@ -520,8 +523,9 @@ class AgentController extends AbstractActionController
         }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
 
+        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 
@@ -530,6 +534,8 @@ class AgentController extends AbstractActionController
             'campagne' => $campagne,
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
+
+            'displayBandeau' => $displayBandeau,
             'template' => $template,
         ]);
         return $vm;

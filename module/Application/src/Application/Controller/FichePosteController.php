@@ -188,8 +188,9 @@ class FichePosteController extends AbstractActionController
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
+        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 
@@ -202,6 +203,8 @@ class FichePosteController extends AbstractActionController
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(FichePosteParametres::TYPE),
+
+            'displayBandeau' => $displayBandeau,
             'template' => $template,
         ]);
     }
@@ -221,8 +224,9 @@ class FichePosteController extends AbstractActionController
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
+        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 
@@ -237,6 +241,8 @@ class FichePosteController extends AbstractActionController
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
 
             'parametres' => $this->getParametreService()->getParametresByCategorieCode(FichePosteParametres::TYPE),
+
+            'displayBandeau' => $displayBandeau,
             'template' => $template,
         ]);
     }

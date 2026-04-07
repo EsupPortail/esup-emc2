@@ -4,11 +4,16 @@
  * @var Agent $agent
  * @var FichePoste[] $fichespostes
  * @var array $droits
+ *
+ * @var bool $displayBandeau
+ * @var Rendu $template
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
+use FichePoste\Provider\Template\TextTemplates;
+use UnicaenRenderer\Entity\Db\Rendu;
 
 $canDetruireFichier     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
 $canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
@@ -49,10 +54,14 @@ $structure = ($affectation)?$affectation->getStructure():null;
     </div>
 </div>
 
-<?php if ($template): ?>
+<?php if ($displayBandeau): ?>
     <div class="alert alert-info" style="margin-top: 0.5rem;">
-        <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
-        <?php echo $template->getCorps(); ?>
+        <?php if ($template) : ?>
+            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+            <?php echo $template->getCorps(); ?>
+        <?php else : ?>
+            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 

@@ -6,6 +6,7 @@ use Agent\Entity\Db\AgentQuotite;
 use Application\Entity\Db\Agent;
 use Agent\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentMissionSpecifique;
+use DateTime;
 
 /**
  * Trait AgentMacroTrait
@@ -51,14 +52,16 @@ trait AgentMacroTrait
     /**
      * @return string
      */
-    public function toStringAffectationsActives() : string
+    public function toStringAffectationsActives(?string $date = null) : string
     {
-        /** @var Agent $agent */
+        if ($date !== null) $date = DateTime::createFromFormat('Y-m-d', $date);
+        if ($date === false) $date = new DateTime();
+
         $agent = $this;
-        $affecations = $agent->getAffectationsActifs();
+        $affectations = $agent->getAffectationsActifs($date);
         if (empty($affectations)) return 'Aucune affectation active';
         $texte  = "<ul>";
-        foreach ($affecations as $affectation) {
+        foreach ($affectations as $affectation) {
             $texte .= "<li>";
             $texte .= $affectation->getStructure()->getLibelleLong();
             $texte .= " (";

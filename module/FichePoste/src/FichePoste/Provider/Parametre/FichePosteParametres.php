@@ -7,5 +7,6 @@ class FichePosteParametres {
     const TYPE = 'FICHE_POSTE';
 
     const CODE_FONCTION = 'CODE_FONCTION';
+    const DISPLAY_BANDEAU_FICHEPOSTE = 'DISPLAY_BANDEAU_FICHEPOSTE';
 
 }

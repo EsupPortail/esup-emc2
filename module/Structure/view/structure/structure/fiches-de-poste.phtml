@@ -10,6 +10,8 @@
  * @var array $fichesDePoste
  * @var array $fichesDePostePdf
  * @var EtatType[] $etats
+ *
+ * @var bool $displayBandeau
  * @var Rendu $template
  */
 
@@ -19,6 +21,7 @@ use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use FichePoste\Provider\Template\TextTemplates;
 use UnicaenFichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
@@ -38,10 +41,14 @@ $date = new DateTime();
 
 <?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'campagnesFutures' => $campagnesFutures, 'current' => 'fiches-de-poste', 'selecteur' => $selecteur]); ?>
 
-<?php if ($template): ?>
+<?php if ($displayBandeau): ?>
     <div class="alert alert-info" style="margin-top: 0.5rem;">
-        <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
-        <?php echo $template->getCorps(); ?>
+        <?php if ($template) : ?>
+            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+            <?php echo $template->getCorps(); ?>
+        <?php else : ?>
+            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 

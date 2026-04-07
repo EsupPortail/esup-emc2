@@ -9,6 +9,8 @@
  * @var boolean $sousstructure
  * @var AgentPoste[] $postes
  * @var Parametre[] $parametres
+ *
+ * @var bool $displayBandeau
  * @var Rendu $template
  *
  * @var array $applications
@@ -23,6 +25,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Provider\Template\TextTemplates;
 use Structure\Entity\Db\Structure;
 use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenRenderer\Entity\Db\Rendu;
@@ -86,10 +89,14 @@ $this->headTitle("Modification de la fiche de poste #" . $ficheId);
         </div>
     </div>
 
-    <?php if ($template): ?>
+    <?php if ($displayBandeau): ?>
         <div class="alert alert-info" style="margin-top: 0.5rem;">
-            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
-            <?php echo $template->getCorps(); ?>
+            <?php if ($template) : ?>
+                <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+                <?php echo $template->getCorps(); ?>
+            <?php else : ?>
+                Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 

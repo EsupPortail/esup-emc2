@@ -22,6 +22,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Exception;
 use FichePoste\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Parametre\FichePosteParametres;
 use FichePoste\Provider\Template\TextTemplates;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -262,8 +263,9 @@ class StructureController extends AbstractActionController
             return $a->getDateDebut() <=> $b->getDateDebut();
         });
 
+        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 
@@ -277,6 +279,8 @@ class StructureController extends AbstractActionController
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FichePosteEtats::TYPE),
+
+            'displayBandeau' => $displayBandeau,
             'template' => $template,
         ]);
     }

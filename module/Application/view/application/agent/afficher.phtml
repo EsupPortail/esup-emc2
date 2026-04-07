@@ -33,6 +33,8 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentGrade[] $grades
  * @var AgentQuotite|null $quotite
  * @var AgentEchelon[] $echelons
+ *
+ * @var boolean $displayBandeau
  * @var Template $template
  *
  * @var array $applications
@@ -158,7 +160,7 @@ if ($agent !== null) {
 
                 <div id="fiches" class="tab-pane " role="tabpanel">
                     <?php echo $this->partial('partial/fiche-poste',
-                        ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits, 'template' => $template], []); ?>
+                        ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits, 'displayBandeau' => $displayBandeau, 'template' => $template], []); ?>
                 </div>
 
             <?php endif; ?>

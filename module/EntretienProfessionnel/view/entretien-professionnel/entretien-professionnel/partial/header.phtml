@@ -35,6 +35,10 @@ $canAjouterObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(
 $canModifierObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_MODIFIER));
 $canHistoriserObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_HISTORISER));
 $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_SUPPRIMER));
+
+$dateSituation = $entretien->getConvocation();
+$strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de convocation non connue';
+
 ?>
 
 <div class="row">
@@ -111,11 +115,11 @@ $canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceI
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <dt class="col-md-4"> Structure(s) </dt>
+                    <dt class="col-md-4" title="Structures issues des affectations de l'Agent·e à la date de convocation (<?php echo $strDateSituation ?>)"> Structure(s) </dt>
                     <dd class="col-md-8">
                         <?php
                             $structures = [];
-                            foreach ($agent->getAffectationsActifs() as $affectation) {
+                            foreach ($agent->getAffectationsActifs($dateSituation) as $affectation) {
                                 $structure = $affectation->getStructure();
                                 $structures[$structure->getId()] = $structure;
                             }
