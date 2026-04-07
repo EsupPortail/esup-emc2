@@ -172,6 +172,11 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->statut = $statut;
     }
 
+    public function getDateSituation() : ?DateTime
+    {
+        return $this->getConvocation();
+    }
+
     /** FONCTIONS ***********************/
 
     public function isComplete() : bool
@@ -726,5 +731,133 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $this->getAgent()->getDenomination() . " - entretien planifié le ". $this->getDateEntretien()->format('d/m/Y');
     }
 
+    /** MACRO *********************************************************************************************************/
 
+    public function toStringAffectations(Agent $agent): string
+    {
+        $convocation = $this->getDateSituation();
+        if ($convocation === null) {
+            return "Impossible de retourner l'affectation - aucune date de situation";
+        }
+        $affectations = $agent->getAffectationsActifs($convocation);
+
+        $texte  = "<ul>";
+        foreach ($affectations as $affectation) {
+            $texte .= "<li>";
+            $texte .= $affectation->toStringAffectation();
+            $texte .= "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringAgentAffectations(): string
+    {
+        $agent = $this->getAgent();
+        return $this->toStringAffectations($agent);
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringResponsableAffectations(): string
+    {
+        $responsable = $this->getResponsable();
+        return $this->toStringAffectations($responsable);
+    }
+
+    public function toStringGrades(Agent $agent): string
+    {
+        $convocation = $this->getDateSituation();
+        if ($convocation === null) {
+            return "Impossible de retourner le corps/grade - aucune date de situation";
+        }
+        $grades = $agent->getGradesActifs($convocation);
+
+        $texte  = "<ul>";
+        foreach ($grades as $grade) {
+            $texte .= "<li>";
+            $texte .= $grade->toStringGrade();
+            $texte .= "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringAgentGrades(): string
+    {
+        $agent = $this->getAgent();
+        return $this->toStringGrades($agent);
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringResponsableGrades(): string
+    {
+        $responsable = $this->getResponsable();
+        return $this->toStringGrades($responsable);
+    }
+
+    public function toStringStatuts(Agent $agent): string
+    {
+        $convocation = $this->getDateSituation();
+        if ($convocation === null) {
+            return "Impossible de retourner les statuts - aucune date de situation";
+        }
+        $statuts = $agent->getStatutsActifs($convocation);
+
+        $texte  = "<ul>";
+        foreach ($statuts as $statut) {
+            $texte .= "<li>";
+            $texte .= $statut->toStringStatut();
+            $texte .= "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringAgentStatuts(): string
+    {
+        $agent = $this->getAgent();
+        return $this->toStringStatuts($agent);
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringResponsableStatuts(): string
+    {
+        $responsable = $this->getResponsable();
+        return $this->toStringStatuts($responsable);
+    }
+
+    public function toStringEchelons(Agent $agent): string
+    {
+        $convocation = $this->getDateSituation();
+        if ($convocation === null) {
+            return "Impossible de retourner l'échelon - aucune date de situation";
+        }
+        $echelons = $agent->getEchelonsActifs($convocation);
+
+        $texte  = "<ul>";
+        foreach ($echelons as $echelon) {
+            $texte .= "<li>";
+            $texte .= $echelon->toStringEchelon();
+            $texte .= "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringAgentEchelons(): string
+    {
+        $agent = $this->getAgent();
+        return $this->toStringEchelons($agent);
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringResponsableEchelons(): string
+    {
+        $responsable = $this->getResponsable();
+        return $this->toStringEchelons($responsable);
+    }
 }

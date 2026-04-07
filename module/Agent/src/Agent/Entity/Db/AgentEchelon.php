@@ -34,4 +34,12 @@ class AgentEchelon implements HasPeriodeInterface, IsSynchronisableInterface
         return $this->echelon;
     }
 
+    public function toStringEchelon(): string
+    {
+        $texte  = "Échelon ";
+        $texte .= $this->getEchelon()??"-";
+        if ($this->getDateDebut()) $texte .= " (date de passage le " . $this->getDateDebut()->format('d/m/Y') . ")";
+        return $texte;
+    }
+
 }

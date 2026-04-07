@@ -2,9 +2,9 @@
 
 namespace Application\Entity\Db\MacroContent;
 
+use Agent\Entity\Db\AgentEchelon;
 use Agent\Entity\Db\AgentQuotite;
 use Application\Entity\Db\Agent;
-use Agent\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentMissionSpecifique;
 use DateTime;
 
@@ -49,9 +49,6 @@ trait AgentMacroTrait
         return $prenom . " " . $nomUsuel;
     }
 
-    /**
-     * @return string
-     */
     public function toStringAffectationsActives(?string $date = null) : string
     {
         if ($date !== null) $date = DateTime::createFromFormat('Y-m-d', $date);
@@ -63,20 +60,7 @@ trait AgentMacroTrait
         $texte  = "<ul>";
         foreach ($affectations as $affectation) {
             $texte .= "<li>";
-            $texte .= $affectation->getStructure()->getLibelleLong();
-            $texte .= " (";
-            if($affectation->getDateFin()) {
-                $texte .= "du " . $affectation->getDateDebut()->format('d/m/Y') . " au " . $affectation->getDateFin()->format('d/m/Y');
-            } else {
-                $texte .= "depuis le " . $affectation->getDateDebut()->format('d/m/Y');
-            }
-            $texte .= ")";
-            if ($affectation->isPrincipale()) {
-                $texte .= "<br/>";
-                $texte .= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='complement'>";
-                $texte .= "Affectation principale";
-                $texte .= "</span>";
-            }
+            $texte .= $affectation->toStringAffectation();
             $texte .= "</li>";
         }
         $texte .= "</ul>";
@@ -86,71 +70,51 @@ trait AgentMacroTrait
     /**
      * @return string
      */
-    public function toStringStatutsActifs() : string
+    public function toStringStatutsActifs(?string $date = null) : string
     {
-        /** @var Agent $agent */
-        $agent = $this;
-        $statuts = $agent->getStatutsActifs();
+        if ($date !== null) $date = DateTime::createFromFormat('Y-m-d', $date);
+        if ($date === false) $date = new DateTime();
+
+        $statuts = $this->getStatutsActifs($date);
         if (empty($statuts)) return 'Aucune statut actif';
-//        $texte  = "<ul>";
         $texte  = "";
         foreach ($statuts as $statut) {
-            $temoins = [];
-            if ($statut->isTitulaire()) $temoins[] = "Titulaire";
-            if ($statut->isCdi()) $temoins[] = "C.D.I.";
-            if ($statut->isCdd()) $temoins[] = "C.D.D.";
-            if (!empty($temoins)) {
-//                $texte .= "<li>";
-                $texte .= implode(", ",$temoins);
-//                $texte .= " (";
-//                if($statut->getDateFin()) {
-//                    $texte .= "du " . $statut->getDateDebut()->format('d/m/Y') . " au " . $statut->getDateFin()->format('d/m/Y');
-//                } else {
-//                    $texte .= "depuis le " . $statut->getDateDebut()->format('d/m/Y');
-//                }
-//                $texte .= " - " . $statut->getStructure()->getLibelleCourt() .")";
-                //$texte .= "</span>";
-                $texte .= "<br/>";
-            }
+            $statutsStr = $statut->toStringStatut();
+            if ($statutsStr !== '') $texte .= $statutsStr . "<br/>";
         }
-//        $texte .= "</ul>";
         return $texte;
     }
 
     /**
      * @return string
      */
-    public function toStringGradesActifs() : string
+    public function toStringGradesActifs(?string $date = null) : string
     {
-        /** @var Agent $agent */
-        $agent = $this;
-        $grades = $agent->getGradesActifs();
+        if ($date !== null) $date = DateTime::createFromFormat('Y-m-d', $date);
+        if ($date === false) $date = new DateTime();
+
+        $grades = $this->getGradesActifs();
         if (empty($grades)) return 'Aucune grade actif';
-//        $texte  = "<ul>";
         $texte  = "";
         foreach ($grades as $grade) {
-//            $texte .= "<li>";
-            $grade_libelle = $grade->getCorps()->getLibelleLong();
-            $correspondance = $grade->getCorrespondance();
-            if ($correspondance) {
-                $grade_bap = $correspondance->getType()->getLibelleCourt(). " " .$correspondance->getLibelleCourt();
-            } else {
-                $grade_bap = "";
-            }
-            $texte .= $grade_libelle . " ". $grade_bap;
-//            $texte .= " (";
-//            if($grade->estFini()) {
-//                $texte .= "du " . $grade->getDateDebut()->format('d/m/Y') . " au " . $grade->getDateFin()->format('d/m/Y');
-//            } else {
-//                $texte .= "depuis le " . (($grade->getDateDebut() !== null)?$grade->getDateDebut()->format('d/m/Y'):"---");
-//            }
-//            $texte .= " - ";
-//            $texte .= $grade->getStructure()->getLibelleCourt() .")";
-//            $texte .= "</span>";
-//            $texte .= "</li>";
-            $texte .= "<BR>";
+            $texte .= $grade->toStringGrade();
+            $texte .= "<br>";
         }
-//        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function toStringEchelonsActifs(?string $date = null) : string
+    {
+        if ($date !== null) $date = DateTime::createFromFormat('Y-m-d', $date);
+        if ($date === false) $date = new DateTime();
+
+        $echelons = $this->getEchelonsActifs($date);
+        if (empty($echelons)) return 'Aucune échelon actif';
+        $texte  = "";
+        foreach ($echelons as $echelon) {
+            $texte .= $echelon->toStringEchelon();
+            $texte .= "<br>";
+        }
         return $texte;
     }
 

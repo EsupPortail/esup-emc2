@@ -97,4 +97,25 @@ class AgentAffectation implements HasPeriodeInterface, IsSynchronisableInterface
         }
         return $affectations;
     }
+
+    public function  toStringAffectation(): string
+    {
+        $texte = "";
+        $texte .= $this->getStructure()->getLibelleLong();
+        $texte .= " (";
+        if($this->getDateFin()) {
+            $texte .= "du " . $this->getDateDebut()->format('d/m/Y') . " au " . $this->getDateFin()->format('d/m/Y');
+        } else {
+            $texte .= "depuis le " . $this->getDateDebut()->format('d/m/Y');
+        }
+        $texte .= ")";
+        if ($this->isPrincipale()) {
+            $texte .= "<br/>";
+            $texte .= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='complement'>";
+            $texte .= "Affectation principale";
+            $texte .= "</span>";
+        }
+
+        return $texte;
+    }
 }

@@ -208,4 +208,17 @@ class AgentStatut implements HasPeriodeInterface, IsSynchronisableInterface {
         }
         return $statuts;
     }
+
+    public function toStringStatut(): string
+    {
+        $texte  = "";
+        $temoins = [];
+        if ($this->isTitulaire()) $temoins[] = "Titulaire";
+        if ($this->isCdi()) $temoins[] = "C.D.I.";
+        if ($this->isCdd()) $temoins[] = "C.D.D.";
+        if (!empty($temoins)) {
+            $texte .= implode(", ",$temoins);
+        }
+        return $texte;
+    }
 }

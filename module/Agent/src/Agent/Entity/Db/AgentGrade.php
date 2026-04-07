@@ -61,4 +61,19 @@ class AgentGrade implements HasPeriodeInterface, IsSynchronisableInterface {
     {
         return $this->emploiType;
     }
+
+
+    public function  toStringGrade(): string
+    {
+        $texte = "";
+        $grade_libelle = $this->getCorps()->getLibelleLong();
+        $correspondance = $this->getCorrespondance();
+        if ($correspondance) {
+            $grade_bap = $correspondance->getType()->getLibelleCourt(). " " .$correspondance->getLibelleCourt();
+        } else {
+            $grade_bap = "";
+        }
+        $texte .= $grade_libelle . " ". $grade_bap;
+        return $texte;
+    }
 }
