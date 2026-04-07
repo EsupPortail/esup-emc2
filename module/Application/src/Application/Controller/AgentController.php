@@ -110,7 +110,7 @@ class AgentController extends AbstractActionController
                 if ($agentId) return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentId], [], true);
                 $agentLabel = $params['agent-sas']['label'] ?? null;
 
-                if ($agentId === null OR $agentId === "") {
+                if ($agentLabel === null OR $agentLabel === "") {
                     $agents = [];
                     $error = "Veuillez sélectionner un agent dans la liste des propositions. ";
                 } else {
@@ -396,30 +396,6 @@ class AgentController extends AbstractActionController
             'warning' => "<span class='icon icon-attention'></span> Attention la taille de la fiche de poste ne doit pas dépaser 2 Mo."
         ]);
         return $vm;
-    }
-
-    /** Vérification lien Utilisateur <=> Agent **/
-
-    public function verifierLienAction(): ViewModel
-    {
-        $user = $this->getUserService()->getRequestedUser($this);
-        if ($user === null) $user = $this->getUserService()->getConnectedUser();
-
-        $agentByUser = $this->getAgentService()->getAgentByUser($user);
-        $agentByLogin = $this->getAgentService()->getAgentByLogin($user->getUsername());
-        if ($agentByUser === null and $agentByLogin === null) {
-            throw new RuntimeException(
-                "
-                Aucun agent de trouvé depuis l'utilisateur·trice connecté·e
-                [id:" . $user->getId() . " username:" . $user->getUsername() . "] 
-            ", 0);
-        }
-
-        return new ViewModel([
-            'utilisateur' => $user,
-            'agentByUser' => $agentByUser,
-            'agentByLogin' => $agentByLogin,
-        ]);
     }
 
     /** Recherche d'agent  ********************************************************************************************/

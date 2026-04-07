@@ -165,17 +165,6 @@ return [
                         AgentPrivileges::AGENT_GESTION_CCC,
                     ],
                 ],
-
-                /** VERIF */
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'verifier-lien',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
-                    ],
-                ],
                 [
                     'controller' => AgentController::class,
                     'action' => [
@@ -249,16 +238,6 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'verifier-lien' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/verifier-lien[/:utilisateur]',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'verifier-lien',
-                            ],
-                        ],
-                    ],
                     /** Fonctions de recherche ************************************************************************/
                     'rechercher' => [
                         'type' => Literal::class,
