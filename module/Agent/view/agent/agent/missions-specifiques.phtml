@@ -1,0 +1,53 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
+
+/**
+ * @see \Agent\Controller\AgentController::missionsSpecifiquesAction()
+ * @var Agent $agent
+ * @var AgentMissionSpecifique $missions
+ *
+ * @var Parametre[] $parametres
+ */
+$canAjouterMission      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
+
+?>
+
+
+<?php echo $this->partial('agent/agent/partial/entete', ['current' => 'missions', 'agent' => $agent, 'parametres' => $parametres,]); ?>
+
+
+<?php if ($canAjouterMission) : ?>
+    <a
+        <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
+        href="<?php echo $this->url('mission-specifique-affectation/ajouter', [], ['query' => ['agent' => $agent->getId()]], true); ?>"
+        class="ajax-modal btn btn-primary"
+        data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter une mission spécifique
+    </a>
+<?php endif; ?>
+
+
+<br>
+
+<div class="alert alert-info">
+    <span class="icon icon-information"></span>
+    Les missions spécifiques appartiennent à un référentiel déterminé par la Direction des Ressources Humaines.<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Elles sont affectées aux agents par leurs responsables hiérarchiques.
+</div>
+
+<?php
+
+$affectations = $agent->getMissionsSpecifiques();
+
+echo $this->affectationsMissionSpecifique($missions, ['display-agent' => false, 'retour' => $this->url('agent/missions-specifiques', ['agent' => $agent->getId()], [], true)]);
+
+?>
+
+

@@ -256,7 +256,8 @@ class AgentController extends AbstractActionController
 
             $retour = $this->params()->fromQuery('retour');
             if ($retour) return $this->redirect()->toUrl($retour);
-            return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()]);
+            exit();
+            //return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()]);
         }
 
         $vm = new ViewModel();
@@ -328,7 +329,7 @@ class AgentController extends AbstractActionController
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         if ($structure === null) {
-            throw new RuntimeException("Aucune structure de founie");
+            throw new RuntimeException("Aucune structure de fournie");
         }
 
         $structures = $this->getStructureService()->getStructuresFilles($structure);

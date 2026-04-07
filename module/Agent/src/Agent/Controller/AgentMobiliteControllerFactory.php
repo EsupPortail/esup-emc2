@@ -10,6 +10,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class AgentMobiliteControllerFactory
 {
@@ -24,12 +25,14 @@ class AgentMobiliteControllerFactory
          * @var AgentService $agentService
          * @var AgentMobiliteService $agentMobiliteService
          * @var MobiliteService $mobiliteService
+         * @var ParametreService $parametreService
          * @var StructureService $structureService
          * @var AgentMobiliteForm $agentMobiliteForm
          */
         $agentService = $container->get(AgentService::class);
         $agentMobiliteService = $container->get(AgentMobiliteService::class);
         $mobiliteService = $container->get(MobiliteService::class);
+        $parametresService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
         $agentMobiliteForm = $container->get('FormElementManager')->get(AgentMobiliteForm::class);
 
@@ -37,6 +40,7 @@ class AgentMobiliteControllerFactory
         $controller->setAgentService($agentService);
         $controller->setAgentMobiliteService($agentMobiliteService);
         $controller->setMobiliteService($mobiliteService);
+        $controller->setParametreService($parametresService);
         $controller->setStructureService($structureService);
         $controller->setAgentMobiliteForm($agentMobiliteForm);
         return $controller;

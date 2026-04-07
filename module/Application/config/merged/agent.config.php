@@ -137,22 +137,7 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_EDITER,
                         AgentPrivileges::AGENT_ACQUIS_MODIFIER,
-                    ],
-                ],
-
-                /** NEW STUFFS CCC */
-
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'ajouter-accompagnement',
-                        'modifier-accompagnement',
-                        'historiser-accompagnement',
-                        'restaurer-accompagnement',
-                        'detruire-accompagnement',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_GESTION_CCC,
+                        AgentPrivileges::AGENT_ELEMENT_AJOUTER,
                     ],
                 ],
                 [

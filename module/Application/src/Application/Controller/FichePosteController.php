@@ -12,6 +12,7 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
+use Application\Provider\Parametre\AgentParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
@@ -97,6 +98,28 @@ class FichePosteController extends AbstractActionController
             'fichesIncompletes' => $fichesIncompletes,
             'fichesVides' => $ficheVides,
             'fichesCompletes' => $fichesCompletes,
+        ]);
+    }
+
+    public function afficherAgentAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+
+        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
+        $template = null;
+        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
+        }
+
+        return new ViewModel([
+            'agent' => $agent,
+            'fichespostes' => $fichespostes,
+
+            'displayBandeau' => $displayBandeau,
+            'template' => $template,
+            // onglet
+            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
         ]);
     }
 

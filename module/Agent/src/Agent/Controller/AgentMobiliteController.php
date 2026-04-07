@@ -5,18 +5,21 @@ namespace Agent\Controller;
 use Agent\Entity\Db\AgentMobilite;
 use Agent\Form\AgentMobilite\AgentMobiliteFormAwareTrait;
 use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
+use Application\Provider\Parametre\AgentParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class AgentMobiliteController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use AgentMobiliteServiceAwareTrait;
     use MobiliteServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
     use AgentMobiliteFormAwareTrait;
 
@@ -54,6 +57,21 @@ class AgentMobiliteController extends AbstractActionController
             'agent' => $agent,
             'structure' => $structure,
             'mobilite' => $mobilite,
+        ]);
+    }
+
+    public function afficherAgentAction(): ViewModel
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $mobilites = $this->getAgentMobiliteService()->getAgentsMobilitesByAgent($agent);
+
+        return new ViewModel([
+            'agent' => $agent,
+            'mobilites' => $mobilites,
+
+            // onglet
+            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
+
         ]);
     }
 

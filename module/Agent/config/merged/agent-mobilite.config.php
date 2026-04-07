@@ -31,6 +31,15 @@ return [
                 [
                     'controller' => AgentMobiliteController::class,
                     'action' => [
+                        'afficher-agent',
+                    ],
+                    'privileges' => [
+                        AgentMobilitePrivileges::AGENTMOBILITE_AFFICHER
+                    ],
+                ],
+                [
+                    'controller' => AgentMobiliteController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -88,6 +97,16 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'afficher-agent' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/afficher-agent/:agent',
+                                    'defaults' => [
+                                        /** @see AgentMobiliteController::afficherAgentAction() */
+                                        'action' => 'afficher-agent'
+                                    ],
+                                ],
+                            ],
                             'ajouter' => [
                                 'type' => Segment::class,
                                 'options' => [

@@ -87,6 +87,14 @@ return [
                 [
                     'controller' => FichePosteController::class,
                     'action' => [
+                        'afficher-agent',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_AFFICHER,
+                    'assertion' => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
                         'afficher',
                         'export',
                         'exporter',
@@ -209,6 +217,17 @@ return [
                     ],
                 ],
                 'child_routes' => [
+                    'afficher-agent' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route' => '/afficher-agent/:agent',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action' => 'afficher-agent',
+                            ],
+                        ],
+                    ],
                     'ajouter' => [
                         'type' => Segment::class,
                         'may_terminate' => true,

@@ -1,0 +1,92 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+use UnicaenFichier\Entity\Db\Fichier;
+use UnicaenParametre\Entity\Db\Parametre;
+
+/**
+ * @see \Agent\Controller\AgentController::portfolioAction()
+ * @var Agent $agent
+ * @var Fichier[] $fichiers
+ *
+ * @var Parametre[] $parametres
+ */
+
+$canVoirFichier = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+$canAjouterFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canHistoriserFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruireFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+
+?>
+
+<?php echo $this->partial('agent/agent/partial/entete', ['current' => 'portfolio', 'agent' => $agent, 'parametres' => $parametres]); ?>
+
+
+<?php if ($canAjouterFichier) : ?>
+    <a
+        <?php /** @see  \Application\Controller\AgentController::uploadFichierAction() */ ?>
+        href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'portfolio'], true)]], true); ?>"
+        class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-televerser"></span>
+        Téléverser un fichier
+    </a>
+<?php endif; ?>
+
+<ul>
+    <?php foreach ($fichiers as $fichier) : ?>
+        <li>
+            <?php echo $fichier->getNature()->getLibelle(); ?> -
+            <?php if ($canVoirFichier) : ?>
+            <a
+                <?php /** @see  \UnicaenFichier\Controller\FichierController::downloadAction() */ ?>
+                href="<?php echo $this->url('fichier/download', ['fichier' => $fichier->getId()], [], true); ?>">
+                <?php endif; ?>
+                <?php echo $fichier->getNomOriginal(); ?>
+                <?php if ($canVoirFichier) : ?>
+            </a>
+        <?php endif; ?>
+            (téléverser le <?php echo $fichier->getHistoModification()->format('d/m/Y à H:i:s '); ?>)
+
+            <?php if ($canHistoriserFichier) : ?>
+                <?php if ($fichier->estNonHistorise()) : ?>
+                    <a
+                        <?php /** @see \UnicaenFichier\Controller\FichierController::historiserAction() */?>
+                        href="<?php echo $this->url('fichier/historiser', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]] ,true); ?>"
+                        data-event="modification"
+                    >
+                        <span class="icon icon-historiser" title="Historiser le fichier"></span></a>
+                <?php else : ?>
+                    <a
+                        <?php /** @see \UnicaenFichier\Controller\FichierController::restaurerAction() */?>
+                        href="<?php echo $this->url('fichier/restaurer', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]] ,true); ?>"
+                        data-event="modification"
+                    >
+                        <span class="icon icon-restaurer" title="Restaurer le fichier"></span></a>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <?php if ($canDetruireFichier) : ?>
+                <a
+                    <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>
+                    href="<?php echo $this->url('fichier/supprimer', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]], true); ?>"
+                    class="ajax-modal" data-event="modification"
+                >
+                    <span class="icon icon-unchecked text-danger" title="supprimer le fichier"></span></a>
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+
+

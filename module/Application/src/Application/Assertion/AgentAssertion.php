@@ -44,10 +44,12 @@ class AgentAssertion extends AbstractAssertion
         $isSuperieur = false;
         $isAutorite = false;
         $isObservateur = false;
+        $isAgent = false;
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
         if ($role->getRoleId() === StructureRoleProvider::OBSERVATEUR) $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
+        if ($role->getRoleId() === Agent::ROLE_AGENT) $isAgent = ($agent === $entity);
 
         switch ($privilege) {
             case AgentPrivileges::AGENT_AFFICHER :
@@ -70,6 +72,7 @@ class AgentAssertion extends AbstractAssertion
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
                     Agent::ROLE_AUTORITE => $isAutorite,
+                    Agent::ROLE_AGENT=> $isAgent,
                     default => false,
                 };
             case AgentPrivileges::AGENT_ELEMENT_DETRUIRE:
@@ -115,7 +118,11 @@ class AgentAssertion extends AbstractAssertion
         }
 
         return match ($action) {
-            'afficher', 'afficher-statuts-grades'       => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
+            'afficher',
+            'afficher-statuts-grades'
+                => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
+            'upload-fichier'
+                => $this->computeAssertion($entity, AgentPrivileges::AGENT_ELEMENT_AJOUTER),
             default => true,
         };
     }
