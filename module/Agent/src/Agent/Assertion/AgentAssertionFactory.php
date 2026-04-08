@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Assertion;
+namespace Agent\Assertion;
 
 use Application\Service\Agent\AgentService;
 use Agent\Service\AgentAffectation\AgentAffectationService;

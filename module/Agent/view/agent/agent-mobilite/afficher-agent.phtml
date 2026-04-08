@@ -19,7 +19,7 @@ $canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmob
 
 ?>
 
-<?php echo $this->partial('agent/agent/partial/entete', ['current' => 'mobilite', 'agent' => $agent, 'parametres' => $parametres]); ?>
+<?php echo $this->agentOnglet($agent, 'mobilite'); ?>
 
 
 <?php if (empty($mobilites)) : ?>

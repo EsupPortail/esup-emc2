@@ -2,14 +2,13 @@
 
 namespace Application;
 
+use Agent\Assertion\AgentAssertion;
 use Agent\Service\AgentQuotite\AgentQuotiteService;
 use Agent\Service\AgentQuotite\AgentQuotiteServiceFactory;
 use Agent\Service\AgentStatut\AgentStatutService;
 use Agent\Service\AgentStatut\AgentStatutServiceFactory;
 use Application\Assertion\AgentAffichageAssertion;
 use Application\Assertion\AgentAffichageAssertionFactory;
-use Application\Assertion\AgentAssertion;
-use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
@@ -21,7 +20,7 @@ use Application\Form\SelectionAgent\SelectionAgentFormFactory;
 use Application\Form\SelectionAgent\SelectionAgentHydrator;
 use Application\Form\SelectionAgent\SelectionAgentHydratorFactory;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
-use Application\Provider\Privilege\AgentPrivileges;
+use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
@@ -350,7 +349,6 @@ return [
 
     'service_manager' => [
         'factories' => [
-            AgentAssertion::class => AgentAssertionFactory::class,
             AgentAffichageAssertion::class => AgentAffichageAssertionFactory::class,
 
             AgentService::class => AgentServiceFactory::class,

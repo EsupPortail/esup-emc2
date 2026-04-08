@@ -2,18 +2,59 @@
 
 namespace Agent;
 
+use Agent\Assertion\AgentAssertion;
+use Agent\Assertion\AgentAssertionFactory;
 use Agent\Controller\AgentController;
 use Agent\Controller\AgentControllerFactory;
-use Agent\Provider\Privilege\AgentmobilitePrivileges;
+use Agent\Provider\Privilege\AgentPrivileges;
 use Agent\View\Helper\AgentOngletViewHelper;
 use Agent\View\Helper\AgentOngletViewHelperFactory;
-use Application\Assertion\AgentAssertion;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'Agent' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            AgentPrivileges::AGENT_AFFICHER,
+//                            AgentPrivileges::AGENT_ELEMENT_VOIR,
+//                            AgentPrivileges::AGENT_ELEMENT_AJOUTER,
+//                            AgentPrivileges::AGENT_ELEMENT_MODIFIER,
+//                            AgentPrivileges::AGENT_ELEMENT_HISTORISER,
+//                            AgentPrivileges::AGENT_ELEMENT_DETRUIRE,
+//                            AgentPrivileges::AGENT_ELEMENT_VALIDER,
+//                            AgentPrivileges::AGENT_ACQUIS_AFFICHER,
+//                            AgentPrivileges::AGENT_ACQUIS_MODIFIER,
+                        ],
+                        'resources' => ['Agent'],
+                        'assertion' => AgentAssertion::class
+                    ],
+//                    [
+//                        'privileges' => [
+//                            AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR,
+//                            AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE,
+//                            AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE,
+//                            AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
+//                            AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME,
+//                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION,
+//                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT,
+//                        ],
+//                        'resources' => ['Agent'],
+//                        'assertion' => AgentAffichageAssertion::class
+//                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -25,10 +66,9 @@ return [
                         'portfolio',
                     ],
                     'privileges' => [
-                        //TODO change
-                        AgentmobilitePrivileges::AGENTMOBILITE_AFFICHER,
+                        AgentPrivileges::AGENT_AFFICHER,
                     ],
-                    //'assertion' => AgentAssertion::class,
+                    'assertion' => AgentAssertion::class,
                 ],
             ],
         ],
@@ -94,6 +134,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            AgentAssertion::class => AgentAssertionFactory::class,
         ],
     ],
     'controllers' => [

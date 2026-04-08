@@ -1,11 +1,8 @@
 <?php
 
 use Application\Entity\Db\Agent;
-use Application\Provider\Privilege\AgentPrivileges;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
-use UnicaenFichier\Entity\Db\Fichier;
-use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \Agent\Controller\AgentController::acquisAction()
@@ -22,7 +19,8 @@ $options['retour'] = $this->url('agent/acquis', ['agent' => $agent->getId()], []
 <?php echo $this->agentOnglet($agent, 'acquis'); ?>
 
 <div class="alert alert-info">
-    <strong><span class="icon icon-attention"> Affichage des applications et compétences directement liées à l'agent.</strong>
+    <strong><span
+                class="icon icon-attention"> Affichage des applications et compétences directement liées à l'agent.</strong>
     <br/>
     Dans ces listes, les applications et compétences associées aux fiches de postes d'un
     agent ne sont pas mentionnées.
@@ -37,7 +35,7 @@ $options['retour'] = $this->url('agent/acquis', ['agent' => $agent->getId()], []
 <!--                --><?php //endif; ?>
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

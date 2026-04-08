@@ -4,7 +4,7 @@ namespace Application;
 
 use Application\Controller\ElementController;
 use Application\Controller\ElementControllerFactory;
-use Application\Provider\Privilege\AgentPrivileges;
+use Agent\Provider\Privilege\AgentPrivileges;
 use Element\Provider\Privilege\CompetencePrivileges;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;

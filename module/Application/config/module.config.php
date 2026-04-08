@@ -10,7 +10,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
 use Application\Provider\IdentityProvider;
 use Application\Provider\IdentityProviderFactory;
-use Application\Provider\Privilege\AgentPrivileges;
+use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;

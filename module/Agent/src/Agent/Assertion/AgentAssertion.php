@@ -1,21 +1,21 @@
 <?php
 
-namespace Application\Assertion;
+namespace Agent\Assertion;
 
+use Agent\Provider\Privilege\AgentPrivileges;
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Entity\Db\Agent;
-use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class AgentAssertion extends AbstractAssertion
 {
@@ -27,7 +27,7 @@ class AgentAssertion extends AbstractAssertion
     use ObservateurServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    public function computeAssertion(?Agent $entity, string $privilege) : bool
+    public function computeAssertion(?Agent $entity, string $privilege): bool
     {
         if (!$entity instanceof Agent) {
             return false;
@@ -38,17 +38,21 @@ class AgentAssertion extends AbstractAssertion
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
-        $structures = $entity->getStructures();
-
         $isResponsable = false;
         $isSuperieur = false;
         $isAutorite = false;
         $isObservateur = false;
         $isAgent = false;
-        if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
-        if ($role->getRoleId() === StructureRoleProvider::OBSERVATEUR) $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
+        if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) {
+            $structures = $entity->getStructures();
+            $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
+        }
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity, $agent);
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity, $agent);
+        if ($role->getRoleId() === StructureRoleProvider::OBSERVATEUR) {
+            $structures = $entity->getStructures();
+            $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
+        }
         if ($role->getRoleId() === Agent::ROLE_AGENT) $isAgent = ($agent === $entity);
 
         switch ($privilege) {
@@ -72,7 +76,7 @@ class AgentAssertion extends AbstractAssertion
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
                     Agent::ROLE_AUTORITE => $isAutorite,
-                    Agent::ROLE_AGENT=> $isAgent,
+                    Agent::ROLE_AGENT => $isAgent,
                     default => false,
                 };
             case AgentPrivileges::AGENT_ELEMENT_DETRUIRE:
@@ -94,7 +98,7 @@ class AgentAssertion extends AbstractAssertion
 
     protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
-        if (! $entity instanceof Agent) {
+        if (!$entity instanceof Agent) {
             return false;
         }
         return $this->computeAssertion($entity, $privilege);
@@ -118,11 +122,11 @@ class AgentAssertion extends AbstractAssertion
         }
 
         return match ($action) {
-            'afficher',
+            'informations', 'portfolio',
             'afficher-statuts-grades'
-                => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
+            => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
             'upload-fichier'
-                => $this->computeAssertion($entity, AgentPrivileges::AGENT_ELEMENT_AJOUTER),
+            => $this->computeAssertion($entity, AgentPrivileges::AGENT_ELEMENT_AJOUTER),
             default => true,
         };
     }
