@@ -81,7 +81,6 @@ class IndexController extends AbstractActionController
         if ($agent !== null && $agent->getUtilisateur() === null) {
             $agent->setUtilisateur($connectedUser);
             $this->getAgentService()->update($agent);
-//            return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
         }
 
         /** @var Role $connectedRole */
@@ -91,8 +90,8 @@ class IndexController extends AbstractActionController
             switch ($connectedRole->getRoleId()) {
                 case AppRoleProvider::AGENT :
                     $agent = $this->getAgentService()->getAgentByUser($connectedUser);
-                    /** @see AgentController::afficherAction() */
-                    return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
+                    /** @see \Agent\Controller\AgentController::informationsAction() */
+                    return $this->redirect()->toRoute('agent/informations', ['agent' => $agent->getId()], [], true);
                 case RoleProvider::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
                     /** @see StructureController::descriptionAction() */

@@ -186,8 +186,8 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
             <td class="action">
 <!--                --><?php //if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
                 <?php if ($this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER))) : ?>
-                    <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                    <?php /** @see \Agent\Controller\AgentController::informationsAction() */?>
+                    <a href="<?php echo $this->url('agent/informations', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank"
                        class="action secondary"
                     >

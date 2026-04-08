@@ -54,8 +54,8 @@ $strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de conv
                     <dt class="col-md-4"> Fiche de l'agent </dt>
                     <dd class="col-md-8">
                         <a
-                            <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
-                            href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                            <?php /** @see \Agent\Controller\AgentController::informationsAction() */ ?>
+                            href="<?php echo $this->url('agent/informations', ['agent' => $agent->getId()], [], true); ?>"
                             target="_blank"
                         >
                             <?php echo $agent->getDenomination(); ?>

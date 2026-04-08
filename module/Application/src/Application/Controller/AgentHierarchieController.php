@@ -598,7 +598,8 @@ class AgentHierarchieController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $chaine->getAgent()->getId()], ['fragment' => 'informations'], true);
+        /** @see \Agent\Controller\AgentController::informationsAction() */
+        return $this->redirect()->toRoute('agent/infromations', ['agent' => $chaine->getAgent()->getId()], [], true);
     }
 
     public
@@ -622,7 +623,8 @@ class AgentHierarchieController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $chaine->getAgent()->getId()], ['fragment' => 'informations'], true);
+        /** @see \Agent\Controller\AgentController::informationsAction() */
+        return $this->redirect()->toRoute('agent/informations', ['agent' => $chaine->getAgent()->getId()], [], true);
     }
 
     public

@@ -128,8 +128,8 @@ foreach ($agents as $agent) {
         <td class="action" data-column-id="Actions">
             <!-- Si on fait jouer l'assertion, on augmente le nombre de requètes -->
             <?php if ($canAfficherAgent) : ?>
-                <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
-                <a href="<?php echo $this->url("agent/afficher", ["agent" => $agent->getId()], [], true); ?>"
+                <?php /** @see \Agent\Controller\AgentController::informationsAction() */ ?>
+                <a href="<?php echo $this->url("agent/informations", ["agent" => $agent->getId()], [], true); ?>"
                    class="action secondary">
                     <span class="icon icon-voir"></span>
                     Accéder

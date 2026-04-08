@@ -105,8 +105,8 @@ $nbAgent = count($agents);
                     <td>
                         <?php if ($canAfficher) : ?>
                             <a
-                                <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                                <?php /** @see \Agent\Controller\AgentController::informationsAction() */?>
+                                href="<?php echo $this->url('agent/informations', ['agent' => $agent->getId()], [], true); ?>"
                                 class="action secondary"
                                 title="Accéder à la fiche de <span class='highlight agent'><?php echo $agent->getDenomination(true); ?></span>"
                                 data-bs-html="true" data-bs-toggle="tooltip"

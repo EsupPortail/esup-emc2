@@ -121,7 +121,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
                             <br>
                             <a
                                 <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>
-                                href="<?php echo $this->url('fichier/supprimer', ['fichier' => $fiche->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
+                                href="<?php echo $this->url('fichier/supprimer', ['fichier' => $fiche->getId()], ['query' => ['retour' => $this->url('agent/informations', ['agent' => $agent->getId()], true)]], true); ?>"
                                 class="action danger ajax-modal" data-event="modification"
                             >
                                 <span class="icon icon-unchecked" title="supprimer le fichier"></span>

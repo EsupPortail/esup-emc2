@@ -107,7 +107,10 @@ class AgentController extends AbstractActionController
         if ($params !== null) {
             if (isset($params['type']) and $params['type'] === 'acceder') {
                 $agentId = $params['agent-sas']['id'] ?? null;
-                if ($agentId) return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentId], [], true);
+                if ($agentId) {
+                    /** @see \Agent\Controller\AgentController::informationsAction() */
+                    return $this->redirect()->toRoute('agent/informations', ['agent' => $agentId], [], true);
+                }
                 $agentLabel = $params['agent-sas']['label'] ?? null;
 
                 if ($agentLabel === null OR $agentLabel === "") {
@@ -116,7 +119,10 @@ class AgentController extends AbstractActionController
                 } else {
                     $agents = $this->getAgentService()->getAgentsLargeByTerm($agentLabel);
                 }
-                if (count($agents) === 1) return $this->redirect()->toRoute('agent/afficher', ['agent' => current($agents)->getId()], [], true);
+                if (count($agents) === 1) {
+                    /** @see \Agent\Controller\AgentController::informationsAction() */
+                    return $this->redirect()->toRoute('agent/informations', ['agent' => current($agents)->getId()], [], true);
+                }
             }
             if (isset($params['type']) and $params['type'] === 'filtrer') {
                 $a=1;
@@ -133,73 +139,6 @@ class AgentController extends AbstractActionController
             'agents' => $agents,
             'params' => $params,
             'error' => $error,
-        ]);
-    }
-
-    public function afficherAction(): ViewModel
-    {
-        //Recupération de l'agent
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        if ($agent === null) $agent = $this->getAgentService()->getAgentByConnectedUser();
-        if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
-
-        //Récupération des status
-        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
-        $agentAffectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgentAndDate($agent, new DateTime());
-        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
-
-        //Récupération des supérieures et autorités
-        $superieures = array_map(
-            function (AgentSuperieur $a) {
-                return $a->getSuperieur();
-            },
-            $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
-        $autorites = array_map(
-            function (AgentAutorite $a) {
-                return $a->getAutorite();
-            },
-            $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
-
-        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
-
-        $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', 'INTRANET_DOCUMENT');
-        $lienIntranet = ($parametreIntranet) ? $parametreIntranet->getValeur() : "Aucun lien vers l'intranet";
-
-        $mobilites = $this->getAgentMobiliteService()->getAgentsMobilitesByAgent($agent);
-
-        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
-        $template = null;
-        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
-            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
-        }
-
-        return new ViewModel([
-            'title' => 'Afficher l\'agent',
-            'agent' => $agent,
-            'affectations' => $agentAffectations,
-            'statuts' => $agentStatuts,
-            'grades' => $agentGrades,
-            'echelons' => $agent->getEchelonsActifs(),
-            'fichespostes' => $fichespostes,
-
-            'superieures' => $superieures,
-            'autorites' => $autorites,
-
-            'quotite' => $this->getAgentQuotiteService()->getAgentQuotiteCurrent($agent),
-            'missions' => $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgent($agent, false),
-
-            'intranet' => $lienIntranet,
-
-            'mobilites' => $mobilites,
-
-            'displayBandeau' => $displayBandeau,
-            'template' => $template,
-
-            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
-            'chaineAssertion' => $this->chaineAssertion,
-            'connectedUser' => $this->getUserService()->getConnectedUser(),
-            'connectedRole' => $this->getUserService()->getConnectedRole(),
-            'campagnesActives' => $this->getCampagneService()->getCampagnesActives(),
         ]);
     }
 
@@ -257,7 +196,6 @@ class AgentController extends AbstractActionController
             $retour = $this->params()->fromQuery('retour');
             if ($retour) return $this->redirect()->toUrl($retour);
             exit();
-            //return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()]);
         }
 
         $vm = new ViewModel();
@@ -290,7 +228,8 @@ class AgentController extends AbstractActionController
                 $agent->addFichier($fichier);
                 $this->getAgentService()->update($agent);
             }
-            return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'fiches']);
+            /** @see FichePosteController::afficherAgentAction() */
+            return $this->redirect()->toRoute('fiche-poste/afficher-agent', ['agent' => $agent->getId()], [], true);
         }
 
         $vm = new ViewModel();

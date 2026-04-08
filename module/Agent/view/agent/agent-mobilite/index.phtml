@@ -84,8 +84,8 @@ $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmobil
             </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
-                    <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
-                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'mobilite'], true); ?>"
+                    <?php /** @see \Agent\Controller\AgentMobiliteController::afficherAgentAction() */ ?>
+                    <a href="<?php echo $this->url('agent/mobilite/afficher-agent', ['agent' => $agent->getId()], true); ?>"
                        class="action secondary"
                     >
                         <span class="icon icon-user"></span> Afficher

@@ -91,16 +91,6 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'afficher',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
-                    ],
-                    'assertion' => AgentAssertion::class,
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
                         'rechercher',
                         'rechercher-large',
                         'rechercher-responsable',
@@ -291,17 +281,6 @@ return [
                             ],
                         ],
                     ],
-                    'afficher' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/afficher[/:agent]',
-                            'defaults' => [
-                                /** @see AgentController::afficherAction() */
-                                'controller' => AgentController::class,
-                                'action' => 'afficher',
-                            ],
-                        ],
-                    ],
                     'afficher-statuts-grades' => [
                         'type' => Segment::class,
                         'options' => [
@@ -353,7 +332,8 @@ return [
                         'order' => 0100,
                         'label' => 'Données personnelles',
                         'title' => "Gestion des données d'un agent",
-                        'route' => 'agent/afficher',
+                        /** @see Agent\Controller\AgentController::informationsAction() */
+                        'route' => 'agent/informations',
                         'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER_DONNEES),
                     ],
                     'entretien' => [

@@ -7,6 +7,7 @@ use Agent\Controller\AgentControllerFactory;
 use Agent\Provider\Privilege\AgentmobilitePrivileges;
 use Agent\View\Helper\AgentOngletViewHelper;
 use Agent\View\Helper\AgentOngletViewHelperFactory;
+use Application\Assertion\AgentAssertion;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -27,6 +28,7 @@ return [
                         //TODO change
                         AgentmobilitePrivileges::AGENTMOBILITE_AFFICHER,
                     ],
+                    //'assertion' => AgentAssertion::class,
                 ],
             ],
         ],
@@ -54,7 +56,7 @@ return [
                     'informations' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/informations/:agent',
+                            'route' => '/informations[/:agent]',
                             'defaults' => [
                                 /** @see AgentController::informationsAction() */
                                 'controller' => AgentController::class,

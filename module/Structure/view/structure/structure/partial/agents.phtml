@@ -142,8 +142,8 @@ $isForce = (isset($options['force']) and $options['force'] === true);
             <td class="action">
                 <?php if ($canVoirAgent) : ?>
                     <a
-                        <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
-                            href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                        <?php /** @see \Agent\Controller\AgentController::informationsAction() */ ?>
+                            href="<?php echo $this->url('agent/informations', ['agent' => $agent->getId()], [], true); ?>"
                             target="_blank" class="action secondary"
                     >
                         <span class="icon icon-voir"></span>

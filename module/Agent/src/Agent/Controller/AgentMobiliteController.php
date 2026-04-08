@@ -168,7 +168,8 @@ class AgentMobiliteController extends AbstractActionController
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMobilite->getAgent()->getId()], ['fragment' => "mobilite"], true);
+        /** @see AgentMobiliteController::afficherAgentAction() */
+        return $this->redirect()->toRoute('agent/mobilite/afficher-agent', ['agent' => $agentMobilite->getAgent()->getId()], [], true);
     }
 
     public function supprimerAction(): ViewModel

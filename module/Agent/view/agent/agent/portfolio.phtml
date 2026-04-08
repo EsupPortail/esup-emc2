@@ -24,7 +24,7 @@ $canDetruireFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DE
 <?php if ($canAjouterFichier) : ?>
     <a
         <?php /** @see  \Application\Controller\AgentController::uploadFichierAction() */ ?>
-        href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'portfolio'], true)]], true); ?>"
+        href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]], true); ?>"
         class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-televerser"></span>
