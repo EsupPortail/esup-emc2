@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\SelectionAgent;
+namespace Agent\Form\SelectionAgent;
 
 use Application\Controller\AgentController;
 use Interop\Container\ContainerInterface;

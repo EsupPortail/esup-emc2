@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use Application\Form\SelectionAgent\SelectionAgentForm;
+use Agent\Form\SelectionAgent\SelectionAgentForm;
 use Agent\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;

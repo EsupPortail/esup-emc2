@@ -14,10 +14,17 @@ use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use Exception;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use UnicaenFichier\Entity\Db\Fichier;
+use UnicaenFichier\Form\Upload\UploadFormAwareTrait;
+use UnicaenFichier\Service\Fichier\FichierServiceAwareTrait;
+use UnicaenFichier\Service\Nature\NatureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
@@ -34,9 +41,12 @@ class AgentController extends AbstractActionController {
     use AgentStatutServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use FichierServiceAwareTrait;
+    use NatureServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use UserServiceAwareTrait;
 
+    use UploadFormAwareTrait;
 
     public function acquisAction(): ViewModel
     {
@@ -49,6 +59,48 @@ class AgentController extends AbstractActionController {
             'agent' => $agent,
             'applications' => $applications,
             'competences' => $competences,
+        ]);
+    }
+
+    public function indexAction(): ViewModel|Response
+    {
+        $params = $this->params()->fromQuery();
+        $error = null;
+        $agents = [];
+        if ($params !== null) {
+            if (isset($params['type']) and $params['type'] === 'acceder') {
+                $agentId = $params['agent-sas']['id'] ?? null;
+                if ($agentId) {
+                    /** @see AgentController::informationsAction() */
+                    return $this->redirect()->toRoute('agent/informations', ['agent' => $agentId], [], true);
+                }
+                $agentLabel = $params['agent-sas']['label'] ?? null;
+
+                if ($agentLabel === null or $agentLabel === "") {
+                    $agents = [];
+                    $error = "Veuillez sélectionner un agent dans la liste des propositions. ";
+                } else {
+                    $agents = $this->getAgentService()->getAgentsLargeByTerm($agentLabel);
+                }
+                if (count($agents) === 1) {
+                    /** @see AgentController::informationsAction() */
+                    return $this->redirect()->toRoute('agent/informations', ['agent' => current($agents)->getId()], [], true);
+                }
+            }
+            if (isset($params['type']) and $params['type'] === 'filtrer') {
+                if ($params['denomination'] === "" and $params['structure-filtre']['id'] === "") {
+                    $agents = [];
+                    $error = "Veuillez préciser la dénomination de l'agent ou une structure";
+                } else {
+                    $agents = $this->getAgentService()->getAgentsWithFiltre($params);
+                }
+            }
+        }
+
+        return new ViewModel([
+            'agents' => $agents,
+            'params' => $params,
+            'error' => $error,
         ]);
     }
 
@@ -180,5 +232,83 @@ class AgentController extends AbstractActionController {
             return new JsonModel($result);
         }
         exit;
+    }
+
+    /** depot de fichiers */
+
+    public function uploadFichierAction(): ViewModel|Response
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $fichier = new Fichier();
+        $form = $this->getUploadForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fichier', ['agent' => $agent->getId()], [], true));
+        $form->bind($fichier);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $files = $request->getFiles();
+            $file = $files['fichier'];
+
+            if ($file['name'] != '') {
+                try {
+                    $nature = $this->getNatureService()->getNature($data['nature']);
+                    $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                } catch (Exception $e) {
+                    throw new RuntimeException("Un problème est survenu lors du téléversement", 0, $e);
+                }
+                $agent->addFichier($fichier);
+                $this->getAgentService()->update($agent);
+            }
+
+            $retour = $this->params()->fromQuery('retour');
+            if ($retour) return $this->redirect()->toUrl($retour);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/default-form');
+        $vm->setVariables([
+            'title' => 'Téléverserment d\'un fichier',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function uploadFichePostePdfAction(): ViewModel|Response
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $nature = $this->getNatureService()->getNatureByCode('FICHE_POSTE');
+
+        $fichier = new Fichier();
+        $fichier->setNature($nature);
+        $form = $this->getUploadForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true));
+        $form->bind($fichier);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $file = $request->getFiles()['fichier'];
+
+            if ($file['name'] != '') {
+                $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                $agent->addFichier($fichier);
+                $this->getAgentService()->update($agent);
+            }
+            /** @see FichePosteController::afficherAgentAction() */
+            return $this->redirect()->toRoute('fiche-poste/afficher-agent', ['agent' => $agent->getId()], [], true);
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/default-form');
+        $vm->setVariables([
+            'title' => 'Téléverserment d\'un fichier',
+            'form' => $form,
+            'warning' => "<span class='icon icon-attention'></span> Attention la taille de la fiche de poste ne doit pas dépaser 2 Mo."
+        ]);
+        return $vm;
     }
 }

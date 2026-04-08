@@ -59,7 +59,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                         </div>
                         <div class="col-md-10">
                             <?php
-                            /** @see  \Application\Controller\AgentController::rechercherAction() */
+                            /** @see  \Agent\Controller\AgentController::rechercherAction() */
                             $agentF = new SearchAndSelect('agent');
                             $agentF
                                 ->setAutocompleteSource($this->url('agent/rechercher'))

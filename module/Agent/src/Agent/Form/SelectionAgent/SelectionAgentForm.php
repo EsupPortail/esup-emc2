@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\SelectionAgent;
+namespace Agent\Form\SelectionAgent;
 
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Laminas\Form\Element\Button;

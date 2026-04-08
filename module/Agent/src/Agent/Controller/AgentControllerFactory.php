@@ -14,6 +14,9 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenFichier\Form\Upload\UploadForm;
+use UnicaenFichier\Service\Fichier\FichierService;
+use UnicaenFichier\Service\Nature\NatureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 
@@ -33,6 +36,8 @@ class AgentControllerFactory
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var AgentSuperieurService $agentSuperieurService
          * @var CampagneService $campagneService
+         * @var FichierService $fichierService
+         * @var NatureService $natureService
          * @var ParametreService $parametreService
          * @var UserService $userService
          */
@@ -44,8 +49,15 @@ class AgentControllerFactory
         $agentStatutService = $container->get(AgentStatutService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
+        $fichierService = $container->get(FichierService::class);
+        $natureService = $container->get(NatureService::class);
         $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
+
+        /**
+         * @var UploadForm $uploadForm
+         */
+        $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
         $controller = new AgentController();
         $controller->setAgentService($agentService);
@@ -56,8 +68,12 @@ class AgentControllerFactory
         $controller->setAgentStatutService($agentStatutService);
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setCampagneService($campagneService);
+        $controller->setFichierService($fichierService);
+        $controller->setNatureService($natureService);
         $controller->setParametreService($parametreService);
         $controller->setUserService($userService);
+
+        $controller->setUploadForm($uploadForm);
 
         $assertion = $container->get(ChaineAssertion::class);
         $controller->chaineAssertion = $assertion;

@@ -16,7 +16,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                     <label for="denomination">Dénomination : </label>
                     <?php
                     $agentFiltreSas = new SearchAndSelect('agent-sas');
-                    /** @see \Application\Controller\AgentController::rechercherLargeAction() */
+                    /** @see \Agent\Controller\AgentController::rechercherLargeAction() */
                     $agentFiltreSas->setAutocompleteSource($this->url('agent/rechercher-large'));
                     $agentFiltreSas
                         ->setSelectionRequired()

@@ -2,7 +2,7 @@
 
 namespace Application\Form\AgentMissionSpecifique;
 
-use Application\Controller\AgentController;
+use Agent\Controller\AgentController;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
 use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueService;

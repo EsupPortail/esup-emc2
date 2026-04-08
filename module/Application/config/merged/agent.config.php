@@ -3,24 +3,14 @@
 namespace Application;
 
 use Agent\Assertion\AgentAssertion;
-use Agent\Service\AgentQuotite\AgentQuotiteService;
-use Agent\Service\AgentQuotite\AgentQuotiteServiceFactory;
-use Agent\Service\AgentStatut\AgentStatutService;
-use Agent\Service\AgentStatut\AgentStatutServiceFactory;
+use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Assertion\AgentAffichageAssertion;
 use Application\Assertion\AgentAffichageAssertionFactory;
-use Application\Controller\AgentController;
-use Application\Controller\AgentControllerFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydrator;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactory;
-use Application\Form\SelectionAgent\SelectionAgentForm;
-use Application\Form\SelectionAgent\SelectionAgentFormFactory;
-use Application\Form\SelectionAgent\SelectionAgentHydrator;
-use Application\Form\SelectionAgent\SelectionAgentHydratorFactory;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
-use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
@@ -28,9 +18,6 @@ use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelperFactory;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
-use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Segment;
-use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
@@ -74,151 +61,8 @@ return [
                 ],
             ],
         ],
-        'guards' => [
-            PrivilegeController::class => [
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'index',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_INDEX,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'rechercher-with-structure-mere',
-                    ],
-                    'roles' => [],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'upload-fichier',
-                        'ajouter-application',
-                        'upload-fiche-poste-pdf',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_EDITER,
-                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
-                        AgentPrivileges::AGENT_ELEMENT_AJOUTER,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'mes-agents',
-                        'mes-missions-specifiques',
-                        'mes-fiches-postes',
-                        'mes-entretiens-professionnels',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
-                    ],
-                ],
-            ],
-        ],
     ],
 
-    'router' => [
-        'routes' => [
-            'mes-agents' => [
-                'type' => Literal::class,
-                'options' => [
-                    'route' => '/mes-agents',
-                    'defaults' => [
-                        /** @see AgentController::mesAgentsAction() */
-                        'controller' => AgentController::class,
-                        'action' => 'mes-agents',
-                    ],
-                ],
-            ],
-            'mes-missions-specifiques' => [
-                'type' => Literal::class,
-                'options' => [
-                    'route' => '/mes-missions-specifiques',
-                    'defaults' => [
-                        /** @see AgentController::mesMissionsSpecifiquesAction() */
-                        'controller' => AgentController::class,
-                        'action' => 'mes-missions-specifiques',
-                    ],
-                ],
-            ],
-            'mes-fiches-postes' => [
-                'type' => Literal::class,
-                'options' => [
-                    'route' => '/mes-fiches-postes',
-                    'defaults' => [
-                        /** @see AgentController::mesFichesPostesAction() */
-                        'controller' => AgentController::class,
-                        'action' => 'mes-fiches-postes',
-                    ],
-                ],
-            ],
-            'mes-entretiens-professionnels' => [
-                'type' => Segment::class,
-                'options' => [
-                    'route' => '/mes-entretiens-professionnels[/:campagne]',
-                    'defaults' => [
-                        /** @see AgentController::mesEntretiensProfessionnelsAction() */
-                        'controller' => AgentController::class,
-                        'action' => 'mes-entretiens-professionnels',
-                    ],
-                ],
-            ],
-            'agent' => [
-                'type' => Literal::class,
-                'options' => [
-                    'route' => '/agent',
-                    'defaults' => [
-                        'controller' => AgentController::class,
-                        'action' => 'index',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-
-                    /** Routes de gestion des applications*************************************************************/
-
-                    'ajouter-application' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/ajouter-application/:agent[/:application]',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'ajouter-application',
-                            ],
-                        ],
-                    ],
-
-                    /** AUTRE  ****************************************************************************************/
-
-                    'upload-fichier' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/upload-fichier/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'upload-fichier',
-                            ],
-                        ],
-                    ],
-                    'upload-fiche-poste-pdf' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/upload-fiche-poste-pdf/:agent',
-                            'defaults' => [
-                                /** @see AgentController::uploadFichePostePdfAction() */
-                                'controller' => AgentController::class,
-                                'action' => 'upload-fiche-poste-pdf',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
 
     'navigation' => [
         'default' => [
@@ -229,25 +73,9 @@ return [
                         'label' => 'Suivis',
                         'title' => "suivis",
                         'route' => 'agent',
-                        'resource' => PrivilegeController::getResourceId(AgentController::class, 'index'),
-
+//                        'resource' => PrivilegeController::getResourceId(AgentController::class, 'index'),
                         'pages' => [
-                            'agent' => [
-                                'label' => 'Agents',
-                                'route' => 'agent',
-                                'resource' => PrivilegeController::getResourceId(AgentController::class, 'index'),
-                                'order' => 10,
-                                'icon' => 'fas fa-angle-right',
-                            ],
                         ],
-                    ],
-                    'donnees' => [
-                        'order' => 0100,
-                        'label' => 'Données personnelles',
-                        'title' => "Gestion des données d'un agent",
-                        /** @see Agent\Controller\AgentController::informationsAction() */
-                        'route' => 'agent/informations',
-                        'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER_DONNEES),
                     ],
                     'entretien' => [
                         'order' => 0101,
@@ -266,30 +94,25 @@ return [
             AgentAffichageAssertion::class => AgentAffichageAssertionFactory::class,
 
             AgentMissionSpecifiqueService::class => AgentMissionSpecifiqueServiceFactory::class,
-            AgentQuotiteService::class => AgentQuotiteServiceFactory::class,
-            AgentStatutService::class => AgentStatutServiceFactory::class,
+
         ],
     ],
     'controllers' => [
         'factories' => [
-            AgentController::class => AgentControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            SelectionAgentForm::class => SelectionAgentFormFactory::class,
             AgentMissionSpecifiqueForm::class => AgentMissionSpecifiqueFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
             AgentMissionSpecifiqueHydrator::class => AgentMissionSpecifiqueHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
         'invokables' => [
-
             'agentAffectation' => AgentAffectationViewHelper::class,
             'agentStatut' => AgentStatutViewHelper::class,
             'agentGrade' => AgentGradeViewHelper::class,

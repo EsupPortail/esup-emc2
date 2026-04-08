@@ -151,7 +151,11 @@ $canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileg
         </div>
 
 
-        <?php echo $this->campagneAvancementCache($campagne, $progression->getStructure(), $progression, ['can-refresh' => false]); ?>
+        <?php
+            if ($progression) {
+                echo $this->campagneAvancementCache($campagne, $progression->getStructure(), $progression, ['can-refresh' => false]);
+            }
+        ?>
 
 
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>

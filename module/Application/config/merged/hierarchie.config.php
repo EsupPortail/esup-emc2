@@ -2,8 +2,10 @@
 
 namespace Application;
 
+use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Assertion\ChaineAssertion;
 use Application\Assertion\ChaineAssertionFactory;
+use Application\Controller\AgentController;
 use Application\Controller\AgentHierarchieController;
 use Application\Controller\AgentHierarchieControllerFactory;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;
@@ -130,6 +132,18 @@ return [
                     ],
                     'roles' => [],
                 ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
+                        'mes-agents',
+                        'mes-missions-specifiques',
+                        'mes-fiches-postes',
+                        'mes-entretiens-professionnels',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_AFFICHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -162,8 +176,52 @@ return [
     ],
 
 
-    'router'          => [
+    'router' => [
         'routes' => [
+            'mes-entretiens-professionnels' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/mes-entretiens-professionnels[/:campagne]',
+                    'defaults' => [
+                        /** @see AgentHierarchieController::mesEntretiensProfessionnelsAction() */
+                        'controller' => AgentHierarchieController::class,
+                        'action' => 'mes-entretiens-professionnels',
+                    ],
+                ],
+            ],
+            'mes-agents' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/mes-agents',
+                    'defaults' => [
+                        /** @see AgentHierarchieController::mesAgentsAction() */
+                        'controller' => AgentHierarchieController::class,
+                        'action' => 'mes-agents',
+                    ],
+                ],
+            ],
+            'mes-missions-specifiques' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/mes-missions-specifiques',
+                    'defaults' => [
+                        /** @see AgentHierarchieController::mesMissionsSpecifiquesAction() */
+                        'controller' => AgentHierarchieController::class,
+                        'action' => 'mes-missions-specifiques',
+                    ],
+                ],
+            ],
+            'mes-fiches-postes' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/mes-fiches-postes',
+                    'defaults' => [
+                        /** @see AgentHierarchieController::mesFichesPostesAction() */
+                        'controller' => AgentHierarchieController::class,
+                        'action' => 'mes-fiches-postes',
+                    ],
+                ],
+            ],
             'agent' => [
                 'child_routes' => [
                     'hierarchie' => [

@@ -255,7 +255,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
             /** @see AgentController::rechercherWithStructureMereAction() */
             return $this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true);
         }
-        /** @see AgentController::rechercherLargeAction() */
+        /** @see Agent\Controller\AgentController::rechercherLargeAction() */
         return $this->url()->fromRoute('agent/rechercher-large', [], [], true);
     }
 }

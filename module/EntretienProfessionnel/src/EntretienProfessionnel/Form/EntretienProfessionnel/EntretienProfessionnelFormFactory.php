@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Form\EntretienProfessionnel;
 
-use Application\Controller\AgentController;
+use Agent\Controller\AgentController;
 use EntretienProfessionnel\Controller\EntretienProfessionnelController;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Interop\Container\ContainerInterface;

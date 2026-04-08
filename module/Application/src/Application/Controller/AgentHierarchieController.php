@@ -3,7 +3,10 @@
 namespace Application\Controller;
 
 use Agent\Entity\Db\AgentAffectation;
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Agent\Service\AgentRef\AgentRefServiceAwareTrait;
+use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
@@ -13,17 +16,30 @@ use Application\Form\Chaine\ChaineFormAwareTrait;
 use Application\Provider\Parametre\GlobalParametres;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\Url\UrlServiceAwareTrait;
 use DateTime;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Template\TexteTemplates;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use FichePoste\Provider\Parametre\FichePosteParametres;
+use FichePoste\Provider\Template\TextTemplates;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class AgentHierarchieController extends AbstractActionController
 {
@@ -36,6 +52,18 @@ class AgentHierarchieController extends AbstractActionController
     use AgentHierarchieCalculFormAwareTrait;
     use AgentHierarchieImportationFormAwareTrait;
     use ChaineFormAwareTrait;
+
+    use AgentAffectationServiceAwareTrait;
+    use AgentGradeServiceAwareTrait;
+    use AgentMissionSpecifiqueServiceAwareTrait;
+    use AgentStatutServiceAwareTrait;
+    use CampagneServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
+    use RenduServiceAwareTrait;
+    use TemplateServiceAwareTrait;
+    use UserServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -745,5 +773,180 @@ class AgentHierarchieController extends AbstractActionController
 
     }
 
+    public function mesAgentsAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+
+        $affectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgents($agents);
+        $grades = $this->getAgentGradeService()->getAgentGradesByAgents($agents);
+        $statuts = $this->getAgentStatutService()->getAgentStatutsByAgents($agents);
+
+        $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
+        $obligations = [];
+        foreach ($campagnes as $campagne_) {
+            [$obligation] = $this->getCampagneService()->trierAgents($campagne_, $agents);
+            $obligations[$campagne_->getId()] = $obligation;
+        }
+
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+
+            'campagne' => $campagne,
+            'affectations' => $affectations,
+            'grades' => $grades,
+            'statuts' => $statuts,
+
+            'campagnes' => $campagnes,
+            'obligations' => $obligations,
+        ]);
+        return $vm;
+    }
+
+    public function mesMissionsSpecifiquesAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+
+        $missions = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgents($agents);
+        $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+            'campagne' => $campagne,
+
+            'missions' => $missions,
+        ]);
+        return $vm;
+    }
+
+    public function mesFichesPostesAction(): ViewModel
+    {
+        $agents = $this->listerAgents();
+        $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $fichesDePoste = [];
+        foreach ($agents as $agent_) {
+            if ($agent_ instanceof StructureAgentForce) $agent_ = $agent_->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent_);
+            $fichesDePoste[$agent_->getId()] = $fiches;
+        }
+        $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
+
+        $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
+        $template = null;
+        if ($displayBandeau and $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+            $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
+        }
+
+        $vm = new ViewModel([
+            'agents' => $agents,
+            'campagne' => $campagne,
+            'fichesDePoste' => $fichesDePoste,
+            'fichesDePostePdf' => $fichesDePostePdf,
+
+            'displayBandeau' => $displayBandeau,
+            'template' => $template,
+        ]);
+        return $vm;
+    }
+
+    public function mesEntretiensProfessionnelsAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
+
+        $role = $this->getUserService()->getConnectedRole();
+        $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
+
+        $agents = [];
+        $entretiensS = [];
+        $entretiensR = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
+            $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($connectedAgent, $campagne, false, false);
+        }
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
+            $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
+            $entretiensR = [];
+        }
+
+        $entretiens = [];
+        foreach ($entretiensR as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
+        foreach ($entretiensS as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()] = $entretien;
+        }
+
+        //Extraction de la liste des campagnes
+        $campagnes = $this->getCampagneService()->getCampagnes();
+
+        //manque le tri des agents !!!!
+        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
+        $finalises = [];
+        $encours = [];
+        foreach ($entretiens as $entretien) {
+            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
+                $finalises[] = $entretien;
+            } else {
+                $encours[] = $entretien;
+            }
+        }
+
+        /** GENERATION DES CONTENUS TEMPLATISÉS ***********************************************************************/
+        $vars = ['UrlService' => $this->getUrlService(), 'campagne' => $campagne];
+        $templates = [];
+        $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION] = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION, $vars, false);
+
+        $vm = new ViewModel([
+            'campagnes' => $campagnes,
+            'campagne' => $campagne,
+            'agent' => $connectedAgent,
+            'agents' => $agents,
+            'obligatoires' => $obligatoires,
+            'facultatifs' => $facultatifs,
+            'raisons' => $raisons,
+
+            'entretiens' => $entretiens,
+            'encours' => $encours,
+            'finalises' => $finalises,
+
+            'templates' => $templates,
+        ]);
+        return $vm;
+    }
+
+    /** @return Agent[] */
+    public function listerAgents(): array
+    {
+        $role = $this->getUserService()->getConnectedRole();
+        $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
+
+        $agents = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($connectedAgent);
+            $agents = array_map(function (AgentSuperieur $a) {
+                return $a->getAgent();
+            }, $chaines);
+        }
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($connectedAgent);
+            $agents = array_map(function (AgentAutorite $a) {
+                return $a->getAgent();
+            }, $chaines);
+        }
+
+        $result = [];
+        foreach ($agents as $agent) {
+            $result[$agent->getId()] = $agent;
+        }
+        return $result;
+    }
 
 }

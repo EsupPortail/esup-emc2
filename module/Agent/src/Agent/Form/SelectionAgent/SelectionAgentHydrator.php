@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\SelectionAgent;
+namespace Agent\Form\SelectionAgent;
 
 use Application\Entity\HasAgentInterface;
 use Agent\Service\Agent\AgentServiceAwareTrait;

@@ -6,6 +6,10 @@ use Agent\Assertion\AgentAssertion;
 use Agent\Assertion\AgentAssertionFactory;
 use Agent\Controller\AgentController;
 use Agent\Controller\AgentControllerFactory;
+use Agent\Form\SelectionAgent\SelectionAgentForm;
+use Agent\Form\SelectionAgent\SelectionAgentFormFactory;
+use Agent\Form\SelectionAgent\SelectionAgentHydrator;
+use Agent\Form\SelectionAgent\SelectionAgentHydratorFactory;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Agent\Service\Agent\AgentService;
 use Agent\Service\Agent\AgentServiceFactory;
@@ -62,6 +66,15 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
                         'acquis',
                         'informations',
                         'missions-specifiques',
@@ -95,6 +108,25 @@ return [
                         AgentPrivileges::AGENT_RECHERCHER,
                     ],
                 ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'rechercher-with-structure-mere',
+                    ],
+                    'roles' => [],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'upload-fichier',
+                        'upload-fiche-poste-pdf',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_EDITER,
+                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
+                        AgentPrivileges::AGENT_ELEMENT_AJOUTER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -105,7 +137,13 @@ return [
                 'type' => Literal::class,
                 'options' => [
                     'route' => '/agent',
+                    'defaults' => [
+                        /** @see AgentController::indexAction() */
+                        'controller' => AgentController::class,
+                        'action' => 'index'
+                    ],
                 ],
+                'may_terminate' => true,
                 'child_routes' => [
                     'acquis' => [
                         'type' => Segment::class,
@@ -159,6 +197,29 @@ return [
                                 /** @see AgentController::portfolioAction() */
                                 'controller' => AgentController::class,
                                 'action' => 'portfolio'
+                            ],
+                        ],
+                    ],
+                    /** AUTRE  ****************************************************************************************/
+
+                    'upload-fichier' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/upload-fichier/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action' => 'upload-fichier',
+                            ],
+                        ],
+                    ],
+                    'upload-fiche-poste-pdf' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/upload-fiche-poste-pdf/:agent',
+                            'defaults' => [
+                                /** @see AgentController::uploadFichePostePdfAction() */
+                                'controller' => AgentController::class,
+                                'action' => 'upload-fiche-poste-pdf',
                             ],
                         ],
                     ],
@@ -220,6 +281,33 @@ return [
         ],
     ],
 
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'suivis' => [
+                        'pages' => [
+                            'agent' => [
+                                'label' => 'Agents',
+                                'route' => 'agent',
+                                'resource' => PrivilegeController::getResourceId(AgentController::class, 'index'),
+                                'order' => 10,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                    'donnees' => [
+                        'order' => 0100,
+                        'label' => 'Données personnelles',
+                        'title' => "Gestion des données d'un agent",
+                        /** @see AgentController::informationsAction() */
+                        'route' => 'agent/informations',
+                        'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER_DONNEES),
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'service_manager' => [
         'factories' => [
@@ -234,10 +322,13 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            SelectionAgentForm::class => SelectionAgentFormFactory::class,
+
         ],
     ],
     'hydrators' => [
         'factories' => [
+            SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

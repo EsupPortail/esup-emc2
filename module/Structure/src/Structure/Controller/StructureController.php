@@ -2,15 +2,15 @@
 
 namespace Structure\Controller;
 
+use Agent\Controller\AgentController;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
-use Application\Controller\AgentController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
-use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Agent\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Provider\Parametre\GlobalParametres;
-use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -265,7 +265,7 @@ class StructureController extends AbstractActionController
 
         $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau and $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 

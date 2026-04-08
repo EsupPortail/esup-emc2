@@ -45,6 +45,7 @@ $modules = [
     'UnicaenStorage',
 
     'Referentiel',
+    'Element',
     'Agent',
     'MissionSpecifique',
     'Structure',
@@ -55,7 +56,7 @@ $modules = [
 
     'FichePoste',
 
-    'Element',
+
 
     'Application',
 

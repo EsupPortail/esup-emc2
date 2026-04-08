@@ -18,10 +18,10 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
     $structureF = new SearchAndSelect('agent');
     if ($structure !== null) {
-        /** @see  \Application\Controller\AgentController::rechercherWithStructureMereAction() */
+        /** @see  \Agent\Controller\AgentController::rechercherWithStructureMereAction() */
         $structureF->setAutocompleteSource($this->url('agent/rechercher-with-structure-mere', ['strcture' => $structure->getId()], [], true));
     } else {
-        /** @see  \Application\Controller\AgentController::rechercherAction() */
+        /** @see  \Agent\Controller\AgentController::rechercherAction() */
         $structureF->setAutocompleteSource($this->url('agent/rechercher'));
     }
     $structureF

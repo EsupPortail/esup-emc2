@@ -38,7 +38,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                     </div>
                     <div class="col-md-5">
                         <?php
-                        /** @see \Application\Controller\AgentController::rechercherLargeAction() */
+                        /** @see \Agent\Controller\AgentController::rechercherLargeAction() */
                         $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent·e :"]);
                         $agentF
                             ->setAutocompleteSource($this->url('agent/rechercher-large'))
