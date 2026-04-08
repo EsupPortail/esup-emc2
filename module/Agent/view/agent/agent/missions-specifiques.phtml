@@ -3,21 +3,18 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
-use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \Agent\Controller\AgentController::missionsSpecifiquesAction()
  * @var Agent $agent
  * @var AgentMissionSpecifique $missions
- *
- * @var Parametre[] $parametres
  */
 $canAjouterMission      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
 
 ?>
 
 
-<?php echo $this->partial('agent/agent/partial/entete', ['current' => 'missions', 'agent' => $agent, 'parametres' => $parametres,]); ?>
+<?php echo $this->agentOnglet($agent,'missions'); ?>
 
 
 <?php if ($canAjouterMission) : ?>

@@ -4,7 +4,6 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
 use FichePoste\Provider\Template\TextTemplates;
-use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenRenderer\Entity\Db\Rendu;
 
 /**
@@ -14,7 +13,6 @@ use UnicaenRenderer\Entity\Db\Rendu;
  * @var bool $displayBandeau
  * @var Rendu $template
  *
- * @var Parametre[] $parametres
  *
  */
 
@@ -35,7 +33,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
 
 ?>
 
-<?php echo $this->partial('agent/agent/partial/entete', ['current' => 'ficheposte', 'agent' => $agent, 'parametres' => $parametres]); ?>
+<?php echo $this->agentOnglet($agent, 'ficheposte'); ?>
 
 
 

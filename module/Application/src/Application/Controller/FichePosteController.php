@@ -118,8 +118,6 @@ class FichePosteController extends AbstractActionController
 
             'displayBandeau' => $displayBandeau,
             'template' => $template,
-            // onglet
-            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
         ]);
     }
 

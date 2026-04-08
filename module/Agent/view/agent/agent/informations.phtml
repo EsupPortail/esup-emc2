@@ -11,7 +11,6 @@ use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Privilege\ChainePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -31,8 +30,6 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var User $connectedUser
  * @var Role $connectedRole
  * @var Campagne[] $campagnesActives
- *
- * @var Parametre[] $parametres
  */
 
 
@@ -59,9 +56,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
 
 ?>
 
-<?php echo $this->partial('agent/agent/partial/entete', [
-        'current' => 'informations', 'agent' => $agent, 'parametres' => $parametres,
-]); ?>
+<?php echo $this->agentOnglet($agent, 'informations'); ?>
 
 
 <!-- Aide pour le EP -------------------------------------------------------------------------------------------------->

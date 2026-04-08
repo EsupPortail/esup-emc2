@@ -13,14 +13,13 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var ApplicationElement[] $applications
  * @var CompetenceElement[] $competences
  *
- * @var Parametre[] $parametres
  */
 
 $options['retour'] = $this->url('agent/acquis', ['agent' => $agent->getId()], [], true);
 
 ?>
 
-<?php echo $this->partial('agent/agent/partial/entete', ['current' => 'acquis', 'agent' => $agent, 'parametres' => $parametres]); ?>
+<?php echo $this->agentOnglet($agent, 'acquis'); ?>
 
 <div class="alert alert-info">
     <strong><span class="icon icon-attention"> Affichage des applications et compétences directement liées à l'agent.</strong>

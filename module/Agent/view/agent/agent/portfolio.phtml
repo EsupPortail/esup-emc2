@@ -3,14 +3,12 @@
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use UnicaenFichier\Entity\Db\Fichier;
-use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see \Agent\Controller\AgentController::portfolioAction()
  * @var Agent $agent
  * @var Fichier[] $fichiers
  *
- * @var Parametre[] $parametres
  */
 
 $canVoirFichier = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
@@ -20,7 +18,7 @@ $canDetruireFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DE
 
 ?>
 
-<?php echo $this->partial('agent/agent/partial/entete', ['current' => 'portfolio', 'agent' => $agent, 'parametres' => $parametres]); ?>
+<?php echo $this->agentOnglet($agent, 'portfolio'); ?>
 
 
 <?php if ($canAjouterFichier) : ?>

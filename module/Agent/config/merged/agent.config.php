@@ -5,6 +5,8 @@ namespace Agent;
 use Agent\Controller\AgentController;
 use Agent\Controller\AgentControllerFactory;
 use Agent\Provider\Privilege\AgentmobilitePrivileges;
+use Agent\View\Helper\AgentOngletViewHelper;
+use Agent\View\Helper\AgentOngletViewHelperFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -107,8 +109,10 @@ return [
     ],
     'view_helpers' => [
         'factories' => [
+            AgentOngletViewHelper::class => AgentOngletViewHelperFactory::class,
         ],
         'aliases' => [
+            'agentOnglet' => AgentOngletViewHelper::class,
         ],
     ],
 ];

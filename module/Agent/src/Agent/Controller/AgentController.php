@@ -49,8 +49,6 @@ class AgentController extends AbstractActionController {
             'agent' => $agent,
             'applications' => $applications,
             'competences' => $competences,
-            // onglet
-            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
         ]);
     }
 
@@ -95,8 +93,6 @@ class AgentController extends AbstractActionController {
             'connectedRole' => $this->getUserService()->getConnectedRole(),
             'campagnesActives' => $this->getCampagneService()->getCampagnesActives(),
 
-            // onglet
-            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
         ]);
     }
 
@@ -108,8 +104,6 @@ class AgentController extends AbstractActionController {
         return new ViewModel([
            'agent' => $agent,
            'missions' => $missions,
-            // onglet
-            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
         ]);
     }
 
