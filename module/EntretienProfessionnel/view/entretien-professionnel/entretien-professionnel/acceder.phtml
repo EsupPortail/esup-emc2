@@ -32,6 +32,7 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Role\RoleProvider;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\Observateur;
@@ -154,7 +155,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
 <?php
     $canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
-    $cannotVisualiser = ($role->getRoleId() === Agent::ROLE_AGENT AND ($now > $entretien->getDateFin() AND $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null));
+    $cannotVisualiser = ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT AND ($now > $entretien->getDateFin() AND $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null));
 ?>
 
 <?php if ($canRenseigner) : ?>

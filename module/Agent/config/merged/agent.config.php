@@ -7,6 +7,8 @@ use Agent\Assertion\AgentAssertionFactory;
 use Agent\Controller\AgentController;
 use Agent\Controller\AgentControllerFactory;
 use Agent\Provider\Privilege\AgentPrivileges;
+use Agent\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentServiceFactory;
 use Agent\View\Helper\AgentOngletViewHelper;
 use Agent\View\Helper\AgentOngletViewHelperFactory;
 use Laminas\Router\Http\Literal;
@@ -70,6 +72,29 @@ return [
                     ],
                     'assertion' => AgentAssertion::class,
                 ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'afficher-statuts-grades',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_AFFICHER,
+//                        AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
+                    ],
+//                    'assertion' => AgentAffichageAssertion::class,
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'rechercher',
+                        'rechercher-large',
+                        'rechercher-responsable',
+                        'rechercher-gestionnaire',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_RECHERCHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -90,6 +115,17 @@ return [
                                 /** @see AgentController::acquisAction() */
                                 'controller' => AgentController::class,
                                 'action' => 'acquis'
+                            ],
+                        ],
+                    ],
+                    'afficher-statuts-grades' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/afficher-statuts-grades/:agent',
+                            'defaults' => [
+                                /** @see AgentController::afficherStatutsGradesAction() */
+                                'controller' => AgentController::class,
+                                'action' => 'afficher-statuts-grades',
                             ],
                         ],
                     ],
@@ -126,6 +162,59 @@ return [
                             ],
                         ],
                     ],
+                    /** Fonctions de recherche ************************************************************************/
+                    'rechercher' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/rechercher',
+                            'defaults' => [
+                                /** @see AgentController::rechercherAction() */
+                                'controller' => AgentController::class,
+                                'action' => 'rechercher',
+                            ],
+                        ],
+                    ],
+                    'rechercher-large' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/rechercher-large',
+                            'defaults' => [
+                                /** @see AgentController::rechercherLargeAction() */
+                                'controller' => AgentController::class,
+                                'action' => 'rechercher-large',
+                            ],
+                        ],
+                    ],
+                    'rechercher-with-structure-mere' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/rechercher-with-structure-mere/:structure',
+                            'defaults' => [
+                                /** @see AgentController::rechercherWithStructureMereAction() */
+                                'action' => 'rechercher-with-structure-mere',
+                            ],
+                        ],
+                    ],
+                    'rechercher-responsable' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/rechercher-responsable',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action' => 'rechercher-responsable',
+                            ],
+                        ],
+                    ],
+                    'rechercher-gestionnaire' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/rechercher-gestionnaire',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action' => 'rechercher-gestionnaire',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -135,6 +224,7 @@ return [
     'service_manager' => [
         'factories' => [
             AgentAssertion::class => AgentAssertionFactory::class,
+            AgentService::class => AgentServiceFactory::class,
         ],
     ],
     'controllers' => [

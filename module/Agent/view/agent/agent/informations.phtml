@@ -4,6 +4,7 @@ use Agent\Entity\Db\AgentAffectation;
 use Agent\Entity\Db\AgentEchelon;
 use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentStatut;
+use Agent\Provider\Role\RoleProvider;
 use Application\Assertion\ChaineAssertion;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
@@ -61,7 +62,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
 
 <!-- Aide pour le EP -------------------------------------------------------------------------------------------------->
 
-<?php if ($connectedUser === $agent->getUtilisateur() AND $connectedRole->getRoleId() === Agent::ROLE_AGENT) : ?>
+<?php if ($connectedUser === $agent->getUtilisateur() AND $connectedRole->getRoleId() === RoleProvider::ROLE_AGENT) : ?>
     <?php foreach ($campagnesActives as $campagne) : ?>
         <?php echo $this->aideAgentCampagne($agent, $campagne); ?>
     <?php endforeach; ?>
@@ -338,7 +339,7 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
 
 <?php if ($canAfficherCarriereComplete) : ?>
     <a
-            <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */ ?>
+            <?php /** @see \Agent\Controller\AgentController::afficherStatutsGradesAction() */ ?>
             href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
             class="ajax-modal"
     >

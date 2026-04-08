@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Agent;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;

@@ -4,7 +4,7 @@ namespace Application\Service\Perimetre;
 
 use Application\Entity\Db\Agent;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Structure\Entity\Db\Structure;

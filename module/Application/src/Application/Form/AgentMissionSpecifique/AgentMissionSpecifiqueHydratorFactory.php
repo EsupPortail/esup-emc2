@@ -2,7 +2,7 @@
 
 namespace Application\Form\AgentMissionSpecifique;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

@@ -21,8 +21,6 @@ use Application\Form\SelectionAgent\SelectionAgentHydrator;
 use Application\Form\SelectionAgent\SelectionAgentHydratorFactory;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Agent\Provider\Privilege\AgentPrivileges;
-use Application\Service\Agent\AgentService;
-use Application\Service\Agent\AgentServiceFactory;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
@@ -90,31 +88,9 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'rechercher',
-                        'rechercher-large',
-                        'rechercher-responsable',
-                        'rechercher-gestionnaire',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_RECHERCHER,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
                         'rechercher-with-structure-mere',
                     ],
                     'roles' => [],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'afficher-statuts-grades',
-                    ],
-                    'privileges' => [
-                        AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
-                    ],
-                    'assertion' => AgentAffichageAssertion::class,
                 ],
                 [
                     'controller' => AgentController::class,
@@ -202,58 +178,6 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    /** Fonctions de recherche ************************************************************************/
-                    'rechercher' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/rechercher',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'rechercher',
-                            ],
-                        ],
-                    ],
-                    'rechercher-large' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/rechercher-large',
-                            'defaults' => [
-                                /** @see AgentController::rechercherLargeAction() */
-                                'controller' => AgentController::class,
-                                'action' => 'rechercher-large',
-                            ],
-                        ],
-                    ],
-                    'rechercher-with-structure-mere' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/rechercher-with-structure-mere/:structure',
-                            'defaults' => [
-                                /** @see AgentController::rechercherWithStructureMereAction() */
-                                'action' => 'rechercher-with-structure-mere',
-                            ],
-                        ],
-                    ],
-                    'rechercher-responsable' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/rechercher-responsable',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'rechercher-responsable',
-                            ],
-                        ],
-                    ],
-                    'rechercher-gestionnaire' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/rechercher-gestionnaire',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'rechercher-gestionnaire',
-                            ],
-                        ],
-                    ],
 
                     /** Routes de gestion des applications*************************************************************/
 
@@ -277,16 +201,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action' => 'upload-fichier',
-                            ],
-                        ],
-                    ],
-                    'afficher-statuts-grades' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/afficher-statuts-grades/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'afficher-statuts-grades',
                             ],
                         ],
                     ],
@@ -351,7 +265,6 @@ return [
         'factories' => [
             AgentAffichageAssertion::class => AgentAffichageAssertionFactory::class,
 
-            AgentService::class => AgentServiceFactory::class,
             AgentMissionSpecifiqueService::class => AgentMissionSpecifiqueServiceFactory::class,
             AgentQuotiteService::class => AgentQuotiteServiceFactory::class,
             AgentStatutService::class => AgentStatutServiceFactory::class,

@@ -6,7 +6,7 @@ use Agent\Service\AgentRef\AgentRefService;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
 use Application\Form\Chaine\ChaineForm;
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Psr\Container\ContainerExceptionInterface;

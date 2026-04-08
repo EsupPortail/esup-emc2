@@ -6,7 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use DateTime;

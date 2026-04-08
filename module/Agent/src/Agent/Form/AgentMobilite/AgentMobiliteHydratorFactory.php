@@ -2,7 +2,7 @@
 
 namespace Agent\Form\AgentMobilite;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Carriere\Service\Mobilite\MobiliteService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;

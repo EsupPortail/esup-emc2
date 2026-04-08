@@ -3,7 +3,7 @@
 namespace Structure\Assertion;
 
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Provider\Role\RoleProvider;

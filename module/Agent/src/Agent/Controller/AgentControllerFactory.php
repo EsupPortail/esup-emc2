@@ -6,7 +6,7 @@ use Agent\Service\AgentAffectation\AgentAffectationService;
 use Agent\Service\AgentGrade\AgentGradeService;
 use Agent\Service\AgentStatut\AgentStatutService;
 use Application\Assertion\ChaineAssertion;
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;

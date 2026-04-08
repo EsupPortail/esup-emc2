@@ -2,8 +2,9 @@
 
 namespace Application\Provider;
 
+use Agent\Provider\Role\RoleProvider;
 use Application\Entity\Db\Agent;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -28,7 +29,7 @@ class IdentityProvider extends AbstractIdentityProvider
     public function computeUsersAutomatiques(string $code) : ?array
     {
         switch ($code) {
-            case Agent::ROLE_AGENT :
+            case RoleProvider::ROLE_AGENT :
                 $user = $this->getAgentService()->getUsersInAgent();
                 return $user;
             case Agent::ROLE_SUPERIEURE :
@@ -57,7 +58,7 @@ class IdentityProvider extends AbstractIdentityProvider
         if ($agent !== null) {
 
             if (!empty($agent->getAffectationsActifs())) {
-                $roleAgent = $this->getRoleService()->findByRoleId(Agent::ROLE_AGENT);
+                $roleAgent = $this->getRoleService()->findByRoleId(RoleProvider::ROLE_AGENT);
                 $roles[] = $roleAgent;
             }
 

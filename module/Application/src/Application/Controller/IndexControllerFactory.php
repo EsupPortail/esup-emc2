@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Agent\Service\AgentAffectation\AgentAffectationService;
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;

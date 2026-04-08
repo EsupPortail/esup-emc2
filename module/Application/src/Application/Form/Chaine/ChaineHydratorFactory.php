@@ -2,7 +2,7 @@
 
 namespace Application\Form\Chaine;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

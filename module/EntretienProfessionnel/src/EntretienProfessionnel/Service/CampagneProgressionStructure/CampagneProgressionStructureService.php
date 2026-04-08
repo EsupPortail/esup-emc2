@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\CampagneProgressionStructure;
 
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

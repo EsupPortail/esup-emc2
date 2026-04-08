@@ -6,7 +6,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\HasDescription\HasDescriptionForm;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentForm;
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;

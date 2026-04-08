@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurForm;
 use EntretienProfessionnel\Form\Observateur\ObservateurForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;

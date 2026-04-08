@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Assertion;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;

@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Form\AgentForceSansObligation;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

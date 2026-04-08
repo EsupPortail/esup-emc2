@@ -2,7 +2,7 @@
 
 namespace Application\Service\FichePoste;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerExceptionInterface;

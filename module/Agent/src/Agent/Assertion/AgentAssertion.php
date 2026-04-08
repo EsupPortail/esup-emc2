@@ -3,10 +3,11 @@
 namespace Agent\Assertion;
 
 use Agent\Provider\Privilege\AgentPrivileges;
+use Agent\Provider\Role\RoleProvider;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -53,7 +54,7 @@ class AgentAssertion extends AbstractAssertion
             $structures = $entity->getStructures();
             $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
         }
-        if ($role->getRoleId() === Agent::ROLE_AGENT) $isAgent = ($agent === $entity);
+        if ($role->getRoleId() === RoleProvider::ROLE_AGENT) $isAgent = ($agent === $entity);
 
         switch ($privilege) {
             case AgentPrivileges::AGENT_AFFICHER :
@@ -76,7 +77,7 @@ class AgentAssertion extends AbstractAssertion
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
                     Agent::ROLE_AUTORITE => $isAutorite,
-                    Agent::ROLE_AGENT => $isAgent,
+                    RoleProvider::ROLE_AGENT => $isAgent,
                     default => false,
                 };
             case AgentPrivileges::AGENT_ELEMENT_DETRUIRE:

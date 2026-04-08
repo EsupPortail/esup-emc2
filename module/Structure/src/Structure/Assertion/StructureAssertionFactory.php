@@ -2,7 +2,7 @@
 
 namespace Structure\Assertion;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;

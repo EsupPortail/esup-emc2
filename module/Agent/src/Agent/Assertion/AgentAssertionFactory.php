@@ -2,19 +2,20 @@
 
 namespace Agent\Assertion;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Interop\Container\ContainerInterface;
+use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
 use UnicaenUtilisateur\Service\User\UserService;
-use Laminas\Mvc\Application;
 
-class AgentAssertionFactory {
+class AgentAssertionFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -22,7 +23,7 @@ class AgentAssertionFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function  __invoke(ContainerInterface $container): AgentAssertion
+    public function __invoke(ContainerInterface $container): AgentAssertion
     {
         /**
          * @var AgentService $agentService
@@ -52,7 +53,7 @@ class AgentAssertionFactory {
 
         /* @var $application Application */
         $application = $container->get('Application');
-        $mvcEvent    = $application->getMvcEvent();
+        $mvcEvent = $application->getMvcEvent();
         $assertion->setMvcEvent($mvcEvent);
         return $assertion;
     }

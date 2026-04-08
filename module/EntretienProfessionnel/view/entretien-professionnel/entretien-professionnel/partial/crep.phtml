@@ -9,6 +9,7 @@
  * @var string $source
  */
 
+use Agent\Provider\Role\RoleProvider;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -108,7 +109,7 @@ $date_depassee = (($isAgent) and ($now > $date));
         ?>
 
 
-        <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
+        <?php if ($role->getRoleId() === RoleProvider::ROLE_AGENT AND $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
             <div class="alert alert-info">
                 <strong>
                     <span class="icon icon-information"></span>

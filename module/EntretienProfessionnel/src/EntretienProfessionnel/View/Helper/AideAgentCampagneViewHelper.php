@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\View\Helper;
 
+use Agent\Provider\Role\RoleProvider;
 use Application\Entity\Db\Agent;
 use DateInterval;
 use DateTime;
@@ -62,7 +63,7 @@ class AideAgentCampagneViewHelper extends AbstractHelper
             if ($entretien) {
                 $urlService = $this->getUrlService();
                 $urlService->setVariables(['entretien' => $entretien]);
-                $infos['url-entretien'] = $urlService->getUrlEntretienRenseigner(Agent::ROLE_AGENT, false);
+                $infos['url-entretien'] = $urlService->getUrlEntretienRenseigner(RoleProvider::ROLE_AGENT, false);
             }
         }
 

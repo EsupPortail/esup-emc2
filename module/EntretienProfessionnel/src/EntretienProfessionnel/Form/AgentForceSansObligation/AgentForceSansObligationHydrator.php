@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Form\AgentForceSansObligation;
 
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\Agent;
+namespace Agent\Service\Agent;
 
 trait AgentServiceAwareTrait {
 

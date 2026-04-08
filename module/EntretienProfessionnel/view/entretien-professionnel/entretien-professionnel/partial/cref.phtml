@@ -9,6 +9,7 @@
  * @var RoleInterface $role
  */
 
+use Agent\Provider\Role\RoleProvider;
 use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
@@ -96,7 +97,7 @@ $agent  = $entretien->getAgent();
             echo $this->instanceAsText()->render($cref, null, null, true);
         ?>
 
-        <?php if ($role->getRoleId() === Agent::ROLE_AGENT AND  $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
+        <?php if ($role->getRoleId() === RoleProvider::ROLE_AGENT AND  $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
             <div class="alert alert-info">
                 <strong>
                     <span class="icon icon-information"></span>

@@ -4,7 +4,7 @@ namespace Agent\Service\AgentMobilite;
 
 use Agent\Entity\Db\AgentMobilite;
 use Application\Entity\Db\Agent;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Entity\Db\Mobilite;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;

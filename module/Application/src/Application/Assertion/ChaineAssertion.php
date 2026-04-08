@@ -7,7 +7,7 @@ use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Privilege\ChainePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienRoleProvider;

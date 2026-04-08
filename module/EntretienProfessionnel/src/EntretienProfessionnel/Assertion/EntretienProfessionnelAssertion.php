@@ -4,7 +4,8 @@ namespace EntretienProfessionnel\Assertion;
 
 use Application\Entity\Db\Agent;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
@@ -171,7 +172,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     if ($role->getRoleId() === AppRoleProvider::ADMIN_FONC) return true;
                 }
                 switch ($role->getRoleId()) {
-                    case Agent::ROLE_AGENT :
+                    case AgentRoleProvider::ROLE_AGENT :
                         $etatOk = $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
                         $dateOk = $now < $entretien->getDateEntretien();
                         $scope = $this->isScopeCompatible($entretien, $agent, $role, $predicats);

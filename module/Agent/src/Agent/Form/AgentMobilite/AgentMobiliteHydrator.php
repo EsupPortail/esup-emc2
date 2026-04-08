@@ -3,7 +3,7 @@
 namespace Agent\Form\AgentMobilite;
 
 use Agent\Entity\Db\AgentMobilite;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 

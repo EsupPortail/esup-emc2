@@ -11,7 +11,7 @@ use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormAwareTrait;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormAwareTrait;
 use Application\Form\Chaine\ChaineFormAwareTrait;
 use Application\Provider\Parametre\GlobalParametres;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;

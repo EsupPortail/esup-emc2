@@ -2,7 +2,7 @@
 
 namespace Agent\Service\AgentMobilite;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Carriere\Service\Mobilite\MobiliteService;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerExceptionInterface;

@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieService;

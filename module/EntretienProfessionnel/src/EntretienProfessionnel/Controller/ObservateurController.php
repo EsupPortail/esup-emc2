@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Observateur;
 use EntretienProfessionnel\Form\ImporterObservateur\ImporterObservateurFormAwareTrait;

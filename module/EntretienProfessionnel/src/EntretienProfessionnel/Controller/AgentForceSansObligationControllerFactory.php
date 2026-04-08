@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use EntretienProfessionnel\Form\AgentForceSansObligation\AgentForceSansObligationForm;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;

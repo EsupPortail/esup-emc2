@@ -12,7 +12,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\AgentParametres;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -113,7 +113,7 @@ class AgentController extends AbstractActionController
                 }
                 $agentLabel = $params['agent-sas']['label'] ?? null;
 
-                if ($agentLabel === null OR $agentLabel === "") {
+                if ($agentLabel === null or $agentLabel === "") {
                     $agents = [];
                     $error = "Veuillez sélectionner un agent dans la liste des propositions. ";
                 } else {
@@ -125,8 +125,8 @@ class AgentController extends AbstractActionController
                 }
             }
             if (isset($params['type']) and $params['type'] === 'filtrer') {
-                $a=1;
-                if ($params['denomination'] === "" AND $params['structure-filtre']['id'] === "") {
+                $a = 1;
+                if ($params['denomination'] === "" and $params['structure-filtre']['id'] === "") {
                     $agents = [];
                     $error = "Veuillez préciser la dénomination de l'agent ou une structure";
                 } else {
@@ -141,28 +141,6 @@ class AgentController extends AbstractActionController
             'error' => $error,
         ]);
     }
-
-    public function afficherStatutsGradesAction(): ViewModel
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-
-        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent, false);
-        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, false);
-        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent, false);
-
-        $param = $this->getParametreService()->getParametreByCode('GLOBAL', 'CODE_UNIV');
-        $codeEtabPrincipal = ($param) ? $param->getValeur() : null;
-
-        return new ViewModel([
-            'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
-            'agent' => $agent,
-            'affectations' => $agentAffectations,
-            'statuts' => $agentStatuts,
-            'grades' => $agentGrades,
-            'codeEtabPrincipal' => $codeEtabPrincipal,
-        ]);
-    }
-
 
     /** Fichier associé à l'agent *************************************************************************************/
 

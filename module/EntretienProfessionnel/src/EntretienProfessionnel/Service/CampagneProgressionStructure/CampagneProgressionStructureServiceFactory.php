@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\CampagneProgressionStructure;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;

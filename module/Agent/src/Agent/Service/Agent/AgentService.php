@@ -1,12 +1,11 @@
 <?php
 
-namespace Application\Service\Agent;
+namespace Agent\Service\Agent;
 
 use Agent\Entity\Db\AgentAffectation;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Entity\Db\Agent;
 use DateTime;
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
@@ -53,7 +52,7 @@ class AgentService
             //affectations
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('affectation_structure')->leftJoin('affectation.structure', 'affectation_structure')
-            //quotite de l'agent
+            //quotité de l'agent
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
             ->andWhere('agent.deletedOn IS NULL');
@@ -78,39 +77,6 @@ class AgentService
     }
 
     /**
-     * @return Agent[]
-     */
-    public function getAgents(): array
-    {
-        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
-            ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
-//            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
-            ->andWhere('agent.deletedOn IS NULL')
-            ->orderBy('agent.nomUsuel, agent.prenom');
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    public function getAgentFullJoin(int $agentId): Agent
-    {
-        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->join('agent.affectations', 'affectation')->addSelect('affectation')->andWhere('affectation.deletedOn IS NULL')
-            ->join('agent.grades', 'grade')->addSelect('grade')->andWhere('grade.deletedOn IS NULL')
-            ->join('agent.statuts', 'statut')->addSelect('statut')->andWhere('grade.deletedOn IS NULL')
-            ->join('affectation.structure', 'structure')->addSelect('structure')
-            ->andWhere('agent.id = :agentId')->setParameter('agentId', $agentId)
-            ->andWhere('agent.deletedOn IS NULL')
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs [".Agent::class." partagent le même id [".$agentId."]");
-        }
-        return $result;
-    }
-
-    /**
      * @param DateTime|null $debut
      * @param DateTime|null $fin
      * @param Structure[]|null $structures
@@ -124,13 +90,11 @@ class AgentService
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
             ->andWhere('agent.deletedOn IS NULL')
-            // Devrait être un filtrage ... et pas une requete même si cela accélère les choses
+            // Devrait être un filtrage ; pas une requête même si cela accélère les choses
             ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
             ->andWhere('statut.enseignant = :false')
-//            ->andWhere('emploitype.code <> :UCNRECH')
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
-//            ->setParameter('UCNRECH', 'UCNRECH')
             ->orderBy('agent.nomUsuel, agent.prenom');
 
         if ($debut) $qb = $qb
@@ -324,53 +288,6 @@ EOS;
             }
         }
         return $agents;
-
-//        if ($dateDebut === null) $dateDebut = new DateTime();
-//        $structuresId = [];
-//        foreach ($structures as $structure) {
-//            if (is_array($structure)) {
-//                $structure = $structure[0];
-//            }
-//            $structuresId[] = $structure?->getId();
-//        }
-//        $params = ['dateDebut' => $dateDebut?->format('Y-m-d'), 'dateFin' => $dateFin?->format('Y-m-d'), 'structures' => $structuresId];
-//
-//        $sql = <<<EOS
-//select DISTINCT a.c_individu as c_individu
-//from agent a
-//join agent_carriere_affectation aca on a.c_individu = aca.agent_id
-//where
-//    aca.deleted_on IS NULL
-//    and aca.structure_id in (:structures)
-//EOS;
-//        if ($dateDebut and $dateFin) {
-//            $sql .= <<<EOS
-//and tsrange(aca.date_debut, aca.date_fin) && tsrange(:dateDebut, :dateFin)
-//EOS;
-//        }
-//        if ($dateDebut and !$dateFin) {
-//            $sql .= <<<EOS
-//and aca.date_debut <= :dateDebut and (aca.date_fin IS NULL OR aca.date_fin >= :dateDebut)
-//EOS;
-//        }
-//
-//        try {
-//            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params, ['structures' => ArrayParameterType::INTEGER]);
-//            try {
-//                $tmp = $res->fetchAllAssociative();
-//            } catch (DRV_Exception $e) {
-//                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
-//            }
-//        } catch (DBA_Exception $e) {
-//            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
-//        }
-//        $ids = [];
-//        foreach ($tmp as $row) {
-//            $ids[] = $row['c_individu'];
-//        }
-//
-//        $agents = $this->getAgentsByIds($ids);
-//        return $agents;
     }
 
     /**
@@ -425,7 +342,7 @@ EOS;
 
         //checking structure
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
-        if ($affectationsPrincipales === null or count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
+        if ($affectationsPrincipales === null or count($affectationsPrincipales) !== 1) return [];
 
         if (reset($affectationsPrincipales)) {
             $affectationPrincipale = reset($affectationsPrincipales);
@@ -464,7 +381,7 @@ EOS;
             foreach ($affectationsPrincipales as $affectation) {
                 $niveau2 = $affectation->getStructure()->getNiv2();
                 if ($structure === null or $niveau2 === $structure) $structure = $niveau2;
-                else return []; //throw new LogicException("Différentes structures de niveau2 affectations principales pour l'agent");
+                else return [];
             }
         }
 
@@ -695,7 +612,7 @@ EOS;
             ->andWhere('coalesce(statut.dateDebut, :date) <= :date')->setParameter('date', $date ?? new DateTime())
             ->andWhere('statut.'.$statut.' = :oui')->setParameter('oui', 'O')
             ->andWhere('agent.deletedOn IS NULL')->andWhere('statut.deletedOn IS NULL')
-            ->andWhere('agent.id in (:ids)')->setParameter('ids', $ids);
+            ->andWhere('agent.id in (:ids)')->setParameter('ids', $ids)
             ;
         $result = $qb->getQuery()->getResult();
 

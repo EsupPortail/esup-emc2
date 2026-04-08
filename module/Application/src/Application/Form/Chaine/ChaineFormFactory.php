@@ -26,7 +26,7 @@ class ChaineFormFactory
         $pluginManager = $container->get('ViewHelperManager');
         /** @var Url $urlManager */
         $urlManager = $pluginManager->get('Url');
-        /** @see AgentController::rechercherAction() */
+        /** @see \Agent\Controller\AgentController::rechercherLargeAction() */
         $urlAgent       =  $urlManager->__invoke('agent/rechercher-large', [], [], true);
 
         $form = new ChaineForm();

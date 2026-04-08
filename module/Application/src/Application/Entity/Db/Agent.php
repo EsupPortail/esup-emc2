@@ -8,8 +8,8 @@ use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentQuotite;
 use Agent\Entity\Db\AgentRef;
 use Agent\Entity\Db\AgentStatut;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
-use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Grade;
 use Carriere\Entity\Db\NiveauEnveloppe;
@@ -26,11 +26,11 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
 use FichePoste\Provider\Etat\FichePosteEtats;
-use UnicaenFichier\Entity\Db\Fichier;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
+use UnicaenFichier\Entity\Db\Fichier;
 use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
@@ -51,7 +51,6 @@ class Agent implements
     use HasValidationsTrait;
     use AgentMacroTrait;
 
-    const ROLE_AGENT = 'Agent';
     const ROLE_SUPERIEURE = 'Supérieur·e hiérarchique direct·e';
     const ROLE_AUTORITE = 'Autorité hiérarchique';
 
@@ -195,7 +194,7 @@ class Agent implements
     {
         /** @var AgentRef $ref */
         foreach ($this->refs as $ref) {
-            if ($ref->getSource() === $source AND (!$actif OR !$ref->isDeleted())) return $ref;
+            if ($ref->getSource() === $source and (!$actif or !$ref->isDeleted())) return $ref;
         }
         return null;
     }
@@ -384,14 +383,13 @@ class Agent implements
         $splittedTemoins = explode('&', $temoins);
 
         $sat = true;
-        foreach ($splittedTemoins as $temoin)
-        {
+        foreach ($splittedTemoins as $temoin) {
             $type = true;
             if ($temoin[0] === '!') {
                 $type = false;
                 $temoin = substr($temoin, 1);
             }
-            $value = (isset($count[$temoin]) AND $count[$temoin]);
+            $value = (isset($count[$temoin]) and $count[$temoin]);
             if (!$type) $sat = ($sat && !$value);
             else $sat = ($sat && $value);
         }
@@ -412,7 +410,9 @@ class Agent implements
 
 
         $affectations = $this->getAffectations($date);
-        if ($structures !== null) $affectations = array_filter($affectations, function (AgentAffectation $a) use ($structures) { return in_array($a->getStructure(), $structures);});
+        if ($structures !== null) $affectations = array_filter($affectations, function (AgentAffectation $a) use ($structures) {
+            return in_array($a->getStructure(), $structures);
+        });
         if (empty($affectations)) return [$emptyResult, ["Aucune affectation"]];
 
         /** NOTE À PROPOS DU CODE CI-DESSOUS
@@ -452,7 +452,7 @@ class Agent implements
         $valeurs = explode(";", $valeurs);
 
         $count = [];
-        $statuts = $statuts??$this->getStatutsActifs($date);
+        $statuts = $statuts ?? $this->getStatutsActifs($date);
         if (empty($statuts)) return [$emptyResult, ["Aucun statut"]];
 
         $match = [];
@@ -514,7 +514,7 @@ class Agent implements
         $valeurs = explode(";", $valeurs);
 
         $count = [];
-        $grades = $grades??$this->getGradesActifs($date);
+        $grades = $grades ?? $this->getGradesActifs($date);
         if (empty($grades)) return [$emptyResult, ["Aucun corps"]];
 
         $match = [];
@@ -555,7 +555,7 @@ class Agent implements
         if ($nomCap) $nom = strtoupper($nom);
         if ($nomBold) $nom = "<strong>" . $nom . "</strong>";
         if ($prenomFirst) return trim(ucwords(strtolower($prenom), "- ") . ' ' . $nom);
-        return trim($nom . ' ' . ucwords(strtolower($prenom??""), "- "));
+        return trim($nom . ' ' . ucwords(strtolower($prenom ?? ""), "- "));
 
     }
 
@@ -588,48 +588,48 @@ class Agent implements
     /** SANS OBLIGATION ***********************************************************************************************/
 
     /**
-     * @var Campagne $campagne
-     * @var ?Structure[] $structures
      * @return bool
+     * @var ?Structure[] $structures
+     * @var Campagne $campagne
      */
     public function isForceExclus(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
             if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_EXCLUS) {
-                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+                if ($forcage->getStructure() === null or in_array($forcage->getStructure(), $structures ?? [])) return true;
             }
         }
         return false;
     }
 
     /**
-     * @var Campagne $campagne
-     * @var ?Structure[] $structures
      * @return bool
+     * @var ?Structure[] $structures
+     * @var Campagne $campagne
      */
     public function isForceSansObligation(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
             if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_SANS_OBLIGATION) {
-                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+                if ($forcage->getStructure() === null or in_array($forcage->getStructure(), $structures ?? [])) return true;
             }
         }
         return false;
     }
 
     /**
-     * @var Campagne $campagne
-     * @var ?Structure[] $structures
      * @return bool
+     * @var ?Structure[] $structures
+     * @var Campagne $campagne
      */
     public function isForceAvecObligation(Campagne $campagne, ?array $structures = null): bool
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
             if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne && $forcage->getType() === AgentForceSansObligation::FORCE_AVEC_OBLIGATION) {
-                if ($forcage->getStructure() === null OR in_array($forcage->getStructure(), $structures??[])) return true;
+                if ($forcage->getStructure() === null or in_array($forcage->getStructure(), $structures ?? [])) return true;
             }
         }
         return false;
@@ -851,7 +851,7 @@ class Agent implements
                 ($a->getSourceId() !== "EMC2")
             );
         });
-        $result = array_filter($result, function (AgentSuperieur $a) use ($date){
+        $result = array_filter($result, function (AgentSuperieur $a) use ($date) {
             return $a->estEnCours($date);
         });
         if ($histo === false) {
@@ -973,13 +973,13 @@ class Agent implements
     {
         if ($date === null) $date = new DateTime();
         $date->setTime(12, 0, 0);
-        $affectations = $affectations??$this->getAffectations();
+        $affectations = $affectations ?? $this->getAffectations();
         foreach ($affectations as $affectation) {
             $affectation->getDateDebut()?->setTime(12, 0, 0);
             $affectation->getDateFin()?->setTime(12, 0, 0);
             $inStructure = true;
             if ($structures !== null) $inStructure = in_array($affectation->getStructure(), $structures);
-            if ($inStructure AND $affectation->getDateDebut() <= $date AND ($affectation->getDateFin() === NULL OR $affectation->getDateFin() >= $date)) return true;
+            if ($inStructure and $affectation->getDateDebut() <= $date and ($affectation->getDateFin() === NULL or $affectation->getDateFin() >= $date)) return true;
 
         }
         return false;
@@ -993,7 +993,7 @@ class Agent implements
         foreach ($grades as $grade) {
             $grade->getDateDebut()?->setTime(12, 0, 0);
             $grade->getDateFin()?->setTime(12, 0, 0);
-            if ($grade->getDateDebut() <= $date AND ($grade->getDateFin() === NULL OR $grade->getDateFin() >= $date)) return true;
+            if ($grade->getDateDebut() <= $date and ($grade->getDateFin() === NULL or $grade->getDateFin() >= $date)) return true;
         }
         return false;
     }
@@ -1006,7 +1006,7 @@ class Agent implements
         foreach ($statuts as $statut) {
             $statut->getDateDebut()?->setTime(12, 0, 0);
             $statut->getDateFin()?->setTime(12, 0, 0);
-            if ($statut->getDateDebut() <= $date AND ($statut->getDateFin() === NULL OR $statut->getDateFin() >= $date)) return true;
+            if ($statut->getDateDebut() <= $date and ($statut->getDateFin() === NULL or $statut->getDateFin() >= $date)) return true;
         }
         return false;
     }

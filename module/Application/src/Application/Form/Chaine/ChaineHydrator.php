@@ -4,7 +4,7 @@ namespace Application\Form\Chaine;
 
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Laminas\Hydrator\HydratorInterface;
 use RuntimeException;

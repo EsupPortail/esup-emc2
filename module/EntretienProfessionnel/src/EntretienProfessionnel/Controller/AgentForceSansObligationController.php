@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Form\AgentForceSansObligation\AgentForceSansObligationFormAwareTrait;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;

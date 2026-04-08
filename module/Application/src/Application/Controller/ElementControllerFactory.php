@@ -2,7 +2,7 @@
 
 namespace Application\Controller;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Form\CompetenceElement\CompetenceElementForm;
 use Element\Form\SelectionNiveau\SelectionNiveauForm;

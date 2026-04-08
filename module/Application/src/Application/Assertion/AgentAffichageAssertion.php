@@ -6,7 +6,7 @@ use Agent\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;

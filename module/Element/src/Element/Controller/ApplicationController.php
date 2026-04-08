@@ -3,7 +3,7 @@
 namespace Element\Controller;
 
 use Application\Provider\Etat\FicheMetierEtats;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationTheme;

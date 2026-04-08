@@ -2,6 +2,8 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Controller\AgentController;
 use Application\Controller\IndexController;
 use Application\Entity\Db\Agent;
@@ -9,7 +11,6 @@ use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -20,7 +21,6 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFor
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Role\RoleProvider;
-use EntretienProfessionnel\Provider\Template\PdfTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -39,7 +39,6 @@ use RuntimeException;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use UnicaenAutoform\Service\Formulaire\FormulaireService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementServiceAwareTrait;
@@ -82,7 +81,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $error = null;
         $entretiens = [];
         if ($params !== null and !empty($params)) {
-            if ($params['campagne'] !== "" OR $params['etat'] !== "" OR $params['structure-filtre']['id'] !== "" OR $params['agent-filtre']['id'] !== "" OR $params['responsable-filtre']['id'] !== "") {
+            if ($params['campagne'] !== "" or $params['etat'] !== "" or $params['structure-filtre']['id'] !== "" or $params['agent-filtre']['id'] !== "" or $params['responsable-filtre']['id'] !== "") {
                 $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsWithFiltre($params);
             } else {
                 $entretiens = [];
@@ -224,7 +223,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
-            'title' => 'Ajout d\'un nouvel entretien professionnel pour la campagne '.$campagne->getAnnee(),
+            'title' => 'Ajout d\'un nouvel entretien professionnel pour la campagne ' . $campagne->getAnnee(),
             'form' => $form,
             'js' => "$('#campagne').parent().hide();",
         ]);
@@ -297,7 +296,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $ficheposteFichier = null;
         if (!empty($fichiers)) {
             foreach ($fichiers as $fichier) {
-                if ($ficheposteFichier === null OR $fichier->getHistoCreation() > $ficheposteFichier->getHistoCreation()) $ficheposteFichier = $fichier;
+                if ($ficheposteFichier === null or $fichier->getHistoCreation() > $ficheposteFichier->getHistoCreation()) $ficheposteFichier = $fichier;
             }
         }
 
@@ -320,7 +319,7 @@ class EntretienProfessionnelController extends AbstractActionController
         }
         $observateurs = $this->getObservateurService()->getObservateursByEntretienProfessionnel($entretien);
 
-        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
+        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
         if (!empty($facultatif)) {
             $entretien->setStatut("facultatif");
         }
@@ -483,11 +482,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $text = "Validation de l'entretien";
         switch ($type) {
             case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
-                $parametre = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT)??"<span class='text-danger'>Délai non renseigné</span>";
+                $parametre = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_OBSERVATION_AGENT) ?? "<span class='text-danger'>Délai non renseigné</span>";
                 $title = "Validation par le responsable de l'entretien professionnel";
                 $text = "<p>";
                 $text .= "Cette validation figera les comptes-rendus d'entretien et de formation de " . $entretien->getAgent()->getDenomination(true) . ".<br>";
-                $text .= "La validation ouvre la période de ".$parametre." jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
+                $text .= "La validation ouvre la période de " . $parametre . " jours pour l'expression des observations et notifie " . $entretien->getAgent()->getDenomination(true) . ".";
                 $text .= "</p>";
                 $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;
@@ -562,7 +561,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
 
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
+        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
         if (!empty($facultatif)) {
             $entretien->setStatut("facultatif");
         }
@@ -574,7 +573,7 @@ class EntretienProfessionnelController extends AbstractActionController
         ];
         $template = $entretien->getCampagne()?->getTemplateCREP();
         if ($template === null) {
-            $message = "Aucun template associé aux CREP pour cette campagne. Veuillez contacter l'assistance : <a href='".$assistance."'>".$assistance."</a>.";
+            $message = "Aucun template associé aux CREP pour cette campagne. Veuillez contacter l'assistance : <a href='" . $assistance . "'>" . $assistance . "</a>.";
             throw new RuntimeException($message, -1);
         }
         $rendu = $this->getRenduService()->generateRenduByTemplate($template, $vars);
@@ -586,7 +585,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
 
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [ $entretien->getAgent()]);
+        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
         if (!empty($facultatif)) {
             $entretien->setStatut("facultatif");
         }
@@ -599,7 +598,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
         $template = $entretien->getCampagne()?->getTemplateCREF();
         if ($template === null) {
-            $message = "Aucun template associé aux CREF pour cette campagne. Veuillez contacter l'assistance : <a href='".$assistance."'>".$assistance."</a>.";
+            $message = "Aucun template associé aux CREF pour cette campagne. Veuillez contacter l'assistance : <a href='" . $assistance . "'>" . $assistance . "</a>.";
             throw new RuntimeException($message, -1);
         }
         $rendu = $this->getRenduService()->generateRenduByTemplate($template, $vars);
@@ -621,7 +620,7 @@ class EntretienProfessionnelController extends AbstractActionController
         try {
             $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_ACCEPTATION_AGENT);
         } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre",0,$e);
+            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre", 0, $e);
         }
         try {
             $dateButoir = (DateTime::createFromFormat('d/m/Y', $entretien->getHistoModification()->format('d/m/Y')))->add(new DateInterval('P' . $delai . 'D'));
@@ -677,7 +676,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
         if ($role === null) return $this->redirect()->toRoute('home', [], [], true);
 
-        switch($role->getRoleId()) {
+        switch ($role->getRoleId()) {
             case AppRoleProvider::ADMIN_TECH :
             case AppRoleProvider::ADMIN_FONC :
             case AppRoleProvider::DRH:
@@ -696,15 +695,15 @@ class EntretienProfessionnelController extends AbstractActionController
             case  Agent::ROLE_AUTORITE :
             case  Agent::ROLE_SUPERIEURE :
                 /** @see AgentController::mesEntretiensProfessionnelsAction() */
-                return $this->redirect()->toRoute('mes-entretiens-professionnels', ['campagne' => $entretien->getCampagne()->getId()],[], true);
-            case  Agent::ROLE_AGENT :
+                return $this->redirect()->toRoute('mes-entretiens-professionnels', ['campagne' => $entretien->getCampagne()->getId()], [], true);
+            case  AgentRoleProvider::ROLE_AGENT :
                 /** @see EntretienProfessionnelController::indexAgentAction() */
                 return $this->redirect()->toRoute('entretien-professionnel/index-agent', [], [], true);
             case  RoleProvider::OBSERVATEUR :
                 /** @see IndexController::indexAction() */
                 return $this->redirect()->toRoute('home', [], [], true);
             default:
-                throw new RuntimeException("Rôle [".$role->getRoleId()."] non prévu");
+                throw new RuntimeException("Rôle [" . $role->getRoleId() . "] non prévu");
         }
     }
 
@@ -718,7 +717,7 @@ class EntretienProfessionnelController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") {
-                $instance = ($formulaire==='CREP')?$entretien->getFormulaireInstance():$entretien->getFormationInstance();
+                $instance = ($formulaire === 'CREP') ? $entretien->getFormulaireInstance() : $entretien->getFormationInstance();
                 if ($instance) {
                     $this->getFormulaireInstanceService()->historise($instance);
                     switch ($formulaire) {
@@ -747,7 +746,7 @@ class EntretienProfessionnelController extends AbstractActionController
         if ($entretien !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Réinitialisation du ".$formulaire." de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
+                'title' => "Réinitialisation du " . $formulaire . " de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
                 'text' => "La réinitialisation effacera les saisies et ré-effectuera les recopies. Êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/reinitialiser', ["entretien" => $entretien->getId(), "formulaire" => $formulaire], [], true),
             ]);
@@ -757,16 +756,16 @@ class EntretienProfessionnelController extends AbstractActionController
 
     /** Fonctions auxilaires / Factoorisation *************************************************************************/
 
-    public function checkDelaiConvocation(EntretienProfessionnel $entretien) : void
+    public function checkDelaiConvocation(EntretienProfessionnel $entretien): void
     {
         $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_CONVOCATION_AGENT);
         if ($delai) {
             try {
                 $jplus15 = (new DateTime())->add(new DateInterval('P' . ((string)$delai) . 'D'));
             } catch (Exception $e) {
-                throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations",0,$e);
+                throw new RuntimeException("Une erreur est survenue lors du calcul du délai recommandé des convocations", 0, $e);
             }
-            if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de ".$delai." jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+            if ($entretien->getDateEntretien() < $jplus15) $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de " . $delai . " jours n'est pas respecté.</strong><br/> Veuillez vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
         }
     }
 }

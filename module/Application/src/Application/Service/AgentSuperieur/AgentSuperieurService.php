@@ -4,7 +4,7 @@ namespace Application\Service\AgentSuperieur;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;

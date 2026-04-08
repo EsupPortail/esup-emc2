@@ -3,7 +3,7 @@
 namespace Application\Form\SelectionAgent;
 
 use Application\Entity\HasAgentInterface;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class SelectionAgentHydrator implements HydratorInterface {

@@ -4,7 +4,7 @@ namespace FichePoste\Service\Notification;
 
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use FichePoste\Provider\Template\MailTemplates;

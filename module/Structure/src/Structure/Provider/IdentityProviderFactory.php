@@ -2,7 +2,7 @@
 
 namespace Structure\Provider;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\Agent;
+namespace Agent\Service\Agent;
 
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Doctrine\ORM\EntityManager;

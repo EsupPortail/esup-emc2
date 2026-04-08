@@ -2,6 +2,7 @@
 
 namespace Application;
 
+use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Controller\IndexController;
 use Application\Event\RgpdRenderer\RgpdRendererEvenement;
 use Application\Event\RgpdRenderer\RgpdRendererEvenementFactory;
@@ -10,7 +11,6 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
 use Application\Provider\IdentityProvider;
 use Application\Provider\IdentityProviderFactory;
-use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
@@ -23,7 +23,6 @@ use Application\Service\Perimetre\PerimetreService;
 use Application\Service\Perimetre\PerimetreServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
-use Application\View\Helper\ActionIconViewHelper;
 use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Application\View\Helper\TimerViewHelper;
@@ -301,7 +300,6 @@ return [
 
     'view_helpers' => [
         'invokables' => [
-            'actionIcon' => ActionIconViewHelper::class,
             'synchroniserIcon' => SynchorniserIconViewHelper::class,
             'historiqueBloc' => HistoriqueBlocViewHelper::class,
             'timer' => TimerViewHelper::class,

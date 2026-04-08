@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\AgentForceSansObligation;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

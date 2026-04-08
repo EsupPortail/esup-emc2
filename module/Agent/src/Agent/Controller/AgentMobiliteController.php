@@ -4,9 +4,9 @@ namespace Agent\Controller;
 
 use Agent\Entity\Db\AgentMobilite;
 use Agent\Form\AgentMobilite\AgentMobiliteFormAwareTrait;
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Application\Provider\Parametre\AgentParametres;
-use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;

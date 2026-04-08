@@ -2,7 +2,7 @@
 
 namespace FicheMetier\Controller;
 
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Element\Service\NiveauMaitrise\NiveauMaitriseService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Psr\Container\ContainerExceptionInterface;

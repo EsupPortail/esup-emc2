@@ -4,7 +4,7 @@ namespace FicheMetier\Controller;
 
 use Agent\Service\AgentPoste\AgentPosteService;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Service\Agent\AgentService;
+use Agent\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieForm;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleForm;

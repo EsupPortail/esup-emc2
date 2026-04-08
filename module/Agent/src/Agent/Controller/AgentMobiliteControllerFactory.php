@@ -3,8 +3,8 @@
 namespace Agent\Controller;
 
 use Agent\Form\AgentMobilite\AgentMobiliteForm;
+use Agent\Service\Agent\AgentService;
 use Agent\Service\AgentMobilite\AgentMobiliteService;
-use Application\Service\Agent\AgentService;
 use Carriere\Service\Mobilite\MobiliteService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
