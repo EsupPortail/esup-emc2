@@ -55,7 +55,7 @@ $dateSituationAsString = $dateSituation?->format('d/m/Y');
 ?>
 
 <div class="alert alert-info" style="margin-top: .5rem;">
-    Date de situation considérée : <?php echo $dateSituationAsString; ?>
+    Date de référence considérée : <?php echo $dateSituationAsString; ?> (<?php echo $campagne->getDateSituationExplication(); ?>)
 </div>
 
 <table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">

@@ -60,7 +60,7 @@ class AgentForceSansObligationForm extends Form
             ],
         ]);
         //structure
-        $structure = new SearchAndSelect('structuresearch', ['label' => "Structure <span class='icon icon-information' title='Si une structure est saisie alors l&apos;exception sera limitée au périmètre de cette structure. L&apos;agent·e ne sera pas soumis·e à cette exception dans ses autres structures d&apos;affectation.'></span>:"]);
+        $structure = new SearchAndSelect('structuresearch', ['label' => "Structure <span class='icon icon-information' title='Si une structure est saisie alors l&apos;exception sera limitée au périmètre de cette structure. L&apos;agent·e ne sera pas soumis·e à cette exception dans ses autres structures d&apos;affectation. Peut être utilisé pour restreindre un agent à faire son entretien dans une de ses structures d&apos;affectation.'></span>:"]);
         $structure
             ->setAutocompleteSource($this->urlStructure)
             ->setSelectionRequired()

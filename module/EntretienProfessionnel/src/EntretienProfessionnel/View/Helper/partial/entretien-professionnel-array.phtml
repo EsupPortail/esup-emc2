@@ -3,6 +3,7 @@
 use Agent\Entity\Db\AgentAffectation;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 
@@ -198,7 +199,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 </a>
             <?php endif; ?>
 <!--            --><?php //if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)) : ?>
-            <?php if ($canExporter) : ?>
+            <?php if ($canExporter AND !in_array($entretien->getEtatActif()->getType()->getCode(), [EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER])) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>

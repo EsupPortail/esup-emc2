@@ -154,6 +154,15 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
         return $dateSituation;
     }
 
+    public function getDateSituationExplication(): string
+    {
+        if (!$this->estCommence()) return "Date de début de la campagne";
+        if ($this->estEnCours()) return "Date du jour";
+        if ($this->estFini()) return "Date de fin de la campagne";
+
+        throw new RuntimeException("La date de situation n'a pu être déterminée pour la campagne #".$this->getId()." [".$this->getAnnee()."]");
+    }
+
     /** prédicats *****************************************************************************************************/
 
     public function isEligible(Agent $agent) : bool
