@@ -97,7 +97,7 @@ class CampagneForm extends Form
             'name' => 'date_en_poste',
             'type' => Date::class,
             'options' => [
-                'label' => "Date à laquelle sera considérée la situation de l'agent pour déterminer le caractère obligatoire des entretiens :",
+                'label' => "Date à laquelle l'agent·e doit déjà être en poste pour être inclu·e dans la campagne :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
