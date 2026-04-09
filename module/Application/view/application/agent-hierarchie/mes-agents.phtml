@@ -22,6 +22,8 @@ use EntretienProfessionnel\Entity\Db\Campagne;
  * @var array $obligations
  */
 
+$colors = [ 'firebrick',  'darkgreen', 'chocolate', 'midnightblue', 'indigo'];
+
 $canAfficherAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 
 /**
@@ -64,6 +66,7 @@ foreach ($agents as $agent) {
         <th> Dénomination </th>
         <th> Affectations courantes </th>
         <th> Situations actuelles </th>
+        <th> Campagnes d'EP actives</th>
         <th class="action"> Actions </th>
     </tr>
     </thead>
@@ -79,14 +82,6 @@ foreach ($agents as $agent) {
     ">
         <td data-column-id="Dénomination" data-order="<?php echo $agent->getDenomination(); ?>">
             <?php echo $agent->getDenomination(true); ?>
-            <?php if (!empty($campagnes)) : ?>
-                <br>
-                <?php foreach ($campagnes as $campagne) : ?>
-                    <?php if (isset($obligations[$campagne->getId()][$agent->getId()])) : ?>
-                        <span class="badge"> Campagne d'EPI <?php echo $campagne->getAnnee(); ?> </span>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
         </td>
         <td data-column-id="Affectations courantes" >
             <?php if (isset($affectations[$agent->getId()])) : ?>
@@ -123,6 +118,22 @@ foreach ($agents as $agent) {
                 <?php endforeach; ?>
             <?php else : ?>
                 <span class="missing-data">Aucun grade connu</span>
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php if (!empty($campagnes)) : ?>
+                <?php $first = true; ?>
+                <?php foreach ($campagnes as $campagne) : ?>
+                    <?php if (isset($obligations[$campagne->getId()][$agent->getId()])) : ?>
+                        <?php if (!$first) : ?>
+                            <br>
+                        <?php else : ?>
+                           <?php $first = false; ?>
+                        <?php endif; ?>
+
+                        <span class="badge" style="background: <?php echo $colors[$campagne->getId() % 5]; ?> "> Campagne d'EPI <?php echo $campagne->getAnnee(); ?> </span>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             <?php endif; ?>
         </td>
         <td class="action" data-column-id="Actions">
