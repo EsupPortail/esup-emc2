@@ -31,7 +31,7 @@
     "unicaen/parametre": "6.2.0",
     "unicaen/pdf": "6.1.1",
     "unicaen/privilege": "6.2.1",
-    "unicaen/renderer": "7.2.2",
+    "unicaen/renderer": "7.2.3",
     "unicaen/synchro": "7.0.0",
     "unicaen/utilisateur": "7.1.2",
     "unicaen/utilisateur-ldap-adapter" : "2.0.7",
