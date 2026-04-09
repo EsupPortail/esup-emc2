@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 use Agent\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Doctrine\ORM\EntityManager;
+use EntretienProfessionnel\Service\CampagneConfigurationPresaisie\CampagneConfigurationPresaisieService;
 use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -28,6 +29,7 @@ class EntretienProfessionnelServiceFactory
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
+         * @var CampagneConfigurationPresaisieService $configurationPresaisieService
          * @var CampagneConfigurationRecopieService $configurationRecopieService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var ParametreService $parametreService
@@ -37,6 +39,7 @@ class EntretienProfessionnelServiceFactory
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
+        $configurationPresaisieService = $container->get(CampagneConfigurationPresaisieService::class);
         $configurationRecopieService = $container->get(CampagneConfigurationRecopieService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -47,6 +50,7 @@ class EntretienProfessionnelServiceFactory
         $service = new EntretienProfessionnelService();
         $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
+        $service->setCampagneConfigurationPresaisieService($configurationPresaisieService);
         $service->setCampagneConfigurationRecopieService($configurationRecopieService);
         $service->setFormulaireInstanceService($formulaireInstanceService);
         $service->setParametreService($parametreService);

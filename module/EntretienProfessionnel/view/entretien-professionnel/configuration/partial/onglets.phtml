@@ -7,6 +7,14 @@
 ?>
 
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::indexAction() */ ?>
+    <button class="nav-link" id="presaisies-tab"
+            data-bs-toggle="tab" data-bs-target="#presaisies"
+            type="button" role="tab" aria-controls="presaisies" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/configuration-presaisie', [],[], true); ?>'"
+    >
+        Pré-saisies (beta)
+    </button>
     <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::indexAction() */ ?>
     <button class="nav-link" id="recopies-tab"
             data-bs-toggle="tab" data-bs-target="#recopies"

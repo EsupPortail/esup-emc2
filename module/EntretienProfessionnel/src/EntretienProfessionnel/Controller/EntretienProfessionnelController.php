@@ -4,7 +4,7 @@ namespace EntretienProfessionnel\Controller;
 
 use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
-use Application\Controller\AgentController;
+use Agent\Controller\AgentController;
 use Application\Controller\IndexController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
@@ -23,6 +23,7 @@ use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\CampagneConfigurationPresaisie\CampagneConfigurationPresaisieServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
@@ -39,6 +40,7 @@ use RuntimeException;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use UnicaenAutoform\Service\Formulaire\FormulaireReponseServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementServiceAwareTrait;
@@ -55,6 +57,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
+    use CampagneConfigurationPresaisieServiceAwareTrait;
     use RenduServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use EvenementServiceAwareTrait;
@@ -72,6 +75,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use RappelPasObservationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
+    use FormulaireReponseServiceAwareTrait;
 
     use EntretienProfessionnelFormAwareTrait;
 
@@ -727,6 +731,8 @@ class EntretienProfessionnelController extends AbstractActionController
                             $entretien->setFormulaireInstance($entretien_instance);
                             $this->getEntretienProfessionnelService()->update($entretien);
                             $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+                            $this->getCampagneConfigurationPresaisieService()->applyPresaisies($entretien, "CREP");
+
                             break;
                         case 'CREF':
                             $formulaireType = $campagne->getFormulaireCREF();
@@ -734,6 +740,8 @@ class EntretienProfessionnelController extends AbstractActionController
                             $entretien->setFormationInstance($entretien_instance);
                             $this->getEntretienProfessionnelService()->update($entretien);
                             $this->getEntretienProfessionnelService()->recopiePrecedent($entretien, $formulaire);
+                            $this->getCampagneConfigurationPresaisieService()->applyPresaisies($entretien, "CREF");
+
                             break;
 
                     }

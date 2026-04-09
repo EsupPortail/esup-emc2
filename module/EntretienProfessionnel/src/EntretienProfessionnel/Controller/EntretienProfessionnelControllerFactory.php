@@ -8,6 +8,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
+use EntretienProfessionnel\Service\CampagneConfigurationPresaisie\CampagneConfigurationPresaisieService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
@@ -18,6 +19,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
+use UnicaenAutoform\Service\Formulaire\FormulaireReponseService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenEvenement\Service\Evenement\EvenementService;
@@ -42,6 +44,7 @@ class EntretienProfessionnelControllerFactory {
          * @var AgentAutoriteService $agentAutoriteService
          * @var AgentSuperieurService $agentSuperieurService
          * @var CampagneService $campagneService
+         * @var CampagneConfigurationPresaisieService $campagneConfigurationPresaisieService
          * @var RenduService $renduService
          * @var UserService $userService
          * @var EntretienProfessionnelService $entretienProfessionnelService
@@ -58,10 +61,12 @@ class EntretienProfessionnelControllerFactory {
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var FormulaireInstanceService $formulaireInstanceService
+         * @var FormulaireReponseService $formulaireReponseService
          */
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
+        $campagneConfigurationPresaisieService = $container->get(CampagneConfigurationPresaisieService::class);
         $renduService = $container->get(RenduService::class);
         $userService = $container->get(UserService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
@@ -81,6 +86,7 @@ class EntretienProfessionnelControllerFactory {
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
+        $formulaireReponseService = $container->get(FormulaireReponseService::class);
 
         /**
          * @var EntretienProfessionnelForm $entretienProfessionnelForm
@@ -92,6 +98,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setAgentService($agentService);
         $controller->setAgentAutoriteService($agentAutoriteService);
         $controller->setAgentSuperieurService($agentSuperieurService);
+        $controller->setCampagneConfigurationPresaisieService($campagneConfigurationPresaisieService);
         $controller->setRenduService($renduService);
         $controller->setUserService($userService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
@@ -109,6 +116,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setRappelPasObservationService($rappelPasObservationService);
         $controller->setStructureService($structureService);
         $controller->setFormulaireInstanceService($formulaireInstanceService);
+        $controller->setFormulaireReponseService($formulaireReponseService);
 
         $controller->setEntretienProfessionnelForm($entretienProfessionnelForm);
 

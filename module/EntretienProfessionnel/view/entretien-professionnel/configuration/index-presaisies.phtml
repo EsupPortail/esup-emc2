@@ -1,0 +1,148 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::indexAction()
+ * @var CampagneConfigurationPresaisie[] $campagneConfigurationPresaisies
+ * @var ?string $verificationTypes
+ */
+
+use EntretienProfessionnel\Entity\Db\CampagneConfigurationPresaisie;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+
+$this->headTitle("Configuration des recopies de campagne");
+
+$canAjouter = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
+$canAfficher = $canAjouter;
+$canModifier = $canAjouter;
+$canHistoriser = $canAjouter;
+$canSupprimer = $canAjouter;
+$canReappliquer = $canAjouter;
+
+$canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AFFICHER));
+
+?>
+
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Configuration des campagnes d'entretien professionnel
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canIndexCampagne) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\CampagneController::indexAction() */ ?>
+            <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
+               class="btn btn-primary float-end">
+                <span class="icon icon-listing"></span>
+                Accéder aux campagnes
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php echo $this->partial('partial/onglets', ['current' => 'presaisies'], [], true); ?>
+
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-presaisie/ajouter', [], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter une présaisie
+    </a>
+<?php endif; ?>
+
+<br>
+<!---->
+<?php if (empty($campagneConfigurationPresaisies)) : ?>
+    <em> Aucune pré-saisie </em>
+<?php else : ?>
+    <table class="table table-condensed" id="presaisie">
+        <thead>
+        <tr>
+            <th class="col-md-4"> Formulaire </th>
+            <th class="col-md-3"> Champ </th>
+            <th class="col-md-3"> Macro </th>
+            <th class="col-md-2 action"> Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($campagneConfigurationPresaisies as $campagneConfigurationPresasie) : ?>
+            <?php $champ = $campagneConfigurationPresasie->getChamp(); ?>
+            <tr class="<?php if ($campagneConfigurationPresasie->estHistorise()) echo " historise "; ?>">
+                <td>
+                    <?php echo $champ->getCategorie()->getFormulaire()->getLibelle(); ?>
+                    <br>
+                    <code><?php echo $champ->getCategorie()->getFormulaire()->getCode(); ?></code>
+                </td>
+                <td>
+                    <?php echo $champ->getCategorie()->getLibelle(); ?> > <?php echo $champ->getLibelle(); ?>
+                    <br>
+                    <?php echo $champ->getType()->getLibelle(); ?>
+                </td>
+                <td> <?php echo $campagneConfigurationPresasie->getMacro()->getCode(); ?> </td>
+                <td class="action">
+                    <?php if ($canModifier): ?>
+                        <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::modifierAction() */ ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-presaisie/modifier', ['campagne-configuration-presaisie' => $campagneConfigurationPresasie->getId()], [], true); ?>"
+                           class="action primary ajax-modal" data-event="modification">
+                            <span class="icon icon-modifier"></span>
+                            Modifier
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser): ?>
+                        <br>
+                        <?php if ($campagneConfigurationPresasie->estNonHistorise()) : ?>
+                            <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::historiserAction() */ ?>
+                            <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-presaisie/historiser', ['campagne-configuration-presaisie' => $campagneConfigurationPresasie->getId()], [], true); ?>"
+                               class="action warning">
+                                <span class="icon icon-historiser"></span>
+                                Historiser
+                            </a>
+                        <?php else : ?>
+                            <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::restaurerAction() */ ?>
+                            <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-presaisie/restaurer', ['campagne-configuration-presaisie' => $campagneConfigurationPresasie->getId()], [], true); ?>"
+                               class="action warning">
+                                <span class="icon icon-restaurer"></span>
+                                Restaurer
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canSupprimer): ?>
+                        <br>
+                        <?php /**  @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/campagne/configuration-presaisie/supprimer', ['campagne-configuration-presaisie' => $campagneConfigurationPresasie->getId()], [], true); ?>"
+                           class="action danger ajax-modal" data-event="modification">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('table#presaisie').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [2], orderable: false}
+            ]
+        });
+    });
+
+</script>

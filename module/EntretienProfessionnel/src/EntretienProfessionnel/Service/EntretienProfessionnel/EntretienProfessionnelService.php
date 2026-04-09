@@ -14,6 +14,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
+use EntretienProfessionnel\Service\CampagneConfigurationPresaisie\CampagneConfigurationPresaisieServiceAwareTrait;
 use EntretienProfessionnel\Service\CampagneConfigurationRecopie\CampagneConfigurationRecopieServiceAwareTrait;
 use Exception;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -31,6 +32,7 @@ class EntretienProfessionnelService
 {
     use AgentServiceAwareTrait;
     use ProvidesObjectManager;
+    use CampagneConfigurationPresaisieServiceAwareTrait;
     use CampagneConfigurationRecopieServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -429,6 +431,7 @@ class EntretienProfessionnelService
 
 
         $this->recopiePrecedent($entretien, $formulaire);
+        $this->getCampagneConfigurationPresaisieService()->applyPresaisies($entretien, $formulaire);
         return $entretien;
     }
 
@@ -598,3 +601,5 @@ class EntretienProfessionnelService
         return $date;
     }
 }
+
+
