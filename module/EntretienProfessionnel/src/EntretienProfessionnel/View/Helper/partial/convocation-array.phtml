@@ -18,7 +18,6 @@
  *  1 - ajout d'une méthode dans la campagne pour retourner la date de situation à considérer
  */
 
-
 use Agent\Entity\Db\AgentAffectation;
 use Agent\Entity\Db\AgentGrade;
 use Agent\Entity\Db\AgentStatut;
@@ -47,7 +46,6 @@ $canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivil
 $canAction = ($canAfficher OR $canConvoquer);
 
 $raison = (isset($options['raison']))?$options['raison']:[];
-
 
 $dateSituation = $campagne->getDateSituation();
 $dateSituationAsString = $dateSituation?->format('d/m/Y');
