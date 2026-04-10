@@ -43,12 +43,11 @@ class CampagneConfigurationPresaisieController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Ajout d'une recopie",
+            'title' => "Ajout d'une pré-saisie",
             'form' => $form,
             'presaisie' => $presaisie,
         ]);
-//        $vm->setTemplate('entretien-professionnel/configuration/presaisie-form');
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('entretien-professionnel/configuration/presaisie-form');
         return $vm;
     }
 
@@ -70,12 +69,11 @@ class CampagneConfigurationPresaisieController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Modifier la recopie",
+            'title' => "Modifier la pré-saisie",
             'form' => $form,
             'presaisie' => $presaisie,
         ]);
-//        $vm->setTemplate('entretien-professionnel/configuration/recopie-form');
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('entretien-professionnel/configuration/presaisie-form');
         return $vm;
     }
 

@@ -108,7 +108,8 @@ class CampagneConfigurationPresaisieService {
     {
         $vars = [];
         $vars['entretien'] = $entretien;
-        $vars['agent'] = $entretien->getAgent();
+        $vars['campagne'] = $entretien?->getCampagne();
+        $vars['agent'] = $entretien?->getAgent();
 
         if ($formulaire === null OR $formulaire === 'CREP') {
             $instance = $entretien->getFormulaireInstance();

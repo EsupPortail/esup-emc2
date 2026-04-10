@@ -1,0 +1,65 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\CampagneConfigurationPresaisie;
+use EntretienProfessionnel\Form\CampagneConfigurationPresaisie\CampagneConfigurationPresaisieForm;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::ajouterAction()
+ * @see \EntretienProfessionnel\Controller\CampagneConfigurationPresaisieController::modifierAction()
+ * @var CampagneConfigurationPresaisieForm $form
+ * @var CampagneConfigurationPresaisie $presaisie
+ */
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $('select#champ').parent().hide();
+
+
+    async function generateSelect(formulaireId) {
+        let url = "<?php echo $this->url("formulairechamps", [], ['force_canonical' => true], true); ?>" + "/" + formulaireId;
+        return await $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json"
+        });
+    }
+
+    async function manageChamp(id) {
+        let value = $('select#formulaire').val();
+        console.log("HERE");
+        console.log("value");
+
+        if (value !== '') {
+            const data = await generateSelect(value);
+
+            $('select#champ').empty();
+            data.forEach(group => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = group.label;
+
+                group.options.forEach(opt => {
+                    const option = new Option(opt.text, opt.value);
+                    optgroup.appendChild(option);
+                });
+
+                document.getElementById('champ').appendChild(optgroup);
+                if (id !== undefined) $('select#champ option[value='+id+']').prop('selected', true);
+            });
+
+            $('select#champ').parent().show();
+        } else {
+            $('select#champ').parent().hide();
+        }
+    }
+
+    $(function() {
+        $('select#formulaire').on('change', function () {
+            manageChamp();
+        });
+
+        manageChamp(<?php echo $presaisie->getFormulaire()?->getId(); ?>);
+    });
+</script>

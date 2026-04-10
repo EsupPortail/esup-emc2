@@ -54,7 +54,7 @@ class CampagneConfigurationPresaisieForm extends Form
                 'label' => "Macro qui sera utilisée pour la présaisie<span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 //todo préfiltrer le liste avec des variables (car on pourrai les connaitre)
-                'value_options' => $this->getMacroService()->getMacrosAsOptions(),
+                'value_options' => $this->getMacroService()->getMacrosAsOptions(['agent', 'campagne']),
                 'empty_option' => "Choisissez une macro ...",
             ],
             'attributes' => [
