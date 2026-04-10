@@ -74,8 +74,12 @@ class CampagneController extends AbstractActionController
     {
         $campagnes = $this->getCampagneService()->getCampagnes(true);
 
+        $parametre = $this->getParametreService()->getParametreByCode(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
+        if ($parametre === null) throw new ParametreNotFoundException("Le paramètre [".GlobalParametres::TYPE.",".GlobalParametres::CODE_UNIV."] n'existe pas.",-1);
         $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
+        if ($code === null) throw new ParametreNotFoundException("Le paramètre [".GlobalParametres::TYPE.",".GlobalParametres::CODE_UNIV."] n'a pas de valeur.",-1);
         $structure = $this->getStructureService()->getStructureByCode($code);
+        if ($structure === null) throw new ParametreNotFoundException("Aucune structure racine trouvée",-1);
 
         $progressions = [];
         foreach ($campagnes as $campagne) {
