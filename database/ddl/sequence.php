@@ -69,6 +69,7 @@ return [
     'entretienprofessionnel_agent_force_sansobligation_id_seq',
     'entretienprofessionnel_campagne_agent_statut_id_seq',
     'entretienprofessionnel_campagne_configuration_indicateur_id_seq',
+    'entretienprofessionnel_campagne_configuration_presaisie_id_seq',
     'entretienprofessionnel_campagne_configuration_recopie_id_seq',
     'entretienprofessionnel_campagne_id_seq',
     'entretienprofessionnel_campagne_progression_id_seq',

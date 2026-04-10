@@ -4,8 +4,8 @@
 
 return [
     'schema'      => 'public',
-    'name'        => 'activite_user_id_fk_2',
-    'table'       => 'activite_old',
+    'name'        => 'epccp_unicaen_utilisateur_user_id_fk_2',
+    'table'       => 'entretienprofessionnel_campagne_configuration_presaisie',
     'rtable'      => 'unicaen_utilisateur_user',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',

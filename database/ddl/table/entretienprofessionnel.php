@@ -46,6 +46,18 @@ return [
             'position'    => 6,
             'commentaire' => NULL,
         ],
+        'convocation'           => [
+            'name'        => 'convocation',
+            'type'        => 'date',
+            'bdd-type'    => 'timestamp without time zone',
+            'length'      => 0,
+            'scale'       => NULL,
+            'precision'   => 6,
+            'nullable'    => TRUE,
+            'default'     => NULL,
+            'position'    => 18,
+            'commentaire' => NULL,
+        ],
         'date_entretien'        => [
             'name'        => 'date_entretien',
             'type'        => 'date',
