@@ -3,11 +3,11 @@
 namespace Application\Provider;
 
 use Agent\Provider\Role\RoleProvider;
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Provider\Identity\AbstractIdentityProvider;

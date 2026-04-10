@@ -12,7 +12,7 @@
             <join-column name="structure_id"/>
         </many-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\Agent" field="agent">
+        <many-to-one target-entity="Agent\Entity\Db\Agent" field="agent">
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
 

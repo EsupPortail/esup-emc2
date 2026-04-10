@@ -2,14 +2,14 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Provider\Template\PdfTemplate;
 use Agent\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;

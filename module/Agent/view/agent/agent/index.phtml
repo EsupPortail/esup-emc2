@@ -7,7 +7,7 @@
  * @var ?string $error
  */
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Agent\Provider\Privilege\AgentPrivileges;
 
 $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));

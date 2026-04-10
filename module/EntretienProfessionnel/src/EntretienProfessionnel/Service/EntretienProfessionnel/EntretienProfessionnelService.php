@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;

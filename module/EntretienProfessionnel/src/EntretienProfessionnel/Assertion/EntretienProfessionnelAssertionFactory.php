@@ -3,8 +3,8 @@
 namespace EntretienProfessionnel\Assertion;
 
 use Agent\Service\Agent\AgentService;
-use Application\Service\AgentAutorite\AgentAutoriteService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Observateur\ObservateurService;

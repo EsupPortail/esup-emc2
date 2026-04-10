@@ -8,7 +8,7 @@
 
         <field name="libelle"            length="256"      column="libelle"            />
 
-        <many-to-one field="agent" target-entity="Application\Entity\Db\Agent">
+        <many-to-one field="agent" target-entity="Agent\Entity\Db\Agent">
             <join-column name="agent" referenced-column-name="c_individu" />
         </many-to-one>
 

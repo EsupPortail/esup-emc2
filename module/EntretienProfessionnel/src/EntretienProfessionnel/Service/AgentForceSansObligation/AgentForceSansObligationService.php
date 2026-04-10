@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\AgentForceSansObligation;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

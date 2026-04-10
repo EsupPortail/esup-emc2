@@ -2,14 +2,14 @@
 
 namespace Agent\Controller;
 
+use Agent\Service\Agent\AgentService;
 use Agent\Service\AgentAffectation\AgentAffectationService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
 use Agent\Service\AgentGrade\AgentGradeService;
 use Agent\Service\AgentStatut\AgentStatutService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Assertion\ChaineAssertion;
-use Agent\Service\Agent\AgentService;
-use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

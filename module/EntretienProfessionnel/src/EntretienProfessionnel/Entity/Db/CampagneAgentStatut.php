@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use DateTime;
 use Structure\Entity\Db\Structure;
 

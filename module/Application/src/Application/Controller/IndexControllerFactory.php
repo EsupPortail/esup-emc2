@@ -4,9 +4,9 @@ namespace Application\Controller;
 
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Agent\Service\Agent\AgentService;
-use Application\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\Macro\MacroService;
 use Application\Service\Url\UrlService;

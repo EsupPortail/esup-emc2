@@ -4,7 +4,7 @@ namespace Agent\Service\Agent;
 
 use Agent\Entity\Db\AgentAffectation;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;

@@ -2,7 +2,7 @@
 
 namespace Structure\Service\StructureAgentForce;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;

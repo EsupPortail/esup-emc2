@@ -4,8 +4,8 @@ namespace EntretienProfessionnel\Controller;
 
 use Agent\Form\SelectionAgent\SelectionAgentForm;
 use Agent\Service\Agent\AgentService;
-use Application\Service\AgentAutorite\AgentAutoriteService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\Macro\MacroService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;

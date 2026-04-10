@@ -2,7 +2,7 @@
 
 namespace Element\Service\ApplicationElement;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;

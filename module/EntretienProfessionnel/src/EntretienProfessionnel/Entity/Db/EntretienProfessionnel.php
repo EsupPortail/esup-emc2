@@ -2,8 +2,8 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
-use Application\Entity\Db\Agent;
-use Application\Entity\HasAgentInterface;
+use Agent\Entity\Db\Agent;
+use Agent\Entity\HasAgentInterface;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;

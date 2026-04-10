@@ -2,7 +2,7 @@
 
 namespace Agent\Entity\Db;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Carriere\Entity\Db\Mobilite;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;

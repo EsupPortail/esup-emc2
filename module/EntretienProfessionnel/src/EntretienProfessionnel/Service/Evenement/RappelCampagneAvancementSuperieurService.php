@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\Evenement;
 
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;

@@ -4,7 +4,7 @@ namespace Application\Controller;
 
 use Agent\Entity\Db\AgentAffectation;
 use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
-use Application\Entity\Db\AgentSuperieur;
+use Agent\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
@@ -14,7 +14,7 @@ use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Provider\Parametre\AgentParametres;
 use Agent\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;

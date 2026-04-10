@@ -2,7 +2,7 @@
 
 namespace Application\Service\AgentMissionSpecifique;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;

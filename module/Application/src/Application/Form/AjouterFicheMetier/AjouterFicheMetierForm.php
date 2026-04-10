@@ -2,7 +2,7 @@
 
 namespace Application\Form\AjouterFicheMetier;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use FicheMetier\Entity\Db\FicheMetier;

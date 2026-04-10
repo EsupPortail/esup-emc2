@@ -2,7 +2,7 @@
 
 namespace Agent\Form\SelectionAgent;
 
-use Application\Entity\HasAgentInterface;
+use Agent\Entity\HasAgentInterface;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 

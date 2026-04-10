@@ -4,7 +4,7 @@ namespace Agent\Service\AgentRef;
 
 use Agent\Entity\Db\AgentRef;
 use Application\Controller\AgentController;
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;

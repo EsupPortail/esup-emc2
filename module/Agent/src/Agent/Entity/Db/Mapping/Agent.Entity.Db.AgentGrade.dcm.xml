@@ -4,7 +4,7 @@
 
         <id name="id" type="string" column="id" />
 
-        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+        <many-to-one target-entity="Agent\Entity\Db\Agent"  field="agent">
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
 

@@ -3,7 +3,7 @@
 namespace Agent\Service\AgentPoste;
 
 use Agent\Entity\Db\AgentPoste;
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use FicheMetier\Entity\Db\CodeFonction;

@@ -2,12 +2,12 @@
 
 namespace EntretienProfessionnel\Assertion;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;

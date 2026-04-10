@@ -2,7 +2,7 @@
 
 namespace Agent\Service\AgentGrade;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;

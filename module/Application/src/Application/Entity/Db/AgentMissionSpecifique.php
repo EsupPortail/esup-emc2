@@ -2,9 +2,10 @@
 
 namespace Application\Entity\Db;
 
+use Agent\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
-use Application\Entity\HasAgentInterface;
+use Agent\Entity\HasAgentInterface;
 use MissionSpecifique\Entity\Db\MissionSpecifique;
 use Structure\Entity\Db\Structure;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;

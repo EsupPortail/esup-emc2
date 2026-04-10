@@ -2,15 +2,15 @@
 
 namespace Application\Assertion;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;

@@ -2,7 +2,7 @@
 
 namespace Agent\Entity\Db;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;

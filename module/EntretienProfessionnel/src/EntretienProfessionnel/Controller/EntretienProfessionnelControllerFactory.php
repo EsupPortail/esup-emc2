@@ -3,8 +3,8 @@
 namespace EntretienProfessionnel\Controller;
 
 use Agent\Service\Agent\AgentService;
-use Application\Service\AgentAutorite\AgentAutoriteService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;

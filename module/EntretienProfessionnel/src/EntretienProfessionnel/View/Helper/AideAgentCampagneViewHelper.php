@@ -3,7 +3,7 @@
 namespace EntretienProfessionnel\View\Helper;
 
 use Agent\Provider\Role\RoleProvider;
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;

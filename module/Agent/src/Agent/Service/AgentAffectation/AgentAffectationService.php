@@ -2,7 +2,7 @@
 
 namespace Agent\Service\AgentAffectation;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAffectation;
 use DateTime;
 use Doctrine\DBAL\ArrayParameterType;

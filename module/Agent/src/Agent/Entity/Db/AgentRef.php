@@ -2,7 +2,7 @@
 
 namespace Agent\Entity\Db;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
 use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 

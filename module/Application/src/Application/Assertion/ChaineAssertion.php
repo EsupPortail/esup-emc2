@@ -2,14 +2,14 @@
 
 namespace Application\Assertion;
 
-use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAutorite;
-use Application\Entity\Db\AgentSuperieur;
-use Application\Provider\Privilege\ChainePrivileges;
+use Agent\Entity\Db\Agent;
+use Agent\Entity\Db\AgentAutorite;
+use Agent\Entity\Db\AgentSuperieur;
+use Agent\Provider\Privilege\ChainePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienRoleProvider;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Observateur\ObservateurServiceAwareTrait;

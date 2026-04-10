@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Structure\Entity\Db\Structure;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;

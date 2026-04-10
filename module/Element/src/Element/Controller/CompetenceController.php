@@ -2,7 +2,7 @@
 
 namespace Element\Controller;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
 use DateTime;

@@ -8,7 +8,7 @@ use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Agent\Service\Agent\AgentService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\FichePoste\FichePosteService;

@@ -5,7 +5,7 @@ namespace EntretienProfessionnel\Service\Campagne;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;

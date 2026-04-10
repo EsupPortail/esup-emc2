@@ -15,6 +15,7 @@ use Agent\Service\Agent\AgentService;
 use Agent\Service\Agent\AgentServiceFactory;
 use Agent\View\Helper\AgentOngletViewHelper;
 use Agent\View\Helper\AgentOngletViewHelperFactory;
+use Agent\View\Helper\AgentViewHelperFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -333,6 +334,7 @@ return [
     ],
     'view_helpers' => [
         'factories' => [
+            'agent' => AgentViewHelperFactory::class,
             AgentOngletViewHelper::class => AgentOngletViewHelperFactory::class,
         ],
         'aliases' => [

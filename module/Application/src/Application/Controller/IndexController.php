@@ -3,15 +3,15 @@
 namespace Application\Controller;
 
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
-use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAutorite;
-use Application\Entity\Db\AgentSuperieur;
+use Agent\Entity\Db\Agent;
+use Agent\Entity\Db\AgentAutorite;
+use Agent\Entity\Db\AgentSuperieur;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Provider\Template\TexteTemplate;
 use Agent\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;

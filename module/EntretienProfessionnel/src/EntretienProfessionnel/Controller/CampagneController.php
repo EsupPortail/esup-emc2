@@ -3,14 +3,14 @@
 namespace EntretienProfessionnel\Controller;
 
 use Agent\Entity\Db\AgentAffectation;
-use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAutorite;
-use Application\Entity\Db\AgentSuperieur;
+use Agent\Entity\Db\Agent;
+use Agent\Entity\Db\AgentAutorite;
+use Agent\Entity\Db\AgentSuperieur;
 use Agent\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Provider\Parametre\GlobalParametres;
 use Agent\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
-use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;

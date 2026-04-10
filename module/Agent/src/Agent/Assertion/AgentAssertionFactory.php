@@ -4,8 +4,8 @@ namespace Agent\Assertion;
 
 use Agent\Service\Agent\AgentService;
 use Agent\Service\AgentAffectation\AgentAffectationService;
-use Application\Service\AgentAutorite\AgentAutoriteService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;

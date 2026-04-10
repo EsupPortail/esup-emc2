@@ -2,7 +2,7 @@
 
 namespace Carriere\Entity\Db;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;

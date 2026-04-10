@@ -2,8 +2,8 @@
 
 namespace Structure\Entity\Db;
 
-use Application\Entity\Db\Agent;
-use Application\Entity\HasAgentInterface;
+use Agent\Entity\Db\Agent;
+use Agent\Entity\HasAgentInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 

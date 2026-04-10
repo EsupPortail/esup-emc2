@@ -4,9 +4,9 @@ namespace Application\Controller;
 
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Agent\Service\Agent\AgentService;
-use Application\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueService;
 use MissionSpecifique\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeService;
 use MissionSpecifique\Service\MissionSpecifiqueType\MissionSpecifiqueTypeService;

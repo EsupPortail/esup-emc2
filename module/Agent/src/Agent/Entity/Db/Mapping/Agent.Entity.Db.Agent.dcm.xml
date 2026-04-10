@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Agent\Entity\Db\Agent" table="agent">
+
+        <id    name="id"                        column="c_individu"         type="string" length="40" >
+        </id>
+
+        <field name="prenom"                   column="prenom"               length="64" />
+        <field name="nomUsuel"                 column="nom_usage"            length="64" />
+        <field name="nomFamille"               column="nom_famille"          length="64" />
+        <field name="sexe"                     column="sexe"                 length="1" />
+        <field name="dateNaissance"            column="date_naissance"       type="datetime" />
+        <field name="login"                    column="login"                length="256" />
+        <field name="email"                    column="email"                length="1024" />
+        <field name="tContratLong"             column="T_CONTRAT_LONG"       length="1" nullable="true"/>
+
+        <one-to-many target-entity="Agent\Entity\Db\AgentRef" mapped-by="agent" field="refs"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentEchelon" mapped-by="agent" field="echelons"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentQuotite" mapped-by="agent" field="quotites"/>
+        <one-to-many target-entity="Agent\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
+
+        <one-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="utilisateur">
+            <join-column name="utilisateur_id" referenced-column-name="ID" />
+        </one-to-one>
+
+        <one-to-many target-entity="Application\Entity\Db\FichePoste" mapped-by="agent" field="fiches" />
+        <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="agent" field="missionsSpecifiques"/>
+
+        <many-to-many field="applications" target-entity="Element\Entity\Db\ApplicationElement">
+            <join-table name="agent_element_application">
+                <join-columns>
+                    <join-column name="agent_id" referenced-column-name="c_individu" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="application_element_id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="competences" target-entity="Element\Entity\Db\CompetenceElement">
+            <join-table name="agent_element_competence">
+                <join-columns>
+                    <join-column name="agent_id" referenced-column-name="c_individu" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="competence_element_id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" mapped-by="agent" field="entretiens"/>
+        <one-to-many target-entity="Structure\Entity\Db\StructureAgentForce" mapped-by="agent" field="structuresForcees"/>
+        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\AgentForceSansObligation" mapped-by="agent" field="forcesSansObligation"/>
+
+        <many-to-many field="fichiers" target-entity="UnicaenFichier\Entity\Db\Fichier" inversed-by="fichier">
+            <join-table name="agent_fichier">
+                <join-columns>
+                    <join-column name="agent" referenced-column-name="c_individu"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="fichier"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <one-to-many field="autorites" target-entity="Agent\Entity\Db\AgentAutorite" mapped-by="agent"/>
+        <one-to-many field="superieurs" target-entity="Agent\Entity\Db\AgentSuperieur" mapped-by="agent"/>
+
+        <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
+            <join-table name="agent_validation">
+                <join-columns>
+                    <join-column name="agent_id" referenced-column-name="c_individu" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="validation_instance_id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <!-- DB IMPORT #############################  -->
+        <field name="createdOn"               column="created_on"       type="datetime"/>
+        <field name="updatedOn"               column="updated_on"       type="datetime"/>
+        <field name="deletedOn"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                column="source_id"        length="128"/>
+    </entity>
+</doctrine-mapping>

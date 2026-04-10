@@ -2,13 +2,13 @@
 
 namespace Application\Entity\Db;
 
+use Agent\Entity\Db\Agent;
 use Application\Entity\Db\MacroContent\FichePosteMacroTrait;
-use Application\Entity\HasAgentInterface;
+use Agent\Entity\HasAgentInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
-use FicheMetier\Entity\Db\Mission;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;

@@ -1,0 +1,222 @@
+<?php
+
+use Agent\Entity\Db\AgentAffectation;
+use Agent\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentStatut;
+use Agent\Entity\Db\Agent;
+use Agent\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @see \Application\Controller\AgentController::mesAgentsAction()
+ * @var Agent[] $agents
+ * @var Campagne $campagne
+ * @var array $obligations
+ *
+ * @var AgentAffectation[] $affectations
+ * @var AgentGrade[] $grades
+ * @var AgentStatut[] $statuts
+ *
+ *
+ * @var Campagne[] $campagnes
+ * @var array $obligations
+ */
+
+$colors = [ 'firebrick',  'darkgreen', 'chocolate', 'midnightblue', 'indigo'];
+
+$canAfficherAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+
+/**
+ * @param AgentStatut[] $statuts
+ * @return boolean
+ * */
+function isAdministratif(array $statuts) : bool
+{
+    foreach ($statuts as $statut) {
+        if ($statut->isAdministratif()) return true;
+    }
+    return false;
+}
+
+$nonAdministratif = 0;
+foreach ($agents as $agent) {
+    if (!isAdministratif($statuts[$agent->getId()]??[])) $nonAdministratif++;
+}
+?>
+
+<?php echo $this->partial('partial/onglets', ['current' => 'agents', 'campagne' => $campagne]); ?>
+
+<h1 class="page-header"> Liste des agent·es dont je suis responsable </h1>
+
+<span id="button_administratif" class="btn btn-secondary btn-administratif" data-value="off">
+    <span id="icone" class="icon icon-voir"></span>
+    <span id="texte">Agent·es non administratif·ives (<?php echo $nonAdministratif; ?> agent·es)</span>
+</span>
+
+<?php foreach ($campagnes as $campagne) : ?>
+    <span id="button_campagne" class="btn btn-secondary btn-campagne" data-value="off" data-campagne="<?php echo $campagne->getId(); ?>">
+        <span id="icone" class="icon icon-voir"></span>
+        <span id="texte">Campagne <?php echo $campagne->getAnnee(); ?></span>
+    </span>
+<?php endforeach; ?>
+
+<table class="table table-condensed" id="agents">
+    <thead>
+    <tr>
+        <th> Dénomination </th>
+        <th> Affectations courantes </th>
+        <th> Situations actuelles </th>
+        <th> Campagnes d'EP actives</th>
+        <th class="action"> Actions </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($agents as $agent) : ?>
+    <tr class="
+        <?php if (isAdministratif($statuts[$agent->getId()]??[])) echo 'administratif'; ?>
+        <?php foreach($campagnes as $campagne) : ?>
+            <?php if (isset($obligations[$campagne->getId()][$agent->getId()])) : ?>
+                <?php echo "campagne_".$campagne->getId(); ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    ">
+        <td data-column-id="Dénomination" data-order="<?php echo $agent->getDenomination(); ?>">
+            <?php echo $agent->getDenomination(true); ?>
+        </td>
+        <td data-column-id="Affectations courantes" >
+            <?php if (isset($affectations[$agent->getId()])) : ?>
+                <?php foreach ($affectations[$agent->getId()] as $affectation) : ?>
+                    <?php $structure = $affectation->getStructure(); ?>
+                    <?php if ($structure) : ?>
+                        <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                    <?php else : ?>
+                        <span class="text-warning">
+                                <span class="icon icon-attention"></span>
+                                Aucune structure connue
+                            </span>
+                    <?php endif; ?>
+                    <?php if ($affectation->isPrincipale()): ?>
+                        <span class="badge" style="background: darkgreen;" title="Affectation principale">P</span>
+                    <?php endif; ?>
+                    <?php if ($affectation->isHierarchique()): ?>
+                        <span class="badge" style="background: darkslategrey;" title="Affectation hiérarchique">H</span>
+                    <?php endif; ?>
+                    <?php if ($affectation->isFonctionnelle()): ?>
+                        <span class="badge" style="background: darkred;" title="Affectation fonctionnelle">F</span>
+                    <?php endif; ?>
+                    <br/>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <span class="missing-data">Aucune affectation connue </span>
+            <?php endif; ?>
+        </td>
+        <td data-column-id="Grades courants" >
+            <?php if (isset($grades[$agent->getId()])) : ?>
+                <?php foreach ($grades[$agent->getId()] as $grade) : ?>
+                    <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                    <br>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <span class="missing-data">Aucun grade connu</span>
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php if (!empty($campagnes)) : ?>
+                <?php $first = true; ?>
+                <?php foreach ($campagnes as $campagne) : ?>
+                    <?php if (isset($obligations[$campagne->getId()][$agent->getId()])) : ?>
+                        <?php if (!$first) : ?>
+                            <br>
+                        <?php else : ?>
+                           <?php $first = false; ?>
+                        <?php endif; ?>
+
+                        <span class="badge" style="background: <?php echo $colors[$campagne->getId() % 5]; ?> "> Campagne d'EPI <?php echo $campagne->getAnnee(); ?> </span>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </td>
+        <td class="action" data-column-id="Actions">
+            <!-- Si on fait jouer l'assertion, on augmente le nombre de requètes -->
+            <?php if ($canAfficherAgent) : ?>
+                <?php /** @see \Agent\Controller\AgentController::informationsAction() */ ?>
+                <a href="<?php echo $this->url("agent/informations", ["agent" => $agent->getId()], [], true); ?>"
+                   class="action secondary">
+                    <span class="icon icon-voir"></span>
+                    Accéder
+                </a>
+            <?php endif; ?>
+        </td>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<script>
+    $(function () {
+        $('#agents').DataTable({
+            autoWidth: false,
+            paging: false,
+            info: false,
+            columnDefs: [{
+                "targets": 3,
+                "orderable": false,
+            }],
+            language: {
+                url: '/js/datatables_fr.json'
+            }
+        });
+        $('tbody tr:not(.administratif)').hide();
+    });
+
+
+    let visible_exclus = false;
+    $('span#button_administratif').on('click', function() {
+        let value = $(this).data('value');
+        console.log("Click on administratif : " + value);
+        $('tbody tr').show();
+        if (value === 'off') {
+            $(this).data('value', 'on');
+            $('span.btn-campagne span#icone').removeClass('icon-masquer').addClass('icon-voir');
+            $('span.btn-campagne').data('value','off');
+            $('span#button_administratif span#icone').removeClass('icon-voir').addClass('icon-masquer');
+        } else {
+            $(this).data('value', 'off');
+            $('tbody tr:not(.administratif)').hide();
+            $('span.btn-campagne span#icone').removeClass('icon-masquer').addClass('icon-voir');
+            $('span.btn-campagne').data('value','off');
+            $('span#button_administratif span#icone').removeClass('icon-masquer').addClass('icon-voir');
+        }
+        visible_exclus = !visible_exclus;
+    });
+
+    $('span#button_campagne').on('click', function(e) {
+        let value = $(this).data('value');
+        let campagne = $(this).data('campagne');
+        console.log("Click on campagne : " + campagne + " - " + value);
+
+        if (value === 'off') {
+            $('span.btn-campagne').data('value','off');
+            $('span.administratif').data('value','off');
+            $(this).data('value', 'on');
+            $('tbody tr').hide();
+            $('tbody tr.campagne_' + campagne).show();
+            $('span.btn-administratif span#icone').removeClass('icon-masquer').addClass('icon-voir');
+            $('span.btn-campagne span#icone').removeClass('icon-voir').addClass('icon-masquer');
+            $('span#button_campagne span#icone').removeClass('icon-voir').addClass('icon-masquer');
+        } else {
+            // reset de tous les boutons
+            $('span.btn-campagne').data('value','off');
+            $('span.administratif').data('value','off');
+            // changement de valeur
+            $(this).data('value', 'off');
+            $('tbody tr').show();
+            $('span#button_campagne span#icone').removeClass('icon-masquer').addClass('icon-voir');
+            // masquage des non administratif (comportement par défaut)
+            $('tbody tr:not(.administratif)').hide();
+        }
+        visible_exclus = !visible_exclus;
+    });
+
+</script>
+

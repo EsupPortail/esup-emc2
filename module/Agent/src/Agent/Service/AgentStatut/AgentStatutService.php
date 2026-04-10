@@ -3,7 +3,7 @@
 namespace Agent\Service\AgentStatut;
 
 use Agent\Entity\Db\AgentStatut;
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;

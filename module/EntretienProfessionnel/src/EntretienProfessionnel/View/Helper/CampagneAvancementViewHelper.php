@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\View\Helper;
 
-use Application\Entity\Db\Agent;
+use Agent\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;

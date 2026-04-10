@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\Evenement;
 
-use Application\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
 use EntretienProfessionnel\Provider\Event\EvenementProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
