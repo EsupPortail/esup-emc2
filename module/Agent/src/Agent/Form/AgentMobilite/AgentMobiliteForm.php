@@ -19,11 +19,11 @@ class AgentMobiliteForm extends Form
 
     public function init(): void
     {
-        $cible = new SearchAndSelect('agent', ['label' => "Agent·e :"]);
+        $cible = new SearchAndSelect('agent-sas', ['label' => "Agent·e :"]);
         $cible
             ->setAutocompleteSource($this->urlAgent)
             ->setAttributes([
-                'id' => 'agent',
+                'id' => 'agent-sas',
                 'placeholder' => "Agent·e concerné·e ...",
             ]);
         $this->add($cible);
@@ -75,7 +75,7 @@ class AgentMobiliteForm extends Form
 
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'agent' => ['required' => true,],
+            'agent-sas' => ['required' => true,],
             'mobilite' => ['required' => true,],
             'commentaire' => ['required' => false,],
         ]));
