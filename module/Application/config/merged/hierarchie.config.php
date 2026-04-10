@@ -5,7 +5,6 @@ namespace Application;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Assertion\ChaineAssertion;
 use Application\Assertion\ChaineAssertionFactory;
-use Application\Controller\AgentController;
 use Application\Controller\AgentHierarchieController;
 use Application\Controller\AgentHierarchieControllerFactory;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;

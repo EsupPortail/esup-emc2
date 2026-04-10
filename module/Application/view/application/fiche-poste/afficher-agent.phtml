@@ -36,6 +36,16 @@ $structure = ($affectation)?$affectation->getStructure():null;
 <?php echo $this->agentOnglet($agent, 'ficheposte'); ?>
 
 
+<?php if ($displayBandeau): ?>
+    <div class="alert alert-info" style="margin-top: 0.5rem;">
+        <?php if ($template) : ?>
+            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+            <?php echo $template->getCorps(); ?>
+        <?php else : ?>
+            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
 
 <div class="row">
     <div class="col-md-4">
@@ -60,16 +70,6 @@ $structure = ($affectation)?$affectation->getStructure():null;
     </div>
 </div>
 
-<?php if ($displayBandeau): ?>
-    <div class="alert alert-info" style="margin-top: 0.5rem;">
-        <?php if ($template) : ?>
-            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
-            <?php echo $template->getCorps(); ?>
-        <?php else : ?>
-            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
-        <?php endif; ?>
-    </div>
-<?php endif; ?>
 
 <div>
     <div class="alert alert-info">

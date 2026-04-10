@@ -4,6 +4,7 @@ namespace Application;
 
 use Agent\Service\AgentStatut\AgentStatutService;
 use Agent\Service\AgentStatut\AgentStatutServiceFactory;
+use Agent\View\Helper\AgentStatutViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -33,6 +34,11 @@ return [
     ],
     'hydrators' => [
         'factories' => [],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'agentStatut' => AgentStatutViewHelper::class,
+        ],
+    ],
 
 ];

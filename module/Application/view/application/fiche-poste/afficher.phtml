@@ -31,6 +31,17 @@ $canExport   = $canAfficher;
 
 ?>
 
+<?php if ($displayBandeau): ?>
+    <div class="alert alert-info" style="margin-top: 0.5rem;">
+        <?php if ($template) : ?>
+            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+            <?php echo $template->getCorps(); ?>
+        <?php else : ?>
+            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
@@ -53,17 +64,6 @@ $canExport   = $canAfficher;
         <?php endif; ?>
     </div>
 </div>
-
-<?php if ($displayBandeau): ?>
-    <div class="alert alert-info" style="margin-top: 0.5rem;">
-        <?php if ($template) : ?>
-            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
-            <?php echo $template->getCorps(); ?>
-        <?php else : ?>
-            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
-        <?php endif; ?>
-    </div>
-<?php endif; ?>
 
 <?php echo $this->partial("partial/validations.phtml"); ?>
 

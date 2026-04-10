@@ -4,6 +4,7 @@ namespace Application;
 
 use Agent\Service\AgentAffectation\AgentAffectationService;
 use Agent\Service\AgentAffectation\AgentAffectationServiceFactory;
+use Agent\View\Helper\AgentAffectationViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -33,6 +34,11 @@ return [
     ],
     'hydrators' => [
         'factories' => [],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'agentAffectation' => AgentAffectationViewHelper::class,
+        ],
+    ],
 
 ];

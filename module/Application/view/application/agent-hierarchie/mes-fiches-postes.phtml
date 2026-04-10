@@ -35,7 +35,6 @@ $date = new DateTime();
 
 <?php echo $this->partial('partial/onglets', ['current' => 'fiches-de-poste', 'campagne' => $campagne]); ?>
 
-<h1 class="page-header"> Liste des fiches de poste des Agent·es dont je suis responsable</h1>
 
 <?php if ($displayBandeau): ?>
     <div class="alert alert-info" style="margin-top: 0.5rem;">
@@ -47,6 +46,8 @@ $date = new DateTime();
         <?php endif; ?>
     </div>
 <?php endif; ?>
+
+<h1 class="page-header"> Liste des fiches de poste des Agent·es dont je suis responsable</h1>
 
 <table class="table table-condensed table-hover datatable" id="fiches">
     <thead>

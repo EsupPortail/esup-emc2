@@ -13,9 +13,6 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactor
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
-use Application\View\Helper\AgentAffectationViewHelper;
-use Application\View\Helper\AgentGradeViewHelper;
-use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelperFactory;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
@@ -114,9 +111,7 @@ return [
     // TODO prochain truc à bouger
     'view_helpers' => [
         'invokables' => [
-            'agentAffectation' => AgentAffectationViewHelper::class,
-            'agentStatut' => AgentStatutViewHelper::class,
-            'agentGrade' => AgentGradeViewHelper::class,
+
         ],
         'factories' => [
             'agent' => AgentViewHelperFactory::class,

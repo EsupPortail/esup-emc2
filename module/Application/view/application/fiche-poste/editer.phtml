@@ -46,6 +46,17 @@ $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIE
 $this->headTitle("Modification de la fiche de poste #" . $ficheId);
 ?>
 
+<?php if ($displayBandeau): ?>
+    <div class="alert alert-info" style="margin-top: 0.5rem;">
+        <?php if ($template) : ?>
+            <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
+            <?php echo $template->getCorps(); ?>
+        <?php else : ?>
+            Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
 <?php if (!$canModifier) : ?>
 
     <div class="alert alert-danger col-md-8">
@@ -88,17 +99,6 @@ $this->headTitle("Modification de la fiche de poste #" . $ficheId);
 
         </div>
     </div>
-
-    <?php if ($displayBandeau): ?>
-        <div class="alert alert-info" style="margin-top: 0.5rem;">
-            <?php if ($template) : ?>
-                <span class="icon icon-info"></span><strong> <?php echo $template->getSujet(); ?> </strong><br>
-                <?php echo $template->getCorps(); ?>
-            <?php else : ?>
-                Le template <code><?php echo TextTemplates::FICHEPOSTE_BANDEAU; ?></code> n'existe pas.
-            <?php endif; ?>
-        </div>
-    <?php endif; ?>
 
 
     <?php echo $this->partial("partial/validations.phtml"); ?>

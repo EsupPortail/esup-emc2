@@ -4,6 +4,7 @@ namespace Application;
 
 use Agent\Service\AgentGrade\AgentGradeService;
 use Agent\Service\AgentGrade\AgentGradeServiceFactory;
+use Agent\View\Helper\AgentGradeViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -33,6 +34,11 @@ return [
     ],
     'hydrators' => [
         'factories' => [],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'agentGrade' => AgentGradeViewHelper::class,
+        ],
     ]
 
 ];

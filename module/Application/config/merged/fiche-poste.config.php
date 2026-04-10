@@ -33,7 +33,6 @@ use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelperFactory;
-use Application\View\Helper\RaisonsViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -579,7 +578,6 @@ return [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
             'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
-            'raisons' => RaisonsViewHelper::class,
             'fichePosteGraph' => FichePosteGraphViewHelper::class,
         ],
         'factories' => [
