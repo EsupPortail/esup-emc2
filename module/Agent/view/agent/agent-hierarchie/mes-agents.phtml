@@ -22,8 +22,6 @@ use EntretienProfessionnel\Entity\Db\Campagne;
  * @var array $obligations
  */
 
-$colors = [ 'firebrick',  'darkgreen', 'chocolate', 'midnightblue', 'indigo'];
-
 $canAfficherAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 
 /**
@@ -56,7 +54,7 @@ foreach ($agents as $agent) {
 <?php foreach ($campagnes as $campagne) : ?>
     <span id="button_campagne" class="btn btn-secondary btn-campagne" data-value="off" data-campagne="<?php echo $campagne->getId(); ?>">
         <span id="icone" class="icon icon-voir"></span>
-        <span id="texte">Campagne <?php echo $campagne->getAnnee(); ?></span>
+        <span id="texte">Agent·es devant passer un entretien pour la campagne <?php echo $campagne->getAnnee(); ?></span>
     </span>
 <?php endforeach; ?>
 
@@ -66,7 +64,7 @@ foreach ($agents as $agent) {
         <th> Dénomination </th>
         <th> Affectations courantes </th>
         <th> Situations actuelles </th>
-        <th> Campagnes d'EP actives</th>
+        <th> Campagne d'EPI</th>
         <th class="action"> Actions </th>
     </tr>
     </thead>
@@ -131,7 +129,7 @@ foreach ($agents as $agent) {
                            <?php $first = false; ?>
                         <?php endif; ?>
 
-                        <span class="badge" style="background: <?php echo $colors[$campagne->getId() % 5]; ?> "> Campagne d'EPI <?php echo $campagne->getAnnee(); ?> </span>
+                        <span class="badge" > <?php echo $campagne->getAnnee(); ?> </span>
                     <?php endif; ?>
                 <?php endforeach; ?>
             <?php endif; ?>

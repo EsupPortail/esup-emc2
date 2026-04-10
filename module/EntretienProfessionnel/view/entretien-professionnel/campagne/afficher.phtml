@@ -114,27 +114,18 @@ $canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileg
         Complétion de la campagne
     </div>
     <div class="card-body">
-        <h2>Agent·es éligibles à un entretien </h2>
-
         <div class="row">
             <div class="col-md-7">
-                <dl class="row">
-                    <dt class="col-md-5"> Nombre d'agent·e <span class="icon icon-information" title="Agent·es répondant aux critères à la date de prise de poste"></span> </dt>
-                    <dd class="col-md-7"> <?php echo $progression?->getNbTotal(); ?></dd>
-                    <dt class="col-md-5"> Nombre d'entretien <span class="icon icon-information" title="Peu importe l'état de l'entretien professionnel">  </dt>
-                    <dd class="col-md-7"> <?php echo $progression?->getNbEntretiens(); ?> </dd>
-                </dl>
+                <h2>Agent·es éligibles à un entretien </h2>
             </div>
             <div class="col-md-5">
-                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::extraireAction() */ ?>
-                <a href="<?php echo $this->url('entretien-professionnel/campagne/extraire', ['campagne' => $campagne->getId()], [], true); ?>"
-                   class="btn btn-secondary float-end"
-                >
-                    <span class="icon icon-csv"></span>
-                    Extraction de la campagne
-                </a>
             </div>
         </div>
+
+        <dl class="row">
+            <dt class="col-md-5"> Nombre d'agent·es <span class="icon icon-information" title="Agent·es devant passer un entretien"></span> </dt>
+            <dd class="col-md-7"> <?php echo $progression?->getNbTotal(); ?></dd>
+        </dl>
 
         <div class="row">
             <div class="col-md-7">
@@ -150,6 +141,11 @@ $canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileg
             </div>
         </div>
 
+        <dl class="row">
+            <dt class="col-md-5"> Nombre d'entretiens planifiés ou en cours  </dt>
+            <dd class="col-md-7"> <?php echo $progression?->getNbEntretiens(); ?> </dd>
+        </dl>
+
 
         <?php
             if ($progression) {
@@ -157,51 +153,71 @@ $canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileg
             }
         ?>
 
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::extraireAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne/extraire', ['campagne' => $campagne->getId()], [], true); ?>"
+           class="btn btn-secondary"
+        >
+            <span class="icon icon-csv"></span>
+            Extraction de la campagne
+        </a>
 
-                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>
-                <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-superieur', ['campagne' => $campagne->getId()], [], true); ?>"
-                   class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
-                   title="Rappel de la demande de validation aux responsables d'entretien pour lesquel·les l'entretien est en attente de leur validation"
-                >
-                    <span class="icon icon-notifier"></span>
-                    Notifier les responsables
-                </a>
-                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAutoriteAction();  */ ?>
-                <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-autorite', ['campagne' => $campagne->getId()], [], true); ?>"
-                   class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
-                   title="Rappel de la demande de validation aux autorités hiérarchiques pour lesquel·les l'entretien est en attente de leur validation"
-                >
-                    <span class="icon icon-notifier"></span>
-                    Notifier les autorités
-                </a>
-                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAgentAction();  */ ?>
-                <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-agent', ['campagne' => $campagne->getId()], [], true); ?>"
-                   class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
-                   title="Rappel de la demande de validation aux agents pour lesquel·les l'entretien est en attente de leur validation"
-                >
-                    <span class="icon icon-notifier"></span>
-                    Notifier les agents
-                </a>
+
             </div>
 <!--        </div>-->
 <!--    </div>-->
 </div>
 
-<h2>
-    Notifier de l'avancement les supérieur·es et autorité·es
-</h2>
+<div class="card">
+    <div class="card-header card-info">
+        Notifications
+    </div>
+    <div class="card-body">
 
-<div>
+        <h2>
+            Rappels des entretiens en attente de validation
+        </h2>
+
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-superieur', ['campagne' => $campagne->getId()], [], true); ?>"
+           class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
+           title="Rappel de la demande de validation aux responsables d'entretien pour lesquel·les l'entretien est en attente de leur validation"
+        >
+            <span class="icon icon-notifier"></span>
+            Rappels  des responsables
+        </a>
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAutoriteAction();  */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-autorite', ['campagne' => $campagne->getId()], [], true); ?>"
+           class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
+           title="Rappel de la demande de validation aux autorités hiérarchiques pour lesquel·les l'entretien est en attente de leur validation"
+        >
+            <span class="icon icon-notifier"></span>
+            Rappels des autorités
+        </a>
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAgentAction();  */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-agent', ['campagne' => $campagne->getId()], [], true); ?>"
+           class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
+           title="Rappel de la demande de validation aux agents pour lesquel·les l'entretien est en attente de leur validation"
+        >
+            <span class="icon icon-notifier"></span>
+            Rappels des agents
+        </a>
+
+        <h2>
+            Notifier de l'avancement des supérieur·es et autorité·es
+        </h2>
     <?php /** @see \EntretienProfessionnel\Controller\CampagneController::notifierAvancementSuperieurAction() */ ?>
     <a href="<?php echo $this->url('entretien-professionnel/campagne/notifier-avancement-superieur', ['campagne' => $campagne->getId()], [], true); ?>"
        class="btn btn-primary ajax-modal"
     >
+        <span class="icon icon-notifier"></span>
         Notifier l'avancement pour un·e supérieur·e
     </a>
     <?php /** @see \EntretienProfessionnel\Controller\CampagneController::notifierAvancementAutoriteAction() */ ?>
     <a href="<?php echo $this->url('entretien-professionnel/campagne/notifier-avancement-autorite', ['campagne' => $campagne->getId()], [], true); ?>"
        class="btn btn-primary ajax-modal"
     >
+        <span class="icon icon-notifier"></span>
         Notifier l'avancement pour un·e autorité
     </a>
+</div>
 </div>
