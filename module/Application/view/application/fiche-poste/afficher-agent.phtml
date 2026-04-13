@@ -84,6 +84,16 @@ $structure = ($affectation)?$affectation->getStructure():null;
     <br/>
 
     <?php if ($canAjouterFichier) : ?>
+        <?php /** @see \Agent\Controller\AgentController::uploadFichePostePdfAction() */ ?>
+        <a class="btn btn-primary ajax-modal" data-event="modification"
+           href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
+        >
+            <span class="icon icon-pdf"></span><span class="lettrine" style="color:var(--color-dark);">P</span>
+            Ajouter une fiche de poste PDF
+        </a>
+    <?php endif; ?>
+
+    <?php if ($canAjouterFichier) : ?>
         <div class="alert alert-warning">
             <span class="icon icon-attention"></span> Il ne faut déposer une fiche de poste PDF que si l'agent n'a pas de fiche de poste de renseignée dans EMC2. <br>
             <span class="icon icon-attention"></span> La taille de la fiche de poste ne doit pas dépasser 2 Mo.
@@ -111,7 +121,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
                             <a
                                 <?php /** @see  \UnicaenFichier\Controller\FichierController::downloadAction()*/ ?>
                                 href="<?php echo $this->url('fichier/download', ['fichier' => $fiche->getId()], [], true); ?>"
-                                class="action secondary"
+                                class="action secondary" target="_blank"
                             >
                                 <span class="icon icon-voir" title="voir le fichier"></span>
                                 Visualiser
@@ -136,13 +146,25 @@ $structure = ($affectation)?$affectation->getStructure():null;
         <!--    --><?php //else : ?>
     <?php endif; ?>
 
-    <?php if ($canAjouterFichier) : ?>
-        <?php /** @see \Application\Controller\AgentController::uploadFichePostePdfAction() */ ?>
-        <a class="btn btn-primary ajax-modal" data-event="modification"
-           href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
-        >
-            <span class="icon icon-pdf"></span><span class="lettrine" style="color:var(--color-dark);">P</span>
-            Ajouter une fiche de poste PDF
-        </a>
-    <?php endif; ?>
+
 </div>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('#fichespostes-pdf').DataTable({
+            autoWidth: false,
+            paging: false,
+            columnDefs: [{
+                "targets": 3,
+                "orderable": false
+            }],
+            language: {
+                url: '/js/datatables_fr.json'
+            }
+        });
+    });
+</script>

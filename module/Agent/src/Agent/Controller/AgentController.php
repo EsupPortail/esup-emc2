@@ -298,8 +298,9 @@ class AgentController extends AbstractActionController {
                 $agent->addFichier($fichier);
                 $this->getAgentService()->update($agent);
             }
-            /** @see FichePosteController::afficherAgentAction() */
-            return $this->redirect()->toRoute('fiche-poste/afficher-agent', ['agent' => $agent->getId()], [], true);
+//            /** @see FichePosteController::afficherAgentAction() */
+//            return $this->redirect()->toRoute('fiche-poste/afficher-agent', ['agent' => $agent->getId()], [], true);
+            exit();
         }
 
         $vm = new ViewModel();
