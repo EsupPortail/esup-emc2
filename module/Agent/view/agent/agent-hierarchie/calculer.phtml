@@ -11,13 +11,14 @@
 
 use Agent\Entity\Db\Agent;
 use Agent\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Structure\Entity\Db\Structure;
 
 $this->headTitle("Chaînes hiérarchiques calculées");
 
 $listing = [];
-if ($type === Agent::ROLE_SUPERIEURE) $listing = $superieurs;
-if ($type === Agent::ROLE_AUTORITE) $listing = $autorites;
+if ($type === AgentRoleProvider::ROLE_SUPERIEURE) $listing = $superieurs;
+if ($type === AgentRoleProvider::ROLE_AUTORITE) $listing = $autorites;
 ?>
 
 <?php echo $this->form($form); ?>
@@ -61,11 +62,11 @@ if ($type === Agent::ROLE_AUTORITE) $listing = $autorites;
                     <tr>
                         <td> <?php echo $agent->getDenomination(); ?> </td>
                         <td>
-                            <?php if ($type === Agent::ROLE_SUPERIEURE) : ?>
+                            <?php if ($type === AgentRoleProvider::ROLE_SUPERIEURE) : ?>
                                 <?php echo $responsable->getSuperieur()->getDenomination(); ?>
                                 <?php //echo $responsable->getId(); ?>
                             <?php endif; ?>
-                            <?php if ($type === Agent::ROLE_AUTORITE) : ?>
+                            <?php if ($type === AgentRoleProvider::ROLE_AUTORITE) : ?>
                                 <?php echo $responsable->getAutorite()->getDenomination(); ?>
                             <?php endif; ?>
                         </td>

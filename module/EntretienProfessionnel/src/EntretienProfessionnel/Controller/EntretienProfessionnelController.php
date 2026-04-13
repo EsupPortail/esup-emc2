@@ -696,8 +696,8 @@ class EntretienProfessionnelController extends AbstractActionController
                 }
                 /** @see IndexController::indexAction() */
                 return $this->redirect()->toRoute('home', [], [], true);
-            case  Agent::ROLE_AUTORITE :
-            case  Agent::ROLE_SUPERIEURE :
+            case  AgentRoleProvider::ROLE_AUTORITE :
+            case  AgentRoleProvider::ROLE_SUPERIEURE :
                 /** @see AgentController::mesEntretiensProfessionnelsAction() */
                 return $this->redirect()->toRoute('mes-entretiens-professionnels', ['campagne' => $entretien->getCampagne()->getId()], [], true);
             case  AgentRoleProvider::ROLE_AGENT :

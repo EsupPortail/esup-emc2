@@ -41,8 +41,8 @@ class FichePosteAssertion extends AbstractAssertion {
         $predicats = [
             'isAgent'                   => ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT &&  $referencedAgent === $connectedAgent),
             'isResponsable'             => ($role->getRoleId() === StructureRoleProvider::RESPONSABLE && $this->getStructureService()->isResponsableS($structures, $connectedAgent)),
-            'isSuperieure'              => ($role->getRoleId() === Agent::ROLE_SUPERIEURE && $this->getAgentSuperieurService()->isSuperieur($referencedAgent, $connectedAgent)),
-            'isAutorite'                => ($role->getRoleId() === Agent::ROLE_AUTORITE && $this->getAgentAutoriteService()->isAutorite($referencedAgent, $connectedAgent)),
+            'isSuperieure'              => ($role->getRoleId() === AgentRoleProvider::ROLE_SUPERIEURE && $this->getAgentSuperieurService()->isSuperieur($referencedAgent, $connectedAgent)),
+            'isAutorite'                => ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE && $this->getAgentAutoriteService()->isAutorite($referencedAgent, $connectedAgent)),
         ];
         return $predicats;
     }
@@ -54,8 +54,8 @@ class FichePosteAssertion extends AbstractAssertion {
             AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH, AppRoleProvider::OBSERVATEUR  => true,
             AgentRoleProvider::ROLE_AGENT => $predicats['isAgent'],
             StructureRoleProvider::RESPONSABLE => $predicats['isResponsable'],
-            Agent::ROLE_SUPERIEURE => $predicats['isSuperieure'],
-            Agent::ROLE_AUTORITE => $predicats['isAutorite'],
+            AgentRoleProvider::ROLE_SUPERIEURE => $predicats['isSuperieure'],
+            AgentRoleProvider::ROLE_AUTORITE => $predicats['isAutorite'],
             default => false,
         };
     }

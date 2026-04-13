@@ -3,6 +3,7 @@
 namespace Application\Service\Perimetre;
 
 use Agent\Entity\Db\Agent;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
@@ -81,14 +82,14 @@ class PerimetreService implements PerimetreServiceInterface
             case AppRoleProvider::DRH:
                 $agents = true;
                 break;
-            case Agent::ROLE_AUTORITE:
+            case AgentRoleProvider::ROLE_AUTORITE:
                 $agent = $this->getAgentService()->getAgentByConnectedUser();
                 $listing = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent);
                 foreach ($listing as $chaine) {
                     $agents[$chaine->getAgent()->getId()] = $chaine->getAgent();
                 }
                 break;
-            case Agent::ROLE_SUPERIEURE:
+            case AgentRoleProvider::ROLE_SUPERIEURE:
                 $agent = $this->getAgentService()->getAgentByConnectedUser();
                 $listing = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent);
                 foreach ($listing as $chaine) {

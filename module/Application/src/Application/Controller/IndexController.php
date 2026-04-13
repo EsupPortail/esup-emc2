@@ -92,8 +92,8 @@ class IndexController extends AbstractActionController
                     /** @see StructureController::descriptionAction() */
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/description', ['structure' => $structures[0]->getId()], [], true);
                     break;
-                case Agent::ROLE_SUPERIEURE :
-                case Agent::ROLE_AUTORITE :
+                case AgentRoleProvider::ROLE_SUPERIEURE :
+                case AgentRoleProvider::ROLE_AUTORITE :
                     /** @see AgentController::mesAgentsAction() */
                     return $this->redirect()->toRoute('mes-agents', [], [], true);
                 case RoleProvider::OBSERVATEUR :

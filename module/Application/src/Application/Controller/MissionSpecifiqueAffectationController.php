@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Agent\Entity\Db\Agent;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Provider\Template\PdfTemplate;
@@ -242,11 +243,11 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
     {
         $role = $this->getUserService()->getConnectedRole();
 
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE) {
             /** @see AgentHierarchieController::rechercherAgentWithAutoriteAction() */
             return $this->url()->fromRoute('agent/hierarchie/rechercher-agent-with-autorite', [], [], true);
         }
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_SUPERIEURE) {
             /** @see AgentHierarchieController::rechercherAgentWithSuperieurAction() */
             $url = $this->url()->fromRoute('agent/hierarchie/rechercher-agent-with-superieur', [], [], true);
             return $url;
@@ -255,7 +256,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController
             /** @see AgentController::rechercherWithStructureMereAction() */
             return $this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true);
         }
-        /** @see Agent\Controller\AgentController::rechercherLargeAction() */
+        /** @see AgentController::rechercherLargeAction() */
         return $this->url()->fromRoute('agent/rechercher-large', [], [], true);
     }
 }

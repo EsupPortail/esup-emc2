@@ -9,8 +9,6 @@ use Application\Event\RgpdRenderer\RgpdRendererEvenementFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
-use Application\Provider\IdentityProvider;
-use Application\Provider\IdentityProviderFactory;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
@@ -275,8 +273,6 @@ return [
             PerimetreService::class => PerimetreServiceFactory::class,
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,
-
-            IdentityProvider::class => IdentityProviderFactory::class,
         ],
     ],
     'controllers' => [

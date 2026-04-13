@@ -48,8 +48,8 @@ class AgentAssertion extends AbstractAssertion
             $structures = $entity->getStructures();
             $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
         }
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity, $agent);
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity, $agent);
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity, $agent);
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity, $agent);
         if ($role->getRoleId() === StructureRoleProvider::OBSERVATEUR) {
             $structures = $entity->getStructures();
             $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
@@ -62,8 +62,8 @@ class AgentAssertion extends AbstractAssertion
                 return match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR, AppRoleProvider::DRH => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
-                    Agent::ROLE_SUPERIEURE => $isSuperieur,
-                    Agent::ROLE_AUTORITE => $isAutorite,
+                    AgentRoleProvider::ROLE_SUPERIEURE => $isSuperieur,
+                    AgentRoleProvider::ROLE_AUTORITE => $isAutorite,
                     StructureRoleProvider::OBSERVATEUR => $isObservateur,
                     AgentRoleProvider::ROLE_AGENT => $entity === $agent,
                     default => false,
@@ -75,8 +75,8 @@ class AgentAssertion extends AbstractAssertion
                 return match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
-                    Agent::ROLE_SUPERIEURE => $isSuperieur,
-                    Agent::ROLE_AUTORITE => $isAutorite,
+                    AgentRoleProvider::ROLE_SUPERIEURE => $isSuperieur,
+                    AgentRoleProvider::ROLE_AUTORITE => $isAutorite,
                     AgentRoleProvider::ROLE_AGENT => $isAgent,
                     default => false,
                 };

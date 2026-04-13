@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Entity\Db\MacroContent;
+namespace Agent\Entity;
 
 use Agent\Entity\Db\AgentEchelon;
 use Agent\Entity\Db\AgentQuotite;

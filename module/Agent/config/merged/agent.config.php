@@ -2,6 +2,8 @@
 
 namespace Agent;
 
+use Agent\Assertion\AgentAffichageAssertion;
+use Agent\Assertion\AgentAffichageAssertionFactory;
 use Agent\Assertion\AgentAssertion;
 use Agent\Assertion\AgentAssertionFactory;
 use Agent\Controller\AgentController;
@@ -10,6 +12,7 @@ use Agent\Form\SelectionAgent\SelectionAgentForm;
 use Agent\Form\SelectionAgent\SelectionAgentFormFactory;
 use Agent\Form\SelectionAgent\SelectionAgentHydrator;
 use Agent\Form\SelectionAgent\SelectionAgentHydratorFactory;
+use Agent\Provider\Privilege\AgentaffichagePrivileges;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Agent\Service\Agent\AgentService;
 use Agent\Service\Agent\AgentServiceFactory;
@@ -46,19 +49,19 @@ return [
                         'resources' => ['Agent'],
                         'assertion' => AgentAssertion::class
                     ],
-//                    [
-//                        'privileges' => [
-//                            AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR,
-//                            AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE,
-//                            AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE,
-//                            AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
-//                            AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME,
-//                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION,
-//                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT,
-//                        ],
-//                        'resources' => ['Agent'],
-//                        'assertion' => AgentAffichageAssertion::class
-//                    ],
+                    [
+                        'privileges' => [
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT,
+                        ],
+                        'resources' => ['Agent'],
+                        'assertion' => AgentAffichageAssertion::class
+                    ],
                 ],
             ],
         ],
@@ -313,6 +316,7 @@ return [
     'service_manager' => [
         'factories' => [
             AgentAssertion::class => AgentAssertionFactory::class,
+            AgentAffichageAssertion::class => AgentAffichageAssertionFactory::class,
             AgentService::class => AgentServiceFactory::class,
         ],
     ],

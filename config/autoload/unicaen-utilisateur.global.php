@@ -1,6 +1,6 @@
 <?php
 
-use Application\Provider\IdentityProvider;
+use Agent\Provider\Identity\IdentityProvider;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;

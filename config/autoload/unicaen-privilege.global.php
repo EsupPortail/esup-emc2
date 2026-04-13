@@ -19,7 +19,7 @@ $settings = [
             300 => 'UnicaenAuthentification\Provider\Identity\Basic',   // en 1er
             200 => 'UnicaenAuthentification\Provider\Identity\Db',      // en 2e
             100 => 'UnicaenAuthentification\Provider\Identity\Ldap',    // en 3e @deprecated
-            020 => 'Application\Provider\IdentityProvider',             // en 3e
+            020 => 'Agent\Provider\Identity\IdentityProvider',             // en 3e
             011 => 'EntretienProfessionnel\Provider\Identity\IdentityProvider',  // en 3e
             010 => 'Structure\Provider\IdentityProvider',  // en 3e
         ],

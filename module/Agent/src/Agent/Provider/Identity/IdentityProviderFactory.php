@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Provider;
+namespace Agent\Provider\Identity;
 
 use Agent\Service\Agent\AgentService;
 use Agent\Service\AgentAutorite\AgentAutoriteService;

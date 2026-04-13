@@ -4,9 +4,8 @@ namespace Agent\Entity\Db;
 
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Agent\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\MacroContent\AgentMacroTrait;
+use Agent\Entity\AgentMacroTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Grade;
 use Carriere\Entity\Db\NiveauEnveloppe;
@@ -47,9 +46,6 @@ class Agent implements
 
     use HasValidationsTrait;
     use AgentMacroTrait;
-
-    const ROLE_SUPERIEURE = 'Supérieur·e hiérarchique direct·e';
-    const ROLE_AUTORITE = 'Autorité hiérarchique';
 
     public function getResourceId(): string
     {

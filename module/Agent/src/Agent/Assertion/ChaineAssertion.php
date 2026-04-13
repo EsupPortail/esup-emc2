@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Assertion;
+namespace Agent\Assertion;
 
 use Agent\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAutorite;
@@ -48,8 +48,8 @@ class ChaineAssertion extends AbstractAssertion
         $isAutorite = false;
         $isObservateur = false;
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($agentEntity,$agent);
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($agentEntity,$agent);
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($agentEntity,$agent);
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($agentEntity,$agent);
         if ($role->getRoleId() === StructureRoleProvider::OBSERVATEUR) $isObservateur = $this->getObservateurService()->isObservateur($structures, $user);
 
         switch ($privilege) {
@@ -60,8 +60,8 @@ class ChaineAssertion extends AbstractAssertion
                 $temp =  match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
-                    Agent::ROLE_SUPERIEURE => $isSuperieur,
-                    Agent::ROLE_AUTORITE => $isAutorite,
+                    AgentRoleProvider::ROLE_SUPERIEURE => $isSuperieur,
+                    AgentRoleProvider::ROLE_AUTORITE => $isAutorite,
                     StructureRoleProvider::OBSERVATEUR, EntretienRoleProvider::OBSERVATEUR => $isObservateur,
                     AgentRoleProvider::ROLE_AGENT => $agentEntity === $agent,
                     default => false,

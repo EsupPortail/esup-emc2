@@ -100,8 +100,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH, AppRoleProvider::OBSERVATEUR  => true,
             AgentRoleProvider::ROLE_AGENT => $predicats['isAgentEntretien'],
             RoleProvider::RESPONSABLE => $predicats['isResponsableStructure'],
-            Agent::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'],
-            Agent::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
+            AgentRoleProvider::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'],
+            AgentRoleProvider::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
             EntretienProfessionnelRoleProvider::OBSERVATEUR => $this->getObservateurService()->isObservateur($entretienProfessionnel, $connectedAgent->getUtilisateur()),
             RoleProvider::OBSERVATEUR => $this->getObservateurStructureService()->isObservateur($structures, $connectedAgent->getUtilisateur()),
             default => false,
@@ -178,7 +178,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         $scope = $this->isScopeCompatible($entretien, $agent, $role, $predicats);
                         $blocage = ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien));
                         return $etatOk && $dateOk && $scope && !$blocage;
-                    case Agent::ROLE_SUPERIEURE:
+                    case AgentRoleProvider::ROLE_SUPERIEURE:
                         $etatOk = $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) || $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                         $isResponsable = ($agent === $entretien->getResponsable());
                         $blocage = ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien));
@@ -207,9 +207,9 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::RESPONSABLE:
                         return $predicats['isResponsableStructure'];
-                    case Agent::ROLE_SUPERIEURE:
+                    case AgentRoleProvider::ROLE_SUPERIEURE:
                         return $predicats['isSuperieureHierarchique'];
-                    case Agent::ROLE_AUTORITE:
+                    case AgentRoleProvider::ROLE_AUTORITE:
                         return $predicats['isAutoriteHierarchique'];
                     case EntretienProfessionnelRoleProvider::OBSERVATEUR:
                         return $this->isScopeCompatible($entretien, $agent, $role);
@@ -220,8 +220,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 return match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
                     RoleProvider::RESPONSABLE => (($predicats['isResponsableStructure'] and $predicats['isResponsableEntretien']) or $predicats['isAutoriteStructure']),
-                    Agent::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'] and $predicats['isResponsableEntretien'],
-                    Agent::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
+                    AgentRoleProvider::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'] and $predicats['isResponsableEntretien'],
+                    AgentRoleProvider::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
                     EntretienProfessionnelRoleProvider::OBSERVATEUR => $this->isScopeCompatible($entretien, $agent, $role),
                     default => false,
                 };
@@ -236,7 +236,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 if ($this->BLOCAGE_VALIDATION AND !$this->isPeriodeCompatible($entretien)) return false;
                 $value =  match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH => true,
-                    RoleProvider::RESPONSABLE, Agent::ROLE_AUTORITE => ($predicats['isAutoriteHierarchique'] && ($inhibition || !$predicats['isResponsableEntretien'])),
+                    RoleProvider::RESPONSABLE, AgentRoleProvider::ROLE_AUTORITE => ($predicats['isAutoriteHierarchique'] && ($inhibition || !$predicats['isResponsableEntretien'])),
                     default => false,
                 };
                 return $value;

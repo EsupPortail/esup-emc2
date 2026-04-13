@@ -4,13 +4,10 @@ namespace Application;
 
 use Agent\Assertion\AgentAssertion;
 use Agent\Provider\Privilege\AgentPrivileges;
-use Application\Assertion\AgentAffichageAssertion;
-use Application\Assertion\AgentAffichageAssertionFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydrator;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactory;
-use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -40,19 +37,6 @@ return [
                         ],
                         'resources' => ['Agent'],
                         'assertion' => AgentAssertion::class
-                    ],
-                    [
-                        'privileges' => [
-                            AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR,
-                            AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE,
-                            AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE,
-                            AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
-                            AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME,
-                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION,
-                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT,
-                        ],
-                        'resources' => ['Agent'],
-                        'assertion' => AgentAffichageAssertion::class
                     ],
                 ],
             ],
@@ -87,7 +71,6 @@ return [
 
     'service_manager' => [
         'factories' => [
-            AgentAffichageAssertion::class => AgentAffichageAssertionFactory::class,
             AgentMissionSpecifiqueService::class => AgentMissionSpecifiqueServiceFactory::class,
 
         ],

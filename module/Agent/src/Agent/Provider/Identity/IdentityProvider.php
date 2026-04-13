@@ -1,9 +1,9 @@
 <?php
 
-namespace Application\Provider;
+namespace Agent\Provider\Identity;
 
 use Agent\Provider\Role\RoleProvider;
-use Agent\Entity\Db\Agent;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 
 use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
@@ -32,10 +32,10 @@ class IdentityProvider extends AbstractIdentityProvider
             case RoleProvider::ROLE_AGENT :
                 $user = $this->getAgentService()->getUsersInAgent();
                 return $user;
-            case Agent::ROLE_SUPERIEURE :
+            case AgentRoleProvider::ROLE_SUPERIEURE :
                 $user = $this->getAgentSuperieurService()->getUsersInSuperieurs();
                 return $user;
-            case Agent::ROLE_AUTORITE :
+            case AgentRoleProvider::ROLE_AUTORITE :
                 $user = $this->getAgentAutoriteService()->getUsersInAutorites();
                 return $user;
         }
@@ -64,13 +64,13 @@ class IdentityProvider extends AbstractIdentityProvider
 
             $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent);
             if (!empty($superieurs)) {
-                $roleSuperieur = $this->getRoleService()->findByRoleId(Agent::ROLE_SUPERIEURE);
+                $roleSuperieur = $this->getRoleService()->findByRoleId(AgentRoleProvider::ROLE_SUPERIEURE);
                 $roles[] = $roleSuperieur;
             }
 
             $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent);
             if (!empty($autorites)) {
-                $roleAutorite = $this->getRoleService()->findByRoleId(Agent::ROLE_AUTORITE);
+                $roleAutorite = $this->getRoleService()->findByRoleId(AgentRoleProvider::ROLE_AUTORITE);
                 $roles[] = $roleAutorite;
             }
         }

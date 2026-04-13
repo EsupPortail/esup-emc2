@@ -5,7 +5,7 @@ namespace Agent\Controller;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
-use Application\Assertion\ChaineAssertion;
+use Agent\Assertion\ChaineAssertion;
 use Agent\Entity\Db\AgentAutorite;
 use Agent\Entity\Db\AgentSuperieur;
 use Agent\Provider\Parametre\AgentParametres;

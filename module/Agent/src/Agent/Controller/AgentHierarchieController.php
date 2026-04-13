@@ -9,6 +9,7 @@ use Agent\Entity\Db\AgentSuperieur;
 use Agent\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormAwareTrait;
 use Agent\Form\AgentHierarchieImportation\AgentHierarchieImportationFormAwareTrait;
 use Agent\Form\Chaine\ChaineFormAwareTrait;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
@@ -238,10 +239,10 @@ class AgentHierarchieController extends AbstractActionController
             if ($mode === 'import' and empty($error)) {
                 foreach ($agents as $agent) {
                     switch ($type) {
-                        case Agent::ROLE_SUPERIEURE :
+                        case AgentRoleProvider::ROLE_SUPERIEURE :
                             $this->getAgentSuperieurService()->historiseAll($agent);
                             break;
-                        case Agent::ROLE_AUTORITE :
+                        case AgentRoleProvider::ROLE_AUTORITE :
                             $this->getAgentAutoriteService()->historiseAll($agent);
                             break;
                         default:
@@ -250,10 +251,10 @@ class AgentHierarchieController extends AbstractActionController
                 }
                 foreach ($chaines as $chaine) {
                     switch ($type) {
-                        case Agent::ROLE_SUPERIEURE :
+                        case AgentRoleProvider::ROLE_SUPERIEURE :
                             $this->getAgentSuperieurService()->createAgentSuperieurWithArray($chaine);
                             break;
-                        case Agent::ROLE_AUTORITE :
+                        case AgentRoleProvider::ROLE_AUTORITE :
                             $this->getAgentAutoriteService()->createAgentAutoriteWithArray($chaine);
                             break;
                         default:
@@ -309,7 +310,7 @@ class AgentHierarchieController extends AbstractActionController
             $agents = $this->getAgentService()->getAgentsByStructures($structures);
 
             $superieurs = [];
-            if ($type === Agent::ROLE_SUPERIEURE) {
+            if ($type === AgentRoleProvider::ROLE_SUPERIEURE) {
                 foreach ($agents as $agent) {
                     $superieurs[$agent->getId()] = [];
                     $affectation = $agent->getAffectationPrincipale();
@@ -347,7 +348,7 @@ class AgentHierarchieController extends AbstractActionController
             }
 
             $autorites = [];
-            if ($type === Agent::ROLE_AUTORITE) {
+            if ($type === AgentRoleProvider::ROLE_AUTORITE) {
 
                 foreach ($agents as $agent) {
                     $autorites[$agent->getId()] = [];
@@ -867,12 +868,12 @@ class AgentHierarchieController extends AbstractActionController
         $agents = [];
         $entretiensS = [];
         $entretiensR = [];
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_SUPERIEURE) {
             $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
             $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($connectedAgent, $campagne, false, false);
         }
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE) {
             $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
             $entretiensR = [];
@@ -933,13 +934,13 @@ class AgentHierarchieController extends AbstractActionController
         $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
 
         $agents = [];
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_SUPERIEURE) {
             $chaines = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($connectedAgent);
             $agents = array_map(function (AgentSuperieur $a) {
                 return $a->getAgent();
             }, $chaines);
         }
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+        if ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE) {
             $chaines = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($connectedAgent);
             $agents = array_map(function (AgentAutorite $a) {
                 return $a->getAgent();

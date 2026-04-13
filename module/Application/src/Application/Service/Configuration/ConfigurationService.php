@@ -2,7 +2,6 @@
 
 namespace Application\Service\Configuration;
 
-use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Doctrine\ORM\NonUniqueResultException;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -24,24 +23,21 @@ class ConfigurationService
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration): ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
+    public function create(ConfigurationFicheMetier $configuration): void
     {
         $this->getObjectManager()->persist($configuration);
         $this->getObjectManager()->flush($configuration);
-        return $configuration;
     }
 
-    public function update(ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration): ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
+    public function update(ConfigurationFicheMetier $configuration): void
     {
         $this->getObjectManager()->flush($configuration);
-        return $configuration;
     }
 
-    public function delete(ConfigurationFicheMetier|ConfigurationEntretienProfessionnel $configuration): ConfigurationFicheMetier|ConfigurationEntretienProfessionnel
+    public function delete(ConfigurationFicheMetier $configuration): void
     {
         $this->getObjectManager()->remove($configuration);
         $this->getObjectManager()->flush($configuration);
-        return $configuration;
     }
 
     /** CONFIGU *******************************************************************************************************/

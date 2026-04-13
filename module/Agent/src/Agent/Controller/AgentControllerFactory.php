@@ -8,7 +8,7 @@ use Agent\Service\AgentAutorite\AgentAutoriteService;
 use Agent\Service\AgentGrade\AgentGradeService;
 use Agent\Service\AgentStatut\AgentStatutService;
 use Agent\Service\AgentSuperieur\AgentSuperieurService;
-use Application\Assertion\ChaineAssertion;
+use Agent\Assertion\ChaineAssertion;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Psr\Container\ContainerExceptionInterface;
