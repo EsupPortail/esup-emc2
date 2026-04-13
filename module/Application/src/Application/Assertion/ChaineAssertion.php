@@ -6,6 +6,7 @@ use Agent\Entity\Db\Agent;
 use Agent\Entity\Db\AgentAutorite;
 use Agent\Entity\Db\AgentSuperieur;
 use Agent\Provider\Privilege\ChainePrivileges;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
@@ -62,7 +63,7 @@ class ChaineAssertion extends AbstractAssertion
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
                     Agent::ROLE_AUTORITE => $isAutorite,
                     StructureRoleProvider::OBSERVATEUR, EntretienRoleProvider::OBSERVATEUR => $isObservateur,
-                    AppRoleProvider::AGENT => $agentEntity === $agent,
+                    AgentRoleProvider::ROLE_AGENT => $agentEntity === $agent,
                     default => false,
                 };
                 return $temp;

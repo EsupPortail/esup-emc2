@@ -6,6 +6,7 @@ use Agent\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
@@ -38,7 +39,7 @@ class FichePosteAssertion extends AbstractAssertion {
         $structures = $referencedAgent->getStructures();
 
         $predicats = [
-            'isAgent'                   => ($role->getRoleId() === AppRoleProvider::AGENT &&  $referencedAgent === $connectedAgent),
+            'isAgent'                   => ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT &&  $referencedAgent === $connectedAgent),
             'isResponsable'             => ($role->getRoleId() === StructureRoleProvider::RESPONSABLE && $this->getStructureService()->isResponsableS($structures, $connectedAgent)),
             'isSuperieure'              => ($role->getRoleId() === Agent::ROLE_SUPERIEURE && $this->getAgentSuperieurService()->isSuperieur($referencedAgent, $connectedAgent)),
             'isAutorite'                => ($role->getRoleId() === Agent::ROLE_AUTORITE && $this->getAgentAutoriteService()->isAutorite($referencedAgent, $connectedAgent)),
@@ -51,7 +52,7 @@ class FichePosteAssertion extends AbstractAssertion {
         $predicats = ($predicats === null)?$this->computePredicats($entretienProfessionnel, $connectedAgent, $connectedRole):$predicats;
         return match ($connectedRole->getRoleId()) {
             AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH, AppRoleProvider::OBSERVATEUR  => true,
-            AppRoleProvider::AGENT => $predicats['isAgent'],
+            AgentRoleProvider::ROLE_AGENT => $predicats['isAgent'],
             StructureRoleProvider::RESPONSABLE => $predicats['isResponsable'],
             Agent::ROLE_SUPERIEURE => $predicats['isSuperieure'],
             Agent::ROLE_AUTORITE => $predicats['isAutorite'],
@@ -76,7 +77,7 @@ class FichePosteAssertion extends AbstractAssertion {
         switch($privilege) {
             case FichePostePrivileges::FICHEPOSTE_AFFICHER :
                 switch ($role->getRoleId()) {
-                    case AppRoleProvider::AGENT:
+                    case AgentRoleProvider::ROLE_AGENT:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
                         return $isAgent AND ($etatCode === FichePosteEtats::ETAT_CODE_OK OR $etatCode === FichePosteEtats::ETAT_CODE_SIGNEE);
                     case StructureRoleProvider::OBSERVATEUR:

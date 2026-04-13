@@ -3,8 +3,10 @@
 namespace Application\Controller;
 
 use Agent\Entity\Db\AgentAffectation;
-use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Agent\Entity\Db\AgentSuperieur;
+use Agent\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\AgentPoste\AgentPosteServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
@@ -12,9 +14,6 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
-use Application\Provider\Parametre\AgentParametres;
-use Agent\Service\Agent\AgentServiceAwareTrait;
-use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -89,7 +88,7 @@ class FichePosteController extends AbstractActionController
             else {
 //                if ($fiche['agent_id'] === null and $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
 //                else
-                    $fichesIncompletes[] = $fiche;
+                $fichesIncompletes[] = $fiche;
             }
         }
 
@@ -108,7 +107,7 @@ class FichePosteController extends AbstractActionController
 
         $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau and $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 
@@ -211,7 +210,7 @@ class FichePosteController extends AbstractActionController
 
         $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau and $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 
@@ -247,7 +246,7 @@ class FichePosteController extends AbstractActionController
 
         $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
-        if ($displayBandeau AND $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
+        if ($displayBandeau and $this->getTemplateService()->getTemplateByCode(TextTemplates::FICHEPOSTE_BANDEAU)) {
             $template = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::FICHEPOSTE_BANDEAU, [], false);
         }
 

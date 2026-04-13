@@ -31,7 +31,6 @@
 
 use Agent\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
-use Application\Provider\Role\RoleProvider;
 use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -133,7 +132,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 ?>
 
 
-<?php if ($role->getRoleId() === RoleProvider::AGENT) : ?>
+<?php if ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT) : ?>
     <div class="alert alert-info">
         <strong> <span class="icon icon-information"></span> Modification des compte-rendus. </strong>
 

@@ -2,17 +2,11 @@
 
 namespace Agent\View\Helper;
 
-use Agent\Entity\Db\Agent;
-use Application\Provider\Parametre\AgentParametres;
-use Laminas\View\Helper\AbstractHelper;
-use Laminas\View\Helper\Partial;
-use Laminas\View\Renderer\PhpRenderer;
-use Laminas\View\Resolver\TemplatePathStack;
+use Agent\Provider\Parametre\AgentParametres;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 
 class AgentViewHelperFactory

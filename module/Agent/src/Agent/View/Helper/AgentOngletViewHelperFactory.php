@@ -2,7 +2,7 @@
 
 namespace Agent\View\Helper;
 
-use Application\Provider\Parametre\AgentParametres;
+use Agent\Provider\Parametre\AgentParametres;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

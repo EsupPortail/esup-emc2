@@ -34,14 +34,14 @@ return [
                     [
                         'privileges' => [
                             AgentPrivileges::AGENT_AFFICHER,
-//                            AgentPrivileges::AGENT_ELEMENT_VOIR,
-//                            AgentPrivileges::AGENT_ELEMENT_AJOUTER,
-//                            AgentPrivileges::AGENT_ELEMENT_MODIFIER,
-//                            AgentPrivileges::AGENT_ELEMENT_HISTORISER,
-//                            AgentPrivileges::AGENT_ELEMENT_DETRUIRE,
-//                            AgentPrivileges::AGENT_ELEMENT_VALIDER,
-//                            AgentPrivileges::AGENT_ACQUIS_AFFICHER,
-//                            AgentPrivileges::AGENT_ACQUIS_MODIFIER,
+                            AgentPrivileges::AGENT_ELEMENT_VOIR,
+                            AgentPrivileges::AGENT_ELEMENT_AJOUTER,
+                            AgentPrivileges::AGENT_ELEMENT_MODIFIER,
+                            AgentPrivileges::AGENT_ELEMENT_HISTORISER,
+                            AgentPrivileges::AGENT_ELEMENT_DETRUIRE,
+                            AgentPrivileges::AGENT_ELEMENT_VALIDER,
+                            AgentPrivileges::AGENT_ACQUIS_AFFICHER,
+                            AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                         ],
                         'resources' => ['Agent'],
                         'assertion' => AgentAssertion::class

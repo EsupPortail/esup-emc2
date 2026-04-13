@@ -98,7 +98,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
         return match ($connectedRole->getRoleId()) {
             AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH, AppRoleProvider::OBSERVATEUR  => true,
-            AppRoleProvider::AGENT => $predicats['isAgentEntretien'],
+            AgentRoleProvider::ROLE_AGENT => $predicats['isAgentEntretien'],
             RoleProvider::RESPONSABLE => $predicats['isResponsableStructure'],
             Agent::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'],
             Agent::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
@@ -201,7 +201,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case AppRoleProvider::DRH:
                     case AppRoleProvider::OBSERVATEUR:
                         return true;
-                    case AppRoleProvider::AGENT:
+                    case AgentRoleProvider::ROLE_AGENT:
                         if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
                         if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
                         return $predicats['isAgentEntretien'];

@@ -4,6 +4,7 @@ namespace Application\Assertion;
 
 use Agent\Entity\Db\AgentAffectation;
 use Agent\Entity\Db\Agent;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
@@ -120,7 +121,7 @@ class AgentAffichageAssertion extends AbstractAssertion
                     StructureRoleProvider::OBSERVATEUR => $isObservateur,
                     Agent::ROLE_SUPERIEURE => $isSuperieur,
                     Agent::ROLE_AUTORITE => $isAutorite,
-                    AppRoleProvider::AGENT => $entity === $agent,
+                    AgentRoleProvider::ROLE_AGENT => $entity === $agent,
                     default => false,
                 };
         }

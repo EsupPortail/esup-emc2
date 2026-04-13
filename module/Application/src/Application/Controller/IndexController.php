@@ -2,23 +2,19 @@
 
 namespace Application\Controller;
 
-use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Entity\Db\Agent;
-use Agent\Entity\Db\AgentAutorite;
-use Agent\Entity\Db\AgentSuperieur;
-use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Provider\Template\TexteTemplate;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
+use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
-use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Application\Provider\Template\TexteTemplate;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\Controller\ObservateurController;
-use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienProfessionnelRoleProvider;
-use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Http\Response;
@@ -27,7 +23,6 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Structure\Controller\ObservateurController as StructureObservateurController;
 use Structure\Controller\StructureController;
-use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
@@ -88,7 +83,7 @@ class IndexController extends AbstractActionController
 
         if ($connectedRole) {
             switch ($connectedRole->getRoleId()) {
-                case AppRoleProvider::AGENT :
+                case AgentRoleProvider::ROLE_AGENT :
                     $agent = $this->getAgentService()->getAgentByUser($connectedUser);
                     /** @see \Agent\Controller\AgentController::informationsAction() */
                     return $this->redirect()->toRoute('agent/informations', ['agent' => $agent->getId()], [], true);

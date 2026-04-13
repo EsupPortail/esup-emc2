@@ -8,7 +8,7 @@ use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Assertion\ChaineAssertion;
 use Agent\Entity\Db\AgentAutorite;
 use Agent\Entity\Db\AgentSuperieur;
-use Application\Provider\Parametre\AgentParametres;
+use Agent\Provider\Parametre\AgentParametres;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;

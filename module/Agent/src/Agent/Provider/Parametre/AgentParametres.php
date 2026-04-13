@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Provider\Parametre;
+namespace Agent\Provider\Parametre;
 
 class AgentParametres {
     const TYPE = "AGENT";

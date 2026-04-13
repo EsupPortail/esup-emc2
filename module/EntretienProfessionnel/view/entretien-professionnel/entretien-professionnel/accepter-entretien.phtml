@@ -8,7 +8,7 @@
  * @var Role $role
  */
 
-use Application\Provider\Role\RoleProvider;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenUtilisateur\Entity\Db\Role;
 
@@ -39,7 +39,7 @@ use UnicaenUtilisateur\Entity\Db\Role;
     <div class="alert alert-success">
         <p> Vous venez d'accepter votre entretien professionnel qui se déroule le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?>. </p>
         <p> Vous pouvez dorénavant commencer à consulter votre entretien professionnel
-            <?php if ($role->getRoleId() === RoleProvider::AGENT) : ?>
+            <?php if ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT) : ?>
                 en suivant le lien :
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::indexAgentAction() */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/index-agent'); ?>">Accéder à mes entretiens professionnels</a>.
