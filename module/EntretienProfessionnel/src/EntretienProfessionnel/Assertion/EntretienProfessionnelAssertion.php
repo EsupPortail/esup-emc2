@@ -135,8 +135,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             $agent->setUtilisateur($user);
         }
 
-
-
         if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
         $now = new DateTime();
@@ -190,6 +188,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return $etatOk && $scope && !$blocage;
                 }
             case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
+                if ($entretien->getCampagne() === null) return false;
                 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
                     $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
                 return $this->isScopeCompatible($entretien, $agent, $role, $predicats);

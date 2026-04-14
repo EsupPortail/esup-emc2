@@ -270,8 +270,21 @@ $strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de conv
             </div>
             <div class="card-body">
                 <dl class="row">
-                    <dt class="col-md-5">Confirmation</dt>
-                    <dd class="col-md-7"><?php echo ($entretien->getToken() === null) ? '<span class="icon icon-checked" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
+                    <dt class="col-md-5">Convocation</dt>
+                    <dd class="col-md-7">
+                        <?php if ($entretien->getConvocation()) : ?>
+                            <?php echo $entretien->getConvocation()->format('d/m/Y à H:i'); ?>
+                        <?php else : ?>
+                            <span class="missing-data">Aucune date de convocation connue</span>
+                        <?php endif; ?>
+                    <dt class="col-md-5">Acceptation par l'agent·e</dt>
+                    <dd class="col-md-7">
+                        <?php if ($entretien->getAcceptation()) : ?>
+                            <?php echo $entretien->getAcceptation()->format('d/m/Y à H:i'); ?>
+                        <?php else :?>
+                            <span class="missing-data">Aucune date d'acceptation connue</span>
+                        <?php endif; ?>
+                    </dd>
                     <dt class="col-md-5">Responsable d'entretien </dt>
                     <dd class="col-md-7">
                         <?php $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE); ?>

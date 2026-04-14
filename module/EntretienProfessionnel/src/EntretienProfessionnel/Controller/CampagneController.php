@@ -237,10 +237,15 @@ class CampagneController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($campagne !== null) {
+            $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne);
+            $warning = "";
+            if (!empty($entretiens)) {
+                $warning = "<p><strong>".count($entretiens)." entretiens sont associés à cette campagne et seront dé-associés de celle-ci.</strong></p>";
+            }
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la campagne " . $campagne->getAnnee(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => $warning . "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/campagne/detruire', ["campagne" => $campagne->getId()], [], true),
             ]);
         }

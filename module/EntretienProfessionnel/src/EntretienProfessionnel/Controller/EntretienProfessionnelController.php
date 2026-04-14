@@ -323,9 +323,11 @@ class EntretienProfessionnelController extends AbstractActionController
         }
         $observateurs = $this->getObservateurService()->getObservateursByEntretienProfessionnel($entretien);
 
-        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
-        if (!empty($facultatif)) {
-            $entretien->setStatut("facultatif");
+        if ($entretien->getCampagne() !== null) {
+            [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
+            if (!empty($facultatif)) {
+                $entretien->setStatut("facultatif");
+            }
         }
 
         return new ViewModel([
@@ -565,9 +567,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
 
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
-        if (!empty($facultatif)) {
-            $entretien->setStatut("facultatif");
+        if ($entretien->getCampagne()) {
+            [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
+            if (!empty($facultatif)) {
+                $entretien->setStatut("facultatif");
+            }
         }
 
         $vars = [
@@ -589,9 +593,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
 
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
-        if (!empty($facultatif)) {
-            $entretien->setStatut("facultatif");
+        if ($entretien->getCampagne()) {
+            [$obligatoire, $facultatif, $raison] = $this->getCampagneService()->trierAgents($entretien->getCampagne(), [$entretien->getAgent()]);
+            if (!empty($facultatif)) {
+                $entretien->setStatut("facultatif");
+            }
         }
 
         $vars = [

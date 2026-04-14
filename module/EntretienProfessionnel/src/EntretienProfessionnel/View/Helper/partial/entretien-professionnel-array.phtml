@@ -199,7 +199,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 </a>
             <?php endif; ?>
 <!--            --><?php //if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)) : ?>
-            <?php if ($canExporter AND !in_array($entretien->getEtatActif()->getType()->getCode(), [EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER])) : ?>
+            <?php if ($canExporter AND $entretien->getCampagne() AND !in_array($entretien->getEtatActif()->getType()->getCode(), [EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER])) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
