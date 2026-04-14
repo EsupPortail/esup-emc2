@@ -1,0 +1,315 @@
+<?php
+
+use UnicaenPrivilege\Entity\Db\Privilege;
+use UnicaenPrivilege\Entity\Db\PrivilegeCategorie;
+use UnicaenPrivilege\Entity\Db\PrivilegeInterface;
+use UnicaenPrivilege\Form\Privilege\CategorieFiltreForm;
+use UnicaenUtilisateur\Entity\Db\RoleInterface;
+
+/**
+ * @var RoleInterface[] $roles
+ * @var array $privilegesByCategorie
+ * @var CategorieFiltreForm $form
+ * @var ?string $gestion
+ * @var ?string $namespace
+ *
+ * @see AdministrationController::privilegeAction()
+ * @see PrivilegeController::indexAction()
+ */
+
+$this->headTitle("Gestion des privilèges");
+
+
+$namespaces = [];
+/**
+ * @var  int $categorieId
+ * @var  Privilege[] $privileges
+ */
+foreach ($privilegesByCategorie as $categorieId => $privileges) {
+    $privilege = $privileges[array_key_first($privileges)];
+    $categorie = $privilege->getCategorie();
+    $namespaces[$categorie->getNamespace()][] = $categorie;
+}
+
+ksort($namespaces);
+foreach ($namespaces as $namespace_ => $categories) {
+    usort($categories, function (PrivilegeCategorie $a, PrivilegeCategorie $b) { return $a->getOrdre() <=> $b->getOrdre(); });
+    $namespaces[$namespace_] = $categories;
+}
+//var_dump($namespaces);
+
+?>
+
+<h1 class="page-header">
+    Gestion des privilèges
+</h1>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+
+<?php if (!isset($gestion) or $gestion !== 'off') : ?>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <?php /** @see PrivilegeCategorieController::indexAction() */ ?>
+            <a href="<?php echo $this->url('unicaen-privilege/categorie', [], ["query" => ['namespace' => $namespace]], true); ?>"
+               class="btn btn-primary">
+                <i class="fas fa-crown"></i>
+                Gestion des privilèges
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($form)) : ?>
+    <div class="card ">
+        <div class="card-header bg-default">
+            <h2>
+                <span class="icon icon-filtrer"></span>
+                Filtrer les privilèges
+            </h2>
+        </div>
+        <div class="card-body">
+            <?php echo $this->form()->openTag($form->prepare()); ?>
+            <div class="row">
+                <div class="col-md-5">
+                    <?php echo $this->formControlGroup($form->get('namespace')); ?>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <?php echo $this->formButton($form->get('filtrer')); ?>
+                        <?php echo $this->formButton($form->get('effacer')); ?>
+                    </div>
+                </div>
+            </div>
+
+            <?php echo $this->form()->closeTag(); ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+
+<table id="privilege-liste" class="table table-hover table-condensed table-header-rotated">
+    <thead>
+    <tr>
+        <th></th>
+        <?php $first = true;
+        foreach ($roles as $role): ?>
+            <th class="rotate-45" title="<?php echo $role; ?>">
+                <div<?php if ($first) echo ' class="first"'; ?>><span><?php echo $role; ?></span></div>
+            </th>
+            <?php $first = false; endforeach; ?>
+        <th></th>
+    </tr>
+    <tr>
+        <th>Privilèges <i title="Afficher / Masquer tous les privilèges"
+                          class="hide-privileges fas fa-caret-square-down"></i></th>
+        <th colspan="<?php echo count($roles); ?>">Rôles</th>
+        <th style="min-width:166px"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php $namespacePosition = 0; ?>
+    <?php foreach ($namespaces as $namespace_ => $categories) : ?>
+        <?php $namespacePosition++; ?>
+    <tr>
+        <th class="namespace" colspan="<?php echo 1 + count($roles); ?>">
+            <?php echo $namespace_; ?>
+            <span data-namespace="namespace_<?php echo $namespacePosition; ?>" class="icon icon-masquer toggleable" onclick="masquerNamespace(this)"></span>
+            <span data-namespace="namespace_<?php echo $namespacePosition; ?>" class="icon icon-voir toggleable" onclick="afficherNamespace(this)" style="display: none;"></span>
+        </th>
+    </tr>
+        <?php foreach ($categories as $categorie) : ?>
+            <tr class="categorie" id="<?php echo $categorie->getId(); ?>" data-namespace="namespace_<?php echo $namespacePosition; ?>">
+            <th class="categorie" colspan="<?php echo 1 + count($roles); ?>" >
+                <?php echo $categorie->getLibelle(); ?>
+            </th>
+            </tr>
+            <?php
+                $privileges = $categorie->getPrivileges()->toArray();
+                usort($privileges, function (Privilege $a, Privilege $b) {return $a->getOrdre() <=> $b->getOrdre(); });
+            ?>
+
+                <?php foreach ($privileges as $privilege) : ?>
+                    <tr class="privilege categorie-id-<?php echo $privilege->getCategorie()->getId(); ?>"  data-namespace="namespace_<?php echo $namespacePosition; ?>">
+                        <td class="privilege">
+                            <?php echo $privilege; ?>
+                        </td>
+                        <?php foreach ($roles as $role): ?>
+                            <?php echo $this->privilege($privilege)->renderStatut($role); ?>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+        <?php endforeach; ?>
+
+
+
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<style>
+    thead {
+        position: sticky;
+        top: 65px;
+    }
+
+    tr th.namespace {
+        background: var(--unistrap-color-light);
+    }
+    .table-header-rotated th.rotate-45 {
+        border: none;
+        width: 50px;
+        padding: 0;
+        white-space: nowrap;
+    }
+
+    .table-header-rotated th.rotate-45 > div {
+        position: relative;
+        top: 0;
+        height: 200px;
+        left: 84px;
+        transform: skew(-40deg, 0deg);
+        overflow: hidden;
+        border-right: 1px solid #ddd;
+        z-index: 99;
+    }
+
+    .table-header-rotated th.rotate-45 > div.first {
+        border-left: 1px solid #ddd;
+    }
+
+    .table-header-rotated th.rotate-45 span {
+        transform: skew(40deg, 0deg) rotate(310deg);
+        position: absolute;
+        bottom: 40px;
+        left: -30px;
+        display: inline-block;
+        width: 100px;
+        text-align: left;
+    }
+
+    th.categorie {
+        background-color: #f5f5f5;
+    }
+
+    th.categorie > i:hover {
+        cursor: pointer;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+
+        var body = $('body');
+
+        <?php //Note tv : Cause une erreur JS car a priori déjà fait ailleur mais je n'ais pas trouvé ou?>
+        // body.tooltip({
+        //     selector: '[data-bs-toggle="tooltip"]',
+        //     placement: "bottom",
+        //     html: true
+        // });
+
+        body.on('click', 'a.modifier-privilege', function (e) {
+            e.preventDefault();
+            that = $(this);
+            $.ajax({
+                type: "GET",
+                url: $(this).attr('href'),
+                dataType: "html",
+                beforeSend: function () {
+                    that.find('i').attr('class', 'fas fa-pulse fa-spinner');
+                },
+                success: function (data) {
+                    that.parent('td.role-privilege-statut').replaceWith(data);
+                },
+            });
+        });
+
+        $("i.hide-privileges").click(function () {
+            if ($(this).hasClass('fa-caret-square-down')) {
+                $("tr.privilege").hide();
+                $(this)
+                    .removeClass('fa-caret-square-down')
+                    .addClass('fa-caret-square-up')
+            } else {
+                $("tr.privilege").show();
+                $(this)
+                    .removeClass('fa-caret-square-up')
+                    .addClass('fa-caret-square-down')
+            }
+        });
+
+        $("th.categorie > i").click(function () {
+            let categorieId = $(this).parent().attr("id");
+            $("tr.categorie-id-" + categorieId).toggle();
+            if ($(this).hasClass('fa-caret-square-down')) {
+                $(this)
+                    .removeClass('fa-caret-square-down')
+                    .addClass('fa-caret-square-up')
+            } else {
+                $(this)
+                    .removeClass('fa-caret-square-up')
+                    .addClass('fa-caret-square-down')
+            }
+        });
+
+        $('button#effacer').click(function (e) {
+            $('#namespace').prop('selected', false);
+            $('#namespace').val('');
+            $('form').submit();
+            // $('.selectpicker').val('').selectpicker('refresh');
+        });
+    });
+
+    function masquerNamespace() {
+        const element = event.currentTarget;
+        const namespace = element.dataset.namespace;
+
+        // Masquage des categories
+        const rowsCategorie = document.querySelectorAll(
+            `tr.categorie[data-namespace="${namespace}"]`
+        );
+        rowsCategorie.forEach(row => {
+            row.style.display = "none";
+        });
+        // Masquage des privileges
+        const rowsPrivileges = document.querySelectorAll(
+            `tr.privilege[data-namespace="${namespace}"]`
+        );
+        rowsPrivileges.forEach(row => {
+            row.style.display = "none";
+        });
+        toggleNamespaceVisibility(namespace);
+    }
+
+    function afficherNamespace() {
+        const element = event.currentTarget;
+        const namespace = element.dataset.namespace;
+
+        // Masquage des categories
+        const rowsCategorie = document.querySelectorAll(
+            `tr.categorie[data-namespace="${namespace}"]`
+        );
+        rowsCategorie.forEach(row => {
+            row.style.display = "";
+        });
+        // Masquage des privileges
+        const rowsPrivileges = document.querySelectorAll(
+            `tr.privilege[data-namespace="${namespace}"]`
+        );
+        rowsPrivileges.forEach(row => {
+            row.style.display = "";
+        });
+        toggleNamespaceVisibility(namespace);
+    }
+
+    function toggleNamespaceVisibility(namespace) {
+        const rowsPrivileges = document.querySelectorAll(
+            `span.toggleable[data-namespace="${namespace}"]`
+        );
+        rowsPrivileges.forEach(row => {
+            if (row.style.display === "none") row.style.display = "";
+            else row.style.display = "none";
+        });
+    }
+</script>

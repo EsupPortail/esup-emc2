@@ -19,8 +19,6 @@ $canSupprimer = $this->isAllowed(ApplicationthemePrivileges::getResourceId(Appli
 
 $canApplicationIndex = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_INDEX));
 
-$canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
-
 ?>
 
 <h1 class="page-header">
@@ -53,12 +51,12 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
 </div>
 
 
-<table id="applications" class="table table-condensed table-hover">
+<table id="application_themes" class="table table-condensed table-hover">
     <thead>
     <tr>
-        <th> Libelle</th>
-        <th> #Application</th>
-        <th class="action"> Action </th>
+        <th class="col-md-8 "> Libelle</th>
+        <th class="col-md-2 "> #Application</th>
+        <th class="col-md-2 action"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -68,7 +66,6 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
             <td>
                 <?php echo count($theme->getApplications()); ?>
             </td>
-            <?php if ($canAction) : ?>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Element\Controller\ApplicationThemeController::afficherAction() */?>
@@ -119,7 +116,6 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
                     </a>
                 <?php endif; ?>
             </td>
-            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>
@@ -132,6 +128,17 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+        $('table#application_themes').DataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [2], orderable: false}
+            ]
         });
     });
 </script>

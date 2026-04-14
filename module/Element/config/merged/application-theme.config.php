@@ -68,7 +68,7 @@ return [
                 [
                     'controller' => ApplicationThemeController::class,
                     'action' => [
-                        'detruire-groupe',
+                        'detruire',
                     ],
                     'privileges' => [
                         ApplicationthemePrivileges::APPLICATIONTHEME_EFFACER,
