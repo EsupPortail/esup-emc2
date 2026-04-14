@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel;
 
+use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use EntretienProfessionnel\Controller\CampagneController;
 use EntretienProfessionnel\Controller\CampagneControllerFactory;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
@@ -55,6 +56,7 @@ return [
 //                        CampagnePrivileges::CAMPAGNE_AFFICHER_STRUCTURE,
                         StructurePrivileges::STRUCTURE_AFFICHER,
                     ],
+                    'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [
                     'controller' => CampagneController::class,

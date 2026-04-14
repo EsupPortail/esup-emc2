@@ -85,7 +85,11 @@ class StructureAssertion extends AbstractAssertion {
         $entity = $this->getStructureService()->getStructure($structureId);
 
         return match ($action) {
-            'afficher'
+            'afficher',
+            'description',
+            'agents',
+            'fiches-de-poste',
+            'extractions'
                     => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AFFICHER),
             'editer-description',
             'toggle-resume-mere'

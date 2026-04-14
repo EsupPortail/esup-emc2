@@ -17,6 +17,8 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Observateur\ObservateurServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Structure\Assertion\StructureAssertion;
+use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Observateur\ObservateurStructureServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -268,6 +270,16 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien-professionnel')));
         if ($entretienId === null) $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
         $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($entretienId);
+
+        $structureId = (($this->getMvcEvent()->getRouteMatch()->getParam('structure')));
+        $structure = $this->getStructureService()->getStructure($structureId);
+        if ($action === 'structure') {
+            $structureAssertion = new StructureAssertion();
+            $structureAssertion->setUserService($this->userService);
+            $structureAssertion->setAgentService($this->agentService);
+            $structureAssertion->setStructureService($this->structureService);
+            return $structureAssertion->computeAssertion($structure, StructurePrivileges::STRUCTURE_AFFICHER);
+        }
 
         if ($entretien === null) return true;
         return match ($action) {
