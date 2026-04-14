@@ -3,6 +3,7 @@
 use Agent\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Agent\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\FichePostePrivileges;
 use FichePoste\Provider\Template\TextTemplates;
 use UnicaenRenderer\Entity\Db\Rendu;
 
@@ -27,7 +28,8 @@ foreach ($agent->getFichiers() as $fichier) {
     if ($fichier->getNature()->getCode() === 'FICHE_POSTE' AND $fichier->estNonHistorise()) $fichesPDF[] = $fichier;
 }
 
-$canAjouterFichePoste = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$new = new FichePoste(); $new->setAgent($agent);
+$canAjouterFichePoste = $this->isAllowed($new, FichePostePrivileges::FICHEPOSTE_AJOUTER);
 $affectation = $agent->getAffectationPrincipale();
 $structure = ($affectation)?$affectation->getStructure():null;
 
@@ -83,7 +85,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
     <br/>
     <br/>
 
-    <?php if ($canAjouterFichier) : ?>
+    <?php if ($canAjouterFichePoste AND $canAjouterFichier) : ?>
         <?php /** @see \Agent\Controller\AgentController::uploadFichePostePdfAction() */ ?>
         <a class="btn btn-primary ajax-modal" data-event="modification"
            href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
@@ -127,7 +129,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
                                 Visualiser
                             </a>
                         <?php endif; ?>
-                        <?php if ($canDetruireFichier) : ?>
+                        <?php if ($canAjouterFichePoste AND $canDetruireFichier) : ?>
                             <br>
                             <a
                                 <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>
