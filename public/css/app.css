@@ -420,3 +420,8 @@ span.input-sublibelle {
     /*color: darkgreen;*/
     /*font-weight : bold;*/
 }
+
+table#privilege-liste thead {
+    position: sticky;
+    top: 65px;
+}
