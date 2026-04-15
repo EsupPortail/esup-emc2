@@ -520,6 +520,15 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return str_replace("_"," ",$texte);
     }
 
+    /** @noinspection PhpUnused */
+    public function toStringCREP_Champ_SansLibelle($motsClefs): string
+    {
+        $mots = explode(";", $motsClefs);
+        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots,false);
+//        if ($texte === '' ) return "<span style='color:grey; font-style: italic;'>Aucune information saisie</span>";
+        return str_replace("_"," ",$texte);
+    }
+
     /** MACRO du CREF *************************************************************************************************/
 
     /** @noinspection PhpUnused */
@@ -527,6 +536,15 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         $mots = explode(";", $motsClefs);
         return $this->formationInstance->fetchChampReponseByMotsClefs($mots);
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringCREF_Champ_SansLibelle($motsClefs): string
+    {
+        $mots = explode(";", $motsClefs);
+        $texte = $this->formationInstance->fetchChampReponseByMotsClefs($mots,false);
+//        if ($texte === '' ) return "<span style='color:grey; font-style: italic;'>Aucune information saisie</span>";
+        return str_replace("_"," ",$texte);
     }
 
     /** @noinspection PhpUnused */

@@ -413,6 +413,7 @@ div.autoform-texte {
 }
 
 span.input-libelle {
+    /*display: none;*/
     /*color: darkblue;*/
     /*font-weight : bolder;*/
 }
