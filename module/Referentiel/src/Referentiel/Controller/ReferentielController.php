@@ -195,6 +195,7 @@ class ReferentielController extends AbstractActionController
             if ($warnings !== '') {
                 $texteWarning  = "<strong class='text-danger'>ATTENTION :</strong> la suppression du référentiel entraîne la suppression des ressources attachées.<br>";
                 $texteWarning .= "Ressources attachées au référentiel :<ul>".$warnings."</ul>";
+                $texteWarning .= "Nous vous conseillons de rattacher les ressources à un autre référentiel avant de le supprimer.";
             }
 
 
