@@ -44,7 +44,9 @@ foreach ($agents as $agent) {
 
 <?php echo $this->partial('partial/onglets', ['current' => 'agents', 'campagne' => $campagne]); ?>
 
-<h1 class="page-header"> Liste des agent·es dont je suis responsable </h1>
+<h1 class="page-header"> Liste des agent·es dont je suis responsable <span class="badge"><?php echo count($agents); ?></span></h1>
+
+<br>
 
 <span id="button_administratif" class="btn btn-secondary btn-administratif" data-value="off">
     <span id="icone" class="icon icon-voir"></span>
