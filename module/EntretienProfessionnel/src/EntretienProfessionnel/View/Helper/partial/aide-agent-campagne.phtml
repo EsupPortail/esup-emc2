@@ -4,6 +4,7 @@ use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
 
 /**
@@ -97,14 +98,19 @@ $estDepasseObservation = ($entretien and isset($infos['limite-observation']) and
                     <?php if (new DateTime() < $entretien->getDateEntretien()) : ?>
                         <strong>Dernière action :</strong> vous avez accepté votre entretien professionnel.
                         <br>
-                        <strong>Prochaine étape :</strong>
-                        vous avez jusqu'à votre entretien pour préparer et pré-saisir les comptes rendus : <a
-                                href="<?php echo $infos['url-entretien']; ?>" target="_blank"> préparer mon entretien </a>.
-                        <br>
+                        <?php if ($this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER))) : ?>
+                            <strong>Prochaine étape :</strong>
+                            vous avez jusqu'à votre entretien pour préparer et pré-saisir les comptes rendus : <a
+                                    href="<?php echo $infos['url-entretien']; ?>" target="_blank"> préparer mon entretien </a>.
+                            <br>
 
-                        <div class="alert alert-info" style="margin-top: 0.5rem;">
-                            <span class="icon icon-info"></span> Une fois l'entretien commencé seul le responsable de l'entretien pourra modifier celui-ci.
-                        </div>
+                            <div class="alert alert-info" style="margin-top: 0.5rem;">
+                                <span class="icon icon-info"></span> Une fois l'entretien commencé seul le responsable de l'entretien pourra modifier celui-ci.
+                            </div>
+                        <?php else : ?>
+                            <strong>Prochaine étape :</strong>
+                            Votre entretien se déroulera le <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> ; afin de préparer celui-ci, pensez à lister les réalisations de l'année et la liste des formations que vous avez suivies.
+                        <?php endif; ?>
                     <?php else: ?>
                         <strong>Dernière action :</strong> votre entretien a eu lieu.
                         <br>
