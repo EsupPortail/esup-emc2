@@ -10,7 +10,7 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
 
 /**
  * /**
- * @see \Application\Controller\AgentController::mesEntretiensProfessionnelsAction()
+ * @see AgentController::mesEntretiensProfessionnelsAction()
  *
  * @var Agent[] $agents
  * @var Agent[] $obligatoires
@@ -81,7 +81,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
 
 <?php if (!empty($encours)) : ?>
     <h2>
-        Entretiens professionnels en cours d'évaluation
+        Entretiens professionnels planifiés ou en cours
         <span class="badge"> <?php echo count($encours); ?> </span>
     </h2>
 
@@ -90,7 +90,11 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
 
 <?php if (!empty($obligatoires)) : ?>
     <h2>
-        Agent·es en attente d'entretien professionnel
+        <?php if (!$campagne->estCommence()) : ?>
+            Agent·es qui devront passer un entretien professionnel
+        <?php else : ?>
+            Agent·es concerné·es par un entretien professionnel non convoqué·es
+        <?php endif; ?>
         <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>
     <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien', 'raison' => $raisons]); ?>
