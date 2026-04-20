@@ -146,7 +146,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         //todo faire une vraiment méthode
         $inhibition = false;
         foreach ($grades as $grade) {
-            if ($grade->getCorps()->isSuperieurAsAutorite()) {
+            if ($grade->getCorps() AND $grade->getCorps()->isSuperieurAsAutorite()) {
                 $inhibition = true;
                 break;
             }

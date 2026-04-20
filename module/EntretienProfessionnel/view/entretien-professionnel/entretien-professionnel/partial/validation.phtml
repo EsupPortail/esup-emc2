@@ -52,7 +52,7 @@ $responsable = $entretien->getResponsable();
 $grades = $agent->getGradesActifs($entretien->getDateEntretien());
 $inhibition = false;
 foreach ($grades as $grade) {
-    if ($grade->getCorps()->isSuperieurAsAutorite()) {
+    if ($grade->getCorps() AND $grade->getCorps()->isSuperieurAsAutorite()) {
         $inhibition = true;
         break;
     }
