@@ -39,6 +39,7 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenEvenement\Service\Evenement\EvenementServiceAwareTrait;
 use UnicaenIndicateur\Service\HasIndicateurs\HasIndicateursServiceAwareTrait;
 use UnicaenParametre\Exception\ParametreNotFoundException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -55,6 +56,7 @@ class CampagneController extends AbstractActionController
     use CampagneConfigurationIndicateurServiceAwareTrait;
     use CampagneProgressionStructureServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use EvenementServiceAwareTrait;
     use HasIndicateursServiceAwareTrait;
     use MacroServiceAwareTrait;
     use NotificationServiceAwareTrait;
@@ -125,8 +127,11 @@ class CampagneController extends AbstractActionController
                 $this->getCampagneService()->create($campagne);
                 $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [" . $campagne->getAnnee() . "] vient d'être créée.");
 
-                $this->getRappelCampagneAvancementAutoriteService()->creer($campagne);
-                $this->getRappelCampagneAvancementSuperieurService()->creer($campagne);
+                $evenementAutorite = $this->getRappelCampagneAvancementAutoriteService()->creer($campagne);
+                $campagne->addEvenement($evenementAutorite);
+                $evenementSuperieur = $this->getRappelCampagneAvancementSuperieurService()->creer($campagne);
+                $campagne->addEvenement($evenementSuperieur);
+                $this->getCampagneService()->update($campagne);
 
                 try {
                     $notificationsActivees = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_NOTIFIER_OUVERTURE);
@@ -226,10 +231,9 @@ class CampagneController extends AbstractActionController
 
                 //nettoyage des indicateurs associés
                 $this->getHasIndicateursService()->retirerIndicateurs($campagne);
-
-                //nettoyage des événements todo ???
-
-
+                foreach ($campagne->getEvenements() as $evenement) {
+                    $this->getEvenementService()->supprimer($evenement);
+                }
                 $this->getCampagneService()->delete($campagne);
             }
             exit();
@@ -665,6 +669,17 @@ class CampagneController extends AbstractActionController
         return new ViewModel([
             'campagne' => $campagne,
             'indicateurs' => $indicateurs,
+        ]);
+    }
+
+    public function evenementsAction(): ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $evenements = $campagne->getEvenements();
+
+        return new ViewModel([
+            'campagne' => $campagne,
+            'evenements' => $evenements,
         ]);
     }
 

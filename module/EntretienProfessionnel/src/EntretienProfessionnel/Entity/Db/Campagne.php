@@ -10,16 +10,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use RuntimeException;
 use UnicaenAutoform\Entity\Db\Formulaire;
+use UnicaenEvenement\Entity\HasEvenementsInterface;
+use UnicaenEvenement\Entity\HasEvenementsTrait;
 use UnicaenIndicateur\Entity\Interface\HasIndicateursInterface;
 use UnicaenIndicateur\Entity\Trait\HasIndicateursTrait;
 use UnicaenRenderer\Entity\Db\Template;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndicateursInterface {
+class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndicateursInterface, HasEvenementsInterface {
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
-    use HasIndicateursTrait;
+    use HasIndicateursTrait, HasEvenementsTrait;
 
     private ?int $id = -1;
     private ?string $annee = null;
@@ -36,6 +38,7 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface, HasIndi
 
     public function __construct() {
         $this->indicateurs = new ArrayCollection();
+        $this->initEvenements();
     }
 
     public function getId() : ?int

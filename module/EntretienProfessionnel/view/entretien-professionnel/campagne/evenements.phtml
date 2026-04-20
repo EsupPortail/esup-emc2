@@ -1,0 +1,39 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use UnicaenIndicateur\Entity\Db\Indicateur;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::evenementsAction()
+ * @var Campagne $campagne
+ */
+
+if ($campagne === null) {
+    throw new RuntimeException("Aucune campagne fournie", -1);
+}
+
+$this->headTitle("Événements associés à la campagne " . $campagne->getAnnee());
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::indexAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
+           class="btn btn-primary float-end">
+            <span class="icon icon-listing"></span>
+            Accéder aux campagnes
+        </a>
+    </div>
+</div>
+
+<?php echo $this->partial('partial/onglets', ['campagne' => $campagne, 'current' => 'evenements'], [], true); ?>
+
+<br>
+
+<?php echo $this->evenements($campagne->getEvenements()->toArray()); ?>

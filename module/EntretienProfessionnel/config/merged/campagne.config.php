@@ -38,7 +38,7 @@ return [
                         'tester-eligibilite',
                         'notifier-avancement-autorite',
                         'notifier-avancement-superieur',
-
+                        'evenements',
                         'progression-par-structures',
                     ],
                     'privileges' => [
@@ -191,6 +191,17 @@ return [
                                     'defaults' => [
                                         /** @see CampagneController::indicateursAction() */
                                         'action'     => 'indicateurs',
+                                    ],
+                                ],
+                            ],
+                            'evenements' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/evenements/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::evenementsAction() */
+                                        'action'     => 'evenements',
                                     ],
                                 ],
                             ],

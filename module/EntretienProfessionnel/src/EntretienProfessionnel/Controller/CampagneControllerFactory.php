@@ -23,6 +23,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
+use UnicaenEvenement\Service\Evenement\EvenementService;
 use UnicaenIndicateur\Service\HasIndicateurs\HasIndicateursService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
@@ -46,6 +47,7 @@ class CampagneControllerFactory extends AbstractActionController
          * @var CampagneConfigurationIndicateurService $campagneConfigurationIndicateurService
          * @var CampagneProgressionStructureService $campagneProgressionStructureService
          * @var EntretienProfessionnelService $entretienProfessionnelService
+         * @var EvenementService $evenementService
          * @var HasIndicateursService $hasIndicateursService
          * @var MacroService $macroService
          * @var NotificationService $notificationService
@@ -65,6 +67,7 @@ class CampagneControllerFactory extends AbstractActionController
         $campagneConfigurationIndicateurService = $container->get(CampagneConfigurationIndicateurService::class);
         $campagneProgressionStructureService = $container->get(CampagneProgressionStructureService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
+        $evenementService = $container->get(EvenementService::class);
         $hasIndicateursService = $container->get(HasIndicateursService::class);
         $macroService = $container->get(MacroService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -92,6 +95,7 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setCampagneConfigurationIndicateurService($campagneConfigurationIndicateurService);
         $controller->setCampagneProgressionStructureService($campagneProgressionStructureService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
+        $controller->setEvenementService($evenementService);
         $controller->setHasIndicateursService($hasIndicateursService);
         $controller->setMacroService($macroService);
         $controller->setNotificationService($notificationService);

@@ -6,7 +6,9 @@
  */
 
 use EntretienProfessionnel\Entity\Db\Campagne;
+use UnicaenEvenement\Provider\Privilege\EvenementinstancePrivileges;
 
+$canEvenement = $this->isAllowed(EvenementinstancePrivileges::getResourceId(EvenementinstancePrivileges::INSTANCE_CONSULTATION));
 ?>
 
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -26,6 +28,16 @@ use EntretienProfessionnel\Entity\Db\Campagne;
     >
         Indicateurs
     </button>
+    <?php if ($canEvenement) : ?>
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::evenementsAction() */ ?>
+        <button class="nav-link" id="evenements-tab"
+                data-bs-toggle="tab" data-bs-target="#evenements"
+                type="button" role="tab" aria-controls="evenements" aria-selected="true"
+                onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/evenements', ['campagne' => $campagne->getId()],[], true); ?>'"
+        >
+            Événements <br/> &nbsp; <span class="badge" style="margin-left:1rem;"><?php echo count($campagne->getEvenements()->toArray()); ?></span>
+        </button>
+    <?php endif; ?>
 </div>
 
 <script>
