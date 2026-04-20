@@ -345,6 +345,8 @@ class EntretienProfessionnelController extends AbstractActionController
             'cref' => $cref,
             'observateurs' => $observateurs,
 
+            'BLOCAGE_VISUALISATION_CREP' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelEtats::TYPE, EntretienProfessionnelParametres::CREP_BLOCAGE_VISUALISATION_AGENT_AVANT_VALIDATION),
+            'BLOCAGE_VISUALISATION_CREF' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelEtats::TYPE, EntretienProfessionnelParametres::CREF_BLOCAGE_VISUALISATION_AGENT_AVANT_VALIDATION),
             'BLOCAGE_COMPTERENDU' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION),
             'BLOCAGE_VALIDATION' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_VALIDATION),
             'OBSERVATION_FINALE' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::OBSERVATION_AGENT_FINAL),
