@@ -10,11 +10,12 @@ use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
 
 /**
  * /**
- * @see AgentController::mesEntretiensProfessionnelsAction()
+ * @see \Agent\Controller\AgentHierarchieController::mesEntretiensProfessionnelsAction()
  *
  * @var Agent[] $agents
  * @var Agent[] $obligatoires
  * @var Agent[] $facultatifs
+ * @var Agent[] $exclus
  * @var string[] $raisons
  *
  * @var Campagne[] $campagnes
@@ -124,6 +125,23 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
         </div>
     </div>
     <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raisons]); ?>
+<?php endif; ?>
+
+<?php if (!empty($exclus)) : ?>
+    <?php usort($exclus, function (Agent $a, Agent $b) { return $a->getDenomination() <=> $b->getDenomination(); }); ?>
+    <h2>
+        Agent·es exclu·es
+        <span class="badge"> <?php echo count($exclus); ?> </span>
+    </h2>
+
+    <ul>
+        <?php foreach ($exclus as $agent) : ?>
+            <li>
+                <?php echo $agent->getDenomination(); ?>
+                <span class='icon icon-information' title="<ul><?php echo $raisons[$agent->getId()]; ?></ul>" data-bs-toggle="tooltip" data-bs-html="true"></span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 <?php endif; ?>
 
 <script>

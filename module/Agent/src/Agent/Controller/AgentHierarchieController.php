@@ -891,7 +891,7 @@ class AgentHierarchieController extends AbstractActionController
         $campagnes = $this->getCampagneService()->getCampagnes();
 
         //manque le tri des agents !!!!
-        [$obligatoires, $facultatifs, $raisons] = $this->getCampagneService()->trierAgents($campagne, $agents);
+        [$obligatoires, $facultatifs, $raisons, $exclus] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
         $finalises = [];
@@ -916,6 +916,7 @@ class AgentHierarchieController extends AbstractActionController
             'agents' => $agents,
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
+            'exclus' => $exclus,
             'raisons' => $raisons,
 
             'entretiens' => $entretiens,

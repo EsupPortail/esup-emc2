@@ -220,7 +220,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php if ($cannotVisualiser OR ($role->getRoleId() === Agent::ROLE_AGENT AND $validationResponsable === null AND $BLOCAGE_VISUALISATION_CREP)) : ?>
+        <?php if ($cannotVisualiser OR ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT AND $validationResponsable === null AND $BLOCAGE_VISUALISATION_CREP)) : ?>
             <div class="alert alert-info">
                 Vous ne pourrez visualiser ce compte-rendu qu'une fois celui-ci validé par votre supérieur·e hiérarchique direct·e.
             </div>
@@ -241,7 +241,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php if ($cannotVisualiser  OR ($role->getRoleId() === Agent::ROLE_AGENT AND $validationResponsable === null AND $BLOCAGE_VISUALISATION_CREF)) : ?>
+        <?php if ($cannotVisualiser  OR ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT AND $validationResponsable === null AND $BLOCAGE_VISUALISATION_CREF)) : ?>
             <div class="alert alert-info">
                 Vous ne pourrez visualiser ce compte-rendu qu'une fois celui-ci validé par votre supérieur·e hiérarchique direct·e.
             </div>
