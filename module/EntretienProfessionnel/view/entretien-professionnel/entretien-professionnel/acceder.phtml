@@ -20,6 +20,8 @@
  * @var Agent[] $superieures
  * @var Agent[] $autorites
  *
+ * @var bool $BLOCAGE_VISUALISATION_CREP
+ * @var bool $BLOCAGE_VISUALISATION_CREF
  * @var bool $BLOCAGE_COMPTERENDU
  * @var bool $BLOCAGE_VALIDATION
  * @var bool $OBSERVATION_FINALE
@@ -64,7 +66,6 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RE
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) or $depasseObs) $step = 2;
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)) $step = 3;
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) $step = 4;
-
 
 
 ?>
@@ -154,7 +155,8 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
 <?php
     $canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
-    $cannotVisualiser = ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT AND ($now > $entretien->getDateFin() AND $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null));
+    $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+    $cannotVisualiser = ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT AND ($now > $entretien->getDateFin() AND $validationResponsable === null));
 ?>
 
 <?php if ($canRenseigner) : ?>
@@ -218,7 +220,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php if ($cannotVisualiser) : ?>
+        <?php if ($cannotVisualiser OR ($role->getRoleId() === Agent::ROLE_AGENT AND $validationResponsable === null AND $BLOCAGE_VISUALISATION_CREP)) : ?>
             <div class="alert alert-info">
                 Vous ne pourrez visualiser ce compte-rendu qu'une fois celui-ci validé par votre supérieur·e hiérarchique direct·e.
             </div>
@@ -239,7 +241,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
         <?php endif; ?>
 
-        <?php if ($cannotVisualiser) : ?>
+        <?php if ($cannotVisualiser  OR ($role->getRoleId() === Agent::ROLE_AGENT AND $validationResponsable === null AND $BLOCAGE_VISUALISATION_CREF)) : ?>
             <div class="alert alert-info">
                 Vous ne pourrez visualiser ce compte-rendu qu'une fois celui-ci validé par votre supérieur·e hiérarchique direct·e.
             </div>
