@@ -365,3 +365,8 @@
 {
     content:"\f086";
 }
+
+.icon.icon-play::before
+{
+    content:"\f04b";
+}
