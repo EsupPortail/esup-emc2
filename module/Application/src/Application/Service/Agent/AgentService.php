@@ -197,7 +197,9 @@ class AgentService
         $sql = <<<EOS
 select a.c_individu as id
 from agent a
-where unaccent(LOWER(CONCAT(a.prenom, ' ', a.nom_usage))) like unaccent('%' || :term || '%') OR unaccent(LOWER(CONCAT(a.nom_usage, ' ', a.prenom))) like unaccent('%' || :term || '%')
+where 
+    (unaccent(LOWER(CONCAT(a.prenom, ' ', a.nom_usage))) like unaccent('%' || :term || '%') OR unaccent(LOWER(CONCAT(a.nom_usage, ' ', a.prenom))) like unaccent('%' || :term || '%'))
+and a.deleted_on IS NULL
 EOS;
 
         // where LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like UNACCENT(:search)
