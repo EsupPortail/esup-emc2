@@ -31,6 +31,10 @@ class StructureAssertion extends AbstractAssertion {
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $isResponsable = $this->getStructureService()->isResponsable($entity, $agent);
         }
+        $isGestionnaire = false;
+        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
+            $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $agent);
+        }
         $isObservateur = false;
         if ($role->getRoleId() === RoleProvider::OBSERVATEUR) {
             $isObservateur = $this->getObservateurService()->isObservateur([$entity], $user);
@@ -45,13 +49,14 @@ class StructureAssertion extends AbstractAssertion {
                             => true,
                 RoleProvider::RESPONSABLE
                             => $isResponsable,
+                RoleProvider::GESTIONNAIRE
+                            => $isGestionnaire,
                 RoleProvider::OBSERVATEUR
                 => $isObservateur,
                 default
                             => false,
             },
             StructurePrivileges::STRUCTURE_DESCRIPTION,
-            StructurePrivileges::STRUCTURE_GESTIONNAIRE,
             StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT,
             StructurePrivileges::STRUCTURE_AGENT_FORCE,
             StructurePrivileges::STRUCTURE_AGENT_MASQUE,
@@ -60,8 +65,8 @@ class StructureAssertion extends AbstractAssertion {
                             AppRoleProvider::ADMIN_TECH,
                             AppRoleProvider::DRH
                                             => true,
-                            RoleProvider::RESPONSABLE
-                                            => $isResponsable,
+                            RoleProvider::RESPONSABLE => $isResponsable,
+                            RoleProvider::GESTIONNAIRE => $isGestionnaire,
                             default
                                             => false,
             },

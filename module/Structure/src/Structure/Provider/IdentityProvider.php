@@ -31,6 +31,9 @@ class IdentityProvider extends AbstractIdentityProvider
             case RoleProvider::RESPONSABLE :
                 $user = $this->getStructureService()->getUsersInResponsables();
                 return $user;
+            case RoleProvider::GESTIONNAIRE :
+                $user = $this->getStructureService()->getUsersInGestionnaires();
+                return $user;
             case RoleProvider::OBSERVATEUR :
                 $user = $this->getObservateurService()->getUsersInObservateurs();
                 return $user;
@@ -45,6 +48,9 @@ class IdentityProvider extends AbstractIdentityProvider
     public function computeRolesAutomatiques(?User $user = null) : array
     {
         $roles = [];
+        $roleResponsable = $this->getRoleService()->findByRoleId(RoleProvider::RESPONSABLE);
+        $roleGestionnaire = $this->getRoleService()->findByRoleId(RoleProvider::GESTIONNAIRE);
+        $roleObservateur = $this->getRoleService()->findByRoleId(RoleProvider::OBSERVATEUR);
 
         if ($user === null) {
             $user = $this->getUserService()->getConnectedUser();
@@ -54,14 +60,16 @@ class IdentityProvider extends AbstractIdentityProvider
         if ($agent !== null) {
             $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
             if ($responsabilites !== null and $responsabilites !== []) {
-                $roleResponsable = $this->getRoleService()->findByRoleId(RoleProvider::RESPONSABLE);
                 $roles[] = $roleResponsable;
+            }
+            $gestions = $this->getAgentService()->getGestionnaireStructure($agent);
+            if ($gestions !== null and $gestions !== []) {
+                $roles[] = $roleGestionnaire;
             }
         }
 
         $observateurs = $this->getObservateurService()->getObservateursByUtilisateur($user);
         if (! empty($observateurs)) {
-            $roleObservateur = $this->getRoleService()->findByRoleId(RoleProvider::OBSERVATEUR);
             $roles[] = $roleObservateur;
         }
         return $roles;

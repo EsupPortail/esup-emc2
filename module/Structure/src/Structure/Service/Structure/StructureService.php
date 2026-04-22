@@ -414,7 +414,7 @@ EOS;
                 and (!$gestionnaire->isDeleted())
             ) return true;
         }
-        if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
+        if ($structure->getParent() && $structure !== $structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
         return false;
     }
 

@@ -84,6 +84,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             'isAgentEntretien'          => $entretienProfessionnel->isAgent($connectedAgent),
             'isResponsableEntretien'    => $entretienProfessionnel->isResponsable($connectedAgent),
             'isResponsableStructure'    => ($role->getRoleId() === RoleProvider::RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
+            'isGestionnaireStructure'    => ($role->getRoleId() === RoleProvider::GESTIONNAIRE) && $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
             'isAutoriteStructure'       => $this->getStructureService()->isAutoriteS($structures, $connectedAgent),
             'isSuperieureHierarchique'  => $connectedAgent !== null && $this->getAgentSuperieurService()->isSuperieur($entretienProfessionnel->getAgent(), $connectedAgent),
             'isAutoriteHierarchique'    =>  $connectedAgent !== null && $this->getAgentAutoriteService()->isAutorite($entretienProfessionnel->getAgent(), $connectedAgent),
@@ -102,6 +103,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH, AppRoleProvider::OBSERVATEUR  => true,
             AgentRoleProvider::ROLE_AGENT => $predicats['isAgentEntretien'],
             RoleProvider::RESPONSABLE => $predicats['isResponsableStructure'],
+            RoleProvider::GESTIONNAIRE => $predicats['isGestionnaireStructure'],
             AgentRoleProvider::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'],
             AgentRoleProvider::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
             EntretienProfessionnelRoleProvider::OBSERVATEUR => $this->getObservateurService()->isObservateur($entretienProfessionnel, $connectedAgent->getUtilisateur()),
@@ -206,8 +208,10 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
                         if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
                         return $predicats['isAgentEntretien'];
-                    case RoleProvider::RESPONSABLE:
-                        return $predicats['isResponsableStructure'];
+                    case RoleProvider::GESTIONNAIRE:
+                        $a=1;
+                        return $predicats['isGestionnaireStructure'];
+                    case RoleProvider::RESPONSABLE: return $predicats['isResponsableStructure'];
                     case AgentRoleProvider::ROLE_SUPERIEURE:
                         return $predicats['isSuperieureHierarchique'];
                     case AgentRoleProvider::ROLE_AUTORITE:
