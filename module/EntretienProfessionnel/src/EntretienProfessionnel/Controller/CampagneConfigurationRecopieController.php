@@ -155,7 +155,7 @@ class CampagneConfigurationRecopieController extends AbstractActionController
                 'reponse' => "Vérification effectuée",
                 'success' => $success,
                 'error' => $error,
-                'warning' => $warning,
+                'warning' => (trim($warning) === ""?null:$warning),
             ]);
             $vm->setTemplate('default/reponse');
             return $vm;

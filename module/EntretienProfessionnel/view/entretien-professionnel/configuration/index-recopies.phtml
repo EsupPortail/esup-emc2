@@ -88,10 +88,24 @@ $canIndexCampagne = $this->isAllowed(CampagnePrivileges::getResourceId(CampagneP
                 <td>
                     <?php echo $campagneConfigurationRecopie->getFrom()->getLibelle(); ?>
                     <br>
+                    <span class="badge">
+                        Formulaire #<?php echo $campagneConfigurationRecopie->getFrom()->getCategorie()->getFormulaire()->getId(); ?>
+                        Code:<strong><?php echo $campagneConfigurationRecopie->getFrom()->getCategorie()->getFormulaire()->getCode(); ?></strong>
+                        -
+                        Champ #<?php echo $campagneConfigurationRecopie->getFrom()->getId(); ?>
+                    </span>
+                    <br>
                     <code><?php echo $campagneConfigurationRecopie->getFrom()->getType()->getLibelle(); ?></code>
                 </td>
                 <td>
                     <?php echo $campagneConfigurationRecopie->getTo()->getLibelle(); ?>
+                    <br>
+                    <span class="badge">
+                        Formulaire #<?php echo $campagneConfigurationRecopie->getTo()->getCategorie()->getFormulaire()->getId(); ?>
+                        Code:<strong><?php echo $campagneConfigurationRecopie->getTo()->getCategorie()->getFormulaire()->getCode(); ?></strong>
+                        -
+                        Champ #<?php echo $campagneConfigurationRecopie->getTo()->getId(); ?>
+                    </span>
                     <br>
                     <code><?php echo $campagneConfigurationRecopie->getTo()->getType()->getLibelle(); ?></code>
                 </td>
