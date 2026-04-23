@@ -416,7 +416,7 @@ class CampagneService
                 }
 
                 // Utilisation des paramètres d'exclusion à la date de situation
-                $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateSituation(), $structures, true);
+                $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateSituation(), $structures, false);
                 if ($result[0] === true) {
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
