@@ -416,7 +416,7 @@ class CampagneService
                 }
 
                 // Utilisation des paramètres d'exclusion à la date de situation
-                $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateSituation(), $structures, false);
+                $result = $agent->isValideAffectation($parametres[EntretienProfessionnelParametres::TEMOIN_AFFECTATION_EXCLUS], $campagne->getDateSituation(), $structures, true);
                 if ($result[0] === true) {
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
@@ -430,7 +430,8 @@ class CampagneService
                     $exclus[$agent->getId()] = $agent;
                     $raison[$agent->getId()] .= "Corps excluant à la date du " . $strDateSituation . " (" . $explication . ")";
                 }
-                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateSituation(), false, $statutsDateSituation[$agent->getId()]??[]);
+                // NB ajout de dernière minute si pas de résultat (pas de status) alors, on exclut. En effet, des statuts devraient être connus pour l'agent·e !!!
+                $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateSituation(), true, $statutsDateSituation[$agent->getId()]??[]);
                 if ($result[0] === true) {
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
