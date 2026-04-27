@@ -107,7 +107,7 @@ $date = new DateTime();
                     <?php /** @see \Application\Controller\AgentController::uploadFichePostePdfAction() */ ?>
                     <a href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
-                       title="Ajouter une fiche PDF <br/> <strong><span class='text-danger'><span class='icon icon-attention'></span>Il est préférable de modéliser la fiche de poste dans EMC2</span></strong>"
+                       title="Ajouter une fiche PDF"
                        data-bs-toggle="tooltip" data-bs-html="true">
                         <span class="icon icon-pdf"></span><span class="lettrine">+</span></a>
                 <?php else : ?>
