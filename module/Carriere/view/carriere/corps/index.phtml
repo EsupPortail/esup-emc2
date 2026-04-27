@@ -3,7 +3,7 @@
 /**
  * @see \Carriere\Controller\CorpsController::indexAction()
  * @var Corps[] $corps
- * @var Corps[] $corps
+ * @var array $repartition <corps_id, number>
  * @var bool $avecAgent
  */
 
@@ -12,10 +12,10 @@ use Carriere\Provider\Privilege\CorpsPrivileges;
 
 $this->headTitle("Liste des corps");
 
-$canLister      = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_LISTER_AGENTS));
-$canModifier    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+$canLister = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_LISTER_AGENTS));
+$canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
 
-$canAction = ($canModifier OR $canLister);
+$canAction = ($canModifier or $canLister);
 ?>
 
 <h1 class="page-header">
@@ -38,90 +38,93 @@ $canAction = ($canModifier OR $canLister);
     <thead>
     <tr>
         <th> Libellé</th>
-        <th> #Agent/Grade </th>
-        <th> Catégorie </th>
-        <th> Supérieur = Autorité </th>
-        <th> Niveaux </th>
+        <th> #Agent/Grade</th>
+        <th> Catégorie</th>
+        <th> Supérieur = Autorité</th>
+        <th> Niveaux</th>
         <?php if ($canAction) : ?>
-            <th class="action"> Action </th>
+            <th class="action"> Action</th>
         <?php endif ?>
     </tr>
     </thead>
     <tbody>
-    <?php foreach($corps as $corp): ?>
-        <tr>
-            <td>
-                <span
-                    title="<?php echo $corp->generateTooltip(); ?>"
-                    data-bs-toggle="tooltip" data-bs-html="true"
-                >
-                <?php echo $corp->getLibelleLong(); ?>
-                </span>
-            </td>
-            <td> <?php echo count($corp->getAgentGrades()); ?> </td>
-            <td> <?php echo $corp->getCategorie(); ?> </td>
-            <td class="action">
-                <?php if ($corp->isSuperieurAsAutorite()) : ?>
-                    <span class="text-success">
-                        <span class="icon icon-checked"></span> Oui
-                    </span>
-                <?php else : ?>
-                    <span class="text-danger">
-                        <span class="icon icon-unchecked"></span> Non
-                    </span>
-
-                <?php endif; ?>
-                &nbsp;
-                <?php /** @see \Carriere\Controller\CorpsController::toggleSuperieurAutoriteAction() */ ?>
-                <a href="<?php echo $this->url('corps/toggle-superieur-autorite', ['corps' => $corp->getId()], [], true); ?>">
-                    <span class="icon icon-refresh"></span>Changer
-                </a>
-            </td>
-            <td class="action">
-                <?php echo $this->niveauEnveloppe($corp->getNiveaux()) ?>
-                <?php if ($canModifier) : ?>
-                    <?php if ($corp->getNiveaux()) : ?>
-                        <?php /**  @see \Carriere\Controller\CorpsController::modifierNiveauxAction() */ ?>
-                        <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon icon-editer"></span>
-                            Modifier
-                        </a>
-                    <?php else : ?>
-                        <br/>
-                        <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
-                        <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon icon-ajouter"></span>
-                            Ajouter
-                        </a>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </td>
-            <?php if ($canAction) : ?>
-            <td class="action">
-                <?php if ($canLister) : ?>
-                    <a
-                        <?php /** @see \Carriere\Controller\CorpsController::afficherAgentsAction() */ ?>
-                        href="<?php echo $this->url('corps/afficher-agents', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
-                        class="ajax-modal" data-event="modification"
+    <?php foreach ($corps as $corp): ?>
+<!--        --><?php //if (!$avecAgent OR ($repartition[$corp->getId()] ?? 0) > 0)  : ?>
+            <tr>
+                <td>
+                    <span
+                            title="<?php echo $corp->generateTooltip(); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true"
                     >
-                        <span class="icon icon-users"></span>
-                        Lister les agents
+                    <?php echo $corp->getLibelleLong(); ?>
+                    </span>
+                </td>
+                            <td> <?php echo count($corp->getAgentGrades()); ?> </td>
+<!--                <td> --><?php //echo $repartition[$corp->getId()] ?? "N.C."; ?><!-- </td>-->
+                <td> <?php echo $corp->getCategorie(); ?> </td>
+                <td class="action">
+                    <?php if ($corp->isSuperieurAsAutorite()) : ?>
+                        <span class="text-success">
+                            <span class="icon icon-checked"></span> Oui
+                        </span>
+                    <?php else : ?>
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span> Non
+                        </span>
+
+                    <?php endif; ?>
+                    &nbsp;
+                    <?php /** @see \Carriere\Controller\CorpsController::toggleSuperieurAutoriteAction() */ ?>
+                    <a href="<?php echo $this->url('corps/toggle-superieur-autorite', ['corps' => $corp->getId()], [], true); ?>">
+                        <span class="icon icon-refresh"></span>Changer
                     </a>
+                </td>
+                <td class="action">
+                    <?php echo $this->niveauEnveloppe($corp->getNiveaux()) ?>
+                    <?php if ($canModifier) : ?>
+                        <?php if ($corp->getNiveaux()) : ?>
+                            <?php /**  @see \Carriere\Controller\CorpsController::modifierNiveauxAction() */ ?>
+                            <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon icon-editer"></span>
+                                Modifier
+                            </a>
+                        <?php else : ?>
+                            <br/>
+                            <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                            <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon icon-ajouter"></span>
+                                Ajouter
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </td>
+                <?php if ($canAction) : ?>
+                    <td class="action">
+                        <?php if ($canLister) : ?>
+                            <a
+                                    <?php /** @see \Carriere\Controller\CorpsController::afficherAgentsAction() */ ?>
+                                    href="<?php echo $this->url('corps/afficher-agents', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
+                                    class="ajax-modal action secondary" data-event="modification"
+                            >
+                                <span class="icon icon-users"></span>
+                                Lister les agents
+                            </a>
+                        <?php endif; ?>
+                    </td>
                 <?php endif; ?>
-            </td>
-            <?php endif; ?>
-        </tr>
+            </tr>
+<!--        --><?php //endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>
 
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
@@ -135,7 +138,7 @@ $canAction = ($canModifier OR $canLister);
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                { targets: [5], orderable: false }
+                {targets: [5], orderable: false}
             ]
         });
     });

@@ -40,7 +40,6 @@ class CorrespondanceController extends AbstractActionController
     {
         $actifOnly = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::ACTIF_ONLY);
         $bool = ($actifOnly) && ($actifOnly->getValeur() === "true");
-
         $correspondance = $this->getCorrespondanceService()->getRequestedCorrespondance($this);
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByCorrespondance($correspondance, $bool);
         $agents = [];

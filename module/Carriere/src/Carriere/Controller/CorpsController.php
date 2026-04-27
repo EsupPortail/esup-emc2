@@ -28,8 +28,14 @@ class CorpsController extends AbstractActionController {
         $avecAgent = $this->getParametreService()->getValeurForParametre(CarriereParametres::TYPE,CarriereParametres::CORPS_AVEC_AGENT) === true;
         $corps = $this->getCorpsService()->getCorps('libelleLong', 'ASC', $avecAgent);
 
+//        $repartition = $this->getCorpsService()->getRepartitionAgentsByConnectedUser();
+//        $corps = $this->getCorpsService()->getCorps('id', 'ASC', false);
+
+
+
         return new ViewModel([
             "corps" => $corps,
+//            "repartition" => $repartition,
             "avecAgent" => $avecAgent,
         ]);
     }

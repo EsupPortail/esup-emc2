@@ -283,4 +283,20 @@ class AgentSuperieurService
         $result = $qb->getQuery()->getResult();
         return !empty($result);
     }
+
+    /** Cette méthode retourne une requête pour générer une table "WITH" qui liste les agents en charge du supérieur */
+    public function generateQueryAgent(): string
+    {
+        $subquery = <<<EOS
+    select DISTINCT ahs.agent_id as agent_id
+    from agent_hierarchie_superieur ahs
+    join agent a on ahs.agent_id = a.c_individu
+    where a.deleted_on is NULL
+      and ahs.deleted_on is NULL
+      and coalesce(ahs.date_debut,now()) <= now()
+      and coalesce(ahs.date_fin,now()) >= now()
+      and ahs.superieur_id = :superieur_id 
+EOS;
+        return $subquery;
+    }
 }
