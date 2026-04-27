@@ -19,12 +19,18 @@ use Application\Service\Notification\NotificationService;
 use Application\Service\Notification\NotificationServiceFactory;
 use Application\Service\Perimetre\PerimetreService;
 use Application\Service\Perimetre\PerimetreServiceFactory;
+use Application\Service\SqlHelper\SqlHelperService;
+use Application\Service\SqlHelper\SqlHelperServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Application\View\Helper\TimerViewHelper;
+use Carriere\Provider\Privilege\CategoriePrivileges;
 use Carriere\Provider\Privilege\CorpsPrivileges;
+use Carriere\Provider\Privilege\CorrespondancePrivileges;
+use Carriere\Provider\Privilege\EmploiTypePrivileges;
+use Carriere\Provider\Privilege\GradePrivileges;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -63,8 +69,11 @@ return [
                         'index-ressources',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AGENT_INDEX,
+                        CategoriePrivileges::CATEGORIE_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
+                        CorrespondancePrivileges::CORRESPONDANCE_INDEX,
+                        EmploiTypePrivileges::EMPLOITYPE_INDEX,
+                        GradePrivileges::GRADE_INDEX,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         StructurePrivileges::STRUCTURE_INDEX,
                     ],
@@ -271,6 +280,7 @@ return [
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
             PerimetreService::class => PerimetreServiceFactory::class,
+            SqlHelperService::class => SqlHelperServiceFactory::class,
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,
         ],
