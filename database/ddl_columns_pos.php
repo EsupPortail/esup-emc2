@@ -2688,6 +2688,10 @@ return [
         'histo_destruction',
         'histo_destructeur_id',
     ],
+    'entretienprofessionnel_campagne_evenement'                => [
+        'campagne_id',
+        'evenement_instance_id',
+    ],
 ];
 
 //@formatter:on

@@ -1,3 +1,5 @@
 'code';'libelle';'description'
-"CREF","Compte-Rendu d'Entretien de formation (CREF)","Formulaire lié à l'entretien professionnel partie CREF"
+"CREF","Compte-Rendu d'Entretien de formation (CREF)","<p>Formulaire li&eacute; &agrave; l'entretien professionnel partie CREF</p>"
 "CREP","Compte-Rendu d'Entretien Professionnel (CREP)","Formulaire lié à l'entretien professionnel partie CREP"
+"NEW_CREF","Nouveau CREF (2026)","<p>(2026) Nouveau formulaire de CREF avec les nouveaux &eacute;l&eacute;ments de formulaires</p>"
+"NEW_CREP","Nouveau CREP (2026)","<p>CREP repris de la production (16/03/2026)</p>"

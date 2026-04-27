@@ -304,9 +304,6 @@
 <h2>Spécificité du poste</h2>
 <p>VAR[FICHE_POSTE#Specificite]</p>
 <p>VAR[FICHE_POSTE#SpecificiteActivites]</p>","body {font-size: 9pt;}h1 {font-size: 14pt; color:#123456;}h2 {font-size: 12pt; color:#123456; border-bottom: 1px solid #123456;}h3 {font-size: 10pt; color:#123456;}li.formation-groupe {font-weight:bold;} .mission-principale { padding-bottom:0; margin-bottom:0;}span.activite{border-left:1px solid #123456; display:block; }",null
-"NOTIFICATION_ENTRETIEN_INVITATION","<p>Courrier électronique faisant suivre l'invitation au formation ICS pour l'agent après l'acceptation de la convocation.</p>","mail","Invitation au rendez-vous pour votre entretien professionnel du VAR[ENTRETIEN#date]","<p>Bonjour,</p>
-<p>Ce courrier électronique fait suivre l'invitation à votre entretien professionnel du VAR[ENTRETIEN#date].<br>Vous pouvez utiliser cette invitation pour ajouter celui-ci à votre agenda.</p>
-<p>Bonne journée,<br>VAR[Macro#Parametre|GLOBAL;APP_NAME]</p>",null,"EntretienProfessionnel\Provider\Template"
 "RAPPEL_ATTENTE_VALIDATION_AGENT",null,"mail","Entretien·s professionnel·s en attente de votre validation","<p>Bonjour VAR[AGENT#Denomination],</p>
 <p>Vous êtes un·e agent de l'Université de Caen Normandie et au moins un entretien professionnel de la campagne VAR[CAMPAGNE#annee] attend votre validation en tant qu'Agent.<br />Veuillez vous connecter à l'application EMC2 (VAR[URL#App]) afin de valider ceux-ci.</p>
 <p>Bonne journée,<br />L'équipe EMC2</p>",null,"EntretienProfessionnel\Provider\Template"
@@ -605,6 +602,9 @@
 <li><strong>Recours de droit commun<br></strong>L’agent qui souhaite contester son compte rendu d’entretien professionnel peut exercer un recours de droit commun devant le juge administratif dans les 2 mois suivant la notification du compte rendu de l’entretien professionnel, sans exercer de recours gracieux ou hiérarchique (et sans saisir la CAP) ou après avoir exercé un recours administratif de droit commun (gracieux ou hiérarchique). <br>Il peut enfin saisir le juge administratif à l’issue de la procédure spécifique définie par l’article 6 précité. Le délai de recours contentieux, suspendu durant cette procédure, repart à compter de la notification de la décision finale de l’administration faisant suite à l’avis rendu par la CAP.</li>
 </ul>
 <p> </p>","body {font-size:9pt;} h1 {font-size: 14pt; color: #154360;} h2 {font-size:12pt; color:#154360;} h3 {font-size: 11pt; color: #154360;}table {border:1px solid black;border-collapse:collapse; width: 100%;} td {border:1px solid black;} th {border:1px solid black; color:#154360;}","EntretienProfessionnel\Provider\Template"
+"NOTIFICATION_ENTRETIEN_INVITATION","<p>Courrier électronique envoyé à l'agent une fois que celui-ci a accepté sa convocation d'EPI. Le mail contient le fichier ICS qui permet, une fois rajouté, de voir l'événement dans son agenda.</p>","mail","Ajoutez votre entretien professionnel du VAR[ENTRETIEN#date] dans votre agenda","<p>Bonjour,</p>
+<p>Nous vous proposons d'ajouter votre entretien du VAR[ENTRETIEN#date] à votre agenda. Pour cela, il vous suffit de cliquer sur ""Ajouter à mon agenda"" à côté du fichier .ics joint à ce mail puis de sélectionner votre calendrier dans la liste. </p>
+<p>Bonne journée,<br>VAR[Macro#Parametre|GLOBAL;APP_NAME]</p>",null,"EntretienProfessionnel\Provider\Template"
 "ENTRETIEN_VALIDATION_1-RESPONSABLE",null,"mail","Validation de l'entretien professionnel pour la campagne VAR[CAMPAGNE#annee] de VAR[AGENT#Denomination] par le responsable de l'entretien VAR[ENTRETIEN#Responsable]","<p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;""><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
 <p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"">Bonjour,</p>
 <p style=""line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"">Votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee] a été validé par VAR[ENTRETIEN#Responsable], vous êtes invité<span style=""color: #4d5156; font-family: arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"">·</span>e à en prendre connaissance et y apporter des observations si vous l'estimez nécessaire.</p>
@@ -694,6 +694,158 @@
 <p> </p>
 <p>Votre fiche de poste a été validée par la direction des ressources humaines.<br>Celle est maintenant votre fiche de poste de reférence.</p>
 <p>Pour consulter celle-ci, vous pouvez vous connecter à l'application EMC2 et consulter vos fiches de poste.<br>Ou bien consulter celle-ci en suivant le lien suivant : <strong>TODO</strong></p>",null,"FichePoste\Provider\Template"
+"TEST_SUB1","<p>Ceci est un template de test pour l'inclusion des templates</p>","pdf","test","<p>Ceci est un test de sous template VAR[FICHE_METIER#INTITULE]</p>",null,null
+"NEW_CREP","<p>Compte-rendu de l'entretien professionnel d'un agent</p>","pdf","Entretien_professionnel_VAR[CAMPAGNE#annee]_VAR[AGENT#NomUsage]_VAR[AGENT#Prenom].pdf","<h1>Annexe C9 - Compte rendu de l'entretien professionnel</h1>
+<p><strong>Année : VAR[CAMPAGNE#annee]</strong></p>
+<p><strong>AGENT·E<br>Nom d'usage :</strong> VAR[AGENT#NomUsage]<br><strong>Nom de famille :</strong> VAR[AGENT#NomFamille]<br><strong>Prénom :</strong> VAR[AGENT#Prenom]<br><strong>Date de naissance :</strong> VAR[AGENT#DateNaissance]<br><strong>Corps-grade :</strong> VAR[ENTRETIEN#AgentAffectations]<br><strong>Échelon :</strong> VAR[ENTRETIEN#AgentEchelons]</p>
+<p><strong>SUPÉRIEUR·E HIÉRARCHIQUE DIRECT·E<br>Nom d'usage :</strong> VAR[ENTRETIEN#ReponsableNomUsage]<br><strong>Nom de famille :</strong> VAR[ENTRETIEN#ReponsableNomFamille]<br><strong>Prénom :</strong> VAR[ENTRETIEN#ReponsablePrenom]<br>VAR[ENTRETIEN#CREP_Champ|CREP;responsable_poste]<br><strong>Structure :</strong> VAR[ENTRETIEN#ReponsableStructure]<br><strong>Date de l'entretien professionnel :</strong> VAR[ENTRETIEN#date]</p>
+<p>VAR[ENTRETIEN#Facultatif]</p>
+<h2>1. Description du poste occupé par l'agent</h2>
+<p><strong>Structure :</strong> VAR[AGENT#AffectationStructure]<br>VAR[ENTRETIEN#CREP_Champ|CREP;agent_poste]<br>VAR[ENTRETIEN#CREP_Champ|CREP;emploi-type]<br><strong>Positionnement du poste dans le structure :</strong> VAR[AGENT#AffectationStructureFine]<br><strong>Quotité travaillée :</strong> VAR[AGENT#Quotite]<br><strong>Quotité d'affectation :</strong> VAR[AGENT#QuotiteAffectation]</p>
+<p><strong>Missions du postes :</strong> VAR[AGENT#Missions]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;missions]</p>
+<p>Le cas échéant, fonctions d'encadrement ou de conduite de projet :<br>l'agent assume-t'il des fonctions de conduite de projet ? VAR[ENTRETIEN#CREP_projet]<br>l'agent  assume-t'il des fonctions d'encadrements ? VAR[ENTRETIEN#CREP_encadrement]<br>Si oui préciser le nombre d'agents et leur répartition par catégorie : <br>VAR[ENTRETIEN#CREP_Champ|CREP;encadrement_A]VAR[ENTRETIEN#CREP_Champ|CREP;encadrement_B]VAR[ENTRETIEN#CREP_Champ|CREP;encadrement_C]</p>
+<h2>2. Évaluation de l'année écoulée</h2>
+<h3>2.1 Rappel des objectifs d'activités attendus fixés l'année précédente</h3>
+<p>(merci d'indiquer si des démarches ou moyens spécifiques ont été mis en œuvres pour atteindre ces objectifs)</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;2.1]</p>
+<p>VAR[ENTRETIEN#CREP_Champ_SansLibelle|CREP;2.1]</p>
+<h3>2.2 Événements survenus au cours de la période écoulée ayant entraîné un impact sur l'activité</h3>
+<p>(Nouvelles orientations, réorganisations, nouvelles méthodes, nouveaux outils, etc.) </p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;2.2]</p>
+<h2>3. Valeur professionnelle et manière de servir du fonctionnaire</h2>
+<h3>3.1 Critères d'appréciation</h3>
+<p>L’évaluateur retient, pour apprécier la valeur professionnelle des agents au cours de l'entretien professionnel, les critères annexés à l’arrêté ministériel et qui sont adaptés à la nature des tâches qui leur sont confiées, au niveau de leurs responsabilités et au contexte professionnel. Pour les infirmiers et les médecins seules les parties 2, 3 et 4 doivent être renseignées en tenant compte des limites légales et règlementaires en matière de secret professionnel imposées à ces professionnels.</p>
+<p><strong>1. Les compétences professionnelles et technicité</strong></p>
+<p>Maîtrise technique ou expertise scientifique du domaine d'activité, connaissance de l'environnement professionnel et capacité à s'y situer, qualité d'expression écrite, qualité d'expression orale, ...</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.1]<br><br>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.1old]</p>
+<p><strong>2. La contribution à l’activité du service</strong></p>
+<p>Capacité à partager l'information, à transférer les connaissances et à rendre compte, capacité à s'invertir dans des projets, sens du service public et conscience professionnelle, capacité à respecter l'organisation collective du travail, ...</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.2]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.2old]</p>
+<p><strong>3. Les capacités professionnelles et relationnelles </strong></p>
+<p>Autonomie, discernement et sens des initiatives dans l'exercice de ses attributions, capacité d'adaptation, capacité à travailler en équipe, ...</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.3]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.3old]</p>
+<p><strong>4. Le cas échéant, aptitude à l'encadrement et/ou à la conduite de projets</strong></p>
+<p>Capacité d'organisation et de pilotage, aptitude à la conduite de projets, capacité à déléguer, aptitude au dialogue, à la communication et à la négociation, ...</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.4]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.4old]</p>
+<h3>3.2 Appréciation générale sur la valeur professionnelle, la manière de servir et la réalisation des objectifs</h3>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.2.1]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.2.2]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.2.3]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.2.4]</p>
+<h3>Réalisation des objectifs de l'année écoulée (cf. paragraphe 2.1)</h3>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;realisation]</p>
+<h3>Appréciation littérale</h3>
+<p>Merci d’apporter un soin particulier à cette appréciation qui constitue un critère pour l’avancement de grade des agents et pourra être repris dans les rapports liés à la promotion de grade.</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;appreciation]</p>
+<h2>4. Acquis de l'expérience professionnelle</h2>
+<p>(Vous indiquerez également dans cette rubrique si l'agent occupe des fonctions de formateur, de membre du jury, d'assistant de prévention, mandat électif, ...)</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;exppro_1]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;exppro_2]</p>
+<h2>5. Objectifs fixés pour la nouvelle année</h2>
+<h3>5.1 Objectifs d'activités attendus</h3>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;5.1old]<br>VAR[ENTRETIEN#CREP_Champ|CREP;5.1]</p>
+<h3>5.2 Démarche envisagée, et moyens à prévoir dont la formation, pour faciliter l'atteinte des objectifs</h3>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;5.2]</p>
+<h2>6. Perspectives d'évolution professionnelle</h2>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;6.1]</p>
+<h3>6.2 Évolution de carrière</h3>
+<p><strong>Attention</strong> : à compléter obligatoirement pour les agent ayant atteint le dernier échelon de leur grade depuis au moins trois ans au 31/12 de l'année au titre de la présente évaluation, et lorsque la nomination à ce grade ne résulte pas d'un avancement de grade ou d'un accès à celui-ci par concours ou promotion interne.</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;6.2]</p>
+<h2>7. Signature du supérieur·e hiérarchique direct·e</h2>
+<p>Date de l'entretien : VAR[ENTRETIEN#date]</p>
+<p>Date de transmission du compte-rendu : </p>
+<p>Nom et signature du responsable hiérarchique :</p>
+<p>VAR[ENTRETIEN#VALIDATION_SUPERIEUR]</p>
+<h2>8. Observations de l'agent sur son évaluation</h2>
+<p>(dans un délai d'une semaine à compter de la date de transmission du compte rendu)</p>
+<p>Sur l'entretien : VAR[ENTRETIEN#ObservationEntretien]</p>
+<p>Sur les perspectives de carrière et de mobilité : VAR[ENTRETIEN#ObservationPerspective]</p>
+<h2>9. Signature de l'autorité hiérarchique</h2>
+<p>Date :</p>
+<p>Nom et signature de l'autorité hiérarchique :</p>
+<p>VAR[ENTRETIEN#VALIDATION_AUTORITE]</p>
+<h2>10. Signature de l'agent</h2>
+<p>Date :</p>
+<p>Nom et signature de l'agent·e :<br><br>VAR[ENTRETIEN#VALIDATION_AGENT]</p>
+<h3>Modalité de recours </h3>
+<ul>
+<li><strong>Recours spécifique (Article 6 du décret n° 2010-888 du 28 juillet 2010)</strong><br>L’agent peut saisir l’autorité hiérarchique d’une demande de révision de son compte rendu d’entretien professionnel. Ce recours hiérarchique doit être exercé dans le délai de 15 jours francs suivant la notification du compte rendu d’entretien professionnel. La réponse de l’autorité hiérarchique doit être notifiée dans un délai de 15 jours francs à compter de la date de réception de la demande de révision du compte rendu de l’entretien professionnel. A compter de la date de la notification de cette réponse l’agent peut saisir la commission administrative paritaire dans un délai d'un mois. Le recours hiérarchique est le préalable obligatoire à la saisine de la CAP.</li>
+<li><strong>Recours de droit commun<br></strong>L’agent qui souhaite contester son compte rendu d’entretien professionnel peut exercer un recours de droit commun devant le juge administratif dans les 2 mois suivant la notification du compte rendu de l’entretien professionnel, sans exercer de recours gracieux ou hiérarchique (et sans saisir la CAP) ou après avoir exercé un recours administratif de droit commun (gracieux ou hiérarchique). <br>Il peut enfin saisir le juge administratif à l’issue de la procédure spécifique définie par l’article 6 précité. Le délai de recours contentieux, suspendu durant cette procédure, repart à compter de la notification de la décision finale de l’administration faisant suite à l’avis rendu par la CAP.</li>
+</ul>",".missing-data { font-style: italic; color: grey; } .input-libelle { display: znone; color: darkblue; font-weight: bold; } .input-sublibelle { color: darkgreen; text-decoration: underline; }","EntretienProfessionnel\Provider\Template"
+"NEW_CREF","<p>Compte-rendu de formation d'un agent</p>","pdf","Entretien_formation_VAR[CAMPAGNE#annee]_VAR[AGENT#NomUsage]_VAR[AGENT#Prenom].pdf","<p>VAR[ENTRETIEN#CREF_Champ|CREF;TEST]</p>
+<h1>Annexe C9 - Compte rendu de l'entretien de formation</h1>
+<p><strong>Année : VAR[CAMPAGNE#annee]</strong></p>
+<p><strong>AGENT·E<br>Nom d'usage :</strong> VAR[AGENT#NomUsage]<br><strong>Nom de famille :</strong> VAR[AGENT#NomFamille]<br><strong>Prénom :</strong> VAR[AGENT#Prenom]<br><strong>Date de naissance :</strong> VAR[AGENT#DateNaissance]<br><strong>Corps-grade :</strong> VAR[AGENT#CorpsGrade]<br><strong>Échelon :</strong> VAR[Agent#Echelon]<br><strong>Date de promotion dans l'échelon : </strong>VAR[Agent#EchelonDate]</p>
+<p><strong>SUPÉRIEUR·E HIÉRARCHIQUE DIRECT·E<br>Nom d'usage :</strong> VAR[ENTRETIEN#ReponsableNomUsage]<br><strong>Nom de famille :</strong> VAR[ENTRETIEN#ReponsableNomFamille]<br><strong>Prénom :</strong> VAR[ENTRETIEN#ReponsablePrenom]<br><strong>Corps-grade :</strong> VAR[ENTRETIEN#ReponsableCorpsGrade]<br>VAR[ENTRETIEN#CREP_Champ|CREP;responsable_date]<br><strong>Structure :</strong> VAR[ENTRETIEN#ReponsableStructure]<br><strong>Date de l'entretien professionnel :</strong> VAR[ENTRETIEN#date]</p>
+<p>VAR[ENTRETIEN#Facultatif]</p>
+<h2>1. Description du poste occupé par l'agent</h2>
+<p><strong>Structure :</strong> VAR[AGENT#AffectationStructure]<br>VAR[ENTRETIEN#CREP_Champ|CREP;agent_poste]<br>VAR[ENTRETIEN#CREP_Champ|CREP;affectation_date]<br>VAR[ENTRETIEN#CREP_Champ|CREP;emploi-type]<br><strong>Positionnement du poste dans le structure :</strong> VAR[AGENT#AffectationStructureFine]<br><strong>Quotité travaillée :</strong> VAR[AGENT#Quotite]<br><strong>Quotité d'affectation :</strong> VAR[AGENT#QuotiteAffectation]</p>
+<p><strong>Missions du postes :</strong> VAR[AGENT#Missions]<br>VAR[ENTRETIEN#CREP_Champ|CREP;missions]</p>
+<p>Le cas échéant, fonctions d'encadrement ou de conduite de projet :</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;projet]VAR[ENTRETIEN#CREP_Champ|CREP;encadrement]</p>
+<p><br>Si oui, préciser le nombre d'agents et leur répartition par catégorie : VAR[ENTRETIEN#CREP_encadrementA]VAR[ENTRETIEN#CREP_encadrementB]VAR[ENTRETIEN#CREP_encadrementC]</p>
+<h3>Activités de transfert de compétences ou d’accompagnement des agents</h3>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;1.1]</p>
+<h3>Formation dispensé par l'agent</h3>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;1.2]</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;1.3]</p>
+<h2>2. Bilan des formations suivies sur la période écoulée</h2>
+<p>Sessions réalisées du 1er septembre au 31 août de l'année VAR[CAMPAGNE#annee]</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;2]</p>
+<h2>3. Formations demandées sur la période écoulée et non suivies</h2>
+<p>Formations demandées lors de l'entretien précédent</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;3]</p>
+<h2>4. Formations demandées pour la nouvelle période</h2>
+<p><strong>Type 1 : formations d'adaptation immédiate au poste de travail</strong><br>Stage d'adaptation à l'emploi, de prise de poste après une mutation ou une promotion</p>
+<p><strong>Type 2 : formations à l'évolution des métiers ou des postes de travail</strong><br>Approfondir ses compétences techniques, actualiser ses savoir-faire professionnels, acquérir des fondamentaux ou remettre à niveau ses connaissances pour se préparer à des changements fortement probables, induits par la mise en place d'une réforme, d'un nouveau système d'information ou de nouvelles techniques.</p>
+<p><strong>Type 3 : formations d'acquisition de qualifications nouvelles</strong><br>Favoriser sa culture professionnelle ou son niveau d'expertise, approfondir ses connaissances dans un domaine qui ne relève pas de son activité actuelle, pour se préparer à de nouvelles fonctions, surmonter des difficultés sur son poste actuel.</p>
+<h3>Formations demandées</h3>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;4.1]</p>
+<p><strong>Actions de formations demandées par l'agent et recueillant un avis défavorable du supérieur hiérarchique direct</strong></p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;4.2]</p>
+<p>N.B. : l'avis défavorable émis par le supérieur hiérarchique direct conduisant l'entretien ne préjuge pas de la suite donnée à la demande de formation</p>
+<h2>5. Formation de préparation à un concours ou examen professionnel</h2>
+<p>Pour acquérir les bases et connaissances générales utiles à un concours, dans le cadre de ses perspectives professionnelles pour préparer un changement d'orientation pouvant impliquer le départ de son ministère ou de la fonction publique.</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;5]</p>
+<h2>6. Formations pour construire un projet personnel à caractère professionnel</h2>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;6;VAE]</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;6;bilan]</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;6;periode]</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;6;conge]</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;6;ecarriere]</p>
+<p>VAR[ENTRETIEN#CREF_Champ|CREF;6;bcarriere]</p>
+<h2>7. Signature du supérieur·e hiérarchique direct·e</h2>
+<p>Date de l'entretien : VAR[ENTRETIEN#date]</p>
+<p>Date de transmission du compte rendu : </p>
+<p>Nom et signature du responsable hiérarchique :</p>
+<p>VAR[ENTRETIEN#VALIDATION_SUPERIEUR]</p>
+<h2>8. Observations de l'agent sur son évaluation</h2>
+<p>(dans un délai d'une semaine à compter de la date de transmission du compte-rendu)</p>
+<p><strong>Observations :</strong> VAR[ENTRETIEN#ObservationFormation]</p>
+<h2>9. Signature de l'autorité hiérarchique</h2>
+<p>Date :</p>
+<p>Nom et signature de l'autorité hiérarchique :</p>
+<p>VAR[ENTRETIEN#VALIDATION_AUTORITE]</p>
+<h2>10. Signature de l'agent</h2>
+<p>Date :</p>
+<p>Nom et signature de l'agent·e :<br><br>VAR[ENTRETIEN#VALIDATION_AGENT]</p>
+<h2>11. Réglementation</h2>
+<p>Décret n°2007-1470 du 15 octobre 2007 relatif à la formation professionnelle tout au long de la vie des fonctionnaires de l'État</p>
+<p>Article 5 :</p>
+<ul>
+<li>Le compte rendu de l'entretien de formation est établi sous la responsabilité du supérieur hiérarchique.</li>
+<li>Les objectifs de formation proposés pour l'agent y sont inscrits.</li>
+<li>Le fonctionnaire en reçoit communication et peut y ajouter ses observations.</li>
+<li>Ce compte rendu ainsi qu'une fiche retraçant les actions de formation auxquelles le fonctionnaire a participé sont versés à son dossier.</li>
+<li>Les actions conduites en tant que formateur y figurent également.</li>
+<li>Le fonctionnaire est informé par son supérieur hiérarchique des suites données à son entretien de formation.</li>
+<li>Les refus opposés aux demandes de formation présentées à l'occasion de l'entretien de formation sont motivés.</li>
+</ul>
+<p> </p>",".missing-data { font-style: italic; color: grey; } .input-libelle { color: darkblue; font-weight: bold; } .input-sublibelle { color: darkgreen; text-decoration: underline; }","EntretienProfessionnel\Provider\Template"
 "ENTRETIEN_CONVOCATION_ENVOI","<p>Mail de convocation à une entretien professionnel d'un agent</p>","mail","Convocation à votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee]","<p><strong>Université de démonstration</strong><br><strong>Direction des Ressources Humaines</strong></p>
 <p><span style=""text-decoration: underline;"">Objet</span> :    Convocation à votre entretien professionnel VAR[CAMPAGNE#annee].</p>
 <p>Réf. :      </p>
@@ -707,11 +859,15 @@
 <p>Bonjour,</p>
 <p>Le décret n°2011-2041 généralise le dispositif des entretiens professionnels. La circulaire du Président de l'Université signée du VAR[CAMPAGNE#datecirculaire], vous informe des directives de la campagne pour les personnels de l'AENES, de l'ITRF et des bibliothèques pour l'année VAR[CAMPAGNE#annee] ainsi que pour les agents non titulaires recrutés par contrat à durée déterminée de plus d'un an comme le prévoit le décret n°2014-364.</p>
 <p>Votre responsable hiérarchique vous recevra pour réaliser votre entretien professionnel le VAR[ENTRETIEN#date] à VAR[ENTRETIEN#lieu].</p>
-<p>Votre responsable hiérarchique vous invite à préparer votre entretien en consultant sous le lien suivant les documents : http://intranet.unicaen.fr/services-/ressources-humaines/gestion-des-personnels/entretien-professionnel-540109.kjsp?RH=1574253529391</p>
-<p>Si la date ne vous convient pas veuillez vous adresser à votre responsable d'entretien professionnel ou à votre responsable de structure.</p>
-<p>Merci d'accuser réception de cette convocation en cliquant sur le lien suivant : VAR[URL#EntretienAccepter]<br>En cas d’empêchement, veuillez contacter votre supérieur·e hiérarchique direct·e.</p>
+<p>Votre responsable hiérarchique vous invite à préparer votre entretien.</p>
+<p>Si la date ne vous convient pas, veuillez vous adresser à votre responsable d'entretien professionnel ou à votre responsable de structure.</p>
+<p><strong>Merci d'accuser réception de cette convocation en cliquant sur le lien suivant :</strong> VAR[URL#EntretienAccepter]<br>En cas d’empêchement, veuillez contacter votre supérieur·e hiérarchique direct·e.</p>
 <p>Cordialement,<br>VAR[EMC2#AppName]</p>",null,"EntretienProfessionnel\Provider\Template"
-"TEST_SUB1","<p>Ceci est un template de test pour l'inclusion des templates</p>","pdf","test","<p>Ceci est un test de sous template VAR[FICHE_METIER#INTITULE]</p>",null,null
+"EMC2_ACCUEIL","<p>Texte de la page d'accueil</p>","texte","Instance de démonstration de EMC2","<p><strong>Instance de démonstration de  {{ MacroService.getValeurParametre(""GLOBAL;APP_NAME"") }}</strong></p>
+<p> </p>
+<p><em>Ce texte est un template modifiable dans la partie Administration &gt; Templates</em></p>
+<p> </p>
+<p><strong>Organigramme fictif pour réalisation de tests</strong><br><a href=""https://unicloud.unicaen.fr/index.php/s/e9jf4TtS4YZy5Jf"" target=""_blank"" rel=""noopener"">Liste des agents</a> fictifs avec leur rôle, affectation, structure, hiérarchie etc. vous permettant de réaliser des tests de fonctionnalités</p>",null,"Application\Provider\Template"
 "FICHE_METIER","<p>Exportation pdf d'une fiche métier</p>","pdf","Fiche_Métier_VAR[FICHE_METIER#INTITULE].pdf","<h1>Fiche Métier de l'Université de démonstration</h1>
 <h1>{{ fichemetier.getIntitule }} ({{ fichemetier.getReferentiel.getLibelleCourt }} {{ fichemetier.getReference }})</h1>
 <p> </p>
@@ -729,6 +885,10 @@
 <tr>
 <th>Famille professionnelle</th>
 <td>{{ fichemetier.toStringFamille }}</td>
+</tr>
+<tr>
+<th>Catégorie</th>
+<td>{{ fichemetier.toStringCategorie }}</td>
 </tr>
 <tr>
 <th>Code Fonction</th>
@@ -763,6 +923,10 @@
 <tr>
 <th>Famille professionnelle</th>
 <td>{{ fichemetier.toStringFamille }}</td>
+</tr>
+<tr>
+<th>Catégorie</th>
+<td>{{ fichemetier.toStringCategorie }}</td>
 </tr>
 <tr>
 <th>Codes Emploi Type</th>
@@ -827,9 +991,6 @@ table#applications th#cle {width: 10%;}
 /** TABLEAU ENVIRONNEMENT **/
 table#environnement th#libelle {width: 50%;}
 table#environnement th#niveau {width: 50%;}","FicheMetier\Provider\Template"
-"EMC2_ACCUEIL","<p>Texte de la page d'accueil</p>","texte","Instance de démonstration de EMC2","<p><strong>Instance de démonstration de  {{ MacroService.getValeurParametre(""GLOBAL;APP_NAME"") }}</strong></p>
-<p> </p>
-<p><em>Ce texte est un template modifiable dans la partie Administration &gt; Templates</em></p>
-<p> </p>
-<p><strong>Organigramme fictif pour réalisation de tests</strong><br><a href=""https://unicloud.unicaen.fr/index.php/s/e9jf4TtS4YZy5Jf"" target=""_blank"" rel=""noopener"">Liste des agents</a> fictifs avec leur rôle, affectation, structure, hiérarchie etc. vous permettant de réaliser des tests de fonctionnalités</p>",null,"Application\Provider\Template"
-
+"FICHEPOSTE_BANDEAU",null,"texte","À propos des fiches de postes","<p class=""isSelectedEnd"">La fonctionnalité « fiches de poste » est actuellement en cours d'amélioration.</p>
+<p>Dans le cadre de la campagne d’entretien professionnel 2026, pour toute mise à jour ou création de fiche de poste, merci d’utiliser la trame proposée via le lien ci-dessous puis de l'enregistrer en format PDF et de la charger dans le profil de l'agent, onglet ""Fiche de poste"" &gt; ""Ajouter une fiche de poste PDF"". </p>
+<p><a href=""https://www.google.com"">Trame fiche de poste 2026</a> </p>",null,"FichePoste\Provider\Template"
