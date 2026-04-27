@@ -502,7 +502,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $title = "Validation des observations de l'agent·e";
                 $text = "<p>";
                 $text .= "Cette validation figera les observations si elles ont été faites.<br>";
-                $text .= "La validation ouvre la possibilité aux autorités hiérachiques de valider à leur tour cet entretien.";
+                $text .= "La validation ouvre la possibilité aux autorités hiérarchiques de valider à leur tour cet entretien.";
                 $text .= "</p>";
                 $text .= "Êtes-vous sûr·e de vouloir valider ?";
                 break;

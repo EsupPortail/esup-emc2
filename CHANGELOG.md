@@ -11,14 +11,14 @@ Version 5.x
 * Correction du non traitement de chaine de caractère 'null' devenu déprécié en php 8.2
 
 [ÉVOLUTION]
-* L'échelon n'est plus un entier, mais une chaîne de caractère (certains échelons bib et aenes ne sont pas numérique)
+* L'échelon n'est plus un entier, mais une chaîne de caractère (certains échelons bib et AENES ne sont pas numérique)
 * Adaptation de l'affichage des tables des entretiens professionnels pour un meilleur tri/filtrage
 
 ### Version 5.0.3 - 27/02/2025
 
 [CORRECTION]
-* Le système d'attribution des rôles automatiques "Supérieur·e Hiérachique Directe·e" et "Autorité Hiérarchique" ne tenait pas en compte correctement les notions de "deletedOn"  
-* Ajout de nouveaux champs dans la biliothèque de gestion des formulaires ("Plus Text" et "Plus Custom")
+* Le système d'attribution des rôles automatiques "Supérieur·e Hiérarchique Directe·e" et "Autorité Hiérarchique" ne tenait pas en compte correctement les notions de "deletedOn"  
+* Ajout de nouveaux champs dans la bibliothèque de gestion des formulaires ("Plus Text" et "Plus Custom")
 
 ### Version 5.0.2 - 12/02/2025
 

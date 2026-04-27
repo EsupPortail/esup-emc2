@@ -39,7 +39,7 @@ class ImporterObservateurForm extends Form
             'type' => File::class,
             'name' => 'fichier',
             'options' => [
-                'label' => 'Chaînes hiérachique au format CSV <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
+                'label' => 'Chaînes hiérarchique au format CSV <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
         ]);

@@ -15,7 +15,6 @@ $correspondances = array_filter($correspondances, function (Correspondance $a) u
 $canAfficher      = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
 $canLister      = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_LISTER_AGENTS));
 
-$canAction = ($canLister);
 
 $this->headTitle("Liste des spécialités");
 ?>
@@ -53,13 +52,11 @@ $this->headTitle("Liste des spécialités");
 <table class="datatable table table-condensed table-hover" id="correspondances">
     <thead>
     <tr>
-        <th> Code </th>
-        <th > Libellé </th>
-        <th> Type </th>
-        <th> #Agent/Grade </th>
-        <?php if ($canAction) : ?>
-            <th > Action </th>
-        <?php endif; ?>
+        <th class="col-md-2"> Code </th>
+        <th class="col-md-4"> Libellé </th>
+        <th class="col-md-2"> Type </th>
+        <th class="col-md-2"> #Agent/Grade </th>
+        <th class="col-md-2"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -86,7 +83,6 @@ $this->headTitle("Liste des spécialités");
                 <?php endif; ?>
             </td>
             <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
-            <?php if ($canAction) : ?>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
@@ -110,7 +106,6 @@ $this->headTitle("Liste des spécialités");
                     </a>
                 <?php endif; ?>
             </td>
-            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

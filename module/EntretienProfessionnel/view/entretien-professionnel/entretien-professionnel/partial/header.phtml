@@ -302,7 +302,7 @@ $strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de conv
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
                     </dd>
-                    <dt class="col-md-5">Autorité hiérachique </dt>
+                    <dt class="col-md-5">Autorité hiérarchique </dt>
                     <dd class="col-md-7">
                         <?php $validationHierarchie = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH); ?>
                         <?php if ($validationHierarchie !== null) : ?>

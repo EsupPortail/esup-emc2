@@ -880,7 +880,7 @@ class FichePosteController extends AbstractActionController
                 $responsables = implode(', ', $responsables);
                 $titre = "Validation de l'agent de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
                 $texte = "Cette validation finalise la fiche de poste de l'agent.<br/>";
-                $texte .= "Suite à cette validation un courrier électronique sera envoyé au·x supérieur·e·s hiérachique·s direct·e·s de l'agent (" . $responsables . ") pour le·s informer de la validation de celle-ci.<br/>";
+                $texte .= "Suite à cette validation un courrier électronique sera envoyé au·x supérieur·e·s hiérarchique·s direct·e·s de l'agent (" . $responsables . ") pour le·s informer de la validation de celle-ci.<br/>";
                 break;
         }
         $vm = new ViewModel();

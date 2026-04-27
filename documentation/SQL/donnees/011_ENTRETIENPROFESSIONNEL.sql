@@ -937,8 +937,8 @@ INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recu
     ('rappel_entretienpro', 'Rappel de l''entretien professionnel', 'Rappel à J-4 de l''entretien professionnel', 'entretien', null),
     ('rappel_campagne', 'Rappel de l''avancement de la campagne', 'Mail envoyé périodiquement lors de la campagne aux responsables de structures pour leur rappeler l''état d''avancement de la campagne', 'campagne', 'P4W'),
     ('rappel_pas_observation_entretienpro', 'Rappel en cas où il n''y a pas d''observation', 'Rappel en cas où il n''y a pas d''observation', 'entretien', null),
-    ('rappel_campagne_autorite', 'Rappel avancement campagne EP [Autorité hiérachique]', 'Rappel avancement campagne EP [Autorité hiérachique]', 'campagne', 'P4W'),
-    ('rappel_campagne_superieur', 'Rappel avancement campagne EP [Supérieur·e hiérachique]', 'Rappel avancement campagne EP [Supérieur·e hiérachique]', 'campagne', 'P2W');
+    ('rappel_campagne_autorite', 'Rappel avancement campagne EP [Autorité hiérarchique]', 'Rappel avancement campagne EP [Autorité hiérarchique]', 'campagne', 'P4W'),
+    ('rappel_campagne_superieur', 'Rappel avancement campagne EP [Supérieur·e hiérarchique]', 'Rappel avancement campagne EP [Supérieur·e hiérarchique]', 'campagne', 'P2W');
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGES ----------------------------------------------------------------------------------------------------------
@@ -1028,7 +1028,7 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'agentforcesansobligation';
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'observation_voir_observation_agent', 'Voir les observations emises par l''agent', 510 UNION
-    SELECT 'observation_voir_observation_autorite', 'Voir les observations emises par l''autorité hiérachique', 520 UNION
+    SELECT 'observation_voir_observation_autorite', 'Voir les observations emises par l''autorité hiérarchique', 520 UNION
     SELECT 'observation_voir_observation_finale', 'Voir les observations finales emises par l''agent', 530
 )
 SELECT cp.id, d.code, d.lib, d.ordre

@@ -39,7 +39,7 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
             throw new RuntimeException("Problème de calcul de la date de traitement de l'événement",0 ,$e);
         }
 
-        $description = "Rappel de l'avancement de la campagne " . $campagne->getAnnee() . " [Supérieur·e hiérachique]";
+        $description = "Rappel de l'avancement de la campagne " . $campagne->getAnnee() . " [Supérieur·e hiérarchique]";
         $evenement = $this->createEvent($description, $description, $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE), $this->getType(), $parametres, $dateTraitement);
         $this->ajouter($evenement);
         return $evenement;

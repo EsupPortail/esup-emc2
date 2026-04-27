@@ -203,7 +203,7 @@
 "observation","observation_historiser","Historiser/Restaurer une observation","40"
 "observation","observation_supprimer","Supprimer une observation","50"
 "observation","observation_voir_observation_agent","Voir les observations emises par l'agent","510"
-"observation","observation_voir_observation_autorite","Voir les observations emises par l'autorité hiérachique","520"
+"observation","observation_voir_observation_autorite","Voir les observations emises par l'autorité hiérarchique","520"
 "observation","observation_voir_observation_finale","Voir les observations finales emises par l'agent","530"
 "sursis","sursis_afficher","Afficher un sursis","10"
 "sursis","sursis_ajouter","Ajouter un sursis","20"

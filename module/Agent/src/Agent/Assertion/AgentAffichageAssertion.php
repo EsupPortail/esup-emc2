@@ -42,7 +42,7 @@ class AgentAffichageAssertion extends AbstractAssertion
 
     /**
      * Exemple de ce que l'on pourrait faire avec l'utilisation de périmètre pour remplacer les calculs dans les assertions
-     * TODO :: définir un moyen d'associé des types de périmètre aux rôles (p.e. STRUCTURE => Responsable de structure, AGENT => Supérieure hiérachique directe)
+     * TODO :: définir un moyen d'associé des types de périmètre aux rôles (p.e. STRUCTURE => Responsable de structure, AGENT => Supérieure hiérarchique directe)
      * TODO :: provoquer que le calcul des perimètres utiles
      **/
     public function computePerimetreCompatible(UserInterface $user, RoleInterface $role, Agent $entity): bool
