@@ -209,7 +209,12 @@ class StructureService
             ->setParameter('structure', $structure)
             ->orderBy('structure.code')
             ->andWhere("structure.deletedOn IS NULL");
-        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
+        if ($ouverte) {
+            $qb = $qb
+                ->andWhere("coalesce(structure.fermeture, :date) >= :date")
+                ->setParameter('date', new DateTime())
+            ;
+        }
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -229,7 +234,9 @@ class StructureService
         $aTraitees[] = $structure;
 
         while (!empty($aTraitees)) {
+            /** @var Structure $current */
             $current = array_shift($aTraitees);
+            $current->getLibelleLong();
             $result = $this->getSousStructures($current);
             foreach ($result as $item) {
                 if (!$item->isDeleted() and !isset($dejaTraitees[$item->getId()])) {
