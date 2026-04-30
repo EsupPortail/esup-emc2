@@ -236,7 +236,6 @@ class StructureService
         while (!empty($aTraitees)) {
             /** @var Structure $current */
             $current = array_shift($aTraitees);
-            $current->getLibelleLong();
             $result = $this->getSousStructures($current);
             foreach ($result as $item) {
                 if (!$item->isDeleted() and !isset($dejaTraitees[$item->getId()])) {
