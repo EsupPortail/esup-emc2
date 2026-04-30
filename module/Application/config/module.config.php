@@ -30,13 +30,24 @@ use Carriere\Provider\Privilege\CategoriePrivileges;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Carriere\Provider\Privilege\CorrespondancePrivileges;
 use Carriere\Provider\Privilege\EmploiTypePrivileges;
+use Carriere\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Carriere\Provider\Privilege\GradePrivileges;
+use Carriere\Provider\Privilege\MobilitePrivileges;
+use Carriere\Provider\Privilege\NiveaucarrierePrivileges;
+use Carriere\Provider\Privilege\NiveaufonctionPrivileges;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Element\Provider\Privilege\ApplicationPrivileges;
+use Element\Provider\Privilege\CompetencePrivileges;
+use Element\Provider\Privilege\NiveauPrivileges;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use FicheMetier\Provider\Privilege\ActivitePrivileges;
+use FicheMetier\Provider\Privilege\CodeFonctionPrivileges;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
 use Laminas\Router\Http\Literal;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
+use Referentiel\Provider\Privilege\ReferentielPrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -69,13 +80,26 @@ return [
                         'index-ressources',
                     ],
                     'privileges' => [
+                        // sans categorie
+                        ActivitePrivileges::ACTIVITE_INDEX,
+                        MissionPrincipalePrivileges::MISSIONPRINCIPALE_INDEX,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
+                        MobilitePrivileges::MOBILITE_INDEX,
+                        // carriere
+                        CorrespondancePrivileges::CORRESPONDANCE_INDEX,
+                        FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_INDEX,
                         CategoriePrivileges::CATEGORIE_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
-                        CorrespondancePrivileges::CORRESPONDANCE_INDEX,
                         EmploiTypePrivileges::EMPLOITYPE_INDEX,
                         GradePrivileges::GRADE_INDEX,
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
-                        StructurePrivileges::STRUCTURE_INDEX,
+                        NiveaucarrierePrivileges::NIVEAUCARRIERE_INDEX,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_INDEX,
+                        CodeFonctionPrivileges::CODEFONCTION_INDEX,
+                        //Autres Ressources
+                        ApplicationPrivileges::APPLICATION_INDEX,
+                        CompetencePrivileges::COMPETENCE_INDEX,
+                        NiveauPrivileges::NIVEAU_INDEX,
+                        ReferentielPrivileges::REFERENTIEL_INDEX,
                     ],
                 ],
                 [

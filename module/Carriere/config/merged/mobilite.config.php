@@ -87,7 +87,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 2110,
+                                'order' => 1999,
                                 'label' => 'Mobilités',
                                 'route' => 'mobilite',
                                 'resource' => PrivilegeController::getResourceId(MobiliteController::class, 'index') ,

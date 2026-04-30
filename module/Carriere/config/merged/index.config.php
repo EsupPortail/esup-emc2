@@ -7,8 +7,12 @@ use Carriere\Controller\IndexControllerFactory;
 use Carriere\Provider\Privilege\CategoriePrivileges;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Carriere\Provider\Privilege\CorrespondancePrivileges;
+use Carriere\Provider\Privilege\EmploiTypePrivileges;
+use Carriere\Provider\Privilege\FamilleprofessionnellePrivileges;
 use Carriere\Provider\Privilege\GradePrivileges;
 use Carriere\Provider\Privilege\NiveaucarrierePrivileges;
+use Carriere\Provider\Privilege\NiveaufonctionPrivileges;
+//use FicheMetier\Provider\Privilege\CodeFonctionPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -23,11 +27,15 @@ return [
                         'index',
                     ],
                     'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_INDEX,
+                        FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_INDEX,
                         CategoriePrivileges::CATEGORIE_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
-                        CorrespondancePrivileges::CORRESPONDANCE_INDEX,
+                        EmploiTypePrivileges::EMPLOITYPE_INDEX,
                         GradePrivileges::GRADE_INDEX,
                         NiveaucarrierePrivileges::NIVEAUCARRIERE_INDEX,
+                        NiveaufonctionPrivileges::NIVEAUFONCTION_INDEX,
+//                        CodeFonctionPrivileges::CODEFONCTION_INDEX, // dans un module chargé après
                     ],
                 ],
             ],
