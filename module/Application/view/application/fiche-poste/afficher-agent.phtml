@@ -30,6 +30,7 @@ foreach ($agent->getFichiers() as $fichier) {
 
 $new = new FichePoste(); $new->setAgent($agent);
 $canAjouterFichePoste = $this->isAllowed($new, FichePostePrivileges::FICHEPOSTE_AJOUTER);
+$canAjouterFichePostePdf = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER_PDF));
 $affectation = $agent->getAffectationPrincipale();
 $structure = ($affectation)?$affectation->getStructure():null;
 
@@ -85,12 +86,13 @@ $structure = ($affectation)?$affectation->getStructure():null;
     <br/>
     <br/>
 
-    <?php if ($canAjouterFichePoste AND $canAjouterFichier) : ?>
+    <?php if ($canAjouterFichePostePdf AND $canAjouterFichier) : ?>
         <?php /** @see \Agent\Controller\AgentController::uploadFichePostePdfAction() */ ?>
         <a class="btn btn-primary ajax-modal" data-event="modification"
            href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
+           style="margin-bottom: 0.5rem;"
         >
-            <span class="icon icon-pdf"></span><span class="lettrine" style="color:var(--color-dark);">P</span>
+            <span class="icon icon-pdf"></span>
             Ajouter une fiche de poste PDF
         </a>
     <?php endif; ?>

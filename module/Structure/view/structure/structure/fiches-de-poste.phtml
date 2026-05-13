@@ -34,6 +34,7 @@ $canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResource
 $canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
 $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
+$canAjouterFichePostePdf    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER_PDF));
 
 $date = new DateTime();
 ?>
@@ -90,8 +91,6 @@ $date = new DateTime();
                     <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank">
                         <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true" title="Ajouter la fiche de poste"></span></a>
-                <?php else : ?>
-                    <span class="icon icon-ajouter nope"></span>
                 <?php endif; ?>
 
                 <?php if ($structure AND $canAjouterFichePoste) : ?>
@@ -99,19 +98,15 @@ $date = new DateTime();
                     <a href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
                        class="ajax-modal" data-event="duplication" >
                         <span class="icon icon-cloner" data-bs-toggle="tooltip" data-bs-html="true" title="Dupliquer une fiche existante"></span></a>
-                <?php else : ?>
-                    <span class="icon icon-cloner nope"></span>
                 <?php endif; ?>
 
-                <?php if ($canAjouterFichePoste) : ?>
+                <?php if ($canAjouterFichePostePdf) : ?>
                     <?php /** @see \Application\Controller\AgentController::uploadFichePostePdfAction() */ ?>
                     <a href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                        title="Ajouter une fiche PDF"
                        data-bs-toggle="tooltip" data-bs-html="true">
                         <span class="icon icon-pdf"></span><span class="lettrine">+</span></a>
-                <?php else : ?>
-                    <span class="icon icon-pdf nope"></span><span class="lettrine nope">+</span>
                 <?php endif; ?>
 
                 <?php if (!empty($fichesDePostePdf[$agent->getId()]) ) : ?>
