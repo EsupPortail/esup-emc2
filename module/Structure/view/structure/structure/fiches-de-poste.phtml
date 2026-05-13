@@ -101,7 +101,7 @@ $date = new DateTime();
                 <?php endif; ?>
 
                 <?php if ($canAjouterFichePostePdf) : ?>
-                    <?php /** @see \Application\Controller\AgentController::uploadFichePostePdfAction() */ ?>
+                    <?php /** @see \Agent\Controller\AgentController::uploadFichePostePdfAction() */ ?>
                     <a href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                        title="Ajouter une fiche PDF"

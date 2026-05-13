@@ -19,6 +19,7 @@ use Agent\Service\Agent\AgentServiceFactory;
 use Agent\View\Helper\AgentOngletViewHelper;
 use Agent\View\Helper\AgentOngletViewHelperFactory;
 use Agent\View\Helper\AgentViewHelperFactory;
+use Agent\Provider\Privilege\FichePostePrivileges;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -123,12 +124,20 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'upload-fichier',
-                        'upload-fiche-poste-pdf',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_EDITER,
                         AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                         AgentPrivileges::AGENT_ELEMENT_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'upload-fiche-poste-pdf',
+                    ],
+                    'privileges' => [
+                        FichePostePrivileges::FICHEPOSTE_AJOUTER_PDF,
                     ],
                 ],
             ],
