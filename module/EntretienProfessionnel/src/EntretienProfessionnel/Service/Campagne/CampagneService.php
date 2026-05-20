@@ -428,7 +428,7 @@ class CampagneService
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
                     $exclus[$agent->getId()] = $agent;
-                    $raison[$agent->getId()] .= "Corps excluant à la date du " . $strDateSituation . " (" . $explication . ")";
+                    $raison[$agent->getId()] .= "<li>Corps excluant à la date du " . $strDateSituation . " (" . $explication . ")</li>";
                 }
                 // NB ajout de dernière minute si pas de résultat (pas de status) alors, on exclut. En effet, des statuts devraient être connus pour l'agent·e !!!
                 $result = $agent->isValideStatut($parametres[EntretienProfessionnelParametres::TEMOIN_STATUT_EXCLUS], $campagne->getDateSituation(), true, $statutsDateSituation[$agent->getId()]??[]);
@@ -436,14 +436,14 @@ class CampagneService
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
                     $exclus[$agent->getId()] = $agent;
-                    $raison[$agent->getId()] .= "Statut excluant à la date du " . $strDateSituation . " (" . $explication . ")";
+                    $raison[$agent->getId()] .= "<li>Statut excluant à la date du " . $strDateSituation . " (" . $explication . ")</li>";
                 }
                 $result = $agent->isValideEmploiType($parametres[EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE_EXCLUS], $campagne->getDateSituation());
                 if ($result[0] === true) {
                     $estExclus = true;
                     $explication = implode(", ", $result[1]);
                     $exclus[$agent->getId()] = $agent;
-                    $raison[$agent->getId()] .= "Emploi-Type excluant  à la date du " . $strDateSituation . "(" . $explication . ")";
+                    $raison[$agent->getId()] .= "<li>Emploi-Type excluant à la date du " . $strDateSituation . "(" . $explication . ")</li>";
                 }
             }
 
