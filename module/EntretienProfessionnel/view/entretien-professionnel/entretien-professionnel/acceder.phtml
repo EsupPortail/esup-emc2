@@ -135,20 +135,14 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
 <?php if ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT) : ?>
     <div class="alert alert-info">
-        <strong> <span class="icon icon-information"></span> Modification des compte-rendus. </strong>
+        <strong> <span class="icon icon-information"></span> Pré-complétion des comptes-rendus. </strong>
 
         <br>
-        En tant qu'Agent·e, vous pouvez modifier le compte-rendu d'entretien professionnel :
-        <ul>
-            <li> après avoir accepté
-                celui-ci <?php echo ($entretien->isAccepte()) ? "<span class='icon icon-checked'></span>" : "<span class='icon icon-unchecked'></span>"; ?> </li>
-            <li> tant que la date d'entretien n'est pas
-                dépassée <?php echo (!$entretien->isDepasse()) ? "<span class='icon icon-checked'></span>" : "<span class='icon icon-unchecked'></span>"; ?> </li>
-            <li> tant que le ou la Responsable de l'entretien n'a pas validé
-                celui-ci <?php echo (!$entretien->isValideResponsable()) ? "<span class='icon icon-checked'></span>" : "<span class='icon icon-unchecked'></span>"; ?> </li>
-            <!--            <li> avoir le droit de renseigner les comptes-rendus -->
-            <?php //echo ($canModifierEP)?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?><!-- </li>-->
-        </ul>
+        En tant qu'agent·e, vous pouvez pré-compléter les formulaires de compte-rendu d'entretien professionnel et de formation jusqu'à la date de l'entretien.
+        <br>
+        Passé cette date, seul votre responsable hiérarchique peut finaliser la rédaction du compte-rendu.
+        <br>
+        Vous pourrez le consulter une fois validé.
 
     </div>
 <?php endif; ?>
