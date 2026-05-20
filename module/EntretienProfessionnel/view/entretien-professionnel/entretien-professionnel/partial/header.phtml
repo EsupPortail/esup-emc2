@@ -159,7 +159,7 @@ $strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de conv
                         <dt class="col-md-4"> Année </dt>
                         <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?> </dd>
                     <?php endif; ?>
-                    <dt class="col-md-4"> Date </dt>
+                    <dt class="col-md-4"> Date d'entretien</dt>
                     <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
                     <dt class="col-md-4"> Lieu </dt>
                     <dd class="col-md-8"> <?php echo $entretien->getLieu(); ?> </dd>
@@ -270,7 +270,7 @@ $strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de conv
             </div>
             <div class="card-body">
                 <dl class="row">
-                    <dt class="col-md-5">Convocation</dt>
+                    <dt class="col-md-5">Envoi de la convocation</dt>
                     <dd class="col-md-7">
                         <?php if ($entretien->getConvocation()) : ?>
                             <?php echo $entretien->getConvocation()->format('d/m/Y à H:i'); ?>
