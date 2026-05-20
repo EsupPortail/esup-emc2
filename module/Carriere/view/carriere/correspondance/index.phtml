@@ -52,9 +52,9 @@ $this->headTitle("Liste des spécialités");
 <table class="datatable table table-condensed table-hover" id="correspondances">
     <thead>
     <tr>
+        <th class="col-md-1"> Type </th>
         <th class="col-md-2"> Code </th>
-        <th class="col-md-4"> Libellé </th>
-        <th class="col-md-2"> Type </th>
+        <th class="col-md-5"> Libellé </th>
         <th class="col-md-2"> #Agent/Grade </th>
         <th class="col-md-2"> Action </th>
     </tr>
@@ -62,18 +62,7 @@ $this->headTitle("Liste des spécialités");
     <tbody>
     <?php foreach($correspondances as $correspondance): ?>
         <tr>
-            <td> <code><?php echo $correspondance->getCategorie(); ?></code> </td>
-            <td>
-                <span
-                    title="<?php echo $correspondance->generateTooltip(); ?>"
-                    data-bs-toggle="tooltip" data-bs-html="true"
-                >
-                <?php echo $correspondance->getLibelleLong(); ?>
-                #
-                <?php echo $this->correspondance($correspondance); ?>
-                </span>
-            </td>
-            <td>
+            <td data-column-id="Type">
                 <?php if ($correspondance->getType()) : ?>
                     <span title="<?php echo $correspondance->getType()->getLibelleLong(); ?>">
                         <code><?php echo $correspondance->getType()->getLibelleCourt(); ?></code>
@@ -82,8 +71,19 @@ $this->headTitle("Liste des spécialités");
                     Aucun
                 <?php endif; ?>
             </td>
+            <td data-column-id="Code">
+                <code><?php echo $correspondance->getCategorie(); ?></code>
+            </td>
+            <td data-column-id="Libellé">
+                <span
+                    title="<?php echo $correspondance->generateTooltip(); ?>"
+                    data-bs-toggle="tooltip" data-bs-html="true"
+                >
+                <?php echo $correspondance->getLibelleLong(); ?>
+                </span>
+            </td>
             <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
-            <td class="action">
+            <td data-column-id="Action" class="action">
                 <?php if ($canAfficher) : ?>
                     <a
                             <?php /** @see \Carriere\Controller\CorrespondanceController::afficherAction() */ ?>
