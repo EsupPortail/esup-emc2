@@ -145,7 +145,7 @@ class CampagneController extends AbstractActionController
 
                 $listing = $this->getCampagneConfigurationIndicateurService()->generateGenerationArray($campagne);
                 $log = $this->getHasIndicateursService()->ajouterIndicateurs($campagne, $listing, ":campagne");
-                if ($log !== '') $this->flashMessenger()->addWarningMessage($log);
+                if ($log !== null AND trim($log) !== '') $this->flashMessenger()->addWarningMessage($log);
 
             }
         }
