@@ -15,6 +15,8 @@ use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenEtat\Entity\Db\EtatInstance;
+use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
@@ -113,9 +115,26 @@ class FichePosteAssertion extends AbstractAssertion {
         if ($ficheId === null) $ficheId = (($this->getMvcEvent()->getRouteMatch()->getParam('fiche')));
         $fiche = $this->getFichePosteService()->getFichePoste($ficheId);
 
+        /** si on a pas de fiche alors on va regarder si on a un agent */
+        if ($fiche === null) {
+            $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
+            $agent = null;
+            if ($agentId !== null)
+                $agent = $this->getAgentService()->getAgent($agentId);
+                if ($agent) {
+                    $fiche = new FichePoste();
+                    $fiche->setAgent($agent);
+                    $etatType = new EtatType();
+                    $etatType->setCode(FichePosteEtats::ETAT_CODE_OK);
+                    $etat = new EtatInstance();
+                    $etat->setType($etatType);
+                    $fiche->addEtat($etat);
+                }
+        }
+
         if ($fiche === null) return true;
         return match ($action) {
-            'afficher', 'export', 'exporter' => $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER),
+            'afficher', 'afficher-agent', 'export', 'exporter' => $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER),
             'ajouter', 'dupliquer' => $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_AJOUTER),
             'modifier-information-poste' => $this->computeAssertion($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER_POSTE),
             'editer', 'associer-agent', 'associer-titre', 'editer-rifseep', 'editer-specificite',
