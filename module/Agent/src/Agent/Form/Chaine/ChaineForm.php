@@ -68,7 +68,7 @@ class ChaineForm extends  Form {
             'type' => Checkbox::class,
             'name' => 'historisation',
             'options' => [
-                'label' => "Historisation des chaînes existantes <span class='icon icon-info text-info' title='Les chaînes en cours seront historisées et ne seront plus considéré.'></span>",
+                'label' => "Annulation des chaînes existantes <span class='icon icon-info text-info' title='Les chaînes en cours seront historisées et ne seront plus considéré.'></span>",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
