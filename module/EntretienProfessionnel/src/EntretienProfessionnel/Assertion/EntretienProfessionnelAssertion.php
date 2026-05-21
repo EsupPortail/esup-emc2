@@ -86,7 +86,14 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             'isResponsableStructure'    => ($role->getRoleId() === RoleProvider::RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
             'isGestionnaireStructure'    => ($role->getRoleId() === RoleProvider::GESTIONNAIRE) && $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
             'isAutoriteStructure'       => $this->getStructureService()->isAutoriteS($structures, $connectedAgent),
-            'isSuperieureHierarchique'  => $connectedAgent !== null && $this->getAgentSuperieurService()->isSuperieur($entretienProfessionnel->getAgent(), $connectedAgent),
+            'isSuperieureHierarchique'  =>
+                   $connectedAgent !== null
+                && (
+                    $this->getAgentSuperieurService()->isSuperieur($entretienProfessionnel->getAgent(), $connectedAgent)
+                    ||
+                $entretienProfessionnel->getResponsable() === $connectedAgent
+                   ),
+
             'isAutoriteHierarchique'    =>  $connectedAgent !== null && $this->getAgentAutoriteService()->isAutorite($entretienProfessionnel->getAgent(), $connectedAgent),
         ];
 //        var_dump("Fin du calcul : ".(new \DateTime())->format('H:i:s:u '));

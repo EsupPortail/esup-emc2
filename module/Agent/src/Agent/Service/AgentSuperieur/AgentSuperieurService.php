@@ -289,7 +289,7 @@ class AgentSuperieurService
         $users = [];
         /** @var AgentSuperieur $item */
         foreach ($result as $item) {
-            $users[$item->getSuperieur()->getId()] = $item->getSuperieur()->getUtilisateur();
+            $users[$item->getSuperieur()->getUtilisateur()?->getId()] = $item->getSuperieur()->getUtilisateur();
         }
         return $users;
     }

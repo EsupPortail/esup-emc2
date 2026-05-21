@@ -27,6 +27,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 class CampagneService
 {
@@ -621,5 +622,39 @@ class CampagneService
             $this->getObjectManager()->persist($statut);
             $this->getObjectManager()->flush($statut);
         }
+    }
+
+    /** @return UserInterface[] */
+    public function getResponsablesForActiveCampagne(): array
+    {
+        $now = new DateTime();
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.campagne', 'campagne')
+            ->join('entretien.responsable', 'responsable')->addSelect('responsable')
+            ->andWhere('campagne.dateDebut <= :now and campagne.dateFin >= :now')->setParameter('now', $now)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $responsables = [];
+        /** @var EntretienProfessionnel $entretien */
+        foreach ($result as $entretien) {
+            $responsable = $entretien->getResponsable();
+            $responsables[$responsable->getUtilisateur()?->getId()] = $responsable->getUtilisateur();
+        }
+        return $responsables;
+    }
+
+    /** @return EntretienProfessionnel[] */
+    public function getEntretiensForCampagneActiveByResponsable(Agent $agent): array
+    {
+        $now = new DateTime();
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.campagne', 'campagne')
+            ->join('entretien.responsable', 'responsable')
+            ->andWhere('campagne.dateDebut <= :now and campagne.dateFin >= :now')->setParameter('now', $now)
+            ->andWhere('entretien.responsable = :responsable')->setParameter('responsable', $agent)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }
