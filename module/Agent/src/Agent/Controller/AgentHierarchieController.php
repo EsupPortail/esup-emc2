@@ -861,6 +861,7 @@ class AgentHierarchieController extends AbstractActionController
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         if ($campagne === null) $campagne = $this->getCampagneService()->getBestCampagne();
+        $dateSituation = $campagne->getDateSituation();
 
         $role = $this->getUserService()->getConnectedRole();
         $connectedAgent = $this->getAgentService()->getAgentByConnectedUser();
@@ -868,13 +869,20 @@ class AgentHierarchieController extends AbstractActionController
         $agents = [];
         $entretiensS = [];
         $entretiensR = [];
+
         if ($role->getRoleId() === AgentRoleProvider::ROLE_SUPERIEURE) {
-            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
+            // recupération des agents à la date de situation
+            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieurAndDate($connectedAgent, $dateSituation);
+            // récupération des entretiens de ces agents
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
+            // récupération des entretiens de ce responsable
             $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($connectedAgent, $campagne, false, false);
         }
         if ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE) {
+            // recupération des agents à la date de situation
             $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
+            $agents = $this->getAgentAutoriteService()->getAgentsWithAutoriteAndDate($connectedAgent, $campagne->getDateSituation());
+
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
             $entretiensR = [];
         }
@@ -887,13 +895,8 @@ class AgentHierarchieController extends AbstractActionController
             $entretiens[$entretien->getAgent()->getId()] = $entretien;
         }
 
-        //Extraction de la liste des campagnes
-        $campagnes = $this->getCampagneService()->getCampagnes();
-
-        //manque le tri des agents !!!!
         [$obligatoires, $facultatifs, $raisons, $exclus] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
         $finalises = [];
         $encours = [];
         foreach ($entretiens as $entretien) {
@@ -910,7 +913,7 @@ class AgentHierarchieController extends AbstractActionController
         $templates[TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION] = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplates::EP_EXPLICATION_SANS_OBLIGATION, $vars, false);
 
         $vm = new ViewModel([
-            'campagnes' => $campagnes,
+            'campagnes' => $this->getCampagneService()->getCampagnes(),
             'campagne' => $campagne,
             'agent' => $connectedAgent,
             'agents' => $agents,

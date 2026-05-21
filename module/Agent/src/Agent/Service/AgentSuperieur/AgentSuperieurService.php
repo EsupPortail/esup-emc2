@@ -161,6 +161,30 @@ class AgentSuperieurService
         return $agents;
     }
 
+    public function getAgentsWithSuperieurAndDate(?Agent $superieur, DateTime $date): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
+            ->andWhere('agentsuperieur.histoDestruction IS NULL')
+            ->andWhere('agentsuperieur.deletedOn IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
+
+            ->andWhere('agentsuperieur.dateDebut IS NULL OR agentsuperieur.dateDebut < :date')
+            ->andWhere('agentsuperieur.dateFin IS NULL OR agentsuperieur.dateFin > :date')
+            ->setParameter('date', $date)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+
+        $agents = [];
+        /** @var AgentSuperieur $item */
+        foreach ($result as $item) {
+            $agent = $item->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+        return $agents;
+    }
+
     /** @return Agent[] */
     public function getAgentsWithSuperieurAndTerm(Agent $superieur, string $term): array
     {
