@@ -74,8 +74,7 @@ class CompetenceService
             ->addSelect('theme')->leftJoin('competence.theme', 'theme')
             ->addSelect('discipline')->leftJoin('competence.discipline', 'discipline')
             ->addSelect('synonyme')->leftJoin('competence.synonymes', 'synonyme')
-            ->addSelect('referentiel')->leftJoin('competence.referentiel', 'referentiel')
-        ;
+            ->addSelect('referentiel')->leftJoin('competence.referentiel', 'referentiel');
         return $qb;
     }
 
@@ -227,11 +226,11 @@ class CompetenceService
             'attributes' => [
                 'data-content' =>
                     "<span class='libelle_competence competence' title='" . ($competence->getDescription() ?? "Aucune description") . "' class='badge btn-danger'>"
-                        . $texte
-                        . "&nbsp;" . "<span class='badge'>"
-                        . (($type !== null) ? $type->getLibelle() : "Sans type")
-                        . "</span>&nbsp;"
-                        . $competence->printReference()
+                    . $texte
+                    . "&nbsp;" . "<span class='badge'>"
+                    . (($type !== null) ? $type->getLibelle() : "Sans type")
+                    . "</span>&nbsp;"
+                    . $competence->printReference()
                     . "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($competence->getDescription() ?? "Aucune description") . "</span>"
                     . "</span>",
             ],
@@ -536,15 +535,15 @@ class CompetenceService
 
         $positions = ['id' => $positionId, 'libelle' => $positionLibelle, 'theme' => $positionTheme, 'type' => $positionType, 'discipline' => $positionDiscipline, 'definition' => $positionDefinition, 'emploi_type' => $positionCodesEmploiType];
 
-        if ($positionId === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_ID."</code> obligatoire est manquante !";
-        if ($positionLibelle === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_LIBELLE."</code> obligatoire est manquante !";
-        if ($positionType === false) $error[] = "La colonne <code>".Competence::COMPETENCE_HEADER_TYPE."</code> obligatoire est manquante !";
-        if ($positionTheme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_THEME."</code> facultative est manquante.";
-        if ($positionDefinition === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DEFINITION."</code> facultative est manquante.";
-        if ($positionDiscipline === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_DISCIPLINE."</code> facultative est manquante.";
-        if ($positionSynonyme === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_SYNONYMES."</code> facultative est manquante.";
-        if ($positionCodesEmploiType === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE."</code> facultative est manquante.";
-        if ($displayCodeFonction AND $positionCodesFonction === false) $warning[] = "La colonne <code>".Competence::COMPETENCE_HEADER_CODES_FONCTION."</code> facultative est manquante.";
+        if ($positionId === false) $error[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_ID . "</code> obligatoire est manquante !";
+        if ($positionLibelle === false) $error[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_LIBELLE . "</code> obligatoire est manquante !";
+        if ($positionType === false) $error[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_TYPE . "</code> obligatoire est manquante !";
+        if ($positionTheme === false) $warning[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_THEME . "</code> facultative est manquante.";
+        if ($positionDefinition === false) $warning[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_DEFINITION . "</code> facultative est manquante.";
+        if ($positionDiscipline === false) $warning[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_DISCIPLINE . "</code> facultative est manquante.";
+        if ($positionSynonyme === false) $warning[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_SYNONYMES . "</code> facultative est manquante.";
+        if ($positionCodesEmploiType === false) $warning[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_CODES_EMPLOI_TYPE . "</code> facultative est manquante.";
+        if ($displayCodeFonction and $positionCodesFonction === false) $warning[] = "La colonne <code>" . Competence::COMPETENCE_HEADER_CODES_FONCTION . "</code> facultative est manquante.";
 
         /** Reading the data ******************************************************************************************/
 
@@ -565,7 +564,7 @@ class CompetenceService
                     if ($discipline === null) {
                         $discipline = new CompetenceDiscipline();
                         $discipline->setLibelle($libelle);
-                        $info[] = "Nouvelle discipline : " . $libelle;
+                        $info[] = "Nouvelle discipline : " . $libelle . (($mode !== 'import') ? " (sera créée lors de l'importation)" : "");
                     }
                     $disciplines[$libelle] = $discipline;
                 }
@@ -575,14 +574,14 @@ class CompetenceService
         $themes = [];
         if ($positionType !== false) {
             foreach ($data as $item) {
-                if ($positionTheme !== false) {
+                if ($positionTheme !== false and isset($item[$positionTheme])) {
                     $libelle = trim($item[$positionTheme]);
                     if (!isset($themes[$libelle])) {
                         $type = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($libelle);
                         if ($type === null and $libelle !== "") {
                             $type = new CompetenceTheme();
                             $type->setLibelle($libelle);
-                            $info[] = "Nouveau thème : " . $libelle;
+                            $info[] = "Nouveau thème : " . $libelle . (($mode !== 'import') ? " (sera créé lors de l'importation)" : "");;
                         }
                         $themes[$libelle] = $type;
                     }
@@ -595,24 +594,26 @@ class CompetenceService
             $ligne = 1; // il faut échapper l'entête
             foreach ($data as $item) {
                 $ligne++;
-                $oldLibelle = trim($item[$positionType]);
-                if (!isset($types[$oldLibelle])) {
-                    $libelle = strtolower($oldLibelle);
+                if (isset($item[$positionType])) {
+                    $oldLibelle = trim($item[$positionType]);
+                    if (!isset($types[$oldLibelle])) {
+                        $libelle = strtolower($oldLibelle);
 
-                    $type = null;
-                    if (!isset($dictionnairesTypes[$libelle])) {
-                        $warning[] = "Le type de compétence [" . $libelle . "] n'existe pas (ligne ".$ligne.")";
-                        //throw new RuntimeException(("Le type de compétence [".$libelle."] n'existe pas.<br>Ligne considérée : <code>".implode(";", $item))."</code>",0);
-                    } else {
-                        $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($dictionnairesTypes[$libelle]);
-                        if ($type === null and $libelle !== "") {
-                            $type = new CompetenceType();
-                            $type->setLibelle($libelle);
-                            $info[] = "Nouveau type : " . $libelle;
+                        $type = null;
+                        if (!isset($dictionnairesTypes[$libelle])) {
+                            $error[] = "Le type de compétence [" . $libelle . "] n'existe pas (ligne " . $ligne . "). Merci de renseigner des types de compétences existants dans EMC2";
+                            //throw new RuntimeException(("Le type de compétence [".$libelle."] n'existe pas.<br>Ligne considérée : <code>".implode(";", $item))."</code>",0);
+                        } else {
+                            $type = $this->getCompetenceTypeService()->getCompetenceTypeByCode($dictionnairesTypes[$libelle]);
+//                        if ($type === null and $libelle !== "") {
+//                            $type = new CompetenceType();
+//                            $type->setLibelle($libelle);
+//                            $info[] = "Nouveau type : " . $libelle;
+//                        }
+                            $types[$dictionnairesTypes[$libelle]] = $type;
                         }
-                        $types[$dictionnairesTypes[$libelle]] = $type;
-                    }
 
+                    }
                 }
             }
         }
@@ -625,71 +626,74 @@ class CompetenceService
             $nLine = 1;
             foreach ($data as $item) {
                 $nLine++;
-                $id = $item[$positionId];
-                $competence = $this->getCompetenceByRefentiel($referentiel, $id);
-                $libelle = $item[$positionLibelle];
-                if ($competence === null and $libelle !== "") {
-                    $competence = new Competence();
-                } else {
-                    $old = $competence->getSynonymes();
-                    foreach ($old as $synonyme) $oldSynonymes[] = $synonyme;
-                    $competence->clearSynonymes();
+                // truc pourri ajouter pour rattraper des lignes vides ?
+                if (!empty($item) AND $item[0] !== null) {
+                    $id = $item[$positionId];
+                    $competence = $this->getCompetenceByRefentiel($referentiel, $id);
+                    $libelle = $item[$positionLibelle];
+                    if ($competence === null and $libelle !== "") {
+                        $competence = new Competence();
+                    } else {
+                        $old = $competence->getSynonymes();
+                        foreach ($old as $synonyme) $oldSynonymes[] = $synonyme;
+                        $competence->clearSynonymes();
 
-                    if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [libellé:" . $competence->getLibelle() . "]";
-                    if ($competence->getType() !== $types[$dictionnairesTypes[strtolower($item[$positionType])]]) $info[] = "Mise à jour du type de la compétence [libellé:" . $competence->getLibelle() . "]";
-                    if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $info[] = "Mise à jour du thème de la compétence [libellé:" . $competence->getLibelle() . "]";
-                    if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $info[] = "Mise à jour de la discipline de la compétence [libellé:" . $competence->getLibelle() . "]";
+                        if ($competence->getLibelle() !== $item[$positionLibelle]) $info[] = "Mise à jour du libellé de la compétence [libellé:" . $competence->getLibelle() . "]";
+                        if ($competence->getType() !== $types[$dictionnairesTypes[strtolower($item[$positionType])]]) $info[] = "Mise à jour du type de la compétence [libellé:" . $competence->getLibelle() . "]";
+                        if ($positionTheme !== false and $competence->getTheme() !== $themes[$item[$positionTheme]]) $info[] = "Mise à jour du thème de la compétence [libellé:" . $competence->getLibelle() . "]";
+                        if ($positionDiscipline !== false and $competence->getDiscipline() !== $disciplines[$item[$positionDiscipline]]) $info[] = "Mise à jour de la discipline de la compétence [libellé:" . $competence->getLibelle() . "]";
 //                    if ($positionSynonyme !== false and $competence->getSynonymes() !== (($item[$positionSynonyme] !== '') ? $item[$positionSynonyme] : null)) $info[] = "Mise à jour de la liste des synonymes de la compétence [libellé:" . $competence->getLibelle() . "]";
-                    if ($positionDefinition !== false and $competence->getDescription() !== (($item[$positionDefinition] !== '') ? $item[$positionDefinition] : null)) $info[] = "Mise à jour de la définition de la compétence [libellé:" . $competence->getLibelle() . "]";
-                }
-                // obligatoire
-                $competence->setReferentiel($referentiel);
-                $competence->setReference($id);
-                $competence->setLibelle(trim($item[$positionLibelle]));
-                $type = null;
-                if (isset($dictionnairesTypes[strtolower($item[$positionType])])) $type = $types[$dictionnairesTypes[strtolower($item[$positionType])]];
-                $competence->setType($type);
-                // facultatif
-                if ($positionTheme !== false) {
-                    $theme = $themes[$item[$positionTheme]];
-                    $competence->setTheme($theme);
-                }
-                if ($positionDefinition !== false) {
-                    $competence->setDescription($item[$positionDefinition] !== "" ? $item[$positionDefinition] : null);
-                }
-                if ($positionDiscipline !== false and ($item[$positionDiscipline] ?? null) !== null) {
-                    $discipline = $disciplines[$item[$positionDiscipline]];
-                    $competence->setDiscipline($discipline);
-                }
-                if ($positionSynonyme !== false) {
-                    if ($item[$positionSynonyme] !== "") {
-                        $liste = explode($SEP_SYNONYME, $item[$positionSynonyme]);
-                        foreach ($liste as $synonyme) {
-                            $eSynonyme = new CompetenceSynonyme();
-                            $eSynonyme->setCompetence($competence);
-                            $eSynonyme->setLibelle($synonyme);
-                            $competence->addSynonyme($eSynonyme);
+                        if ($positionDefinition !== false and $competence->getDescription() !== (($item[$positionDefinition] !== '') ? $item[$positionDefinition] : null)) $info[] = "Mise à jour de la définition de la compétence [libellé:" . $competence->getLibelle() . "]";
+                    }
+                    // obligatoire
+                    $competence->setReferentiel($referentiel);
+                    $competence->setReference($id);
+                    $competence->setLibelle(trim($item[$positionLibelle]));
+                    $type = null;
+                    if (isset($dictionnairesTypes[strtolower($item[$positionType])])) $type = $types[$dictionnairesTypes[strtolower($item[$positionType])]];
+                    $competence->setType($type);
+                    // facultatif
+                    if ($positionTheme !== false) {
+                        $theme = $themes[$item[$positionTheme]];
+                        $competence->setTheme($theme);
+                    }
+                    if ($positionDefinition !== false) {
+                        $competence->setDescription($item[$positionDefinition] !== "" ? $item[$positionDefinition] : null);
+                    }
+                    if ($positionDiscipline !== false and ($item[$positionDiscipline] ?? null) !== null) {
+                        $discipline = $disciplines[$item[$positionDiscipline]];
+                        $competence->setDiscipline($discipline);
+                    }
+                    if ($positionSynonyme !== false) {
+                        if (isset($item[$positionSynonyme]) and $item[$positionSynonyme] !== "") {
+                            $liste = explode($SEP_SYNONYME, $item[$positionSynonyme]);
+                            foreach ($liste as $synonyme) {
+                                $eSynonyme = new CompetenceSynonyme();
+                                $eSynonyme->setCompetence($competence);
+                                $eSynonyme->setLibelle($synonyme);
+                                $competence->addSynonyme($eSynonyme);
+                            }
                         }
                     }
-                }
-                if ($positionCodesFonction !== false) {
-                    if ($item[$positionCodesFonction] !== "") {
-                        $competence->setCodesFonction(str_replace(",","|",$item[$positionCodesFonction]));
+                    if ($positionCodesFonction !== false) {
+                        if ($item[$positionCodesFonction] !== "") {
+                            $competence->setCodesFonction(str_replace(",", "|", $item[$positionCodesFonction]));
+                        }
                     }
-                }
-                if ($positionCodesEmploiType !== false) {
-                    if ($item[$positionCodesEmploiType] !== "") {
-                        $competence->setCodesEmploiType(str_replace(",","|",$item[$positionCodesEmploiType]));
+                    if ($positionCodesEmploiType !== false) {
+                        if ($item[$positionCodesEmploiType] !== "") {
+                            $competence->setCodesEmploiType(str_replace(",", "|", $item[$positionCodesEmploiType]));
+                        }
                     }
-                }
 
-                $raw = [];
-                foreach ($header as $position => $element) {
-                    $raw[$element] = $item[$position];
+                    $raw = [];
+                    foreach ($header as $position => $element) {
+                        $raw[$element] = $item[$position];
+                    }
+                    $raw = json_encode($raw, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                    $competence->setRaw($raw);
+                    if ($competence->getType()) $competences[$nLine++] = $competence;
                 }
-                $raw = json_encode($raw, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-                $competence->setRaw($raw);
-                if ($competence->getType()) $competences[$nLine++] = $competence;
             }
 
             if ($mode === 'import') {
