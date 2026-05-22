@@ -174,7 +174,7 @@ class CorrespondanceService {
 
     public function generateDictionnaire(string $discriminant):array
     {
-        $specialites = $this->getCorrespondances();
+        $specialites = $this->getCorrespondances('categorie', 'ASC', false);
 
         $dictionnaire = [];
         foreach ($specialites as $specialite) {

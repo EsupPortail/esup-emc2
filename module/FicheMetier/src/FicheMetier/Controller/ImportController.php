@@ -811,6 +811,7 @@ class ImportController extends AbstractActionController
 
                 $specialite = $dictionnaireSpecialite[$specialiteCode] ?? null;
                 if ($specialite === null) {
+                    $warning[] = "La spécialité " .  $raw[$HEADER_SPECIALITE_LIBELLE] . " (".$raw[$HEADER_SPECIALITE_TYPE]." ".$raw[$HEADER_SPECIALITE_CODE].") n'existe pas et sera créé à l'import.";
                     $specialite = new Correspondance();
                     $specialite->setCategorie($specialiteCode);
                     $specialite->setLibelleLong($specialiteLibelle);
@@ -821,7 +822,8 @@ class ImportController extends AbstractActionController
             } else {
                 if ($famille->getLibelle() !== $raw[$HEADER_FAMILLE_LIBELLE]) $warning[] = "Le libellé de la famille est différent [FamilleProfessionnelle:" . $famille->getLibelle() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_LIBELLE] . " ]";
                 if ($HEADER_FAMILLE_POSITION !== null AND $famille->getPosition() != $raw[$HEADER_FAMILLE_POSITION]) $warning[] = "La position de la famille " . $famille->getLibelle() . " est différente [FamilleProfessionnelle:" . $famille->getPosition() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_POSITION] . " ]";
-                if ($famille->getCorrespondance() !== ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] ?? null))
+
+                if ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] !== null AND $famille->getCorrespondance() !== ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] ?? null))
                     $warning[] = "La spécialité de la famille " . $famille->getLibelle() . " est différente [Spécialité:" . $famille->getCorrespondance()?->getId() . " &ne; Fichier:" . ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_LIBELLE]] ?? null)?->getId() . " ]";
             }
             $fiche->setFamilleProfessionnelle($famille);
