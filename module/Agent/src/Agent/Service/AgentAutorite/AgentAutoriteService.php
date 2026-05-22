@@ -169,6 +169,29 @@ class AgentAutoriteService
     }
 
     /** @return Agent[] */
+    public function getAgentsWithAutoriteAndDate(Agent $autorite, DateTime $date): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
+            ->andWhere('agentautorite.histoDestruction IS NULL')
+            ->andWhere('agentautorite.deletedOn IS NULL')
+            ->andWhere('agent.deletedOn IS NULL')
+
+            ->andWhere('agentautorite.dateDebut IS NULL OR agentautorite.dateDebut < :date')
+            ->andWhere('agentautorite.dateFin IS NULL OR agentautorite.dateFin > :date')
+            ->setParameter('date', $date)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $agents = [];
+        foreach ($result as $item) {
+            $agent = $item->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+        return $agents;
+    }
+
+    /** @return Agent[] */
     public function getAgentsWithAutoriteAndTerm(Agent $autorite, string $term): array
     {
         $qb = $this->createQueryBuilder();

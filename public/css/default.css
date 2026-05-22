@@ -18,7 +18,7 @@
 .unistrap-th-emc2 {
     --unistrap-color-main: rgb(55, 104, 155);
     --unistrap-color-dark: rgb(15,64,95);
-    --unistrap-color-light: rgb(155, 204, 255);
+    --unistrap-color-light: rgb(182 217 253);
 
     --emc2-activite: rgb(205, 122, 2);
     --emc2-mission: rgb(129, 1, 1);
@@ -34,6 +34,5 @@ footer div#etablissement {
     width:160px;
     display: inline-block;
     background-repeat: no-repeat;
-    background-image: url('../img/nerv-logo.com.png');
     background-size: 72px 85px;
 }

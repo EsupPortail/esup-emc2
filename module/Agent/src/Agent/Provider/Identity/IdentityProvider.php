@@ -8,6 +8,7 @@ use Agent\Service\Agent\AgentServiceAwareTrait;
 
 use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Provider\Identity\AbstractIdentityProvider;
@@ -21,6 +22,7 @@ class IdentityProvider extends AbstractIdentityProvider
     use AgentSuperieurServiceAwareTrait;
     use RoleServiceAwareTrait;
     use UserServiceAwareTrait;
+    use CampagneServiceAwareTrait;
 
     /**
      * @param string $code
@@ -33,7 +35,15 @@ class IdentityProvider extends AbstractIdentityProvider
                 $user = $this->getAgentService()->getUsersInAgent();
                 return $user;
             case AgentRoleProvider::ROLE_SUPERIEURE :
-                $user = $this->getAgentSuperieurService()->getUsersInSuperieurs();
+                $user = [];
+                $usersResponsable = $this->getCampagneService()->getResponsablesForActiveCampagne();
+                foreach ($usersResponsable as $id => $item) {
+                    $user[$id] = $item;
+                }
+                $usersChaine = $this->getAgentSuperieurService()->getUsersInSuperieurs();
+                foreach ($usersChaine as $id => $item) {
+                    $user[$id] = $item;
+                }
                 return $user;
             case AgentRoleProvider::ROLE_AUTORITE :
                 $user = $this->getAgentAutoriteService()->getUsersInAutorites();
@@ -63,7 +73,8 @@ class IdentityProvider extends AbstractIdentityProvider
             }
 
             $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent);
-            if (!empty($superieurs)) {
+            $entretiens = $this->getCampagneService()->getEntretiensForCampagneActiveByResponsable($agent);
+            if (!empty($superieurs) OR !empty($entretiens)) {
                 $roleSuperieur = $this->getRoleService()->findByRoleId(AgentRoleProvider::ROLE_SUPERIEURE);
                 $roles[] = $roleSuperieur;
             }
