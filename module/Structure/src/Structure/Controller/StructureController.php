@@ -3,6 +3,8 @@
 namespace Structure\Controller;
 
 use Agent\Controller\AgentController;
+use Agent\Entity\Db\AgentAutorite;
+use Agent\Entity\Db\AgentSuperieur;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Entity\Db\Agent;
@@ -492,18 +494,23 @@ class StructureController extends AbstractActionController
     public function extractionListingFichePosteAction(): CsvModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] = $structure;
+        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
 
         $filename = "listing_fiche_poste_-_" . str_replace(" ", "_", $structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
-        $header = ["Agent", "Fiche metier principale", "Complement"];
+        $header = ["Agent", "Supérieur·es hiérarchiques direct·es", "Autorités hiérarchiques","Fiche metier principale", "Complement"];
 
+        $now = new DateTime();
         $result = [];
         foreach ($agents as $agent) {
             $denomination = $agent->getDenomination();
             $fiche = "";
             $complement = "";
+
+            $superieurs = $agent->getSuperieurs($now);
+            $superieurs = array_map(function (AgentSuperieur $superieur){ return $superieur->getSuperieur()->getDenomination(); }, $superieurs);
+            $autorites = $agent->getAutorites($now);
+            $autorites = array_map(function (AgentAutorite $autorite){ return $autorite->getAutorite()->getDenomination(); }, $autorites);
 
             $ficheposte = $this->getFichePosteService()->getFichePosteActiveByAgent($agent);
             if ($ficheposte !== null) {
@@ -511,7 +518,13 @@ class StructureController extends AbstractActionController
                 $complement = $ficheposte->getLibelle();
             }
 
-            $result[] = [$denomination, $fiche, $complement];
+            $result[] = [
+                $denomination,
+                implode("\n",$superieurs),
+                implode("\n",$autorites),
+                $fiche,
+                $complement
+            ];
         }
 
         $CSV = new CsvModel();
@@ -570,7 +583,7 @@ class StructureController extends AbstractActionController
             foreach ($petitenfants as $petitenfant) {
                 $sub = $this->getStructureService()->getSousStructures($petitenfant);
                 $sub[] = $petitenfant;
-                $agents[$petitenfant->getId()] = $this->getAgentService()->getAgentsByStructures([$sub]);
+                $agents[$petitenfant->getId()] = $this->getAgentService()->getAgentsByStructures($sub);
             }
         }
 
@@ -596,7 +609,7 @@ class StructureController extends AbstractActionController
             foreach ($enfant->getEnfants() as $petitenfant) {
                 $sub = $this->getStructureService()->getSousStructures($petitenfant);
                 $sub[] = $petitenfant;
-                $agents[$petitenfant->getId()] = $this->getAgentService()->getAgentsByStructures([$sub]);
+                $agents[$petitenfant->getId()] = $this->getAgentService()->getAgentsByStructures($sub);
             }
         }
 

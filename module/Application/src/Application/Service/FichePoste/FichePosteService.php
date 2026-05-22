@@ -183,14 +183,37 @@ class FichePosteService
             ->setParameter('agent', $agent)
             ->andWhere('fiche.histoCreation <= :date')
             ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
+            ->andWhere('fiche.finValidite IS NULL')
             ->setParameter('date', $date);
-        $qb = FichePoste::decorateWithEtatsCodes($qb, 'fiche', [FichePosteEtats::ETAT_CODE_OK, FichePosteEtats::ETAT_CODE_SIGNEE]);
+        $qb = FichePoste::decorateWithEtatsCodes($qb, 'fiche', [FichePosteEtats::ETAT_CODE_SIGNEE]);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
+            if ($result) return $result;
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs fiches de poste remontées pour l'agent [" . $agent->getDenomination() . "] en date du [" . $date->format('d/m/Y') . "]", 0, $e);
+            throw new RuntimeException("Plusieurs fiches de poste signée en cours de validité remontées pour l'agent [" . $agent->getDenomination() . "] en date du [" . $date->format('d/m/Y') . "]", 0, $e);
         }
-        return $result;
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fiche.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('fiche.histoCreation <= :date')
+            ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
+            ->setParameter('date', $date);
+        $qb = FichePoste::decorateWithEtatsCodes($qb, 'fiche', [FichePosteEtats::ETAT_CODE_OK]);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+            if ($result) return $result;
+        } catch (NonUniqueResultException $e) {
+            $result = $qb->getQuery()->getResult();
+
+            $newest = null;
+            foreach ($result as $fiche) {
+                if ($newest === null OR $fiche->getHistoCreation() > $newest->getHistoCreation()) $newest = $fiche;
+            }
+            return $newest;
+        }
+
+        return null;
     }
 
     public function getFichePosteEnRedactionByAgent(Agent $agent, ?DateTime $date = null): ?FichePoste

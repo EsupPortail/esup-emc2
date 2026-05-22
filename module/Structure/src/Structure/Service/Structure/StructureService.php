@@ -737,4 +737,14 @@ EOS;
         });
         return $result;
     }
+
+    public function getStructuresWithContacts(): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->join('structure.contacts', 'contact')->addSelect('contact')
+            ->join('contact.type', 'contact_type')->addSelect('contact_type');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }
