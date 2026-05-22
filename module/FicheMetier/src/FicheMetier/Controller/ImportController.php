@@ -861,7 +861,7 @@ class ImportController extends AbstractActionController
 
         $readMissionPosition = 1;
         foreach ($readMissions as $readMission) {
-            $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission);
+            $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission, $referentiel);
             if ($mission === null) {
                 $reference = $fiche->getReference() . "_" . $readMissionPosition;
                 $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
@@ -887,7 +887,7 @@ class ImportController extends AbstractActionController
 
         $readActivitePosition = 1;
         foreach ($readActivites as $readActivite) {
-            $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite);
+            $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite, $referentiel);
             if ($activite === null) {
                 $reference = $fiche->getReference() . "_" . $readActivitePosition;
                 $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);

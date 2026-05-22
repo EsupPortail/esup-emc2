@@ -98,10 +98,13 @@ class MissionPrincipaleService
     }
 
 
-    public function getMissionPrincipaleByLibelle(?string $libelle): ?Mission
+    public function getMissionPrincipaleByLibelle(?string $libelle, ?Referentiel $referentiel = null): ?Mission
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('mission.libelle = :libelle')->setParameter('libelle', $libelle);
+        if ($referentiel) {
+            $qb = $qb->andWhere('mission.referentiel = :referentiel')->setParameter('referentiel', $referentiel);
+        }
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();

@@ -144,10 +144,13 @@ class ActiviteService
         return $activites;
     }
 
-    public function getActiviteByLibelle(?string $libelle): ?Activite
+    public function getActiviteByLibelle(?string $libelle, ?Referentiel $referentiel = null): ?Activite
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.libelle = :libelle')->setParameter('libelle', $libelle);
+        if ($referentiel) {
+            $qb = $qb->andWhere('activite.referentiel = :referentiel')->setParameter('referentiel', $referentiel);
+        }
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
