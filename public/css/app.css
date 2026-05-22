@@ -426,3 +426,16 @@ table#privilege-liste thead {
     position: sticky;
     top: 65px;
 }
+
+small.role-libelle {
+    background: var(--unistrap-color-light);
+    color: black !important;
+    padding: 0.2rem 1rem;
+    border-radius: 0.5rem;
+    margin-left: 1rem;
+    text-decoration-color: var(--unistrap-color-light) !important;
+}
+
+a#user-current-info {
+    text-decoration: none;
+}
