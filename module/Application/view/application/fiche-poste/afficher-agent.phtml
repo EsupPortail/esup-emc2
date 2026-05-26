@@ -31,6 +31,7 @@ foreach ($agent->getFichiers() as $fichier) {
 $new = new FichePoste(); $new->setAgent($agent);
 $canAjouterFichePoste = $this->isAllowed($new, FichePostePrivileges::FICHEPOSTE_AJOUTER);
 $canAjouterFichePostePdf = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER_PDF));
+$canSupprimerFichePostePdf = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_SUPPRIMER_PDF));
 $affectation = $agent->getAffectationPrincipale();
 $structure = ($affectation)?$affectation->getStructure():null;
 
@@ -131,7 +132,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
                                 Visualiser
                             </a>
                         <?php endif; ?>
-                        <?php if ($canAjouterFichePoste AND $canDetruireFichier) : ?>
+                        <?php if ($canSupprimerFichePostePdf AND $canDetruireFichier) : ?>
                             <br>
                             <a
                                 <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>

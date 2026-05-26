@@ -26,6 +26,7 @@ $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResource
 $canExporterFichePoste      = $canVoirFichePoste;
 $canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
 $canAjouterFichePostePdf       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER_PDF));
+$canDetruireFichePostePdf       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_SUPPRIMER_PDF));
 $canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
 $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
@@ -141,7 +142,7 @@ $date = new DateTime();
                                     <?php endif; ?>
                                     <span class="icon icon-editer nope"></span>
                                     <span class="icon icon-historiser nope"></span>
-                                    <?php if ($canDetruireFichier) : ?>
+                                    <?php if ($canDetruireFichePostePdf AND $canDetruireFichier) : ?>
                                         <a
                                             <?php /** @see \UnicaenFichier\Controller\FichierController::deleteAction() */?>
                                             href="<?php echo $this->url('fichier/supprimer', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url(null, [], ['force_canonical' => true], true)]]); ?>"
