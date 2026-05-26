@@ -287,6 +287,57 @@ EOS;
         return $options;
     }
 
+    public function getStructuresAsOptionGroup(string $grouping = 'niveau2'): array
+    {
+        $sql=<<<EOS
+select s.id as id,
+--       n.libelle_court || ' > ' || coalesce(s.libelle_long,s.libelle_court) as label,
+       coalesce(s.libelle_long,s.libelle_court) as label,
+       coalesce(s.niv2_id,s.id) as n2_id,
+       coalesce(n.libelle_court, s.libelle_court) as grouping,
+       coalesce(t.libelle, 'Type inconnu') as type
+from structure s
+left join structure n on s.niv2_id = n.id
+left join structure_type t on s.type_id = t.id
+where
+    s.deleted_on IS NULL
+and (s.d_ouverture IS NULL OR s.d_ouverture <= now())
+and (s.d_fermeture IS NULL OR s.d_fermeture >= now())
+order by n.libelle_court || ' > ' || s.libelle_long
+EOS;
+        try {
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, []);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des données liées aux structures", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'exécution de la requête de récupération des structures", 0, $e);
+        }
+
+        $groupes = [];
+        foreach ($tmp as $item) {
+            $element = $item['grouping'];
+            $groupes[$item['grouping']] = $item['grouping'];
+        }
+        sort($groupes);
+        $elements = [];
+        foreach ($tmp as $item) {
+            $grouping = $item['grouping'];
+            $elements[$grouping][$item['id']] = $item['label'];
+        }
+
+        $options = [];
+        foreach ($groupes as $group) {
+            $options[] = [
+                'label' => $group,
+                'options' => $elements[$group],
+            ];
+        }
+        return $options;
+    }
+
     /**
      * @return User[]
      */

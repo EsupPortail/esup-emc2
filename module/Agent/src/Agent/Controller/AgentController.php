@@ -21,6 +21,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenFichier\Entity\Db\Fichier;
 use UnicaenFichier\Form\Upload\UploadFormAwareTrait;
 use UnicaenFichier\Service\Fichier\FichierServiceAwareTrait;
@@ -44,6 +45,7 @@ class AgentController extends AbstractActionController {
     use FichierServiceAwareTrait;
     use NatureServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use UploadFormAwareTrait;
@@ -88,7 +90,7 @@ class AgentController extends AbstractActionController {
                 }
             }
             if (isset($params['type']) and $params['type'] === 'filtrer') {
-                if ($params['denomination'] === "" and $params['structure-filtre']['id'] === "") {
+                if ($params['denomination'] === "" and (!isset($params['structure-select']) OR $params['structure-select'] === '')/**$params['structure-filtre']['id'] === ""**/) {
                     $agents = [];
                     $error = "Veuillez préciser la dénomination de l'agent ou une structure";
                 } else {
@@ -101,6 +103,8 @@ class AgentController extends AbstractActionController {
             'agents' => $agents,
             'params' => $params,
             'error' => $error,
+            'structuresGroups' =>  $this->getStructureService()->getStructuresAsOptionGroup(),
+
         ]);
     }
 

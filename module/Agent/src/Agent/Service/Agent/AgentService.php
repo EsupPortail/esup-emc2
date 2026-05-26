@@ -525,6 +525,9 @@ EOS;
         $term = (isset($params['denomination']) and trim($params['denomination']) !== '') ? trim($params['denomination']) : null;
         $encours = (isset($params['encours'])) ? $params['encours'] : null;
         $structure = (isset($params['structure-filtre']) and isset($params['structure-filtre']['id'])) ? $this->getStructureService()->getStructure($params['structure-filtre']['id']) : null;
+        if ($structure === null) {
+            $structure = (isset($params['structure-select'])) ? $this->getStructureService()->getStructure($params['structure-select']) : null;
+        }
 
         $qb = $this->createQueryBuilder();
         if ($term !== null) $qb = AgentService::decorateWithTerm($qb, $term);

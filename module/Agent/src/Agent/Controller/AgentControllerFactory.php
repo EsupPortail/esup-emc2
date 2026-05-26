@@ -14,6 +14,8 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Structure\Service\Notification\NotificationService;
+use Structure\Service\Structure\StructureService;
 use UnicaenFichier\Form\Upload\UploadForm;
 use UnicaenFichier\Service\Fichier\FichierService;
 use UnicaenFichier\Service\Nature\NatureService;
@@ -39,6 +41,8 @@ class AgentControllerFactory
          * @var FichierService $fichierService
          * @var NatureService $natureService
          * @var ParametreService $parametreService
+         * @var NotificationService $structureService
+         * @var StructureService $structureService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
@@ -52,6 +56,7 @@ class AgentControllerFactory
         $fichierService = $container->get(FichierService::class);
         $natureService = $container->get(NatureService::class);
         $parametreService = $container->get(ParametreService::class);
+        $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
         /**
@@ -71,6 +76,7 @@ class AgentControllerFactory
         $controller->setFichierService($fichierService);
         $controller->setNatureService($natureService);
         $controller->setParametreService($parametreService);
+        $controller->setStructureService($structureService);
         $controller->setUserService($userService);
 
         $controller->setUploadForm($uploadForm);

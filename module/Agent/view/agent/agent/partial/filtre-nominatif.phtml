@@ -13,7 +13,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
             <div class="row">
                 <div class="col-md-9">
                     <input type="hidden" value="acceder" id="type" name="type"/>
-                    <label for="denomination">Dénomination : </label>
+                    <label for="denomination">Accéder directement à une fiche agent  </label>
                     <?php
                     $agentFiltreSas = new SearchAndSelect('agent-sas');
                     /** @see \Agent\Controller\AgentController::rechercherLargeAction() */
@@ -22,7 +22,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                         ->setSelectionRequired()
                         ->setAttributes([
                             'id' => 'agent-sas',
-                            'placeholder' => "Sélectionner un agent",
+                            'placeholder' => "Nom ou prénom (minimum 2 caractères)",
                         ]);
                     ?>
                     <?php echo $this->formControlGroup($agentFiltreSas); ?>

@@ -5,6 +5,7 @@
  * @var Agent[] $agents
  * @var array $params
  * @var ?string $error
+ * @var array $structuresGroups
  */
 
 use Agent\Entity\Db\Agent;
@@ -41,11 +42,9 @@ $nbAgent = count($agents);
             Filtre de recherche des agents
         </div>
         <div class="card-body">
-<!--            <h4> Recherche directe </h4>-->
-            <?php echo $this->partial('partial/filtre-nominatif', ['params' => $params], [], true); ?>
+            <?php echo $this->partial('partial/filtre', ['params' => $params, 'structuresGroups' => $structuresGroups], [], true); ?>
             <hr>
-<!--            <h3> Filtrage </h3>-->
-            <?php echo $this->partial('partial/filtre', ['params' => $params], [], true); ?>
+            <?php echo $this->partial('partial/filtre-nominatif', ['params' => $params], [], true); ?>
         </div>
     </div>
 

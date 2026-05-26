@@ -2,6 +2,7 @@
 
 /**
  * @var array $params
+ * @var array $structuresGroups
  */
 
 use UnicaenApp\Form\Element\SearchAndSelect;
@@ -13,25 +14,46 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
             <div class="row">
                 <div class="col-md-9">
                     <div class="row">
-                        <div class="col-md-4">
-                            <input type="hidden" value="filtrer" id="type" name="type"/>
+                        <div class="col-md-12">
+                            <input type="hidden" value="filtrer" id="type" name="type" />
                             <label for="denomination">Dénomination : </label>
-                            <input type="text" id="denomination" name="denomination"/>
+                            <input type="text" id="denomination" name="denomination" class="form-control" placeholder="Nom ou prénom de l'Agent·e"/>
                         </div>
                         <div class="col-md-4">
-                            <?php
-                            /** @see \Structure\Controller\StructureController::rechercherAction() */
-                            $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
-                            $structureF
-                                ->setAutocompleteSource($this->url('structure/rechercher'))
-                                ->setSelectionRequired()
-                                ->setAttributes([
-                                    'id' => 'structure-filtre',
-                                    'placeholder' => "Nom de la structure ...",
-                                ]);
-                            ?>
-                            <?php echo $this->formControlGroup($structureF); ?>
+                            <label for="structure-select"> Structure d'affectation : </label>
+                            <select id="structure-select" name="structure-select" class="form-control selectpicker" data-live-search="true">
+                                <option value="" disabled  hidden
+                                        <?php if (!isset($params['structure-select']) OR $params['structure-select'] === '') { echo " selected " ; } ?>
+                                >
+                                    Sélectionnez une option
+                                </option>
+                                <?php foreach ($structuresGroups as $group) : ?>
+                                    <optgroup label="<?php echo $group['label']; ?>">
+                                        <?php foreach ($group['options'] as $id => $label) : ?>
+                                            <option value="<?php echo $id; ?>"
+                                                    <?php if (isset($params['structure-select']) AND $params['structure-select'] == $id) echo 'selected'; ?>
+                                            >
+                                                <?php echo $label; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
+<!--                        <div class="col-md-4">-->
+<!--                            --><?php
+//                            /** @see \Structure\Controller\StructureController::rechercherAction() */
+//                            $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
+//                            $structureF
+//                                ->setAutocompleteSource($this->url('structure/rechercher'))
+//                                ->setSelectionRequired()
+//                                ->setAttributes([
+//                                    'id' => 'structure-filtre',
+//                                    'placeholder' => "Nom de la structure ...",
+//                                ]);
+//                            ?>
+<!--                            --><?php //echo $this->formControlGroup($structureF); ?>
+<!--                        </div>-->
                         <div class="col-md-4">
                             <label for="encours">Affectation en cours : </label>
                             <select id="encours" name="encours" class="selectpicker">
@@ -48,6 +70,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                             <span class="icon icon-filtrer"></span>
                             Filtrer
                         </button>
+                        <br>
                         <button class="btn btn-primary action" id="clear">
                             <span class="icon icon-gommer"></span> Remise à zéro
                         </button>
@@ -59,7 +82,8 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
         </form>
 
 <script>
-    $('button#clear').click(function() {
+    $('button#clear').click(function(e) {
+        e.preventDefault();
         window.location.href = '?';
     });
 
