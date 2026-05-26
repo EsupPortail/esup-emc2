@@ -506,13 +506,25 @@ class CampagneService
         }
 
         $exceptions = $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagneAndAgents($campagne, $agents);
+        // filtrer les trucs avec structure et !==
+        if ($structures !== null) {
+            foreach ($exceptions as $type => $listing) {
+                $listing = array_filter($listing, function (AgentForceSansObligation $exception) use ($structures) {
+                    return ($exception->getStructure() === null or in_array($exception->getStructure(), $structures));
+                });
+                $exceptions[$type] = $listing;
+            }
+        }
         foreach ($exceptions[AgentForceSansObligation::FORCE_SANS_OBLIGATION] as $forcage) {
             $agent = $forcage->getAgent();
+            $raison[$agent->getId()] = '';
             if (isset($exclus[$agent->getId()]) OR isset($obligatoires[$agent->getId()])) {
                 unset($exclus[$agent->getId()]);
                 unset($obligatoires[$agent->getId()]);
                 $facultatifs[$agent->getId()] = $agent;
-                $raison[$agent->getId()] = '<li>Agent·e forcé·e sans obligation  dans la campagne par une exception</li>';
+                $raison[$agent->getId()] .= '<li>Agent·e forcé·e sans obligation de la campagne par une exception';
+                if ($forcage->getStructure()) $raison[$agent->getId()] .= ' sur la structure '.$forcage->getStructure()->getLibelleLong();
+                $raison[$agent->getId()] .= '</li>';
             }
         }
         foreach ($exceptions[AgentForceSansObligation::FORCE_EXCLUS] as $forcage) {
@@ -521,7 +533,9 @@ class CampagneService
                 unset($obligatoires[$agent->getId()]);
                 unset($facultatifs[$agent->getId()]);
                 $exclus[$agent->getId()] = $agent;
-                $raison[$agent->getId()] = '<li>Agent·e exclu·e dans la campagne par une exception</li>';
+                $raison[$agent->getId()] .= '<li>Agent·e exclu·e de la campagne par une exception';
+                if ($forcage->getStructure()) $raison[$agent->getId()] .= ' sur la structure '.$forcage->getStructure()->getLibelleLong();
+                $raison[$agent->getId()] .= '</li>';
             }
         }
         foreach ($exceptions[AgentForceSansObligation::FORCE_AVEC_OBLIGATION] as $forcage) {
@@ -530,7 +544,9 @@ class CampagneService
                 unset($exclus[$agent->getId()]);
                 unset($facultatifs[$agent->getId()]);
                 $obligatoires[$agent->getId()] = $agent;
-                $raison[$agent->getId()] = '<li>Agent·e forcé·e avec obligation dans la campagne par une exception</li>';
+                $raison[$agent->getId()] .= '<li>Agent·e forcé·e avec obligation de la campagne par une exception';
+                if ($forcage->getStructure()) $raison[$agent->getId()] .= ' sur la structure '.$forcage->getStructure()->getLibelleLong();
+                $raison[$agent->getId()] .= '</li>';
             }
         }
 

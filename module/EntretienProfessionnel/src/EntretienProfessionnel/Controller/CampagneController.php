@@ -20,6 +20,7 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Template\TexteTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
+use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurServiceAwareTrait;
@@ -52,6 +53,7 @@ class CampagneController extends AbstractActionController
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
+    use AgentForceSansObligationServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use CampagneConfigurationIndicateurServiceAwareTrait;
     use CampagneProgressionStructureServiceAwareTrait;
@@ -475,7 +477,14 @@ class CampagneController extends AbstractActionController
         $timing["structure data"] = microtime(true);
 
 
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
+        $agentsStructures = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateEnPoste(), $campagne->getDateFin());
+        /** Note (DA65901) : il faut aussi récupérer les agents ayant une exception sur la structure (et sous-structures). **/
+        $agentsExceptions = $this->getAgentForceSansObligationService()->getAgentsAvecExceptionByCampagneAndStructures($campagne, $structures);
+
+        $agents = [];
+        foreach ($agentsStructures as $id => $agent) $agents[$id] = $agent;
+        foreach ($agentsExceptions as $id => $agent) $agents[$id] = $agent;
+
         $agentsForces = array_map(function (StructureAgentForce $agentForce) {
             return $agentForce->getAgent();
         }, $this->getStructureAgentForceService()->getStructureAgentsForcesByStructures($structures));

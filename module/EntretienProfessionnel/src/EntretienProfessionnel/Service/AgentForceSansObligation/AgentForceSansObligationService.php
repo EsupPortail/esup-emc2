@@ -156,5 +156,22 @@ class AgentForceSansObligationService {
         return $dictionnaires;
     }
 
+    /** @return Agent[] */
+    public function getAgentsAvecExceptionByCampagneAndStructures(?Campagne $campagne, array $structures): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentForceSansObligation.campagne = :campagne')->setParameter('campagne', $campagne)
+            ->andWhere('agentForceSansObligation.structure in (:structures)')->setParameter('structures', $structures)
+            ->andWhere('agentForceSansObligation.histoDestruction IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+        $agents = [];
+        foreach ($result as $exception) {
+            $agent = $exception->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+        return $agents;
+    }
+
 
 }

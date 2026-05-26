@@ -8,6 +8,7 @@ use Agent\Service\AgentAutorite\AgentAutoriteService;
 use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\Macro\MacroService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
+use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\CampagneConfigurationIndicateur\CampagneConfigurationIndicateurService;
 use EntretienProfessionnel\Service\CampagneProgressionStructure\CampagneProgressionStructureService;
@@ -43,6 +44,7 @@ class CampagneControllerFactory extends AbstractActionController
          * @var AgentService $agentService
          * @var AgentAutoriteService $agentAutoriteService
          * @var AgentSuperieurService $agentSuperieurService
+         * @var AgentForceSansObligationService $agentForceSansObligationService
          * @var CampagneService $campagneService
          * @var CampagneConfigurationIndicateurService $campagneConfigurationIndicateurService
          * @var CampagneProgressionStructureService $campagneProgressionStructureService
@@ -63,6 +65,7 @@ class CampagneControllerFactory extends AbstractActionController
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
+        $agentForceSansObligationService = $container->get(AgentForceSansObligationService::class);
         $campagneService = $container->get(CampagneService::class);
         $campagneConfigurationIndicateurService = $container->get(CampagneConfigurationIndicateurService::class);
         $campagneProgressionStructureService = $container->get(CampagneProgressionStructureService::class);
@@ -91,6 +94,7 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setAgentService($agentService);
         $controller->setAgentAutoriteService($agentAutoriteService);
         $controller->setAgentSuperieurService($agentSuperieurService);
+        $controller->setAgentForceSansObligationService($agentForceSansObligationService);
         $controller->setCampagneService($campagneService);
         $controller->setCampagneConfigurationIndicateurService($campagneConfigurationIndicateurService);
         $controller->setCampagneProgressionStructureService($campagneProgressionStructureService);
