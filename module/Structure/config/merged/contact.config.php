@@ -2,26 +2,25 @@
 
 namespace Structure;
 
+use Agent\Controller\AgentMobiliteController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Structure\Controller\ContactController;
 use Structure\Controller\ContactControllerFactory;
-use Structure\Controller\ObservateurController;
-use Structure\Controller\ObservateurControllerFactory;
-use Structure\Form\Observateur\ObservateurForm;
-use Structure\Form\Observateur\ObservateurFormFactory;
-use Structure\Form\Observateur\ObservateurHydrator;
-use Structure\Form\Observateur\ObservateurHydratorFactory;
-use Structure\Provider\Privilege\StructureobservateurPrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
-use Structure\Service\Observateur\ObservateurService;
-use Structure\Service\Observateur\ObservateurServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => ContactController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_INDEX, //TODO privilege ...
+                ],
                 [
                     'controller' => ContactController::class,
                     'action' => [
@@ -46,7 +45,7 @@ return [
                                 'action' => 'index',
                             ],
                         ],
-                        'may_terminate' => false,
+                        'may_terminate' => true,
                         'child_routes' => [
                             'ajouter' => [
                                 'type' => Segment::class,
@@ -98,6 +97,27 @@ return [
 //                                    ],
 //                                ],
 //                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'contact' => [
+                                'label' => 'Gestion des contacts',
+                                'route' => 'structure/contact',
+                                'resource' => PrivilegeController::getResourceId(ContactController::class, 'index'),
+                                'order' => 100001,
+                                'icon' => 'fas fa-angle-right',
+                            ],
                         ],
                     ],
                 ],

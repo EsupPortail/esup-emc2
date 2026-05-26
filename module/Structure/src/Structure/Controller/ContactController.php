@@ -15,6 +15,16 @@ class ContactController extends AbstractActionController
     use StructureServiceAwareTrait;
     use ContactFormAwareTrait;
 
+    public function indexAction(): ViewModel
+    {
+        // $dictionnaire[$structure][$type] = Contact[];
+        $structures = $this->getStructureService()->getStructuresWithContacts();
+
+        return new ViewModel([
+            'structures' => $structures
+        ]);
+    }
+
     public function ajouterAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
