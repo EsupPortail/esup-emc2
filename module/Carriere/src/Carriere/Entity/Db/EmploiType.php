@@ -2,6 +2,7 @@
 
 namespace Carriere\Entity\Db;
 
+use Agent\Entity\Db\AgentEmploiType;
 use Agent\Entity\Db\AgentGrade;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
@@ -20,11 +21,11 @@ class EmploiType implements HasPeriodeInterface, IsSynchronisableInterface
     private ?string $libelleCourt = null;
     private ?string $libelleLong = null;
 
-    private Collection $agentGrades;
+    private Collection $agentEmploiTypes;
 
     public function __construct()
     {
-        $this->agentGrades = new ArrayCollection();
+        $this->agentEmploiTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,10 +53,10 @@ class EmploiType implements HasPeriodeInterface, IsSynchronisableInterface
         return $this->libelleLong;
     }
 
-    /** @return AgentGrade[] */
-    public function getAgentGrades(): array
+    /** @return AgentEmploiType[] */
+    public function getAgentEmploiTypes(): array
     {
-        return $this->agentGrades->toArray();
+        return $this->agentEmploiTypes->toArray();
     }
 
     public function __toString(): string

@@ -2,7 +2,7 @@
 
 namespace Carriere\Controller;
 
-use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
+use Agent\Service\AgentEmploiType\AgentEmploiTypeServiceAwareTrait;
 use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\EmploiType\EmploiTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -10,7 +10,7 @@ use Laminas\View\Model\ViewModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class EmploiTypeController extends AbstractActionController {
-    use AgentGradeServiceAwareTrait;
+    use AgentEmploiTypeServiceAwareTrait;
     use EmploiTypeServiceAwareTrait;
     use ParametreServiceAwareTrait;
 
@@ -20,7 +20,7 @@ class EmploiTypeController extends AbstractActionController {
         $emploisTypes = $this->getEmploiTypeService()->getEmploisTypes('libelleLong', 'ASC', $avecAgent);
 
         return new ViewModel([
-            "emploisTypes" => $emploisTypes,
+            'emploisTypes' => $emploisTypes,
             'avecAgent' => $avecAgent,
         ]);
     }
@@ -31,16 +31,16 @@ class EmploiTypeController extends AbstractActionController {
         $bool = ($actifOnly) && ($actifOnly->getValeur() === "true");
 
         $emploitype = $this->getEmploiTypeService()->getRequestedEmploiType($this);
-        $agentGrades = $this->getAgentGradeService()->getAgentGradesByEmploiType($emploitype, $bool);
+        $agentEmploiTypes = $this->getAgentEmploiTypeService()->getAgentEmploiTypesByEmploiType($emploitype, $bool);
         $agents = [];
-        foreach ($agentGrades as $agentGrade) {
-            $agents[$agentGrade->getAgent()->getId()] = $agentGrade->getAgent();
+        foreach ($agentEmploiTypes as $agentEmploiType) {
+            $agents[$agentEmploiType->getAgent()->getId()] = $agentEmploiType->getAgent();
         }
 
         return new ViewModel([
             'title' => "Agents ayant l'emploi type [". $emploitype->getLibelleCourt()."]",
             'emploiType' => $emploitype,
-            'agentGrades' => $agentGrades,
+            'agentEmploiTypes' => $agentEmploiTypes,
             'agents' => $agents,
         ]);
     }

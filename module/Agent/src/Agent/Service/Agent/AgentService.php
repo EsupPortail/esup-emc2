@@ -88,7 +88,6 @@ class AgentService
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->addSelect('grade')->join('agent.grades', 'grade')
-            ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
             ->andWhere('agent.deletedOn IS NULL')
             // Devrait être un filtrage ; pas une requête même si cela accélère les choses
             ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')

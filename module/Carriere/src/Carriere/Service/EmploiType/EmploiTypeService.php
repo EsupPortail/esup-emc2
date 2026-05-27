@@ -39,10 +39,11 @@ class EmploiTypeService
             ->orderBy('emploitype.' . $champ, $ordre);
 
         if ($avecAgent) {
-            $qb = $qb->addSelect('agentGrade')->join('emploitype.agentGrades', 'agentGrade')
+            $qb = $qb
+                ->addSelect('agentEmploiType')->join('emploitype.agentEmploiTypes', 'agentEmploiType')
                 ->addSelect('agent')->join('agentGrade.agent', 'agent')
                 ->andWhere('agent.deletedOn IS NULL')
-                ->andWhere('agentGrade.deletedOn IS NULL');
+                ->andWhere('agentEmploiType.deletedOn IS NULL');
             $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
         }
 

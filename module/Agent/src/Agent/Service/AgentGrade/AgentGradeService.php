@@ -29,7 +29,6 @@ class AgentGradeService {
             ->leftjoin('agentgrade.grade', 'grade')->addSelect('grade')
             ->leftjoin('agentgrade.corps', 'corps')->addSelect('corps')
             ->leftjoin('agentgrade.correspondance', 'correspondance')->addSelect('correspondance')
-            ->leftjoin('agentgrade.emploiType', 'emploitype')->addSelect('emploitype')
             ->andWhere('agentgrade.deletedOn IS NULL')
         ;
         return $qb;
@@ -146,25 +145,6 @@ class AgentGradeService {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.correspondance = :correspondance')
             ->setParameter('correspondance', $correspondance)
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-        ;
-
-        if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param EmploiType $emploiType
-     * @param bool $actif
-     * @return array
-     */
-    public function getAgentGradesByEmploiType(EmploiType $emploiType, bool $actif = true) : array
-    {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('agentgrade.emploiType = :emploitype')
-            ->setParameter('emploitype', $emploiType)
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 

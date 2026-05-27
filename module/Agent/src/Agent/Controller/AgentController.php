@@ -3,6 +3,7 @@
 namespace Agent\Controller;
 
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Agent\Service\AgentEmploiType\AgentEmploiTypeServiceAwareTrait;
 use Agent\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Agent\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Agent\Assertion\ChaineAssertion;
@@ -38,6 +39,7 @@ class AgentController extends AbstractActionController {
     use AgentAutoriteServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use AgentGradeServiceAwareTrait;
+    use AgentEmploiTypeServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
     use AgentStatutServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
@@ -117,6 +119,7 @@ class AgentController extends AbstractActionController {
         //Récupération des status
         $agentAffectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgentAndDate($agent);
         $agentEchelons = $agent->getEchelonsActifs();
+        $agentEmploiTypes = $agent->getEmploiTypesActifs();
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
         $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
 
@@ -139,6 +142,7 @@ class AgentController extends AbstractActionController {
             'superieurs' => $superieurs,
             'agentAffectations' => $agentAffectations,
             'agentEchelons' => $agentEchelons,
+            'agentEmploiTypes' => $agentEmploiTypes,
             'agentGrades' => $agentGrades,
             'agentStatuts' => $agentStatuts,
 

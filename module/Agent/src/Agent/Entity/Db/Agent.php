@@ -67,6 +67,8 @@ class Agent implements
     /** AgentAffectation[] */
     private Collection $echelons;
     /** AgentEchelon[] */
+    private Collection $emploiTypes;
+
     private Collection $grades;
     /** AgentGrade[] */
     private Collection $quotites;
@@ -100,6 +102,7 @@ class Agent implements
         $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
         $this->echelons = new ArrayCollection();
+        $this->emploiTypes = new ArrayCollection();
         $this->grades = new ArrayCollection();
         $this->structuresForcees = new ArrayCollection();
         $this->forcesSansObligation = new ArrayCollection();
@@ -281,6 +284,30 @@ class Agent implements
         return $this->getEchelons($date);
     }
 
+    /** @return AgentEmploiType[] */
+    public function getEmploiTypes(?DateTime $date = null, bool $histo = false): array
+    {
+        $emploitypes = $this->emploiTypes->toArray();
+        if ($histo === false) $emploitypes = array_filter($emploitypes, function (AgentEmploiType $aet) {
+            return !$aet->isDeleted();
+        });
+        if ($date !== null) $emploitypes = array_filter($emploitypes, function (AgentEmploiType $aet) use ($date) {
+            return ($aet->estEnCours($date));
+        });
+
+        usort($emploitypes, function (AgentEmploiType $a, AgentEmploiType $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
+        return $emploitypes;
+    }
+
+    /** @return AgentEmploiType[] */
+    public function getEmploiTypesActifs(?DateTime $date = null): array
+    {
+        if ($date === null) $date = (new DateTime());
+        return $this->getEmploiTypes($date);
+    }
+
     /** @return AgentGrade[] */
     public function getGrades(?DateTime $date = null, bool $histo = false): array
     {
@@ -355,17 +382,6 @@ class Agent implements
             return in_array($a->getStructure(), $structures);
         });
         return $statuts;
-    }
-
-    /** @return AgentGrade[] */
-    public function getEmploiTypesActifs(?DateTime $date = null, ?array $structures = null): array
-    {
-        if ($date === null) $date = (new DateTime());
-        $grades = $this->getGrades($date);
-        if ($structures !== null) $grades = array_filter($grades, function (AgentGrade $a) use ($structures) {
-            return in_array($a->getStructure(), $structures);
-        });
-        return $grades;
     }
 
     /** Prédicats avec temoins ****************************************************************************************/

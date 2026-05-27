@@ -24,10 +24,6 @@
             <join-column name="correspondance_id"/>
         </many-to-one>
 
-        <many-to-one target-entity="Carriere\Entity\Db\EmploiType"  field="emploiType">
-            <join-column name="emploitype_id"/>
-        </many-to-one>
-
         <field name="dateDebut"     type="datetime"                 column="d_debut" />
         <field name="dateFin"       type="datetime"                 column="d_fin"   />
 

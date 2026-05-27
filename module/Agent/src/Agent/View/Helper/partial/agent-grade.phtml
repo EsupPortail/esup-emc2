@@ -8,13 +8,19 @@
  */
 
 use Agent\Entity\Db\AgentEchelon;
+use Agent\Entity\Db\AgentEmploiType;
 use Agent\Entity\Db\AgentGrade;
 
 $debug = false;
 
 /** @var AgentEchelon[] $echelons */
 $echelons = ($options['echelons']) ?? [];
-$echelons = array_filter($echelons, function (AgentEchelon $a) { return $a->getEchelon() !== 0 ;});
+$echelons = array_filter($echelons, function (AgentEchelon $a) {
+    return $a->getEchelon() !== 0;
+});
+/** @var AgentEmploiType[] $emploiTypes */
+$emploiTypes = ($options['emploiTypes']) ?? [];
+
 
 $displayStructure = (isset($options['structure']) and $options['structure'] !== false);
 $displayPeriode = (isset($options['periode']) and $options['periode'] !== false);
@@ -108,23 +114,30 @@ $displayCorrespondance = (isset($options['correspondance']) and $options['corres
                 <dd class="col-md-9">
                     <?php foreach ($echelons as $echelon) : ?>
                         <?php echo $echelon->getEchelon(); ?>
-                            <br> date de passage : <?php echo $echelon->getDateDebut()->format('d/m/Y'); ?>
-                            <?php if ($echelon->getDateFin()): ?>
-                                <br> date prévisionnelle du prochain échelon : <?php echo $echelon->getDateFin()->format('d/m/Y'); ?>
-                            <?php endif; ?>
+                        <br> date de passage : <?php echo $echelon->getDateDebut()->format('d/m/Y'); ?>
+                        <?php if ($echelon->getDateFin()): ?>
+                            <br> date prévisionnelle du prochain échelon : <?php echo $echelon->getDateFin()->format('d/m/Y'); ?>
+                        <?php endif; ?>
 
                     <?php endforeach; ?>
                 </dd>
             <?php endif; ?>
 
-            <dt class="col-md-3"> Emploi Type</dt>
-            <dd class="col-md-9">
-                <?php if ($grade->getEmploiType()) : ?>
-                    <?php echo $this->emploitype($grade->getEmploiType()); ?>
-                <?php else : ?>
-                    Non renseigné
-                <?php endif; ?>
-            </dd>
+            <?php if (!empty($emploiTypes)) : ?>
+                <dt class="col-md-3"> Emploi Type</dt>
+                <dd class="col-md-9">
+                    <?php foreach ($emploiTypes as $emploiType) : ?>
+                        <?php if ($emploiType->getEmploiType()) : ?>
+                            <?php echo $emploiType->getEmploiType()->getCode(); ?>
+                            -
+                            <?php echo $emploiType->getEmploiType()->getLibelleLong(); ?>
+                        <?php else : ?>
+                            Emploi-type inconnu
+                        <?php endif; ?>
+                        <br>
+                    <?php endforeach; ?>
+                </dd>
+            <?php endif; ?>
         </dl>
     <?php endif; ?>
 </div>

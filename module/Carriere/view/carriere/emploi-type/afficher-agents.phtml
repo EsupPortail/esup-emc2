@@ -3,24 +3,24 @@
 /**
  * @see \Carriere\Controller\EmploiTypeController::afficherAgentsAction();
  * @var EmploiType $emploiType
- * @var AgentGrade[] $agentGrades
+ * @var AgentEmploiType[] $agentEmploiTypes
  * @var Agent[] $agents
  */
 
 use Agent\Entity\Db\Agent;
-use Agent\Entity\Db\AgentGrade;
+use Agent\Entity\Db\AgentEmploiType;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Carriere\Entity\Db\EmploiType;
 
 $now = new DateTime();
 
-/** @var  AgentGrade[] $agents */
-$agents = $emploiType->getAgentGrades();
-$agents = array_filter($agents, function (AgentGrade $a) use ($now) { return $a->estCommence($now) && !$a->isDeleted();});
-usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
+///** @var  AgentGrade[] $agents */
+//$agents = $emploiType->getAgentGrades();
+//$agents = array_filter($agents, function (AgentGrade $a) use ($now) { return $a->estCommence($now) && !$a->isDeleted();});
+//usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
 
 $actifs = 0; $inactifs = 0;
-foreach ($agents as $agent) { if ($agent->estFini()) $inactifs++; else $actifs++;}
+foreach ($agentEmploiTypes as $agentEmploiType) { if ($agentEmploiType->estFini()) $inactifs++; else $actifs++;}
 ?>
 <div class="row">
     <div class="col-md-6">
@@ -56,20 +56,21 @@ foreach ($agents as $agent) { if ($agent->estFini()) $inactifs++; else $actifs++
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($agents as $agent) : ?>
-        <tr <?php if ($agent->estFini($now)) echo 'class="historise"'; ?> >
-            <td> <?php echo $agent->getId(); ?> </td>
+        <?php foreach ($agentEmploiTypes as $agentEmploiType) : ?>
+        <?php $agent = $agentEmploiType->getAgent(); ?>
+        <tr <?php if ($agentEmploiType->estFini($now)) echo 'class="historise"'; ?> >
+            <td> <?php echo $agentEmploiType->getId(); ?> </td>
             <td>
-                <?php if ($this->isAllowed($agent->getAgent(), AgentPrivileges::AGENT_AFFICHER)) : ?>
-                    <a class="linkexterne" id="<?php echo $agent->getAgent()->getId(); ?>" href="">
-                        <?php echo $agent->getAgent()->getDenomination(); ?>
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                    <a class="linkexterne" id="<?php echo $agent->getId(); ?>" href="">
+                        <?php echo $agent->getDenomination(); ?>
                     </a>
                 <?php else : ?>
-                    <?php echo $agent->getAgent()->getDenomination(); ?>
+                    <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
             </td>
-            <td> <?php echo ($agent->getDateDebut()) ? $agent->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
-            <td> <?php echo ($agent->getDateFin()) ? $agent->getDateFin()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agentEmploiType->getDateDebut()) ? $agentEmploiType->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agentEmploiType->getDateFin()) ? $agentEmploiType->getDateFin()->format('d/m/Y') : "---"; ?> </td>
         </tr>
         <?php endforeach; ?>
     </tbody>

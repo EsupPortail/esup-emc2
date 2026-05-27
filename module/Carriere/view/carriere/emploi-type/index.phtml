@@ -57,7 +57,7 @@ $canAction = ($canModifier OR $canLister);
                 </span>
             </td>
             <td> <code><?php echo $emploiType->getCode(); ?></code> </td>
-            <td> <?php echo count($emploiType->getAgentGrades()); ?> </td>
+            <td> <?php echo count($emploiType->getAgentEmploiTypes()); ?> </td>
             <?php if ($canAction) : ?>
             <td class="action">
                 <?php if ($canLister) : ?>
