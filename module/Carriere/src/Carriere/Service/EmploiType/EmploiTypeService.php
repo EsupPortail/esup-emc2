@@ -41,10 +41,10 @@ class EmploiTypeService
         if ($avecAgent) {
             $qb = $qb
                 ->addSelect('agentEmploiType')->join('emploitype.agentEmploiTypes', 'agentEmploiType')
-                ->addSelect('agent')->join('agentGrade.agent', 'agent')
+                ->addSelect('agent')->join('agentEmploiType.agent', 'agent')
                 ->andWhere('agent.deletedOn IS NULL')
                 ->andWhere('agentEmploiType.deletedOn IS NULL');
-            $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
+            $qb = AgentGrade::decorateWithActif($qb, 'agentEmploiType');
         }
 
         if ($avecHisto === false) {
@@ -62,8 +62,8 @@ class EmploiTypeService
             ->setParameter('id', $id);
 
         if ($avecAgent) {
-            $qb = $qb->addSelect('agentGrade')->join('emploitype.agentGrades', 'agentGrade')
-                ->addSelect('agent')->join('agentGrade.agent', 'agent')
+            $qb = $qb->addSelect('agentEmploiType')->join('emploitype.agentEmploiTypes', 'agentEmploiType')
+                ->addSelect('agent')->join('agentEmploiType.agent', 'agent')
                 ->andWhere('agent.deletedOn IS NULL');
         }
 

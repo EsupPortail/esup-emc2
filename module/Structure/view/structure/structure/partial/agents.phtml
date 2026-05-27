@@ -195,12 +195,18 @@ $isForce = (isset($options['force']) and $options['force'] === true);
     });
 
     function extract<?php echo $options['id']; ?>() {
-        let agents = ["Agent·e, Structure"];
+        let agents = ["Agent·e,Structure fine,Supérieur·es hiérachiques direct·es,Autorités hiérachiques"];
         <?php usort($agents, function ( $a, $b) { return $a->getDenomination() <=> $b->getDenomination();}); ?>
         <?php foreach ($agents as $agent) : ?>
-            <?php //RUSTINE
-                $agent = ($agent instanceof StructureAgentForce)?$agent->getAgent():$agent; ?>
-            agents.push("\"<?php echo strip_tags($agent?->getDenomination()); ?>\",\"<?php echo $agent->getAffectationPrincipale()?->getStructure()->getLibelleLong(); ?>\"");
+            <?php
+                //RUSTINE
+                $agent = ($agent instanceof StructureAgentForce)?$agent->getAgent():$agent;
+                $superieurs = $agent->getSuperieurs(); $superieurs = array_map(function (AgentSuperieur $s) { return $s->getSuperieur()->getDenomination(); }, $superieurs);
+                $autorites = $agent->getAutorites(); $autorites = array_map(function (AgentAutorite $a) { return $a->getAutorite()->getDenomination(); }, $autorites);
+            ?>
+
+            agents.push("\"<?php echo strip_tags($agent?->getDenomination()); ?>\",\"<?php echo $agent->getAffectationPrincipale()?->getStructure()->getLibelleLong(); ?>\",\"<?php echo implode(" \\n", $superieurs); ?>\",\"<?php echo implode("\\n", $autorites); ?>\"");
+
         <?php endforeach; ?>
         agents = agents.join('\n');
 

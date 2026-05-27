@@ -7,11 +7,16 @@
 
 use Structure\Entity\Db\Structure;
 use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Provider\Privilege\ContactPrivileges;
 use UnicaenContact\Provider\Privilege\ContacttypePrivileges;
 
 $this->headTitle('Contacts');
 
 $canIndexType = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_INDEX));
+$canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
+$canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
+$canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
+
 ?>
 
 <div class="row">
@@ -24,14 +29,21 @@ $canIndexType = $this->isAllowed(ContacttypePrivileges::getResourceId(Contacttyp
         <?php /** @see \UnicaenContact\Controller\TypeController::indexAction() */ ?>
         <?php if ($canIndexType) : ?>
             <a href="<?php echo $this->url('unicaen-contact/type', [], ['query' => ['retour' => $this->url(null, [], [], true)]], true); ?>"
-               class="btn btn-secondary">
-                <span class="icon icon-listing float-end"></span>
+               class="btn btn-secondary float-end">
+                <span class="icon icon-listing "></span>
                 Accéder aux types
             </a>
         <?php endif; ?>
     </div>
 </div>
 
+<?php if ($canAjouterContact) : ?>
+    <a href=""
+        class="btn btn-primary ajax-modal" data-event="modification" >
+        <span class="icon icon-ajouter"></span>
+        Ajouter un contact
+    </a>
+<?php endif; ?>
 
 
 <div class="card">
@@ -40,16 +52,24 @@ $canIndexType = $this->isAllowed(ContacttypePrivileges::getResourceId(Contacttyp
         Filtre de recherches
     </div>
     <div class="card-body">
-        TODO
+        <div class="col-md-9">
+            TYPE
+            STRUCTURE
+        </div>
+        <div class="col-md-3">
+            Filtrer RAZ
+        </div>
     </div>
 </div>
 
 <table class="table table-condensed" id="contacts">
     <thead>
     <tr>
-        <th class="col-md-5"> Structure </th>
-        <th class="col-md-5"> Type </th>
-        <th class="col-md-5"> Contact </th>
+        <th class="col-md-1"> Id </th>
+        <th class="col-md-2" data-order="string"> Dénomination </th>
+        <th class="col-md-3"> Informations de contact </th>
+        <th class="col-md-1"> Type</th>
+        <th class="col-md-3"> Structures </th>
         <th class="col-md-2 action"> Action </th>
     </tr>
     </thead>
@@ -58,25 +78,40 @@ $canIndexType = $this->isAllowed(ContacttypePrivileges::getResourceId(Contacttyp
         <?php /** @var Contact $contact */ ?>
         <?php foreach ($structure->getContacts() as $contact): ?>
             <tr>
+                <td data-column-id="Id">
+                    <?php echo $contact->getId(); ?>
+                </td>
+                <td data-colomun="Dénomination" data-order="<?php echo $contact->getNom(); ?> <?php echo $contact->getPrenom(); ?>">
+                    <?php echo $contact->getPrenom(); ?> <?php echo $contact->getNom(); ?>
+                </td>
+                <td data-colomun="Informations de contact">
+                    <?php if ($contact->getTelephone()) : ?>
+                        <?php echo $contact->getTelephone(); ?>
+                    <?php else : ?>
+                        <span class="missing-data">Aucun numéro de téléphone</span>
+                    <?php endif; ?>
+                    <br>
+                    <?php if ($contact->getEmail()) : ?>
+                        <?php echo $contact->getEmail(); ?>
+                    <?php else : ?>
+                        <span class="missing-data">Aucune adresse électronique</span>
+                    <?php endif; ?>
+                </td>
+                <td data-column-id="Type">
+                    <?php echo $contact->getType()->getLibelle(); ?> <br>
+                    <code><?php echo $contact->getType()->getCode(); ?></code>
+                </td>
                 <td data-column-id="Structure">
+                    TO BE CHANGED
                     <?php if ($structure->getNiv2() AND $structure->getNiv2() !== $structure) : ?>
                         <?php echo $structure->getNiv2()->getLibelleCourt(); ?> >
                     <?php endif; ?>
                     <?php echo $structure->getLibelleLong(); ?><br>
                     <?php echo $structure->getType()->getLibelle(); ?>
                 </td>
-                <td data-column-id="Type">
-                    <?php echo $contact->getType()->getLibelle(); ?> <br>
-                    <code><?php echo $contact->getType()->getCode(); ?></code>
+                <td data-column-id="Action">
+                    TO DO
                 </td>
-                <td data-column-id="Contact">
-                    <?php echo $contact->getPrenom(); ?> <?php echo $contact->getNom(); ?><br>
-                    <?php if ($contact->getTelephone()) : ?>
-                        <?php echo $contact->getTelephone(); ?><br>
-                    <?php endif; ?>
-                    <?php echo $contact->getEmail(); ?>
-                </td>
-                <td></td>
             </tr>
         <?php endforeach; ?>
     <?php endforeach; ?>
