@@ -1,13 +1,48 @@
 <?php
 
 /**
+ * @see \Structure\Controller\StructureController::indexAction()
  * @var Structure[] $structures
  */
 
 use Structure\Entity\Db\Structure;
 use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Provider\Privilege\ContacttypePrivileges;
 
+$this->headTitle('Contacts');
+
+$canIndexType = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_INDEX));
 ?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Contacts
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php /** @see \UnicaenContact\Controller\TypeController::indexAction() */ ?>
+        <?php if ($canIndexType) : ?>
+            <a href="<?php echo $this->url('unicaen-contact/type', [], ['query' => ['retour' => $this->url(null, [], [], true)]], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-listing float-end"></span>
+                Accéder aux types
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-header">
+        <span class="icon icon-filter"></span>
+        Filtre de recherches
+    </div>
+    <div class="card-body">
+        TODO
+    </div>
+</div>
 
 <table class="table table-condensed" id="contacts">
     <thead>
