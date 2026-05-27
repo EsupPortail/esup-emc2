@@ -13,7 +13,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
             <div class="row">
                 <div class="col-md-9">
                     <input type="hidden" value="acceder" id="type" name="type"/>
-                    <label for="denomination">Accéder directement à une fiche agent  </label>
+                    <label for="denomination">Accéder directement à une fiche agent : </label>
                     <?php
                     $agentFiltreSas = new SearchAndSelect('agent-sas');
                     /** @see \Agent\Controller\AgentController::rechercherLargeAction() */
@@ -30,6 +30,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                 <!-- BOUTON -->
                 <div class="col-md-3">
                     <div class="pull-right">
+                        <div style="height:1.2rem;">&nbsp;</div>
                         <button class="btn btn-primary action" id="acceder">
                             <span class="icon icon-voir"></span>
                             Accéder
