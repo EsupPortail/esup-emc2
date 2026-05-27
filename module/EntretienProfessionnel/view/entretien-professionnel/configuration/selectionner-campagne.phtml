@@ -7,9 +7,17 @@ use EntretienProfessionnel\Entity\Db\Campagne;
  * @see \EntretienProfessionnel\Controller\CampagneConfigurationRecopieController::verifierAction()
  * @var Campagne[] $campagnes
  * @var string $url
+ * @var ?string $info
  */
 
 ?>
+
+<?php if (isset($info)) : ?>
+    <div class="alert alert-info">
+        <span class="icon icon-info"></span>
+        <?php echo $info; ?>
+    </div>
+<?php endif; ?>
 
 <form method="post" action="<?php echo $url; ?>">
     <label for="campagne">

@@ -139,14 +139,18 @@ class CampagneConfigurationRecopieController extends AbstractActionController
             $campagne = $this->getCampagneService()->getCampagne($campagneId);
 
             if ($campagne !== null) {
-                $error = $this->getCampagneConfigurationRecopieService()->verifierFormulaire($campagne);
+                if ($campagne->getPrecede() === null) {
+                    $warning = "La campagne ".$campagne->getId()." ne fait suite à aucune campagne. <br>Les recopies ne peuvent pas être faites dans ce contexte.";
+                } else {
+                    $error = $this->getCampagneConfigurationRecopieService()->verifierFormulaire($campagne);
 
-                $log1 = $this->getCampagneConfigurationRecopieService()->verifierTypes();
-                $log2 = $this->getCampagneConfigurationRecopieService()->verifierExistences($campagne);
-                $warning = $log1 . (($log1)?"<br>":"") . $log2;
+                    $log1 = $this->getCampagneConfigurationRecopieService()->verifierTypes();
+                    $log2 = $this->getCampagneConfigurationRecopieService()->verifierExistences($campagne);
+                    $warning = $log1 . (($log1) ? "<br>" : "") . $log2;
 
-                if ($error === null AND $warning === null) {
-                    $success = "Les copies sont bien paramétrées pour la campagne ".$campagne->getAnnee();
+                    if ($error === null and $warning === null) {
+                        $success = "Les copies sont bien paramétrées pour la campagne " . $campagne->getAnnee();
+                    }
                 }
             }
 
@@ -162,10 +166,12 @@ class CampagneConfigurationRecopieController extends AbstractActionController
         }
 
         $campagnes = $this->getCampagneService()->getCampagnes();
+        $campagnes = array_filter($campagnes, function ($campagne) { return $campagne->getPrecede() !== null; });
         $vm = new ViewModel([
             'title' => "Vérification des recopies",
             'campagnes' => $campagnes,
             'url' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration-recopie/verifier', [], [], true),
+            'info' => "Seules les campagnes précédant une autre peuvent faire l'objet de recopies. Par conséquent seulement celles-ci sont sélectionnables.",
         ]);
         $vm->setTemplate('entretien-professionnel/configuration/selectionner-campagne');
         return $vm;
