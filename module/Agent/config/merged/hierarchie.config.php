@@ -161,7 +161,7 @@ return [
                                 'dropdown-header' => true,
                             ],
                             'hierarchie' => [
-                                'label' => 'Gestion des chaînes hiérarchiques',
+                                'label' => 'Chaînes hiérarchiques',
                                 'route' => 'agent/hierarchie',
                                 'resource' => PrivilegeController::getResourceId(AgentHierarchieController::class, 'index'),
                                 'order' => 9999,

@@ -16,13 +16,13 @@ use Agent\Provider\Privilege\AgentPrivileges;
 use Carriere\Entity\Db\Mobilite;
 use Structure\Entity\Db\Structure;
 
-$this->headTitle("Gestion des statuts de mobilité des agent·es");
+$this->headTitle("Statuts de mobilité des agent·es");
 
 $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AJOUTER));
 ?>
 
 <h1 class="page-header">
-    Gestion des statuts de mobilité des agent·es
+    Statuts de mobilité des agent·es
 </h1>
 
 <?php echo $this->partial('partial/filtre', ['mobilites' => $types, 'agent' => $agent, 'mobilite' => $mobilite, 'structure' => $structure]); ?>

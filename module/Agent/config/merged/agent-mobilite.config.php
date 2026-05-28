@@ -171,7 +171,7 @@ return [
                     'gestion' => [
                         'pages' => [
                             'agent-mobilite' => [
-                                'label' => 'Gestion des statuts de mobilités des agents',
+                                'label' => 'Statuts de mobilités des agents',
                                 'route' => 'agent/mobilite',
                                 'resource' => PrivilegeController::getResourceId(AgentMobiliteController::class, 'index'),
                                 'order' => 100000,
