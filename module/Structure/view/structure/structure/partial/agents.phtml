@@ -195,7 +195,7 @@ $isForce = (isset($options['force']) and $options['force'] === true);
     });
 
     function extract<?php echo $options['id']; ?>() {
-        let agents = ["Agent·e,Structure fine,Supérieur·es hiérachiques direct·es,Autorités hiérachiques"];
+        let agents = ["Agent·e,Structure fine,Supérieur·es hiérarchiques direct·es,Autorités hiérarchiques"];
         <?php usort($agents, function ( $a, $b) { return $a->getDenomination() <=> $b->getDenomination();}); ?>
         <?php foreach ($agents as $agent) : ?>
             <?php
