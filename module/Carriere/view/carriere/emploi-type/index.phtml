@@ -6,6 +6,7 @@
  * @var bool $avecAgent
  */
 
+use Agent\Entity\Db\AgentEmploiType;
 use Carriere\Entity\Db\EmploiType;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 
@@ -47,6 +48,7 @@ $canAction = ($canModifier OR $canLister);
     </thead>
     <tbody>
     <?php foreach($emploisTypes as $emploiType): ?>
+        <?php $actifs = array_filter($emploiType->getAgentEmploiTypes(), function (AgentEmploiType $a) { return $a->estEnCours() AND !$a->isDeleted(); }) ?>
         <tr>
             <td>
                 <span
