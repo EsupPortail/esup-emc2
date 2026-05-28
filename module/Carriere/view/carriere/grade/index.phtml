@@ -6,8 +6,8 @@
  * @var bool $avecAgent
  */
 
+use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Grade;
-use Carriere\Provider\Privilege\CorpsPrivileges;
 use Carriere\Provider\Privilege\GradePrivileges;
 
 $canLister = $this->isAllowed(GradePrivileges::getResourceId(GradePrivileges::GRADE_LISTER_AGENTS));
@@ -46,6 +46,7 @@ $this->headTitle("Liste des grades");
     </thead>
     <tbody>
     <?php foreach($grades as $grade): ?>
+        <?php $actifs = array_filter($grade->getAgentGrades(), function (AgentGrade $a) { return $a->estEnCours() AND !$a->isDeleted(); }) ?>
         <tr>
             <td>
                 <span
@@ -55,7 +56,7 @@ $this->headTitle("Liste des grades");
                 <?php echo $grade->getLibelleLong(); ?>
                 </span>
             </td>
-            <td> <?php echo count($grade->getAgentGrades()); ?> </td>
+            <td> <?php echo count($actifs); ?> </td>
             <?php if ($canAction) : ?>
             <td class="action">
                     <a
