@@ -2,7 +2,9 @@
 
 namespace EntretienProfessionnel\Form\AgentForceSansObligation;
 
+use Agent\Service\Agent\AgentServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
+use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Radio;
@@ -10,11 +12,16 @@ use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 
 class AgentForceSansObligationForm extends Form
 {
     use CampagneServiceAwareTrait;
+    use AgentServiceAwareTrait;
+    use StructureServiceAwareTrait;
+    use AgentForceSansObligationServiceAwareTrait;
 
     private ?string $urlAgent = null;
 
@@ -115,6 +122,28 @@ class AgentForceSansObligationForm extends Form
             'agentsearch' => ['required' => true,],
             'structuresearch' => ['required' => false,],
             'campagne' => ['required' => true,],
+            'type' => ['required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "Une exception existe déjà pour cet·te agent·e et campagne sur la structure sélectionnée.",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            $agent = $this->getAgentService()->getAgent($context['agentsearch']['id']);
+                            $structure = $this->getStructureService()->getStructure($context['structuresearch']['id']);
+                            $campagne = $this->getCampagneService()->getCampagne($context['campagne']);
+                            $has = $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagneAndAgentAndStructure(
+                                $campagne, $agent, $structure
+                            );
+                            if (!empty($has)) {
+                                if (count($has) === 1 AND current($has)->getId() === $this->getObject()->getId()) return true;
+                                return false;
+                            }
+                            return true;
+                        },
+                    ],
+                ]],],
             'raison' => ['required' => false,],
         ]));
     }

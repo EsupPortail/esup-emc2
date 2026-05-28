@@ -10,7 +10,9 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 
 
 class AgentForceSansObligationController extends AbstractActionController
@@ -19,6 +21,9 @@ class AgentForceSansObligationController extends AbstractActionController
     use AgentForceSansObligationFormAwareTrait;
     use AgentServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use StructureServiceAwareTrait;
+
+    /** @method FlashMessenger flashMessenger() */
 
     public function indexAction(): ViewModel
     {
@@ -35,6 +40,20 @@ class AgentForceSansObligationController extends AbstractActionController
         $forcage = $this->params()->fromQuery('forcage');
         if ($forcage) $agentsForcesSansObligation = array_filter($agentsForcesSansObligation, function (AgentForceSansObligation $a) use ($forcage) { return $a->getType() === $forcage;});
 
+        $structureId = $this->params()->fromQuery('structure');
+        if ($structureId) {
+            if ($structureId === -1) {
+                $agentsForcesSansObligation = array_filter($agentsForcesSansObligation, function (AgentForceSansObligation $a)  {
+                    return $a->getStructure() === null;
+                });
+            } else {
+                $structure = $this->getStructureService()->getStructure($structureId);
+                $agentsForcesSansObligation = array_filter($agentsForcesSansObligation, function (AgentForceSansObligation $a) use ($structure) {
+                    return $a->getStructure() === $structure;
+                });
+            }
+        } else $structure = null;
+
         return new ViewModel([
             'agentsForcesSansObligation' => $agentsForcesSansObligation,
             'campagnes' => $campagnes,
@@ -42,6 +61,8 @@ class AgentForceSansObligationController extends AbstractActionController
             'agent' => $agent,
             'campagne' => $campagne,
             'forcage' => $forcage,
+            'structure' => $structureId,
+            'structuresGroups' =>  $this->getStructureService()->getStructuresAsOptionGroup(),
         ]);
     }
 

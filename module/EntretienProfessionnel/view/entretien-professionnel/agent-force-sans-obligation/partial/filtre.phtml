@@ -3,6 +3,7 @@
 use Agent\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Form\Element\SearchAndSelect;
 
 /**
@@ -10,6 +11,8 @@ use UnicaenApp\Form\Element\SearchAndSelect;
  * @var ?Campagne $campagne
  * @var ?Agent $agent
  * @var ?string $forcage
+ * @var ?string $structure
+ * @var array $structuresGroups
  */
 
 ?>
@@ -25,7 +28,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
             <div class="row">
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="campagne">Campagne : </label>
                             <select id="campagne" name="campagne" class="selectpicker" data-live-search="true">
                                 <option value=""> Toutes les campagnes</option>
@@ -43,7 +46,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="forcage"> Type d'exception : </label>
                             <select id="forcage" name="forcage" class="selectpicker">
                                 <option value=""> Peu importe</option>
@@ -51,6 +54,32 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                                     <option value="<?php echo $id; ?>"
                                         <?php if (isset($forcage) and $forcage === $id) echo " selected "; ?>
                                     > <?php echo $libelle; ?> </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="structure"> Structure d'affectation : </label>
+                            <select id="structure" name="structure" class="form-control selectpicker" data-live-search="true">
+                                <option value="" disabled  hidden
+                                        <?php if (!isset($structure) OR $structure === '') { echo " selected " ; } ?>
+                                >
+                                    Sélectionnez une option
+                                </option>
+                                <option value="-1"
+                                        <?php if (isset($structure) AND $structure == '-1') { echo " selected " ; } ?>
+                                >
+                                    Aucune structure
+                                </option>
+                                <?php foreach ($structuresGroups as $group) : ?>
+                                    <optgroup label="<?php echo $group['label']; ?>">
+                                        <?php foreach ($group['options'] as $id => $label) : ?>
+                                            <option value="<?php echo $id; ?>"
+                                                    <?php if ($structure  == $id) echo 'selected'; ?>
+                                            >
+                                                <?php echo $label; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -107,11 +136,13 @@ use UnicaenApp\Form\Element\SearchAndSelect;
         let campagneId = $('select#campagne option:selected').val();
         let agentId = $('input[name="agent[id]"]').val();
         let forcageId = $('select#forcage option:selected').val();
+        let $structureId = $('select#structure option:selected').val();
 
         let query = "";
         query += "&forcage=" + forcageId;
         query += "&campagne=" + campagneId;
         query += "&agent=" + agentId;
+        query += "&structure=" + $structureId;
         window.location.href = '?' + query;
     });
 

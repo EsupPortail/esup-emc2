@@ -11,6 +11,7 @@ use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
+use Structure\Entity\Db\Structure;
 
 class AgentForceSansObligationService {
     use ProvidesObjectManager;
@@ -171,6 +172,23 @@ class AgentForceSansObligationService {
             $agents[$agent->getId()] = $agent;
         }
         return $agents;
+    }
+
+    /** @return AgentForceSansObligation[] */
+    public function getAgentsForcesSansObligationByCampagneAndAgentAndStructure(?Campagne $campagne, ?Agent $agent, ?Structure $structure, bool $withHisto = false): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentForceSansObligation.campagne = :campagne')->setParameter('campagne', $campagne)
+            ->andWhere('agentForceSansObligation.agent = :agent')->setParameter('agent', $agent);
+        if ($structure) {
+            $qb = $qb->andWhere('agentForceSansObligation.structure = :structure')->setParameter('structure', $structure);
+        } else {
+            $qb = $qb->andWhere('agentForceSansObligation.structure IS NULL');
+        }
+        if ($withHisto === false) $qb = $qb->andWhere('agentForceSansObligation.histoDestruction IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 

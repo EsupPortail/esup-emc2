@@ -4,6 +4,7 @@ use Agent\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Privilege\AgentforcesansobligationPrivileges;
+use Structure\Entity\Db\Structure;
 
 /**
  * @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::indexAction()
@@ -13,9 +14,11 @@ use EntretienProfessionnel\Provider\Privilege\AgentforcesansobligationPrivileges
  * @var ?Campagne $campagne
  * @var ?Agent $agent
  * @var ?string $forcage
+ * @var ?Structure $structure
+ * @var array $structuresGroups
  */
 
-$this->headTitle("Exceptions pour les entretiens professionnels ");
+$this->headTitle("Exceptions pour les entretiens professionnels");
 
 /** TODO prevoir de changer cela avec les assertions */
 $canAfficher = $this->isAllowed(AgentforcesansobligationPrivileges::getResourceId(AgentforcesansobligationPrivileges::AGENTFORCESANSOBLIGATION_AFFICHER));
@@ -38,7 +41,11 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
     </a>
 <?php endif; ?>
 
-<?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'campagne' => $campagne, 'agent' => $agent, 'forcage' => $forcage]); ?>
+<?php //echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<?php echo $this->partial('partial/filtre', ['structuresGroups' => $structuresGroups, 'campagnes' => $campagnes,
+        'campagne' => $campagne, 'agent' => $agent, 'forcage' => $forcage, 'structure' => $structure
+]); ?>
 
 <?php if (empty($agentsForcesSansObligation)) : ?>
     <em> Aucun·e agent·e n'est forcé·e sans obligation </em>
