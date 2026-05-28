@@ -7,6 +7,7 @@
  * @var bool $avecAgent
  */
 
+use Agent\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Corps;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 
@@ -49,6 +50,7 @@ $canAction = ($canModifier or $canLister);
     </thead>
     <tbody>
     <?php foreach ($corps as $corp): ?>
+        <?php $actifs = array_filter($corp->getAgentGrades(), function (AgentGrade $a) { return $a->estEnCours() AND !$a->isDeleted(); }) ?>
 <!--        --><?php //if (!$avecAgent OR ($repartition[$corp->getId()] ?? 0) > 0)  : ?>
             <tr>
                 <td>
@@ -59,8 +61,7 @@ $canAction = ($canModifier or $canLister);
                     <?php echo $corp->getLibelleLong(); ?>
                     </span>
                 </td>
-                            <td> <?php echo count($corp->getAgentGrades()); ?> </td>
-<!--                <td> --><?php //echo $repartition[$corp->getId()] ?? "N.C."; ?><!-- </td>-->
+                            <td> <?php echo count($actifs); ?> </td>
                 <td> <?php echo $corp->getCategorie(); ?> </td>
                 <td class="action">
                     <?php if ($corp->isSuperieurAsAutorite()) : ?>
