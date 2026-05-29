@@ -2,12 +2,15 @@
 
 namespace Structure;
 
-use Agent\Controller\AgentMobiliteController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Structure\Controller\ContactController;
 use Structure\Controller\ContactControllerFactory;
-use Structure\Provider\Privilege\StructurePrivileges;
+use Structure\Form\Contact\ContactForm;
+use Structure\Form\Contact\ContactFormFactory;
+use Structure\Form\Contact\ContactHydrator;
+use Structure\Form\Contact\ContactHydratorFactory;
+use UnicaenContact\Provider\Privilege\ContactPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -19,14 +22,28 @@ return [
                     'action' => [
                         'index',
                     ],
-                    'privileges' => StructurePrivileges::STRUCTURE_INDEX, //TODO privilege ...
+                    'privileges' => ContactPrivileges::CONTACT_INDEX,
                 ],
                 [
                     'controller' => ContactController::class,
                     'action' => [
                         'ajouter',
                     ],
-                    'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION, //TODO privilege ...
+                    'privileges' => ContactPrivileges::CONTACT_AJOUTER,
+                ],
+                [
+                    'controller' => ContactController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => ContactPrivileges::CONTACT_MODIFIER,
+                ],
+                [
+                    'controller' => ContactController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => ContactPrivileges::CONTACT_SUPPRIMER,
                 ],
             ],
         ],
@@ -41,6 +58,7 @@ return [
                         'options' => [
                             'route' => '/contact',
                             'defaults' => [
+                                /** @see ContactController::indexAction() */
                                 'controller' => ContactController::class,
                                 'action' => 'index',
                             ],
@@ -50,53 +68,33 @@ return [
                             'ajouter' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/ajouter/:structure',
+                                    'route' => '/ajouter[/:structure]',
                                     'defaults' => [
                                         /** @see ContactController::ajouterAction() */
                                         'action' => 'ajouter',
                                     ],
                                 ],
                             ],
-//                            'modifier' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/modifier/:observateur[/:structure]',
-//                                    'defaults' => [
-//                                        /** @see ObservateurController::modifierAction() */
-//                                        'action' => 'modifier',
-//                                    ],
-//                                ],
-//                            ],
-//                            'historiser' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/historiser/:observateur',
-//                                    'defaults' => [
-//                                        /** @see ObservateurController::historiserAction() */
-//                                        'action' => 'historiser',
-//                                    ],
-//                                ],
-//                            ],
-//                            'restaurer' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/restaurer/:observateur',
-//                                    'defaults' => [
-//                                        /** @see ObservateurController::restaurerAction() */
-//                                        'action' => 'restaurer',
-//                                    ],
-//                                ],
-//                            ],
-//                            'supprimer' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/supprimer/:observateur',
-//                                    'defaults' => [
-//                                        /** @see ObservateurController::supprimerAction() */
-//                                        'action' => 'supprimer',
-//                                    ],
-//                                ],
-//                            ],
+                            'modifier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/modifier/:contact',
+                                    'defaults' => [
+                                        /** @see ContactController::modifierAction() */
+                                        'action' => 'modifier',
+                                    ],
+                                ],
+                            ],
+                            'supprimer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/supprimer/:contact',
+                                    'defaults' => [
+                                        /** @see ContactController::supprimerAction() */
+                                        'action' => 'supprimer',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -136,11 +134,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            ContactForm::class => ContactFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            ContactHydrator::class => ContactHydratorFactory::class,
         ],
-    ]
-
+    ],
 ];

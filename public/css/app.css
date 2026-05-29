@@ -439,3 +439,8 @@ small.role-libelle {
 a#user-current-info {
     text-decoration: none;
 }
+
+body {
+    /*font-size: min(12px,0.9rem) !important;*/
+    font-size: 0.8rem !important;
+}

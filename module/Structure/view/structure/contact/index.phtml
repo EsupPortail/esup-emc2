@@ -1,12 +1,18 @@
 <?php
 
 /**
- * @see \Structure\Controller\StructureController::indexAction()
+ * @see \Structure\Controller\ContactController::indexAction()
+ * @var Contact[] $contacts
+ * @var array<int, Structure[]> $dictionnaire
+ *
+ * @var Type[] $types
  * @var Structure[] $structures
+ * @var array $params
  */
 
 use Structure\Entity\Db\Structure;
 use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Entity\Db\Type;
 use UnicaenContact\Provider\Privilege\ContactPrivileges;
 use UnicaenContact\Provider\Privilege\ContacttypePrivileges;
 
@@ -16,6 +22,10 @@ $canIndexType = $this->isAllowed(ContacttypePrivileges::getResourceId(Contacttyp
 $canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
 $canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
 $canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
+
+usort($types, function (Type $a, Type $b) {
+    return $a->getLibelle() <=> $b->getLibelle();
+});
 
 ?>
 
@@ -37,83 +47,196 @@ $canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(Contact
     </div>
 </div>
 
-<?php if ($canAjouterContact) : ?>
-    <a href=""
-        class="btn btn-primary ajax-modal" data-event="modification" >
-        <span class="icon icon-ajouter"></span>
-        Ajouter un contact
-    </a>
-<?php endif; ?>
+<div>
+    <?php if ($canAjouterContact) : ?>
+        <?php /** @see \Structure\Controller\ContactController::ajouterAction() */ ?>
+        <a href="<?php echo $this->url('structure/contact/ajouter', [], [], true); ?>"
+           class="btn btn-primary ajax-modal" data-event="modification">
+            <span class="icon icon-ajouter"></span>
+            Ajouter un contact
+        </a>
+    <?php endif; ?>
+</div>
 
 
-<div class="card">
+<div class="card" style="margin-bottom: 1rem; margin-top: 1rem;">
     <div class="card-header">
         <span class="icon icon-filter"></span>
         Filtre de recherches
     </div>
     <div class="card-body">
-        <div class="col-md-9">
-            TYPE
-            STRUCTURE
-        </div>
-        <div class="col-md-3">
-            Filtrer RAZ
-        </div>
+        <?php /** @see \Structure\Controller\ContactController::indexAction() */ ?>
+        <form method="get" id="filtre" action="<?php $this->url('structure/contact', [], [], true); ?>">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="type">Type de contact :</label>
+                            <select id="type" name="type">
+                                <option value="">Tous les types</option>
+                                <?php foreach ($types as $type) : ?>
+                                    <option value="<?php echo $type->getId(); ?>"
+                                            <?php if (isset($params['type']) and $params['type'] == $type?->getId()) echo 'selected'; ?>
+                                    >
+                                        <?php echo $type->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="structure"> Structure d'affectation : </label>
+                            <select id="structure" name="structure" class="form-control selectpicker"
+                                    data-live-search="true">
+                                <option value="">
+                                    Toutes les structures
+                                </option>
+                                <option value="-1"
+                                        <?php if (isset($params['structure']) and $params['structure'] == '-1') {
+                                            echo " selected ";
+                                        } ?>
+                                >
+                                    Aucune structure
+                                </option>
+
+                                <?php foreach ($structures as $group) : ?>
+                                    <optgroup label="<?php echo $group['label']; ?>">
+                                        <?php foreach ($group['options'] as $id => $label) : ?>
+                                            <option value="<?php echo $id; ?>"
+                                                    <?php if (isset($params['structure']) and $params['structure'] == $id) echo 'selected'; ?>
+                                            >
+                                                <?php echo $label; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary action" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <button class="btn btn-primary action" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        Remise à zéro
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
 <table class="table table-condensed" id="contacts">
     <thead>
     <tr>
-        <th class="col-md-1"> Id </th>
-        <th class="col-md-2" data-order="string"> Dénomination </th>
-        <th class="col-md-3"> Informations de contact </th>
+        <th class="col-md-1"> Id</th>
+        <th class="col-md-2" data-order="string"> Dénomination</th>
+        <th class="col-md-2"> Informations de contact</th>
+        <th class="col-md-2"> Service</th>
         <th class="col-md-1"> Type</th>
-        <th class="col-md-3"> Structures </th>
-        <th class="col-md-2 action"> Action </th>
+        <th class="col-md-2"> Structures</th>
+        <th class="col-md-2 action"> Action</th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($structures as $structure): ?>
-        <?php /** @var Contact $contact */ ?>
-        <?php foreach ($structure->getContacts() as $contact): ?>
-            <tr>
-                <td data-column-id="Id">
-                    <?php echo $contact->getId(); ?>
-                </td>
-                <td data-colomun="Dénomination" data-order="<?php echo $contact->getNom(); ?> <?php echo $contact->getPrenom(); ?>">
-                    <?php echo $contact->getPrenom(); ?> <?php echo $contact->getNom(); ?>
-                </td>
-                <td data-colomun="Informations de contact">
-                    <?php if ($contact->getTelephone()) : ?>
-                        <?php echo $contact->getTelephone(); ?>
-                    <?php else : ?>
-                        <span class="missing-data">Aucun numéro de téléphone</span>
+    <?php foreach ($contacts as $contact): ?>
+        <tr>
+            <td data-column-id="Id">
+                <?php echo $contact->getId(); ?>
+            </td>
+            <td data-colomun="Dénomination"
+                data-order="<?php echo $contact->getNom(); ?> <?php echo $contact->getPrenom(); ?>">
+                <?php echo $contact->getPrenom(); ?>
+                <?php echo $contact->getNom(); ?>
+            </td>
+            <td data-colomun="Informations de contact">
+                <?php if ($contact->getTelephone()) : ?>
+                    <?php echo $contact->getTelephone(); ?>
+                <?php else : ?>
+                    <span class="missing-data">Aucun numéro de téléphone</span>
+                <?php endif; ?>
+                <br>
+                <?php if ($contact->getEmail()) : ?>
+                    <?php echo $contact->getEmail(); ?>
+                <?php else : ?>
+                    <span class="missing-data">Aucune adresse électronique</span>
+                <?php endif; ?>
+            </td>
+            <td data-column-id="Service">
+                <?php echo $contact->getService(); ?>
+            </td>
+            <td data-column-id="Type">
+                <?php echo $contact->getType()->getLibelle(); ?> <br>
+                <code><?php echo $contact->getType()->getCode(); ?></code>
+            </td>
+            <td data-column-id="Structures">
+                <ul>
+                    <?php if (isset($dictionnaire[$contact->getId()])) : ?>
+                        <?php foreach ($dictionnaire[$contact->getId()] as $structure) : ?>
+                            <li>
+                                <?php if ($structure->getNiv2() and $structure->getNiv2() !== $structure) : ?>
+                                    <?php echo $structure->getNiv2()->getLibelleCourt(); ?> >
+                                <?php endif; ?>
+                                <?php echo $structure->getLibelleLong(); ?>
+                            </li>
+                        <?php endforeach; ?>
                     <?php endif; ?>
-                    <br>
-                    <?php if ($contact->getEmail()) : ?>
-                        <?php echo $contact->getEmail(); ?>
-                    <?php else : ?>
-                        <span class="missing-data">Aucune adresse électronique</span>
-                    <?php endif; ?>
-                </td>
-                <td data-column-id="Type">
-                    <?php echo $contact->getType()->getLibelle(); ?> <br>
-                    <code><?php echo $contact->getType()->getCode(); ?></code>
-                </td>
-                <td data-column-id="Structure">
-                    TO BE CHANGED
-                    <?php if ($structure->getNiv2() AND $structure->getNiv2() !== $structure) : ?>
-                        <?php echo $structure->getNiv2()->getLibelleCourt(); ?> >
-                    <?php endif; ?>
-                    <?php echo $structure->getLibelleLong(); ?><br>
-                    <?php echo $structure->getType()->getLibelle(); ?>
-                </td>
-                <td data-column-id="Action">
-                    TO DO
-                </td>
-            </tr>
-        <?php endforeach; ?>
+                </ul>
+            </td>
+            <td data-column-id="Action">
+                <?php if ($canModifierContact) : ?>
+                    <?php /** @see \Structure\Controller\ContactController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('structure/contact/modifier', ['contact' => $contact->getId()], [], true); ?>"
+                       class="action primary ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-modifier"></span>
+                        Modifier
+                    </a>
+                <?php endif; ?>
+                <br>
+                <?php if ($canSupprimerContact) : ?>
+                    <?php /** @see \Structure\Controller\ContactController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('structure/contact/supprimer', ['contact' => $contact->getId()], [], true); ?>"
+                       class="action danger ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
+
+
+<script>
+    $(function () {
+        $('select').selectpicker();
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('table#contacts').dataTable({
+            paging: true,
+            info: true,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [6], orderable: false}
+            ]
+        });
+    });
+
+
+    $('button#clear').on("click", function (e) {
+        e.preventDefault();
+        window.location.href = 'contact';
+    });
+
+
+</script>

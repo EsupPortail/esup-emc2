@@ -11,6 +11,7 @@ use Agent\Entity\Db\AgentAutorite;
 use Agent\Entity\Db\AgentSuperieur;
 use Application\Provider\Parametre\GlobalParametres;
 use DateTime;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
@@ -25,6 +26,8 @@ use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Provider\Role\RoleProvider;
+use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Entity\Db\Type;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
@@ -789,13 +792,45 @@ EOS;
         return $result;
     }
 
-    public function getStructuresWithContacts(): array
+    public function getStructuresWithContacts(?Type $type = null, ?Structure $structure = null): array
     {
         $qb = $this->createQueryBuilder()
             ->join('structure.contacts', 'contact')->addSelect('contact')
             ->join('contact.type', 'contact_type')->addSelect('contact_type');
+        if ($type)  $qb = $qb->andWhere('contact.type = :type')->setParameter('type', $type);
+        if ($structure)  $qb = $qb->andWhere('structure.id = :idStructure')->setParameter('idStructure', $structure->getId());
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /** @return int[] */
+    public function getStructureIdsHavingContact(?Contact $contact): array
+    {
+        if ($contact === null) return [];
+
+        $params = ['contact_id' => $contact->getId()];
+        $sql = <<<EOS
+select structure_id as structure_id 
+from structure_contact sc 
+where sc.contact_id=:contact_id
+EOS;
+
+        try {
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, $params);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenu lors de la récupération des structures ayant le contact #" . $contact?->getId(), 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la préparation de la requête " . $sql, 0, $e);
+        }
+
+        $ids = [];
+        foreach ($tmp as $item) {
+            $ids[] = $item['structure_id'];
+        }
+        return $ids;
     }
 }

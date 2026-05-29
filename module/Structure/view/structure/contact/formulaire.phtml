@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @var Form $form
+ * @var string|null $info
+ * @var string|null $warning
+ */
+
+use Laminas\Form\Form;
+
+?>
+
+<?php if (isset($info)) : ?>
+    <div class="alert alert-info">
+        <?php echo $info; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($warning)) : ?>
+    <div class="alert alert-warning">
+        <?php echo $warning; ?>
+    </div>
+<?php endif; ?>
+
+<?php echo $this->form($form); ?>
+
+
+<script>
+    <?php if (isset($js)): ?>
+    <?php echo $js; ?>
+    <?php endif; ?>
+
+    $(function() {
+        $('select').selectpicker();
+
+        $('body').on('click', 'li', function() {
+            alert("AAAA");
+        });
+        $('optgroup').on('click', function() {
+            alert("BBBB");
+        });
+        $('label').on('click', function() {
+            alert("CCCC");
+        });
+    });
+
+
+</script>
