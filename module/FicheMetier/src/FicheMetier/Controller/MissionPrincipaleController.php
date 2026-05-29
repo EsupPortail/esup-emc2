@@ -383,7 +383,7 @@ class MissionPrincipaleController extends AbstractActionController
                     while (($row = fgetcsv($csvFile, null, ';')) !== false) {
                         $item = [];
                         for ($position = 0; $position < $nbElements; ++$position) {
-                            $item[$header[$position]] = $row[$position];
+                            $item[$header[$position]] = $row[$position]??"";
                         }
                         $raws[] = $item;
                     }
