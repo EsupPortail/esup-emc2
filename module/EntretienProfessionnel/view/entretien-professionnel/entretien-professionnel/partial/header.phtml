@@ -156,9 +156,24 @@ $strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de conv
                     <dt class="col-md-4"> Responsable </dt>
                     <dd class="col-md-8"> <?php echo $entretien->getResponsable()->getDenomination(); ?> </dd>
                     <?php if ($entretien->getCampagne()) : ?>
-                        <dt class="col-md-4"> Année </dt>
+                        <dt class="col-md-4"> Campagne </dt>
                         <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?> </dd>
                     <?php endif; ?>
+                    <dt class="col-md-4">Envoi de la convocation</dt>
+                    <dd class="col-md-8">
+                        <?php if ($entretien->getConvocation()) : ?>
+                            <?php echo $entretien->getConvocation()->format('d/m/Y à H:i'); ?>
+                        <?php else : ?>
+                            <span class="missing-data">Aucune date de convocation connue</span>
+                        <?php endif; ?>
+                    <dt class="col-md-4">Acceptation par l'agent·e</dt>
+                    <dd class="col-md-8">
+                        <?php if ($entretien->getAcceptation()) : ?>
+                            <?php echo $entretien->getAcceptation()->format('d/m/Y à H:i'); ?>
+                        <?php else :?>
+                            <span class="missing-data">Aucune date d'acceptation connue</span>
+                        <?php endif; ?>
+                    </dd>
                     <dt class="col-md-4"> Date d'entretien</dt>
                     <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
                     <dt class="col-md-4"> Lieu </dt>
@@ -263,28 +278,13 @@ $strDateSituation = $dateSituation?$dateSituation->format('d/m/Y'):'Date de conv
         </div>
         <?php endif; ?>
 
-        <!--Validation -->
+        <!--Validation ------------------------------------------------------------------------------------------------>
         <div class="card">
             <div class="card-header bg-default">
                 Validation de l'entretien
             </div>
             <div class="card-body">
                 <dl class="row">
-                    <dt class="col-md-5">Envoi de la convocation</dt>
-                    <dd class="col-md-7">
-                        <?php if ($entretien->getConvocation()) : ?>
-                            <?php echo $entretien->getConvocation()->format('d/m/Y à H:i'); ?>
-                        <?php else : ?>
-                            <span class="missing-data">Aucune date de convocation connue</span>
-                        <?php endif; ?>
-                    <dt class="col-md-5">Acceptation par l'agent·e</dt>
-                    <dd class="col-md-7">
-                        <?php if ($entretien->getAcceptation()) : ?>
-                            <?php echo $entretien->getAcceptation()->format('d/m/Y à H:i'); ?>
-                        <?php else :?>
-                            <span class="missing-data">Aucune date d'acceptation connue</span>
-                        <?php endif; ?>
-                    </dd>
                     <dt class="col-md-5">Responsable d'entretien </dt>
                     <dd class="col-md-7">
                         <?php $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE); ?>
