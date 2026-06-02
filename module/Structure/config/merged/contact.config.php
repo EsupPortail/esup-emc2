@@ -10,6 +10,7 @@ use Structure\Form\Contact\ContactForm;
 use Structure\Form\Contact\ContactFormFactory;
 use Structure\Form\Contact\ContactHydrator;
 use Structure\Form\Contact\ContactHydratorFactory;
+use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenContact\Provider\Privilege\ContactPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -44,6 +45,14 @@ return [
                         'supprimer',
                     ],
                     'privileges' => ContactPrivileges::CONTACT_SUPPRIMER,
+                ],
+                [
+                    'controller' => ContactController::class,
+                    'action' => [
+                        'associer',
+                        'desassocier',
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION,
                 ],
             ],
         ],
@@ -92,6 +101,26 @@ return [
                                     'defaults' => [
                                         /** @see ContactController::supprimerAction() */
                                         'action' => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            'associer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/associer/:structure',
+                                    'defaults' => [
+                                        /** @see ContactController::associerAction() */
+                                        'action' => 'associer',
+                                    ],
+                                ],
+                            ],
+                            'desassocier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/desassocier/:structure/:contact',
+                                    'defaults' => [
+                                        /** @see ContactController::desassocierAction() */
+                                        'action' => 'desassocier',
                                     ],
                                 ],
                             ],

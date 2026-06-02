@@ -34,24 +34,29 @@ use UnicaenContact\Provider\Privilege\ContactPrivileges;
 
 $this->headTitle($structure->getLibelleLong() . " - Description");
 
-$canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
+$canEditerDescription = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
 $canGererGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_GESTIONNAIRE));
 
-$canAjouterContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
-$canModifierContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
-$canHistoriserContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
-$canSupprimerContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
+$canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
+$canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
+$canHistoriserContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
+$canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
 
 $date = new DateTime();
-$filles = array_filter($filles, function (Structure $s) use ($date) { return ! $s->isDeleted() ; });
+$filles = array_filter($filles, function (Structure $s) use ($date) {
+    return !$s->isDeleted();
+});
 
-$sortedContacts = []; $sortedTypes = [];
+$sortedContacts = [];
+$sortedTypes = [];
 foreach ($contacts as $contact) {
     $type = $contact->getType();
     $sortedTypes[$type->getId()] = $type;
     $sortedContacts[$type->getId()][] = $contact;
 }
-usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b->getLibelle(); });
+usort($sortedTypes, function (Type $a, Type $b) {
+    return $a->getLibelle() <=> $b->getLibelle();
+});
 
 
 ?>
@@ -82,29 +87,29 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
 
         <?php if ($canEditerDescription) : ?>
             <a
-                <?php /** @see \Structure\Controller\StructureController::editerDescriptionAction() */ ?>
-                href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
-                class="btn btn-primary ajax-modal"
-                data-event="modification"
+                    <?php /** @see \Structure\Controller\StructureController::editerDescriptionAction() */ ?>
+                    href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
+                    class="btn btn-primary ajax-modal"
+                    data-event="modification"
             >
                     <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true"
                           title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
-                    Modifier le résumé de la structure
+                Modifier le résumé de la structure
             </a>
             <a
-                <?php /** @see \Structure\Controller\StructureController::toggleResumeMereAction() */ ?>
-                href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
-                class="btn btn-<?php echo $structure->getRepriseResumeMere()?'danger':'success'; ?>"
+                    <?php /** @see \Structure\Controller\StructureController::toggleResumeMereAction() */ ?>
+                    href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
+                    class="btn btn-<?php echo $structure->getRepriseResumeMere() ? 'danger' : 'success'; ?>"
             >
-            <?php if ($structure->getRepriseResumeMere()) : ?>
-                <span class="icon icon-unchecked" data-bs-toggle="tooltip" data-bs-html="true"
-                      title="Ne plus réutiliser le résumé de la structure mère"></span>
-                Ne plus utiliser le résumé de la structure mère
-            <?php else : ?>
-                <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"
-                      title="Réutiliser le résumé de la structure mère"></span>
-                Utiliser le résumé de la structure mère
-            <?php endif; ?>
+                <?php if ($structure->getRepriseResumeMere()) : ?>
+                    <span class="icon icon-unchecked" data-bs-toggle="tooltip" data-bs-html="true"
+                          title="Ne plus réutiliser le résumé de la structure mère"></span>
+                    Ne plus utiliser le résumé de la structure mère
+                <?php else : ?>
+                    <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"
+                          title="Réutiliser le résumé de la structure mère"></span>
+                    Utiliser le résumé de la structure mère
+                <?php endif; ?>
             </a>
 
         <?php endif; ?>
@@ -112,10 +117,10 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
         <br>
 
         <?php if ($structure->getRepriseResumeMere()) : ?>
-<!--            <div class="alert alert-info">-->
-<!--                <span class="icon icon-information"></span>-->
-<!--                Reprise du résumé de la structure mère.-->
-<!--            </div>-->
+            <!--            <div class="alert alert-info">-->
+            <!--                <span class="icon icon-information"></span>-->
+            <!--                Reprise du résumé de la structure mère.-->
+            <!--            </div>-->
         <?php endif; ?>
         <?php if ($structure->getDescriptionComplete()) : ?>
             <?php echo $structure->getDescriptionComplete(); ?>
@@ -130,17 +135,17 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
 
         <dl class="row">
             <?php if ($structure->getOuverture() !== null) : ?>
-                <dt class="col-md-4"> Date d'ouverture </dt>
+                <dt class="col-md-4"> Date d'ouverture</dt>
                 <dd class="col-md-8"> <?php echo $structure->getOuverture()->format('d/m/Y'); ?></dd>
             <?php endif; ?>
             <?php if ($structure->getFermeture() !== null) : ?>
-                <dt class="col-md-4"> Date de fermeture </dt>
+                <dt class="col-md-4"> Date de fermeture</dt>
                 <dd class="col-md-8">
                     <?php echo $structure->getFermeture()->format('d/m/Y'); ?>
                 </dd>
             <?php endif; ?>
             <?php if ($structure->getAdresseFonctionnelle() !== null) : ?>
-                <dt class="col-md-4"> Adresse de contact </dt>
+                <dt class="col-md-4"> Adresse de contact</dt>
                 <dd class="col-md-8"> <?php echo $structure->getAdresseFonctionnelle(); ?></dd>
             <?php endif; ?>
         </dl>
@@ -157,7 +162,7 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
             <ul>
                 <?php foreach ($responsables as $responsable) : ?>
                     <li>
-                    <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut())?$responsable->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($responsable->getDateFin())?$responsable->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                    <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut()) ? $responsable->getDateDebut()->format('d/m/Y') : "N.C"; ?> au  <?php echo ($responsable->getDateFin()) ? $responsable->getDateFin()->format('d/m/Y') : "N.C"; ?>">
                         <?php echo $responsable->getAgent()->getDenomination(); ?>
                     </span>
                     </li>
@@ -165,7 +170,7 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
             </ul>
         <?php endif; ?>
 
-        <?php if ($blocGestionnaire AND $canGererGestionnaire) : ?>
+        <?php if ($blocGestionnaire and $canGererGestionnaire) : ?>
             <h2> Gestionnaire·s </h2>
 
             <?php if (empty($gestionnaires)) : ?>
@@ -177,7 +182,7 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
                 <ul>
                     <?php foreach ($gestionnaires as $gestionnaire) : ?>
                         <li>
-                        <span title="Gestion valide sur la période du <?php echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                        <span title="Gestion valide sur la période du <?php echo ($gestionnaire->getDateDebut()) ? $gestionnaire->getDateDebut()->format('d/m/Y') : "N.C"; ?> au  <?php echo ($gestionnaire->getDateFin()) ? $gestionnaire->getDateFin()->format('d/m/Y') : "N.C"; ?>">
                             <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
                         </span>
                         </li>
@@ -191,32 +196,37 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
         <?php endif; ?>
 
         <?php if ($blocContact) : ?>
-                <h2>
-                    Contact·s
-                    <?php if ($canAjouterContact): ?>
-                        <?php /**  @see \Structure\Controller\ContactController::ajouterAction() **/ ?>
-                        <a href="<?php echo $this->url('structure/contact/ajouter', ['structure' => $structure->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification" title="Ajouter un contact pour la structure">
-                            <span class="icon icon-ajouter"></span>
-                        </a>
-                    <?php endif; ?>
-                </h2>
+            <h2>
+                Contact·s
+                <?php if ($canAjouterContact): ?>
+                    <?php /**  @see \Structure\Controller\ContactController::ajouterAction() * */ ?>
+                    <a href="<?php echo $this->url('structure/contact/ajouter', ['structure' => $structure->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon icon-ajouter" title="Ajouter un contact pour la structure"></span></a>
+                    <?php /**  @see \Structure\Controller\ContactController::associerAction() * */ ?>
+                    <a href="<?php echo $this->url('structure/contact/associer', ['structure' => $structure->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon icon-link" title="Associer un contact existant"></span></a>
+                <?php endif; ?>
+            </h2>
 
-                <?php if (empty($contacts)) : ?>
-                    <span class="text-warning">
+            <?php if (empty($contacts)) : ?>
+                <span class="text-warning">
                         <span class="icon icon-attention"></span>
                         Aucun contact de désigné pour cette structure.
                     </span>
-                <?php else : ?>
-                    <?php foreach ($sortedTypes as $type) : ?>
-                        <h3> <?php echo $type->getLibelle(); ?> </h3>
+            <?php else : ?>
+                <?php foreach ($sortedTypes as $type) : ?>
+                    <h3> <?php echo $type->getLibelle(); ?> </h3>
 
-                        <?php
-                            $contacts_ = $sortedContacts[$type->getId()];
-                            $res = usort($contacts_, function ($a, $b) { return Contact::sort($a,$b);});
-                        ?>
-                        <?php foreach ($contacts_ as $contact) : ?>
-                            <?php if ($contact->estNonHistorise() OR $canHistoriserContact OR $canSupprimerContact) : ?>
+                    <?php
+                    $contacts_ = $sortedContacts[$type->getId()];
+                    $res = usort($contacts_, function ($a, $b) {
+                        return Contact::sort($a, $b);
+                    });
+                    ?>
+                    <?php foreach ($contacts_ as $contact) : ?>
+                        <?php if ($contact->estNonHistorise() or $canHistoriserContact or $canSupprimerContact) : ?>
                             <div class="row">
                                 <div class="col-md-8">
                                     <?php echo $this->contact($contact); ?>
@@ -224,50 +234,30 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
                                 <div class="col-md-4 action">
                                     <?php if ($canEditerDescription && $canModifierContact) : ?>
                                         <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
-                                        <a      href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()],[], true);?>"
-                                                class="action primary ajax-modal" data-event="modification"
+                                        <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
+                                           class="action primary ajax-modal" data-event="modification"
                                         >
                                             <span class="icon icon-editer"></span>
                                             Modifier
                                         </a>
                                     <?php endif; ?>
-                                    <?php if ($canEditerDescription && $canHistoriserContact) : ?>
+                                    <?php if ($canEditerDescription) : ?>
                                         <br>
-                                        <?php if ($contact->estNonHistorise()) : ?>
-                                            <?php /** @see \UnicaenContact\Controller\ContactController::historiserAction() */ ?>
-                                            <a      href="<?php echo $this->url("unicaen-contact/contact/historiser", ['contact' => $contact->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true);?>"
-                                                    class="action warning"
-                                            >
-                                                <span class="icon icon-historiser"></span>
-                                                Historiser
-                                            </a>
-                                        <?php else : ?>
-                                            <?php /** @see \UnicaenContact\Controller\ContactController::restaurerAction() */ ?>
-                                            <a      href="<?php echo $this->url("unicaen-contact/contact/restaurer", ['contact' => $contact->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true);?>"
-                                                    class="action warning"
-                                            >
-                                                <span class="icon icon-restaurer"></span>
-                                                Restaurer
-                                            </a>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-                                    <?php if ($canEditerDescription && $canSupprimerContact) : ?>
-                                        <br>
-                                        <?php /** @see \UnicaenContact\Controller\ContactController::supprimerAction() */ ?>
-                                        <a      href="<?php echo $this->url("unicaen-contact/contact/supprimer", ['contact' => $contact->getId()], [], true);?>"
-                                                class="action danger ajax-modal" data-event="modification"
+                                        <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
+                                        <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
+                                           class="action warning"
                                         >
-                                            <span class="icon icon-unchecked"></span>
-                                            Supprimer
+                                            <span class="icon icon-unlink"></span>
+                                            Dés-associer
                                         </a>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
+                        <?php endif; ?>
                     <?php endforeach; ?>
-                <?php endif; ?>
+                <?php endforeach; ?>
             <?php endif; ?>
+        <?php endif; ?>
 
         <h2> Positionnement de la structure </h2>
 
@@ -278,19 +268,19 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
                 Pas de structure parente
             </span>
         <?php else : ?>
-            <ul>
+        <ul>
             <?php $canAfficher = $this->isAllowed($structure->getParent(), StructurePrivileges::STRUCTURE_AFFICHER); ?>
             <li>
-            <?php if ($canAfficher) : ?>
-                <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
-                <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getParent()->getId()], [], true); ?>">
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                    <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getParent()->getId()], [], true); ?>">
+                        <?php echo $parent->getLibelleLong(); ?>
+                    </a>
+                <?php else: ?>
                     <?php echo $parent->getLibelleLong(); ?>
-                </a>
-            <?php else: ?>
-                <?php echo $parent->getLibelleLong(); ?>
-            <?php endif; ?>
+                <?php endif; ?>
             </li>
-        <?php endif; ?>
+            <?php endif; ?>
         </ul>
 
         <h3>Structure courante <code>n</code></h3>
@@ -301,21 +291,21 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
         <?php if (empty($filles)) : ?>
             <em> Aucune structure fille </em>
         <?php else : ?>
-            <ul>
+        <ul>
             <?php foreach ($filles as $enfant) : ?>
                 <li>
-                <?php $canAfficher = $this->isAllowed($enfant, StructurePrivileges::STRUCTURE_AFFICHER); ?>
-                <?php if ($canAfficher) : ?>
-                    <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
-                    <a href="<?php echo $this->url('structure/description', ['structure' => $enfant->getId()], [], true); ?>">
-                        <?php echo $enfant->getLibelleLong()?>
-                    </a>
-                <?php else: ?>
-                    <?php echo $enfant->getLibelleLong()?>
-                <?php endif; ?>
+                    <?php $canAfficher = $this->isAllowed($enfant, StructurePrivileges::STRUCTURE_AFFICHER); ?>
+                    <?php if ($canAfficher) : ?>
+                        <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                        <a href="<?php echo $this->url('structure/description', ['structure' => $enfant->getId()], [], true); ?>">
+                            <?php echo $enfant->getLibelleLong() ?>
+                        </a>
+                    <?php else: ?>
+                        <?php echo $enfant->getLibelleLong() ?>
+                    <?php endif; ?>
                 </li>
             <?php endforeach; ?>
-        <?php endif; ?>
+            <?php endif; ?>
         </ul>
 
     </div>

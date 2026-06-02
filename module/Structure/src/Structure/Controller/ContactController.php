@@ -2,17 +2,20 @@
 
 namespace Structure\Controller;
 
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Form\Contact\ContactFormAwareTrait;
 use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Form\SelectionnerContact\SelectionnerContactFormAwareTrait;
 use UnicaenContact\Service\Contact\ContactServiceAwareTrait;
 use UnicaenContact\Service\Type\TypeServiceAwareTrait;
 
 class ContactController extends AbstractActionController
 {
     use ContactServiceAwareTrait;
+    use SelectionnerContactFormAwareTrait;
     use StructureServiceAwareTrait;
     use TypeServiceAwareTrait;
     use ContactFormAwareTrait;
@@ -93,6 +96,7 @@ class ContactController extends AbstractActionController
            'title' => "Ajout d'un contact" . (($structure)?("pour la structure ".$structure->getLibelleLong()):""),
            'form' => $form,
            'structures' => $this->getStructureService()->getStructuresAsOptionGroup(),
+           'structure' => $structure,
         ]);
         $vm->setTemplate('structure/contact/formulaire');
         return $vm;
@@ -150,5 +154,43 @@ class ContactController extends AbstractActionController
         return $vm;
     }
 
+    public function associerAction(): ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $form = $this->getSelectionnerContactForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/contact/associer', ['structure' => $structure->getId()], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $contact = $form->getContactService()->getContact($data['contact']);
+                $structure->addContact($contact);
+                $this->getStructureService()->update($structure);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Associer un contact",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function desassocierAction(): Response
+    {
+        $contact = $this->getContactService()->getRequestedContract($this);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structure->removeContact($contact);
+        $this->getStructureService()->update($structure);
+
+        /** @see StructureController::descriptionAction() */
+        return $this->redirect()->toRoute('structure/description', ['structure' => $structure->getId()], [], true);
+    }
 }
 
