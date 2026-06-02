@@ -92,6 +92,7 @@ class ContactController extends AbstractActionController
         $vm = new ViewModel([
            'title' => "Ajout d'un contact" . (($structure)?("pour la structure ".$structure->getLibelleLong()):""),
            'form' => $form,
+           'structures' => $this->getStructureService()->getStructuresAsOptionGroup(),
         ]);
         $vm->setTemplate('structure/contact/formulaire');
         return $vm;

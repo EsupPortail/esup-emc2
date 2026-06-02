@@ -37,10 +37,10 @@ $this->headTitle($structure->getLibelleLong() . " - Description");
 $canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
 $canGererGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_GESTIONNAIRE));
 
-$canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
-$canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
-$canHistoriserContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
-$canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
+$canAjouterContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
+$canModifierContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
+$canHistoriserContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
+$canSupprimerContact = false; //$this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
 
 $date = new DateTime();
 $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $s->isDeleted() ; });
@@ -205,7 +205,7 @@ usort($sortedTypes, function (Type $a, Type $b) { return $a->getLibelle() <=> $b
                 <?php if (empty($contacts)) : ?>
                     <span class="text-warning">
                         <span class="icon icon-attention"></span>
-                        Aucun·e responsable de désigné·e pour cette structure.
+                        Aucun contact de désigné pour cette structure.
                     </span>
                 <?php else : ?>
                     <?php foreach ($sortedTypes as $type) : ?>

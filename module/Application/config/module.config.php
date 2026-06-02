@@ -379,7 +379,6 @@ return [
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
             '120_bootstrap-select' => '/vendor/bootstrap-select-1.14.0-beta3/js/bootstrap-select.min.js',
             '120_bootstrap-select-fr' => '/vendor/bootstrap-select-1.14.0-beta3/js/i18n/defaults-fr_FR.js',
-//            '150_' => 'vendor/tinymce-6.8.2/js/tinymce/tinymce.min.js',
 
         ],
         'stylesheets' => [

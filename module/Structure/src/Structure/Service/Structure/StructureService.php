@@ -325,7 +325,6 @@ EOS;
             $groupes[$item['grouping']] = $item['grouping'];
         }
         sort($groupes);
-        $elements = [];
         foreach ($tmp as $item) {
             $grouping = $item['grouping'];
             $elements[$grouping][$item['id']] = $item['label'];
