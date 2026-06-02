@@ -127,7 +127,7 @@ class AgentForceSansObligationForm extends Form
                     'name' => Callback::class,
                     'options' => [
                         'messages' => [
-                            Callback::INVALID_VALUE => "Une exception existe déjà pour cet·te agent·e et campagne sur la structure sélectionnée.",
+                            Callback::INVALID_VALUE => "Une exception existe déjà pour cet·te agent·e et cette campagne sur la structure sélectionnée.",
                         ],
                         'callback' => function ($value, $context = []) {
                             $agent = $this->getAgentService()->getAgent($context['agentsearch']['id']);

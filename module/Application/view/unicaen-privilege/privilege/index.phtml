@@ -73,6 +73,8 @@ foreach ($namespaces as $namespace_ => $categories) {
     </tr>
     <tr>
         <th>Privilèges
+            <span class="icon icon-masquer" id="close-all" onclick="closeAll()"></span>
+            <span class="icon icon-voir" id="open-all"></span>
 <!--            <i title="Afficher / Masquer tous les privilèges" class="hide-privileges fas fa-caret-square-down"></i>-->
         </th>
         <th colspan="<?php echo count($roles); ?>">Rôles</th>
@@ -83,15 +85,15 @@ foreach ($namespaces as $namespace_ => $categories) {
     <?php $namespacePosition = 0; ?>
     <?php foreach ($namespaces as $namespace_ => $categories) : ?>
         <?php $namespacePosition++; ?>
-    <tr style="width:100%">
+    <tr style="width:100%" class="namespace" data-namespace="<?php echo $namespacePosition; ?>">
         <th class="namespace" colspan="<?php echo 1 + count($roles); ?>" >
             Module <?php echo explode("\\",$namespace_)[0]; ?>
-            <span id="toggle_namespace_<?php echo $namespacePosition; ?>" data-namespace="namespace_<?php echo $namespacePosition; ?>" class="icon icon-masquer toggleable" onclick="masquerNamespace(this)" style="display: none;"></span>
-            <span id="toggle_namespace_<?php echo $namespacePosition; ?>" data-namespace="namespace_<?php echo $namespacePosition; ?>" class="icon icon-voir toggleable" onclick="afficherNamespace(this)" ></span>
+            <span id="toggle_namespace_<?php echo $namespacePosition; ?>" data-namespace="namespace_<?php echo $namespacePosition; ?>" class="icon icon-masquer toggleable" onclick="masquerNamespace(this)" ></span>
+            <span id="toggle_namespace_<?php echo $namespacePosition; ?>" data-namespace="namespace_<?php echo $namespacePosition; ?>" class="icon icon-voir toggleable" onclick="afficherNamespace(this)" style="display: none;"></span>
         </th>
     </tr>
         <?php foreach ($categories as $categorie) : ?>
-            <tr style="display: none;" class="categorie" id="<?php echo $categorie->getId(); ?>" data-namespace="namespace_<?php echo $namespacePosition; ?>">
+            <tr class="categorie" id="<?php echo $categorie->getId(); ?>" data-namespace="namespace_<?php echo $namespacePosition; ?>">
             <th class="categorie" colspan="<?php echo 1 + count($roles); ?>" data-categorie="<?php echo $categorie->getId(); ?>" onclick="toggleCategorie(<?php echo $categorie->getId(); ?>)">
                 <?php echo $categorie->getLibelle(); ?>
                 <i class="toggle-categorie fas fa-caret-square-down" data-categorie="<?php echo $categorie->getId(); ?>" title="Afficher / Masquer les privilèges"></i>
@@ -103,7 +105,7 @@ foreach ($namespaces as $namespace_ => $categories) {
             ?>
 
                 <?php foreach ($privileges as $privilege) : ?>
-                    <tr style="display: none;" class="privilege categorie-id-<?php echo $privilege->getCategorie()->getId(); ?>"  data-namespace="namespace_<?php echo $namespacePosition; ?>" ">
+                    <tr  class="privilege categorie-id-<?php echo $privilege->getCategorie()->getId(); ?>"  data-namespace="namespace_<?php echo $namespacePosition; ?>" ">
                         <td  class="privilege">
                             <?php echo $privilege; ?>
                         </td>
@@ -190,9 +192,14 @@ foreach ($namespaces as $namespace_ => $categories) {
         });
     });
 
-    function masquerNamespace() {
-        const element = event.currentTarget;
-        const namespace = element.dataset.namespace;
+    function masquerNamespace(namespace) {
+
+        if (namespace === undefined) {
+            const element = event.currentTarget;
+            const namespace = element.dataset.namespace;
+        }
+        console.log("Masquage du namespace " + namespace);
+
 
 
         // Masquage des categories
@@ -250,5 +257,14 @@ foreach ($namespaces as $namespace_ => $categories) {
         console.log("Categorie : " + categorie);
         console.log($('tr.categorie-id-'+categorie));
         $('tr.categorie-id-'+categorie).toggle();
+    }
+
+    function closeAll() {
+        let all = $('tr.namespace');
+        console.log("Namespace à masquer : " + all.length);
+        all.each((index, el) => {
+            let id = $(el).data("namespace");  // Note: il faut utiliser $(el)
+            masquerNamespace(id);
+        });
     }
 </script>
