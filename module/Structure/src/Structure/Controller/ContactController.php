@@ -93,7 +93,7 @@ class ContactController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-           'title' => "Ajout d'un contact" . (($structure)?("pour la structure ".$structure->getLibelleLong()):""),
+           'title' => "Ajout d'un contact" . (($structure)?(" pour la structure ".$structure->getLibelleLong()):""),
            'form' => $form,
            'structures' => $this->getStructureService()->getStructuresAsOptionGroup(),
            'structure' => $structure,

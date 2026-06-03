@@ -212,18 +212,10 @@ class MissionPrincipaleService
         $description = null;
 
         $texte = "<span class='mission' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
+        $texte .= "&nbsp;" . $mission->printReference();
 
-        if ($mission->getCodesFicheMetier() !== null) {
-            $missions = explode("|", $mission->getCodesFicheMetier());
-            foreach ($missions as $mission_) {
-                $texte .= "&nbsp;" . "<span class='badge'>" .
-                    $mission_
-                    . "</span>";
-            }
-        }
-
-        $texte .= "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
-            . "</span>";
+        $texte .= "<span class='description' style='display: none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>";
+        $texte .= "</span>";
 
         $this_option = [
             'value' => $mission->getId(),

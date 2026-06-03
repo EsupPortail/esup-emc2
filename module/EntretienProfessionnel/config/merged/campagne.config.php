@@ -118,7 +118,7 @@ return [
                     'gestion' => [
                         'pages' => [
                             'camapgne' => [
-                                'label' => 'Campagne',
+                                'label' => 'Campagnes',
                                 'route' => 'entretien-professionnel/campagne',
                                 'resource' =>  PrivilegeController::getResourceId(CampagneController::class, 'index'),
                                 'order'    => 3021,

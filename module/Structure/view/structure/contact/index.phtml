@@ -36,11 +36,10 @@ usort($types, function (Type $a, Type $b) {
         </h1>
     </div>
     <div class="col-md-4">
-        <br>
-        <?php /** @see \UnicaenContact\Controller\TypeController::indexAction() */ ?>
         <?php if ($canIndexType) : ?>
+            <?php /** @see \UnicaenContact\Controller\TypeController::indexAction() */ ?>
             <a href="<?php echo $this->url('unicaen-contact/type', [], ['query' => ['retour' => $this->url(null, [], [], true)]], true); ?>"
-               class="btn btn-secondary float-end">
+               class="btn btn-secondary">
                 <span class="icon icon-listing "></span>
                 Accéder aux types
             </a>
@@ -56,6 +55,7 @@ usort($types, function (Type $a, Type $b) {
             <span class="icon icon-ajouter"></span>
             Ajouter un contact
         </a>
+
     <?php endif; ?>
 </div>
 

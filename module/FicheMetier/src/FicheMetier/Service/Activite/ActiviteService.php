@@ -206,20 +206,9 @@ EOS;
 
     private function optionify(Activite $activite): array
     {
-//        $texte  = $mission->getLibelle();
         $texte = "<span class='libelle_activite shorten'>" . MissionPrincipaleService::tronquerTexte($activite->getLibelle(), 100) . "</span>";
         $texte .= "<span class='libelle_activite full' style='display: none'>" . $activite->getLibelle() . "</span>";
-//        $description = $activite->getDescription();
-//        $texte = "<span class='activite' title='" . ($description ?? "Aucune description") . "' class='badge btn-danger'>" . $texte;
-
-        if ($activite->getCodesFicheMetier() !== null) {
-            $texte .= "&nbsp;" . "<span class='badge'>" .
-                $activite->getCodesFicheMetier()
-                . "</span>";
-        }
-
-//        $texte .= "<span class='description' style='display : none' onmouseenter='alert(event.target);'>" . ($description ?? "Aucune description") . "</span>"
-//            . "</span>";
+        $texte .= "&nbsp;" . $activite->printReference();
 
         return [
             'value' => $activite->getId(),
