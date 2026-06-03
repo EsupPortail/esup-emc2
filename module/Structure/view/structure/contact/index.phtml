@@ -16,7 +16,7 @@ use UnicaenContact\Entity\Db\Type;
 use UnicaenContact\Provider\Privilege\ContactPrivileges;
 use UnicaenContact\Provider\Privilege\ContacttypePrivileges;
 
-$this->headTitle('Contacts');
+$this->headTitle('Contacts de structures');
 
 $canIndexType = $this->isAllowed(ContacttypePrivileges::getResourceId(ContacttypePrivileges::CONTACTTYPE_INDEX));
 $canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
@@ -32,7 +32,7 @@ usort($types, function (Type $a, Type $b) {
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
-            Contacts
+            Contacts de structures
         </h1>
     </div>
     <div class="col-md-4">

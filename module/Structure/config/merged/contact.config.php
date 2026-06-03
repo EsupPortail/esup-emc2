@@ -139,7 +139,7 @@ return [
                     'gestion' => [
                         'pages' => [
                             'contact' => [
-                                'label' => 'Contacts',
+                                'label' => 'Contacts de structures',
                                 'route' => 'structure/contact',
                                 'resource' => PrivilegeController::getResourceId(ContactController::class, 'index'),
                                 'order' => 100001,
