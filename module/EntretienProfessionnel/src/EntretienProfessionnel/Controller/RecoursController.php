@@ -126,7 +126,7 @@ class RecoursController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la procédure de recours",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/recours/supprimer', ["recours" => $recours->getId()], [], true),
             ]);
         }

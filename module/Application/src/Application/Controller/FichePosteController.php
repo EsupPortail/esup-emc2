@@ -312,7 +312,7 @@ class FichePosteController extends AbstractActionController
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la fiche de poste  de " . (($fiche->getAgent()) ? $fiche->getAgent()->getDenomination() : "[Aucun Agent]"),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-poste/detruire', ["fiche-poste" => $fiche->getId()], ["query" => $params], true),
             ]);
         }

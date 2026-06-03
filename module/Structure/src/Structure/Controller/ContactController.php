@@ -147,7 +147,7 @@ class ContactController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression d'un contact",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('structure/contact/supprimer', ["contact" => $contact->getId()], [], true),
             ]);
         }
@@ -159,7 +159,9 @@ class ContactController extends AbstractActionController
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
         $form = $this->getSelectionnerContactForm();
+        $form->setPortant($structure);
         $form->setAttribute('action', $this->url()->fromRoute('structure/contact/associer', ['structure' => $structure->getId()], [], true));
+        $form->reinit($structure->getContacts());
 
         $request = $this->getRequest();
         if ($request->isPost()) {

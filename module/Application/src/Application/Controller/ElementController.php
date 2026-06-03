@@ -93,7 +93,7 @@ class ElementController extends AbstractActionController
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'élément " . $element->getObjet()->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element_/supprimer', ["type" => $elementType, "id" => $elementId], [], true),
             ]);
         }

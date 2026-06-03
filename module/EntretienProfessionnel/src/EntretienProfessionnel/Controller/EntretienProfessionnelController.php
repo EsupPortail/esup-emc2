@@ -423,7 +423,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/detruire', ["entretien" => $entretien->getId()], [], true),
             ]);
         }

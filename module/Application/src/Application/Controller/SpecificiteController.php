@@ -74,7 +74,7 @@ class SpecificiteController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la mission additionnelle <strong>" . $missionadditionnelle->getMission()->getLibelle() . '</strong>',
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('specificite/retirer-activite', ["specificite-activite" => $missionadditionnelle->getId()], [], true),
             ]);
         }

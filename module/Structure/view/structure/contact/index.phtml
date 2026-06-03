@@ -36,6 +36,7 @@ usort($types, function (Type $a, Type $b) {
         </h1>
     </div>
     <div class="col-md-4">
+        <br>
         <?php /** @see \UnicaenContact\Controller\TypeController::indexAction() */ ?>
         <?php if ($canIndexType) : ?>
             <a href="<?php echo $this->url('unicaen-contact/type', [], ['query' => ['retour' => $this->url(null, [], [], true)]], true); ?>"

@@ -210,7 +210,7 @@ class MissionPrincipaleController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la mission [" . $mission->getLibelle() . "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'warning' => (($nbFicheMetier + $nbFichePoste) > 0) ? $warning : null,
                 'action' => $this->url()->fromRoute('mission-principale/supprimer', ["mission-principale" => $mission->getId()], [], true),
             ]);

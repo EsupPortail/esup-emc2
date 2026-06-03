@@ -91,7 +91,7 @@ class ThematiqueElementController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'élément associé à  [".$thematiqueElement->getType()->getLibelle()."]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/thematique-element/supprimer', ["thematique-element" => $thematiqueElement->getId()], [], true),
             ]);
         }

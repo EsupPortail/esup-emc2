@@ -120,7 +120,7 @@ class CampagneConfigurationRecopieController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la configuration/recopie ",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration-recopie/supprimer', ["campagne-configuration-recopie" => $recopie->getId()], [], true),
             ]);
         }

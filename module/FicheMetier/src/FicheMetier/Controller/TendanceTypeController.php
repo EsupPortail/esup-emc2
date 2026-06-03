@@ -129,7 +129,7 @@ class TendanceTypeController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du type [".$tendanceType->getLibelle()."]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/tendance-type/supprimer', ["tendance-type" => $tendanceType->getId()], [], true),
             ]);
         }

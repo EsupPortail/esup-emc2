@@ -116,7 +116,7 @@ class CompetenceTypeController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de le type de compétence  " . $type->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/competence-type/detruire', ["competence-type" => $type->getId()], [], true),
             ]);
         }

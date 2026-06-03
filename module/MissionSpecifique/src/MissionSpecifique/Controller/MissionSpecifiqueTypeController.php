@@ -116,7 +116,7 @@ class MissionSpecifiqueTypeController extends AbstractActionController
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du type de mission spécifique  " . $type->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('mission-specifique-type/detruire', ["type" => $type->getId()], [], true),
             ]);
         }

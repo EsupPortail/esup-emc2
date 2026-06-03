@@ -168,7 +168,7 @@ class AgentForceSansObligationController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'exception pour [" . $agentForceSansObligation->getAgent()->getDenomination() . "] et la campagne [" . $agentForceSansObligation->getCampagne()->getAnnee() . "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/agent-avec-forcage/supprimer', ["agent-force-sans-obligation" => $agentForceSansObligation->getId()], [], true),
             ]);
         }

@@ -123,7 +123,7 @@ class CompetenceDisciplineController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la discipline de compétence  " . $discipline->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/competence-discipline/detruire', ["competence-discipline" => $discipline->getId()], [], true),
             ]);
         }

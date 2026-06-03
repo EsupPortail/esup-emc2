@@ -132,7 +132,7 @@ class EmploiRepereController extends  AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'emploi repère " . $emploi->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('emploi-repere/supprimer', ["emploi-repere" => $emploi->getId()], [], true),
             ]);
         }

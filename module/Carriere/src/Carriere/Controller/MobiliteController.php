@@ -124,7 +124,7 @@ class MobiliteController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la mobilité " . $mobilite->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('mobilite/supprimer', ["mobilite" => $mobilite->getId()], [], true),
             ]);
         }

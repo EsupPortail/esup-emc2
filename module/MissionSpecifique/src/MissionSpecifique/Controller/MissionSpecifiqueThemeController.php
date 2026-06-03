@@ -116,7 +116,7 @@ class MissionSpecifiqueThemeController extends AbstractActionController
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du thème de mission spécifique  " . $theme->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('mission-specifique-theme/detruire', ["type" => $theme->getId()], [], true),
             ]);
         }

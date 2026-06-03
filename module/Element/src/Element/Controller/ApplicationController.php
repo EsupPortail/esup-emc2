@@ -149,7 +149,7 @@ class ApplicationController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'application [" . $application->getLibelle() . "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/application/effacer', ["id" => $application->getId()], [], true),
             ]);
         }

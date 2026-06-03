@@ -251,7 +251,7 @@ class CampagneController extends AbstractActionController
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la campagne " . $campagne->getAnnee(),
-                'text' => $warning . "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => $warning . "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/campagne/detruire', ["campagne" => $campagne->getId()], [], true),
             ]);
         }

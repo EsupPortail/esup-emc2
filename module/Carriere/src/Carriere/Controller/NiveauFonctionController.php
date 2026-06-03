@@ -135,7 +135,7 @@ class NiveauFonctionController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du code fonction [" . $fonctionType->getCode() . "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('niveau-fonction/supprimer', ["niveau-fonction" => $fonctionType->getId()], [], true),
             ]);
         }

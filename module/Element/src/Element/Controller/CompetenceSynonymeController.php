@@ -114,7 +114,7 @@ class CompetenceSynonymeController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression des synonymes associé à [".$competence->getLibelle()."]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/competence-synonyme/vider', ["competence" => $competence->getId()], [], true),
             ]);
         }
@@ -138,7 +138,7 @@ class CompetenceSynonymeController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du synonyme",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/competence-synonyme/supprimer', ["competence-synonyme" => $competenceSynonyme->getId()], [], true),
             ]);
         }

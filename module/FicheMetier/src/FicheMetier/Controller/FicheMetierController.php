@@ -284,7 +284,7 @@ class FicheMetierController extends AbstractActionController
             $vm->setVariables([
                 'title' => "Suppression de la fiche métier " . $fichemetier->getLibelle(),
                 'warning' => !empty($fiches) ? "Attention : " . count($fiches) . " fiche·s de poste dépende·nt de cette fiche métier" : null,
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/supprimer', ["fiche-metier" => $fichemetier->getId()], [], true),
             ]);
         }

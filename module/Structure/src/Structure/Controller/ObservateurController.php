@@ -153,7 +153,7 @@ class ObservateurController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'observateur·trice",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('structure/observateur/supprimer', ["observateur" => $observateur->getId()], [], true),
             ]);
         }

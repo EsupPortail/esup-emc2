@@ -118,7 +118,7 @@ class NiveauController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du niveau de maîtrise " . $maitrise->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/niveau/supprimer', ["niveau" => $maitrise->getId()], [], true),
             ]);
         }

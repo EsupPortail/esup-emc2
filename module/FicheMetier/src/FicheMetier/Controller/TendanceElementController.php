@@ -91,7 +91,7 @@ class TendanceElementController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'élément associé à  [" . $tendanceElement->getType()->getLibelle() . "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/tendance-element/supprimer', ["tendance-element" => $tendanceElement->getId()], [], true),
             ]);
         }

@@ -121,7 +121,7 @@ class CampagneConfigurationIndicateurController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la configuration/indicateur " . $configuration->getCode(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/campagne/configuration-indicateur/supprimer', ["campagne-configuration-indicateur" => $configuration->getId()], [], true),
             ]);
         }

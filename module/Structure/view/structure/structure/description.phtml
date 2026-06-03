@@ -226,13 +226,13 @@ usort($sortedTypes, function (Type $a, Type $b) {
                     });
                     ?>
                     <?php foreach ($contacts_ as $contact) : ?>
-                        <?php if ($contact->estNonHistorise() or $canHistoriserContact or $canSupprimerContact) : ?>
+                        <?php if ($contact->estNonHistorise() or $canModifierContact) : ?>
                             <div class="row">
                                 <div class="col-md-8">
                                     <?php echo $this->contact($contact); ?>
                                 </div>
                                 <div class="col-md-4 action">
-                                    <?php if ($canEditerDescription && $canModifierContact) : ?>
+                                    <?php if ($canModifierContact) : ?>
                                         <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
                                         <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
                                            class="action primary ajax-modal" data-event="modification"
@@ -241,7 +241,7 @@ usort($sortedTypes, function (Type $a, Type $b) {
                                             Modifier
                                         </a>
                                     <?php endif; ?>
-                                    <?php if ($canEditerDescription) : ?>
+                                    <?php if ($canModifierContact) : ?>
                                         <br>
                                         <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
                                         <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"

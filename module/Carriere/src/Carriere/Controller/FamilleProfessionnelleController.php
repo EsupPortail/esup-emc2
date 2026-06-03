@@ -151,7 +151,7 @@ class FamilleProfessionnelleController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la famille professionnelle " . $famille->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('famille-professionnelle/supprimer', ["famille-professionnelle" => $famille->getId()], [], true),
             ]);
         }

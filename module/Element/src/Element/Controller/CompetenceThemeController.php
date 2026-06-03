@@ -115,7 +115,7 @@ class CompetenceThemeController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de le thème de compétence  " . $theme->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/competence-theme/detruire', ["competence-theme" => $theme->getId()], [], true),
             ]);
         }

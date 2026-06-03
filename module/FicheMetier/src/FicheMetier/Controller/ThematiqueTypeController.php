@@ -129,7 +129,7 @@ class ThematiqueTypeController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du type [".$thematiqueType->getLibelle()."]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/thematique-type/supprimer', ["thematique-type" => $thematiqueType->getId()], [], true),
             ]);
         }

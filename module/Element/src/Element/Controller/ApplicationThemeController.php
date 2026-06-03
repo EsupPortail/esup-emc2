@@ -118,7 +118,7 @@ class ApplicationThemeController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du groupe d'application [" . $groupe->getLibelle(). "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('element/application-theme/detruire', ["application-groupe" => $groupe->getId()], [], true),
             ]);
         }

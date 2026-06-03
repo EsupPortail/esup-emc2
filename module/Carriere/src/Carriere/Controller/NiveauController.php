@@ -109,7 +109,7 @@ class NiveauController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du niveau " . $niveau->getEtiquette(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('niveau/supprimer', ["niveau" => $niveau->getId()], [], true),
             ]);
         }
