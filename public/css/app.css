@@ -439,3 +439,7 @@ small.role-libelle {
 a#user-current-info {
     text-decoration: none;
 }
+
+span.input-libelle {
+    font-weight: bold;
+}
