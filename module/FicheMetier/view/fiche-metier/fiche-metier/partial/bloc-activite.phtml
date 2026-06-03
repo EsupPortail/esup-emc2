@@ -28,6 +28,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
         <?php foreach ($activites as $activite): ?>
             <li>
                 <?php echo $activite->getActivite()->getLibelle() ?>
+                <?php echo $activite->getActivite()->printReference() ?>
                 <?php if ($mode === "edition-fiche-metier" AND $canModifier) : ?>
                     <small>
                         <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
