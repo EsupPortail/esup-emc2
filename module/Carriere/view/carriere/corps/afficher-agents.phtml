@@ -26,7 +26,7 @@ foreach ($agentGrades as $agentGrade) { if ($agentGrade->estFini($now)) $inactif
             <dd class="col-md-7">[#<?php echo $corps->getId(); ?>] <?php echo $corps->getLibelleLong(); ?></dd>
 <!--            <dt class="col-md-5"> #Agent </dt>-->
 <!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
-            <dt class="col-md-5"> #AgentGrade </dt>
+            <dt class="col-md-5"> #Agent·e </dt>
             <dd class="col-md-7"> <?php echo $actifs; ?> actifs (<?php echo $inactifs ?> inactifs)</dd>
         </dl>
     </div>
@@ -40,14 +40,14 @@ foreach ($agentGrades as $agentGrade) { if ($agentGrade->estFini($now)) $inactif
     </div>
 </div>
 
-<label for="actif_only">Conserver les actifs seulement</label>
+<label for="actif_only">Conserver que les situations en cours</label>
 <input type="checkbox" name="actif_only" id="actif_only" checked>
 
 <table class="table table-condensed">
     <thead>
         <tr>
             <th> Id </th>
-            <th> Agent </th>
+            <th> Agent·e </th>
             <th> Début </th>
             <th> Fin </th>
         </tr>
@@ -59,7 +59,10 @@ foreach ($agentGrades as $agentGrade) { if ($agentGrade->estFini($now)) $inactif
             <td> <?php echo $agentGrade->getId(); ?> </td>
             <td>
                 <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
-                    <a class="linkexterne" id="<?php echo $agent->getId(); ?>" href="">
+                    <?php /** @see \Agent\Controller\AgentController::informationsAction() */ ?>
+                    <a href="<?php echo $this->url('agent/informations', ['agent' => $agent->getId()], [], true); ?>"
+                       target="_blank"
+                    >
                         <?php echo $agent->getDenomination(); ?>
                     </a>
                 <?php else : ?>
@@ -78,12 +81,6 @@ foreach ($agentGrades as $agentGrade) { if ($agentGrade->estFini($now)) $inactif
     $('#actif_only').on('change', function() {
         let val = $('#actif_only').is(':checked');
         if (val === true) $('tr.historise').hide(); else $('tr.historise').show();
-    });
-
-    $('a.linkexterne').on('click',function(e) {
-        e.preventDefault();
-        $('.modal').modal("hide");
-        window.location = 'agent/informations/' + $(this).attr('id');
     });
 </script>
 

@@ -46,7 +46,7 @@ $canModifier = $this->isAllowed(EmploiTypePrivileges::getResourceId(EmploiTypePr
     <tr>
         <th class="col-md-6"> Libellé</th>
         <th class="col-md-2"> Code</th>
-        <th class="col-md-2"> #Agent/Emploi-Type</th>
+        <th class="col-md-2"> #Agent·e</th>
         <th class="col-md-2"> Action</th>
     </tr>
     </thead>
@@ -64,7 +64,7 @@ $canModifier = $this->isAllowed(EmploiTypePrivileges::getResourceId(EmploiTypePr
                 <td data-column-id="Code">
                     <code><?php echo $emploiType->getCode(); ?></code>
                 </td>
-                <td data-column-id="#Agent/Emploi-Type">
+                <td data-column-id="#Agent·e">
                     <?php echo $dictionnaire[$emploiType->getId()]??0; ?>
                 </td>
                 <td data-column-id="Action">

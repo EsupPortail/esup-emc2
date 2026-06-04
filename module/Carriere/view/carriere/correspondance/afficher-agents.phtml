@@ -48,7 +48,7 @@ foreach ($agentGrades as $agentGrade) {
     </div>
 </div>
 
-<label for="actif_only">Conserver les actifs seulement</label>
+<label for="actif_only">Conserver que les situations en cours</label>
 <input type="checkbox" name="actif_only" id="actif_only" checked>
 
 <table class="table table-condensed">
@@ -67,8 +67,10 @@ foreach ($agentGrades as $agentGrade) {
             <td data-column-id="Id"> <?php echo $agentGrade->getId(); ?> </td>
             <td data-column-id="Agent·e">
                 <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
-                    <a class="linkexterne" id="<?php echo $agent->getId(); ?>" href="">
-                        <?php echo $agent->getDenomination(); ?>
+                    <?php /** @see \Agent\Controller\AgentController::informationsAction() */ ?>
+                    <a href="<?php echo $this->url('agent/informations', ['agent' => $agent->getId()], [], true); ?>"
+                       target="_blank"
+                    >
                     </a>
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
@@ -86,12 +88,6 @@ foreach ($agentGrades as $agentGrade) {
     $('#actif_only').on('change', function () {
         let val = $('#actif_only').is(':checked');
         if (val === true) $('tr.historise').hide(); else $('tr.historise').show();
-    });
-
-    $('a.linkexterne').on('click', function (e) {
-        e.preventDefault();
-        $('.modal').modal("hide");
-        window.location = 'agent/informations/' + $(this).attr('id');
     });
 </script>
 

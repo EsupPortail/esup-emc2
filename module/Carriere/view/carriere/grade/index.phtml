@@ -45,7 +45,7 @@ $this->headTitle("Liste des grades");
     <thead>
     <tr>
         <th class="col-md-9"> Libellé</th>
-        <th class="col-md-1"> #Agent/Grade</th>
+        <th class="col-md-1"> #Agent·e</th>
         <th class="col-md-2"> Action</th>
     </tr>
     </thead>
@@ -58,7 +58,7 @@ $this->headTitle("Liste des grades");
                         <?php echo $grade->getLibelleLong(); ?>
                     </span>
                 </td>
-                <td data-column-id="#Agent/Grade">
+                <td data-column-id="#Agent·e">
                     <?php echo $dictionnaire[$grade->getId()]??0; ?>
                 </td>
                 <td data-column-id="Action">

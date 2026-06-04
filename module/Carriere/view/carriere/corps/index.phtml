@@ -44,11 +44,11 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
 <table class="datatable table table-condensed" id="corps">
     <thead>
     <tr>
-        <th class="col-md-6"> Libellé</th>
-        <th class="col-md-1"> #Agent/Grade</th>
+        <th class="col-md-4"> Libellé</th>
+        <th class="col-md-1"> #Agent·e</th>
         <th class="col-md-1"> Catégorie</th>
-        <th class="col-md-1"> Supérieur = Autorité</th>
-        <th class="col-md-1"> Niveaux</th>
+        <th class="col-md-2"> Supérieur = Autorité</th>
+        <th class="col-md-2"> Niveaux</th>
         <th class="col-md-2"> Action</th>
     </tr>
     </thead>
@@ -65,7 +65,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                     <?php echo $corp->getLibelleLong(); ?>
                     </span>
                 </td>
-                <td data-column-id="#Agent/Grade">
+                <td data-column-id="#Agent·e">
                     <?php echo $dictionnaire[$corp->getId()]??0; ?>
                 </td>
                 <td cladata-column-idss="Catégorie">
