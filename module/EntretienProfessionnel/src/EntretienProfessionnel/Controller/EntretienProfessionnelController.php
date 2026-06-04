@@ -266,7 +266,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
                 $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien re-planifié.");
-                $this->getNotificationService()->triggerConvocationDemande($entretien);
+                $this->getNotificationService()->triggerModificationConvocationDemande($entretien);
             }
         }
 
