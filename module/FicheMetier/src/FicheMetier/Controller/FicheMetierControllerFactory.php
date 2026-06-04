@@ -11,6 +11,8 @@ use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessi
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereForm;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
+use Element\Service\ApplicationElement\ApplicationElementService;
+use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use EmploiRepere\Service\EmploiRepere\EmploiRepereService;
 use FicheMetier\Form\CodeEmploiType\CodeEmploiTypeForm;
@@ -51,8 +53,10 @@ class FicheMetierControllerFactory
          * @var ActiviteElementService $activiteElementService
          * @var AgentService $agentService
          * @var AgentPosteService $agentPosteService
+         * @var ApplicationElementService $applicationElementService
          * @var CodeFonctionService $codeFonctionService
          * @var CompetenceTypeService $competenceTypeService
+         * @var CompetenceElementService $competenceElementService
          * @var EmploiRepereService $emploiRepereService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
@@ -69,8 +73,10 @@ class FicheMetierControllerFactory
         $activiteElementService = $container->get(ActiviteElementService::class);
         $agentService = $container->get(AgentService::class);
         $agentPosteService = $container->get(AgentPosteService::class);
+        $applicationElementService = $container->get(ApplicationElementService::class);
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
+        $competenceElementService = $container->get(CompetenceElementService::class);
         $emploiRepereService = $container->get(EmploiRepereService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -117,8 +123,10 @@ class FicheMetierControllerFactory
         $controller->setActiviteElementService($activiteElementService);
         $controller->setAgentService($agentService);
         $controller->setAgentPosteService($agentPosteService);
+        $controller->setApplicationElementService($applicationElementService);
         $controller->setCodeFonctionService($codeFonctionService);
         $controller->setCompetenceTypeService($competenceTypeService);
+        $controller->setCompetenceElementService($competenceElementService);
         $controller->setEmploiRepereService($emploiRepereService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);

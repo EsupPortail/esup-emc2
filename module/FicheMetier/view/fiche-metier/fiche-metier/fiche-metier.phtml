@@ -174,6 +174,13 @@ foreach ($types as $type) {
                                 <span class="icon icon-listing"></span>
                                 Gérer les missions
                             </a>
+                            <?php /** @see FicheMetierController::purgerMissionsPrincipalesAction() */ ?>
+                            <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-missions"
+                               href="<?php echo $this->url('fiche-metier/purger-missions-principales', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-nettoyer"></span>
+                                Purger les missions
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -199,6 +206,13 @@ foreach ($types as $type) {
                            href="<?php echo $this->url('fiche-metier/gerer-activites', ['fiche-metier' => $fiche->getId()], [], true); ?>">
                             <span class="icon icon-listing"></span>
                             Gérer les activités
+                        </a>
+                        <?php /** @see FicheMetierController::purgerActivitesAction() */ ?>
+                        <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                           data-event="refresh-activites"
+                           href="<?php echo $this->url('fiche-metier/purger-activites', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                            <span class="icon icon-nettoyer"></span>
+                            Purger les activités
                         </a>
                     <?php endif; ?>
                 </div>
@@ -235,6 +249,13 @@ foreach ($types as $type) {
                                class="btn btn-primary ajax-modal" data-event="refresh-competences">
                                 <span class="icon icon-lister"></span>
                                 Gérer les compétences
+                            </a>
+                            <?php /** @see FicheMetierController::purgerCompetencesAction() */ ?>
+                            <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-competences"
+                               href="<?php echo $this->url('fiche-metier/purger-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-nettoyer"></span>
+                                Purger les compétences
                             </a>
                         <?php endif; ?>
                     </div>
@@ -279,6 +300,13 @@ foreach ($types as $type) {
                                 <span class="icon icon-lister"></span>
                                 Gérer les compétences
                             </a>
+                            <?php /** @see FicheMetierController::purgerCompetencesSpecifiquesAction() */ ?>
+                            <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-competences-specifiques"
+                               href="<?php echo $this->url('fiche-metier/purger-competences-specifiques', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-nettoyer"></span>
+                                Purger les compétences
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -294,13 +322,13 @@ foreach ($types as $type) {
     <div class="card info">
         <div class="card-header">
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <h2>
                         <span class="icon application"></span>
                         Applications
                     </h2>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="float-end">
                         <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueApplicationsAction() */ ?>
                         <a href="<?php echo $this->url('graphique/applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
@@ -316,6 +344,13 @@ foreach ($types as $type) {
                                class="btn btn-primary ajax-modal" data-event="refresh-applications">
                                 <span class="icon icon-lister"></span>
                                 Gérer les applications
+                            </a>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::purgerApplicationsAction() */ ?>
+                            <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-applications"
+                               href="<?php echo $this->url('fiche-metier/purger-applications', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-nettoyer"></span>
+                                Purger les applications
                             </a>
                         <?php endif; ?>
                     </div>

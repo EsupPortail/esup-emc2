@@ -10,10 +10,20 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class CompetenceType implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+
     const CODE_CONNAISSANCE    = 'CONN';
     const CODE_OPERATIONNELLE  = 'OPER';
     const CODE_COMPORTEMENTALE = 'COMP';
+    const CODE_TYPES_STANDARDS = [
+        self::CODE_CONNAISSANCE,
+        self::CODE_OPERATIONNELLE,
+        self::CODE_COMPORTEMENTALE,
+    ];
+
     const CODE_SPECIFIQUE = 'SPEC';
+    const CODE_TYPES_SPECIFIQUES = [
+        self::CODE_SPECIFIQUE,
+    ];
 
     private ?int $id = null;
     private ?string $code = null;
