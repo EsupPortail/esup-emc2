@@ -234,4 +234,46 @@ EOS;
         return $result;
 
     }
+
+    /**
+     * @param Agent[] $agents
+     * @return array
+     */
+    public function generateRecensementBySpecialite(array $agents): array
+    {
+        $agent_ids = array_map(function (Agent $agent) { return $agent->getId(); }, $agents);
+        $params = ['agent_ids' => $agent_ids];
+
+        $sql = <<<EOS
+select correspondance_id, count(DISTINCT acg.agent_id) as count from agent_carriere_grade acg
+where true
+  and coalesce(acg.d_debut, now()) <= now()
+  and coalesce(acg.d_fin, now()) >= now()
+  and acg.deleted_on IS NULL
+  and acg.agent_id in (:agent_ids)
+group by acg.correspondance_id
+EOS;
+
+        $tmp = $this->getSqlHelperService()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_STR_ARRAY]);
+        $dictionnaire = [];
+        foreach ($tmp as $row) {
+            $dictionnaire[$row['correspondance_id']] = $row['count'];
+        }
+        return $dictionnaire;
+    }
+
+    /**
+     * @param Correspondance $specialite
+     * @param Agent[] $agents
+     * @return AgentGrade[]
+     */
+    public function generateDictionnaireWithSpecialite(Correspondance $specialite, array $agents): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentgrade.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('agentgrade.correspondance = :specialite')->setParameter('specialite', $specialite);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+    }
 }

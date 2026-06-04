@@ -2,9 +2,9 @@
 
 /**
  * @see \Carriere\Controller\CorrespondanceController::afficherAgentsAction();
- * @var Correspondance $correspondance
- * @var Agent[] $agents
+ * @var Correspondance $specialite
  * @var AgentGrade[] $agentGrades
+ * @var Agent[] $agents
  */
 
 use Agent\Entity\Db\Agent;
@@ -12,31 +12,38 @@ use Agent\Entity\Db\AgentGrade;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Carriere\Entity\Db\Correspondance;
 
+usort($agentGrades, function (AgentGrade $a, AgentGrade $b) {
+    return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+});
+
 $now = new DateTime();
-
+$actifs = 0;
+$inactifs = 0;
+foreach ($agentGrades as $agentGrade) {
+    if ($agentGrade->estFini($now)) $inactifs++; else $actifs++;
+}
 ?>
-
-<dl class="row">
-
-</dl>
 
 <div class="row">
     <div class="col-md-6">
         <dl class="row">
-            <dt class="col-md-4"> Correspondance </dt>
-            <dd class="col-md-8">[#<?php echo $correspondance->getId(); ?>] <?php echo $correspondance->getLibelleLong(); ?></dd>
-<!--            <dt class="col-md-4"> #Agent </dt>-->
-<!--            <dd class="col-md-8"> --><?php //echo count($agents); ?><!--</dd>-->
-            <dt class="col-md-4"> #AgentGrade </dt>
-            <dd class="col-md-8"> <?php echo count($agentGrades); ?></dd>
+            <dt class="col-md-5"> Spécialité</dt>
+            <dd class="col-md-7">
+                [#<?php echo $specialite->getId(); ?>] <?php echo $specialite->getLibelleLong(); ?>
+                <br>
+                <?php echo $specialite->getType()->getCode(); ?>
+                <?php echo $specialite->getCategorie(); ?>
+            </dd>
+            <dt class="col-md-5"> #Agent·e</dt>
+            <dd class="col-md-7"> <?php echo $actifs; ?> actifs (<?php echo $inactifs ?> inactifs)</dd>
         </dl>
     </div>
     <div class="col-md-6">
         <dl class="row">
-            <dt class="col-md-5"> Date ouverture </dt>
-            <dd class="col-md-7"> <?php echo ($correspondance->getDateDebut())?$correspondance->getDateDebut()->format('d/m/Y'):"---"; ?>  </dd>
-            <dt class="col-md-5"> Date fermeture </dt>
-            <dd class="col-md-7"> <?php echo ($correspondance->getDateFin())?$correspondance->getDateFin()->format('d/m/Y'):"---"; ?></dd>
+            <dt class="col-md-5"> Date ouverture</dt>
+            <dd class="col-md-7"> <?php echo ($specialite->getDateDebut()) ? $specialite->getDateDebut()->format('d/m/Y') : "---"; ?>  </dd>
+            <dt class="col-md-5"> Date fermeture</dt>
+            <dd class="col-md-7"> <?php echo ($specialite->getDateFin()) ? $specialite->getDateFin()->format('d/m/Y') : "---"; ?></dd>
         </dl>
     </div>
 </div>
@@ -46,43 +53,42 @@ $now = new DateTime();
 
 <table class="table table-condensed">
     <thead>
-        <tr>
-            <th> Id </th>
-            <th> Agent </th>
-            <th> Début </th>
-            <th> Fin </th>
-        </tr>
+    <tr>
+        <th> Id</th>
+        <th> Agent·e</th>
+        <th> Début</th>
+        <th> Fin</th>
+    </tr>
     </thead>
     <tbody>
-        <?php foreach ($agentGrades  as $agent) : ?>
-        <tr <?php if ($agent->estFini($now)) echo 'class="historise"'; ?> >
-            <td> <?php echo $agent->getId(); ?> </td>
-            <td>
-                <?php if ($this->isAllowed($agent->getAgent(), AgentPrivileges::AGENT_AFFICHER)) : ?>
-                    <a class="linkexterne" id="<?php echo $agent->getAgent()->getId(); ?>" href="">
-                        <?php echo $agent->getAgent()->getDenomination(); ?>
+    <?php foreach ($agentGrades as $agentGrade) : ?>
+        <?php $agent = $agentGrade->getAgent(); ?>
+        <tr <?php if ($agentGrade->estFini($now)) echo 'class="historise"'; ?> >
+            <td data-column-id="Id"> <?php echo $agentGrade->getId(); ?> </td>
+            <td data-column-id="Agent·e">
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                    <a class="linkexterne" id="<?php echo $agent->getId(); ?>" href="">
+                        <?php echo $agent->getDenomination(); ?>
                     </a>
                 <?php else : ?>
-                    <?php echo $agent->getAgent()->getDenomination(); ?>
+                    <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
             </td>
-            <td> <?php echo ($agent->getDateDebut()) ? $agent->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
-            <td> <?php echo ($agent->getDateFin()) ? $agent->getDateFin()->format('d/m/Y') : "---"; ?> </td>
+            <td data-column-id="Début" > <?php echo ($agentGrade->getDateDebut()) ? $agentGrade->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
+            <td data-column-id="Fin"> <?php echo ($agentGrade->getDateFin()) ? $agentGrade->getDateFin()->format('d/m/Y') : "---"; ?> </td>
         </tr>
-        <?php endforeach; ?>
+    <?php endforeach; ?>
     </tbody>
 </table>
 
-
-
 <script>
     $('tr.historise').hide();
-    $('#actif_only').on('change', function() {
+    $('#actif_only').on('change', function () {
         let val = $('#actif_only').is(':checked');
         if (val === true) $('tr.historise').hide(); else $('tr.historise').show();
     });
 
-    $('a.linkexterne').on('click',function(e) {
+    $('a.linkexterne').on('click', function (e) {
         e.preventDefault();
         $('.modal').modal("hide");
         window.location = 'agent/informations/' + $(this).attr('id');
