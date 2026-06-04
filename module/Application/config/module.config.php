@@ -23,6 +23,8 @@ use Application\Service\SqlHelper\SqlHelperService;
 use Application\Service\SqlHelper\SqlHelperServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
+use Application\Service\Util\UtilService;
+use Application\Service\Util\UtilServiceFactory;
 use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Application\View\Helper\TimerViewHelper;
@@ -304,6 +306,7 @@ return [
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
             PerimetreService::class => PerimetreServiceFactory::class,
+            UtilService::class => UtilServiceFactory::class,
             SqlHelperService::class => SqlHelperServiceFactory::class,
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,

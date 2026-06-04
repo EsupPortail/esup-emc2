@@ -3,8 +3,12 @@
 namespace Agent\Service\Agent;
 
 use Agent\Entity\Db\AgentAffectation;
+use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Entity\Db\Agent;
+use Agent\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Agent\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Application\Provider\Role\RoleProvider;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
@@ -74,6 +78,15 @@ class AgentService
         $qb = $qb->andWhere($entityName . ".structure in (:structures)")
             ->setParameter('structures', $structures);
         return $qb;
+    }
+
+    /** @return Agent[] */
+    public function getAgents(): array {
+        $agents = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere('agent.deletedOn IS NULL')
+        ;
+        $result = $agents->getQuery()->getResult();
+        return $result;
     }
 
     /**
@@ -605,6 +618,36 @@ EOS;
     }
 
     /** FACADE ********************************************************************************************************/
+
+    /**
+     * Cette méthode est en charge de lister les agents visibles pour la personne connectée en fonction de son rôle
+     * @return Agent[]
+     */
+    public function getAgentsGeresWithConnectedUser(): array
+    {
+        $role = $this->getUserService()->getConnectedRole();
+        $agent = $this->getAgentByConnectedUser();
+        $now = new DateTime();
+
+        switch ($role->getRoleId()) {
+            case RoleProvider::ADMIN_TECH :
+                $agents = $this->getAgents();
+                return $agents;
+            case AgentRoleProvider::ROLE_AGENT :
+                // les agent·es ne se voient qu'eux même
+                return [$agent];
+//            case AgentRoleProvider::ROLE_SUPERIEURE :
+//                $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieurAndDate($agent, $now);
+//                return $agents;
+//            case AgentRoleProvider::ROLE_AUTORITE :
+//                $agents = $this->getAgentAutoriteService()->getAgentsWithAutoriteAndDate($agent, $now);
+//                return $agents;
+            //Gestionnaire et responsable
+            //admin et drh et observateur
+            default:
+                return [];
+        }
+    }
 
     /** @return Agent[] */
     public function getAgentWithStatut(array $agents, string $statut, ?DateTime $date = null): array

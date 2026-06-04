@@ -161,6 +161,7 @@ class AgentSuperieurService
         return $agents;
     }
 
+    /** @return Agent[] */
     public function getAgentsWithSuperieurAndDate(?Agent $superieur, DateTime $date): array
     {
         $qb = $this->createQueryBuilder()

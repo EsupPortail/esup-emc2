@@ -25,6 +25,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
@@ -542,6 +543,19 @@ class EntretienProfessionnelService
         $entretiens = $qb->getQuery()->getResult();
         if (!$sortByEtat) return $entretiens;
         return $this->sortByEtat($entretiens);
+    }
+
+    /** @return EntretienProfessionnel[] */
+    public function getEntretiensProfessionnelsByObservateur(UserInterface $user): array
+    {
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->addSelect('agent')->join('entretien.agent', 'agent')
+            ->addSelect('observateur')->join('entretien.observateurs', 'observateur')
+            ->andWhere('entretien.histoDestruction IS NULL')
+            ->andWhere('observateur.histoDestruction IS NULL')
+            ->andWhere('observateur.user = :user')->setParameter('user', $user);
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /**

@@ -59,6 +59,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface, HasContac
 
     private Collection $gestionnaires;      //[StructureGestionnaire]
     private Collection $responsables;       //[StructureResponsable]
+    private Collection $observateurs;       //[Observateur]
 
     private Collection $postes;             //[Poste]
     private Collection $missions;           //[AgentMissionSpecifique]

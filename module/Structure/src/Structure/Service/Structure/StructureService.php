@@ -443,10 +443,7 @@ EOS;
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('observateur')->join('structure.observateurs', 'observateur')
             ->andWhere('observateur.utilisateur = :user')
-            ->andWhere('responsable.deletedOn IS NULL')
-            ->andWhere('responsable.dateDebut IS NULL or responsable.dateDebut <= :now')
-            ->andWhere('responsable.dateFin IS NULL or responsable.dateFin >= :now')
-            ->setParameter('now', new DateTime())
+            ->andWhere('observateur.histoDestruction IS NULL')
             ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt');
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");

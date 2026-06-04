@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @see \Carriere\Controller\CorpsController::afficherAgentsAvecCorpsAction();
+ * @see \Carriere\Controller\CorpsController::afficherAgentsAction();
  * @var Corps $corps
  * @var AgentGrade[] $agentGrades
  * @var Agent[] $agents
@@ -12,15 +12,11 @@ use Agent\Entity\Db\AgentGrade;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Carriere\Entity\Db\Corps;
 
+usort($agentGrades, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
+
 $now = new DateTime();
-
-/** @var  AgentGrade[] $agents */
-$agents = $corps->getAgentGrades();
-$agents = array_filter($agents, function (AgentGrade $a) { return $a->estCommence() && !$a->isDeleted();});
-usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
-
 $actifs = 0; $inactifs = 0;
-foreach ($agents as $agent) { if ($agent->estFini()) $inactifs++; else $actifs++;}
+foreach ($agentGrades as $agentGrade) { if ($agentGrade->estFini($now)) $inactifs++; else $actifs++;}
 ?>
 
 <div class="row">
@@ -57,20 +53,21 @@ foreach ($agents as $agent) { if ($agent->estFini()) $inactifs++; else $actifs++
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($agents as $agent) : ?>
-        <tr <?php if ($agent->estFini($now)) echo 'class="historise"'; ?> >
-            <td> <?php echo $agent->getId(); ?> </td>
+        <?php foreach ($agentGrades as $agentGrade) : ?>
+            <?php $agent = $agentGrade->getAgent(); ?>
+        <tr <?php if ($agentGrade->estFini($now)) echo 'class="historise"'; ?> >
+            <td> <?php echo $agentGrade->getId(); ?> </td>
             <td>
-                <?php if ($this->isAllowed($agent->getAgent(), AgentPrivileges::AGENT_AFFICHER)) : ?>
-                    <a class="linkexterne" id="<?php echo $agent->getAgent()->getId(); ?>" href="">
-                        <?php echo $agent->getAgent()->getDenomination(); ?>
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                    <a class="linkexterne" id="<?php echo $agent->getId(); ?>" href="">
+                        <?php echo $agent->getDenomination(); ?>
                     </a>
                 <?php else : ?>
-                    <?php echo $agent->getAgent()->getDenomination(); ?>
+                    <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
             </td>
-            <td> <?php echo ($agent->getDateDebut()) ? $agent->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
-            <td> <?php echo ($agent->getDateFin()) ? $agent->getDateFin()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agentGrade->getDateDebut()) ? $agentGrade->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agentGrade->getDateFin()) ? $agentGrade->getDateFin()->format('d/m/Y') : "---"; ?> </td>
         </tr>
         <?php endforeach; ?>
     </tbody>
