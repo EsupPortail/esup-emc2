@@ -1,18 +1,21 @@
 <?php
 
-/**
- * @see \Carriere\Controller\GradeController::indexAction()
- * @var Grade[] $grades
- * @var bool $avecAgent
- */
-
-use Agent\Entity\Db\AgentGrade;
+use Agent\Entity\Db\Agent;
 use Carriere\Entity\Db\Grade;
 use Carriere\Provider\Privilege\GradePrivileges;
 
+/**
+ * @see \Carriere\Controller\GradeController::indexAction()
+ * @var Grade[] $grades ,
+ * @var Agent[] $agents
+ * @var array $dictionnaire
+ *
+ * @var bool $avecAgent ,
+ */
+
+
 $canLister = $this->isAllowed(GradePrivileges::getResourceId(GradePrivileges::GRADE_LISTER_AGENTS));
 
-$canAction = ($canLister);
 
 $this->headTitle("Liste des grades");
 ?>
@@ -20,7 +23,11 @@ $this->headTitle("Liste des grades");
 <h1 class="page-header">
     Liste des grades
     <span class="badge">
-        <?php echo count($grades); ?>
+        <?php if ($avecAgent) : ?>
+            <?php echo count($dictionnaire); ?>
+        <?php else : ?>
+            <?php echo count($grades); ?>
+        <?php endif; ?>
     </span>
 </h1>
 
@@ -37,45 +44,41 @@ $this->headTitle("Liste des grades");
 <table class="datatable table table-condensed table-hover" id="grades">
     <thead>
     <tr>
-        <th > Libellé </th>
-        <th> #Agent/Grade </th>
-        <?php if ($canAction) : ?>
-            <th> Action </th>
-        <?php endif; ?>
+        <th class="col-md-9"> Libellé</th>
+        <th class="col-md-1"> #Agent/Grade</th>
+        <th class="col-md-2"> Action</th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach($grades as $grade): ?>
-        <?php $actifs = array_filter($grade->getAgentGrades(), function (AgentGrade $a) { return $a->estEnCours() AND !$a->isDeleted(); }) ?>
-        <tr>
-            <td>
-                <span
-                    title="<?php echo $grade->generateTooltip(); ?>"
-                    data-bs-toggle="tooltip" data-bs-html="true"
-                >
-                <?php echo $grade->getLibelleLong(); ?>
-                </span>
-            </td>
-            <td> <?php echo count($actifs); ?> </td>
-            <?php if ($canAction) : ?>
-            <td class="action">
+    <?php foreach ($grades as $grade) : ?>
+        <?php if (!$avecAgent or (isset($dictionnaire[$grade->getId()]) and $dictionnaire[$grade->getId()] !== 0)) : ?>
+            <tr>
+                <td data-column-id="Libellé">
+                    <span title="<?php echo $grade->generateTooltip(); ?>" data-bs-toggle="tooltip" data-bs-html="true">
+                        <?php echo $grade->getLibelleLong(); ?>
+                    </span>
+                </td>
+                <td data-column-id="#Agent/Grade">
+                    <?php echo $dictionnaire[$grade->getId()]??0; ?>
+                </td>
+                <td data-column-id="Action">
                     <a
-                        <?php /** @see \Carriere\Controller\GradeController::afficherAgentsAction() */ ?>
-                        href="<?php echo $this->url('grade/afficher-agents', ['grade' => $grade->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
+                            <?php /** @see \Carriere\Controller\GradeController::afficherAgentsAction() */ ?>
+                            href="<?php echo $this->url('grade/afficher-agents', ['grade' => $grade->getId()], [], true); ?>"
+                            class="ajax-modal action secondary" data-event="modification"
                     >
-                            <span class="icon icon-users"></span>
+                        <span class="icon icon-users"></span>
                         Lister les agents
                     </a>
-            </td>
-            <?php endif; ?>
-        </tr>
+                </td>
+            </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('table#grades').DataTable({
             paging: false,
             info: false,
@@ -84,7 +87,7 @@ $this->headTitle("Liste des grades");
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                { targets: [2], orderable: false }
+                {targets: [2], orderable: false}
             ]
         });
     });
