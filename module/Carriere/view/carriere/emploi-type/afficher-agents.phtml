@@ -1,5 +1,11 @@
 <?php
 
+use Agent\Entity\Db\Agent;
+use Agent\Entity\Db\AgentEmploiType;
+use Agent\Entity\Db\AgentGrade;
+use Agent\Provider\Privilege\AgentPrivileges;
+use Carriere\Entity\Db\EmploiType;
+
 /**
  * @see \Carriere\Controller\EmploiTypeController::afficherAgentsAction();
  * @var EmploiType $emploiType
@@ -7,38 +13,34 @@
  * @var Agent[] $agents
  */
 
-use Agent\Entity\Db\Agent;
-use Agent\Entity\Db\AgentEmploiType;
-use Agent\Provider\Privilege\AgentPrivileges;
-use Carriere\Entity\Db\EmploiType;
+
+usort($agentEmploiTypes, function (AgentEmploiType $a, AgentEmploiType $b) { return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination(); });
 
 $now = new DateTime();
-
-///** @var  AgentGrade[] $agents */
-//$agents = $emploiType->getAgentGrades();
-//$agents = array_filter($agents, function (AgentGrade $a) use ($now) { return $a->estCommence($now) && !$a->isDeleted();});
-//usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
-
-$actifs = 0; $inactifs = 0;
-foreach ($agentEmploiTypes as $agentEmploiType) { if ($agentEmploiType->estFini()) $inactifs++; else $actifs++;}
+$actifs = 0;
+$inactifs = 0;
+foreach ($agentEmploiTypes as $agentEmploiType) {
+    if ($agentEmploiType->estFini($now)) $inactifs++; else $actifs++;
+}
 ?>
+
 <div class="row">
     <div class="col-md-6">
         <dl class="row">
-            <dt class="col-md-5"> Emploi Type </dt>
+            <dt class="col-md-5"> Emploi-Type</dt>
             <dd class="col-md-7">[#<?php echo $emploiType->getId(); ?>] <?php echo $emploiType->getLibelleLong(); ?></dd>
-<!--            <dt class="col-md-5"> #Agent </dt>-->
-<!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
-            <dt class="col-md-5"> #AgentGrade </dt>
+            <!--            <dt class="col-md-5"> #Agent </dt>-->
+            <!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
+            <dt class="col-md-5"> #AgemtEmploiType</dt>
             <dd class="col-md-7"> <?php echo $actifs; ?> actifs (<?php echo $inactifs ?> inactifs)</dd>
         </dl>
     </div>
     <div class="col-md-6">
         <dl class="row">
-            <dt class="col-md-5"> Date ouverture </dt>
-            <dd class="col-md-7"> <?php echo ($emploiType->getDateDebut())?$emploiType->getDateDebut()->format('d/m/Y'):"---"; ?>  </dd>
-            <dt class="col-md-5"> Date fermeture </dt>
-            <dd class="col-md-7"> <?php echo ($emploiType->getDateFin())?$emploiType->getDateFin()->format('d/m/Y'):"---"; ?></dd>
+            <dt class="col-md-5"> Date ouverture</dt>
+            <dd class="col-md-7"> <?php echo ($emploiType->getDateDebut()) ? $emploiType->getDateDebut()->format('d/m/Y') : "---"; ?>  </dd>
+            <dt class="col-md-5"> Date fermeture</dt>
+            <dd class="col-md-7"> <?php echo ($emploiType->getDateFin()) ? $emploiType->getDateFin()->format('d/m/Y') : "---"; ?></dd>
         </dl>
     </div>
 </div>
@@ -48,15 +50,15 @@ foreach ($agentEmploiTypes as $agentEmploiType) { if ($agentEmploiType->estFini(
 
 <table class="table table-condensed">
     <thead>
-        <tr>
-            <th> Id </th>
-            <th> Agent </th>
-            <th> Début </th>
-            <th> Fin </th>
-        </tr>
+    <tr>
+        <th> Id</th>
+        <th> Agent</th>
+        <th> Début</th>
+        <th> Fin</th>
+    </tr>
     </thead>
     <tbody>
-        <?php foreach ($agentEmploiTypes as $agentEmploiType) : ?>
+    <?php foreach ($agentEmploiTypes as $agentEmploiType) : ?>
         <?php $agent = $agentEmploiType->getAgent(); ?>
         <tr <?php if ($agentEmploiType->estFini($now)) echo 'class="historise"'; ?> >
             <td> <?php echo $agentEmploiType->getId(); ?> </td>
@@ -72,18 +74,18 @@ foreach ($agentEmploiTypes as $agentEmploiType) { if ($agentEmploiType->estFini(
             <td> <?php echo ($agentEmploiType->getDateDebut()) ? $agentEmploiType->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
             <td> <?php echo ($agentEmploiType->getDateFin()) ? $agentEmploiType->getDateFin()->format('d/m/Y') : "---"; ?> </td>
         </tr>
-        <?php endforeach; ?>
+    <?php endforeach; ?>
     </tbody>
 </table>
 
 <script>
     $('tr.historise').hide();
-    $('#actif_only').on('change', function() {
+    $('#actif_only').on('change', function () {
         let val = $('#actif_only').is(':checked');
         if (val === true) $('tr.historise').hide(); else $('tr.historise').show();
     });
 
-    $('a.linkexterne').on('click',function(e) {
+    $('a.linkexterne').on('click', function (e) {
         e.preventDefault();
         $('.modal').modal("hide");
         window.location = 'agent/informations/' + $(this).attr('id');

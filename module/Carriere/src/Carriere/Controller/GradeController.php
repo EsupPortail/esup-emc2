@@ -40,9 +40,6 @@ class GradeController extends AbstractActionController {
 
     public function afficherAgentsAction() : ViewModel
     {
-        $actifOnly = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE, CarriereParametres::GRADE_AVEC_AGENT);
-        $bool = ($actifOnly) && ($actifOnly->getValeur() === "true");
-
         $grade = $this->getGradeService()->getRequestedGrade($this);
 
         $user = $this->getUserService()->getConnectedUser();
