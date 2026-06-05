@@ -637,6 +637,8 @@ class EntretienProfessionnelController extends AbstractActionController
         try {
             $dateButoir = (DateTime::createFromFormat('d/m/Y', $entretien->getHistoModification()->format('d/m/Y')))->add(new DateInterval('P' . $delai . 'D'));
         } catch (Exception $e) {
+            $message = "Un problème est survenu lors du calcul de la date butoir.";
+            if ($delai === null) $message .= " Aucune valeur pour le paramètre [".EntretienProfessionnelParametres::TYPE.",".EntretienProfessionnelParametres::DELAI_ACCEPTATION_AGENT."], veuillez contacter l'assistance.";
             throw new RuntimeException("Un problème est survenu lors du calcul de la date butoir", null, $e);
         }
         $depassee = $dateButoir < (new DateTime());
