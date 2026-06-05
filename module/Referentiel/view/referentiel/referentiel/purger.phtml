@@ -1,0 +1,45 @@
+<?php
+
+use Referentiel\Entity\Db\Referentiel;
+
+/**
+ * @see \Referentiel\Controller\ReferentielController::purgerAction()
+ * @var Referentiel $referentiel
+ * @var ?string $warning
+ */
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <?php /** @see \Referentiel\Controller\ReferentielController::purgerAction() */ ?>
+        <form method="post"
+              action="<?php echo $this->url('referentiel/purger', ['referentiel' => $referentiel->getId()], [], true); ?>">
+            <span style="font-size: large;">Ressources à purger :</span>
+            <div class="form-check">
+                <input type="checkbox" id="purge_activite" name="purge_activite" class="form-check-input" checked>
+                <label class="form-check-label" for="purge_activite"> Purge des activités </label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" id="purge_mission" name="purge_mission" class="form-check-input" checked>
+                <label class="form-check-label" for="purge_mission"> Purge des missions </label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" id="purge_competence" name="purge_competence" class="form-check-input" checked>
+                <label class="form-check-label" for="purge_competence"> Purge des compétences </label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" id="purge_fichemetier" name="purge_fichemetier" class="form-check-input" checked>
+                <label class="form-check-label" for="purge_fichemetier"> Purge des fiches métiers </label>
+            </div>
+            <button type="submit" class="btn btn-success">Purger les ressources sélectionnées</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <?php if ($warning) : ?>
+            <div class="alert alert-warning">
+                <?php echo $warning; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
