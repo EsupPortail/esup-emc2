@@ -76,6 +76,11 @@ $canAfficherAgentsExclus = $this->isAllowed(StructurePrivileges::getResourceId(S
     <span class="badge"><?php echo count($agentsForces); ?></span>
 </h2>
 
+<div class="alert alert-info">
+    <span class="icon icon-info"></span>
+    L’ajout manuel d’un agent dans une structure ne le classe pas automatiquement dans la liste des agents qui doivent réaliser un entretien professionnel dans cette structure.
+    Il est nécessaire de créer une exception et de forcer l’entretien dans cette structure en plus de cet ajout manuel.
+</div>
 <?php if ($canAjouterAgent) : ?>
     <?php /** @see \Structure\Controller\StructureController::ajouterManuellementAgentAction(); */ ?>
     <a class="btn btn-primary ajax-modal" data-event="modification"
