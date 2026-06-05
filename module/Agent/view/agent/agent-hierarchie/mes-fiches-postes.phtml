@@ -293,10 +293,14 @@ $date = new DateTime();
 
 <script>
     $(function() {
-        $("table#fiches").DataTable( {
+        $("table#fiches").DataTable({
             'paging' : false,
             'searching' : true,
             'info' : false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
         });
     });
 </script>
