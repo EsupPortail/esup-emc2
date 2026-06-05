@@ -28,30 +28,32 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             <li>
                 <?php echo $mission->getMission()->getLibelle(); ?>
                 <?php echo $mission->getMission()->printReference() ?>
-                <?php if ($mode === "edition-fiche-metier" AND $canModifier) : ?>
-                    <small>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerMissionAction() */ ?>
-                        <span class="missions-ajax action primary "
-                              data-url="<?php echo $this->url('fiche-metier/bouger-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId(), 'direction' => '-1'], [], true); ?>"
-                        >
+                <?php if ($mode === "edition-fiche-metier" and $canModifier) : ?>
+                    <div style="display: inline-block;">
+                        <small>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerMissionAction() */ ?>
+                            <span class="missions-ajax action primary "
+                                  data-url="<?php echo $this->url('fiche-metier/bouger-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId(), 'direction' => '-1'], [], true); ?>"
+                            >
                         <span class="icon icon-monter"></span>
                         Monter
                     </span>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerMissionAction() */ ?>
-                        <span class="missions-ajax action primary "
-                              data-url="<?php echo $this->url('fiche-metier/bouger-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId(), 'direction' => '1'], [], true); ?>"
-                        >
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerMissionAction() */ ?>
+                            <span class="missions-ajax action primary "
+                                  data-url="<?php echo $this->url('fiche-metier/bouger-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId(), 'direction' => '1'], [], true); ?>"
+                            >
                         <span class="icon icon-descendre"></span>
                         Descendre
                     </span>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::retirerMissionAction() */ ?>
-                        <span class="missions-ajax action danger "
-                              data-url="<?php echo $this->url('fiche-metier/retirer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId()], [], true); ?>"
-                        >
-                        <span class="icon icon-unchecked" ></span>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::retirerMissionAction() */ ?>
+                            <span class="missions-ajax action danger "
+                                  data-url="<?php echo $this->url('fiche-metier/retirer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-element' => $mission->getId()], [], true); ?>"
+                            >
+                        <span class="icon icon-unchecked"></span>
                         Retirer
                     </span>
-                    </small>
+                        </small>
+                    </div>
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>
@@ -62,7 +64,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
 <script>
     function refreshMissions() {
         <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshMissionsAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-missions", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ]); ?>";
+        let url = "<?php echo $this->url("fiche-metier/refresh-missions", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode]); ?>";
         console.log("refreshing activites");
         $.ajax({
             type: "POST",

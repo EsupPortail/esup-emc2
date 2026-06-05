@@ -30,6 +30,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
                 <?php echo $activite->getActivite()->getLibelle() ?>
                 <?php echo $activite->getActivite()->printReference() ?>
                 <?php if ($mode === "edition-fiche-metier" AND $canModifier) : ?>
+                <div style="display: inline-block;">
                     <small>
                         <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
                         <span class="activite-ajax action primary "
@@ -53,6 +54,7 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
                         Retirer
                     </span>
                     </small>
+                </div>
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>
