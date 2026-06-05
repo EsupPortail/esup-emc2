@@ -163,8 +163,9 @@ class StructureController extends AbstractActionController
         [$conserver, $retirer, $raison] = $this->getStructureService()->trierAgents($agents, $structures);
         $debug .= "Filtrage des agents : " . ((new DateTime())->diff($date_debut))->format('%i minutes, %s secondes, %f microsecondes') . "<br>";
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+        $agentsForces_ = array_map(function (StructureAgentForce $agent) { return $agent->getAgent(); }, $agentsForces);
 
-        $allAgents = array_merge($agents, $agentsForces);
+        $allAgents = array_merge($agents, $agentsForces_);
 
         usort($agents, function (Agent $a, Agent $b) {
             $aaa = ($a->getNomUsuel() ?? $a->getNomFamille()) . " " . $a->getPrenom();

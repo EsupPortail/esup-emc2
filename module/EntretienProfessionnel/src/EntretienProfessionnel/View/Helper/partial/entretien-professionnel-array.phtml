@@ -204,7 +204,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
-                    class="action secondary"
+                    class="action secondary" target="_blank"
                 >
                     <span class="icon icon-pdf">
                         Exporter CREP
@@ -213,7 +213,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>"
-                        class="action secondary"
+                        class="action secondary" target="_blank"
                 >
                     <span class="icon icon-pdf">
                         Exporter CREF
