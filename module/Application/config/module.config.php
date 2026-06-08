@@ -2,6 +2,7 @@
 
 namespace Application;
 
+use Agent\Provider\Privilege\AgentmobilitePrivileges;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Controller\IndexController;
 use Application\Event\RgpdRenderer\RgpdRendererEvenement;
@@ -114,6 +115,7 @@ return [
                         FicheMetierPrivileges::FICHEMETIER_INDEX,
                         FichePostePrivileges::FICHEPOSTE_INDEX,
                         MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_INDEX,
+                        AgentmobilitePrivileges::AGENTMOBILITE_INDEX,
                     ],
                 ],
                 [

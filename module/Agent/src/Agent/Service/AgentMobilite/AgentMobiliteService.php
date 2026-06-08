@@ -107,6 +107,18 @@ class AgentMobiliteService
         return $result;
     }
 
+    public function getAgentsMobilitesWithAgents(array $agents, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentmobilite.agent in (:agents)')->setParameter('agents', $agents)
+            ->orderBy('agentmobilite.' . $champ, $ordre);
+        if ($histo === false) $qb = $qb->andWhere('agentmobilite.histoDestruction IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
     /** @return AgentMobilite[] */
     public function getAgentsAutoritesByMobilite(Mobilite $mobilite, bool $histo = false, string $champ = 'id', $ordre = 'ASC'): array
     {
