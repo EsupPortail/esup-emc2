@@ -240,7 +240,14 @@ $this->headTitle("Importation des fiches métiers");
             </div>
             <div class="col-md-4">
                 <?php if ($fiche->getNiveauCarriere()): ?> <strong>Niveau de carrière</strong> <?php echo $fiche->getNiveauCarriere()->getLibelle(); ?> <br> <?php endif; ?>
-                <?php if ($fiche->getCategorie()): ?> <strong>Catégorie</strong> <?php echo $fiche->getCategorie()->getLibelle(); ?> <br> <?php endif; ?>
+                <?php if ($fiche->getCategories(false)): ?>
+                    <strong>Catégories</strong>
+                    <ul>
+                        <?php foreach ($fiche->getCategories() as $category) : ?>
+                            <li> <?php echo $category->getCategorie()->getLibelle(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
                 <?php if ($fiche->getCodeFonction()): ?> <strong>Code fonction</strong> <?php echo $fiche->getCodeFonction()->computeCode(); ?> <br> <?php endif; ?>
                 <?php if ($fiche->getCodesEmploiType()): ?> <strong>Codes emploi type</strong> <?php echo $fiche->getCodesEmploiType(); ?> <br> <?php endif; ?>
                 <?php if ($fiche->getFamilleProfessionnelle()): ?>

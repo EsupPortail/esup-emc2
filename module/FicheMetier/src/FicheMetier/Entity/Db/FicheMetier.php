@@ -4,6 +4,7 @@ namespace FicheMetier\Entity\Db;
 
 use Agent\Entity\Db\AgentPoste;
 use Application\Provider\Etat\FicheMetierEtats;
+use Carriere\Entity\Db\Categorie;
 use Carriere\Entity\Db\Interface\HasFamilleProfessionnelleInterface;
 use Carriere\Entity\Db\Interface\HasNiveauCarriereInterface;
 use Carriere\Entity\Db\Trait\HasFamilleProfessionnelleTrait;
@@ -38,12 +39,10 @@ class FicheMetier implements
     HasReferenceInterface
 {
     use HistoriqueAwareTrait;
-    use HasCategorieTrait;
     use HasEtatsTrait;
     use HasNiveauCarriereTrait;
     use HasActivitesTrait, HasMissionsPrincipalesTrait, HasFamilleProfessionnelleTrait;
     use HasApplicationCollectionTrait, HasCompetenceCollectionTrait;
-
     use HasReferenceTrait;
 
     private ?int $id = null;
@@ -55,6 +54,7 @@ class FicheMetier implements
     public ?string $lienWeb = null;
     public ?string $lienPdf = null;
 
+    private Collection $categories;
     private Collection $tendances;
     private Collection $thematiques;
     private ?string $raw = null;
@@ -88,6 +88,7 @@ class FicheMetier implements
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
 
+        $this->categories = new ArrayCollection();
         $this->tendances = new ArrayCollection();
         $this->thematiques = new ArrayCollection();
     }
@@ -219,6 +220,49 @@ class FicheMetier implements
     public function clearThematique(): void
     {
         $this->thematiques->clear();
+    }
+
+    /** @return FicheMetierCategorie[] */
+    public function getCategories(bool $withHisto = true): array
+    {
+        $categories = $this->categories->toArray();
+        if (!$withHisto) $categories = array_filter($categories, function (FicheMetierCategorie $categorie) {return $categorie->estNonHistorise();});
+        return $categories;
+    }
+
+    public function hasCategorie(Categorie $categorie_): bool
+    {
+        foreach ($this->getCategories(false) as $categorie) {
+            if ($categorie->getCategorie() === $categorie_) return true;
+        }
+        return false;
+    }
+
+    public function addCategorie(Categorie $categorie): void
+    {
+        if (!$this->hasCategorie($categorie)) {
+            $fmCategorie = new FicheMetierCategorie();
+            $fmCategorie->setCategorie($categorie);
+            $fmCategorie->setFicheMetier($this);
+            $this->categories->add($fmCategorie);
+        }
+    }
+
+    public function removeCategorie(Categorie $categorie_): void
+    {
+        foreach ($this->categories as $categorie) {
+            if ($categorie->getCategorie() === $categorie_) $this->categories->removeElement($categorie);
+        }
+    }
+
+    public function addFicheMetierCategorie(FicheMetierCategorie $categorie): void
+    {
+        $this->categories->add($categorie);
+    }
+
+    public function clearCategories(): void
+    {
+        $this->categories->clear();
     }
 
     /** FONCTION POUR MACRO *******************************************************************************************/
@@ -444,8 +488,14 @@ EOS;
     /** @noinspection PhpUnused */
     public function toStringCategorie(): string
     {
-        if ($this->getCategorie()) return $this->getCategorie()->getLibelle();
-        return "Aucune catégorie associée";
+        $categories = $this->getCategories(false);
+        if (empty($categories)) return "Aucune catégorie associée";
+        $texte = "<ul>";
+        foreach ($categories as $category) {
+            $texte .= "<li>" . $category->getCategorie()->getLibelle() . "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
     }
 
     /** @noinspection PhpUnused */

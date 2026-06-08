@@ -1,6 +1,7 @@
 <?php
 
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetierCategorie;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -70,17 +71,24 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
     </dd>
-    <dt class="col-md-5"> Catégorie  </dt>
+    <dt class="col-md-5"> Catégories statutaires </dt>
     <dd class="col-md-7">
-        <?php if ($fichemetier->getCategorie() === null) : ?>
+        <?php if (empty($fichemetier->getCategories())) : ?>
             <span class="missing-data">Aucune catégorie associée</span>
         <?php else : ?>
-            <?php echo $fichemetier->getCategorie()->getLibelle(); ?>
+            <ul style="margin-bottom: 0">
+            <?php
+                $ficheMetierCategories = $fichemetier->getCategories(false);
+                usort($ficheMetierCategories, function (FicheMetierCategorie $a, FicheMetierCategorie $b) { return $a->getCategorie()->getLibelle() <=> $b->getCategorie()->getLibelle(); });
+            ?>
+            <?php foreach ($ficheMetierCategories as $categorie) : ?>
+                <li> <?php echo $categorie->getCategorie()->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+            </ul>
         <?php endif; ?>
-        <br> <!-- // todo : retirer ce br copium -->
         <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
-            <?php /** @see FicheMetierController::modifierCategorieAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/modifier-categorie', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+            <?php /** @see FicheMetierController::modifierCategoriesAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/modifier-categories', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                class="ajax-modal action primary" data-event="modification"
             >
                 <small>
@@ -88,13 +96,13 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     Modifier
                 </small>
             </a>
-            <?php /** @see FicheMetierController::supprimerCategorieAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/supprimer-categorie', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+            <?php /** @see FicheMetierController::viderCategoriesAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/vider-categories', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                class="action danger"
             >
                 <small>
                     <span class="icon icon-unchecked"></span>
-                    Supprimer
+                    Vider
                 </small>
             </a>
         <?php endif; ?>

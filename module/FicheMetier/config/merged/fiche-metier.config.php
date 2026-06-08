@@ -21,6 +21,8 @@ use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceFactory;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieService;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -103,8 +105,8 @@ return [
 
                         'modifier-famille-professionnelle',
                         'supprimer-famille-professionnelle',
-                        'modifier-categorie',
-                        'supprimer-categorie',
+                        'modifier-categories',
+                        'vider-categories',
                         'modifier-niveau-carriere',
                         'supprimer-niveau-carriere',
                         'modifier-code-fonction',
@@ -309,23 +311,23 @@ return [
                             ],
                         ],
                     ],
-                    'modifier-categorie' => [
+                    'modifier-categories' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-categorie/:fiche-metier',
+                            'route'    => '/modifier-categories/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::modifierCategorieAction() */
-                                'action'     => 'modifier-categorie',
+                                /** @see FicheMetierController::modifierCategoriesAction() */
+                                'action'     => 'modifier-categories',
                             ],
                         ],
                     ],
-                    'supprimer-categorie' => [
+                    'vider-categories' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-categorie/:fiche-metier',
+                            'route'    => '/vider-categories/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::supprimerCategorieAction() */
-                                'action'     => 'supprimer-categorie',
+                                /** @see FicheMetierController::viderCategoriesAction() */
+                                'action'     => 'vider-categories',
                             ],
                         ],
                     ],
@@ -617,6 +619,7 @@ return [
     'service_manager' => [
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
+            FicheMetierCategorieService::class => FicheMetierCategorieServiceFactory::class,
         ],
     ],
     'controllers' => [

@@ -25,6 +25,7 @@ use Element\Service\NiveauMaitrise\NiveauMaitriseServiceAwareTrait;
 use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\CodeFonction;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetierCategorie;
 use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Entity\Db\TendanceElement;
 use FicheMetier\Entity\Db\TendanceType;
@@ -34,6 +35,7 @@ use FicheMetier\Service\Activite\ActiviteServiceAwareTrait;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieServiceAwareTrait;
 use FicheMetier\Service\Import\ImportServiceAwareTrait;
 use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -66,6 +68,7 @@ class ImportController extends AbstractActionController
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FicheMetierCategorieServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use MissionElementServiceAwareTrait;
     use NiveauServiceAwareTrait;
@@ -235,15 +238,10 @@ class ImportController extends AbstractActionController
                     }
                 }
 
-                foreach ($fiches as $fiche) {
-                    if ($fiche->getCategorie() and $fiche->getCategorie()->getId() === null) {
-                        $this->getCategorieService()->create($fiche->getCategorie());
-                    }
-                }
-
-
                 /** @var FicheMetier $fiche */
                 foreach ($fiches as $fiche) {
+                    $categories = $fiche->getCategories();
+                    $fiche->clearCategories();
                     $competences = $fiche->getCompetenceCollection()->toArray();
                     $fiche->clearCompetences();
                     $applications = $fiche->getApplicationCollection()->toArray();
@@ -260,6 +258,12 @@ class ImportController extends AbstractActionController
                     $fiche->clearActivites();
 
                     if ($fiche->getId() === null) $this->getFicheMetierService()->create($fiche);
+
+                    foreach ($categories as $category) {
+                        if ($category->getId() === null) $this->getFicheMetierCategorieService()->create($category);
+                        if ($category->getHistoDestruction() AND $category->getHistoDestructeur() === null) $this->getFicheMetierCategorieService()->historise($category);
+                        $fiche->addFicheMetierCategorie($category);
+                    }
 
                     foreach ($competences as $element) {
                         if ($element->getId() === null) $this->getCompetenceElementService()->create($element);
@@ -422,7 +426,7 @@ class ImportController extends AbstractActionController
 
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_REFERENS3, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU] ?? "", $dictionnaireNiveauCarriere, $warning);
-                        $this->readCategorie($fiche, $raw[self::HEADER_REFERENS3_CATEGORIE] ?? "", $dictionnaireCategorie, $warning);
+                        $this->readCategorie($fiche, $raw[self::HEADER_REFERENS3_CATEGORIE] ?? "", $dictionnaireCategorie, "|", $warning);
                         $this->readMissions($fiche, $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "", "|", $referentiel);
                         $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
@@ -724,7 +728,7 @@ class ImportController extends AbstractActionController
 
                         $this->readRaison($fiche, $raw[self::HEADER_EMC2_RAISON] ?? "", $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_EMC2_NIVEAU_CARRIERE] ?? "", $dictionnaireNiveauCarriere, $warning);
-                        $this->readCategorie($fiche, $raw[ImportController::HEADER_EMC2_CATEGORIE] ?? "", $dictionnaireCategorie, $warning);
+                        $this->readCategorie($fiche, $raw[ImportController::HEADER_EMC2_CATEGORIE] ?? "", $dictionnaireCategorie, "|", $warning);
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_EMC2, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION] ?? "", "|", $referentiel);
                         $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE] ?? "", "|", $referentiel);
@@ -839,18 +843,19 @@ class ImportController extends AbstractActionController
     }
 
 
-    public function readCategorie(FicheMetier &$fiche, string $data, array& $dictionnaireCategorie, array& $warning): void
+    public function readCategorie(FicheMetier &$fiche, string $data, array& $dictionnaireCategorie, string $separator, array& $warning): void
     {
-        $libelle = trim($data);
-        if ($libelle === "") return;
+        $now = new DateTime();
+        $categories = $fiche->getCategories(false);
+        foreach ($categories as $category) $category->setHistoDestruction($now);
 
-        $categorie = $dictionnaireCategorie[$libelle] ?? null;
-        if ($categorie === null) {
-            $categorie = new Categorie();
-            $categorie->setCode($libelle);
-            $categorie->setLibelle($libelle);
+        if (trim($data) === "") return;
+        $readCategories = explode($separator, $data);
+
+        foreach ($readCategories as $readCategorie) {
+            $categorie = $dictionnaireCategorie[$readCategorie] ?? null;
+            if ($categorie !== null) $fiche->addCategorie($categorie);
         }
-        $fiche->setCategorie($categorie);
     }
 
     public function readMissions(FicheMetier &$fiche, ?string $data, string $separator, Referentiel $referentiel): void

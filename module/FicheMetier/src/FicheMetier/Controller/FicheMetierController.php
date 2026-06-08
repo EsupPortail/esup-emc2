@@ -8,6 +8,7 @@ use Application\Provider\Etat\FicheMetierEtats;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieFormAwareTrait;
+use Carriere\Form\SelectionnerCategories\SelectionnerCategoriesFormAwareTrait;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormAwareTrait;
 use Element\Entity\Db\CompetenceElement;
@@ -30,6 +31,7 @@ use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieServiceAwareTrait;
 use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
@@ -59,6 +61,7 @@ class FicheMetierController extends AbstractActionController
     use EmploiRepereServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FicheMetierCategorieServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use MissionElementServiceAwareTrait;
@@ -79,6 +82,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionEtatFormAwareTrait;
     use SelectionnerActivitesFormAwareTrait;
     use SelectionnerCategorieFormAwareTrait;
+    use SelectionnerCategoriesFormAwareTrait;
     use SelectionnerFamilleProfessionnelleFormAwareTrait;
     use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
@@ -531,6 +535,59 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
+    public function modifierCategoriesAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerCategoriesForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-categories', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $fmCategories = $fichemetier->getCategories();
+                foreach ($fmCategories as $category) {
+                    if ($category->getId() === null) {
+                        $this->getFicheMetierCategorieService()->create($category);
+                    }
+                    if ($category->getHistoDestruction() !== null AND $category->getHistoDestructeur() === null) {
+                        $this->getFicheMetierCategorieService()->historise($category);
+                    }
+                }
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner les catégories statutaires",
+            'fichemetier' => $fichemetier,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function viderCategoriesAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+
+        $fmCategories = $fichemetier->getCategories(false);
+        foreach ($fmCategories as $category) {
+            $this->getFicheMetierCategorieService()->historise($category);
+        }
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
+
+
     public function modifierCategorieAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -557,18 +614,6 @@ class FicheMetierController extends AbstractActionController
         $vm->setTemplate('default/default-form');
         return $vm;
     }
-
-    public function supprimerCategorieAction(): Response
-    {
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $fichemetier->setCategorie(null);
-        $this->getFicheMetierService()->update($fichemetier);
-
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
-    }
-
 
     public function modifierNiveauCarriereAction(): ViewModel
     {
