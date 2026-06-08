@@ -11,12 +11,26 @@ use RuntimeException;
 
 class CorrespondanceTypeService
 {
-
     use ProvidesObjectManager;
 
-    /** GESTION DES ENITIES *******************************************************************************************/
+    /** GESTION DES ENTITÉS *******************************************************************************************/
 
-    // les grades sont importés et ne sont pas gérés dans l'application.
+    public function create(CorrespondanceType $correspondanceType): void
+    {
+        $this->getObjectManager()->persist($correspondanceType);
+        $this->getObjectManager()->flush($correspondanceType);
+    }
+
+    public function update(CorrespondanceType $correspondanceType): void
+    {
+        $this->getObjectManager()->flush($correspondanceType);
+    }
+
+    public function delete(CorrespondanceType $correspondanceType): void
+    {
+        $this->getObjectManager()->remove($correspondanceType);
+        $this->getObjectManager()->flush($correspondanceType);
+    }
 
     /** REQUETAGE *****************************************************************************************************/
 

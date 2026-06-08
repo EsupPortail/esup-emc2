@@ -6,6 +6,10 @@ use Carriere\Controller\CorrespondanceController;
 use Carriere\Controller\CorrespondanceControllerFactory;
 use Carriere\Controller\CorrespondanceTypeController;
 use Carriere\Controller\CorrespondanceTypeControllerFactory;
+use Carriere\Form\SpecialiteType\SpecialiteTypeForm;
+use Carriere\Form\SpecialiteType\SpecialiteTypeFormFactory;
+use Carriere\Form\SpecialiteType\SpecialiteTypeHydrator;
+use Carriere\Form\SpecialiteType\SpecialiteTypeHydratorFactory;
 use Carriere\Provider\Privilege\CorrespondancePrivileges;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Carriere\Service\Correspondance\CorrespondanceServiceFactory;
@@ -52,6 +56,9 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'ajouter',
+                        'modifier',
+                        'supprimer',
                     ],
                     'privileges' => [
                         CorrespondancePrivileges::CORRESPONDANCE_INDEX,
@@ -106,6 +113,42 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        /** @see CorrespondanceTypeController::ajouterAction() */
+                                        'controller' => CorrespondanceTypeController::class,
+                                        'action'     => 'ajouter',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:correspondance-type',
+                                    'defaults' => [
+                                        /** @see CorrespondanceTypeController::modifierAction() */
+                                        'controller' => CorrespondanceTypeController::class,
+                                        'action'     => 'modifier',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'supprimer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/supprimer/:correspondance-type',
+                                    'defaults' => [
+                                        /** @see CorrespondanceTypeController::supprimerAction() */
+                                        'controller' => CorrespondanceTypeController::class,
+                                        'action'     => 'modifisupprimerer',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
                             'afficher' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -172,10 +215,14 @@ return [
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            SpecialiteTypeForm::class  => SpecialiteTypeFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            SpecialiteTypeHydrator::class => SpecialiteTypeHydratorFactory::class,
+        ],
     ],
     'view_helpers' => [
         'invokables' => [

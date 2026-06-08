@@ -4,7 +4,8 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Carriere\Entity\Db\Correspondance" table="carriere_correspondance">
 
-        <id name="id" column="id" type="integer">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
         </id>
 
         <field name="categorie" column="c_bap" length="10"/>

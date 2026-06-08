@@ -13,7 +13,12 @@ $this->headTitle("Types de spécialité");
 
 $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
 
-$canAction = ($canAfficher)
+//todo privilèges !!!!
+$canAjouter = true;
+$canModifier = true;
+$canSupprimer = true;
+
+$now = new DateTime();
 ?>
 
 <div class="row">
@@ -32,22 +37,31 @@ $canAction = ($canAfficher)
     </div>
 </div>
 
+<?php if ($canAjouter) : ?>
+    <?php /** @see \Carriere\Controller\CorrespondanceTypeController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('carriere/correspondance-type/ajouter', [], [], true); ?>"
+       class="btn btn-success ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter un type de spécialité
+    </a>
+<?php endif; ?>
 
-<div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
-    <span class="icon icon-refresh"></span>
-    Données synchronisées
-</div>
+<!---->
+<!--<div class="col-md-6 alert alert-info" style="margin-top: 1rem;">-->
+<!--    <span class="icon icon-refresh"></span>-->
+<!--    Données synchronisées-->
+<!--</div>-->
 
 
 <table class="table table-condensed table-hover" id="types">
     <thead>
     <tr>
-        <th> Code </th>
-        <th> Libellé court </th>
-        <th> Libellé long </th>
-        <?php if ($canAction) : ?>
-            <th> Action </th>
-        <?php endif ?>
+        <th class="col-md-1"> Code </th>
+        <th class="col-md-2"> Libellé court </th>
+        <th class="col-md-6"> Libellé long </th>
+        <th class="col-md-1"> Source </th>
+        <th class="col-md-2"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -60,18 +74,47 @@ $canAction = ($canAfficher)
                 <?php endif; ?>
             </td>
             <td> <?php echo $type->getLibelleCourt(); ?> </td>
-            <td> <?php echo $type->getLibelleLong(); ?> </td>
-            <?php if ($canAction) : ?>
+            <td>
+                <?php echo $type->getLibelleLong(); ?>
+                <?php if ($type->getDateFermeture() !== null and $type->getDateFermeture() < $now) : ?>
+                    <span class="badge" style="background: darkred;">terminé</span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($type->getSourceId() === null) : ?>
+                    <span class="missing-data">Aucune source connue</span>
+                <?php else : ?>
+                    <code> <?php echo $type->getSourceId(); ?> </code>
+                <?php endif; ?>
+            </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
+                    <?php /** @see \Carriere\Controller\CorrespondanceTypeController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('carriere/correspondance-type/afficher', ['type' => $type->getId()], [], true); ?>"
                        class="ajax-modal action secondary">
                             <span class="icon icon-voir"></span>
                         Afficher
                     </a>
                 <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <br>
+                    <?php /** @see \Carriere\Controller\CorrespondanceTypeController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('carriere/correspondance-type/modifier', ['correspondance-type' => $type->getId()], [], true); ?>"
+                       class="ajax-modal action primary" data-event="modifier">
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <br>
+                    <?php /** @see \Carriere\Controller\CorrespondanceTypeController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('carriere/correspondance-type/supprimer', ['correspondance-type' => $type->getId()], [], true); ?>"
+                       class="ajax-modal action danger" data-event="modifier">
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer
+                    </a>
+                <?php endif; ?>
             </td>
-            <?php endif; ?>
         </tr>
         <?php endforeach; ?>
     </tbody>
@@ -79,9 +122,13 @@ $canAction = ($canAfficher)
 
 <script>
     $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
         $('table#types').DataTable({
-            paging: false,
-            info: false,
+            stateSave: true,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",
