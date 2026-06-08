@@ -130,6 +130,7 @@ $canSupprimer = $this->isAllowed(CodeFonctionPrivileges::getResourceId(CodeFonct
 <script>
     $(function() {
         $("#codesfonctions").DataTable({
+            stateSave: true,
             info: true,
             autoWidth: false,
             language: {

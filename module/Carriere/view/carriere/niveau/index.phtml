@@ -130,6 +130,7 @@ $canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $
         });
         $("table#niveaux").DataTable({
             autoWidth: false,
+            stateSave: true,
             language: {
                 "url": "/js/datatables_fr.json",
             },

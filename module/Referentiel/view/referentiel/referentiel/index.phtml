@@ -149,5 +149,16 @@ $this->headTitle("Référentiels");
             event.div.modal('hide');
             window.location.reload();
         });
+
+        $('table#referentiels').dataTable({
+            stateSave: true,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [2], orderable: false }
+            ]
+        });
     });
 </script>

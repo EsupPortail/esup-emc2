@@ -141,8 +141,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
         });
 
         $('table#corps').DataTable({
-            paging: false,
-            info: false,
+            stateSave: true,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",

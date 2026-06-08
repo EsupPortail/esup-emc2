@@ -80,8 +80,7 @@ $this->headTitle("Liste des grades");
 <script>
     $(document).ready(function () {
         $('table#grades').DataTable({
-            paging: false,
-            info: false,
+            stateSave: true,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",

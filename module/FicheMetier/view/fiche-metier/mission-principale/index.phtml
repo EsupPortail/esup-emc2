@@ -220,6 +220,7 @@ $canImporter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Missi
         });
         $('table#missions').DataTable({
             autoWidth: false,
+            stateSave: true,
             language: {
                 "url": "/js/datatables_fr.json",
             },

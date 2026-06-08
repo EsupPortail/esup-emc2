@@ -94,8 +94,7 @@ $canModifier = $this->isAllowed(EmploiTypePrivileges::getResourceId(EmploiTypePr
         });
 
         $('table#emploi_types').DataTable({
-            paging: false,
-            info: false,
+            stateSave: true,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",

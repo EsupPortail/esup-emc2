@@ -123,9 +123,8 @@ $this->headTitle("Liste des spécialités");
 <script>
     $(document).ready(function () {
         $('table#specialites').DataTable({
-            paging: false,
-            info: false,
             autoWidth: false,
+            stateSave: true,
             language: {
                 "url": "/js/datatables_fr.json",
             },
