@@ -12,11 +12,9 @@ $this->headTitle("Types de spécialité");
 
 
 $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
-
-//todo privilèges !!!!
-$canAjouter = true;
-$canModifier = true;
-$canSupprimer = true;
+$canAjouter     = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AJOUTER));
+$canModifier    = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_MODIFIER));
+$canSupprimer   = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_SUPPRIMER));
 
 $now = new DateTime();
 ?>
@@ -40,7 +38,7 @@ $now = new DateTime();
 <?php if ($canAjouter) : ?>
     <?php /** @see \Carriere\Controller\CorrespondanceTypeController::ajouterAction() */ ?>
     <a href="<?php echo $this->url('carriere/correspondance-type/ajouter', [], [], true); ?>"
-       class="btn btn-success ajax-modal" data-event="modification"
+       class="btn btn-primary ajax-modal" data-event="modification"
     >
         <span class="icon icon-ajouter"></span>
         Ajouter un type de spécialité
@@ -100,7 +98,7 @@ $now = new DateTime();
                     <br>
                     <?php /** @see \Carriere\Controller\CorrespondanceTypeController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('carriere/correspondance-type/modifier', ['correspondance-type' => $type->getId()], [], true); ?>"
-                       class="ajax-modal action primary" data-event="modifier">
+                       class="ajax-modal action primary" data-event="modification">
                         <span class="icon icon-editer"></span>
                         Modifier
                     </a>
@@ -109,7 +107,7 @@ $now = new DateTime();
                     <br>
                     <?php /** @see \Carriere\Controller\CorrespondanceTypeController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('carriere/correspondance-type/supprimer', ['correspondance-type' => $type->getId()], [], true); ?>"
-                       class="ajax-modal action danger" data-event="modifier">
+                       class="ajax-modal action danger" data-event="modification">
                         <span class="icon icon-unchecked"></span>
                         Supprimer
                     </a>

@@ -4,6 +4,7 @@ namespace Carriere\Controller;
 
 use Agent\Service\AgentGrade\AgentGradeService;
 use Application\Service\Util\UtilService;
+use Carriere\Form\Specialite\SpecialiteForm;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -34,12 +35,18 @@ class CorrespondanceControllerFactory {
         $userService = $container->get(UserService::class);
         $utilService = $container->get(UtilService::class);
 
+        /**
+         * @var SpecialiteForm $specialiteForm
+         */
+        $specialiteForm = $container->get('FormElementManager')->get(SpecialiteForm::class);
+
         $controller = new CorrespondanceController();
         $controller->setAgentGradeService($agentGradeService);
         $controller->setCorrespondanceService($correspondanceService);
         $controller->setParametreService($parametreService);
         $controller->setUserService($userService);
         $controller->setUtilService($utilService);
+        $controller->setSpecialiteForm($specialiteForm);
         return $controller;
     }
 }

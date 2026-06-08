@@ -21,7 +21,9 @@ $correspondances = array_filter($specialites, function (Correspondance $a) use (
 
 $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
 $canLister = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_LISTER_AGENTS));
-
+$canAjouter = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AJOUTER));
+$canModifier = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_MODIFIER));
+$canSupprimer = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_SUPPRIMER));
 
 $this->headTitle("Liste des spécialités");
 ?>
@@ -44,6 +46,16 @@ $this->headTitle("Liste des spécialités");
         </a>
     </div>
 </div>
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \Carriere\Controller\CorrespondanceController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('correspondance/ajouter', [], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter une spécialité
+    </a>
+<?php endif; ?>
 
 <div class="col-md-6 alert alert-info" style="margin-top: 1rem;">
     <span class="icon icon-refresh"></span>
@@ -113,6 +125,24 @@ $this->headTitle("Liste des spécialités");
                             Lister les agents
                         </a>
                     <?php endif; ?>
+                    <?php if ($canModifier) : ?>
+                        <br>
+                        <?php /** @see \Carriere\Controller\CorrespondanceController::modifierAction() */ ?>
+                        <a href="<?php echo $this->url('correspondance/modifier', ['correspondance' => $specialite->getId()], [], true); ?>"
+                           class="ajax-modal action primary" data-event="modification">
+                            <span class="icon icon-editer"></span>
+                            Modifier
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canSupprimer) : ?>
+                        <br>
+                        <?php /** @see \Carriere\Controller\CorrespondanceController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('correspondance/supprimer', ['correspondance' => $specialite->getId()], [], true); ?>"
+                           class="ajax-modal action danger" data-event="modification">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endif; ?>
@@ -122,6 +152,11 @@ $this->headTitle("Liste des spécialités");
 
 <script>
     $(document).ready(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
         $('table#specialites').DataTable({
             autoWidth: false,
             stateSave: true,

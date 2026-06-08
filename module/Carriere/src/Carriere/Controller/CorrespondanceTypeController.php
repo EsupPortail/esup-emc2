@@ -2,6 +2,7 @@
 
 namespace Carriere\Controller;
 
+use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\CorrespondanceType;
 use Carriere\Form\SpecialiteType\SpecialiteTypeFormAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
@@ -49,8 +50,6 @@ class CorrespondanceTypeController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $correspondanceType->setSourceId("EMC2"); //todo faire une constante !!!
-                $correspondanceType->setInsertedOn(new DateTime());
                 $this->getCorrespondanceTypeService()->create($correspondanceType);
                 exit();
             }
@@ -104,10 +103,24 @@ class CorrespondanceTypeController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($correspondanceType !== null) {
+
+            $warning = null;
+            /** @var Correspondance[] $correspondances */
+            $correspondances = $correspondanceType->getCorrespondances()->toArray();
+            if (!empty($correspondances)) {
+                $warning = "<span class='icon icon-attention'></span> Attention, ce type de spécialité est utilisé par ".count($correspondances)." spécialité·s :";
+                $warning .= "<ul>";
+                foreach ($correspondances as $correspondance) {
+                    $warning .= "<li>".$correspondance->getLibelleLong()." (".$correspondanceType->getCode()." ". $correspondance->getCategorie() .")</li>";
+                }
+                $warning .= "</ul>";
+            }
+
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression d'un type de spécialité " . $correspondanceType->getLibelleLong(),
                 'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
+                'warning' => $warning,
                 'action' => $this->url()->fromRoute('carriere/correspondance-type/supprimer', ["correspondance-type" => $correspondanceType->getId()], [], true),
             ]);
         }

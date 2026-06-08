@@ -1,0 +1,39 @@
+<?php
+
+use Carriere\Form\Specialite\SpecialiteForm;
+
+/**
+ * @see \Carriere\Controller\CorrespondanceController::ajouterAction()
+ * @see \Carriere\Controller\CorrespondanceController::modifierAction()
+ * @var SpecialiteForm $form
+ */
+
+?>
+
+<?php
+
+echo $this->form()->openTag($form);
+echo $this->formControlGroup($form->get('type'));
+echo $this->formControlGroup($form->get('code'));
+echo $this->formControlGroup($form->get('libelle_court'));
+echo $this->formControlGroup($form->get('libelle_long'));
+?>
+<div class="row">
+    <div class="col-md-6">
+        <?php echo $this->formControlGroup($form->get('date_ouverture')); ?>
+    </div>
+    <div class="col-md-6">
+        <?php echo $this->formControlGroup($form->get('date_fermeture')); ?>
+    </div>
+</div>
+<?php
+echo $this->formControlGroup($form->get('bouton'));
+echo $this->form()->closeTag();
+?>
+
+
+<script>
+    $(function () {
+        $('select').selectpicker();
+    });
+</script>

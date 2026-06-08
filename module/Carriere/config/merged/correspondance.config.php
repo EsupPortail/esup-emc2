@@ -6,6 +6,10 @@ use Carriere\Controller\CorrespondanceController;
 use Carriere\Controller\CorrespondanceControllerFactory;
 use Carriere\Controller\CorrespondanceTypeController;
 use Carriere\Controller\CorrespondanceTypeControllerFactory;
+use Carriere\Form\Specialite\SpecialiteForm;
+use Carriere\Form\Specialite\SpecialiteFormFactory;
+use Carriere\Form\Specialite\SpecialiteHydrator;
+use Carriere\Form\Specialite\SpecialiteHydratorFactory;
 use Carriere\Form\SpecialiteType\SpecialiteTypeForm;
 use Carriere\Form\SpecialiteType\SpecialiteTypeFormFactory;
 use Carriere\Form\SpecialiteType\SpecialiteTypeHydrator;
@@ -45,6 +49,33 @@ return [
                 [
                     'controller' => CorrespondanceController::class,
                     'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_SUPPRIMER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
                         'afficher-agents',
                     ],
                     'privileges' => [
@@ -56,12 +87,36 @@ return [
                     'action' => [
                         'index',
                         'afficher',
-                        'ajouter',
-                        'modifier',
-                        'supprimer',
                     ],
                     'privileges' => [
                         CorrespondancePrivileges::CORRESPONDANCE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceTypeController::class,
+                    'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceTypeController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceTypeController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_SUPPRIMER,
                     ],
                 ],
             ],
@@ -144,7 +199,7 @@ return [
                                     'defaults' => [
                                         /** @see CorrespondanceTypeController::supprimerAction() */
                                         'controller' => CorrespondanceTypeController::class,
-                                        'action'     => 'modifisupprimerer',
+                                        'action'     => 'supprimer',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -197,6 +252,39 @@ return [
                             ],
                         ],
                     ],
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                /** @see CorrespondanceController::ajouterAction() */
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:correspondance',
+                            'defaults' => [
+                                /** @see CorrespondanceController::modifierAction() */
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:correspondance',
+                            'defaults' => [
+                                /** @see CorrespondanceController::supprimerAction() */
+                                'action'     => 'supprimer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                 ],
             ],
         ],
@@ -216,11 +304,13 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            SpecialiteForm::class => SpecialiteFormFactory::class,
             SpecialiteTypeForm::class  => SpecialiteTypeFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            SpecialiteHydrator::class => SpecialiteHydratorFactory::class,
             SpecialiteTypeHydrator::class => SpecialiteTypeHydratorFactory::class,
         ],
     ],

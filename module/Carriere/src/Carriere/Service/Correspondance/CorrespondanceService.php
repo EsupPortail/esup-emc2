@@ -18,7 +18,7 @@ class CorrespondanceService {
     use ProvidesObjectManager;
     use CorrespondanceTypeServiceAwareTrait;
 
-    /** GESTION DES ENITIES *******************************************************************************************/
+    /** GESTION DES ENTITÉS *******************************************************************************************/
 
     public function create(Correspondance $correspondance): Correspondance
     {
@@ -28,6 +28,19 @@ class CorrespondanceService {
         $this->getObjectManager()->persist($correspondance);
         $this->getObjectManager()->flush();
         return $correspondance;
+    }
+
+    public function update(Correspondance $correspondance): void
+    {
+        $correspondance->setUpdatedOn(new DateTime());
+        $this->getObjectManager()->flush($correspondance);
+    }
+
+    public function delete(Correspondance $correspondance): void
+    {
+        //$this->getObjectManager()->remove($correspondanceType);
+        $correspondance->setDeletedOn(new DateTime());
+        $this->getObjectManager()->flush($correspondance);
     }
 
     /** REQUETAGE *****************************************************************************************************/
@@ -113,7 +126,7 @@ class CorrespondanceService {
     public function getRequestedCorrespondance(AbstractActionController $controller, string $param = 'correspondance') : ?Correspondance
     {
         $id = $controller->params()->fromRoute($param);
-        return $this->getCorrespondance($id);
+        return $this->getCorrespondance($id, false);
     }
 
     /** @return Correspondance[] */
