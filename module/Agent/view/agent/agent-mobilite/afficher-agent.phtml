@@ -21,6 +21,16 @@ $canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmob
 
 <?php echo $this->agentOnglet($agent, 'mobilite'); ?>
 
+<p>
+<?php if ($canAjouter) : ?>
+    <?php /** @see \Agent\Controller\AgentMobiliteController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('agent/mobilite/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span> Ajouter
+    </a>
+<?php endif; ?>
+</p>
 
 <?php if (empty($mobilites)) : ?>
     <em> Aucun mobilité de connue</em>
@@ -65,7 +75,7 @@ $canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmob
                     <a href="<?php echo $this->url('agent/mobilite/modifier', ['agent-mobilite' => $mobilite->getId()], [], true); ?>"
                        class="btn btn-primary ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-editer"></span> Modifier le statut
+                        <span class="icon icon-editer"></span> Modifier
                     </a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
@@ -73,13 +83,13 @@ $canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmob
                         <?php /** @see \Application\Controller\AgentMobiliteController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('agent/mobilite/historiser', ['agent-mobilite' => $mobilite->getId()], [], true); ?>"
                            class="btn btn-warning ajax-modal" data-event="modification">
-                            <span class="icon icon-historiser"></span> Historiser le statut
+                            <span class="icon icon-historiser"></span> Historiser
                         </a>
                     <?php else : ?>
                         <?php /** @see \Application\Controller\AgentMobiliteController::restaurerAction() */ ?>
                         <a href="<?php echo $this->url('agent/mobilite/restaurer', ['agent-mobilite' => $mobilite->getId()],[], true); ?>"
                            class="btn btn-primary">
-                            <span class="icon icon-restaurer"></span> Restaurer le statut
+                            <span class="icon icon-restaurer"></span> Restaurer
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -88,7 +98,7 @@ $canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmob
                     <?php /** @see \Application\Controller\AgentMobiliteController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('agent/mobilite/supprimer', ['agent-mobilite' => $mobilite->getId()], [], true); ?>"
                        class="btn btn-danger ajax-modal" data-event="modification">
-                        <span class="icon icon-unchecked"></span> Supprimer le statut
+                        <span class="icon icon-unchecked"></span> Supprimer
                     </a>
                 <?php endif; ?>
 
@@ -97,3 +107,11 @@ $canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmob
     <?php endforeach; ?>
 <?php endif; ?>
 
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
