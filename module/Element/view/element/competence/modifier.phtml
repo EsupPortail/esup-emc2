@@ -29,7 +29,7 @@ use Element\Form\Competence\CompetenceForm;
 
 <script>
     function spe() {
-        if ($('div#form_modification select#type option:selected').val() === '<?php echo $spec->getId(); ?>') {
+        if ($('div#form_modification select#type option:selected').val() === '<?php echo $spec?->getId(); ?>') {
             console.log('specifique');
             $('div#discipline').show();
         } else{
