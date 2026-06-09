@@ -2,6 +2,7 @@
 
 namespace Agent\Assertion;
 
+use Agent\Controller\PortfolioControler;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Agent\Provider\Privilege\PortfolioPrivileges;
 use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
@@ -19,7 +20,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
-class AgentAssertion extends AbstractAssertion
+class PortfolioAssertion extends AbstractAssertion
 {
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
@@ -58,39 +59,17 @@ class AgentAssertion extends AbstractAssertion
         if ($role->getRoleId() === AgentRoleProvider::ROLE_AGENT) $isAgent = ($agent === $entity);
 
         switch ($privilege) {
-            case AgentPrivileges::AGENT_AFFICHER :
-            case AgentPrivileges::AGENT_ACQUIS_AFFICHER:
-                return match ($role->getRoleId()) {
-                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR, AppRoleProvider::DRH => true,
-                    StructureRoleProvider::RESPONSABLE => $isResponsable,
-                    AgentRoleProvider::ROLE_SUPERIEURE => $isSuperieur,
-                    AgentRoleProvider::ROLE_AUTORITE => $isAutorite,
-                    StructureRoleProvider::OBSERVATEUR => $isObservateur,
-                    AgentRoleProvider::ROLE_AGENT => $entity === $agent,
-                    default => false,
-                };
-            case AgentPrivileges::AGENT_ACQUIS_MODIFIER:
-            case AgentPrivileges::AGENT_ELEMENT_AJOUTER:
-            case AgentPrivileges::AGENT_ELEMENT_MODIFIER:
-            case AgentPrivileges::AGENT_ELEMENT_HISTORISER:
+            case PortfolioPrivileges::PORTFOLIO_AFFICHER:
+            case PortfolioPrivileges::PORTFOLIO_AFFICHER_DOCUMENT:
+            case PortfolioPrivileges::PORTFOLIO_HISTORISER_DOCUMENT:
+            case PortfolioPrivileges::PORTFOLIO_RESTAURER_DOCUMENT:
+            case PortfolioPrivileges::PORTFOLIO_SUPPRIMER_DOCUMENT:
                 return match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
                     StructureRoleProvider::RESPONSABLE => $isResponsable,
                     AgentRoleProvider::ROLE_SUPERIEURE => $isSuperieur,
                     AgentRoleProvider::ROLE_AUTORITE => $isAutorite,
                     AgentRoleProvider::ROLE_AGENT => $isAgent,
-                    default => false,
-                };
-            case AgentPrivileges::AGENT_ELEMENT_DETRUIRE:
-                return match ($role->getRoleId()) {
-                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
-                    default => false,
-                };
-            case AgentPrivileges::AGENT_ELEMENT_VALIDER:
-            case AgentPrivileges::AGENT_ELEMENT_AJOUTER_EPRO:
-                return match ($role->getRoleId()) {
-                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH => true,
-                    StructureRoleProvider::RESPONSABLE => $isResponsable,
                     default => false,
                 };
         }
@@ -124,9 +103,16 @@ class AgentAssertion extends AbstractAssertion
         }
 
         return match ($action) {
-            'informations', 'portfolio',
-            'afficher-statuts-grades'
-            => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
+            /** @see PortfolioControler::portfolioAction() */
+            'portfolio', => $this->computeAssertion($entity, PortfolioPrivileges::PORTFOLIO_AFFICHER),
+            /** @see PortfolioControler::afficherAction() */
+            'afficher' => $this->computeAssertion($entity, PortfolioPrivileges::PORTFOLIO_AFFICHER_DOCUMENT),
+            /** @see PortfolioControler::historiserAction() */
+            'historiser' => $this->computeAssertion($entity, PortfolioPrivileges::PORTFOLIO_HISTORISER_DOCUMENT),
+            /** @see PortfolioControler::restaurerAction() */
+            'restaurer' => $this->computeAssertion($entity, PortfolioPrivileges::PORTFOLIO_RESTAURER_DOCUMENT),
+            /** @see PortfolioControler::supprimerAction() */
+            'supprimer' => $this->computeAssertion($entity, PortfolioPrivileges::PORTFOLIO_SUPPRIMERAgentAssertionFactory.php_DOCUMENT),
             default => true,
         };
     }
