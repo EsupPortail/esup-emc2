@@ -59,6 +59,11 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
             return Etat::ECHEC;
         }
 
+        if ($campagne->estFini()) {
+            $evenement->setLog("La campagne #". $parametres['campagne'] . " est terminée.");
+            return Etat::ANNULE;
+        }
+
 
         $message = "";
 
