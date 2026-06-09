@@ -2,6 +2,8 @@
 
 namespace Agent;
 
+use Agent\Assertion\AgentMobiliteAssertion;
+use Agent\Assertion\AgentMobiliteAssertionFactory;
 use Agent\Controller\AgentMobiliteController;
 use Agent\Controller\AgentMobiliteControllerFactory;
 use Agent\Form\AgentMobilite\AgentMobiliteForm;
@@ -14,9 +16,32 @@ use Agent\Service\AgentMobilite\AgentMobiliteServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'AgentMobilite' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            AgentmobilitePrivileges::AGENTMOBILITE_AJOUTER,
+                            AgentmobilitePrivileges::AGENTMOBILITE_MODIFIER,
+                            AgentmobilitePrivileges::AGENTMOBILITE_HISTORISER,
+                            AgentmobilitePrivileges::AGENTMOBILITE_SUPPRIMER,
+                            AgentmobilitePrivileges::AGENTMOBILITE_AFFICHER,
+                        ],
+                        'resources' => ['AgentMobilite'],
+                        'assertion' => AgentMobiliteAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -36,6 +61,7 @@ return [
                     'privileges' => [
                         AgentMobilitePrivileges::AGENTMOBILITE_AFFICHER
                     ],
+                    'assertion' => AgentMobiliteAssertion::class,
                 ],
                 [
                     'controller' => AgentMobiliteController::class,
@@ -45,6 +71,7 @@ return [
                     'privileges' => [
                         AgentMobilitePrivileges::AGENTMOBILITE_AJOUTER
                     ],
+                    'assertion' => AgentMobiliteAssertion::class,
                 ],
                 [
                     'controller' => AgentMobiliteController::class,
@@ -54,6 +81,7 @@ return [
                     'privileges' => [
                         AgentMobilitePrivileges::AGENTMOBILITE_MODIFIER
                     ],
+                    'assertion' => AgentMobiliteAssertion::class,
                 ],
                 [
                     'controller' => AgentMobiliteController::class,
@@ -64,6 +92,7 @@ return [
                     'privileges' => [
                         AgentMobilitePrivileges::AGENTMOBILITE_HISTORISER
                     ],
+                    'assertion' => AgentMobiliteAssertion::class,
                 ],
                 [
                     'controller' => AgentMobiliteController::class,
@@ -73,6 +102,7 @@ return [
                     'privileges' => [
                         AgentMobilitePrivileges::AGENTMOBILITE_SUPPRIMER
                     ],
+                    'assertion' => AgentMobiliteAssertion::class,
                 ],
             ],
         ],
@@ -186,6 +216,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            AgentMobiliteAssertion::class => AgentMobiliteAssertionFactory::class,
             AgentMobiliteService::class => AgentMobiliteServiceFactory::class,
         ],
     ],

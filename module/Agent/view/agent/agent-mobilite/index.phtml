@@ -18,7 +18,17 @@ use Structure\Entity\Db\Structure;
 
 $this->headTitle("Statuts de mobilité des agent·es");
 
+/**
+ * Remarque :
+ * Pour accélérer l'affichage, on ne fait de test de l'assertion sur chaque ligne.
+ * La méthode listant les agents et donc les lignes présentées est la même qu'utilisée par l'assertion
+ **/
 $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AJOUTER));
+$canAfficher = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AFFICHER));
+$canModifier = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_MODIFIER));
+$canHistoriser = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_HISTORISER));
+$canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_SUPPRIMER));
+
 ?>
 
 <h1 class="page-header">
@@ -51,12 +61,6 @@ $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmobil
         <?php
         $agent = $amobilite->getAgent();
         $mobilite = $amobilite->getMobilite();
-
-        $canAfficher = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
-        $canModifier = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_MODIFIER));
-        $canHistoriser = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_HISTORISER));
-        $canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_SUPPRIMER));
-
         ?>
         <tr>
             <td data-order="<?php echo $agent->getDenomination(); ?>"> <?php echo $agent->getDenomination(true); ?> </td>
