@@ -564,6 +564,21 @@ class EntretienProfessionnelController extends AbstractActionController
         return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'validation'], true);
     }
 
+    public function revoquerValidationFinaleAction(): Response
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
+        $this->getValidationInstanceService()->historise($validation);
+
+        if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_AGENT) {
+            $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
+        }
+        $this->getEntretienProfessionnelService()->update($entretien);
+
+        /** @see EntretienProfessionnelController::accederAction */
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'validation'], true);
+    }
+
     public function exporterCrepAction(): string
     {
         $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);

@@ -22,4 +22,5 @@ class EntretienproPrivileges extends Privileges
     const ENTRETIENPRO_VALIDER_RESPONSABLE = 'entretienpro-entretienpro_valider_responsable';
     const ENTRETIENPRO_VALIDER_DRH = 'entretienpro-entretienpro_valider_drh';
     const ENTRETIENPRO_VALIDER_OBSERVATION = 'entretienpro-entretienpro_valider_observation';
+    const ENTRETIENPRO_REVOQUER_VALIDATION_FINALE = 'entretienpro-entretienpro_revoquer_validation_finale';
 }

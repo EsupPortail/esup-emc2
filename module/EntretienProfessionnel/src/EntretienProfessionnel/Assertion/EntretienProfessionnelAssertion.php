@@ -242,6 +242,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE :
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT :
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION :
+            case EntretienproPrivileges::ENTRETIENPRO_REVOQUER_VALIDATION_FINALE :
                 if ($this->BLOCAGE_VALIDATION AND !$this->isPeriodeCompatible($entretien)) return false;
                 return $this->isScopeCompatible($entretien, $agent, $role, $predicats);
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH :
@@ -300,6 +301,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             'modifier', 'historiser', 'restaurer' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER),
             'acceder' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER),
             'reinitialiser' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_REINITIALISER),
+            'revoquer-validation-finale' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_REVOQUER_VALIDATION_FINALE),
             default => true,
         };
     }

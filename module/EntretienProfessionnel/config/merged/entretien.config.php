@@ -45,6 +45,7 @@ return [
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION,
+                            EntretienproPrivileges::ENTRETIENPRO_REVOQUER_VALIDATION_FINALE,
                         ],
                         'resources' => ['EntretienProfessionnel'],
                         'assertion' => EntretienProfessionnelAssertion::class
@@ -153,6 +154,16 @@ return [
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
                     ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'revoquer-validation-finale',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_REVOQUER_VALIDATION_FINALE,
+                    ],
+                    'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [
                     'controller' => EntretienProfessionnelController::class,
@@ -419,6 +430,18 @@ return [
                                 /** @see EntretienProfessionnelController::revoquerValidationAction() */
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'revoquer-validation',
+                            ],
+                        ],
+                    ],
+                    'revoquer-validation-finale' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/revoquer-validation-finale/:entretien-professionnel/:validation',
+                            'defaults' => [
+                                /** @see EntretienProfessionnelController::revoquerValidationFinaleAction() */
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'revoquer-validation-finale',
                             ],
                         ],
                     ],

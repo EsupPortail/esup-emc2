@@ -82,8 +82,18 @@ use UnicaenEtat\Entity\Db\EtatType;
                                     data-live-search="false">
                                 <option value=""> Toutes les campagnes</option>
                                 <?php foreach ($campagnes as $campagne) : ?>
-                                    <option value="<?php echo $campagne->getId(); ?>">
-                                        <?php echo $campagne->getAnnee(); ?>
+                                    <option
+                                            value="<?php echo $campagne->getId(); ?>"
+                                            data-content='
+                                                Campagne <?php echo $campagne->getAnnee(); ?>
+                                                <?php if ($campagne->estEnCours()) : ?>
+                                                    <span class="text-success">
+                                                        <span class="icon icon-checked"></span> En cours
+                                                    </span>
+                                                <?php endif; ?>
+                                            '
+                                    >
+                                        Campagne <?php echo $campagne->getAnnee(); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
