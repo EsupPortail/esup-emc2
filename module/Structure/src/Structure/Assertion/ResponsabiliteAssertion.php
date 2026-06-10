@@ -8,6 +8,8 @@ use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienRoleProvider;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Structure\Controller\StructureController;
+use Structure\Controller\StructureResponsabiliteController;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
@@ -92,6 +94,7 @@ class ResponsabiliteAssertion extends AbstractAssertion {
         }
 
         return match ($action) {
+            /** @see StructureResponsabiliteController::afficherResponsabiliteAction() */
             'afficher-responsabilite'       => $this->computeAssertion($responsabilite, ResponsabilitePrivileges::RESPONSABILITE_AFFICHER),
             'historiser', 'restaurer' => $this->computeAssertion($responsabilite, ResponsabilitePrivileges::RESPONSABILITE_SYNCHRONISER),
             'ajouter', 'modifier', 'supprimer' => $this->computeAssertion($responsabilite, ResponsabilitePrivileges::RESPONSABILITE_GERER),

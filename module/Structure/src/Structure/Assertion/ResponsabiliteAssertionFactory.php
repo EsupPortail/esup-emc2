@@ -3,6 +3,7 @@
 namespace Structure\Assertion;
 
 use Agent\Service\Agent\AgentService;
+use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -43,6 +44,11 @@ class ResponsabiliteAssertionFactory
         $assertion->setStructureGestionnaireService($structureGestionnaireService);
         $assertion->setStructureResponsableService($structureResponsableService);
         $assertion->setUserService($userService);
+
+        /* @var $application Application */
+        $application = $container->get('Application');
+        $mvcEvent    = $application->getMvcEvent();
+        $assertion->setMvcEvent($mvcEvent);
         return $assertion;
     }
 }

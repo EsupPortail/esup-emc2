@@ -458,7 +458,7 @@ EOS;
             ->join('sr.agent', 'agent')
             ->join('sr.structure', 'structure')
             ->andWhere('sr.agent = :agent')->setParameter('agent', $agent)
-            ->andWhere('sr.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('sr.deletedOn IS NULL AND sr.histoDestruction IS NULL')->andWhere('agent.deletedOn IS NULL')->andWhere('structure.deletedOn IS NULL')
             ->andWhere('sr.dateDebut IS NULL OR sr.dateDebut <= :now')
             ->andWhere('sr.dateFin IS NULL OR sr.dateFin >= :now')
             ->setParameter('now', new DateTime());
@@ -479,7 +479,7 @@ EOS;
             ->join('sg.agent', 'agent')
             ->join('sg.structure', 'structure')
             ->andWhere('sg.agent = :agent')->setParameter('agent', $agent)
-            ->andWhere('sg.deletedOn IS NULL')->andWhere('agent.deletedOn IS NULL')->andWhere('structure.deletedOn IS NULL')
+            ->andWhere('sg.deletedOn IS NULL and sg.histoDestruction IS NULL')->andWhere('agent.deletedOn IS NULL')->andWhere('structure.deletedOn IS NULL')
             ->andWhere('sg.dateDebut IS NULL OR sg.dateDebut <= :now')
             ->andWhere('sg.dateFin IS NULL OR sg.dateFin >= :now')
             ->setParameter('now', new DateTime());
