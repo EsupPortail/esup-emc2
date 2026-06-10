@@ -693,7 +693,7 @@ class AgentHierarchieController extends AbstractActionController
         if ($chaine !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression d'une la chaîne hiérarchique de  " . $chaine->getAgent()->getDenomination(),
+                'title' => "Suppression d'une chaîne hiérarchique pour " . $chaine->getAgent()->getDenomination(),
                 'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('agent/hierarchie/supprimer', ["chaine" => $chaine->getId(), 'type' => $type], [], true),
             ]);

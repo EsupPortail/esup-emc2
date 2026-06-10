@@ -4,7 +4,10 @@ use Agent\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Structure\Entity\Db\Observateur;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureResponsable;
+use Structure\Provider\Privilege\ResponsabilitePrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
+use Structure\Provider\Role\RoleProvider;
 use UnicaenContact\Entity\Db\Contact;
 use UnicaenContact\Entity\Db\Type;
 use UnicaenContact\Provider\Privilege\ContactPrivileges;
@@ -36,6 +39,15 @@ $this->headTitle($structure->getLibelleLong() . " - Description");
 
 $canEditerDescription = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
 $canGererGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_GESTIONNAIRE));
+
+
+
+$responsabilite = new StructureResponsable();
+$responsabilite->setStructure($structure);
+
+$canAfficherResponsabilite = $this->isAllowed($responsabilite, ResponsabilitePrivileges::RESPONSABILITE_AFFICHER);
+$canGererResponsabiliteInterne = $this->isAllowed($responsabilite,ResponsabilitePrivileges::RESPONSABILITE_GERER);
+$canGererResponsabiliteSynchronisee = $this->isAllowed($responsabilite,ResponsabilitePrivileges::RESPONSABILITE_SYNCHRONISER);
 
 $canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
 $canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
@@ -151,7 +163,34 @@ usort($sortedTypes, function (Type $a, Type $b) {
         </dl>
     </div>
     <div class="col-md-6">
-        <h2> Responsable·s </h2>
+        <h2> Responsable·s
+
+            <?php if ($canAfficherResponsabilite): ?>
+                <?php /** @see \Structure\Controller\StructureResponsabiliteController::afficherResponsabiliteAction() */ ?>
+                <a href="<?php echo $this->url('structure/responsabilite/afficher-responsabilite', ['structure' => $structure->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
+                   class="ajax-modal action secondary">
+                    <span class="icon icon-voir"></span>
+                    Afficher l'historique
+                </a>
+            <?php endif; ?>
+
+        </h2>
+
+        <?php if ($canGererResponsabiliteInterne) : ?>
+            <div>
+                <?php /** @see \Structure\Controller\StructureResponsabiliteController::ajouterAction() */ ?>
+                <a href="<?php echo $this->url('structure/responsabilite/ajouter', ['structure' => $structure->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
+                   class="ajax-modal btn btn-primary" data-event="modification"
+                >
+                    <span class="icon icon-ajouter"></span>
+                    Ajouter un·e responsable
+                </a>
+            </div>
+        <?php endif; ?>
+
+
+
+
 
         <?php if (empty($responsables)) : ?>
             <span class="text-warning">
@@ -162,16 +201,74 @@ usort($sortedTypes, function (Type $a, Type $b) {
             <ul>
                 <?php foreach ($responsables as $responsable) : ?>
                     <li>
-                    <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut()) ? $responsable->getDateDebut()->format('d/m/Y') : "N.C"; ?> au  <?php echo ($responsable->getDateFin()) ? $responsable->getDateFin()->format('d/m/Y') : "N.C"; ?>">
-                        <?php echo $responsable->getAgent()->getDenomination(); ?>
-                    </span>
+                        <span class=" <?php if ($responsable->estHistorise()) echo " historise "; ?> ">
+                            <span class="badge"><?php echo $responsable->getSourceId(); ?></span>
+                            <?php echo $responsable->getAgent()->getDenomination(); ?>
+                        </span>
+                        <?php if ($responsable->getSourceId() === 'EMC2') : ?>
+                            <?php if ($canGererResponsabiliteInterne) : ?>
+                                <?php /** @see \Structure\Controller\StructureResponsabiliteController::modifierAction() */ ?>
+                                <a href="<?php echo $this->url('structure/responsabilite/modifier', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
+                                   class="ajax-modal action primary" data-event="modification">
+                                    <span class="icon icon-modifier"></span>
+                                    Modifier
+                                </a>
+                                <?php /** @see \Structure\Controller\StructureResponsabiliteController::supprimerAction() */ ?>
+                                <a href="<?php echo $this->url('structure/responsabilite/supprimer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
+                                   class="ajax-modal action danger" data-event="modification">
+                                    <span class="icon icon-unchecked"></span>
+                                    Supprimer
+                                </a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if ($canGererResponsabiliteSynchronisee) : ?>
+                                <?php if ($responsable->estHistorise()) : ?>
+                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::restaurerAction() */ ?>
+                                    <a href="<?php echo $this->url('structure/responsabilite/restaurer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
+                                       class="action warning">
+                                        <span class="icon icon-restaurer"></span>
+                                        Ré-établir
+                                    </a>
+                                <?php else : ?>
+                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::historiserAction() */ ?>
+                                    <a href="<?php echo $this->url('structure/responsabilite/historiser', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
+                                       class="action warning">
+                                        <span class="icon icon-historiser"></span>
+                                        Révoquer
+                                    </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
 
         <?php if ($blocGestionnaire and $canGererGestionnaire) : ?>
-            <h2> Gestionnaire·s </h2>
+            <h2> Gestionnaire·s
+
+                <?php if ($canAfficherResponsabilite): ?>
+                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::afficherResponsabiliteAction() */ ?>
+                    <a href="<?php echo $this->url('structure/responsabilite/afficher-responsabilite', ['structure' => $structure->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                       class="ajax-modal action secondary">
+                        <span class="icon icon-voir"></span>
+                        Afficher l'historique
+                    </a>
+                <?php endif; ?>
+
+            </h2>
+
+            <?php if ($canGererResponsabiliteInterne) : ?>
+                <div>
+                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::ajouterAction() */ ?>
+                    <a href="<?php echo $this->url('structure/responsabilite/ajouter', ['structure' => $structure->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                       class="ajax-modal btn btn-primary" data-event="modification"
+                    >
+                        <span class="icon icon-ajouter"></span>
+                        Ajouter un·e gestionnaire
+                    </a>
+                </div>
+            <?php endif; ?>
 
             <?php if (empty($gestionnaires)) : ?>
                 <span class="text-warning">
@@ -182,9 +279,44 @@ usort($sortedTypes, function (Type $a, Type $b) {
                 <ul>
                     <?php foreach ($gestionnaires as $gestionnaire) : ?>
                         <li>
-                        <span title="Gestion valide sur la période du <?php echo ($gestionnaire->getDateDebut()) ? $gestionnaire->getDateDebut()->format('d/m/Y') : "N.C"; ?> au  <?php echo ($gestionnaire->getDateFin()) ? $gestionnaire->getDateFin()->format('d/m/Y') : "N.C"; ?>">
+                        <span class=" <?php if ($gestionnaire->estHistorise()) echo " historise "; ?> ">
+                            <span class="badge"><?php echo $gestionnaire->getSourceId(); ?></span>
                             <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
                         </span>
+                            <?php if ($gestionnaire->getSourceId() === 'EMC2') : ?>
+                                <?php if ($canGererResponsabiliteInterne) : ?>
+                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::modifierAction() */ ?>
+                                    <a href="<?php echo $this->url('structure/responsabilite/modifier', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                                       class="ajax-modal action primary" data-event="modification">
+                                        <span class="icon icon-modifier"></span>
+                                        Modifier
+                                    </a>
+                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::supprimerAction() */ ?>
+                                    <a href="<?php echo $this->url('structure/responsabilite/supprimer', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                                       class="ajax-modal action danger" data-event="modification">
+                                        <span class="icon icon-unchecked"></span>
+                                        Supprimer
+                                    </a>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <?php if ($canGererResponsabiliteSynchronisee) : ?>
+                                    <?php if ($gestionnaire->estHistorise()) : ?>
+                                        <?php /** @see \Structure\Controller\StructureResponsabiliteController::restaurerAction() */ ?>
+                                        <a href="<?php echo $this->url('structure/responsabilite/restaurer', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                                           class="action warning">
+                                            <span class="icon icon-restaurer"></span>
+                                            Ré-établir
+                                        </a>
+                                    <?php else : ?>
+                                        <?php /** @see \Structure\Controller\StructureResponsabiliteController::historiserAction() */ ?>
+                                        <a href="<?php echo $this->url('structure/responsabilite/historiser', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                                           class="action warning">
+                                            <span class="icon icon-historiser"></span>
+                                            Révoquer
+                                        </a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
