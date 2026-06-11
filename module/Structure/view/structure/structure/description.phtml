@@ -38,10 +38,6 @@ use UnicaenContact\Provider\Privilege\ContactPrivileges;
 $this->headTitle($structure->getLibelleLong() . " - Description");
 
 
-$canGererGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_GESTIONNAIRE));
-
-
-
 $responsabilite = new StructureResponsable();
 $responsabilite->setStructure($structure);
 
@@ -62,17 +58,15 @@ $filles = array_filter($filles, function (Structure $s) use ($date) {
 
 <div class="row">
     <div class="col-md-6">
-
-        <?php echo $this->partial('partial/description/rattachement', ['structure' => $structure]); ?>
         <?php echo $this->partial('partial/description/informations', ['structure' => $structure]); ?>
         <?php echo $this->partial('partial/description/presentation', ['structure' => $structure]); ?>
-
+        <?php echo $this->partial('partial/description/positionnement', ['structure' => $structure,  'parent' => $parent, 'filles' => $filles]); ?>
     </div>
     <div class="col-md-6">
         <?php echo $this->partial('partial/description/responsables', ['structure' => $structure, 'responsables' => $responsables,
                 'canAfficherResponsabilite' => $canAfficherResponsabilite, 'canGererResponsabiliteInterne' => $canGererResponsabiliteInterne, 'canGererResponsabiliteSynchronisee' => $canGererResponsabiliteSynchronisee ]); ?>
 
-        <?php if ($blocGestionnaire and $canGererGestionnaire) : ?>
+        <?php if ($blocGestionnaire) : ?>
         <?php echo $this->partial('partial/description/gestionnaires', ['structure' => $structure, 'gestionnaires' => $gestionnaires,
                 'canAfficherResponsabilite' => $canAfficherResponsabilite, 'canGererResponsabiliteInterne' => $canGererResponsabiliteInterne, 'canGererResponsabiliteSynchronisee' => $canGererResponsabiliteSynchronisee ]); ?>
         <?php endif; ?>
@@ -83,7 +77,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) {
             <?php echo $this->partial('partial/description/contacts', ['structure' => $structure, 'contacts' => $contacts]); ?>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/description/positionnement', ['structure' => $structure, 'parent' => $parent, 'filles' => $filles]); ?>
+
     </div>
 </div>
 

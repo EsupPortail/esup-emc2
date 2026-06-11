@@ -72,7 +72,7 @@ class StructureResponsabiliteController extends AbstractActionController
         }
 
         return new ViewModel([
-            'title' => "Affichage des [".$role->getLibelle()."] pour [" . $structure->getLibelleLong() ."]",
+            'title' => "Affichage des [<span style='color:white;font-weight: bold'>".$role->getLibelle()."</span>] pour [" . $structure->getLibelleLong() ."]",
             'structure' => $structure,
             'role' => $role,
             'responsabilites' => $responsabilites,

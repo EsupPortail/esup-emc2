@@ -11,6 +11,7 @@ use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureGestionnaire\StructureGestionnaireService;
 use Structure\Service\StructureResponsable\StructureResponsableService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class ResponsabiliteAssertionFactory
@@ -25,6 +26,7 @@ class ResponsabiliteAssertionFactory
         /**
          * @var AgentService $agentService
          * @var ObservateurService $observateurService
+         * @var PrivilegeService $privilegeService
          * @var StructureService $structureService
          * @var StructureGestionnaireService $structureGestionnaireService
          * @var StructureResponsableService $structureResponsableService
@@ -32,6 +34,7 @@ class ResponsabiliteAssertionFactory
          */
         $agentService = $container->get(AgentService::class);
         $observateurService = $container->get(ObservateurService::class);
+        $privilegeService = $container->get(PrivilegeService::class);
         $structureService = $container->get(StructureService::class);
         $structureGestionnaireService = $container->get(StructureGestionnaireService::class);
         $structureResponsableService = $container->get(StructureResponsableService::class);
@@ -40,6 +43,7 @@ class ResponsabiliteAssertionFactory
         $assertion = new ResponsabiliteAssertion();
         $assertion->setAgentService($agentService);
         $assertion->setObservateurStructureService($observateurService);
+        $assertion->setPrivilegeService($privilegeService);
         $assertion->setStructureService($structureService);
         $assertion->setStructureGestionnaireService($structureGestionnaireService);
         $assertion->setStructureResponsableService($structureResponsableService);

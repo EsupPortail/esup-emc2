@@ -10,7 +10,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
 $canEditerDescription = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
 ?>
 
-<h3> Présentation de la structure</h3>
+<h2> Présentation de la structure</h2>
 
 <?php if ($canEditerDescription) : ?>
     <a
@@ -21,7 +21,7 @@ $canEditerDescription = $this->isAllowed($structure, StructurePrivileges::STRUCT
     >
                     <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true"
                           title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
-        Modifier le résumé de la structure
+        Modifier le résumé
     </a>
     <a
         <?php /** @see \Structure\Controller\StructureController::toggleResumeMereAction() */ ?>

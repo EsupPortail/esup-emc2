@@ -370,3 +370,8 @@
 {
     content:"\f04b";
 }
+
+
+.icon.icon-telephone:before {
+    content: "\f095";
+}

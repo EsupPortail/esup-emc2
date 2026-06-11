@@ -12,6 +12,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class PortfolioAssertionFactory
@@ -31,6 +32,7 @@ class PortfolioAssertionFactory
          * @var AgentSuperieurService $agentSuperieurService
          * @var AgentAffectationService $agentAffectationService
          * @var ObservateurService $observateurService
+         * @var PrivilegeService $privilegeService
          * @var StructureService $structureService
          * @var UserService $userService
          */
@@ -39,6 +41,7 @@ class PortfolioAssertionFactory
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $observateurService = $container->get(ObservateurService::class);
+        $privilegeService = $container->get(PrivilegeService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
@@ -48,6 +51,7 @@ class PortfolioAssertionFactory
         $assertion->setAgentSuperieurService($agentSuperieurService);
         $assertion->setAgentAffectationService($agentAffectationService);
         $assertion->setObservateurService($observateurService);
+        $assertion->setPrivilegeService($privilegeService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 

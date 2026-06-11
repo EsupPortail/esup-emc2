@@ -20,7 +20,7 @@ use Structure\Entity\Db\Structure;
 <a
         <?php /** @see \Structure\Controller\StructureController::extractionListingFichePosteAction() */ ?>
         href="<?php echo $this->url('structure/extraction/listing-fiche-poste', ['structure' => $structure->getId()], [], true); ?>"
-   class="btn btn-primary action"
+   class="btn btn-primary"
 >
     <span class="icon icon-csv"></span> Extraire au format CSV
 </a>
@@ -30,37 +30,34 @@ use Structure\Entity\Db\Structure;
 <a
     <?php /** @see \Structure\Controller\StructureController::extractionListingMissionSpecifiqueAction() */ ?>
         href="<?php echo $this->url('structure/extraction/listing-mission-specifique', ['structure' => $structure->getId()], [], true); ?>"
-        class="btn btn-primary action"
+        class="btn btn-primary"
 >
     <span class="icon icon-csv"></span> Extraire au format CSV
 </a>
 
-<h2> Organigrammes </h2>
+<h2> Organigramme structurel</h2>
 
-<div class="row">
-    <div class="col-md-4">
-        <h3> Organigramme structurel </h3>
-    </div>
-    <div class="col-md-4">
-        <a
-            <?php /** @see \Structure\Controller\StructureController::organigrammeAction() */ ?>
-                href="<?php echo $this->url('structure/organigramme', ['structure' => $structure->getId()], [], true); ?>"
-                class="btn btn-primary action"
-        >
-            <span class="icon icon-csv"></span> Version WEB
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a
-            <?php /** @see \Structure\Controller\StructureController::organigrammePdfAction() */ ?>
-                href="<?php echo $this->url('structure/organigramme-pdf', ['structure' => $structure->getId()], [], true); ?>"
-                class="btn btn-primary action" target="_blank"
-        >
-            <span class="icon icon-pdf"></span> Version PDF
-        </a>
-    </div>
-</div>
+<a
+    <?php /** @see \Structure\Controller\StructureController::organigrammeAction() */ ?>
+        href="<?php echo $this->url('structure/organigramme', ['structure' => $structure->getId()], [], true); ?>"
+        class="btn btn-primary"
+>
+    <span class="icon icon-voir"></span> Version WEB
+</a>
+<a
+    <?php /** @see \Structure\Controller\StructureController::organigrammePdfAction() */ ?>
+        href="<?php echo $this->url('structure/organigramme-pdf', ['structure' => $structure->getId()], [], true); ?>"
+        class="btn btn-primary" target="_blank"
+>
+    <span class="icon icon-pdf"></span> Version PDF
+</a>
 
 <script>
     $('button#extraction-tab').addClass('active');
 </script>
+
+<style>
+    h2 {
+        margin-top: 0.5rem;
+    }
+</style>

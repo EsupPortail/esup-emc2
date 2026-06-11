@@ -4,6 +4,7 @@ namespace Structure\Assertion;
 
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
+use Structure\Controller\StructureController;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Provider\Role\RoleProvider;
@@ -19,13 +20,15 @@ class StructureAssertion extends AbstractAssertion {
     use ObservateurServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
-    use PrivilegeServiceAwareTrait;
+//    use PrivilegeServiceAwareTrait;
 
     public function computeAssertion(?Structure $entity, string $privilege) : bool
     {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
+
+//        if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
         $isResponsable = false;
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
@@ -99,11 +102,6 @@ class StructureAssertion extends AbstractAssertion {
             'editer-description',
             'toggle-resume-mere'
                     => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_DESCRIPTION),
-            'ajouter-gestionnaire',
-            'retirer-gestionnaire',
-            'ajouter-responsable',
-            'retirer-responsable'
-                    => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_GESTIONNAIRE),
             'ajouter-manuellement-agent',
             'retirer-manuellement-agent'
                     => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AGENT_FORCE),

@@ -18,6 +18,7 @@ use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class PortfolioAssertion extends AbstractAssertion
@@ -28,6 +29,7 @@ class PortfolioAssertion extends AbstractAssertion
     use AgentAffectationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use ObservateurServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
     use UserServiceAwareTrait;
 
     public function computeAssertion(?Agent $entity, string $privilege): bool
@@ -40,6 +42,8 @@ class PortfolioAssertion extends AbstractAssertion
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
+
+        if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
         $isResponsable = false;
         $isSuperieur = false;

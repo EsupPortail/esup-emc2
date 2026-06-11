@@ -21,12 +21,14 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureGestionnaire\StructureGestionnaireServiceAwareTrait;
 use Structure\Service\StructureResponsable\StructureResponsableServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ResponsabiliteAssertion extends AbstractAssertion {
 
     use AgentServiceAwareTrait;
     use ObservateurStructureServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureGestionnaireServiceAwareTrait;
     use StructureResponsableServiceAwareTrait;
@@ -41,6 +43,8 @@ class ResponsabiliteAssertion extends AbstractAssertion {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
+
+        if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
         $structure = $entity?->getStructure();
 

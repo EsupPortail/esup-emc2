@@ -116,4 +116,8 @@ span.icon.obligatoire:before {
     content: "\f069";
 }
 
+span.icon.telephone:before {
+    content: "\f095";
+}
+
 

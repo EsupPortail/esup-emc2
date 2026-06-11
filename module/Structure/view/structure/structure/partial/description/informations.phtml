@@ -8,14 +8,14 @@ use Structure\Entity\Db\Structure;
 
 ?>
 
-<h3> Informations générales</h3>
+<h2> Informations générales</h2>
 
 <?php if ($structure->getFermeture() && $structure->getFermeture() <= new DateTime()) : ?>
     <span class="badge bg-danger">Structure fermée</span>
 <?php endif; ?>
 
 <dl class="row">
-    <dt class="col-md-4"> Date d'ouverture</dt>
+    <dt class="col-md-4"> Date d'ouverture de la structure</dt>
     <dd class="col-md-8">
         <?php if ($structure->getOuverture()) : ?>
             <?php echo $structure->getOuverture()->format('d/m/Y'); ?>
@@ -31,6 +31,6 @@ use Structure\Entity\Db\Structure;
     <?php endif; ?>
     <?php if ($structure->getAdresseFonctionnelle() !== null) : ?>
         <dt class="col-md-4"> Adresse de contact</dt>
-        <dd class="col-md-8"> <?php echo $structure->getAdresseFonctionnelle(); ?></dd>
+        <dd class="col-md-8"> <a href="mailto:<?php echo $structure->getAdresseFonctionnelle(); ?>"><?php echo $structure->getAdresseFonctionnelle(); ?></a></dd>
     <?php endif; ?>
 </dl>
