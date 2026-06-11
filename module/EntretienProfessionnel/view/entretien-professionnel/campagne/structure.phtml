@@ -69,7 +69,31 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
         <label for="campagne">Sélectionner une campagne</label>
         <select id="campagne" name="campagne">
             <?php foreach ($campagnes as $campagne_) : ?>
-                <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_ === $campagne) echo " selected "; ?>><?php echo $campagne_->getAnnee(); ?></option>
+                <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_ === $campagne) echo " selected "; ?>
+                        data-content="
+                            Campagne <?php echo $campagne_->getAnnee(); ?>
+                            <?php if (!$campagne_->estCommence()): ?>
+                                <span class='text-warning'>
+                                    <span class='icon icon-hourglass'>
+                                    En préparation
+                                </span>
+                            <?php endif; ?>
+                            <?php if ($campagne_->estEnCours()): ?>
+                                <span class='text-success'>
+                                    <span class='icon icon-checked'>
+                                    En cours
+                                </span>
+                            <?php endif; ?>
+                            <?php if ($campagne_->estFini()): ?>
+                                <span class='text-danger'>
+                                    <span class='icon icon-unchecked'>
+                                    Terminée
+                                </span>
+                            <?php endif; ?>
+                        "
+                >
+                    Campagne <?php echo $campagne_->getAnnee(); ?>
+                </option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -118,7 +142,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
         <?php if (!$campagne->estCommence()) : ?>
             Agent·es qui devront passer un entretien professionnel
         <?php else : ?>
-            Agent·es concerné·es par un entretien professionnel non convoqué·es
+            Agent·es à convoquer
         <?php endif; ?>
         <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>
@@ -210,9 +234,16 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     let baseUrl = <?php echo "'" . $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId()], [], false) . "'"; ?>;
 
     $(document).ready(function () {
+        $('select').selectpicker();
         $('#campagne').on('change', function () {
             window.location.href = baseUrl + '/' + $(this).val();
         });
     });
 
 </script>
+
+<style>
+    h2 {
+        margin-top: 1rem;
+    }
+</style>
