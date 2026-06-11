@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @var Structure $structure
+ */
+
+use Structure\Entity\Db\Structure;
+
+?>
+
+<h3> Informations générales</h3>
+
+<?php if ($structure->getFermeture() && $structure->getFermeture() <= new DateTime()) : ?>
+    <span class="badge bg-danger">Structure fermée</span>
+<?php endif; ?>
+
+<dl class="row">
+    <dt class="col-md-4"> Date d'ouverture</dt>
+    <dd class="col-md-8">
+        <?php if ($structure->getOuverture()) : ?>
+            <?php echo $structure->getOuverture()->format('d/m/Y'); ?>
+        <?php else : ?>
+            <span class="missing-data"> Non renseignée </span>
+        <?php endif; ?>
+    </dd>
+    <?php if ($structure->getFermeture() !== null) : ?>
+        <dt class="col-md-4"> Date de fermeture</dt>
+        <dd class="col-md-8">
+            <?php echo $structure->getFermeture()->format('d/m/Y'); ?>
+        </dd>
+    <?php endif; ?>
+    <?php if ($structure->getAdresseFonctionnelle() !== null) : ?>
+        <dt class="col-md-4"> Adresse de contact</dt>
+        <dd class="col-md-8"> <?php echo $structure->getAdresseFonctionnelle(); ?></dd>
+    <?php endif; ?>
+</dl>

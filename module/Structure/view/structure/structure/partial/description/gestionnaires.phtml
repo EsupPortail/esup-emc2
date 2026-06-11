@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @var Structure $structure
+ * @var bool $canAfficherResponsabilite
+ * @var bool $canGererResponsabiliteInterne
+ * @var bool $canGererResponsabiliteSynchronisee
+ * @var StructureGestionnaire[] $gestionnaires
+ */
+
+use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureGestionnaire;
+use Structure\Provider\Role\RoleProvider;
+
+?>
+
+<h2> Gestionnaire·s
+
+    <?php if ($canAfficherResponsabilite): ?>
+        <?php /** @see \Structure\Controller\StructureResponsabiliteController::afficherResponsabiliteAction() */ ?>
+        <a href="<?php echo $this->url('structure/responsabilite/afficher-responsabilite', ['structure' => $structure->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+           class="ajax-modal action secondary">
+            <span class="icon icon-voir"></span>
+            Afficher l'historique
+        </a>
+    <?php endif; ?>
+
+</h2>
+
+<?php if ($canGererResponsabiliteInterne) : ?>
+    <div>
+        <?php /** @see \Structure\Controller\StructureResponsabiliteController::ajouterAction() */ ?>
+        <a href="<?php echo $this->url('structure/responsabilite/ajouter', ['structure' => $structure->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+           class="ajax-modal btn btn-primary" data-event="modification"
+        >
+            <span class="icon icon-ajouter"></span>
+            Ajouter un·e gestionnaire
+        </a>
+    </div>
+<?php endif; ?>
+
+<?php if (empty($gestionnaires)) : ?>
+    <span class="text-warning">
+                    <span class="icon icon-attention"></span>
+                    Aucun·e gestionnaire de désigné·e pour cette structure.
+                </span>
+<?php else : ?>
+    <ul>
+        <?php foreach ($gestionnaires as $gestionnaire) : ?>
+            <li>
+                        <span class=" <?php if ($gestionnaire->estHistorise()) echo " historise "; ?> ">
+                            <span class="badge"><?php echo $gestionnaire->getSourceId(); ?></span>
+                            <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
+                        </span>
+                <?php if ($gestionnaire->getSourceId() === 'EMC2') : ?>
+                    <?php if ($canGererResponsabiliteInterne) : ?>
+                        <?php /** @see \Structure\Controller\StructureResponsabiliteController::modifierAction() */ ?>
+                        <a href="<?php echo $this->url('structure/responsabilite/modifier', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                           class="ajax-modal action primary" data-event="modification">
+                            <span class="icon icon-modifier"></span>
+                            Modifier
+                        </a>
+                        <?php /** @see \Structure\Controller\StructureResponsabiliteController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('structure/responsabilite/supprimer', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                           class="ajax-modal action danger" data-event="modification">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <?php if ($canGererResponsabiliteSynchronisee) : ?>
+                        <?php if ($gestionnaire->estHistorise()) : ?>
+                            <?php /** @see \Structure\Controller\StructureResponsabiliteController::restaurerAction() */ ?>
+                            <a href="<?php echo $this->url('structure/responsabilite/restaurer', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                               class="action warning">
+                                <span class="icon icon-restaurer"></span>
+                                Ré-établir
+                            </a>
+                        <?php else : ?>
+                            <?php /** @see \Structure\Controller\StructureResponsabiliteController::historiserAction() */ ?>
+                            <a href="<?php echo $this->url('structure/responsabilite/historiser', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
+                               class="action warning">
+                                <span class="icon icon-historiser"></span>
+                                Révoquer
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

@@ -37,7 +37,7 @@ use UnicaenContact\Provider\Privilege\ContactPrivileges;
 
 $this->headTitle($structure->getLibelleLong() . " - Description");
 
-$canEditerDescription = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
+
 $canGererGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_GESTIONNAIRE));
 
 
@@ -49,25 +49,10 @@ $canAfficherResponsabilite = $this->isAllowed($responsabilite, ResponsabilitePri
 $canGererResponsabiliteInterne = $this->isAllowed($responsabilite,ResponsabilitePrivileges::RESPONSABILITE_GERER);
 $canGererResponsabiliteSynchronisee = $this->isAllowed($responsabilite,ResponsabilitePrivileges::RESPONSABILITE_SYNCHRONISER);
 
-$canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
-$canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
-$canHistoriserContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
-$canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
 
 $date = new DateTime();
 $filles = array_filter($filles, function (Structure $s) use ($date) {
     return !$s->isDeleted();
-});
-
-$sortedContacts = [];
-$sortedTypes = [];
-foreach ($contacts as $contact) {
-    $type = $contact->getType();
-    $sortedTypes[$type->getId()] = $type;
-    $sortedContacts[$type->getId()][] = $contact;
-}
-usort($sortedTypes, function (Type $a, Type $b) {
-    return $a->getLibelle() <=> $b->getLibelle();
 });
 
 
@@ -78,370 +63,41 @@ usort($sortedTypes, function (Type $a, Type $b) {
 <div class="row">
     <div class="col-md-6">
 
-        <h2> Description </h2>
+        <?php echo $this->partial('partial/description/rattachement', ['structure' => $structure]); ?>
+        <?php echo $this->partial('partial/description/informations', ['structure' => $structure]); ?>
+        <?php echo $this->partial('partial/description/presentation', ['structure' => $structure]); ?>
 
-        <?php if ($structure->getFermeture() && $structure->getFermeture() <= new DateTime()) : ?>
-            <span class="badge bg-danger">Structure fermée</span>
-        <?php endif; ?>
-
-        <h3> Rattachement </h3>
-
-        <?php if ($structure->getNiv2() === null) : ?>
-            <span class="text-warning">
-                <span class="icon icon-attention"></span>
-                Pas de structure de rattachement
-            </span>
-        <?php else : ?>
-            Structure rattachée à <?php echo $niveau2->getLibelleLong(); ?>
-        <?php endif; ?>
-
-        <h3> Présentation de la structure</h3>
-
-        <?php if ($canEditerDescription) : ?>
-            <a
-                    <?php /** @see \Structure\Controller\StructureController::editerDescriptionAction() */ ?>
-                    href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
-                    class="btn btn-primary ajax-modal"
-                    data-event="modification"
-            >
-                    <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true"
-                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
-                Modifier le résumé de la structure
-            </a>
-            <a
-                    <?php /** @see \Structure\Controller\StructureController::toggleResumeMereAction() */ ?>
-                    href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
-                    class="btn btn-<?php echo $structure->getRepriseResumeMere() ? 'danger' : 'success'; ?>"
-            >
-                <?php if ($structure->getRepriseResumeMere()) : ?>
-                    <span class="icon icon-unchecked" data-bs-toggle="tooltip" data-bs-html="true"
-                          title="Ne plus réutiliser le résumé de la structure mère"></span>
-                    Ne plus utiliser le résumé de la structure mère
-                <?php else : ?>
-                    <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"
-                          title="Réutiliser le résumé de la structure mère"></span>
-                    Utiliser le résumé de la structure mère
-                <?php endif; ?>
-            </a>
-
-        <?php endif; ?>
-
-        <br>
-
-        <?php if ($structure->getRepriseResumeMere()) : ?>
-            <!--            <div class="alert alert-info">-->
-            <!--                <span class="icon icon-information"></span>-->
-            <!--                Reprise du résumé de la structure mère.-->
-            <!--            </div>-->
-        <?php endif; ?>
-        <?php if ($structure->getDescriptionComplete()) : ?>
-            <?php echo $structure->getDescriptionComplete(); ?>
-        <?php else : ?>
-            <span class="text-warning">
-                <span class="icon icon-attention"></span>
-                Aucune description
-            </span>
-        <?php endif; ?>
-
-        <h3> Autres informations </h3>
-
-        <dl class="row">
-            <?php if ($structure->getOuverture() !== null) : ?>
-                <dt class="col-md-4"> Date d'ouverture</dt>
-                <dd class="col-md-8"> <?php echo $structure->getOuverture()->format('d/m/Y'); ?></dd>
-            <?php endif; ?>
-            <?php if ($structure->getFermeture() !== null) : ?>
-                <dt class="col-md-4"> Date de fermeture</dt>
-                <dd class="col-md-8">
-                    <?php echo $structure->getFermeture()->format('d/m/Y'); ?>
-                </dd>
-            <?php endif; ?>
-            <?php if ($structure->getAdresseFonctionnelle() !== null) : ?>
-                <dt class="col-md-4"> Adresse de contact</dt>
-                <dd class="col-md-8"> <?php echo $structure->getAdresseFonctionnelle(); ?></dd>
-            <?php endif; ?>
-        </dl>
     </div>
     <div class="col-md-6">
-        <h2> Responsable·s
-
-            <?php if ($canAfficherResponsabilite): ?>
-                <?php /** @see \Structure\Controller\StructureResponsabiliteController::afficherResponsabiliteAction() */ ?>
-                <a href="<?php echo $this->url('structure/responsabilite/afficher-responsabilite', ['structure' => $structure->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                   class="ajax-modal action secondary">
-                    <span class="icon icon-voir"></span>
-                    Afficher l'historique
-                </a>
-            <?php endif; ?>
-
-        </h2>
-
-        <?php if ($canGererResponsabiliteInterne) : ?>
-            <div>
-                <?php /** @see \Structure\Controller\StructureResponsabiliteController::ajouterAction() */ ?>
-                <a href="<?php echo $this->url('structure/responsabilite/ajouter', ['structure' => $structure->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                   class="ajax-modal btn btn-primary" data-event="modification"
-                >
-                    <span class="icon icon-ajouter"></span>
-                    Ajouter un·e responsable
-                </a>
-            </div>
-        <?php endif; ?>
-
-
-
-
-
-        <?php if (empty($responsables)) : ?>
-            <span class="text-warning">
-                <span class="icon icon-attention"></span>
-                Aucun·e responsable de désigné·e pour cette structure.
-            </span>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($responsables as $responsable) : ?>
-                    <li>
-                        <span class=" <?php if ($responsable->estHistorise()) echo " historise "; ?> ">
-                            <span class="badge"><?php echo $responsable->getSourceId(); ?></span>
-                            <?php echo $responsable->getAgent()->getDenomination(); ?>
-                        </span>
-                        <?php if ($responsable->getSourceId() === 'EMC2') : ?>
-                            <?php if ($canGererResponsabiliteInterne) : ?>
-                                <?php /** @see \Structure\Controller\StructureResponsabiliteController::modifierAction() */ ?>
-                                <a href="<?php echo $this->url('structure/responsabilite/modifier', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                   class="ajax-modal action primary" data-event="modification">
-                                    <span class="icon icon-modifier"></span>
-                                    Modifier
-                                </a>
-                                <?php /** @see \Structure\Controller\StructureResponsabiliteController::supprimerAction() */ ?>
-                                <a href="<?php echo $this->url('structure/responsabilite/supprimer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                   class="ajax-modal action danger" data-event="modification">
-                                    <span class="icon icon-unchecked"></span>
-                                    Supprimer
-                                </a>
-                            <?php endif; ?>
-                        <?php else : ?>
-                            <?php if ($canGererResponsabiliteSynchronisee) : ?>
-                                <?php if ($responsable->estHistorise()) : ?>
-                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::restaurerAction() */ ?>
-                                    <a href="<?php echo $this->url('structure/responsabilite/restaurer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                       class="action warning">
-                                        <span class="icon icon-restaurer"></span>
-                                        Ré-établir
-                                    </a>
-                                <?php else : ?>
-                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::historiserAction() */ ?>
-                                    <a href="<?php echo $this->url('structure/responsabilite/historiser', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                       class="action warning">
-                                        <span class="icon icon-historiser"></span>
-                                        Révoquer
-                                    </a>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+        <?php echo $this->partial('partial/description/responsables', ['structure' => $structure, 'responsables' => $responsables,
+                'canAfficherResponsabilite' => $canAfficherResponsabilite, 'canGererResponsabiliteInterne' => $canGererResponsabiliteInterne, 'canGererResponsabiliteSynchronisee' => $canGererResponsabiliteSynchronisee ]); ?>
 
         <?php if ($blocGestionnaire and $canGererGestionnaire) : ?>
-            <h2> Gestionnaire·s
-
-                <?php if ($canAfficherResponsabilite): ?>
-                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::afficherResponsabiliteAction() */ ?>
-                    <a href="<?php echo $this->url('structure/responsabilite/afficher-responsabilite', ['structure' => $structure->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
-                       class="ajax-modal action secondary">
-                        <span class="icon icon-voir"></span>
-                        Afficher l'historique
-                    </a>
-                <?php endif; ?>
-
-            </h2>
-
-            <?php if ($canGererResponsabiliteInterne) : ?>
-                <div>
-                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::ajouterAction() */ ?>
-                    <a href="<?php echo $this->url('structure/responsabilite/ajouter', ['structure' => $structure->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
-                       class="ajax-modal btn btn-primary" data-event="modification"
-                    >
-                        <span class="icon icon-ajouter"></span>
-                        Ajouter un·e gestionnaire
-                    </a>
-                </div>
-            <?php endif; ?>
-
-            <?php if (empty($gestionnaires)) : ?>
-                <span class="text-warning">
-                    <span class="icon icon-attention"></span>
-                    Aucun·e gestionnaire de désigné·e pour cette structure.
-                </span>
-            <?php else : ?>
-                <ul>
-                    <?php foreach ($gestionnaires as $gestionnaire) : ?>
-                        <li>
-                        <span class=" <?php if ($gestionnaire->estHistorise()) echo " historise "; ?> ">
-                            <span class="badge"><?php echo $gestionnaire->getSourceId(); ?></span>
-                            <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
-                        </span>
-                            <?php if ($gestionnaire->getSourceId() === 'EMC2') : ?>
-                                <?php if ($canGererResponsabiliteInterne) : ?>
-                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::modifierAction() */ ?>
-                                    <a href="<?php echo $this->url('structure/responsabilite/modifier', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
-                                       class="ajax-modal action primary" data-event="modification">
-                                        <span class="icon icon-modifier"></span>
-                                        Modifier
-                                    </a>
-                                    <?php /** @see \Structure\Controller\StructureResponsabiliteController::supprimerAction() */ ?>
-                                    <a href="<?php echo $this->url('structure/responsabilite/supprimer', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
-                                       class="ajax-modal action danger" data-event="modification">
-                                        <span class="icon icon-unchecked"></span>
-                                        Supprimer
-                                    </a>
-                                <?php endif; ?>
-                            <?php else : ?>
-                                <?php if ($canGererResponsabiliteSynchronisee) : ?>
-                                    <?php if ($gestionnaire->estHistorise()) : ?>
-                                        <?php /** @see \Structure\Controller\StructureResponsabiliteController::restaurerAction() */ ?>
-                                        <a href="<?php echo $this->url('structure/responsabilite/restaurer', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
-                                           class="action warning">
-                                            <span class="icon icon-restaurer"></span>
-                                            Ré-établir
-                                        </a>
-                                    <?php else : ?>
-                                        <?php /** @see \Structure\Controller\StructureResponsabiliteController::historiserAction() */ ?>
-                                        <a href="<?php echo $this->url('structure/responsabilite/historiser', ['responsabilite' => $gestionnaire->getId(), 'role' => RoleProvider::GESTIONNAIRE], [], true); ?>"
-                                           class="action warning">
-                                            <span class="icon icon-historiser"></span>
-                                            Révoquer
-                                        </a>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
+        <?php echo $this->partial('partial/description/gestionnaires', ['structure' => $structure, 'gestionnaires' => $gestionnaires,
+                'canAfficherResponsabilite' => $canAfficherResponsabilite, 'canGererResponsabiliteInterne' => $canGererResponsabiliteInterne, 'canGererResponsabiliteSynchronisee' => $canGererResponsabiliteSynchronisee ]); ?>
         <?php endif; ?>
-
         <?php if ($blocObservateur) : ?>
-            <?php echo $this->partial('partial/observateurs', ['structure' => $structure, 'observateurs' => $observateurs]); ?>
+            <?php echo $this->partial('partial/description/observateurs', ['structure' => $structure, 'observateurs' => $observateurs]); ?>
         <?php endif; ?>
-
         <?php if ($blocContact) : ?>
-            <h2>
-                Contact·s
-                <?php if ($canAjouterContact): ?>
-                    <?php /**  @see \Structure\Controller\ContactController::ajouterAction() * */ ?>
-                    <a href="<?php echo $this->url('structure/contact/ajouter', ['structure' => $structure->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="icon icon-ajouter" title="Ajouter un contact pour la structure"></span></a>
-                    <?php /**  @see \Structure\Controller\ContactController::associerAction() * */ ?>
-                    <a href="<?php echo $this->url('structure/contact/associer', ['structure' => $structure->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="icon icon-link" title="Associer un contact existant"></span></a>
-                <?php endif; ?>
-            </h2>
-
-            <?php if (empty($contacts)) : ?>
-                <span class="text-warning">
-                        <span class="icon icon-attention"></span>
-                        Aucun contact de désigné pour cette structure.
-                    </span>
-            <?php else : ?>
-                <?php foreach ($sortedTypes as $type) : ?>
-                    <h3> <?php echo $type->getLibelle(); ?> </h3>
-
-                    <?php
-                    $contacts_ = $sortedContacts[$type->getId()];
-                    $res = usort($contacts_, function ($a, $b) {
-                        return Contact::sort($a, $b);
-                    });
-                    ?>
-                    <?php foreach ($contacts_ as $contact) : ?>
-                        <?php if ($contact->estNonHistorise() or $canModifierContact) : ?>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <?php echo $this->contact($contact); ?>
-                                </div>
-                                <div class="col-md-4 action">
-                                    <?php if ($canModifierContact) : ?>
-                                        <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
-                                        <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
-                                           class="action primary ajax-modal" data-event="modification"
-                                        >
-                                            <span class="icon icon-editer"></span>
-                                            Modifier
-                                        </a>
-                                    <?php endif; ?>
-                                    <?php if ($canModifierContact) : ?>
-                                        <br>
-                                        <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
-                                        <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
-                                           class="action warning"
-                                        >
-                                            <span class="icon icon-unlink"></span>
-                                            Dissocier
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <?php echo $this->partial('partial/description/contacts', ['structure' => $structure, 'contacts' => $contacts]); ?>
         <?php endif; ?>
 
-        <h2> Positionnement de la structure </h2>
-
-        <h3>Structure mère <code>n+1</code></h3>
-        <?php if ($structure->getParent() === null) : ?>
-            <span class="text-warning">
-                <span class="icon icon-attention"></span>
-                Pas de structure parente
-            </span>
-        <?php else : ?>
-        <ul>
-            <?php $canAfficher = $this->isAllowed($structure->getParent(), StructurePrivileges::STRUCTURE_AFFICHER); ?>
-            <li>
-                <?php if ($canAfficher) : ?>
-                    <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
-                    <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getParent()->getId()], [], true); ?>">
-                        <?php echo $parent->getLibelleLong(); ?>
-                    </a>
-                <?php else: ?>
-                    <?php echo $parent->getLibelleLong(); ?>
-                <?php endif; ?>
-            </li>
-            <?php endif; ?>
-        </ul>
-
-        <h3>Structure courante <code>n</code></h3>
-        <?php echo $structure->getLibelleLong(); ?>
-
-        <h3>Structure·s enfant·s <code>n-1</code></h3>
-
-        <?php if (empty($filles)) : ?>
-            <em> Aucune structure fille </em>
-        <?php else : ?>
-        <ul>
-            <?php foreach ($filles as $enfant) : ?>
-                <li>
-                    <?php $canAfficher = $this->isAllowed($enfant, StructurePrivileges::STRUCTURE_AFFICHER); ?>
-                    <?php if ($canAfficher) : ?>
-                        <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
-                        <a href="<?php echo $this->url('structure/description', ['structure' => $enfant->getId()], [], true); ?>">
-                            <?php echo $enfant->getLibelleLong() ?>
-                        </a>
-                    <?php else: ?>
-                        <?php echo $enfant->getLibelleLong() ?>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-            <?php endif; ?>
-        </ul>
-
+        <?php echo $this->partial('partial/description/positionnement', ['structure' => $structure, 'parent' => $parent, 'filles' => $filles]); ?>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
     $('button#informations-tab').addClass('active');

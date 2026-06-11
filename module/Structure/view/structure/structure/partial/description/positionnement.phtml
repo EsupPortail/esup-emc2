@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @var Structure $structure
+ */
+
+use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructurePrivileges;
+
+?>
+
+<h2> Positionnement de la structure </h2>
+
+<h3>Structure mère <code>n+1</code></h3>
+<?php if ($structure->getParent() === null) : ?>
+    <span class="text-warning">
+                <span class="icon icon-attention"></span>
+                Pas de structure parente
+            </span>
+<?php else : ?>
+<ul>
+    <?php $canAfficher = $this->isAllowed($structure->getParent(), StructurePrivileges::STRUCTURE_AFFICHER); ?>
+    <li>
+        <?php if ($canAfficher) : ?>
+            <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+            <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getParent()->getId()], [], true); ?>">
+                <?php echo $parent->getLibelleLong(); ?>
+            </a>
+        <?php else: ?>
+            <?php echo $parent->getLibelleLong(); ?>
+        <?php endif; ?>
+    </li>
+    <?php endif; ?>
+</ul>
+
+<h3>Structure courante <code>n</code></h3>
+<?php echo $structure->getLibelleLong(); ?>
+
+<h3>Structure·s enfant·s <code>n-1</code></h3>
+
+<?php if (empty($filles)) : ?>
+    <em> Aucune structure fille </em>
+<?php else : ?>
+<ul>
+    <?php foreach ($filles as $enfant) : ?>
+        <li>
+            <?php $canAfficher = $this->isAllowed($enfant, StructurePrivileges::STRUCTURE_AFFICHER); ?>
+            <?php if ($canAfficher) : ?>
+                <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                <a href="<?php echo $this->url('structure/description', ['structure' => $enfant->getId()], [], true); ?>">
+                    <?php echo $enfant->getLibelleLong() ?>
+                </a>
+            <?php else: ?>
+                <?php echo $enfant->getLibelleLong() ?>
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+    <?php endif; ?>
+</ul>
