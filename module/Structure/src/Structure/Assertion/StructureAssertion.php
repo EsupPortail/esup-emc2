@@ -20,7 +20,7 @@ class StructureAssertion extends AbstractAssertion {
     use ObservateurServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
-//    use PrivilegeServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
 
     public function computeAssertion(?Structure $entity, string $privilege) : bool
     {
@@ -28,7 +28,7 @@ class StructureAssertion extends AbstractAssertion {
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
-//        if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
+        if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
         $isResponsable = false;
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {

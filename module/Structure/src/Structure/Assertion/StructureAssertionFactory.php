@@ -38,7 +38,7 @@ class StructureAssertionFactory
         $assertion = new StructureAssertion();
         $assertion->setAgentService($agentService);
         $assertion->setObservateurService($observateurService);
-//        $assertion->setPrivilegeService($privilegeService);
+        $assertion->setPrivilegeService($privilegeService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 
