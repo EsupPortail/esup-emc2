@@ -8,6 +8,7 @@ use UnicaenEtat\Entity\Db\EtatType;
  * @var EtatType[] $etats ;
  * @var Campagne[] $campagnes
  *
+ * @var array $structuresGroups
  * @var array $params
  */
 
@@ -30,24 +31,7 @@ use UnicaenEtat\Entity\Db\EtatType;
             <div class="row">
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col-md-4">
-                            <?php
-                            /** @see \Structure\Controller\StructureController::rechercherAction() */
-                            $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
-                            $structureF
-                                /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherStructureAction() */
-//                                ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-structure'))
-                                /** @see \Structure\Controller\StructureController::rechercherAction() */
-                                ->setAutocompleteSource($this->url('structure/rechercher'))
-                                ->setSelectionRequired()
-                                ->setAttributes([
-                                    'id' => 'structure-filtre',
-                                    'placeholder' => "Nom de la structure ...",
-                                ]);
-                            ?>
-                            <?php echo $this->formControlGroup($structureF); ?>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <?php
                             /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherAgentAction() */
                             $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
@@ -56,13 +40,13 @@ use UnicaenEtat\Entity\Db\EtatType;
                                 ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'agent-filtre',
-                                    'placeholder' => "Nom de l'agent ...",
+                                    'placeholder' => "Nom ou prénom de l'agent·e (minimum 2 caractères)",
                                 ]);
                             ?>
                             <?php echo $this->formControlGroup($agentF); ?>
 
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <?php
                             /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherResponsableAction() */
                             $agentF = new SearchAndSelect('responsable-filtre', ['label' => "Responsable :"]);
@@ -71,10 +55,31 @@ use UnicaenEtat\Entity\Db\EtatType;
                                 ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'responsable-filtre',
-                                    'placeholder' => "Nom du responsable ...",
+                                    'placeholder' => "Nom ou prénom du responsable  (minimum 2 caractères)",
                                 ]);
                             ?>
                             <?php echo $this->formControlGroup($agentF); ?>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="structure-select"> Structure d'affectation : </label>
+                            <select id="structure-select" name="structure-select" class="form-control selectpicker" data-live-search="true">
+                                <option value="" disabled  hidden
+                                        <?php if (!isset($params['structure-select']) OR $params['structure-select'] === '') { echo " selected " ; } ?>
+                                >
+                                    Sélectionnez une option
+                                </option>
+                                <?php foreach ($structuresGroups as $group) : ?>
+                                    <optgroup label="<?php echo $group['label']; ?>">
+                                        <?php foreach ($group['options'] as $id => $label) : ?>
+                                            <option value="<?php echo $id; ?>"
+                                                    <?php if (isset($params['structure-select']) AND $params['structure-select'] == $id) echo 'selected'; ?>
+                                            >
+                                                <?php echo $label; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <label for="campagne">Campagne :</label>

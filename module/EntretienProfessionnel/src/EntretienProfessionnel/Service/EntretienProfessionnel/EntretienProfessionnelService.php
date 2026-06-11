@@ -477,7 +477,23 @@ class EntretienProfessionnelService
         }
 
         $result = $qb->getQuery()->getResult();
-
+        if (isset($params['structure-select']) and $params['structure-select'] !== "") {
+            $structure = $this->getStructureService()->getStructure($params['structure-select']);
+            $entretiens = [];
+            /** @var EntretienProfessionnel $item */
+            foreach ($result as $item) {
+                $agent = $item->getAgent();
+                $affectations = $agent->getAffectations($item->getDateEntretien());
+                //todo filtrer les affectations ?
+                foreach ($affectations as $affectation) {
+                    if ($affectation->getStructure()->isCompatible($structure)) {
+                        $entretiens[] = $item;
+                        break;
+                    }
+                }
+            }
+            $result = $entretiens;
+        }
         if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "") {
             $structure = $this->getStructureService()->getStructure($params['structure-filtre']['id']);
             // NOTE Changement provoqué par la gestion des structures "mères"

@@ -85,7 +85,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $error = null;
         $entretiens = [];
         if ($params !== null and !empty($params)) {
-            if ($params['campagne'] !== "" or $params['etat'] !== "" or $params['structure-filtre']['id'] !== "" or $params['agent-filtre']['id'] !== "" or $params['responsable-filtre']['id'] !== "") {
+            if ($params['campagne'] !== "" or $params['etat'] !== "" or $params['structure-select'] !== "" or $params['agent-filtre']['id'] !== "" or $params['responsable-filtre']['id'] !== "") {
                 $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsWithFiltre($params);
             } else {
                 $entretiens = [];
@@ -97,6 +97,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'entretiens' => $entretiens,
             'params' => $params,
             'campagnes' => $this->getCampagneService()->getCampagnes(),
+            'structuresGroups' => $this->getStructureService()->getStructuresAsOptionGroup(),
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode('ENTRETIEN_PROFESSIONNEL'),
             'error' => $error,
         ]);

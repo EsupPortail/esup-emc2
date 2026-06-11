@@ -8,6 +8,7 @@
  * @var ?string $error
  *
  * @var array $params
+ * @var array $structuresGroups
  */
 
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -35,7 +36,7 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => $params], [], true); ?>
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'structuresGroups' => $structuresGroups,  'params' => $params], [], true); ?>
 
 <?php if ($error !== null) : ?>
     <div class="alert alert-danger">
