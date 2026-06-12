@@ -43,6 +43,7 @@ $this->headTitle($titre);
 $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+$canIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
 
 $actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
 if ($mode === 'edition-fiche-metier') {
@@ -88,6 +89,14 @@ foreach ($types as $type) {
                 <?php endif; ?>
             </ul>
         </div>
+    <?php endif; ?>
+    <?php if ($mode === "edition-fiche-metier" AND $canIndex) : ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
+           class="btn btn-secondary">
+            <span class="icon icon-listing"></span>
+            Retourner à l'index des fiches métiers
+        </a>
     <?php endif; ?>
     <?php if ($canExporterFicheMetier): ?>
         <?php /** @see \FicheMetier\Controller\FicheMetierController::exporterAction() */ ?>
