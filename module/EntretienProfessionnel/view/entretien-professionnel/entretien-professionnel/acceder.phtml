@@ -344,6 +344,43 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         // Sauvegarder la position de défilement actuelle
         localStorage.setItem('scrollPosition', window.scrollY);
     });
+
+
+    // $(function(){
+    //     $('body').on('change', function(){
+    //         formulaireModifie = true;
+    //         alert('changes !');
+    //     })
+    //     $('button[type="submit"]').click(function(){
+    //         formulaireModifie = false;
+    //     });
+    // });
+    //
+    //
+    // window.addEventListener('beforeunload', function(e) {
+    //     if (formulaireModifie) {
+    //         const message = 'Vous avez modifié le formulaire sans l\'enregistrer. Voulez-vous vraiment quitter ?';
+    //         e.preventDefault();
+    //         e.returnValue = message;
+    //         return message;
+    //     }
+    // });
+    //
+    // window.addEventListener('popstate', function(e) {
+    //     if (formulaireModifie) {
+    //         const confirmer = confirm('Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?');
+    //         if (!confirmer) {
+    //             // Annuler la navigation
+    //             history.pushState(null, null, window.location.href);
+    //         } else {
+    //             // Réinitialiser le flag si on confirme
+    //             formulaireModifie = false;
+    //         }
+    //     }
+    // });
+    //
+    // // Pour que le popstate fonctionne, il faut ajouter un état initial
+    // history.pushState(null, null, window.location.href);
 </script>
 
 
