@@ -103,7 +103,9 @@ foreach ($chaines as $chaine) {
 
         <h2> Chaînes revoquées</h2><span class="icon icon-info" title="Chaînes importées depuis le SIRH qui ont été manuellement révoquées depuis <?php echo $appName; ?>" style="cursor: help"> À propos de chaînes révoquées</span>
         <?php usort($revoques, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
-            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+            $dateDebutA = $a->getDateDebut()?$a->getDateDebut()->format('Y-m-d'):'2020-01-01';
+            $dateDebutB = $b->getDateDebut()?$b->getDateDebut()->format('Y-m-d'):'2020-01-01';
+            if ($dateDebutA !== $dateDebutB) {
                 return $a->getDateDebut() <=> $b->getDateDebut();
             }
             if ($a instanceof AgentSuperieur) return $a->getSuperieur()->getDenomination() <=> $b->getSuperieur()->getDenomination();

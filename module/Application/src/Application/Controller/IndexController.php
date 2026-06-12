@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Agent\Controller\AgentHierarchieController;
 use Agent\Entity\Db\Agent;
 use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Agent\Service\Agent\AgentServiceAwareTrait;
@@ -99,7 +100,7 @@ class IndexController extends AbstractActionController
                     break;
                 case AgentRoleProvider::ROLE_SUPERIEURE :
                 case AgentRoleProvider::ROLE_AUTORITE :
-                    /** @see AgentController::mesAgentsAction() */
+                    /** @see AgentHierarchieController::mesAgentsAction() */
                     return $this->redirect()->toRoute('mes-agents', [], [], true);
                 case RoleProvider::OBSERVATEUR :
                     /** @see StructureObservateurController::indexObservateurAction() */
