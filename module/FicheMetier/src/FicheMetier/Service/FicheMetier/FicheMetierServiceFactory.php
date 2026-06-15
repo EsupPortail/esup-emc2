@@ -2,8 +2,8 @@
 
 namespace FicheMetier\Service\FicheMetier;
 
-use Application\Service\Configuration\ConfigurationService;
 use Application\Service\Macro\MacroService;
+use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Carriere\Service\NiveauFonction\NiveauFonctionService;
 use Doctrine\ORM\EntityManager;
 use Element\Form\SelectionApplication\SelectionApplicationHydrator;
@@ -19,7 +19,6 @@ use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceType\TendanceTypeService;
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Interop\Container\ContainerInterface;
-use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Referentiel\ReferentielService;
@@ -27,14 +26,15 @@ use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
-class FicheMetierServiceFactory {
+class FicheMetierServiceFactory
+{
     /**
      * @param ContainerInterface $container
      * @return FicheMetierService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FicheMetierService
+    public function __invoke(ContainerInterface $container): FicheMetierService
     {
         /**
          * @var EntityManager $entityManager
@@ -43,7 +43,6 @@ class FicheMetierServiceFactory {
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
          * @var CodeFonctionService $codeFonctionService
-         * @var ConfigurationService $configurationService
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelleService
          * @var MacroService $macroService
@@ -64,7 +63,6 @@ class FicheMetierServiceFactory {
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
-        $configurationService = $container->get(ConfigurationService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelleService = $container->get(FamilleProfessionnelleService::class);
         $macroService = $container->get(MacroService::class);
@@ -92,7 +90,6 @@ class FicheMetierServiceFactory {
         $service->setCodeFonctionService($codeFonctionService);
         $service->setCompetenceService($competenceService);
         $service->setCompetenceElementService($competenceElementService);
-        $service->setConfigurationService($configurationService);
         $service->setEtatInstanceService($etatInstanceService);
         $service->setFamilleProfessionnelleService($familleProfessionnelleService);
         $service->setMacroService($macroService);

@@ -32,6 +32,8 @@ use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieServiceAwareTrait;
+use FicheMetier\Service\FicheMetierConfigurationApplicationParDefaut\FicheMetierConfigurationApplicationParDefautServiceAwareTrait;
+use FicheMetier\Service\FicheMetierConfigurationCompetenceParDefaut\FicheMetierConfigurationCompetenceParDefautServiceAwareTrait;
 use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
@@ -62,6 +64,8 @@ class FicheMetierController extends AbstractActionController
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FicheMetierCategorieServiceAwareTrait;
+    use FicheMetierConfigurationApplicationParDefautServiceAwareTrait;
+    use FicheMetierConfigurationCompetenceParDefautServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use MissionElementServiceAwareTrait;
@@ -180,8 +184,8 @@ class FicheMetierController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->create($fiche);
-                $this->getFicheMetierService()->setDefaultValues($fiche);
-                $this->getFicheMetierService()->update($fiche);
+                $this->getFicheMetierConfigurationApplicationParDefautService()->applyDefault($fiche);
+                $this->getFicheMetierConfigurationCompetenceParDefautService()->applyDefault($fiche);
 
                 $this->flashMessenger()->addSuccessMessage(
                     "Une nouvelle fiche métier vient d'être ajoutée pour le métier <strong>" . $fiche->getLibelle() . "</strong>.<br/> " .

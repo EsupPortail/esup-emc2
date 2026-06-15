@@ -8,7 +8,6 @@ use Carriere\Form\SelectionnerFamillesProfessionnelles\SelectionnerFamillesProfe
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
-use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\CompetenceElement\CompetenceElementService;
@@ -72,14 +71,12 @@ class MissionPrincipaleControllerFactory
          * @var MissionPrincipaleForm $missionPrincipaleForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var NiveauEnveloppeForm $niveauEnveloppeForm
-         * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetencesForm
          * @var SelectionnerFamillesProfessionnellesForm $selectionnerFamillesProfessionnellesForm
          */
         $missionPrincipaleForm = $container->get('FormElementManager')->get(MissionPrincipaleForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
-        $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetencesForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionnerFamillesProfessionnellesForm = $container->get('FormElementManager')->get(SelectionnerFamillesProfessionnellesForm::class);
 
@@ -102,7 +99,6 @@ class MissionPrincipaleControllerFactory
         $controller->setMissionPrincipaleForm($missionPrincipaleForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
-        $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetencesForm);
         $controller->setSelectionnerFamillesProfessionnellesForm($selectionnerFamillesProfessionnellesForm);
         return $controller;

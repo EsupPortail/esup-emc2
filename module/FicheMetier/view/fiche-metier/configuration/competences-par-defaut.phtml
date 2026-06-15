@@ -1,0 +1,118 @@
+<?php
+
+use Element\Provider\Privilege\CompetencePrivileges;
+use FicheMetier\Entity\Db\FicheMetierConfigurationCompetenceParDefaut;
+use FicheMetier\Provider\Privilege\ConfigurationPrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierConfigurationCompetenceParDefautController::indexAction()
+ * @var FicheMetierConfigurationCompetenceParDefaut[] $competences
+ * @var Parametre[] $parametres
+ */
+
+$canAfficherCompetence = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+$canAjouter = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
+$canSupprimer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_DETRUIRE));
+$canReappliquer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_REAPPLIQUER));
+
+?>
+
+<?php echo $this->partial('header', ['selected' => 'competence', 'parametres' => $parametres]); ?>
+
+<div class="alert alert-info">
+    <span class="icon icon-info"></span>
+    Les compétences ci-dessous sont ajoutées automatiquement aux fiches métiers lors de leur création.
+</div>
+
+<div>
+    <?php if ($canAjouter): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationCompetenceParDefautController::ajouterAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/configuration/competences-par-defaut/ajouter', [], [], true); ?>"
+           class="ajax-modal btn btn-primary" data-event="modification">
+            <span class="icon icon-ajouter"></span>
+            Ajouter une ou plusieurs compétences par défaut
+        </a>
+    <?php endif; ?>
+    <?php if ($canReappliquer): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationCompetenceParDefautController::reappliquerAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/configuration/competences-par-defaut/reappliquer', [], [], true); ?>"
+           class="ajax-modal btn btn-warning" data-event="modification">
+            <span class="icon icon-gerer"></span>
+            Ré-appliquer
+        </a>
+    <?php endif; ?>
+</div>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<?php if (empty($competences)) : ?>
+    <div>
+        Aucune compétence par défaut.
+    </div>
+<?php else: ?>
+    <table class="table table-condensed" id="competences-par-defaut">
+        <thead>
+        <tr>
+            <th class="col-md-10"> Libellé</th>
+            <th class="col-md-2"> Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($competences as $competence): ?>
+            <tr>
+                <td data-column-id="Competences">
+                    <?php echo $competence->getCompetence()->getLibelle(); ?>
+                    <?php if ($competence->getCompetence()->estHistorise()) : ?>
+                        <span class="badge" style="background: darkred;">
+                                Historisée
+                            </span>
+                    <?php endif; ?>
+                </td>
+                <td data-column-id="Action">
+                    <?php if ($canAfficherCompetence): ?>
+                        <?php /** @see \Element\Controller\CompetenceController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('element/competence/afficher', ['competence' => $competence->getCompetence()->getId()], [], true); ?>"
+                           class="ajax-modal action secondary"
+                        >
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canSupprimer): ?>
+                        <br>
+                        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationCompetenceParDefautController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/configuration/competences-par-defaut/supprimer', ['competence-par-defaut' => $competence->getId()], [], true); ?>"
+                           class="ajax-modal action danger" data-event="modification"
+                        >
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('table#competences-par-defaut').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [1], orderable: false}
+            ]
+        });
+    });
+
+</script>

@@ -1,37 +1,35 @@
 <?php
 
-namespace Application\Service\Configuration;
+namespace FicheMetier\Service\FicheMetierConfigurationCompetenceParDefaut;
 
 use Doctrine\ORM\EntityManager;
-use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\CompetenceElement\CompetenceElementService;
-use Interop\Container\ContainerInterface;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-
-
-class ConfigurationServiceFactory {
+class FicheMetierConfigurationCompetenceParDefautServiceFactory {
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) :ConfigurationService
+    public function __invoke(ContainerInterface $container): FicheMetierConfigurationCompetenceParDefautService
     {
         /**
          * @var EntityManager $entityManager
-         * @var ApplicationElementService $applicationElementService
          * @var CompetenceElementService $competenceElementService
+         * @var FicheMetierService $ficheMetierService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $applicationElementService = $container->get(ApplicationElementService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
+        $ficheMetierService = $container->get(FicheMetierService::class);
 
-        $service = new ConfigurationService();
-        $service->setObjectManager($entityManager);
-        $service->setApplicationElementService($applicationElementService);
+        $service = new FicheMetierConfigurationCompetenceParDefautService();
         $service->setCompetenceElementService($competenceElementService);
+        $service->setFicheMetierService($ficheMetierService);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

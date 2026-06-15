@@ -26,6 +26,8 @@ use FicheMetier\Service\ActiviteElement\ActiviteElementService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieService;
+use FicheMetier\Service\FicheMetierConfigurationApplicationParDefaut\FicheMetierConfigurationApplicationParDefautService;
+use FicheMetier\Service\FicheMetierConfigurationCompetenceParDefaut\FicheMetierConfigurationCompetenceParDefautService;
 use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\TendanceElement\TendanceElementService;
@@ -63,6 +65,8 @@ class FicheMetierControllerFactory
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var FicheMetierCategorieService $ficheMetierCategorieService
+         * @var FicheMetierConfigurationApplicationParDefautService $configurationApplicationParDefautService
+         * @var FicheMetierConfigurationCompetenceParDefautService  $configurationCompetenceParDefautService
          * @var FichePosteService $fichePosteService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var MissionElementService $missionElementService
@@ -80,6 +84,8 @@ class FicheMetierControllerFactory
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
+        $configurationApplicationParDefautService = $container->get(FicheMetierConfigurationApplicationParDefautService::class);
+        $configurationCompetenceParDefautService = $container->get(FicheMetierConfigurationCompetenceParDefautService::class);
         $emploiRepereService = $container->get(EmploiRepereService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -138,6 +144,8 @@ class FicheMetierControllerFactory
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierCategorieService($ficheMetierCategorieService);
         $controller->setMissionElementService($missionElementService);
+        $controller->setFicheMetierConfigurationApplicationParDefautService($configurationApplicationParDefautService);
+        $controller->setFicheMetierConfigurationCompetenceParDefautService($configurationCompetenceParDefautService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setParametreService($parametreService);

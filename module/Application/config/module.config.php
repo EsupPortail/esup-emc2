@@ -74,7 +74,6 @@ return [
                         RolePrivileges::ROLE_AFFICHER,
                         ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER,
                         PrivilegePrivileges::PRIVILEGE_VOIR,
-                        ConfigurationPrivileges::CONFIGURATION_AFFICHER,
                     ],
                 ],
                 [

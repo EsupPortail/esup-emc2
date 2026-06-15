@@ -1,8 +1,6 @@
 <?php
 
 /**
- * @see \FicheMetier\Controller\ConfigurationController::competenceAction()
- * @see \FicheMetier\Controller\ConfigurationController::applicationAction()
  * @var string $selected
  * @var Parametre[] $parametres
  */
@@ -25,7 +23,7 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
     <div class="col-md-3">
         <?php if ($canFicheMetierIndex) : ?>
             <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier', [],[], true); ?>"
+            <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
                class="btn btn-secondary">
                 <span class="icon icon-listing"></span>
                 Accéder aux fiches métiers
@@ -41,16 +39,18 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             data-bs-toggle="tab" data-bs-target="#competence"
             type="button" role="tab" aria-controls="competence"
             aria-selected="true"
-            onclick="location.href='<?php echo $this->url('fiche-metier/configuration/competence', [], [], true); ?>'">
+            <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationCompetenceParDefautController::indexAction() */ ?>
+            onclick="location.href='<?php echo $this->url('fiche-metier/configuration/competences-par-defaut', [], [], true); ?>'">
         Compétences par défaut
     </button>
-        <?php if (isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) AND $parametres[FicheMetierParametres::DISPLAY_APPLICATION]?->getValeur() === "true") : ?>
+    <?php if (isset($parametres[FicheMetierParametres::DISPLAY_APPLICATION]) and $parametres[FicheMetierParametres::DISPLAY_APPLICATION]?->getValeur() === "true") : ?>
         <button class="nav-link <?php if ($selected === "application") echo " active "; ?>"
                 id="application-tab"
                 data-bs-toggle="tab" data-bs-target="#application"
                 type="button" role="tab" aria-controls="application"
                 aria-selected="true"
-                onclick="location.href='<?php echo $this->url('fiche-metier/configuration/application', [], [], true); ?>'">
+                <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationApplicationParDefautController::indexAction() */ ?>
+                onclick="location.href='<?php echo $this->url('fiche-metier/configuration/applications-par-defaut', [], [], true); ?>'">
             Applications par défaut
         </button>
     <?php endif; ?>
@@ -59,6 +59,7 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             data-bs-toggle="tab" data-bs-target="#tendance"
             type="button" role="tab" aria-controls="tendance"
             aria-selected="true"
+            <?php /** @see \FicheMetier\Controller\TendanceTypeController::indexAction() */ ?>
             onclick="location.href='<?php echo $this->url('fiche-metier/tendance-type', [], [], true); ?>'">
         Tendances d'évolution
     </button>
@@ -67,6 +68,7 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             data-bs-toggle="tab" data-bs-target="#thematique"
             type="button" role="tab" aria-controls="thematique"
             aria-selected="true"
+            <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::indexAction() */ ?>
             onclick="location.href='<?php echo $this->url('fiche-metier/thematique-type', [], [], true); ?>'">
         Contexte et environnement de travail
     </button>
