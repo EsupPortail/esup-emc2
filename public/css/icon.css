@@ -120,4 +120,8 @@ span.icon.telephone:before {
     content: "\f095";
 }
 
+span.icon.locked:before {
+    content: "\f023";
+}
+
 

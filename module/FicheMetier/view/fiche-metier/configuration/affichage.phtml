@@ -1,6 +1,10 @@
 <?php
 
+use FicheMetier\Entity\Db\Activite;
+use FicheMetier\Entity\Db\ActiviteElement;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionElement;
 use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use UnicaenParametre\Entity\Db\Parametre;
 
@@ -9,9 +13,40 @@ use UnicaenParametre\Entity\Db\Parametre;
  * @var Parametre[] $parametres
  */
 
+$mode = 'affichage';
+
 $fiche = new FicheMetier();
+$fiche->setId(0);
 $fiche->setLibelle("Fiche de métier pour le paramètrage");
 $fiche->setReference("TEST");
+$fiche->setRaison("Fiche métier temporaire pour tester le paramètrage de l'affichage des fiches métiers");
+
+$missions = [];
+$missionLibelles = [
+        1 => "Première mission capitale",
+        2 => "Deuxième mission importante",
+        3 => "Troisième et dernière mission"
+];
+foreach ($missionLibelles as $position => $libelle) {
+    $mission = new Mission();
+    $mission->setLibelle($libelle);
+    $missionElement  = new MissionElement(); $missionElement->setMission($mission); $missionElement->setPosition($position);
+    $missions[] = $missionElement;
+}
+
+$activites = [];
+$activiteLibelles = [
+        1 => "actividad número uno",
+        2 => "zweite Aktivität ",
+        3 => "Saigo no akutibiti"
+];
+foreach ($activiteLibelles as $position => $libelle) {
+    $activite = new Activite();
+    $activite->setLibelle($libelle);
+    $activiteElement  = new ActiviteElement(); $activiteElement->setActivite($activite); $activiteElement->setPosition($position);
+    $activites[] = $activiteElement;
+}
+
 ?>
 
 
@@ -19,84 +54,23 @@ $fiche->setReference("TEST");
 
 <div class="row">
     <div class="col-md-8">
-        <div
-             class="zfloat-end" style="font-size: large; padding-right:0.5rem; "
-             onclick="toggle('<?php echo FicheMetierParametres::TYPE; ?>','<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>')">
-                <span class="text-success" id="toggle-<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>"
-                      style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() !== 'true') echo " none "; ?>"
-                >
-                    <span class="icon icon-toggle-on"></span>
-                    Affichage activé
-                </span>
-                <span class="text-danger" id="toggle-<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>"
-                      style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() === 'true') echo " none "; ?>"
-                >
-                    <span class="icon icon-toggle-off"></span>
-                    Affichage désactivé
-                </span>
-            <?php //var_dump($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur()); ?>
-        </div>
-        <div
-             id='div-<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>'
-             class="  <?php if($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() !== 'true') echo "off"; ?> ">
-        <?php echo $this->partial('fiche-metier/fiche-metier/partial/titre', ['fichemetier' => $fiche, 'mode' => 'affichage']); ?>
-        </div>
-
+        <?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/titre', $parametres[FicheMetierParametres::DISPLAY_TITRE], ['fichemetier' => $fiche, 'mode' => $mode]); ?>
     </div>
     <div class="col-md-4">
-        <div
-                class="zfloat-end" style="font-size: large; padding-right:0.5rem; "
-                onclick="toggle('<?php echo FicheMetierParametres::TYPE; ?>','<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>')">
-                <span class="text-success" id="toggle-<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>"
-                      style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() !== 'true') echo " none "; ?>"
-                >
-                    <span class="icon icon-toggle-on"></span>
-                    Affichage activé
-                </span>
-            <span class="text-danger" id="toggle-<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>"
-                  style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() === 'true') echo " none "; ?>"
-            >
-                    <span class="icon icon-toggle-off"></span>
-                    Affichage désactivé
-                </span>
-            <?php //var_dump($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur()); ?>
-        </div>
-        <div
-                id='div-<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>'
-                class="  <?php if($parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() !== 'true') echo "off"; ?> ">
-            <?php echo $this->partial('fiche-metier/fiche-metier/partial/resume', ['fichemetier' => $fiche, 'mode' => 'affichage']); ?>
-        </div>
+        <?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/resume', $parametres[FicheMetierParametres::DISPLAY_RESUME], ['fichemetier' => $fiche, 'mode' => $mode]); ?>
     </div>
 </div>
 
-<style>
-    div.off
-    {
-        background: whitesmoke !important;
-        color: #666666 !important;
-    }
-</style>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/emploi-repere', $parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE], ['fichemetier' => $fiche, 'emplois' => [], 'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/intitule-poste', $parametres[FicheMetierParametres::DISPLAY_INTITULE], ['fichemetier' => $fiche, 'postes' => [], 'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/fiche-poste', $parametres[FicheMetierParametres::DISPLAY_FICHEPOSTE], ['fichemetier' => $fiche, 'fichespostes' => [], 'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/bloc-raison', $parametres[FicheMetierParametres::DISPLAY_RAISON], ['fichemetier' => $fiche, 'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/bloc-mission', $parametres[FicheMetierParametres::DISPLAY_MISSION], ['fichemetier' => $fiche, 'missions' => $missions, 'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/bloc-activite', $parametres[FicheMetierParametres::DISPLAY_ACTIVITE], ['fichemetier' => $fiche, 'activites' => $activites, 'mode' => $mode]); ?>
 
-<script>
-    function toggle(type,parameter) {
-        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationAffichageController::toggleParametreAction(); */ ?>
-        let url = '<?php echo $this->url('fiche-metier/configuration/affichage/toggle-parametre'); ?>/'+type+'/'+parameter;
-        // console.log("toggle: " + type + "-" + parameter);
-        $.ajax({
-            type: "POST",
-            url: url,
-            success:
-                function (result) {
-                    let success = result.success;
-                    if (success) {
-                        let value = result.value;
-                        // console.log(value(type + "-" + paramparameteretre) + ": " +value);
-                        if (value) $('div#div-' + parameter).removeClass('off');
-                        else $('div#div-' + parameter).addClass('off');
-                        $('span#toggle-' + parameter).toggle();
-                    }
-                }
-        });
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/fake', $parametres[FicheMetierParametres::DISPLAY_COMPETENCE], ['fichemetier' => $fiche, 'titre' => "Compétences", 'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/fake', $parametres[FicheMetierParametres::DISPLAY_COMPETENCE_SPECIFIQUE], ['fichemetier' => $fiche, 'titre' => "Compétences spécifiques", 'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/fake', $parametres[FicheMetierParametres::DISPLAY_APPLICATION], ['fichemetier' => $fiche, 'titre' => "Applications", 'mode' => $mode]); ?>
 
-    }
-</script>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/thematiques', $parametres[FicheMetierParametres::DISPLAY_CONTEXTE], ['fichemetier' => $fiche, 'thematiquesTypes' => [],'thematiquesElements' => [],'mode' => $mode]); ?>
+<?php echo $this->togglablePartial('fiche-metier/fiche-metier/partial/tendances', $parametres[FicheMetierParametres::DISPLAY_TENDANCE], ['fichemetier' => $fiche, 'tendancesTypes' => [], 'tendancesElements' => [], 'mode' => $mode]); ?>

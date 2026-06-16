@@ -375,3 +375,6 @@
 .icon.icon-telephone:before {
     content: "\f095";
 }
+.icon.icon-locked:before {
+    content: "\f023";
+}

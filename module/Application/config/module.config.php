@@ -3,14 +3,12 @@
 namespace Application;
 
 use Agent\Provider\Privilege\AgentmobilitePrivileges;
-use Agent\Provider\Privilege\AgentPrivileges;
 use Application\Controller\IndexController;
 use Application\Event\RgpdRenderer\RgpdRendererEvenement;
 use Application\Event\RgpdRenderer\RgpdRendererEvenementFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
-use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Application\Provider\Role\RoleProvider;
@@ -29,6 +27,7 @@ use Application\Service\Util\UtilServiceFactory;
 use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Application\View\Helper\TimerViewHelper;
+use Application\View\Helper\TogglablePartialViewHelper;
 use Carriere\Provider\Privilege\CategoriePrivileges;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Carriere\Provider\Privilege\CorrespondancePrivileges;
@@ -51,7 +50,6 @@ use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
 use Laminas\Router\Http\Literal;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Referentiel\Provider\Privilege\ReferentielPrivileges;
-use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
@@ -337,6 +335,7 @@ return [
             'synchroniserIcon' => SynchorniserIconViewHelper::class,
             'historiqueBloc' => HistoriqueBlocViewHelper::class,
             'timer' => TimerViewHelper::class,
+            'togglablePartial' => TogglablePartialViewHelper::class,
         ],
     ],
 

@@ -29,6 +29,15 @@ class FicheMetierConfigurationAffichageController extends AbstractActionControll
         $label = $this->params()->fromRoute('parametre');
 
         $parametre = $this->getParametreService()->getParametreByCode($type, $label);
+        if (!$parametre->isModifiable()) {
+            return new JsonModel([
+                'value' => ($parametre->getValeur() === 'true'),
+                'success' => false,
+                'erreur' => "La paramètre est immuable",
+            ]);
+        }
+
+
         if ($parametre->getValeur() === 'true') {
             $parametre->setValeur('false');
             $this->getParametreService()->update($parametre);
@@ -45,7 +54,11 @@ class FicheMetierConfigurationAffichageController extends AbstractActionControll
                 'success' => true
             ]);
         }
-        $JM = new JsonModel(['success' => false]);
+        $JM = new JsonModel([
+            'value' => ($parametre->getValeur() === 'true'),
+            'success' => false,
+            'erreur' => "Cas non prévu."
+        ]);
         $JM->setTerminal(true);
         return $JM;
     }

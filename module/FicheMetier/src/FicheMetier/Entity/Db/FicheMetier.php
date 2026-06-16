@@ -98,6 +98,11 @@ class FicheMetier implements
         return $this->id;
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getRaw(): ?string
     {
         return $this->raw;
