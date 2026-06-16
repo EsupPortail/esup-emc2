@@ -72,6 +72,15 @@ $canFicheMetierIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
             onclick="location.href='<?php echo $this->url('fiche-metier/thematique-type', [], [], true); ?>'">
         Contexte et environnement de travail
     </button>
+    <button class="nav-link <?php if ($selected === "affichage") echo " active "; ?>"
+            id="affichage-tab"
+            data-bs-toggle="tab" data-bs-target="#affichage"
+            type="button" role="tab" aria-controls="affichage"
+            aria-selected="true"
+            <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationAffichageController::indexAction() */ ?>
+            onclick="location.href='<?php echo $this->url('fiche-metier/configuration/affichage', [], [], true); ?>'">
+        Affichage des fiches métiers (beta)
+    </button>
 </div>
 
 <br>

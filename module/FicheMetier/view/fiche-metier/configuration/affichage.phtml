@@ -1,0 +1,102 @@
+<?php
+
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Provider\Parametre\FicheMetierParametres;
+use UnicaenParametre\Entity\Db\Parametre;
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierConfigurationAffichageController::indexAction()
+ * @var Parametre[] $parametres
+ */
+
+$fiche = new FicheMetier();
+$fiche->setLibelle("Fiche de métier pour le paramètrage");
+$fiche->setReference("TEST");
+?>
+
+
+<?php echo $this->partial('header', ['selected' => 'affichage', 'parametres' => $parametres]); ?>
+
+<div class="row">
+    <div class="col-md-8">
+        <div
+             class="zfloat-end" style="font-size: large; padding-right:0.5rem; "
+             onclick="toggle('<?php echo FicheMetierParametres::TYPE; ?>','<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>')">
+                <span class="text-success" id="toggle-<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>"
+                      style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() !== 'true') echo " none "; ?>"
+                >
+                    <span class="icon icon-toggle-on"></span>
+                    Affichage activé
+                </span>
+                <span class="text-danger" id="toggle-<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>"
+                      style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() === 'true') echo " none "; ?>"
+                >
+                    <span class="icon icon-toggle-off"></span>
+                    Affichage désactivé
+                </span>
+            <?php //var_dump($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur()); ?>
+        </div>
+        <div
+             id='div-<?php echo FicheMetierParametres::DISPLAY_TITRE; ?>'
+             class="  <?php if($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() !== 'true') echo "off"; ?> ">
+        <?php echo $this->partial('fiche-metier/fiche-metier/partial/titre', ['fichemetier' => $fiche, 'mode' => 'affichage']); ?>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+        <div
+                class="zfloat-end" style="font-size: large; padding-right:0.5rem; "
+                onclick="toggle('<?php echo FicheMetierParametres::TYPE; ?>','<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>')">
+                <span class="text-success" id="toggle-<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>"
+                      style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() !== 'true') echo " none "; ?>"
+                >
+                    <span class="icon icon-toggle-on"></span>
+                    Affichage activé
+                </span>
+            <span class="text-danger" id="toggle-<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>"
+                  style="display: <?php if($parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() === 'true') echo " none "; ?>"
+            >
+                    <span class="icon icon-toggle-off"></span>
+                    Affichage désactivé
+                </span>
+            <?php //var_dump($parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur()); ?>
+        </div>
+        <div
+                id='div-<?php echo FicheMetierParametres::DISPLAY_RESUME; ?>'
+                class="  <?php if($parametres[FicheMetierParametres::DISPLAY_RESUME]->getValeur() !== 'true') echo "off"; ?> ">
+            <?php echo $this->partial('fiche-metier/fiche-metier/partial/resume', ['fichemetier' => $fiche, 'mode' => 'affichage']); ?>
+        </div>
+    </div>
+</div>
+
+<style>
+    div.off
+    {
+        background: whitesmoke !important;
+        color: #666666 !important;
+    }
+</style>
+
+<script>
+    function toggle(type,parameter) {
+        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationAffichageController::toggleParametreAction(); */ ?>
+        let url = '<?php echo $this->url('fiche-metier/configuration/affichage/toggle-parametre'); ?>/'+type+'/'+parameter;
+        // console.log("toggle: " + type + "-" + parameter);
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function (result) {
+                    let success = result.success;
+                    if (success) {
+                        let value = result.value;
+                        // console.log(value(type + "-" + paramparameteretre) + ": " +value);
+                        if (value) $('div#div-' + parameter).removeClass('off');
+                        else $('div#div-' + parameter).addClass('off');
+                        $('span#toggle-' + parameter).toggle();
+                    }
+                }
+        });
+
+    }
+</script>
