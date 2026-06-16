@@ -496,12 +496,21 @@ class AgentHierarchieController extends AbstractActionController
         $form = $this->getChaineForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/ajouter', ['agent' => $agent?->getId(), 'type' => $type], [], true));
         $form->bind($chaine);
+        $label = null; $obligatoire = " <span class='icon icon-obligatoire' title='Champ obligatoire'></span>";
+        if ($type === 'superieur') $label = "Supérieur·e hiérarchique direct·e ";
+        if ($type === 'autorite') $label = "Autorité hiérarchique ";
+        if ($label !== null) {
+            $form->get('responsable')->setLabel($label . $obligatoire . " : ");
+            $form->get('responsable-bis')->setLabel($label . " : ");
+            $form->get('responsable-ter')->setLabel($label . " : ");
+        }
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                /** Traitement des chaines précédentes **/
                 if ($data['historisation'] === '1') {
                     switch ($type) {
                         case 'superieur':
@@ -522,6 +531,7 @@ class AgentHierarchieController extends AbstractActionController
                         $this->getAgentAutoriteService()->clotureAll($chaine->getAgent());
                         break;
                 }
+                /** Création des nouvelles chaines **/
                 $id = $chaine->generateId();
                 $chaine->setId($id);
                 $chaine->setSourceId("EMC2");
@@ -535,6 +545,26 @@ class AgentHierarchieController extends AbstractActionController
                         break;
                     default :
                         throw new RuntimeException("AgentHierarchieController::ajouterAction() : Le type [" . $type . "] est inconnu");
+                }
+                // Duplication pour la saisie multiple
+                $agent = $chaine->getAgent();
+                $debut = $chaine->getDateDebut();
+                $fin = $chaine->getDateFin();
+                // coquetterie pour résister à la saisie du même responsable plusieurs fois
+                if (isset($data['responsable-bis']['id'])
+                        AND $data['responsable-bis']['id'] !== $data['responsable']['id']) {
+                    $responsable = $this->getAgentService()->getAgent($data['responsable-bis']['id']);
+                    if ($type === 'superieur' and $responsable)  $this->getAgentSuperieurService()->createAgentSuperieurWithArray([$agent, $responsable, $debut, $fin]);
+                    if ($type === 'autorite'  and $responsable) $this->getAgentAutoriteService()->createAgentAutoriteWithArray([$agent, $responsable, $debut, $fin]);
+                }
+                // coquetterie pour résister à la saisie du même responsable plusieurs fois
+                if (isset($data['responsable-ter']['id'])
+                        AND $data['responsable-ter']['id'] !== $data['responsable']['id']
+                        AND $data['responsable-ter']['id'] !== $data['responsable-bis']['id']??""
+                ) {
+                    $responsable = $this->getAgentService()->getAgent($data['responsable-ter']['id']);
+                    if ($type === 'superieur' and $responsable)  $this->getAgentSuperieurService()->createAgentSuperieurWithArray([$agent, $responsable, $debut, $fin]);
+                    if ($type === 'autorite'  and $responsable) $this->getAgentAutoriteService()->createAgentAutoriteWithArray([$agent, $responsable, $debut, $fin]);
                 }
                 exit();
             }
@@ -570,6 +600,10 @@ class AgentHierarchieController extends AbstractActionController
         $form = $this->getChaineForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/modifier', ['chaine' => $chaine->getId(), 'type' => $type], [], true));
         $form->bind($chaine);
+        $label = null;
+        if ($type === 'superieur') $label = "Supérieur·e hiérarchique direct·e <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:";
+        if ($type === 'autorite') $label = "Autorité hiérarchique <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:";
+        if ($label !== null) $form->get('responsable')->setLabel($label);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -602,7 +636,7 @@ class AgentHierarchieController extends AbstractActionController
         $vm = new ViewModel([
             'title' => $titre,
             'form' => $form,
-            'js' => "$('#cloture').parent().hide(); $('#historisation').parent().hide();" . (($chaine->getAgent()) ? "$('#agent-autocomplete').parent().hide();" : ""),
+            'js' => "$('#responsable-bis').parent().hide(); $('#responsable-ter').parent().hide(); $('#cloture').parent().hide(); $('#historisation').parent().hide();" . (($chaine->getAgent()) ? "$('#agent-autocomplete').parent().hide();" : ""),
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;

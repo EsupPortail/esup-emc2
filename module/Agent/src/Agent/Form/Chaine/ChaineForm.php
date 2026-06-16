@@ -7,6 +7,7 @@ use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Date;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 use UnicaenApp\Form\Element\SearchAndSelect;
 
 class ChaineForm extends  Form {
@@ -37,10 +38,35 @@ class ChaineForm extends  Form {
             ->setAutocompleteSource($this->urlAgent)
             ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
-                'id' => 'Responsable',
+                'id' => 'responsable',
                 'placeholder' => $placeholder,
             ]);
         $this->add($responsable);
+
+        $label = "Supérieur·e ou autorité<span class='icon icon-obligatoire'></span> :";
+        $placeholder = "Nom du responsable ...";
+        $responsableBis = new SearchAndSelect('responsable-bis', ['label' => $label]);
+        $responsableBis
+            ->setAutocompleteSource($this->urlAgent)
+            ->setLabelOption('disable_html_escape',true)
+            ->setAttributes([
+                'id' => 'responsable-bis',
+                'placeholder' => $placeholder,
+            ]);
+        $this->add($responsableBis);
+
+        $label = "Supérieur·e ou autorité<span class='icon icon-obligatoire'></span> :";
+        $placeholder = "Nom du responsable ...";
+        $responsableTer = new SearchAndSelect('responsable-ter', ['label' => $label]);
+        $responsableTer
+            ->setAutocompleteSource($this->urlAgent)
+            ->setLabelOption('disable_html_escape',true)
+            ->setAttributes([
+                'id' => 'responsable-ter',
+                'placeholder' => $placeholder,
+            ]);
+        $this->add($responsableTer);
+
         //datedebut *
         $this->add([
             'type' => Date::class,
@@ -104,8 +130,42 @@ class ChaineForm extends  Form {
 
         //input filter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'agent' => ['required' => true,],
-            'responsable' => ['required' => true,],
+            'agent' => [
+                'required' => true,
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "Veuillez sélectionnez une personne dans la liste déroulante.",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                $hasResponsable = (isset($context['agent']) AND isset($context['agent']['id']) AND trim($context['agent']['id']) !== '');
+                                return $hasResponsable;
+                            },
+                        ],
+                    ],
+                ],
+            ],
+            'responsable' => [
+                'required' => true,
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "Veuillez sélectionnez une personne dans la liste déroulante.",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                $hasResponsable = (isset($context['responsable']) AND isset($context['responsable']['id']) AND trim($context['responsable']['id']) !== '');
+                                return $hasResponsable;
+                            },
+                        ],
+                    ],
+                ],
+             ],
+            'responsable-bis' => ['required' => false,],
+            'responsable-ter' => ['required' => false,],
             'date_debut' => ['required' => true,],
             'date_fin' => ['required' => false,],
             'historisation' => ['required' => false,],
