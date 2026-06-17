@@ -24,9 +24,12 @@ $estDepasseObservation = ($entretien and isset($infos['limite-observation']) and
 ?>
 
 <?php if ($campagne !== null) : ?>
-    <div class="card" id="aide-agent-campagne">
-        <div class="card-header bg-default">
+    <div class="card" id="aide-agent-campagne" data-campagne="<?php echo $campagne->getId(); ?>">
+        <div class="card-header bg-default" onclick="toggleBody(<?php echo $campagne->getId(); ?>)" style="cursor: pointer">
+            <span class="icon icon-down"></span>
+            <span class="icon icon-up" style="display:none;"></span>
             Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+            &nbsp;
         </div>
         <div class="card-body">
 
@@ -179,6 +182,11 @@ $estDepasseObservation = ($entretien and isset($infos['limite-observation']) and
 <?php endif ?>
 
 <script>
+    function toggleBody(campagneId) {
+        $('.card[data-campagne="' + campagneId + '"] .card-body').toggle()
+        $('.card[data-campagne="' + campagneId + '"] .card-header .icon').toggle()
+    }
+
     $(function () {
         $(document).on('hide.bs.modal', '.modal', function () {
             window.parent.location.reload();
