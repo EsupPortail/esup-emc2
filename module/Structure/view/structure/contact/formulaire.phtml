@@ -31,7 +31,7 @@ use Structure\Entity\Db\Structure;
 <?php echo $this->formControlGroup($form->get('nom')); ?>
 <?php echo $this->formControlGroup($form->get('telephone')); ?>
 <?php echo $this->formControlGroup($form->get('email')); ?>
-<?php if ($structure === null) echo $this->formControlGroup($form->get('structures')); ?>
+<?php if (!isset($structure)) echo $this->formControlGroup($form->get('structures')); ?>
 <?php echo $this->formControlGroup($form->get('creer')); ?>
 <?php echo $this->form()->closeTag(); ?>
 
