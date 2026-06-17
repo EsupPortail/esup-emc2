@@ -36,6 +36,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
@@ -743,6 +744,7 @@ class CampagneController extends AbstractActionController
         }
 
         $structures = $this->getStructureService()->getStructuresNiv2($campagne->getDateDebut());
+        usort($structures, function (Structure $a, Structure $b) { return $a->getLibelleCourt() <=> $b->getLibelleCourt(); });
 
         // refresh si paramètres
         if ($refresh === 'true') {
