@@ -9,6 +9,7 @@
 
 namespace Application;
 
+use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -17,6 +18,9 @@ use Laminas\Stdlib\Glob;
 use Laminas\Config\Factory as ConfigFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenUtilisateur\Entity\Db\AbstractRole;
+use UnicaenUtilisateur\Service\Role\RoleService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class Module
 {
@@ -46,7 +50,41 @@ class Module
             array($this, 'onUserLogin'),
             100
         );
+//        $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'handleRolePreference'], 100);
+    }
 
+    public function handleRolePreference(MvcEvent $e) {
+
+        $request = $e->getRequest();
+        if (!$request instanceof Request) {
+            return;
+        }
+
+        // Récupérer le paramètre 'role-prefere' de la query string
+        $queryParams = $request->getQuery()->toArray();
+
+        if (isset($queryParams['role-prefere']) && !empty($queryParams['role-prefere'])) {
+            $roleId = $queryParams['role-prefere'];
+            /**
+             * @var RoleService $roleService
+             * @var UserService $userService
+             */
+            $roleService = $e->getApplication()->getServiceManager()->get(RoleService::class);
+            $userService = $e->getApplication()->getServiceManager()->get(UserService::class);
+            /** @var AbstractRole $role */
+            $role = $roleService->getRepo()->findOneBy(['roleId' => $roleId]);
+            if ($role) {
+                $user = $userService->getConnectedUser();
+                if ($user->hasRole($role)) {
+                    die("on avance");
+                } else {
+                    die("L'utilisateur connecté n'a pas le role [".$role->getLibelle()."]");
+                }
+
+            } else {
+                die("Le rôle ".$roleId." n'a pas été trouvé");
+            }
+        }
     }
 
     public function onUserLogin( $e ) {

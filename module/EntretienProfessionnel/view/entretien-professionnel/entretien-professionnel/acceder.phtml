@@ -343,6 +343,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
     $('form').on("submit", function () {
         // Sauvegarder la position de défilement actuelle
+        formulaireModifie = false;
         localStorage.setItem('scrollPosition', window.scrollY);
     });
 
