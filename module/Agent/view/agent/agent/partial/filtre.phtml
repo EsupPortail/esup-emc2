@@ -16,7 +16,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                     <div class="row">
                         <div class="col-md-12" style="margin-bottom: 10px;">
                             <input type="hidden" value="filtrer" id="type" name="type" />
-                            <label for="denomination">Rechercher un agent : </label>
+                            <label for="denomination">Lister les agents :</label>
                             <input type="text" id="denomination" name="denomination" class="form-control" placeholder="Nom ou prénom de l'Agent·e"/>
                         </div>
                         <div class="col-md-4">
@@ -67,8 +67,8 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                 <div class="col-md-3">
                     <div class="pull-right">
                         <button class="btn btn-primary action" id="filter">
-                            <span class="icon icon-filtrer"></span>
-                            Filtrer
+                            <span class="icon icon-rechercher"></span>
+                            Rechercher
                         </button>
                         <br>
                         <button class="btn btn-primary action" id="clear">

@@ -380,3 +380,9 @@
 {
     content:"\f077";
 }
+
+.icon.icon-rechercher::before,
+.icon.search::before
+{
+    content:"\f002";
+}
