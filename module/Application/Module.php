@@ -9,6 +9,7 @@
 
 namespace Application;
 
+use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -17,6 +18,10 @@ use Laminas\Stdlib\Glob;
 use Laminas\Config\Factory as ConfigFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenAuthentification\Service\UserContext;
+use UnicaenUtilisateur\Entity\Db\AbstractRole;
+use UnicaenUtilisateur\Service\Role\RoleService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class Module
 {
@@ -46,7 +51,48 @@ class Module
             array($this, 'onUserLogin'),
             100
         );
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'handleRolePreference'], 100);
+    }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function handleRolePreference(MvcEvent $e): void
+    {
+        $request = $e->getRequest();
+        if (!$request instanceof Request) {
+            return;
+        }
+
+        $queryParams = $request->getQuery()->toArray();
+        if (!empty($queryParams['role-prefere']??[])) {
+            $roleId = $queryParams['role-prefere'];
+            /**
+             * @var RoleService $roleService
+             * @var UserService $userService
+             * @var UserContext $userContextService
+             */
+            $roleService = $e->getApplication()->getServiceManager()->get(RoleService::class);
+            $userService = $e->getApplication()->getServiceManager()->get(UserService::class);
+            $userContextService = $e->getApplication()->getServiceManager()->get(UserContext::class);
+            /** @var AbstractRole $role */
+            $role = $roleService->getRepo()->findOneBy(['roleId' => $roleId]);
+            if ($role === null) {
+//                throw new RuntimeException("Le rôle [".$roleId."] ne semble pas exister",-1);
+                return;
+            }
+            $user = $userService->getConnectedUser();
+            if ($user === null) {
+//              throw new RuntimeException("Aucun utilisateur·trice de connecter ", -1);
+                return;
+            }
+            if (!$user->hasRole($role)) {
+//                throw new RuntimeException("L'utilisateur·trice ne possède pas le rôle [".$role->getLibelle()."]",-1);
+                return;
+            }
+            $userContextService->setSelectedIdentityRole($role);
+        }
     }
 
     public function onUserLogin( $e ) {
