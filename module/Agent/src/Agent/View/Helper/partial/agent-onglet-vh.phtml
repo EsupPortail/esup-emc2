@@ -2,13 +2,21 @@
 
 use Agent\Entity\Db\Agent;
 use Agent\Provider\Parametre\AgentParametres;
+use Agent\Provider\Role\RoleProvider;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use UnicaenParametre\Entity\Db\Parametre;
+use UnicaenUtilisateur\Entity\Db\AbstractRole;
+use UnicaenUtilisateur\Entity\Db\AbstractUser;
 
 /**
  * @see \Agent\View\Helper\AgentOngletViewHelper
  * @var Agent $agent
  * @var Parametre[] $parametres
  * @var string $current
+ *
+ * @var Campagne[] $campagnesActives
+ * @var ?AbstractUser $connectedUser
+ * @var ?AbstractRole $connectedRole
  */
 
 ?>
@@ -19,7 +27,11 @@ use UnicaenParametre\Entity\Db\Parametre;
     <?php echo $agent->getDenomination(true); ?>
 </h1>
 
-
+<?php if ($connectedUser === $agent?->getUtilisateur() AND $connectedRole?->getRoleId() === RoleProvider::ROLE_AGENT) : ?>
+    <?php foreach ($campagnesActives as $campagne) : ?>
+        <?php echo $this->aideAgentCampagne($agent, $campagne); ?>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <!-- onglet ----------------------------------------------------------------------------------------------------------->
 
