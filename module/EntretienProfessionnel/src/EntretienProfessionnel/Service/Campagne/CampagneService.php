@@ -448,6 +448,7 @@ class CampagneService
                 }
             }
 
+            $a=1;
             if ($estExclus) {
                 $exclus[$agent->getId()] = $agent;
             }
@@ -497,6 +498,7 @@ class CampagneService
                     $raison[$agent->getId()] .= "<li>Corps invalide (à la date du ".$campagne->getDateSituation()->format('d/m/y').") dans le cadre des entretiens professionnels (".$explication.")</li>";
                 }
 
+                $a=1;
                 if ($estFiltre) {
                     $facultatifs[$agent->getId()] = $agent;
                 } else {
@@ -515,38 +517,42 @@ class CampagneService
                 $exceptions[$type] = $listing;
             }
         }
+        $a=1;
         foreach ($exceptions[AgentForceSansObligation::FORCE_SANS_OBLIGATION] as $forcage) {
             $agent = $forcage->getAgent();
-            $raison[$agent->getId()] = '';
+            $raison[$agent->getId()] .= '<li>Agent·e forcé·e sans obligation de la campagne par une exception';
+            if ($forcage->getStructure()) $raison[$agent->getId()] .= " sur la structure ".$forcage->getStructure()->getLibelleLong();
+            $raison[$agent->getId()] .= '</li>';
             if (isset($exclus[$agent->getId()]) OR isset($obligatoires[$agent->getId()])) {
                 unset($exclus[$agent->getId()]);
                 unset($obligatoires[$agent->getId()]);
                 $facultatifs[$agent->getId()] = $agent;
-                $raison[$agent->getId()] .= '<li>Agent·e forcé·e sans obligation de la campagne par une exception';
-                if ($forcage->getStructure()) $raison[$agent->getId()] .= ' sur la structure '.$forcage->getStructure()->getLibelleLong();
-                $raison[$agent->getId()] .= '</li>';
             }
         }
         foreach ($exceptions[AgentForceSansObligation::FORCE_EXCLUS] as $forcage) {
+            $agent = $forcage->getAgent();
+            $raison[$agent->getId()] .= '<li>Agent·e exclu·e de la campagne par une exception';
+            if ($forcage->getStructure()) $raison[$agent->getId()] .= " sur la structure ".$forcage->getStructure()->getLibelleLong();
+            $raison[$agent->getId()] .= '</li>';
             $agent = $forcage->getAgent();
             if (isset($obligatoires[$agent->getId()]) OR isset($facultatifs[$agent->getId()])) {
                 unset($obligatoires[$agent->getId()]);
                 unset($facultatifs[$agent->getId()]);
                 $exclus[$agent->getId()] = $agent;
-                $raison[$agent->getId()] .= '<li>Agent·e exclu·e de la campagne par une exception';
-                if ($forcage->getStructure()) $raison[$agent->getId()] .= ' sur la structure '.$forcage->getStructure()->getLibelleLong();
-                $raison[$agent->getId()] .= '</li>';
+            }
+            if ($entretiens[$agent->getId()]) {
+                unset($entretiens[$agent->getId()]);
             }
         }
         foreach ($exceptions[AgentForceSansObligation::FORCE_AVEC_OBLIGATION] as $forcage) {
             $agent = $forcage->getAgent();
+            $raison[$agent->getId()] .= '<li>Agent·e forcé·e avec obligation de la campagne par une exception';
+            if ($forcage->getStructure()) $raison[$agent->getId()] .= " sur la structure ".$forcage->getStructure()->getLibelleLong();
+            $raison[$agent->getId()] .= '</li>';
             if (isset($exclus[$agent->getId()]) OR isset($facultatifs[$agent->getId()])) {
                 unset($exclus[$agent->getId()]);
                 unset($facultatifs[$agent->getId()]);
                 $obligatoires[$agent->getId()] = $agent;
-                $raison[$agent->getId()] .= '<li>Agent·e forcé·e avec obligation de la campagne par une exception';
-                if ($forcage->getStructure()) $raison[$agent->getId()] .= ' sur la structure '.$forcage->getStructure()->getLibelleLong();
-                $raison[$agent->getId()] .= '</li>';
             }
         }
 
@@ -563,12 +569,18 @@ class CampagneService
                         $isInStructures = true;
                     }
                 }
+                if (isset($exceptions[AgentForceSansObligation::FORCE_AVEC_OBLIGATION][$agent->getId()])) {
+                    $isInStructures = true;
+                }
+                if (isset($exceptions[AgentForceSansObligation::FORCE_SANS_OBLIGATION])) {
+                    $isInStructures = true;
+                }
                 if (!$isInStructures) {
                     unset($obligatoires[$agent->getId()]);
                     unset($facultatifs[$agent->getId()]);
                     unset($exclus[$agent->getId()]);
                     $outStructures[$agent->getId()] = $entretien;
-                    $raison[$agent->getId()] = "Entretien dans une autre structure [" . implode(", ", $autres) . "]";
+                    $raison[$agent->getId()] .= "Entretien dans une autre structure [" . implode(", ", $autres) . "]";
                 } else {
                     $inStructures[$agent->getId()] = $entretien;
                 }

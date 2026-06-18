@@ -22,6 +22,8 @@ use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations
  */
 
 
+$raison = $options['raison']??[];
+
 $isEnCours = (!empty($entretiens) && current($entretiens)->getCampagne() && current($entretiens)->getCampagne()->estEnCours());
 
 
@@ -137,7 +139,12 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             </td>
         <?php endif; ?>
         <?php if ($displayAgent) : ?>
-            <td  data-order="<?php echo $entretien->getAgent()->getDenomination(); ?>"> <?php echo $entretien->getAgent()->getDenomination(false, true, true); ?> </td>
+            <td  data-order="<?php echo $entretien->getAgent()->getDenomination(); ?>">
+                <?php echo $entretien->getAgent()->getDenomination(false, true, true); ?>
+                <?php if (isset($raison[$agent->getId()]) AND $raison[$agent->getId()] !== ''): ?>
+                    <span class="icon icon-information" title="<ul><?php echo $raison[$agent->getId()]; ?></ul>" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                <?php endif; ?>
+            </td>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
             <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>">
