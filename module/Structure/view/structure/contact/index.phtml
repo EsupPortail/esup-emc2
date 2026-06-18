@@ -133,8 +133,8 @@ usort($types, function (Type $a, Type $b) {
     <thead>
     <tr>
         <th class="col-md-1"> Id</th>
-        <th class="col-md-2" data-order="string"> Identification</th>
-        <th class="col-md-2"> Informations de contact</th>
+        <th class="col-md-3" data-order="string"> Dénomination / Service </th>
+        <th class="col-md-3"> Informations de contact</th>
         <th class="col-md-1"> Type</th>
         <th class="col-md-2"> Structures</th>
         <th class="col-md-2 action"> Action</th>
@@ -146,7 +146,7 @@ usort($types, function (Type $a, Type $b) {
             <td data-column-id="Id">
                 <?php echo $contact->getId(); ?>
             </td>
-            <td data-colomun="Identification"
+            <td data-colomun="Dénomination / Service"
                 data-order="<?php echo $contact->getDenomination()??$contact->getService(); ?>">
                 <?php if ($contact->getDenomination()): ?>
                 <strong> Dénomination </strong> : <?php echo $contact->getDenomination(); ?>
@@ -235,7 +235,7 @@ usort($types, function (Type $a, Type $b) {
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                {targets: [6], orderable: false}
+                {targets: [5], orderable: false}
             ]
         });
     });
