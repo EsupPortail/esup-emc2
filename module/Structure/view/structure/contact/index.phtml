@@ -168,6 +168,12 @@ usort($types, function (Type $a, Type $b) {
                 <?php else : ?>
                     <span class="missing-data">Aucune adresse électronique</span>
                 <?php endif; ?>
+                <br>
+                <?php if ($contact->getUrl()) : ?>
+                    <?php echo $contact->getUrl(); ?>
+                <?php else : ?>
+                    <span class="missing-data">Aucun site ou plateforme</span>
+                <?php endif; ?>
             </td>
             <td data-column-id="Type">
                 <?php echo $contact->getType()->getLibelle(); ?> <br>

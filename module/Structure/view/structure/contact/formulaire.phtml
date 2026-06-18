@@ -27,10 +27,10 @@ use Structure\Entity\Db\Structure;
 <?php echo $this->form()->openTag($form); ?>
 <?php echo $this->formControlGroup($form->get('type')); ?>
 <?php echo $this->formControlGroup($form->get('service')); ?>
-<?php echo $this->formControlGroup($form->get('prenom')); ?>
-<?php echo $this->formControlGroup($form->get('nom')); ?>
+<?php echo $this->formControlGroup($form->get('denomination')); ?>
 <?php echo $this->formControlGroup($form->get('telephone')); ?>
 <?php echo $this->formControlGroup($form->get('email')); ?>
+<?php echo $this->formControlGroup($form->get('url')); ?>
 <?php if (!isset($structure)) echo $this->formControlGroup($form->get('structures')); ?>
 <?php echo $this->formControlGroup($form->get('creer')); ?>
 <?php echo $this->form()->closeTag(); ?>
