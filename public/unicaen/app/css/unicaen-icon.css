@@ -390,7 +390,13 @@
 }
 
 .icon.icon-rechercher::before,
-.icon.search::before
+.icon.icon-search::before
 {
     content:"\f002";
+}
+
+.icon.icon-lien-externe::before,
+.icon.icon-external-link::before
+{
+    content:"\f35d";
 }

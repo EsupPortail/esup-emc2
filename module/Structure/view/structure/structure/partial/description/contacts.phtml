@@ -66,35 +66,42 @@ usort($sortedTypes, function (Type $a, Type $b) {
                     <?php /** @var Contact $contact */ ?>
                     <?php foreach ($contacts_ as $contact) : ?>
                         <?php if ($contact->estNonHistorise() or $canModifierContact) : ?>
+                            <div class="row">
+                                <div class="col-md-8">
                             <?php
                                 $infos = [];
                                 if ($contact->getService()) $infos[] = $contact->getService();
-                                if ($contact->getPrenom() OR $contact->getNom()) $infos[] = ($contact->getPrenom()??""). " ".($contact->getNom()??"");
+                                if ($contact->getDenomination()) $infos[] = $contact->getDenomination();
                                 echo implode(" - ", $infos);
                             ?>
-                            <?php if ($canModifierContact) : ?>
-                                <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
-                                <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
-                                   class="action primary ajax-modal" data-event="modification"
-                                >
-                                    <span class="icon icon-editer"></span>
-                                    Modifier
-                                </a>
-                                <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
-                                <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
-                                   class="action warning"
-                                >
-                                    <span class="icon icon-unlink"></span>
-                                    Dissocier
-                                </a>
-                            <?php endif; ?>
                             <br>
                             <?php
                                 $infos = [];
-                                if ($contact->getEmail()) $infos[] = "<span class='icon icon-mail'></span>&nbsp;"."<a href='".$contact->getEmail()."'>".$contact->getEmail()."</a>";
+                                if ($contact->getEmail()) $infos[] = "<span class='icon icon-mail'></span>&nbsp;"."<a href='mailto:".$contact->getEmail()."'>".$contact->getEmail()."</a>";
                                 if ($contact->getTelephone()) $infos[] = "<span class='icon icon-telephone'></span>&nbsp;".$contact->getTelephone();
+                                if ($contact->getUrl()) $infos[] = "<span class='icon icon-lien-externe'></span>&nbsp;"."<a href='".$contact->getUrl()."' target='_blank'>".$contact->getUrl()."</a>";
                                 echo implode(" - ", $infos);
                             ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php if ($canModifierContact) : ?>
+                                        <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
+                                        <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
+                                           class="action primary ajax-modal" data-event="modification"
+                                        >
+                                            <span class="icon icon-editer"></span>
+                                            Modifier
+                                        </a>
+                                        <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
+                                        <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
+                                           class="action warning"
+                                        >
+                                            <span class="icon icon-unlink"></span>
+                                            Dissocier
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <div style="padding-bottom: 0.5rem;"></div>
