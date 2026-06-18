@@ -20,7 +20,7 @@ $this->headTitle("Liste des entretiens dont vous observateur·trice");
 </h1>
 
 <?php foreach ($campagnes as $campagne) : ?>
-    <h2> Campagne <?php echo $campagne->getAnnee(); ?> (<?php echo $campagne->getDateDebut()->format('d/m/Y'); ?> &Rightarrow; <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>)</h2>
+    <h2> Campagne <?php echo $campagne->getAnnee(); ?></h2>
 
     <?php
     $entretiens_ = $entretiens[$campagne->getId()];
