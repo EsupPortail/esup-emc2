@@ -133,9 +133,8 @@ usort($types, function (Type $a, Type $b) {
     <thead>
     <tr>
         <th class="col-md-1"> Id</th>
-        <th class="col-md-2" data-order="string"> Dénomination</th>
+        <th class="col-md-2" data-order="string"> Identification</th>
         <th class="col-md-2"> Informations de contact</th>
-        <th class="col-md-2"> Service</th>
         <th class="col-md-1"> Type</th>
         <th class="col-md-2"> Structures</th>
         <th class="col-md-2 action"> Action</th>
@@ -147,10 +146,15 @@ usort($types, function (Type $a, Type $b) {
             <td data-column-id="Id">
                 <?php echo $contact->getId(); ?>
             </td>
-            <td data-colomun="Dénomination"
-                data-order="<?php echo $contact->getNom(); ?> <?php echo $contact->getPrenom(); ?>">
-                <?php echo $contact->getPrenom(); ?>
-                <?php echo $contact->getNom(); ?>
+            <td data-colomun="Identification"
+                data-order="<?php echo $contact->getDenomination()??$contact->getService(); ?>">
+                <?php if ($contact->getDenomination()): ?>
+                <strong> Dénomination </strong> : <?php echo $contact->getDenomination(); ?>
+                <br>
+                <?php endif; ?>
+                <?php if ($contact->getService()): ?>
+                <strong>Service</strong> : <?php echo $contact->getService(); ?>
+                <?php endif; ?>
             </td>
             <td data-colomun="Informations de contact">
                 <?php if ($contact->getTelephone()) : ?>
@@ -164,9 +168,6 @@ usort($types, function (Type $a, Type $b) {
                 <?php else : ?>
                     <span class="missing-data">Aucune adresse électronique</span>
                 <?php endif; ?>
-            </td>
-            <td data-column-id="Service">
-                <?php echo $contact->getService(); ?>
             </td>
             <td data-column-id="Type">
                 <?php echo $contact->getType()->getLibelle(); ?> <br>
