@@ -32,7 +32,6 @@ use UnicaenUtilisateur\Entity\Db\User;
  *
  * @var User $connectedUser
  * @var Role $connectedRole
- * @var Campagne[] $campagnesActives
  */
 
 
@@ -64,11 +63,6 @@ $canModifierChaineSynchroniser = $canModifierChaineSynchroniser && $chaineAssert
 
 <!-- Aide pour le EP -------------------------------------------------------------------------------------------------->
 
-<?php if ($connectedUser === $agent->getUtilisateur() AND $connectedRole->getRoleId() === RoleProvider::ROLE_AGENT) : ?>
-    <?php foreach ($campagnesActives as $campagne) : ?>
-        <?php echo $this->aideAgentCampagne($agent, $campagne); ?>
-    <?php endforeach; ?>
-<?php endif; ?>
 
 <h2> Informations générales sur l'agent </h2>
 

@@ -19,10 +19,10 @@ class ContactHydrator implements HydratorInterface
         $data = [
             'type' => $object->getType()?->getId(),
             'service' => $object->getService(),
-            'prenom' => $object->getPrenom(),
-            'nom' => $object->getNom(),
+            'denomination' => $object->getDenomination(),
             'telephone' => $object->getTelephone(),
             'email' => $object->getEmail(),
+            'url' => $object->getUrl(),
             'structures' => $structuresId,
         ];
         return $data;
@@ -33,10 +33,10 @@ class ContactHydrator implements HydratorInterface
         /** @var Contact $object */
         $type = (isset($data['type'])) ? $this->getTypeService()->getType($data['type']) : null;
         $service = (isset($data['service']) AND trim($data['service']) !== "")?trim($data['service']):null;
-        $prenom = (isset($data['prenom']) AND trim($data['prenom']) !== "")?trim($data['prenom']):null;
-        $nom = (isset($data['nom']) AND trim($data['nom']) !== "")?trim($data['nom']):null;
+        $denomination = (isset($data['denomination']) AND trim($data['denomination']) !== "")?trim($data['denomination']):null;
         $telephone = (isset($data['telephone']) AND trim($data['telephone']) !== "")?trim($data['telephone']):null;
         $email = (isset($data['email']) AND trim($data['email']) !== "")?trim($data['email']):null;
+        $url = (isset($data['url']) AND trim($data['emaiurll']) !== "")?trim($data['url']):null;
 
         $structuresIdOld = $this->getStructureService()->getStructureIdsHavingContact($object);
         $structuresIdNew = (isset($data['structures']))?$data['structures']:[];
@@ -60,10 +60,10 @@ class ContactHydrator implements HydratorInterface
 
         $object->setType($type);
         $object->setService($service);
-        $object->setPrenom($prenom);
-        $object->setNom($nom);
+        $object->setDenomination($denomination);
         $object->setTelephone($telephone);
         $object->setEmail($email);
+        $object->setUrl($url);
         $object->setTmp($structures);
 
         return $object;

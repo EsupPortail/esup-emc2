@@ -39,7 +39,7 @@ $nbAgent = count($agents);
 
     <div class="card">
         <div class="card-header">
-            Filtre de recherche des agents
+            Recherche d'agent·es
         </div>
         <div class="card-body">
             <?php echo $this->partial('partial/filtre', ['params' => $params, 'structuresGroups' => $structuresGroups], [], true); ?>
@@ -65,9 +65,9 @@ $nbAgent = count($agents);
         <table id="agents" class="datatable table table-condensed table-hover">
             <thead>
             <tr>
-                <th> Source Id </th>
                 <th> Dénomination </th>
                 <th> Affectations </th>
+                <th> Source Id </th>
                 <th> <span title="Lié à un utilisateur de l'application">Lié</span> </th>
                 <th class="action"> Action </th>
             </tr>
@@ -75,9 +75,6 @@ $nbAgent = count($agents);
             <tbody>
             <?php foreach ($agents as $agent) : ?>
                 <tr>
-                    <td>
-                        <span class="badge"><?php echo $agent->getId(); ?>
-                    </td>
                     <td>
                         <?php echo $agent->getDenomination(); ?>
                     </td>
@@ -92,6 +89,9 @@ $nbAgent = count($agents);
                             </li>
                         <?php endforeach; ?>
                         </ul>
+                    </td>
+                    <td>
+                        <span class="badge"><?php echo $agent->getId(); ?>
                     </td>
                     <td>
                         <?php if ($agent->getUtilisateur() !== null) : ?>
@@ -140,7 +140,6 @@ $nbAgent = count($agents);
 <script>
     $(document).ready(function() {
         $('#agents').DataTable({
-            "sorting":   false,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",

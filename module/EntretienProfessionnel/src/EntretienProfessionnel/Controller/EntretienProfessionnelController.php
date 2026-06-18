@@ -122,6 +122,11 @@ class EntretienProfessionnelController extends AbstractActionController
         return new ViewModel([
             'entretiens' => $entretiens,
             'intranet' => $intranet,
+
+            'agent' => $agent,
+            'campagnesActives' => $this->getCampagneService()->getCampagnesActives(),
+            'connectedUser' => $user,
+            'connectedRole' => $this->getUserService()->getConnectedRole(),
         ]);
     }
 

@@ -195,7 +195,7 @@ $isForce = (isset($options['force']) and $options['force'] === true);
     });
 
     function extract<?php echo $options['id']; ?>() {
-        let agents = ["Agent·e,Structure fine,Supérieur·es hiérarchiques direct·es,Autorités hiérarchiques"];
+        let agents = ["Agent·e;Structure fine;Supérieur·es hiérarchiques direct·es;Autorités hiérarchiques"];
         <?php usort($agents, function ( $a, $b) { return $a->getDenomination() <=> $b->getDenomination();}); ?>
         <?php foreach ($agents as $agent) : ?>
             <?php
@@ -205,7 +205,7 @@ $isForce = (isset($options['force']) and $options['force'] === true);
                 $autorites = $agent->getAutorites(); $autorites = array_map(function (AgentAutorite $a) { return $a->getAutorite()->getDenomination(); }, $autorites);
             ?>
 
-            agents.push("\"<?php echo strip_tags($agent?->getDenomination()); ?>\",\"<?php echo $agent->getAffectationPrincipale()?->getStructure()->getLibelleLong(); ?>\",\"<?php echo implode(" \\n", $superieurs); ?>\",\"<?php echo implode("\\n", $autorites); ?>\"");
+            agents.push("\"<?php echo strip_tags($agent?->getDenomination()); ?>\";\"<?php echo $agent->getAffectationPrincipale()?->getStructure()->getLibelleLong(); ?>\";\"<?php echo implode(" \\n", $superieurs); ?>\";\"<?php echo implode("\\n", $autorites); ?>\"");
 
         <?php endforeach; ?>
         agents = agents.join('\n');

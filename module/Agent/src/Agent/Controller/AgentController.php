@@ -151,7 +151,6 @@ class AgentController extends AbstractActionController {
             // aide pour la campagne
             'connectedUser' => $this->getUserService()->getConnectedUser(),
             'connectedRole' => $this->getUserService()->getConnectedRole(),
-            'campagnesActives' => $this->getCampagneService()->getCampagnesActives(),
 
         ]);
     }

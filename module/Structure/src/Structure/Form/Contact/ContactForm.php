@@ -7,6 +7,7 @@ use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Email;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Url;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -50,25 +51,13 @@ class ContactForm extends Form
         //nom
         $this->add([
             'type' => Text::class,
-            'name' => 'prenom',
+            'name' => 'denomination',
             'options' => [
-                'label' => "Prénom :",
+                'label' => "Dénomination :",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
-                'id' => 'prenom',
-            ],
-        ]);
-        //prenom
-        $this->add([
-            'type' => Text::class,
-            'name' => 'nom',
-            'options' => [
-                'label' => "Nom :",
-                'label_options' => ['disable_html_escape' => true,],
-            ],
-            'attributes' => [
-                'id' => 'nom',
+                'id' => 'denomination',
             ],
         ]);
         //telephone
@@ -93,6 +82,18 @@ class ContactForm extends Form
             ],
             'attributes' => [
                 'id' => 'email',
+            ],
+        ]);
+        //url
+        $this->add([
+            'type' => Url::class,
+            'name' => 'url',
+            'options' => [
+                'label' => "Site internet / plateforme :",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'url',
             ],
         ]);
         //structures
@@ -127,11 +128,11 @@ class ContactForm extends Form
         $this->setInputFilter((new Factory())->createInputFilter([
             'type' => ['required' => true,],
             'service' => ['required' => false,],
-            'prenom' => ['required' => false,],
-            'nom' => ['required' => false,],
+            'denomination' => ['required' => false,],
             'telephone' => ['required' => false,],
             'structures' => ['required' => false,],
             'email' => ['required' => true,],
+            'url' => ['required' => false,],
         ]));
     }
 }

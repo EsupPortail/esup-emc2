@@ -18,7 +18,6 @@ use Laminas\Stdlib\Glob;
 use Laminas\Config\Factory as ConfigFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use RuntimeException;
 use UnicaenAuthentification\Service\UserContext;
 use UnicaenUtilisateur\Entity\Db\AbstractRole;
 use UnicaenUtilisateur\Service\Role\RoleService;
@@ -84,10 +83,10 @@ class Module
                 return;
             }
             $user = $userService->getConnectedUser();
-          if ($user === null) {
+            if ($user === null) {
 //              throw new RuntimeException("Aucun utilisateur·trice de connecter ", -1);
-              return;
-          }
+                return;
+            }
             if (!$user->hasRole($role)) {
 //                throw new RuntimeException("L'utilisateur·trice ne possède pas le rôle [".$role->getLibelle()."]",-1);
                 return;
