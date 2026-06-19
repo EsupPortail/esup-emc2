@@ -32,7 +32,9 @@ foreach ($privilegesByCategorie as $categorieId => $privileges) {
 
 ksort($namespaces);
 foreach ($namespaces as $namespace_ => $categories) {
-    usort($categories, function (PrivilegeCategorie $a, PrivilegeCategorie $b) { return $a->getOrdre() <=> $b->getOrdre(); });
+    usort($categories, function (PrivilegeCategorie $a, PrivilegeCategorie $b) {
+        return $a->getOrdre() <=> $b->getOrdre();
+    });
     $namespaces[$namespace_] = $categories;
 }
 //var_dump($namespaces);
@@ -63,8 +65,10 @@ foreach ($namespaces as $namespace_ => $categories) {
     <thead>
     <tr>
         <th>Privilèges
-            <span class="icon icon-masquer toggleable" id="close-all" title="Masquer tous les modules"   onclick="closeAll()"></span>
-            <span class="icon icon-voir toggleable"    id="open-all"  title="Afficher tous les modules"  onclick="openAll()" style="display: none;"></span>
+            <span class="icon icon-masquer toggleable" id="close-all" title="Masquer tous les modules"
+                  onclick="closeAll()"></span>
+            <span class="icon icon-voir toggleable" id="open-all" title="Afficher tous les modules" onclick="openAll()"
+                  style="display: none;"></span>
         </th>
         <?php $first = true;
         foreach ($roles as $role): ?>
@@ -78,28 +82,35 @@ foreach ($namespaces as $namespace_ => $categories) {
 
     </thead>
     <tbody>
-    <?php $namespacePosition = 0; $nbElementNamespace = count($namespaces); ?>
+    <?php $namespacePosition = 0;
+    $nbElementNamespace = count($namespaces); ?>
     <?php foreach ($namespaces as $namespace_ => $categories) : ?>
         <?php $namespacePosition++; ?>
-        <tr class="namespace" data-namespace="<?php echo $namespacePosition; ?>" >
-            <th class="namespace" colspan="<?php echo 1 + count($roles); ?>" >
+        <tr class="namespace" data-namespace="<?php echo $namespacePosition; ?>">
+            <th class="namespace" colspan="<?php echo 1 + count($roles); ?>">
                 <?php if ($namespacePosition < $nbElementNamespace): ?>
                     ├─
                 <?php else : ?>
                     └─
                 <?php endif; ?>
-                &nbsp;Module <?php echo explode("\\",$namespace_)[0]; ?>
-                <span id="close-namespace-<?php echo $namespacePosition; ?>" data-namespace="<?php echo $namespacePosition; ?>"
-                      class="icon icon-masquer toggleable close" onclick="masquerNamespace(<?php echo $namespacePosition; ?>)" ></span>
-                <span id="open-namespace-<?php echo $namespacePosition; ?>" data-namespace="<?php echo $namespacePosition; ?>"
-                      class="icon icon-voir toggleable open" onclick="afficherNamespace(<?php echo $namespacePosition; ?>)" style="display: none;"></span>
+                &nbsp;Module <?php echo explode("\\", $namespace_)[0]; ?>
+                <span id="close-namespace-<?php echo $namespacePosition; ?>"
+                      data-namespace="<?php echo $namespacePosition; ?>"
+                      class="icon icon-masquer toggleable close"
+                      onclick="masquerNamespace(<?php echo $namespacePosition; ?>)"></span>
+                <span id="open-namespace-<?php echo $namespacePosition; ?>"
+                      data-namespace="<?php echo $namespacePosition; ?>"
+                      class="icon icon-voir toggleable open"
+                      onclick="afficherNamespace(<?php echo $namespacePosition; ?>)" style="display: none;"></span>
             </th>
         </tr>
-        <?php $categoriePosition = 0; $nbElementCategorie = count($categories); ?>
+        <?php $categoriePosition = 0;
+        $nbElementCategorie = count($categories); ?>
         <?php foreach ($categories as $categorie) : ?>
             <?php $categoriePosition++; ?>
-            <tr class="catégorie" data-namespace="<?php echo $namespacePosition; ?>" data-categorie="<?php echo $categorie->getId(); ?>">
-                <th class="catégorie" colspan="<?php echo 1 + count($roles); ?>" >
+            <tr class="catégorie" data-namespace="<?php echo $namespacePosition; ?>"
+                data-categorie="<?php echo $categorie->getId(); ?>">
+                <th class="catégorie" colspan="<?php echo 1 + count($roles); ?>">
                     │ &nbsp;
                     <?php if ($categoriePosition < $nbElementCategorie): ?>
                         ├─
@@ -107,38 +118,47 @@ foreach ($namespaces as $namespace_ => $categories) {
                         └─
                     <?php endif; ?>
                     &nbsp;<?php echo $categorie->getLibelle(); ?>
-                    <span id="close-categorie-<?php echo $categorie->getId(); ?>" data-namespace="<?php echo $namespacePosition; ?>" data-categorie="<?php echo $categorie->getId(); ?>"
-                          class="icon icon-masquer toggleable close-categorie" onclick="masquerCategorie(<?php echo $categorie->getId(); ?>)" ></span>
-                    <span id="open-categorie-<?php echo $categorie->getId(); ?>" data-namespace="<?php echo $namespacePosition; ?>"  data-categorie="<?php echo $categorie->getId(); ?>"
-                          class="icon icon-voir toggleable open-categorie" onclick="afficherCategorie(<?php echo $categorie->getId(); ?>)" style="display: none;"></span>
+                    <span id="close-categorie-<?php echo $categorie->getId(); ?>"
+                          data-namespace="<?php echo $namespacePosition; ?>"
+                          data-categorie="<?php echo $categorie->getId(); ?>"
+                          class="icon icon-masquer toggleable close-categorie"
+                          onclick="masquerCategorie(<?php echo $categorie->getId(); ?>)"></span>
+                    <span id="open-categorie-<?php echo $categorie->getId(); ?>"
+                          data-namespace="<?php echo $namespacePosition; ?>"
+                          data-categorie="<?php echo $categorie->getId(); ?>"
+                          class="icon icon-voir toggleable open-categorie"
+                          onclick="afficherCategorie(<?php echo $categorie->getId(); ?>)" style="display: none;"></span>
                 </th>
             </tr>
             <?php
-                $privileges = $categorie->getPrivileges()->toArray();
-                usort($privileges, function (Privilege $a, Privilege $b) {return $a->getOrdre() <=> $b->getOrdre(); });
+            $privileges = $categorie->getPrivileges()->toArray();
+            usort($privileges, function (Privilege $a, Privilege $b) {
+                return $a->getOrdre() <=> $b->getOrdre();
+            });
             ?>
-            <?php $privilegePosition = 0; $nbElementPrivilege = count($privileges); ?>
-                <?php foreach ($privileges as $privilege) : ?>
-                    <?php $privilegePosition++; ?>
-                    <tr  class="privilège categorie-id-<?php echo $privilege->getCategorie()->getId(); ?>"
-                         data-namespace="<?php echo $namespacePosition; ?>" data-categorie="<?php echo $categorie->getId(); ?>"
-                    >
-                        <td  class="privilège">
-                            │ &nbsp;│ &nbsp;
-                            <?php if ($privilegePosition < $nbElementPrivilege): ?>
-                                ├─
-                            <?php else : ?>
-                                └─
-                            <?php endif; ?>
-                            &nbsp;<?php echo $privilege; ?>
-                        </td>
-                        <?php foreach ($roles as $role): ?>
-                            <?php echo $this->privilege($privilege)->renderStatut($role); ?>
-                        <?php endforeach; ?>
-                    </tr>
-                <?php endforeach; ?>
+            <?php $privilegePosition = 0;
+            $nbElementPrivilege = count($privileges); ?>
+            <?php foreach ($privileges as $privilege) : ?>
+                <?php $privilegePosition++; ?>
+                <tr class="privilège categorie-id-<?php echo $privilege->getCategorie()->getId(); ?>"
+                    data-namespace="<?php echo $namespacePosition; ?>"
+                    data-categorie="<?php echo $categorie->getId(); ?>"
+                >
+                    <td class="privilège">
+                        │ &nbsp;│ &nbsp;
+                        <?php if ($privilegePosition < $nbElementPrivilege): ?>
+                            ├─
+                        <?php else : ?>
+                            └─
+                        <?php endif; ?>
+                        &nbsp;<?php echo $privilege; ?>
+                    </td>
+                    <?php foreach ($roles as $role): ?>
+                        <?php echo $this->privilege($privilege)->renderStatut($role); ?>
+                    <?php endforeach; ?>
+                </tr>
+            <?php endforeach; ?>
         <?php endforeach; ?>
-
 
 
     <?php endforeach; ?>
@@ -146,6 +166,10 @@ foreach ($namespaces as $namespace_ => $categories) {
 </table>
 
 <style>
+    .highlight {
+        color: orange !important;
+    }
+
     table#privilege-liste thead {
         position: sticky;
         top: 65px;
@@ -161,8 +185,8 @@ foreach ($namespaces as $namespace_ => $categories) {
     .table-header-rotated th.rotate-45 > div {
         position: relative;
         top: 0;
+        left: 100px; /**84px**/
         height: 250px;
-        left: 84px;
         transform: skew(-40deg, 0deg);
         overflow: hidden;
         border-right: 1px solid #ddd;
@@ -237,17 +261,15 @@ foreach ($namespaces as $namespace_ => $categories) {
     });
 
 
-
-    function masquerNamespace(namespace)
-    {
+    function masquerNamespace(namespace) {
         // manipulation des lignes du tableau
         if (debug > 10) console.log("Masquage du namespace " + namespace);
         $('tr[data-namespace="' + namespace + '"]').not('.namespace').addClass('hidden');
         // manipulation des icons du namespace
         $('span#close-namespace-' + namespace).hide()
         $('span#open-namespace-' + namespace).show()
-        $('tr[data-namespace="'+namespace+'"] span.close-categorie').hide();
-        $('tr[data-namespace="'+namespace+'"] span.open-categorie').show();
+        $('tr[data-namespace="' + namespace + '"] span.close-categorie').hide();
+        $('tr[data-namespace="' + namespace + '"] span.open-categorie').show();
     }
 
     function closeAll() {
@@ -261,16 +283,15 @@ foreach ($namespaces as $namespace_ => $categories) {
         $('span#open-all').show()
     }
 
-    function afficherNamespace(namespace)
-    {
+    function afficherNamespace(namespace) {
         // manipulation des lignes du tableau
         if (debug > 10) console.log("Affichage du namespace " + namespace);
         $('tr[data-namespace="' + namespace + '"]').not('.namespace').removeClass('hidden');
         // manipulation des icons du namespace
         $('span#close-namespace-' + namespace).show()
         $('span#open-namespace-' + namespace).hide()
-        $('tr[data-namespace="'+namespace+'"] span.close-categorie').show();
-        $('tr[data-namespace="'+namespace+'"] span.open-categorie').hide();
+        $('tr[data-namespace="' + namespace + '"] span.close-categorie').show();
+        $('tr[data-namespace="' + namespace + '"] span.open-categorie').hide();
     }
 
     function openAll() {
@@ -284,8 +305,7 @@ foreach ($namespaces as $namespace_ => $categories) {
         $('span#open-all').hide()
     }
 
-    function masquerCategorie(categorie)
-    {
+    function masquerCategorie(categorie) {
         // manipulation des lignes du tableau
         if (debug > 10) console.log("Masquage de la catégorie " + categorie);
         $('tr[data-categorie="' + categorie + '"]').not('.catégorie').addClass('hidden');
@@ -294,8 +314,7 @@ foreach ($namespaces as $namespace_ => $categories) {
         $('span#open-categorie-' + categorie).show()
     }
 
-    function afficherCategorie(categorie)
-    {
+    function afficherCategorie(categorie) {
         // manipulation des lignes du tableau
         if (debug > 10) console.log("Affichage de la catégorie " + categorie);
         $('tr[data-categorie="' + categorie + '"]').not('.catégorie').removeClass('hidden');
@@ -303,4 +322,40 @@ foreach ($namespaces as $namespace_ => $categories) {
         $('span#close-categorie-' + categorie).show()
         $('span#open-categorie-' + categorie).hide()
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('privilege-liste');
+        const cells = table.querySelectorAll('tbody td');
+
+        cells.forEach(cell => {
+            cell.addEventListener('mouseenter', function () {
+                // Récupérer l'index de la colonne
+                const colIndex = this.cellIndex;
+
+                // Mettre en surbrillance cette cellule
+                this.classList.add('hovered');
+
+                // Mettre en surbrillance l'en-tête correspondant
+                const theadRow = table.querySelector('thead tr');
+                const headerCell = theadRow.children[colIndex];
+                if (headerCell) {
+                    headerCell.classList.add('highlight');
+                }
+            });
+
+            cell.addEventListener('mouseleave', function () {
+                // Enlever la surbrillance
+                this.classList.remove('hovered');
+
+                // Enlever la surbrillance de l'en-tête
+                const colIndex = this.cellIndex;
+                const theadRow = table.querySelector('thead tr');
+                const headerCell = theadRow.children[colIndex];
+                if (headerCell) {
+                    headerCell.classList.remove('highlight');
+                }
+            });
+        });
+    });
 </script>
+
