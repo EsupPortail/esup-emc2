@@ -46,6 +46,9 @@ $timing["partie phtml"] = microtime(true);
 $sansObligatoires = [];
 $sansFacultatifs = [];
 foreach ($obligatoires as $obligatoire) {
+    $agentId = $obligatoire->getId();
+    $conditions1 = !isset($inStructures[$obligatoire->getId()]);
+    $conditions2 = !isset($outStructures[$obligatoire->getId()]);
     if (!isset($inStructures[$obligatoire->getId()]) AND !isset($outStructures[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
 }
 foreach ($facultatifs as $facultatif) {
@@ -120,7 +123,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </h2>
 
     <?php /** @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper */ ?>
-    <?php echo $this->entretienProfessionnelArray($finalises, ['affichages' => ['annee' => false], 'id' => 'complet', 'from-structure' => $structure->getId()]); ?>
+    <?php echo $this->entretienProfessionnelArray($finalises, ['affichages' => ['annee' => false], 'id' => 'complet', 'from-structure' => $structure->getId(), 'raison' => $raison]); ?>
 <?php endif; ?>
 
 <?php $timing["phtml EP finalisés"] = microtime(true); ?>
@@ -132,7 +135,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
     </h2>
 
     <?php /** @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper */ ?>
-    <?php echo $this->entretienProfessionnelArray($encours, ['affichages' => ['annee' => false], 'id' => 'encours', 'from-structure' => $structure->getId()]); ?>
+    <?php echo $this->entretienProfessionnelArray($encours, ['affichages' => ['annee' => false], 'id' => 'encours', 'from-structure' => $structure->getId(), 'raison' => $raison]); ?>
 <?php endif; ?>
 
 <?php $timing["phtml EP en cours"] = microtime(true); ?>
