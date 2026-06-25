@@ -28,6 +28,7 @@ class StructureAssertion extends AbstractAssertion {
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
+
         if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
         $isResponsable = false;

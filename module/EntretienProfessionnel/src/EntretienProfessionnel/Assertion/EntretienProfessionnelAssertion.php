@@ -290,6 +290,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             $structureAssertion->setUserService($this->userService);
             $structureAssertion->setAgentService($this->agentService);
             $structureAssertion->setStructureService($this->structureService);
+            $structureAssertion->setPrivilegeService($this->privilegeService);
             $structureAssertion->setObservateurService($this->getObservateurStructureService());
             return $structureAssertion->computeAssertion($structure, StructurePrivileges::STRUCTURE_AFFICHER);
         }
