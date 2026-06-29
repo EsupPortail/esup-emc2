@@ -159,7 +159,7 @@ class ReferentielController extends AbstractActionController
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du référentiel [" . $referentiel->getLibelleCourt() . "]",
-                'warning' => $texteWarning,
+                'warning' => $texteWarning !== ''?$texteWarning:null,
                 'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('referentiel/supprimer', ["referentiel" => $referentiel->getId()], [], true),
             ]);
