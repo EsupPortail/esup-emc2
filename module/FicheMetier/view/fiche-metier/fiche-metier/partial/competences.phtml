@@ -28,14 +28,13 @@ if ($mode === 'edition-fiche-metier') {
             </div>
             <div class="col-md-5">
                 <div class="float-end">
-                    <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
-                    <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                       class="btn btn-secondary ajax-modal"
-                    >
-                        <span class="icon icon-diagramme"></span>
-                        Afficher les compétences
-                    </a>
-
+<!--                    --><?php ///** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('graphique/competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?><!--"-->
+<!--                       class="btn btn-secondary ajax-modal"-->
+<!--                    >-->
+<!--                        <span class="icon icon-diagramme"></span>-->
+<!--                        Afficher les compétences-->
+<!--                    </a>-->
                     <?php if ($actions['modifier'] === true) : ?>
                         <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"

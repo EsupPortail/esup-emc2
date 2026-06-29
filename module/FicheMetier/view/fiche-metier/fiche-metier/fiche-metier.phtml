@@ -158,14 +158,13 @@ foreach ($types as $type) {
                 </div>
                 <div class="col-md-7">
                     <div class="float-end">
-                        <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
-                        <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
-                        >
-                            <span class="icon icon-diagramme"></span>
-                            Afficher les compétences
-                        </a>
-
+<!--                        --><?php ///** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
+<!--                        <a href="--><?php //echo $this->url('graphique/competences', ['fiche-metier' => $fiche->getId()], [], true); ?><!--"-->
+<!--                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"-->
+<!--                        >-->
+<!--                            <span class="icon icon-diagramme"></span>-->
+<!--                            Afficher les compétences-->
+<!--                        </a>-->
                         <?php if ($mode === 'edition-fiche-metier'): ?>
                             <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
@@ -178,7 +177,7 @@ foreach ($types as $type) {
                                data-event="refresh-competences"
                                href="<?php echo $this->url('fiche-metier/purger-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>">
                                 <span class="icon icon-nettoyer"></span>
-                                Purger les compétences
+                                Purger
                             </a>
                         <?php endif; ?>
                     </div>
@@ -228,7 +227,7 @@ foreach ($types as $type) {
                                data-event="refresh-competences-specifiques"
                                href="<?php echo $this->url('fiche-metier/purger-competences-specifiques', ['fiche-metier' => $fiche->getId()], [], true); ?>">
                                 <span class="icon icon-nettoyer"></span>
-                                Purger les compétences
+                                Purger
                             </a>
                         <?php endif; ?>
                     </div>
@@ -253,14 +252,13 @@ foreach ($types as $type) {
                 </div>
                 <div class="col-md-6">
                     <div class="float-end">
-                        <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueApplicationsAction() */ ?>
-                        <a href="<?php echo $this->url('graphique/applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
-                        >
-                            <span class="icon icon-diagramme"></span>
-                            Afficher les applications
-                        </a>
-
+<!--                        --><?php ///** @see \FicheMetier\Controller\GraphiqueController::graphiqueApplicationsAction() */ ?>
+<!--                        <a href="--><?php //echo $this->url('graphique/applications', ['fiche-metier' => $fiche->getId()], [], true); ?><!--"-->
+<!--                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"-->
+<!--                        >-->
+<!--                            <span class="icon icon-diagramme"></span>-->
+<!--                            Afficher les applications-->
+<!--                        </a>-->
                         <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
                             <?php /** @see \FicheMetier\Controller\FicheMetierController::gererApplicationsAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/gerer-applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
@@ -273,7 +271,7 @@ foreach ($types as $type) {
                                data-event="refresh-applications"
                                href="<?php echo $this->url('fiche-metier/purger-applications', ['fiche-metier' => $fiche->getId()], [], true); ?>">
                                 <span class="icon icon-nettoyer"></span>
-                                Purger les applications
+                                Purger
                             </a>
                         <?php endif; ?>
                     </div>
