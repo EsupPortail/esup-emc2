@@ -623,6 +623,7 @@ return [
         'formulaire_cref_id',
         'template_crep_id',
         'template_cref_id',
+        'date_fixe',
     ],
     'entretienprofessionnel_critere_competence'                => [
         'id',
@@ -1644,8 +1645,6 @@ return [
         'id',
         'type_id',
         'service',
-        'prenom',
-        'nom',
         'telephone',
         'email',
         'histo_creation',
@@ -1654,6 +1653,8 @@ return [
         'histo_modificateur_id',
         'histo_destruction',
         'histo_destructeur_id',
+        'denomination',
+        'url',
     ],
     'unicaen_contact_type'                                     => [
         'id',
@@ -1683,6 +1684,8 @@ return [
         'codes_fiche_metier',
         'codes_fonction',
         'old_id',
+        'code_fonction',
+        'code_fiche_metier',
     ],
     'activite_application'                                     => [
         'activite_id',
@@ -2630,6 +2633,7 @@ return [
         'statut',
         'raison',
         'date_refresh',
+        'entretienprofessionnel_id',
     ],
     'entretienprofessionnel_campagne_configuration_indicateur' => [
         'id',
@@ -2691,6 +2695,18 @@ return [
     'entretienprofessionnel_campagne_evenement'                => [
         'campagne_id',
         'evenement_instance_id',
+    ],
+    'agent_carriere_emploitype'                                => [
+        'id',
+        'agent_id',
+        'emploitype_id',
+        'date_debut',
+        'date_fin',
+        'source_id',
+        'id_source',
+        'created_on',
+        'updated_on',
+        'deleted_on',
     ],
 ];
 

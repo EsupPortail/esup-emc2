@@ -9,7 +9,7 @@ return [
     'rtable'      => 'element_application_element',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'application_element_id_uindex',
+    'index'       => 'application_element_pk',
     'columns'     => [
         'application_element_id' => 'id',
     ],
