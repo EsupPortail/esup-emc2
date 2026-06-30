@@ -540,7 +540,7 @@ class CampagneService
                 unset($facultatifs[$agent->getId()]);
                 $exclus[$agent->getId()] = $agent;
             }
-            if ($entretiens[$agent->getId()]) {
+            if ($entretiens !== null AND $entretiens[$agent->getId()]) {
                 unset($entretiens[$agent->getId()]);
             }
         }
