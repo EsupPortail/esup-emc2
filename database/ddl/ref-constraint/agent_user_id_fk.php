@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_utilisateur_user',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'SET NULL',
-    'index'       => 'unicaen_utilisateur_user_pkey',
+    'index'       => 'user_pkey',
     'columns'     => [
         'utilisateur_id' => 'id',
     ],

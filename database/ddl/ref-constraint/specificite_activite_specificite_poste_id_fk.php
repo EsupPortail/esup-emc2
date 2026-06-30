@@ -9,7 +9,7 @@ return [
     'rtable'      => 'ficheposte_specificite',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'ficheposte_specificite_id_uindex',
+    'index'       => 'specificite_poste_pk',
     'columns'     => [
         'specificite_id' => 'id',
     ],

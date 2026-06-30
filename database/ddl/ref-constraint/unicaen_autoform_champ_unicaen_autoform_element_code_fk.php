@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_autoform_champ_type',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'unicaen_autoform_champ_type_code_uindex',
+    'index'       => 'unicaen_autoform_champ_type_pk',
     'columns'     => [
         'element' => 'code',
     ],

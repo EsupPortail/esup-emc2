@@ -9,7 +9,7 @@ return [
     'rtable'      => 'carriere_niveau',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'NO ACTION',
-    'index'       => 'niveau_definition_id_uindex',
+    'index'       => 'niveau_definition_pk',
     'columns'     => [
         'borne_superieure_id' => 'id',
     ],
