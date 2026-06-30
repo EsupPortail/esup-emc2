@@ -59,6 +59,15 @@ foreach ($types as $type) {
 }
 ?>
 
+<?php if ($canIndex) : ?>
+    <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
+    <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
+       class="btn btn-secondary">
+        <span class="icon icon-listing"></span>
+        Retour à l'index des fiches métiers
+    </a>
+<?php endif; ?>
+
 <div class="row">
     <div class="col-md-8">
         <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_TITRE]) || $parametres[FicheMetierParametres::DISPLAY_TITRE]->getValeur() !== "false") : ?>
@@ -89,14 +98,6 @@ foreach ($types as $type) {
                 <?php endif; ?>
             </ul>
         </div>
-    <?php endif; ?>
-    <?php if ($mode === "edition-fiche-metier" AND $canIndex) : ?>
-        <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
-        <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
-           class="btn btn-secondary">
-            <span class="icon icon-listing"></span>
-            Retourner à l'index des fiches métiers
-        </a>
     <?php endif; ?>
     <?php if ($canExporterFicheMetier): ?>
         <?php /** @see \FicheMetier\Controller\FicheMetierController::exporterAction() */ ?>

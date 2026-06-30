@@ -92,6 +92,7 @@ usort($sortedTypes, function (Type $a, Type $b) {
                                             <span class="icon icon-editer"></span>
                                             Modifier
                                         </a>
+                                        <br>
                                         <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
                                         <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
                                            class="action warning"
