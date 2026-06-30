@@ -26,7 +26,7 @@ return [
             'name'        => 'code_emploi_type',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
-            'length'      => 256,
+            'length'      => 2048,
             'scale'       => NULL,
             'precision'   => NULL,
             'nullable'    => TRUE,

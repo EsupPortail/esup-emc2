@@ -8,7 +8,7 @@ return [
     'temporary'   => FALSE,
     'logging'     => TRUE,
     'commentaire' => NULL,
-    'sequence'    => 'entretienprofessionnel_observation_id_seq',
+    'sequence'    => NULL,
     'columns'     => [
         'entretien_id'   => [
             'name'        => 'entretien_id',

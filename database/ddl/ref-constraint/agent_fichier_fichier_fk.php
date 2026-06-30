@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_fichier_fichier',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'fichier_fichier_id_uindex',
+    'index'       => 'fichier_fichier_pk',
     'columns'     => [
         'fichier' => 'id',
     ],
