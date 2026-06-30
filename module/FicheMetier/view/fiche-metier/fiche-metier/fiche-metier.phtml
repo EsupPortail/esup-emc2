@@ -61,11 +61,13 @@ foreach ($types as $type) {
 
 <?php if ($canIndex) : ?>
     <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
-    <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
-       class="btn btn-secondary">
-        <span class="icon icon-listing"></span>
-        Retour à l'index des fiches métiers
-    </a>
+    <div style="margin-bottom: 1.25rem;">
+        <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
+           class="btn btn-secondary">
+            <span class="icon icon-listing"></span>
+            Retour à l'index des fiches métiers
+        </a>
+    </div>
 <?php endif; ?>
 
 <div class="row">
