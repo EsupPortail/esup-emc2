@@ -170,7 +170,7 @@ foreach ($types as $type) {
                             <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                class="btn btn-primary ajax-modal" data-event="refresh-competences">
                                 <span class="icon icon-lister"></span>
-                                Gérer les compétences
+                                Gérer
                             </a>
                             <?php /** @see FicheMetierController::purgerCompetencesAction() */ ?>
                             <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
@@ -220,7 +220,7 @@ foreach ($types as $type) {
                                data-competence-type="<?php echo CompetenceType::CODE_SPECIFIQUE; ?>"
                             >
                                 <span class="icon icon-lister"></span>
-                                Gérer les compétences
+                                Gérer
                             </a>
                             <?php /** @see FicheMetierController::purgerCompetencesSpecifiquesAction() */ ?>
                             <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
@@ -264,7 +264,7 @@ foreach ($types as $type) {
                             <a href="<?php echo $this->url('fiche-metier/gerer-applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                class="btn btn-primary ajax-modal" data-event="refresh-applications">
                                 <span class="icon icon-lister"></span>
-                                Gérer les applications
+                                Gérer
                             </a>
                             <?php /** @see \FicheMetier\Controller\FicheMetierController::purgerApplicationsAction() */ ?>
                             <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
