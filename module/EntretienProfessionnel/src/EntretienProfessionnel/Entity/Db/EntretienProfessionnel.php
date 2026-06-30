@@ -466,16 +466,14 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** @noinspection PhpUnused */
     public function toString_CREP_projet() : string {
-        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'projet']);
-        if (trim($res) === '' ) return "Non";
-        return "Oui";
+        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'projet'], false);
+        return $res;
     }
 
     /** @noinspection PhpUnused */
     public function toString_CREP_encadrement() : string {
-        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement']);
-        if (trim($res) === '' ) return "Non";
-        return "Oui";
+        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement'], false);
+        return $res;
     }
 
     /** @noinspection PhpUnused */
