@@ -48,7 +48,7 @@ class CampagneConfigurationIndicateurForm extends Form
             ],
             'attributes' => [
                 'id' => 'requete',
-                'class' => 'tinymce type2',
+                'style' => 'min-height: 200px',
             ],
         ]);
         //button
