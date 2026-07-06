@@ -65,7 +65,7 @@ class FicheMetierConfigurationApplicationParDefautService
     public function getFicheMetierConfigurationApplicationParDefaut(?int $id): ?FicheMetierConfigurationApplicationParDefaut
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('application.id = :id')->setParameter('id', $id);
+            ->andWhere('applicationParDefaut.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
@@ -77,7 +77,7 @@ class FicheMetierConfigurationApplicationParDefautService
     public function getRequestedFicheMetierConfigurationApplicationParDefaut(AbstractActionController $controller, string $param='application-par-defaut'): ?FicheMetierConfigurationApplicationParDefaut
     {
         $id = $controller->params()->fromRoute($param);
-        $result = $this->getFicheMetierConfigurationApplicationParDefaut($id);
+        $result = $this->getFicheMetierConfigurationApplicationParDefaut((int) $id);
         return $result;
     }
 

@@ -65,7 +65,7 @@ class FicheMetierConfigurationCompetenceParDefautService
     public function getFicheMetierConfigurationCompetenceParDefaut(?int $id): ?FicheMetierConfigurationCompetenceParDefaut
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('competence.id = :id')->setParameter('id', $id);
+            ->andWhere('competenceParDefaut.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
