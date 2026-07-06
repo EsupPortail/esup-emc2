@@ -126,8 +126,10 @@ $canAfficherAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivile
 
             <h2>Chaînes annulées</h2>
             <?php usort($historisees, function (AgentSuperieur|AgentAutorite $a, AgentSuperieur|AgentAutorite $b) {
-                if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
-                    return $a->getDateDebut() <=> $b->getDateDebut();
+                $aDebut = $a->getDateDebut()??(DateTime::createFromFormat('Y-m-d', '1970-01-01'));
+                $bDebut = $a->getDateDebut()??(DateTime::createFromFormat('Y-m-d', '1970-01-01'));
+                if ($aDebut->format('Y-m-d') !== $bDebut->format('Y-m-d')) {
+                    return $aDebut <=> $bDebut;
                 }
                 return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
             });
