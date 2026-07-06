@@ -63,15 +63,14 @@ if (!$canGererResponsabiliteSynchronisee) {
                             <?php if ($canGererResponsabiliteInterne) : ?>
                                 <?php /** @see \Structure\Controller\StructureResponsabiliteController::modifierAction() */ ?>
                                 <a href="<?php echo $this->url('structure/responsabilite/modifier', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                   class="ajax-modal action primary" data-event="modification">
+                                   class="ajax-modal action primary" data-event="modification" title="Modifier">
                                     <span class="icon icon-modifier"></span>
-                                    Modifier
                                 </a>
                                 <?php /** @see \Structure\Controller\StructureResponsabiliteController::supprimerAction() */ ?>
                                 <a href="<?php echo $this->url('structure/responsabilite/supprimer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                   class="ajax-modal action danger" data-event="modification">
+                                   class="ajax-modal action danger" data-event="modification" title="Supprimer">
                                     <span class="icon icon-unchecked"></span>
-                                    Supprimer
+
                                 </a>
                             <?php endif; ?>
                         <?php else : ?>
@@ -79,16 +78,16 @@ if (!$canGererResponsabiliteSynchronisee) {
                                 <?php if ($responsable->estHistorise()) : ?>
                                     <?php /** @see \Structure\Controller\StructureResponsabiliteController::restaurerAction() */ ?>
                                     <a href="<?php echo $this->url('structure/responsabilite/restaurer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                       class="action warning">
+                                       class="action warning" title="Ré-établir">
                                         <span class="icon icon-restaurer"></span>
-                                        Ré-établir
+
                                     </a>
                                 <?php else : ?>
                                     <?php /** @see \Structure\Controller\StructureResponsabiliteController::historiserAction() */ ?>
                                     <a href="<?php echo $this->url('structure/responsabilite/historiser', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                       class="action warning">
+                                       class="action warning" title="Révoquer">
                                         <span class="icon icon-historiser"></span>
-                                        Révoquer
+
                                     </a>
                                 <?php endif; ?>
                             <?php endif; ?>
