@@ -372,7 +372,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
     // rechargement
     window.addEventListener('beforeunload', function(e) {
         if (formulaireModifie) {
-            const message = 'Vous avez modifié le formulaire sans l\'enregistrer. Voulez-vous vraiment quitter ?';
+            const message = 'Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?'';
             e.preventDefault();
             e.returnValue = message;
             return message;
