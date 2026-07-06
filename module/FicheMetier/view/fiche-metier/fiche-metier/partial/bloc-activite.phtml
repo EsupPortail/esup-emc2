@@ -54,31 +54,25 @@ $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetier
             <ul>
                 <?php foreach ($activites as $activite): ?>
                     <li>
-                        <?php echo $activite->getActivite()->getLibelle() ?>
                         <?php echo $activite->getActivite()->printReference() ?>
+                        <?php echo $activite->getActivite()->getLibelle() ?>
                         <?php if ($mode === "edition-fiche-metier" and $canModifier) : ?>
                             <div style="display: inline-block;">
                                 <small>
                                     <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
-                                    <span class="activite-ajax action primary "
+                                    <span class="activite-ajax action primary icon icon-monter"
                                           data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '-1'], [], true); ?>"
                                     >
-                        <span class="icon icon-monter"></span>
-                        Monter
                     </span>
                                     <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
-                                    <span class="activite-ajax action primary "
+                                    <span class="activite-ajax action primary icon icon-descendre"
                                           data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '1'], [], true); ?>"
                                     >
-                        <span class="icon icon-descendre"></span>
-                        Descendre
                     </span>
                                     <?php /** @see \FicheMetier\Controller\FicheMetierController::retirerActiviteAction() */ ?>
-                                    <span class="activite-ajax action danger "
+                                    <span class="activite-ajax action danger icon icon-unchecked"
                                           data-url="<?php echo $this->url('fiche-metier/retirer-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId()], [], true); ?>"
                                     >
-                        <span class="icon icon-unchecked"></span>
-                        Retirer
                     </span>
                                 </small>
                             </div>
