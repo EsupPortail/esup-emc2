@@ -93,7 +93,11 @@ foreach ($namespaces as $namespace_ => $categories) {
                 <?php else : ?>
                     └─
                 <?php endif; ?>
-                &nbsp;Module <?php echo explode("\\", $namespace_)[0]; ?>
+                <?php
+                    $moduleLibelle = explode("\\", $namespace_)[0];
+                    if ($moduleLibelle === 'Element') $moduleLibelle = "Applications et Compétences"
+                ?>
+                &nbsp;Module <?php echo $moduleLibelle; ?>
                 <span id="close-namespace-<?php echo $namespacePosition; ?>"
                       data-namespace="<?php echo $namespacePosition; ?>"
                       class="icon icon-masquer toggleable close"

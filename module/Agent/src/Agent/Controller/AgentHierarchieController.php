@@ -920,7 +920,7 @@ class AgentHierarchieController extends AbstractActionController
         }
         if ($role->getRoleId() === AgentRoleProvider::ROLE_AUTORITE) {
             // recupération des agents à la date de situation
-            $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
+//            $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($connectedAgent, $campagne->getDateEnPoste(), $campagne->getDateFin());
             $agents = $this->getAgentAutoriteService()->getAgentsWithAutoriteAndDate($connectedAgent, $campagne->getDateSituation());
 
             $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false);
