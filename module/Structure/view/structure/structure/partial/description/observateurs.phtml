@@ -45,28 +45,26 @@ $canSupprimer = $this->isAllowed(StructureobservateurPrivileges::getResourceId(S
                             <span class="icon icon-information" data-bs-toggle="tooltip" data-bs-html="true"
                                   title="<?php echo $observateur->getDescription(); ?>"></span>
                         <?php endif; ?>
-
+                        <span>&nbsp;&nbsp;</span>
 
                         <?php if ($canModifier) : ?>
                             <?php /** @see \Structure\Controller\ObservateurController::modifierAction() */ ?>
                             <a href="<?php echo $this->url("structure/observateur/modifier", ['observateur' => $observateur->getId(), 'structure' => $structure->getId()], [], true); ?>"
-                               class="action primary ajax-modal" data-event="modification" title="Modifier">
-                                <span class="icon icon-editer"></span>
-
-                            </a>
+                               class="text-primary ajax-modal" data-event="modification" title="Modifier">
+                                <span class="icon icon-editer"></span></a>
                         <?php endif; ?>
                         <?php if (false AND $canHistoriser): ?>
                             <?php if ($observateur->estNonHistorise()) : ?>
                                 <?php /** @see \Structure\Controller\ObservateurController::historiserAction() */ ?>
                                 <a href="<?php echo $this->url("structure/observateur/historiser", ['observateur' => $observateur->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
-                                   class="action warning" title="Historiser"
+                                   class="text-warning" title="Historiser"
                                 >
                                     <span class="icon icon-historiser"></span>
                                 </a>
                             <?php else : ?>
                                 <?php /** @see \Structure\Controller\ObservateurController::restaurerAction() */ ?>
                                 <a href="<?php echo $this->url("structure/observateur/restaurer", ['observateur' => $observateur->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
-                                   class="action warning" title="Restaurer"
+                                   class="text-warning" title="Restaurer"
                                 >
                                     <span class="icon icon-restaurer"></span>
                                 </a>
@@ -75,7 +73,7 @@ $canSupprimer = $this->isAllowed(StructureobservateurPrivileges::getResourceId(S
                         <?php if ($canSupprimer): ?>
                             <?php /** @see \Structure\Controller\ObservateurController::supprimerAction() */ ?>
                             <a href="<?php echo $this->url("structure/observateur/supprimer", ['observateur' => $observateur->getId()], [], true); ?>"
-                               class="action danger ajax-modal" data-event="modification" title="Supprimer">
+                               class="text-danger ajax-modal" data-event="modification" title="Supprimer">
                                 <span class="icon icon-unchecked"></span>
 
                         </a>

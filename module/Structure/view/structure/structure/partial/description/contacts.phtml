@@ -72,6 +72,19 @@ usort($sortedTypes, function (Type $a, Type $b) {
                                 if ($contact->getDenomination()) $infos[] = $contact->getDenomination();
                                 echo implode(" - ", $infos);
                             ?>
+                            <span>&nbsp;&nbsp;</span>
+                            <?php if ($canModifierContact) : ?>
+                                <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
+                                <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
+                                   class="text-primary ajax-modal" data-event="modification" title="Modifier"
+                                >
+                                    <span class="icon icon-editer"></span></a>
+                                <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
+                                <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
+                                   class="text-warning" title="Dissocier"
+                                >
+                                    <span class="icon icon-unlink"></span></a>
+                            <?php endif; ?>
                             <br>
                             <?php
                                 $infos = [];
@@ -80,20 +93,7 @@ usort($sortedTypes, function (Type $a, Type $b) {
                                 if ($contact->getUrl()) $infos[] = "<span class='icon icon-lien-externe'></span>&nbsp;"."<a href='".$contact->getUrl()."' target='_blank'>".$contact->getUrl()."</a>";
                                 echo implode(" - ", $infos);
                             ?>
-                                <?php if ($canModifierContact) : ?>
-                                    <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
-                                    <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
-                                       class="action primary ajax-modal" data-event="modification" title="Modifier"
-                                    >
-                                        <span class="icon icon-editer"></span>
-                                    </a>
-                                    <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
-                                    <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
-                                       class="action warning" title="Dissocier"
-                                    >
-                                        <span class="icon icon-unlink"></span>
-                                    </a>
-                                <?php endif; ?>
+
                             <br>
                         <?php endif; ?>
                     <?php endforeach; ?>

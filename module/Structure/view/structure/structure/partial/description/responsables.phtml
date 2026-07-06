@@ -59,33 +59,31 @@ if (!$canGererResponsabiliteSynchronisee) {
                         <span class=" <?php if ($responsable->estHistorise()) echo " historise "; ?> ">
                             <?php echo $responsable->getAgent()->getDenomination(); ?>
                         </span>
+                        <span>&nbsp;&nbsp;</span>
                         <?php if ($responsable->getSourceId() === 'EMC2') : ?>
                             <?php if ($canGererResponsabiliteInterne) : ?>
                                 <?php /** @see \Structure\Controller\StructureResponsabiliteController::modifierAction() */ ?>
                                 <a href="<?php echo $this->url('structure/responsabilite/modifier', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                   class="ajax-modal action primary" data-event="modification" title="Modifier">
-                                    <span class="icon icon-modifier"></span>
-                                </a>
+                                   class="ajax-modal text-primary" data-event="modification" title="Modifier">
+                                    <span class="icon icon-modifier"></span></a>
                                 <?php /** @see \Structure\Controller\StructureResponsabiliteController::supprimerAction() */ ?>
                                 <a href="<?php echo $this->url('structure/responsabilite/supprimer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                   class="ajax-modal action danger" data-event="modification" title="Supprimer">
-                                    <span class="icon icon-unchecked"></span>
-
-                                </a>
+                                   class="ajax-modal text-danger" data-event="modification" title="Supprimer">
+                                    <span class="icon icon-unchecked"></span></a>
                             <?php endif; ?>
                         <?php else : ?>
                             <?php if ($canGererResponsabiliteSynchronisee) : ?>
                                 <?php if ($responsable->estHistorise()) : ?>
                                     <?php /** @see \Structure\Controller\StructureResponsabiliteController::restaurerAction() */ ?>
                                     <a href="<?php echo $this->url('structure/responsabilite/restaurer', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                       class="action warning" title="Ré-établir">
+                                       class="text-warning" title="Ré-établir">
                                         <span class="icon icon-restaurer"></span>
 
                                     </a>
                                 <?php else : ?>
                                     <?php /** @see \Structure\Controller\StructureResponsabiliteController::historiserAction() */ ?>
                                     <a href="<?php echo $this->url('structure/responsabilite/historiser', ['responsabilite' => $responsable->getId(), 'role' => RoleProvider::RESPONSABLE], [], true); ?>"
-                                       class="action warning" title="Révoquer">
+                                       class="text-warning" title="Révoquer">
                                         <span class="icon icon-historiser"></span>
 
                                     </a>
