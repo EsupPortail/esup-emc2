@@ -496,13 +496,19 @@ class AgentHierarchieController extends AbstractActionController
         $form = $this->getChaineForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/ajouter', ['agent' => $agent?->getId(), 'type' => $type], [], true));
         $form->bind($chaine);
-        $label = null; $obligatoire = " <span class='icon icon-obligatoire' title='Champ obligatoire'></span>";
-        if ($type === 'superieur') $label = "Supérieur·e hiérarchique direct·e ";
-        if ($type === 'autorite') $label = "Autorité hiérarchique ";
+        $label = null; $labelBis = null; $obligatoire = " <span class='icon icon-obligatoire' title='Champ obligatoire'></span>";
+        if ($type === 'superieur') {
+            $label = "Supérieur·e hiérarchique direct·e ";
+            $labelBis = "Autre supérieur·e hiérarchique direct·e ";
+        }
+        if ($type === 'autorite') {
+            $label = "Autorité hiérarchique ";
+            $labelBis = "Autre autorité hiérarchique ";
+        }
         if ($label !== null) {
             $form->get('responsable')->setLabel($label . $obligatoire . " : ");
-            $form->get('responsable-bis')->setLabel($label . " : ");
-            $form->get('responsable-ter')->setLabel($label . " : ");
+            $form->get('responsable-bis')->setLabel($labelBis . " : ");
+            $form->get('responsable-ter')->setLabel($labelBis . " : ");
         }
 
         $request = $this->getRequest();
