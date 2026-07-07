@@ -72,7 +72,7 @@ foreach ($namespaces as $namespace_ => $categories) {
         </th>
         <?php $first = true;
         foreach ($roles as $role): ?>
-            <th class="rotate-45" title="<?php echo $role; ?>">
+            <th class="role rotate-45" title="<?php echo $role; ?>">
                 <div<?php if ($first) echo ' class="first"'; ?>><span><?php echo $role; ?></span></div>
             </th>
             <?php $first = false; endforeach; ?>
@@ -97,7 +97,7 @@ foreach ($namespaces as $namespace_ => $categories) {
                     $moduleLibelle = explode("\\", $namespace_)[0];
                     if ($moduleLibelle === 'Element') $moduleLibelle = "Applications et Compétences"
                 ?>
-                &nbsp;Module <?php echo $moduleLibelle; ?>
+                &nbsp;<?php echo $moduleLibelle; ?>
                 <span id="close-namespace-<?php echo $namespacePosition; ?>"
                       data-namespace="<?php echo $namespacePosition; ?>"
                       class="icon icon-masquer toggleable close"
@@ -329,7 +329,7 @@ foreach ($namespaces as $namespace_ => $categories) {
 
     document.addEventListener('DOMContentLoaded', function () {
         const table = document.getElementById('privilege-liste');
-        const cells = table.querySelectorAll('tbody td');
+        const cells = table.querySelectorAll('tbody td.role-privilege-statut');
 
         cells.forEach(cell => {
             cell.addEventListener('mouseenter', function () {
