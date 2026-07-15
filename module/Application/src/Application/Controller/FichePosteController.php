@@ -16,6 +16,7 @@ use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
@@ -206,7 +207,7 @@ class FichePosteController extends AbstractActionController
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
+        $activites = FichePosteService::getActivitesDictionnaires($fiche);
 
         $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;
@@ -242,7 +243,7 @@ class FichePosteController extends AbstractActionController
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
+        $activites = FichePosteService::getActivitesDictionnaires($fiche);
 
         $displayBandeau = $this->getParametreService()->getValeurForParametre(FichePosteParametres::TYPE, FichePosteParametres::DISPLAY_BANDEAU_FICHEPOSTE);
         $template = null;

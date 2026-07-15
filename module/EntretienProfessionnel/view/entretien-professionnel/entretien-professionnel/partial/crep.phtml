@@ -12,6 +12,7 @@
 use Agent\Provider\Role\RoleProvider;
 use Agent\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Service\FichePoste\FichePosteService;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -41,16 +42,14 @@ $date_depassee = (($isAgent) and ($now > $date));
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
 
 <?php if ($fichePoste !== null) : ?>
-    <h3 class="categorie"> Missions du poste </h3>
-    <ul>
-        <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
-            <li> <?php echo $ficheTypeExterne->getFicheType()->getLibelle(); ?>
-                <?php echo $ficheTypeExterne->getFicheType()->getActivitesFromFicheMetierAsText(); ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-    <br/>
-    <br/>
+    <h3 class="categorie"> Composition en terme de fiches métiers</h3>
+    <?php echo $fichePoste->toStringFichesMetiers(); ?>
+
+    <h3 class="categorie"> Missions</h3>
+    <?php echo $fichePoste->toStringMissions(); ?>
+
+    <h3 class="categorie"> Activités</h3>
+    <?php echo $fichePoste->toStringActivites(); ?>
 <?php endif; ?>
 
 
