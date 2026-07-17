@@ -108,7 +108,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <th class="col-md-2"> Affectation·s </th>
         <?php endif; ?>
         <?php if ($displayDate OR $displayLieu) : ?>
-            <th data-type="num" class="col-md-2">
+            <th data-type="num" class="col-md-1">
                 <?php if ($displayDate): ?>Date<?php endif; ?>
                 <?php if ($displayDate AND $displayLieu): ?> et <?php endif; ?>
                 <?php if ($displayLieu): ?>Lieu<?php endif; ?>
@@ -118,7 +118,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <th data-type="num" class="col-md-3"> État </th>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
-            <th class="action col-md-2"> Action </th>
+            <th class="action col-md-3"> Action </th>
         <?php endif; ?>
     </tr>
     </thead>
@@ -234,7 +234,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                     class="ajax-modal action primary" data-event="modification"
                 >
                     <span class="icon icon-gerer"></span>
-                    Gérer
+                    Gérer la convocation
                 </a>
             <?php endif; ?>
             <?php if ($canHistoriser) : ?>
