@@ -66,6 +66,11 @@ class AgentHierarchieController extends AbstractActionController
     use UserServiceAwareTrait;
     use UrlServiceAwareTrait;
 
+    const HEADER_AGENT_ID = "agent_id";
+    const HEADER_RESPONSABLE_ID = "responsable_id";
+    const HEADER_DATE_DEBUT = "date_debut";
+    const HEADER_DATE_FIN = "date_fin";
+
     public function indexAction(): ViewModel
     {
         return new ViewModel([]);
@@ -185,107 +190,165 @@ class AgentHierarchieController extends AbstractActionController
     {
         $type = $this->params()->fromRoute('type');
 
-        $form = $this->getAgentHierarchieImportationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/importer', ['mode' => 'preview', 'path' => null], [], true));
+        $colonnesObligatoires = [
+            AgentHierarchieController::HEADER_AGENT_ID,
+            AgentHierarchieController::HEADER_RESPONSABLE_ID,
+            AgentHierarchieController::HEADER_DATE_DEBUT,
+            //AgentHierarchieController::HEADER_DATE_FIN
+        ];
+        //$dictionnaires = $this->getPermisService()->getPermissDictionnaire(true);
 
+        $data = null;
+        $error = [];
+        $warning = [];
+        $info = [];
+        $agents = [];
+        $chaines = [];
+
+        $filename = null;
+        $filepath = null;
 
         $request = $this->getRequest();
+
         if ($request->isPost()) {
-            $error = [];
+            $agents = $this->getAgentService()->getAgents();
             $data = $request->getPost();
-            $file = $request->getFiles();
+            $files = $request->getFiles()->toArray();
+            $file = !empty($files) ? current($files) : null;
 
-            $fichier_path = $file['fichier']['tmp_name'];
-            $mode = $data['mode'];
-            $source = $data['source'];
+            $filename = $data['filename'] ?? null;
+            $filepath = $data['filepath'] ?? null;
 
-            //reading
-            $array = [];
-            $warning = [];
-            $chaines = [];
-            $agents = [];
-
-            if ($fichier_path === null or $fichier_path === '') {
-                $error[] = "Aucun fichier !";
+            if (($file === null or $file['tmp_name'] === "") and $filepath === null) {
+                $error[] = "Aucun fichier fourni";
             } else {
-                $handle = fopen($fichier_path, "r");
-
-                while ($content = fgetcsv($handle, 0, ";")) {
-                    $array[] = $content;
-                }
-
-
-                foreach ($array as $line) {
-                    $agent_id = $line[0] ?? null;
-                    if ($source === 'EMC2') $agent = $this->getAgentService()->getAgent($agent_id);
-                    else $agent = $this->getAgentRefService()->getAgentByRef($source, $agent_id);
-                    if ($agent === null) $warning[] = "Aucun·e agent·e de trouvé·e avec l'identifiant [" . $agent_id . "]";
-                    $responsable_id = $line[1] ?? null;
-                    if ($source === 'EMC2') $responsable = $this->getAgentService()->getAgent($responsable_id);
-                    else $responsable = $this->getAgentRefService()->getAgentByRef($source, $responsable_id);
-                    if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
-                    $date_debut_st = $line[2] ?? null;
-                    $dateDebut = ($date_debut_st) ? DateTime::createFromFormat('d/m/Y', $date_debut_st) : null;
-                    if ($dateDebut === false) $warning[] = "Impossibilité de calculer la date de début à partir de [" . $date_debut_st . "]";
-                    $date_fin_st = $line[3] ?? null;
-                    $dateFin = ($date_fin_st) ? DateTime::createFromFormat('d/m/Y', $date_fin_st) : null;
-                    if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculer la date de fin à partir de [" . $date_fin_st . "]";
-
-                    $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
-                    if ($agent) $agents[$agent->getId()] = $agent;
+                if ($filepath === null) {
+                    $filepath = '/tmp/import_chaine_' . (new DateTime())->getTimestamp() . '.csv';
+                    $filename = $file['name'];
+                    copy($file['tmp_name'], $filepath);
                 }
             }
 
-            if ($mode === 'import' and empty($error)) {
-                foreach ($agents as $agent) {
-                    switch ($type) {
-                        case AgentRoleProvider::ROLE_SUPERIEURE :
-                            $this->getAgentSuperieurService()->historiseAll($agent);
-                            break;
-                        case AgentRoleProvider::ROLE_AUTORITE :
-                            $this->getAgentAutoriteService()->historiseAll($agent);
-                            break;
-                        default:
-                            throw new RuntimeException("Type de responsabilité [" . $type . "] inconnu");
+            $source = $data["source"]??"EMC2";
+            $traitement = $data["traitement"]??"historiser";
+
+            if ($data['mode'] and $filepath) {
+                $mode = $data['mode'];
+                if (!in_array($mode, ['preview', 'import'])) {
+                    $error[] = "Le mode sélectionné est non valide (" . $mode . " doit être soit 'preview' soit 'import')";
+                }
+
+
+                $csvFile = fopen($filepath, "r");
+                // lecture du header + position colonne
+                if ($csvFile !== false) {
+                    $header = fgetcsv($csvFile, null, ";");
+                    // Remove BOM https://stackoverflow.com/questions/39026992/how-do-i-read-a-utf-csv-file-in-php-with-a-bom
+                    $header = preg_replace(sprintf('/^%s/', pack('H*', 'EFBBBF')), "", $header);
+                    $nbElements = count($header);
+
+                    foreach ($colonnesObligatoires as $colonne) {
+                        if (!in_array($colonne, $header)) $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> est absente.";
+                    }
+
+                    $raws = [];
+                    while (($row = fgetcsv($csvFile, null, ';')) !== false) {
+                        if ($row) {
+                            $nbLigne = count($row);
+                            $a = 1;
+                            $item = [];
+                            for ($position = 0; $position < $nbElements; ++$position) {
+                                $item[$header[$position]] = $row[$position] ?? null;
+                            }
+                            $raws[] = $item;
+                        }
+                    }
+
+                    if (empty($error)) {
+                        $agentsToManage = [];
+
+                        $ligne = 1;
+                        foreach ($raws as $raw) {
+                            $ligne++;
+
+                            /** Check des valeurs obligatoires **/
+                            $allGood = true;
+                            foreach ($colonnesObligatoires as $colonne) {
+                                if (trim($raw[$colonne] ?? "") === "") {
+                                    $error[] = "La colonne obligatoire <strong>" . $colonne . "</strong> n'a pas de valeur la ligne " . $ligne . " a été ignorée";
+                                    $allGood = false;
+                                }
+                            }
+
+                            if ($allGood) {
+
+                                $agent_id = trim($raw[AgentHierarchieController::HEADER_AGENT_ID]);
+                                $responsable_id = trim($raw[AgentHierarchieController::HEADER_RESPONSABLE_ID]);
+                                $date_debut_st = trim($raw[AgentHierarchieController::HEADER_DATE_DEBUT]);
+                                $date_fin_st = trim($raw[AgentHierarchieController::HEADER_DATE_FIN]??"");
+
+                                if ($source === 'EMC2') $agent = $this->getAgentService()->getAgent($agent_id);
+                                else $agent = $this->getAgentRefService()->getAgentByRef($source, $agent_id);
+                                if ($agent === null) $warning[] = "Aucun·e agent·e de trouvé·e avec l'identifiant [" . $agent_id . "]";
+                                if ($source === 'EMC2') $responsable = $this->getAgentService()->getAgent($responsable_id);
+                                else $responsable = $this->getAgentRefService()->getAgentByRef($source, $responsable_id);
+                                if ($responsable === null) $warning[] = "Aucun·e responsable de trouvé·e avec l'identifiant [" . $responsable_id . "]";
+                                $dateDebut = ($date_debut_st) ? DateTime::createFromFormat('d/m/Y', $date_debut_st) : null;
+                                if ($dateDebut === false) $warning[] = "Impossibilité de calculer la date de début à partir de [" . $date_debut_st . "]";
+                                $dateFin = ($date_fin_st) ? DateTime::createFromFormat('d/m/Y', $date_fin_st) : null;
+                                if ($date_fin_st !== '' and $dateFin === false) $warning[] = "Impossibilité de calculer la date de fin à partir de [" . $date_fin_st . "]";
+
+                                $chaines[] = [$agent, $responsable, $dateDebut, $dateFin];
+                            }
+                        }
+                    }
+
+                    if ($mode === 'import' and empty($error)) {
+                        foreach ($agents as $agent) {
+                            switch ($type) {
+                                case AgentRoleProvider::ROLE_SUPERIEURE :
+                                    if ($traitement === 'historiser') $this->getAgentSuperieurService()->historiseAll($agent);
+                                    if ($traitement === 'clôturer') $this->getAgentSuperieurService()->clotureAll($agent);
+                                    break;
+                                case AgentRoleProvider::ROLE_AUTORITE :
+                                    if ($traitement === 'historiser') $this->getAgentAutoriteService()->historiseAll($agent);
+                                    if ($traitement === 'clôturer') $this->getAgentAutoriteService()->clotureAll($agent);
+                                    break;
+                                default:
+                                    throw new RuntimeException("Type de responsabilité [" . $type . "] inconnu");
+                            }
+                        }
+                        foreach ($chaines as $chaine) {
+                            switch ($type) {
+                                case AgentRoleProvider::ROLE_SUPERIEURE :
+                                    $this->getAgentSuperieurService()->createAgentSuperieurWithArray($chaine);
+                                    break;
+                                case AgentRoleProvider::ROLE_AUTORITE :
+                                    $this->getAgentAutoriteService()->createAgentAutoriteWithArray($chaine);
+                                    break;
+                                default:
+                                    throw new RuntimeException("Type de responsabilité [" . $type . "] inconnu");
+                            }
+                        }
                     }
                 }
-                foreach ($chaines as $chaine) {
-                    switch ($type) {
-                        case AgentRoleProvider::ROLE_SUPERIEURE :
-                            $this->getAgentSuperieurService()->createAgentSuperieurWithArray($chaine);
-                            break;
-                        case AgentRoleProvider::ROLE_AUTORITE :
-                            $this->getAgentAutoriteService()->createAgentAutoriteWithArray($chaine);
-                            break;
-                        default:
-                            throw new RuntimeException("Type de responsabilité [" . $type . "] inconnu");
-                    }
-                }
             }
-
-            if ($mode !== 'import') {
-                $title = "Importation de chaînes hiérarchiques (Prévisualisation)";
-            }
-            if ($mode === 'import') {
-                $title = "Importation de chaînes hiérarchiques (Importation)";
-            }
-            return new ViewModel([
-                'title' => $title,
-                'type' => $type,
-                'fichier_path' => $fichier_path,
-                'form' => $form,
-                'mode' => $mode,
-                'error' => $error,
-                'warning' => $warning,
-                'chaines' => $chaines,
-            ]);
         }
 
-        $vm = new ViewModel([
-            'title' => "Importation de chaînes hiérarchiques",
-            'form' => $form,
+
+        return new ViewModel([
+            'type' => $type,
+            'agents' => $agents,
+
+            'chaines' => $chaines,
+            'info' => $info,
+            'warning' => $warning,
+            'error' => $error,
+
+            'data' => $data,
+            'filepath' => $filepath,
+            'filename' => $filename,
         ]);
-        return $vm;
     }
 
     public function calculerAction(): ViewModel

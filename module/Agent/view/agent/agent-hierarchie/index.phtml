@@ -1,6 +1,6 @@
 <?php
 
-/** @see \Application\Controller\AgentHierarchieController::indexAction() */
+/** @see AgentHierarchieController::indexAction() */
 
 use Agent\Entity\Db\Agent;
 use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
@@ -53,16 +53,16 @@ Un·e agent·e peut avoir plusieurs lignes dans ce fichier si plusieurs responsa
     Tous les agent·es listé·es dans le fichier CSV verront leur chaîne hiérarchique historisée.
 </div>
 
-<?php /** @see \Application\Controller\AgentHierarchieController::importerAction() */ ?>
+<?php /** @see AgentHierarchieController::importerAction() */ ?>
 <a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => AgentRoleProvider::ROLE_SUPERIEURE], [], true); ?>"
-   class="btn btn-primary ajax-modal"
+   class="btn btn-primary"
 >
     Importer les supérieur·es depuis csv
 </a>
 
-<?php /** @see \Application\Controller\AgentHierarchieController::importerAction() */ ?>
+<?php /** @see AgentHierarchieController::importerAction() */ ?>
 <a href="<?php echo $this->url('agent/hierarchie/importer', ['type' => AgentRoleProvider::ROLE_AUTORITE], [], true); ?>"
-   class="btn btn-primary ajax-modal"
+   class="btn btn-primary"
 >
     Importer les autorités depuis csv
 </a>
