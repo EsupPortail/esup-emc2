@@ -1,22 +1,171 @@
 <?php
 
 /**
- * @see \Application\Controller\AgentHierarchieController::importerAction()
+ * @see AgentHierarchieController::importerAction()
  * @var string $title
  * @var AgentHierarchieImportationForm $form
  * @var string $type
  * @var string[] $error
  * @var string[] $warning
  * @var Agent[] $chaines
+ *
+ * @var string $filepath
+ * @var string $filename
  */
 
+use Agent\Controller\AgentHierarchieController;
 use Agent\Entity\Db\Agent;
 use Agent\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
 
+$this->headtitle("Importation de chaîne hiérarchique [" . $type . "]");
 
 ?>
 
-<?php echo $this->form($form); ?>
+<script xmlns="http://www.w3.org/1999/html">
+    function reset() {
+        console.log('click');
+        window.location.href="../../../agent/hierarchie/importer/" + '<?php echo $type; ?>'
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Importation de chaîne hiérarchique [<?php echo $type; ?>]
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if (true) : ?>
+            <?php /** @see \Agent\Controller\AgentHierarchieController::indexAction() */ ?>
+            <a href="<?php echo $this->url('agent/hierarchie', [], [], true); ?>"
+               class="btn btn-secondary float-end">
+                <span class="icon icon-listing"></span>
+                Retour à la gestion des chaînes hiérarchiques
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Importation de fiche métier depuis un CSV</div>
+            <div class="card-body">
+                <form enctype="multipart/form-data"
+                        <?php /** @see \Agent\Controller\AgentHierarchieController::importerAction() */ ?>
+                      action="<?php echo $this->url("agent/hierarchie/importer", ['path' => null, 'type' => $type], [], true); ?>"
+                      method="post">
+                    <?php if ($filepath !== null) : ?>
+                        <span class="form-label">Fichier téléversé : </span><br>
+                        <div style="padding:0.5rem;border:solid 1px lightgrey;width:100%; border-radius:6px;">
+                            <div class='row'>
+                                <div class='col-md-9'> <?php echo $filename; ?> </div>
+                                <div class='col-md-3'>
+                                    <div class='float-end'>
+                            <span class="action text-danger" style="cursor: pointer;" onclick="reset()">
+                                <span class='icon icon-unchecked' id='remove_file' title='Retirer le fichier'></span> Retirer
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="filepath" id="filepath" value="<?php echo $filepath; ?>">
+                        <input type="hidden" name="filename" id="filename" value="<?php echo $filename; ?>">
+                    <?php else : ?>
+                        <label for="file">Fichier à importer <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
+                        <input type="file" name="file" id="file" class="form-control" accept=".csv"/>
+                    <?php endif; ?>
+
+                    <br>
+                    <label for="source"> Mode de traitement <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
+                    <select class="selectpicker show-tick form-control" id="source" name="source">
+                        <option value="EMC2"
+                                <?php if (isset($data["source"]) and $data["source"] === "EMC2") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >EMC2
+                        </option>
+                        <option value="SIHAM"
+                                <?php if (isset($data["mode"]) and $data["mode"] === "SIHAM") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >SIHAM
+                        </option>
+                    </select>
+                    <label for="traitement"> Traitement des chaînes existantes  <span class="icon icon-obligatoire" title="Champ obligatoire"></span></label>
+                    <select class="selectpicker show-tick form-control" id="traitement" name="traitement">
+                        <option value="historiser"
+                                <?php if (isset($data["traitement"]) and $data["traitement"] === "historiser") : ?>
+                                    selected
+                                <?php endif; ?>
+                        > historiser les chaines des agents
+                        </option>
+                        <option value="clôturer"
+                                <?php if (isset($data["traitement"]) and $data["traitement"] === "clôturer") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >clôturer les chaines des agents
+                        </option>
+                    </select>
+                    <label for="mode"> Mode de traitement <span class="icon icon-obligatoire"
+                                                                title="Champ obligatoire"></span></label>
+                    <select class="selectpicker show-tick form-control" id="mode" name="mode">
+                        <option value="preview"
+                                <?php if (isset($data["mode"]) and $data["mode"] === "preview") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >Prévisualisation
+                        </option>
+                        <option value="import"
+                                <?php if (isset($data["mode"]) and $data["mode"] === "import") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >Importation
+                        </option>
+                    </select>
+                    <br>
+                    <button type='submit' class="btn btn-success">
+                        <span class="icon icon-csv"></span>
+                        Traiter le fichier
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            <p>
+            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/chaine_hierarchique/import_chaine_hierarchique.csv">
+                <span class="icon icon-csv"></span> Télécharger la trame d'import des chaînes hiérarchiques
+            </a>
+            </p>
+
+            Pour la trame
+            <ul>
+                <li><code> <?php echo AgentHierarchieController::HEADER_AGENT_ID; ?> </code> <span class="icon icon-obligatoire" title="Donnée obligatoire"></span> : l'identifiant EMC2 de l'Agent ; </li>
+                <li><code> <?php echo AgentHierarchieController::HEADER_RESPONSABLE_ID; ?> </code> <span class="icon icon-obligatoire" title="Donnée obligatoire"></span> : l'identifiant EMC2 du <?php echo $type; ?> ; </li>
+                <li><code> <?php echo AgentHierarchieController::HEADER_DATE_DEBUT; ?> </code> <span class="icon icon-obligatoire" title="Donnée obligatoire"></span> : La date de début au format <code>jj/mm/yyyy</code> ; </li>
+                <li><code> <?php echo AgentHierarchieController::HEADER_DATE_FIN; ?> </code> : La date de fin au format <code>jj/mm/yyyy</code>. </li>
+            </ul>
+
+            <strong><u>Remarques :</u></strong>
+            <ul>
+                <li>Le fichier importé doit être enregistré en <strong style="color:red;">CSV UTF8</strong> (et non CSV).</li>
+                <li><span class="icon icon-obligatoire"></span> indique un champ obligatoire</li>
+                <li>L'intitulé des colonnes doit être exactement celui spécifié (majuscule et accent). </li>
+                <li>L'ordre des colonnes n'a pas besoin d'être respecté.</li>
+                <li> La source <code>EMC2</code> prend l'identifiant des agents dans l'application et la source <code>SIHAM</code> la référence SIHAM attachée à l'agent (utile pour les établissements n'utilisant pas l'identifiant SIHAM comme identifiant des agents).</li>
+                <li> Le traitement <code>historiser les chaînes des agents</code> annule les chaines hiérarchique en cours alors que <code>clôturer les chaines des agents</code> ajoute la date du jour comme de date de fin.</li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
 
 <?php if (!empty($error)) : ?>
     <div class="alert alert-danger">
@@ -24,7 +173,6 @@ use Agent\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
         <?php echo implode('<br>', $error); ?>
     </div>
 <?php else : ?>
-
     <?php if (!empty($warning)) : ?>
     <div class="alert alert-warning">
         <ul>
@@ -33,9 +181,11 @@ use Agent\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
         <?php endforeach; ?>
         </ul>
     </div>
+    <?php endif; ?>
 <?php endif; ?>
 
-    <?php if (isset($chaines) AND $chaines !== []) : ?>
+
+<?php if (isset($chaines) AND $chaines !== []) : ?>
     <table class="table table-condensed">
         <thead>
         <tr>
@@ -56,5 +206,4 @@ use Agent\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
             <?php endforeach; ?>
         </tbody>
     </table>
-<?php endif; ?>
 <?php endif; ?>

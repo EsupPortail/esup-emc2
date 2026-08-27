@@ -683,4 +683,19 @@ EOS;
     {
         return $this->getAgentWithStatut($agents, 'titulaire', $date);
     }
+
+    /** @return Agent[] */
+    public function getAgents() : array
+    {
+        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere('agent.deletedOn IS NULL');
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $listing = [];
+        foreach ($result as $item) {
+            $listing[$item->getId()] = $item;
+        }
+        return $listing;
+    }
 }

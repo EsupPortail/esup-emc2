@@ -508,9 +508,28 @@ EOS;
      * @param FichePoste $fiche
      * @return array
      */
-    public function getActivitesDictionnaires(FichePoste $fiche): array
+    static public function getFicheMetierDictionnaires(FichePoste $fiche): array
     {
+        $dictionnaire = [];
 
+        /** Recuperation des fiches metiers */
+        foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $id = $ficheTypeExterne->getId();
+            $dictionnaire[$id]['object'] = $ficheMetier;
+            $dictionnaire[$id]['principal'] = $ficheTypeExterne->getPrincipale();
+            $dictionnaire[$id]['quotite'] = $ficheTypeExterne->getQuotite();
+        }
+
+        return $dictionnaire;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return array
+     */
+    static public function getMissionsDictionnaires(FichePoste $fiche): array
+    {
         $dictionnaire = [];
 
         /** Recuperation des fiches metiers */
@@ -519,6 +538,25 @@ EOS;
             $activitesId = explode(';', $ficheTypeExterne->getMissions());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
+                $dictionnaire[$id]["object"] = $metierTypeActivite;
+                $dictionnaire[$id]["conserve"] = (in_array($id, $activitesId));
+            }
+        }
+
+        return $dictionnaire;
+    }
+
+    static public function getActivitesDictionnaires(FichePoste $fiche): array
+    {
+
+        $dictionnaire = [];
+
+        /** Recuperation des fiches metiers */
+        foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $activitesId = explode(';', $ficheTypeExterne->getActivites());
+            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getActivite()->getId();
                 $dictionnaire[$id]["object"] = $metierTypeActivite;
                 $dictionnaire[$id]["conserve"] = (in_array($id, $activitesId));
             }

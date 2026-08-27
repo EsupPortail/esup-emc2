@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Agent\Entity\Db\Agent;
 use Application\Entity\Db\MacroContent\FichePosteMacroTrait;
 use Agent\Entity\HasAgentInterface;
+use Application\Service\FichePoste\FichePosteService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -267,6 +268,47 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     }
 
     /** Fonction pour les affichages dans les documents ***************************************************************/
+
+
+    public function toStringFichesMetiers(): string
+    {
+        $fiches = FichePosteService::getFicheMetierDictionnaires($this);
+        $text = "<ul>";
+        foreach ($fiches as $fiche) {
+            $text .= "<li>" . $fiche['object']->getLibelle() . " - Quotités : " . $fiche['quotite']. "%</li>";
+        }
+        $text .= "</ul>";
+        if ($text === "<ul></ul>") return "<span class='missing-data'>Aucune mission</span>";
+        return $text;
+    }
+
+    public function toStringMissions(): string
+    {
+        $missions = FichePosteService::getMissionsDictionnaires($this);
+        $text = "<ul>";
+        foreach ($missions as $mission) {
+            if ($mission['conserve'] === true) {
+                $text .= "<li>" . $mission['object']?->getMission()?->getLibelle() . "</li>";
+            }
+        }
+        $text .= "</ul>";
+        if ($text === "<ul></ul>") return "<span class='missing-data'>Aucune mission</span>";
+        return $text;
+    }
+
+    public function toStringActivites(): string
+    {
+        $activites = FichePosteService::getActivitesDictionnaires($this);
+        $text = "<ul>";
+        foreach ($activites as $activite) {
+            if ($activite['conserve'] === true) {
+                $text .= "<li>" . $activite['object']?->getActivite()?->getLibelle() . "</li>";
+            }
+        }
+        $text .= "</ul>";
+        if ($text === "<ul></ul>") return "<span class='missing-data'>Aucune activité</span>";
+        return $text;
+    }
 
     public function addDictionnaire(string $clef, $valeur): void
     {
