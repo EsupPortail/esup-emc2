@@ -304,6 +304,7 @@ class AgentHierarchieController extends AbstractActionController
                     }
 
                     if ($mode === 'import' and empty($error)) {
+                        $info[] = "Importation terminé.";
                         foreach ($agents as $agent) {
                             switch ($type) {
                                 case AgentRoleProvider::ROLE_SUPERIEURE :
@@ -654,8 +655,7 @@ class AgentHierarchieController extends AbstractActionController
         return $vm;
     }
 
-    public
-    function modifierAction(): ViewModel
+    public function modifierAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $chaineId = $this->params()->fromRoute('chaine');
@@ -761,8 +761,7 @@ class AgentHierarchieController extends AbstractActionController
         return $this->redirect()->toRoute('agent/informations', ['agent' => $chaine->getAgent()->getId()], [], true);
     }
 
-    public
-    function supprimerAction(): ViewModel
+    public function supprimerAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $chaineId = $this->params()->fromRoute('chaine');

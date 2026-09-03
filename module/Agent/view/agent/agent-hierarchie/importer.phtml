@@ -108,6 +108,12 @@ $this->headtitle("Importation de chaîne hiérarchique [" . $type . "]");
                                 <?php endif; ?>
                         >clôturer les chaines des agents
                         </option>
+                        <option value="rien"
+                                <?php if (isset($data["traitement"]) and $data["traitement"] === "rien") : ?>
+                                    selected
+                                <?php endif; ?>
+                        >ne rien faire
+                        </option>
                     </select>
                     <label for="mode"> Mode de traitement <span class="icon icon-obligatoire"
                                                                 title="Champ obligatoire"></span></label>
@@ -182,6 +188,12 @@ $this->headtitle("Importation de chaîne hiérarchique [" . $type . "]");
         </ul>
     </div>
     <?php endif; ?>
+<?php endif; ?>
+<?php if (!empty($info)) : ?>
+<div class="alert alert-info">
+    <span class="icon icon-info"></span>
+    <?php echo implode('<br>', $info); ?>
+</div>
 <?php endif; ?>
 
 
