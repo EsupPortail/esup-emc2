@@ -86,6 +86,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             <?php endforeach; ?>
             </ul>
         <?php endif; ?>
+        <br>
         <?php if ($mode === 'edition-fiche-metier' AND $canEditer) : ?>
             <?php /** @see FicheMetierController::modifierCategoriesAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier/modifier-categories', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"

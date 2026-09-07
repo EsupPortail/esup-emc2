@@ -75,7 +75,7 @@ class ResponsabiliteForm extends  Form {
             'type' => Checkbox::class,
             'name' => 'historisation',
             'options' => [
-                'label' => "Annulation des chaînes existantes <span class='icon icon-info text-info' title='Les chaînes en cours seront historisées et ne seront plus considéré.'></span>",
+                'label' => "Annulation des responsabilités existantes <span class='icon icon-info text-info' title='Les responsabilités en cours seront historisées et ne seront plus considérées.'></span>",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
@@ -86,7 +86,7 @@ class ResponsabiliteForm extends  Form {
             'type' => Checkbox::class,
             'name' => 'cloture',
             'options' => [
-                'label' => "Clôture des chaînes existantes <span class='icon icon-info text-info' title='Les chaînes en cours recevront comme date de fin la date actuelle.'></span>",
+                'label' => "Clôture des responsabilités existantes <span class='icon icon-info text-info' title='Les responsabilités en cours recevront comme date de fin la date actuelle.'></span>",
                 'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
