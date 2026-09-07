@@ -57,7 +57,6 @@ class ResponsabiliteAssertion extends AbstractAssertion {
 
         switch ($privilege) {
             case ResponsabilitePrivileges::RESPONSABILITE_AFFICHER :
-            case ResponsabilitePrivileges::RESPONSABILITE_AFFICHER_HISTORIQUE :
             case ResponsabilitePrivileges::RESPONSABILITE_SYNCHRONISER :
             case ResponsabilitePrivileges::RESPONSABILITE_GERER :
                 $temp =  match ($role->getRoleId()) {
