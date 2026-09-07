@@ -144,7 +144,7 @@ $this->headtitle("Importation de chaîne hiérarchique [" . $type . "]");
     <div class="col-md-6">
         <div class="alert alert-info">
             <p>
-            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/chaine_hierarchique/import_chaine_hierarchique.csv">
+            <a href="<?php echo $this->url('home',[],['force_canonical' => true], true); ?>exemples/trame_csv/import_chaine_hierarchique.csv">
                 <span class="icon icon-csv"></span> Télécharger la trame d'import des chaînes hiérarchiques
             </a>
             </p>
@@ -153,8 +153,8 @@ $this->headtitle("Importation de chaîne hiérarchique [" . $type . "]");
             <ul>
                 <li><code> <?php echo AgentHierarchieController::HEADER_AGENT_ID; ?> </code> <span class="icon icon-obligatoire" title="Donnée obligatoire"></span> : l'identifiant EMC2 de l'Agent ; </li>
                 <li><code> <?php echo AgentHierarchieController::HEADER_RESPONSABLE_ID; ?> </code> <span class="icon icon-obligatoire" title="Donnée obligatoire"></span> : l'identifiant EMC2 du <?php echo $type; ?> ; </li>
-                <li><code> <?php echo AgentHierarchieController::HEADER_DATE_DEBUT; ?> </code> <span class="icon icon-obligatoire" title="Donnée obligatoire"></span> : La date de début au format <code>jj/mm/yyyy</code> ; </li>
-                <li><code> <?php echo AgentHierarchieController::HEADER_DATE_FIN; ?> </code> : La date de fin au format <code>jj/mm/yyyy</code>. </li>
+                <li><code> <?php echo AgentHierarchieController::HEADER_DATE_DEBUT; ?> </code> <span class="icon icon-obligatoire" title="Donnée obligatoire"></span> : la date de début au format <code>jj/mm/yyyy</code> ; </li>
+                <li><code> <?php echo AgentHierarchieController::HEADER_DATE_FIN; ?> </code> : la date de fin au format <code>jj/mm/yyyy</code>. </li>
             </ul>
 
             <strong><u>Remarques :</u></strong>
