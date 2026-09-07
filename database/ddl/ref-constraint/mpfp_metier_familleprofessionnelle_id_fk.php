@@ -9,7 +9,7 @@ return [
     'rtable'      => 'metier_familleprofessionnelle',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'metier_famille_pk',
+    'index'       => 'metier_famille_id_uindex',
     'columns'     => [
         'famille_id' => 'id',
     ],

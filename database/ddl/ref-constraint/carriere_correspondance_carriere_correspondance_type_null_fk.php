@@ -8,7 +8,7 @@ return [
     'table'       => 'carriere_correspondance',
     'rtable'      => 'carriere_correspondance_type',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'NO ACTION',
+    'delete_rule' => 'SET NULL',
     'index'       => 'carriere_correspondance_type_pk',
     'columns'     => [
         'type_id' => 'id',

@@ -154,18 +154,6 @@ return [
             'position'    => 3,
             'commentaire' => NULL,
         ],
-        'old_id'                => [
-            'name'        => 'old_id',
-            'type'        => 'int',
-            'bdd-type'    => 'integer',
-            'length'      => 0,
-            'scale'       => NULL,
-            'precision'   => 4,
-            'nullable'    => TRUE,
-            'default'     => NULL,
-            'position'    => 16,
-            'commentaire' => 'sert pour la reprise de données (peut être supprimée par la suite)',
-        ],
         'reference'             => [
             'name'        => 'reference',
             'type'        => 'string',

@@ -6,7 +6,7 @@ return [
     'name'    => 'activite_id_uindex',
     'unique'  => TRUE,
     'type'    => 'btree',
-    'table'   => 'activite_old',
+    'table'   => 'activite',
     'schema'  => 'public',
     'columns' => [
         'id',

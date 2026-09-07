@@ -8,8 +8,8 @@ return [
     'table'       => 'entretienprofessionnel_campagne_configuration_presaisie',
     'rtable'      => 'unicaen_autoform_champ',
     'update_rule' => 'NO ACTION',
-    'delete_rule' => 'CASCADE',
-    'index'       => 'autoform_champ_pk',
+    'delete_rule' => 'NO ACTION',
+    'index'       => 'autoform_champ_id_uindex',
     'columns'     => [
         'champ_id' => 'id',
     ],

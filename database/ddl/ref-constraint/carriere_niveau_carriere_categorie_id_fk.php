@@ -9,7 +9,7 @@ return [
     'rtable'      => 'carriere_categorie',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'SET NULL',
-    'index'       => 'categorie_pk',
+    'index'       => 'categorie_id_uindex',
     'columns'     => [
         'categorie_id' => 'id',
     ],

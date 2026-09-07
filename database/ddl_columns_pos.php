@@ -77,7 +77,6 @@ return [
         'histo_createur_id',
         'histo_modificateur_id',
         'histo_destructeur_id',
-        'emploitype_id',
     ],
     'agent_carriere_mobilite'                                  => [
         'id',
@@ -623,7 +622,6 @@ return [
         'formulaire_cref_id',
         'template_crep_id',
         'template_cref_id',
-        'date_fixe',
     ],
     'entretienprofessionnel_critere_competence'                => [
         'id',
@@ -738,7 +736,6 @@ return [
         'niveau_carriere_id',
         'codes_emploi_type',
         'expertise',
-        'categorie_id',
     ],
     'fichemetier_application'                                  => [
         'fichemetier_id',
@@ -1064,7 +1061,6 @@ return [
         'reference',
         'codes_fonction',
         'description',
-        'old_id',
     ],
     'missionprincipale_activite'                               => [
         'id',
@@ -1146,6 +1142,9 @@ return [
         'histo_createur_id',
         'histo_modificateur_id',
         'histo_destructeur_id',
+        'histo_creation',
+        'histo_modification',
+        'histo_destruction',
     ],
     'structure_observateur'                                    => [
         'id',
@@ -1174,6 +1173,9 @@ return [
         'histo_createur_id',
         'histo_modificateur_id',
         'histo_destructeur_id',
+        'histo_creation',
+        'histo_modification',
+        'histo_destruction',
     ],
     'structure_type'                                           => [
         'id',
@@ -1684,8 +1686,6 @@ return [
         'codes_fiche_metier',
         'codes_fonction',
         'old_id',
-        'code_fonction',
-        'code_fiche_metier',
     ],
     'activite_application'                                     => [
         'activite_id',
@@ -2633,7 +2633,6 @@ return [
         'statut',
         'raison',
         'date_refresh',
-        'entretienprofessionnel_id',
     ],
     'entretienprofessionnel_campagne_configuration_indicateur' => [
         'id',
@@ -2707,6 +2706,38 @@ return [
         'created_on',
         'updated_on',
         'deleted_on',
+    ],
+    'fichemetier_categorie'                                    => [
+        'id',
+        'fichemetier_id',
+        'categorie_id',
+        'complement',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+    ],
+    'fichemetier_configuration_application_defaut'             => [
+        'id',
+        'application_id',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
+    ],
+    'fichemetier_configuration_competence_defaut'              => [
+        'id',
+        'competence_id',
+        'histo_creation',
+        'histo_createur_id',
+        'histo_modification',
+        'histo_modificateur_id',
+        'histo_destruction',
+        'histo_destructeur_id',
     ],
 ];
 

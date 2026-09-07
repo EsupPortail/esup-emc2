@@ -7,7 +7,7 @@ return [
     'name'        => 'fichemetier_competence',
     'temporary'   => FALSE,
     'logging'     => TRUE,
-    'commentaire' => NULL,
+    'commentaire' => 'table des compétences non spécifiques',
     'sequence'    => NULL,
     'columns'     => [
         'competence_element_id' => [

@@ -7,10 +7,10 @@ return [
     'name'        => 'entretienprofessionnel_campagne_agent_statut',
     'temporary'   => FALSE,
     'logging'     => TRUE,
-    'commentaire' => NULL,
+    'commentaire' => 'Cette table sert de tampon pour ne pas avoir a recalculer les décisions à chaque arrivé sur la page',
     'sequence'    => 'entretienprofessionnel_campagne_agent_statut_id_seq',
     'columns'     => [
-        'agent_id'                  => [
+        'agent_id'     => [
             'name'        => 'agent_id',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -22,7 +22,7 @@ return [
             'position'    => 4,
             'commentaire' => NULL,
         ],
-        'campagne_id'               => [
+        'campagne_id'  => [
             'name'        => 'campagne_id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -34,7 +34,7 @@ return [
             'position'    => 2,
             'commentaire' => NULL,
         ],
-        'date_refresh'              => [
+        'date_refresh' => [
             'name'        => 'date_refresh',
             'type'        => 'date',
             'bdd-type'    => 'timestamp without time zone',
@@ -46,19 +46,7 @@ return [
             'position'    => 7,
             'commentaire' => NULL,
         ],
-        'entretienprofessionnel_id' => [
-            'name'        => 'entretienprofessionnel_id',
-            'type'        => 'int',
-            'bdd-type'    => 'integer',
-            'length'      => 0,
-            'scale'       => NULL,
-            'precision'   => 4,
-            'nullable'    => TRUE,
-            'default'     => NULL,
-            'position'    => 8,
-            'commentaire' => NULL,
-        ],
-        'id'                        => [
+        'id'           => [
             'name'        => 'id',
             'type'        => 'int',
             'bdd-type'    => 'integer',
@@ -70,7 +58,7 @@ return [
             'position'    => 1,
             'commentaire' => NULL,
         ],
-        'raison'                    => [
+        'raison'       => [
             'name'        => 'raison',
             'type'        => 'clob',
             'bdd-type'    => 'text',
@@ -82,7 +70,7 @@ return [
             'position'    => 6,
             'commentaire' => NULL,
         ],
-        'statut'                    => [
+        'statut'       => [
             'name'        => 'statut',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
@@ -94,7 +82,7 @@ return [
             'position'    => 5,
             'commentaire' => NULL,
         ],
-        'structure_id'              => [
+        'structure_id' => [
             'name'        => 'structure_id',
             'type'        => 'string',
             'bdd-type'    => 'character varying',
