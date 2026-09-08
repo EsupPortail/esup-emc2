@@ -1,27 +1,33 @@
 <?php
 
+use Agent\Entity\Db\Agent;
+use Carriere\Entity\Db\EmploiType;
+use Carriere\Provider\Privilege\EmploiTypePrivileges;
+
 /**
  * @see \Carriere\Controller\EmploiTypeController::indexAction()
  * @var EmploiType[] $emploisTypes
+ * @var Agent[] $agents
  * @var bool $avecAgent
+ * @var array $dictionnaire
  */
 
-use Agent\Entity\Db\AgentEmploiType;
-use Carriere\Entity\Db\EmploiType;
-use Carriere\Provider\Privilege\CorpsPrivileges;
 
 $this->headTitle("Liste des emplois types");
 
-$canLister      = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_LISTER_AGENTS));
-$canModifier    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+$canLister = $this->isAllowed(EmploiTypePrivileges::getResourceId(EmploiTypePrivileges::EMPLOITYPE_LISTER_AGENTS));
+$canModifier = $this->isAllowed(EmploiTypePrivileges::getResourceId(EmploiTypePrivileges::EMPLOITYPE_MODIFIER));
 
-$canAction = ($canModifier OR $canLister);
 ?>
 
 <h1 class="page-header">
     Liste des emplois types
     <span class="badge">
-        <?php echo count($emploisTypes); ?>
+        <?php if ($avecAgent) : ?>
+            <?php echo count($dictionnaire); ?>
+        <?php else : ?>
+            <?php echo count($emploisTypes); ?>
+        <?php endif; ?>
     </span>
 </h1>
 
@@ -38,64 +44,63 @@ $canAction = ($canModifier OR $canLister);
 <table class="datatable table table-condensed" id="emploi_types">
     <thead>
     <tr>
-        <th> Libellé</th>
-        <th> Code</th>
-        <th> #Agent/Grade </th>
-        <?php if ($canAction) : ?>
-            <th class="action"> Action </th>
-        <?php endif; ?>
+        <th class="col-md-6"> Libellé</th>
+        <th class="col-md-2"> Code</th>
+        <th class="col-md-2"> #Agent·e</th>
+        <th class="col-md-2"> Action</th>
     </tr>
     </thead>
+
     <tbody>
-    <?php foreach($emploisTypes as $emploiType): ?>
-        <?php $actifs = array_filter($emploiType->getAgentEmploiTypes(), function (AgentEmploiType $a) { return $a->estEnCours() AND !$a->isDeleted(); }) ?>
-        <tr>
-            <td>
-                <span
-                    title="<?php echo $emploiType->generateTooltip(); ?>"
-                    data-bs-toggle="tooltip" data-bs-html="true"
-                >
-                <?php echo $emploiType->getLibelleLong(); ?>
+    <?php foreach ($emploisTypes as $emploiType) : ?>
+        <?php if (!$avecAgent or (isset($dictionnaire[$emploiType->getId()]) and $dictionnaire[$emploiType->getId()] !== 0)) : ?>
+            <tr>
+                <td data-column-id="Libellé">
+                <span title="<?php echo $emploiType->generateTooltip(); ?>" data-bs-toggle="tooltip"
+                      data-bs-html="true">
+                    <?php echo $emploiType->getLibelleLong(); ?>
                 </span>
-            </td>
-            <td> <code><?php echo $emploiType->getCode(); ?></code> </td>
-            <td> <?php echo count($emploiType->getAgentEmploiTypes()); ?> </td>
-            <?php if ($canAction) : ?>
-            <td class="action">
-                <?php if ($canLister) : ?>
-                    <a
-                        <?php /** @see \Carriere\Controller\EmploiTypeController::afficherAgentsAction() */ ?>
-                        href="<?php echo $this->url('emploi-type/afficher-agents', ['emploi-type' => $emploiType->getId()], ['fragment' => 'emploi-type'], true); ?>"
-                        class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon icon-users"></span>
-                        Lister les agents
-                    </a>
-                <?php endif; ?>
-            </td>
-            <?php endif; ?>
-        </tr>
+                </td>
+                <td data-column-id="Code">
+                    <code><?php echo $emploiType->getCode(); ?></code>
+                </td>
+                <td data-column-id="#Agent·e">
+                    <?php echo $dictionnaire[$emploiType->getId()]??0; ?>
+                </td>
+                <td data-column-id="Action">
+                    <?php if ($canLister) : ?>
+                        <a
+                                <?php /** @see \Carriere\Controller\EmploiTypeController::afficherAgentsAction() */ ?>
+                                href="<?php echo $this->url('emploi-type/afficher-agents', ['emploi-type' => $emploiType->getId()], ['fragment' => 'emploi-type'], true); ?>"
+                                class="ajax-modal action secondary" data-event="modification"
+                        >
+                            <span class="icon icon-users"></span>
+                            Lister les agents
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>
 
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
 
         $('table#emploi_types').DataTable({
-            paging: false,
-            info: false,
+            stateSave: true,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",
             },
             columnDefs: [
-                { targets: [3], orderable: false }
+                {targets: [3], orderable: false}
             ]
         });
     });

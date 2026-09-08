@@ -10,7 +10,6 @@ use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTr
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use DateTime;
-use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
@@ -54,7 +53,6 @@ class MissionPrincipaleController extends AbstractActionController
     use MissionPrincipaleFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
-    use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionnerFamillesProfessionnellesFormAwareTrait;
 

@@ -1,0 +1,122 @@
+<?php
+
+namespace Structure\Form\Responsabilite;
+
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Checkbox;
+use Laminas\Form\Element\Date;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+class ResponsabiliteForm extends  Form {
+
+    private string $urlAgent;
+
+    public function setUrlAgent(string $urlAgent): void
+    {
+        $this->urlAgent = $urlAgent;
+    }
+
+    private string $urlStructure;
+
+    public function setUrlStructure(string $urlStructure): void
+    {
+        $this->urlStructure = $urlStructure;
+    }
+
+    public function init(): void
+    {
+        //agent *
+        $structure = new SearchAndSelect('structure', ['label' => "Structure :"]);
+        $structure
+            ->setAutocompleteSource($this->urlStructure)
+            ->setLabelOption('disable_html_escape',true)
+            ->setAttributes([
+                'id' => 'structure',
+                'placeholder' => "Libellé de la structure ...",
+            ]);
+        $this->add($structure);
+        $label = "Supérieur·e ou autorité<span class='icon icon-obligatoire'></span> :";
+        $placeholder = "Nom du responsable ...";
+        $responsable = new SearchAndSelect('responsable', ['label' => $label]);
+        $responsable
+            ->setAutocompleteSource($this->urlAgent)
+            ->setLabelOption('disable_html_escape',true)
+            ->setAttributes([
+                'id' => 'Responsable',
+                'placeholder' => $placeholder,
+            ]);
+        $this->add($responsable);
+        //datedebut *
+        $this->add([
+            'type' => Date::class,
+            'name' => 'date_debut',
+            'options' => [
+                'label' => "Date de début<span class='icon icon-asterisque' title='Champ obligatoire' ></span> :",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'date_debut',
+            ],
+        ]);
+        $this->add([
+            'type' => Date::class,
+            'name' => 'date_fin',
+            'options' => [
+                'label' => "Date de fin :",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'date_fin',
+            ],
+        ]);
+        $this->add([
+            'type' => Checkbox::class,
+            'name' => 'historisation',
+            'options' => [
+                'label' => "Annulation des responsabilités existantes <span class='icon icon-info text-info' title='Les responsabilités en cours seront historisées et ne seront plus considérées.'></span>",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'historisation',
+            ],
+        ]);
+        $this->add([
+            'type' => Checkbox::class,
+            'name' => 'cloture',
+            'options' => [
+                'label' => "Clôture des responsabilités existantes <span class='icon icon-info text-info' title='Les responsabilités en cours recevront comme date de fin la date actuelle.'></span>",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'cloture',
+            ],
+        ]);
+        //bouton
+        $this->add([
+            'type' => Button::class,
+            'name' => 'creer',
+            'options' => [
+                'label' => '<i class="fas fa-save"></i> Enregistrer ',
+                'label_options' => [
+                    'disable_html_escape' => true,
+                ],
+            ],
+            'attributes' => [
+                'type' => 'submit',
+                'class' => 'btn btn-primary',
+            ],
+        ]);
+
+        //input filter
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'structure' => ['required' => true,],
+            'responsable' => ['required' => true,],
+            'date_debut' => ['required' => true,],
+            'date_fin' => ['required' => false,],
+            'historisation' => ['required' => false,],
+            'cloture' => ['required' => false,],
+        ]));
+    }
+}

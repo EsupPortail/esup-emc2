@@ -9,7 +9,7 @@ return [
     'rtable'      => 'element_competence_discipline',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'SET NULL',
-    'index'       => 'competence_discipline_pk',
+    'index'       => 'competence_discipline_id_uindex',
     'columns'     => [
         'discipline_id' => 'id',
     ],

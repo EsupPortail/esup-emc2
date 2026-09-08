@@ -6,6 +6,14 @@ use Carriere\Controller\CorrespondanceController;
 use Carriere\Controller\CorrespondanceControllerFactory;
 use Carriere\Controller\CorrespondanceTypeController;
 use Carriere\Controller\CorrespondanceTypeControllerFactory;
+use Carriere\Form\Specialite\SpecialiteForm;
+use Carriere\Form\Specialite\SpecialiteFormFactory;
+use Carriere\Form\Specialite\SpecialiteHydrator;
+use Carriere\Form\Specialite\SpecialiteHydratorFactory;
+use Carriere\Form\SpecialiteType\SpecialiteTypeForm;
+use Carriere\Form\SpecialiteType\SpecialiteTypeFormFactory;
+use Carriere\Form\SpecialiteType\SpecialiteTypeHydrator;
+use Carriere\Form\SpecialiteType\SpecialiteTypeHydratorFactory;
 use Carriere\Provider\Privilege\CorrespondancePrivileges;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Carriere\Service\Correspondance\CorrespondanceServiceFactory;
@@ -41,6 +49,33 @@ return [
                 [
                     'controller' => CorrespondanceController::class,
                     'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_SUPPRIMER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
                         'afficher-agents',
                     ],
                     'privileges' => [
@@ -55,6 +90,33 @@ return [
                     ],
                     'privileges' => [
                         CorrespondancePrivileges::CORRESPONDANCE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceTypeController::class,
+                    'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceTypeController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceTypeController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_SUPPRIMER,
                     ],
                 ],
             ],
@@ -106,6 +168,42 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        /** @see CorrespondanceTypeController::ajouterAction() */
+                                        'controller' => CorrespondanceTypeController::class,
+                                        'action'     => 'ajouter',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:correspondance-type',
+                                    'defaults' => [
+                                        /** @see CorrespondanceTypeController::modifierAction() */
+                                        'controller' => CorrespondanceTypeController::class,
+                                        'action'     => 'modifier',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'supprimer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/supprimer/:correspondance-type',
+                                    'defaults' => [
+                                        /** @see CorrespondanceTypeController::supprimerAction() */
+                                        'controller' => CorrespondanceTypeController::class,
+                                        'action'     => 'supprimer',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
                             'afficher' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -154,6 +252,39 @@ return [
                             ],
                         ],
                     ],
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                /** @see CorrespondanceController::ajouterAction() */
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:correspondance',
+                            'defaults' => [
+                                /** @see CorrespondanceController::modifierAction() */
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:correspondance',
+                            'defaults' => [
+                                /** @see CorrespondanceController::supprimerAction() */
+                                'action'     => 'supprimer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                 ],
             ],
         ],
@@ -172,10 +303,16 @@ return [
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            SpecialiteForm::class => SpecialiteFormFactory::class,
+            SpecialiteTypeForm::class  => SpecialiteTypeFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            SpecialiteHydrator::class => SpecialiteHydratorFactory::class,
+            SpecialiteTypeHydrator::class => SpecialiteTypeHydratorFactory::class,
+        ],
     ],
     'view_helpers' => [
         'invokables' => [

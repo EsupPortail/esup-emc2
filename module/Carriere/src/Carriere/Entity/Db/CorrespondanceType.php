@@ -33,6 +33,11 @@ class CorrespondanceType implements IsSynchronisableInterface
         return $this->id;
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getCode(): ?string
     {
         return $this->code;
@@ -48,9 +53,19 @@ class CorrespondanceType implements IsSynchronisableInterface
         return $this->libelleCourt;
     }
 
+    public function setLibelleCourt(?string $libelleCourt): void
+    {
+        $this->libelleCourt = $libelleCourt;
+    }
+
     public function getLibelleLong(): ?string
     {
         return $this->libelleLong;
+    }
+
+    public function setLibelleLong(?string $libelleLong): void
+    {
+        $this->libelleLong = $libelleLong;
     }
 
     public function getDateOuverture(): ?DateTime
@@ -58,9 +73,19 @@ class CorrespondanceType implements IsSynchronisableInterface
         return $this->dateOuverture;
     }
 
+    public function setDateOuverture(?DateTime $dateOuverture): void
+    {
+        $this->dateOuverture = $dateOuverture;
+    }
+
     public function getDateFermeture(): ?DateTime
     {
         return $this->dateFermeture;
+    }
+
+    public function setDateFermeture(?DateTime $dateFermeture): void
+    {
+        $this->dateFermeture = $dateFermeture;
     }
 
     public function getCorrespondances(): Collection

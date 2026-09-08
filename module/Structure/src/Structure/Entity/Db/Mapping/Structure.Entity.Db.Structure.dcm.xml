@@ -31,6 +31,8 @@
                      mapped-by="structure"/>
         <one-to-many field="responsables" target-entity="Structure\Entity\Db\StructureResponsable"
                      mapped-by="structure"/>
+        <one-to-many field="observateurs" target-entity="Structure\Entity\Db\Observateur"
+                     mapped-by="structure"/>
 
         <many-to-many field="fichesPostesRecrutements" target-entity="Application\Entity\Db\FichePoste"
                       inversed-by="structure">

@@ -3,6 +3,7 @@
 namespace Carriere\Service\CorrespondanceType;
 
 use Carriere\Entity\Db\CorrespondanceType;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -11,12 +12,31 @@ use RuntimeException;
 
 class CorrespondanceTypeService
 {
-
     use ProvidesObjectManager;
 
-    /** GESTION DES ENITIES *******************************************************************************************/
+    /** GESTION DES ENTITÉS *******************************************************************************************/
 
-    // les grades sont importés et ne sont pas gérés dans l'application.
+    public function create(CorrespondanceType $correspondanceType): void
+    {
+        $correspondanceType->setSourceId("EMC2"); //todo faire une constante !!!
+        $correspondanceType->setInsertedOn(new DateTime());
+
+        $this->getObjectManager()->persist($correspondanceType);
+        $this->getObjectManager()->flush($correspondanceType);
+    }
+
+    public function update(CorrespondanceType $correspondanceType): void
+    {
+        $correspondanceType->setUpdatedOn(new DateTime());
+        $this->getObjectManager()->flush($correspondanceType);
+    }
+
+    public function delete(CorrespondanceType $correspondanceType): void
+    {
+        //$this->getObjectManager()->remove($correspondanceType);
+        $correspondanceType->setDeletedOn(new DateTime());
+        $this->getObjectManager()->flush($correspondanceType);
+    }
 
     /** REQUETAGE *****************************************************************************************************/
 
@@ -84,7 +104,30 @@ class CorrespondanceTypeService
         return $dictionnaire;
     }
 
+    public function getCorrespondancesTypesAsOptions(): array
+    {
+        $types = $this->getCorrespondancesTypes();
+
+        $options = [];
+        foreach ($types as $type) {
+            $options[$type->getId()] = $this->optionify($type);
+        }
+        return $options;
+    }
+
     /** FACADE ********************************************************************************************************/
 
+    public function optionify(CorrespondanceType $type): array
+    {
+        $this_option = [
+            'value' => $type->getId(),
+            'attributes' => [
+                'data-content' =>
+                    "<code>".$type->getCode() . "</code> " . $type->getLibelleLong(),
+            ],
+            'label' => $type->getLibelleLong(),
+        ];
+        return $this_option;
+    }
 
 }

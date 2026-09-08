@@ -44,9 +44,9 @@ foreach ($tendancesElements as $tendancesElement) {
             <thead>
             <tr>
                 <th class="col-md-4"> Libellé </th>
-                <th class="col-md-<?php echo ($editable)?7:8; ?>">Description</th>
+                <th class="col-md-<?php echo ($editable)?6:7; ?>">Description</th>
                 <?php if ($editable) : ?>
-                    <th class="col-md-1"> Action </th>
+                    <th class="col-md-2"> Action </th>
                 <?php endif; ?>
             </tr>
             </thead>
@@ -79,7 +79,7 @@ foreach ($tendancesElements as $tendancesElement) {
                         <td data-column-id="Action" class="action">
                             <?php /** @see \FicheMetier\Controller\TendanceElementController::modifierAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/tendance-element/modifier', ['fiche-metier'=>$fichemetier->getId(), 'tendance-type' => $tendanceType->getId()],[], true); ?>"
-                               class="ajax-modal" data-event="modification"
+                               class="ajax-modal action primary" data-event="modification"
                             >
                             <?php if (isset($elements[$tendanceType->getCode()])) : ?>
                                 <span class="icon icon-modifier"></span>
@@ -93,6 +93,7 @@ foreach ($tendancesElements as $tendancesElement) {
                                 <br>
                                 <?php /** @see \FicheMetier\Controller\TendanceElementController::historiserAction() */ ?>
                                 <a href="<?php echo $this->url('fiche-metier/tendance-element/historiser', ['tendance-element' => $elements[$tendanceType->getCode()]->getId()],['query' => ['retour'=>$this->url(null,[],[], true)]], true); ?>"
+                                   class="action warning"
                                 >
                                     <span class="icon icon-historiser"></span>
                                     Historiser

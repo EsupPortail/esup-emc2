@@ -176,8 +176,7 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
         });
 
         $('table#applications').dataTable({
-            paging: false,
-            info: false,
+            stateSave: true,
             autoWidth: false,
             language: {
                 "url": "/js/datatables_fr.json",

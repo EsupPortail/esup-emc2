@@ -2,14 +2,13 @@
 
 namespace Application;
 
-use Agent\Provider\Privilege\AgentPrivileges;
+use Agent\Provider\Privilege\AgentmobilitePrivileges;
 use Application\Controller\IndexController;
 use Application\Event\RgpdRenderer\RgpdRendererEvenement;
 use Application\Event\RgpdRenderer\RgpdRendererEvenementFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
-use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Application\Provider\Role\RoleProvider;
@@ -23,9 +22,12 @@ use Application\Service\SqlHelper\SqlHelperService;
 use Application\Service\SqlHelper\SqlHelperServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
+use Application\Service\Util\UtilService;
+use Application\Service\Util\UtilServiceFactory;
 use Application\View\Helper\HistoriqueBlocViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
 use Application\View\Helper\TimerViewHelper;
+use Application\View\Helper\TogglablePartialViewHelper;
 use Carriere\Provider\Privilege\CategoriePrivileges;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Carriere\Provider\Privilege\CorrespondancePrivileges;
@@ -48,7 +50,6 @@ use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
 use Laminas\Router\Http\Literal;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Referentiel\Provider\Privilege\ReferentielPrivileges;
-use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
@@ -71,7 +72,6 @@ return [
                         RolePrivileges::ROLE_AFFICHER,
                         ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER,
                         PrivilegePrivileges::PRIVILEGE_VOIR,
-                        ConfigurationPrivileges::CONFIGURATION_AFFICHER,
                     ],
                 ],
                 [
@@ -112,6 +112,7 @@ return [
                         FicheMetierPrivileges::FICHEMETIER_INDEX,
                         FichePostePrivileges::FICHEPOSTE_INDEX,
                         MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_INDEX,
+                        AgentmobilitePrivileges::AGENTMOBILITE_INDEX,
                     ],
                 ],
                 [
@@ -304,6 +305,7 @@ return [
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
             PerimetreService::class => PerimetreServiceFactory::class,
+            UtilService::class => UtilServiceFactory::class,
             SqlHelperService::class => SqlHelperServiceFactory::class,
 
             RgpdRendererEvenement::class => RgpdRendererEvenementFactory::class,
@@ -333,6 +335,7 @@ return [
             'synchroniserIcon' => SynchorniserIconViewHelper::class,
             'historiqueBloc' => HistoriqueBlocViewHelper::class,
             'timer' => TimerViewHelper::class,
+            'togglablePartial' => TogglablePartialViewHelper::class,
         ],
     ],
 

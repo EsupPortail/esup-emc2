@@ -8,7 +8,7 @@ return [
     'temporary'   => FALSE,
     'logging'     => TRUE,
     'commentaire' => NULL,
-    'sequence'    => NULL,
+    'sequence'    => 'carriere_correspondance_type_id_seq',
     'columns'     => [
         'code'          => [
             'name'        => 'code',
@@ -90,7 +90,7 @@ return [
             'scale'       => NULL,
             'precision'   => 8,
             'nullable'    => FALSE,
-            'default'     => NULL,
+            'default'     => 'nextval(\'carriere_correspondance_type_id_seq\'::regclass)',
             'position'    => 1,
             'commentaire' => NULL,
         ],

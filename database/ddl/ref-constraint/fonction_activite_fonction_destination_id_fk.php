@@ -9,7 +9,7 @@ return [
     'rtable'      => 'fonction_destination',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'fonction_destination_pk',
+    'index'       => 'fonction_destination_id_uindex',
     'columns'     => [
         'fonction_destination_id' => 'id',
     ],

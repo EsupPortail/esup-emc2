@@ -4,7 +4,6 @@ namespace FicheMetier\Service\FicheMetier;
 
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
-use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Carriere\Entity\Db\FamilleProfessionnelle;
 use Carriere\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
@@ -52,7 +51,6 @@ class FicheMetierService
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use ReferentielServiceAwareTrait;
-    use ConfigurationServiceAwareTrait;
     use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
@@ -292,13 +290,6 @@ class FicheMetierService
 
     /** FACADE ********************************************************************************************************/
 
-    public function setDefaultValues(FicheMetier $fiche): FicheMetier
-    {
-        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_REDACTION);
-        $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
-        return $fiche;
-    }
-
     /**
      * @param FicheMetier $fiche
      * @param bool $asElement
@@ -515,9 +506,9 @@ class FicheMetierService
         $displayContexte = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_CONTEXTE);
         $displayTendance = $this->getParametreService()->getValeurForParametre(FicheMetierParametres::TYPE, FicheMetierParametres::DISPLAY_TENDANCE);
 
-        $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes('ordre','asc',false);
+        $tendancesTypes = $this->getTendanceTypeService()->getTendancesTypes('ordre', 'asc', false);
         $fichemetier->setTendancesTypes($tendancesTypes);
-        $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('ordre','asc',false);
+        $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('ordre', 'asc', false);
         $fichemetier->setThematiquesTypes($thematiquesTypes);
 
         $vars = [

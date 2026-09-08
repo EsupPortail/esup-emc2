@@ -94,7 +94,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee())
         <?php if (!$campagne->estCommence()) : ?>
             Agent·es qui devront passer un entretien professionnel
         <?php else : ?>
-            Agent·es concerné·es par un entretien professionnel non convoqué·es
+            Agent·es a convoquer
         <?php endif; ?>
         <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>

@@ -2,6 +2,7 @@
 
 namespace Carriere\Controller;
 
+use Carriere\Form\SpecialiteType\SpecialiteTypeForm;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Carriere\Service\CorrespondanceType\CorrespondanceTypeService;
 use Psr\Container\ContainerExceptionInterface;
@@ -25,9 +26,15 @@ class CorrespondanceTypeControllerFactory {
         $correspondaceService = $container->get(CorrespondanceService::class);
         $typeService = $container->get(CorrespondanceTypeService::class);
 
+        /**
+         * @var SpecialiteTypeForm $specialiteTypeForm
+         */
+        $specialiteTypeForm = $container->get('FormElementManager')->get(SpecialiteTypeForm::class);
+
         $controller = new CorrespondanceTypeController();
         $controller->setCorrespondanceService($correspondaceService);
         $controller->setCorrespondanceTypeService($typeService);
+        $controller->setSpecialiteTypeForm($specialiteTypeForm);
         return $controller;
     }
 }

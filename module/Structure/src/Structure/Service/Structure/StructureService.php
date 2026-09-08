@@ -350,6 +350,7 @@ EOS;
             ->andWhere('sr.dateDebut IS NULL OR sr.dateDebut <= :now')
             ->andWhere('sr.dateFin IS NULL OR sr.dateFin >= :now')
             ->andWhere('sr.deletedOn IS NULL')
+            ->andWhere('sr.histoDestruction IS NULL')
             ->setParameter('now', new DateTime())
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
@@ -375,6 +376,7 @@ EOS;
             ->andWhere('sg.dateFin IS NULL OR sg.dateFin >= :now')
             ->setParameter('now', new DateTime())
             ->andWhere('sg.deletedOn IS NULL')
+            ->andWhere('sg.histoDestruction IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
 
@@ -398,7 +400,7 @@ EOS;
             ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
             ->addSelect('agent')->join('gestionnaire.agent', 'agent')
             ->andWhere('agent.utilisateur = :user')
-            ->andWhere('gestionnaire.deletedOn IS NULL')
+            ->andWhere('gestionnaire.deletedOn IS NULL and gestionnaire.histoDestruction IS NULL')
             ->andWhere('gestionnaire.dateDebut IS NULL or gestionnaire.dateDebut <= :now')
             ->andWhere('gestionnaire.dateFin IS NULL or gestionnaire.dateFin >= :now')
             ->setParameter('now', new DateTime())
@@ -421,7 +423,7 @@ EOS;
             ->addSelect('responsable')->join('structure.responsables', 'responsable')
             ->addSelect('agent')->join('responsable.agent', 'agent')
             ->andWhere('agent.utilisateur = :user')
-            ->andWhere('responsable.deletedOn IS NULL')
+            ->andWhere('responsable.deletedOn IS NULL AND responsable.histoDestruction IS NULL')
             ->andWhere('responsable.dateDebut IS NULL or responsable.dateDebut <= :now')
             ->andWhere('responsable.dateFin IS NULL or responsable.dateFin >= :now')
             ->setParameter('now', new DateTime())
@@ -443,10 +445,7 @@ EOS;
         $qb = $this->getObjectManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('observateur')->join('structure.observateurs', 'observateur')
             ->andWhere('observateur.utilisateur = :user')
-            ->andWhere('responsable.deletedOn IS NULL')
-            ->andWhere('responsable.dateDebut IS NULL or responsable.dateDebut <= :now')
-            ->andWhere('responsable.dateFin IS NULL or responsable.dateFin >= :now')
-            ->setParameter('now', new DateTime())
+            ->andWhere('observateur.histoDestruction IS NULL')
             ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt');
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
@@ -470,7 +469,7 @@ EOS;
             if (($gestionnaire->getAgent() === $agent)
                 and ($gestionnaire->getDateDebut() === NULL or $gestionnaire->getDateDebut() <= $date)
                 and ($gestionnaire->getDateFin() === NULL or $gestionnaire->getDateFin() >= $date)
-                and (!$gestionnaire->isDeleted())
+                and (!$gestionnaire->isDeleted() and !$gestionnaire->estHistorise())
             ) return true;
         }
         if ($structure->getParent() && $structure !== $structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
@@ -502,7 +501,7 @@ EOS;
             if (($responsable->getAgent() === $agent)
                 and ($responsable->getDateDebut() === NULL or $responsable->getDateDebut() <= $date)
                 and ($responsable->getDateFin() === NULL or $responsable->getDateFin() >= $date)
-                and (!$responsable->isDeleted())
+                and (!$responsable->isDeleted() and !$responsable->estHistorise())
             ) return true;
         }
         if ($structure->getParent() && $structure !== $structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);

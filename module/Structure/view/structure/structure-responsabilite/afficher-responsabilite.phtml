@@ -1,0 +1,156 @@
+<?php
+
+use Agent\Entity\Db\Agent;
+use Agent\Entity\Db\AgentAutorite;
+use Agent\Entity\Db\AgentSuperieur;
+use Agent\Provider\Privilege\AgentPrivileges;
+use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureGestionnaire;
+use Structure\Entity\Db\StructureResponsable;
+use UnicaenUtilisateur\Entity\Db\Role;
+
+/**
+ * @see \Structure\Controller\StructureResponsabiliteController::afficherResponsabiliteAction()
+ * @var Structure $structure
+ * @var Role $role
+ * @var StructureGestionnaire[]|StructureResponsable[] $responsabilites
+ *
+ * @var string $appName
+ * @var StructureGestionnaire[]|StructureResponsable[] $revoquees
+ * @var StructureGestionnaire[]|StructureResponsable[] $historisees
+ * @var StructureGestionnaire[]|StructureResponsable[] $terminees
+ * @var StructureGestionnaire[]|StructureResponsable[] $encours
+ * @var StructureGestionnaire[]|StructureResponsable[] $avenir
+ */
+
+$canAfficherAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+
+
+?>
+
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Responsabilités valides</h2>
+        <h3>Passée</h3>
+
+        <?php usort($terminees, function (StructureResponsable|StructureGestionnaire $a, StructureResponsable|StructureGestionnaire $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+        <ul>
+            <?php foreach ($terminees as $responsabilite) : ?>
+                <?php $agent = $responsabilite->getAgent(); ?>
+                <li>
+                    <span class="badge"><?php echo $responsabilite->getSourceId(); ?></span>
+                    <?php echo $agent->getDenomination(true); ?>
+                    (<?php echo ($responsabilite->getDateDebut()) ? $responsabilite->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($responsabilite->getDateFin()) ? $responsabilite->getDateFin()->format('d/m/Y') : "---"; ?>)
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h3>En cours</h3>
+
+        <?php usort($encours, function (StructureResponsable|StructureGestionnaire $a, StructureResponsable|StructureGestionnaire $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+        <ul>
+            <?php foreach ($encours as $responsabilite) : ?>
+                <?php $agent = $responsabilite->getAgent(); ?>
+                <li>
+                    <span class="badge"><?php echo $responsabilite->getSourceId(); ?></span>
+                    <?php echo $agent->getDenomination(true); ?>
+                    (<?php echo ($responsabilite->getDateDebut()) ? $responsabilite->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($responsabilite->getDateFin()) ? $responsabilite->getDateFin()->format('d/m/Y') : "---"; ?>)
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h3>À venir</h3>
+
+        <?php usort($avenir, function (StructureResponsable|StructureGestionnaire $a, StructureResponsable|StructureGestionnaire $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+        <ul>
+            <?php foreach ($avenir as $responsabilite) : ?>
+                <?php $agent = $responsabilite->getAgent(); ?>
+                <li>
+                    <span class="badge"><?php echo $responsabilite->getSourceId(); ?></span>
+                    <?php echo $agent->getDenomination(true); ?>
+                    (<?php echo ($responsabilite->getDateDebut()) ? $responsabilite->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($responsabilite->getDateFin()) ? $responsabilite->getDateFin()->format('d/m/Y') : "---"; ?>)
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+    </div>
+    <div class="col-md-6">
+
+        <h2>Responsabilités revoquées</h2>
+        <span class="icon icon-info" title="Responsabilités importées depuis le SIRH qui ont été manuellement révoquées depuis <?php echo $appName; ?>" style="cursor: help"> À propos de responsabilités révoquées</span>
+        <?php usort($revoquees, function (StructureResponsable|StructureGestionnaire $a, StructureResponsable|StructureGestionnaire $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+
+        <ul>
+            <?php foreach ($revoquees as $responsabilite) : ?>
+                <?php $agent = $responsabilite->getAgent(); ?>
+                <li>
+                    <span class="badge"><?php echo $responsabilite->getSourceId(); ?></span>
+                    <?php echo $agent->getDenomination(true); ?>
+                    (<?php echo ($responsabilite->getDateDebut()) ? $responsabilite->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($responsabilite->getDateFin()) ? $responsabilite->getDateFin()->format('d/m/Y') : "---"; ?>)
+                    <br>
+                    <em>revoquée le <?php echo $responsabilite->getHistoDestruction()->format('d/m/Y'); ?>
+                        par <?php echo $responsabilite->getHistoDestructeur()->getDisplayName(); ?></em>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h2>Responsabilités annulées</h2>
+        <?php usort($historisees, function (StructureResponsable|StructureGestionnaire $a, StructureResponsable|StructureGestionnaire $b) {
+            if ($a->getDateDebut()->format('Y-m-d') !== $b->getDateDebut()->format('Y-m-d')) {
+                return $a->getDateDebut() <=> $b->getDateDebut();
+            }
+            return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+        });
+        ?>
+
+        <ul>
+            <?php foreach ($historisees as $responsabilite) : ?>
+                <?php $agent = $responsabilite->getAgent(); ?>
+                <li>
+                    <span class="badge"><?php echo $responsabilite->getSourceId(); ?></span>
+                    <?php echo $agent->getDenomination(true); ?>
+                    (<?php echo ($responsabilite->getDateDebut()) ? $responsabilite->getDateDebut()->format('d/m/Y') : "---"; ?>
+                    &RightArrow;
+                    <?php echo ($responsabilite->getDateFin()) ? $responsabilite->getDateFin()->format('d/m/Y') : "---"; ?>)
+                    <br>
+                    <em>annulée le <?php echo $responsabilite->getHistoDestruction()->format('d/m/Y'); ?>
+                        par <?php echo $responsabilite->getHistoDestructeur()->getDisplayName(); ?></em>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

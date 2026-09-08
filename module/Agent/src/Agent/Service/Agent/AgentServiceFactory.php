@@ -3,6 +3,8 @@
 namespace Agent\Service\Agent;
 
 use Agent\Service\AgentAffectation\AgentAffectationService;
+use Agent\Service\AgentAutorite\AgentAutoriteService;
+use Agent\Service\AgentSuperieur\AgentSuperieurService;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -24,12 +26,16 @@ class AgentServiceFactory {
         /**
          * @var EntityManager $entityManager
          * @var AgentAffectationService $agentAffectationService
+         * @var AgentAutoriteService $agentAutoriteService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var ParametreService $parametreService
          * @var StructureService $structureService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentAffectationService = $container->get(AgentAffectationService::class);
+//        $agentAutoriteService = $container->get(AgentAutoriteService::class);
+//        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $parametreService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
@@ -37,6 +43,8 @@ class AgentServiceFactory {
         $service = new AgentService();
         $service->setObjectManager($entityManager);
         $service->setAgentAffectationService($agentAffectationService);
+//        $service->setAgentAutoriteService($agentAutoriteService);
+//        $service->setAgentSuperieurService($agentSuperieurService);
         $service->setParametreService($parametreService);
         $service->setStructureService($structureService);
         $service->setUserService($userService);

@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * @see \Carriere\Controller\GradeController::afficherAgentsAction();
  * @var Grade $grade
@@ -12,82 +13,80 @@ use Agent\Entity\Db\AgentGrade;
 use Agent\Provider\Privilege\AgentPrivileges;
 use Carriere\Entity\Db\Grade;
 
+usort($agentGrades, function (AgentGrade $a, AgentGrade $b) {
+    return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();
+});
+
 $now = new DateTime();
-
-/** @var  AgentGrade[] $agents */
-$agents = $grade->getAgentGrades();
-$agents = array_filter($agents, function (AgentGrade $a) { return $a->estCommence() && !$a->isDeleted();});
-usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
-
-$actifs = 0; $inactifs = 0;
-foreach ($agents as $agent) { if ($agent->estFini()) $inactifs++; else $actifs++;}
-
+$actifs = 0;
+$inactifs = 0;
+foreach ($agentGrades as $agentGrade) {
+    if ($agentGrade->estFini($now)) $inactifs++; else $actifs++;
+}
 ?>
 
 <div class="row">
     <div class="col-md-6">
         <dl class="row">
-            <dt class="col-md-5"> Grade </dt>
+            <dt class="col-md-5"> Grade</dt>
             <dd class="col-md-7">[#<?php echo $grade->getId(); ?>] <?php echo $grade->getLibelleLong(); ?></dd>
-<!--            <dt class="col-md-5"> #Agent </dt>-->
-<!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
-            <dt class="col-md-5"> #AgentGrade </dt>
-            <dd class="col-md-7"> <?php echo $actifs; ?> actifs (<?php echo $inactifs ?> inactifs)</dd>
+            <!--            <dt class="col-md-5"> #Agent </dt>-->
+            <!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
+            <dt class="col-md-5"> #Agent·e</dt>
+            <dd class="col-md-7"> <?php echo $actifs; ?> actif·ives (<?php echo $inactifs ?> inactif·ives)</dd>
         </dl>
     </div>
     <div class="col-md-6">
         <dl class="row">
-            <dt class="col-md-5"> Date ouverture </dt>
-            <dd class="col-md-7"> <?php echo ($grade->getDateDebut())?$grade->getDateDebut()->format('d/m/Y'):"---"; ?>  </dd>
-            <dt class="col-md-5"> Date fermeture </dt>
-            <dd class="col-md-7"> <?php echo ($grade->getDateFin())?$grade->getDateFin()->format('d/m/Y'):"---"; ?></dd>
+            <dt class="col-md-5"> Date ouverture</dt>
+            <dd class="col-md-7"> <?php echo ($grade->getDateDebut()) ? $grade->getDateDebut()->format('d/m/Y') : "---"; ?>  </dd>
+            <dt class="col-md-5"> Date fermeture</dt>
+            <dd class="col-md-7"> <?php echo ($grade->getDateFin()) ? $grade->getDateFin()->format('d/m/Y') : "---"; ?></dd>
         </dl>
     </div>
 </div>
 
-<label for="actif_only">Conserver les actifs seulement</label>
+<label for="actif_only">Conserver que les situations en cours</label>
 <input type="checkbox" name="actif_only" id="actif_only" checked>
 
 <table class="table table-condensed">
     <thead>
-        <tr>
-            <th> Id </th>
-            <th> Agent </th>
-            <th> Début </th>
-            <th> Fin </th>
-        </tr>
+    <tr>
+        <th> Id</th>
+        <th> Agent·e</th>
+        <th> Début</th>
+        <th> Fin</th>
+    </tr>
     </thead>
     <tbody>
-        <?php foreach ($agents as $agent) : ?>
-        <tr <?php if ($agent->estFini($now)) echo 'class="historise"'; ?> >
-            <td> <?php echo $agent->getId(); ?> </td>
+    <?php foreach ($agentGrades as $agentGrade) : ?>
+        <?php $agent = $agentGrade->getAgent(); ?>
+        <tr <?php if ($agentGrade->estFini($now)) echo 'class="historise"'; ?> >
+            <td> <?php echo $agentGrade->getId(); ?> </td>
             <td>
-                <?php if ($this->isAllowed($agent->getAgent(), AgentPrivileges::AGENT_AFFICHER)) : ?>
-                    <a class="linkexterne" id="<?php echo $agent->getAgent()->getId(); ?>" href="">
-                        <?php echo $agent->getAgent()->getDenomination(); ?>
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                    <?php /** @see \Agent\Controller\AgentController::informationsAction() */ ?>
+                    <a href="<?php echo $this->url('agent/informations', ['agent' => $agent->getId()], [], true); ?>"
+                       target="_blank"
+                    >
+                        <?php echo $agent->getDenomination(); ?>
                     </a>
                 <?php else : ?>
-                    <?php echo $agent->getAgent()->getDenomination(); ?>
+                    <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
             </td>
-            <td> <?php echo ($agent->getDateDebut()) ? $agent->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
-            <td> <?php echo ($agent->getDateFin()) ? $agent->getDateFin()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agentGrade->getDateDebut()) ? $agentGrade->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agentGrade->getDateFin()) ? $agentGrade->getDateFin()->format('d/m/Y') : "---"; ?> </td>
         </tr>
-        <?php endforeach; ?>
+    <?php endforeach; ?>
     </tbody>
 </table>
 
 <script>
     $('tr.historise').hide();
-    $('#actif_only').on('change', function() {
+    $('#actif_only').on('change', function () {
         let val = $('#actif_only').is(':checked');
         if (val === true) $('tr.historise').hide(); else $('tr.historise').show();
-    });
-
-    $('a.linkexterne').on('click',function(e) {
-        e.preventDefault();
-        $('.modal').modal("hide");
-        window.location = 'agent/informations/' + $(this).attr('id');
     });
 </script>
 

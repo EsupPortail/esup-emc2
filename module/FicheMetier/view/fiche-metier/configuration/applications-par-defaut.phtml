@@ -1,0 +1,118 @@
+<?php
+
+use Element\Provider\Privilege\ApplicationPrivileges;
+use FicheMetier\Entity\Db\FicheMetierConfigurationApplicationParDefaut;
+use FicheMetier\Provider\Privilege\ConfigurationPrivileges;
+use UnicaenParametre\Entity\Db\Parametre;
+
+/**
+ * @see \FicheMetier\Controller\FicheMetierConfigurationApplicationParDefautController::indexAction()
+ * @var FicheMetierConfigurationApplicationParDefaut[] $applications
+ * @var Parametre[] $parametres
+ */
+
+$canAfficherApplication = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER));
+$canAjouter = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
+$canSupprimer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_DETRUIRE));
+$canReappliquer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_REAPPLIQUER));
+
+?>
+
+<?php echo $this->partial('header', ['selected' => 'application', 'parametres' => $parametres]); ?>
+
+<div class="alert alert-info">
+    <span class="icon icon-info"></span>
+    Les applications ci-dessous sont ajoutées automatiquement aux fiches métiers lors de leur création.
+</div>
+
+<div>
+    <?php if ($canAjouter): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationApplicationParDefautController::ajouterAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/configuration/applications-par-defaut/ajouter', [], [], true); ?>"
+           class="ajax-modal btn btn-primary" data-event="modification">
+            <span class="icon icon-ajouter"></span>
+            Ajouter une ou plusieurs applications par défaut
+        </a>
+    <?php endif; ?>
+    <?php if ($canReappliquer): ?>
+        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationApplicationParDefautController::reappliquerAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier/configuration/applications-par-defaut/reappliquer', [], [], true); ?>"
+           class="ajax-modal btn btn-warning" data-event="modification">
+            <span class="icon icon-gerer"></span>
+            Ré-appliquer
+        </a>
+    <?php endif; ?>
+</div>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<?php if (empty($applications)) : ?>
+    <div>
+        Aucune application par défaut.
+    </div>
+<?php else: ?>
+    <table class="table table-condensed" id="applications-par-defaut">
+        <thead>
+        <tr>
+            <th class="col-md-10"> Libellé</th>
+            <th class="col-md-2"> Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($applications as $application): ?>
+            <tr>
+                <td data-column-id="Applications">
+                    <?php echo $application->getApplication()->getLibelle(); ?>
+                    <?php if ($application->getApplication()->estHistorise()) : ?>
+                        <span class="badge" style="background: darkred;">
+                                Historisée
+                            </span>
+                    <?php endif; ?>
+                </td>
+                <td data-column-id="Action">
+                    <?php if ($canAfficherApplication): ?>
+                        <?php /** @see \Element\Controller\ApplicationController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('element/application/afficher', ['application' => $application->getApplication()->getId()], [], true); ?>"
+                           class="ajax-modal action secondary"
+                        >
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canSupprimer): ?>
+                        <br>
+                        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationApplicationParDefautController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/configuration/applications-par-defaut/supprimer', ['application-par-defaut' => $application->getId()], [], true); ?>"
+                           class="ajax-modal action danger" data-event="modification"
+                        >
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('table#applications-par-defaut').dataTable({
+            paging: false,
+            info: false,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                {targets: [1], orderable: false}
+            ]
+        });
+    });
+
+</script>

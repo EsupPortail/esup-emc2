@@ -215,6 +215,7 @@ if ($type !== null) {
         });
         $("table#competences-<?php echo $type?$type->getCode():''; ?>").DataTable({
             autoWidth: false,
+            stateSave: true,
             language: {
                 "url": "/js/datatables_fr.json",
             },

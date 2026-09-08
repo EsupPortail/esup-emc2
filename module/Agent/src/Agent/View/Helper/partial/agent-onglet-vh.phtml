@@ -2,6 +2,7 @@
 
 use Agent\Entity\Db\Agent;
 use Agent\Provider\Parametre\AgentParametres;
+use Agent\Provider\Privilege\PortfolioPrivileges;
 use Agent\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use UnicaenParametre\Entity\Db\Parametre;
@@ -81,15 +82,17 @@ use UnicaenUtilisateur\Entity\Db\AbstractUser;
         </button>
     <?php endif; ?>
     <?php if (!isset($parametres[AgentParametres::ONGLET_PORTFOLIO]) || $parametres[AgentParametres::ONGLET_PORTFOLIO]->getValeur() !== "false") : ?>
-        <?php /** @see \Agent\Controller\AgentController::portfolioAction() */ ?>
-        <button class="nav-link" id="portfolio-tab"
-                data-bs-toggle="tab" data-bs-target="#portfolio"
-                type="button" role="tab" aria-controls="portfolio" aria-selected="true"
-                onclick="location.href='<?php echo $this->url('agent/portfolio', ['agent' => $agent->getId()],[], true); ?>'"
-        >
-            Portfolio
-            <br/>
-        </button>
+        <?php if ($this->isAllowed(PortfolioPrivileges::getResourceId(PortfolioPrivileges::PORTFOLIO_AFFICHER))) : ?>
+            <?php /** @see \Agent\Controller\AgentController::portfolioAction() */ ?>
+            <button class="nav-link" id="portfolio-tab"
+                    data-bs-toggle="tab" data-bs-target="#portfolio"
+                    type="button" role="tab" aria-controls="portfolio" aria-selected="true"
+                    onclick="location.href='<?php echo $this->url('agent/portfolio', ['agent' => $agent->getId()],[], true); ?>'"
+            >
+                Portfolio
+                <br/>
+            </button>
+        <?php endif; ?>
     <?php endif; ?>
     <?php if (!isset($parametres[AgentParametres::ONGLET_MOBILITES]) || $parametres[AgentParametres::ONGLET_MOBILITES]->getValeur() !== "false") : ?>
         <?php /** @see \Agent\Controller\AgentMobiliteControllerController::afficherAgentAction() */ ?>

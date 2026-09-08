@@ -131,7 +131,7 @@ class NotificationService extends \Application\Service\Notification\Notification
 
     /** Notifications liées à une campagne d'entretiens professionnels ************************************************/
 
-    public function triggerCampagneOuvertureDirections(Campagne $campagne): Mail
+    public function triggerCampagneOuvertureDirections(Campagne $campagne): ?Mail
     {
         $vars = $this->computeVariableFromCampagne($campagne);
 
@@ -153,7 +153,7 @@ class NotificationService extends \Application\Service\Notification\Notification
         return $mailDac;
     }
 
-    public function triggerCampagneOuverturePersonnels(Campagne $campagne): Mail
+    public function triggerCampagneOuverturePersonnels(Campagne $campagne): ?Mail
     {
         $vars = $this->computeVariableFromCampagne($campagne);
 
@@ -182,6 +182,19 @@ class NotificationService extends \Application\Service\Notification\Notification
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ENVOI, $vars);
+        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
+        if ($mail) {
+            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
+        return $mail;
+    }
+
+    public function triggerModificationConvocationDemande(EntretienProfessionnel $entretien): ?Mail
+    {
+        $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_MODIFICATION_CONVOCATION_ENVOI, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps(),'EntretienProfessionnel');
         if ($mail) {
             $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -290,7 +303,7 @@ class NotificationService extends \Application\Service\Notification\Notification
         return $mail;
     }
 
-    public function triggerPasObservations(EntretienProfessionnel $entretien): Mail
+    public function triggerPasObservations(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
@@ -430,7 +443,7 @@ class NotificationService extends \Application\Service\Notification\Notification
 
     /** Notifications associées à la demande de validation (en retard) d'entretiens professionnels *****/
 
-    public function triggerRappelValidationSuperieur(Agent $superieur, Campagne $campagne, array $entretiens): Mail
+    public function triggerRappelValidationSuperieur(Agent $superieur, Campagne $campagne, array $entretiens): ?Mail
     {
         $vars = ['campagne' => $campagne, 'agent' => $superieur, 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_SUPERIEUR, $vars);
@@ -449,7 +462,7 @@ class NotificationService extends \Application\Service\Notification\Notification
         return $mail;
     }
 
-    public function triggerRappelValidationAutorite(Agent $autorite, Campagne $campagne, array $entretiens): Mail
+    public function triggerRappelValidationAutorite(Agent $autorite, Campagne $campagne, array $entretiens): ?Mail
     {
         $vars = ['campagne' => $campagne, 'agent' => $autorite, 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_AUTORITE, $vars);
@@ -469,7 +482,7 @@ class NotificationService extends \Application\Service\Notification\Notification
         return $mail;
     }
 
-    public function triggerRappelValidationAgent(?EntretienProfessionnel $entretien): Mail
+    public function triggerRappelValidationAgent(?EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 
@@ -485,7 +498,7 @@ class NotificationService extends \Application\Service\Notification\Notification
 
     /** NOTIFICATIONS ASSOCIEES AUX PROCEDURES POST-ENTRETIEN *********************************************************/
 
-    public function triggerModificationComptesRendus(EntretienProfessionnel $entretien): Mail
+    public function triggerModificationComptesRendus(EntretienProfessionnel $entretien): ?Mail
     {
         $vars = $this->computeVariableFromEntretienProfessionnel($entretien);
 

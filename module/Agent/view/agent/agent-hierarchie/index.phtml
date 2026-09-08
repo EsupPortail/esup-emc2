@@ -44,10 +44,17 @@ Extraction des chaînes hiérarchiques courantes au format .csv avec :
 
 <h3> Importation depuis un csv</h3>
 
-
+<p>
 Le format du CSV exploité est le suivant :
 <code>agent_id ; responsable_id ; date_debut; date_fin</code>. <br/>
 Un·e agent·e peut avoir plusieurs lignes dans ce fichier si plusieurs responsables sont lié·es.
+</p>
+
+<p>
+    <a href="<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>exemples/trame_csv/import_chaine_hierarchique.csv">
+    <span class="icon icon-csv"></span> Télécharger la trame d'import des chaînes hiérarchiques
+</a>
+</p>
 
 <div class="alert alert-warning">
     Tous les agent·es listé·es dans le fichier CSV verront leur chaîne hiérarchique historisée.

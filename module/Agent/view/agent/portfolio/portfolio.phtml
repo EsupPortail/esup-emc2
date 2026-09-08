@@ -1,0 +1,137 @@
+<?php
+
+use Agent\Entity\Db\Agent;
+use Agent\Provider\Privilege\AgentPrivileges;
+use Agent\Provider\Privilege\PortfolioPrivileges;
+use UnicaenFichier\Entity\Db\Fichier;
+
+/**
+ * @see \Agent\Controller\PortfolioControler::portfolioAction()
+ * @var Agent $agent
+ * @var Fichier[] $fichiers
+ *
+ */
+
+$canVoirFichier = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+$canAjouterFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canHistoriserFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruireFichier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+
+$natures = [];
+$dictionnaires = [];
+foreach ($fichiers as $fichier) {
+    $nature = $fichier->getNature();
+    $natures[$nature->getId()] = $nature->getLibelle();
+    $dictionnaires[$nature->getId()][] = $fichier;
+}
+
+$canTelecharger = $this->isAllowed($agent, PortfolioPrivileges::PORTFOLIO_AFFICHER_DOCUMENT);
+$canHistoriser = $this->isAllowed($agent, PortfolioPrivileges::PORTFOLIO_HISTORISER_DOCUMENT);
+$canRestaurer = $this->isAllowed($agent, PortfolioPrivileges::PORTFOLIO_RESTAURER_DOCUMENT);
+$canSupprimer = $this->isAllowed($agent, PortfolioPrivileges::PORTFOLIO_SUPPRIMER_DOCUMENT);
+
+?>
+
+<?php echo $this->agentOnglet($agent, 'portfolio'); ?>
+
+
+<?php if ($canAjouterFichier) : ?>
+    <a
+            <?php /** @see  \Agent\Controller\PortfolioControler::ajouterAction() */ ?>
+            href="<?php echo $this->url('agent/portfolio/ajouter', ['agent' => $agent->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]], true); ?>"
+            class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-televerser"></span>
+        Ajouter un document au portfolio
+    </a>
+<?php endif; ?>
+
+<?php foreach ($dictionnaires as $natureId => $fichiersByNature) : ?>
+    <h2> <?php echo $natures[$natureId]; ?></h2>
+
+    <?php /** @var Fichier $fichier */ ?>
+    <?php foreach ($fichiersByNature as $fichier) : ?>
+        <?php if ($fichier->estNonHistorise() OR $canRestaurer) : ?>
+        <div class="fichier">
+            <div class="row">
+                <div class="col-md-8">
+                    <span style="font-size: large"><?php echo $fichier->getNomOriginal(); ?></span><br>
+                    téléverser le <?php echo $fichier->getHistoModification()->format('d/m/Y à H:i:s '); ?> par <?php echo $fichier->getHistoModificateur()->getDisplayname(); ?>
+
+                    <?php if ($fichier->estHistorise()) : ?>
+                        <br>
+                        <span class="badge" style="background: darkred;">document historisé</span>
+                    <?php endif; ?>
+                </div>
+                <div class="col-md-4">
+                    <?php if ($canTelecharger) : ?>
+                        <?php /** @see \Agent\Controller\PortfolioControler::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('agent/portfolio/afficher', ['agent' => $agent?->getId(), 'fichier' => $fichier->getId()], [], true); ?>"
+                           target="_blank" class="btn btn-primary">
+                            <span class="icon icon-telecharger"></span>
+                            Télécharger
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ($fichier->estNonHistorise() AND $canHistoriser) : ?>
+                    <br>
+                    <a
+                            <?php /** @see \Agent\Controller\PortfolioControler::historiserAction() */ ?>
+                            href="<?php echo $this->url('agent/portfolio/historiser', ['agent' => $agent?->getId(), 'fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]], true); ?>"
+                            class="btn btn-warning"
+                    >
+                        <span class="icon icon-historiser"></span>
+                        Supprimer
+                    </a>
+                    <?php endif; ?>
+
+                    <?php if ($fichier->estHistorise() AND $canRestaurer) : ?>
+                    <br>
+                    <a
+                            <?php /** @see \Agent\Controller\PortfolioControler::restaurerAction() */ ?>
+                            href="<?php echo $this->url('agent/portfolio/restaurer', ['agent' => $agent?->getId(), 'fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]], true); ?>"
+                            class="btn btn-warning"
+                    >
+                        <span class="icon icon-restaurer"></span>
+                        Restaurer
+                    </a>
+                    <?php endif; ?>
+
+
+                    <?php if ($canSupprimer) : ?>
+                    <br>
+                    <a
+                            <?php /** @see \Agent\Controller\PortfolioControler::supprimerAction() */ ?>
+                            href="<?php echo $this->url('agent/portfolio/supprimer', ['agent' => $agent?->getId(), 'fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/portfolio', ['agent' => $agent->getId()], [], true)]], true); ?>"
+                            class="ajax-modal btn btn-danger" data-event="modification"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Supprimer définitivement
+                    </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+
+<style>
+    div.fichier {
+        background: whitesmoke;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+
+

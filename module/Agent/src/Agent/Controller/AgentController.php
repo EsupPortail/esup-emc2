@@ -243,47 +243,6 @@ class AgentController extends AbstractActionController {
 
     /** depot de fichiers */
 
-    public function uploadFichierAction(): ViewModel|Response
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-
-        $fichier = new Fichier();
-        $form = $this->getUploadForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fichier', ['agent' => $agent->getId()], [], true));
-        $form->bind($fichier);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $files = $request->getFiles();
-            $file = $files['fichier'];
-
-            if ($file['name'] != '') {
-                try {
-                    $nature = $this->getNatureService()->getNature($data['nature']);
-                    $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
-                } catch (Exception $e) {
-                    throw new RuntimeException("Un problème est survenu lors du téléversement", 0, $e);
-                }
-                $agent->addFichier($fichier);
-                $this->getAgentService()->update($agent);
-            }
-
-            $retour = $this->params()->fromQuery('retour');
-            if ($retour) return $this->redirect()->toUrl($retour);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
-        $vm->setVariables([
-            'title' => 'Téléverserment d\'un fichier',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
     public function uploadFichePostePdfAction(): ViewModel|Response
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);

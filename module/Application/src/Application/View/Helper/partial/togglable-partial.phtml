@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @see \Application\View\Helper\TogglablePartialViewHelper
+ * @var string $partial
+ * @var Parametre $parametre
+ * @var array $variables
+ * @var array $options
+ */
+
+//todo mettre un niveau de debug dans les options
+use UnicaenParametre\Entity\Db\Parametre;
+
+$type = $parametre?->getCategorie()?->getCode();
+$code = $parametre?->getCode();
+$valeur = $parametre?->getValeur();
+?>
+
+<?php if ($parametre->isModifiable()) : ?>
+<div
+    class="zfloat-end" style="font-size: large; padding-right:0.5rem; "
+    onclick="toggle('<?php echo $type; ?>','<?php echo $code; ?>')">
+                <span class="text-success" id="toggle-<?php echo $code; ?>"
+                      style="display: <?php if($valeur !== 'true') echo " none "; ?>"
+                >
+                    <span class="icon icon-toggle-on"></span>
+                    Affichage activé
+                </span>
+    <span class="text-danger" id="toggle-<?php echo $code; ?>"
+          style="display: <?php if($valeur === 'true') echo " none "; ?>"
+    >
+                    <span class="icon icon-toggle-off"></span>
+                    Affichage désactivé
+                </span>
+    <?php //var_dump($valeur); ?>
+</div>
+<?php else : ?>
+    <span style="font-size: large; padding-right:0.5rem;" class="text-warning">
+        <span class="icon icon-locked"></span>
+        <?php if ($parametre->getValeur() === 'true') : ?>
+            Bloc affiché
+        <?php else : ?>
+            Bloc masqué
+        <?php endif; ?>
+    </span>
+<?php endif; ?>
+<div
+    id='div-<?php echo $code; ?>'
+    class="  <?php if($valeur !== 'true') echo "off"; ?> ">
+    <?php echo $this->partial($partial, $variables); ?>
+</div>
+
+<style>
+    .off
+    {
+        position: relative;
+        /*background: whitesmoke !important;*/
+        /*color: #666666 !important;*/
+    }
+
+    .off::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 10px,
+                rgba(0, 0, 0, 0.2) 10px,
+                rgba(0, 0, 0, 0.2) 20px
+        );
+        pointer-events: none; /* Permet de cliquer à travers */
+        z-index: 1;
+    }
+</style>
+
+<script>
+    function doToggle(parameter) {
+        console.log("toggling: " + parameter);
+        $('div#div-' + parameter).toggleClass('off');
+        $('span#toggle-' + parameter).toggle();
+    }
+
+    function toggle(type,parameter) {
+        <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationAffichageController::toggleParametreAction(); */ ?>
+        let url = '<?php echo $this->url('fiche-metier/configuration/affichage/toggle-parametre'); ?>/'+type+'/'+parameter;
+        console.log("toggle: " + type + "-" + parameter);
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    doToggle(parameter);
+                },
+            success:
+                function (result) {
+                    let success = result.success;
+                    if (!success) {
+                        doToggle(parameter);
+                        alert("Une erreur est survenue lors du changement de valeur du paramètre.\n" + result.erreur)
+                    }
+                }
+        });
+
+    }
+</script>

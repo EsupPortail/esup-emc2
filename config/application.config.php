@@ -60,7 +60,7 @@ $modules = [
 
     'Application',
 
-    'Laminas\DeveloperTools',
+    //'Laminas\DeveloperTools',
 
 ];
 

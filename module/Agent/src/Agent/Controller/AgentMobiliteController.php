@@ -7,12 +7,14 @@ use Agent\Form\AgentMobilite\AgentMobiliteFormAwareTrait;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Agent\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Agent\Provider\Parametre\AgentParametres;
+use Application\Service\Util\UtilServiceAwareTrait;
 use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class AgentMobiliteController extends AbstractActionController
 {
@@ -21,11 +23,16 @@ class AgentMobiliteController extends AbstractActionController
     use MobiliteServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
+    use UtilServiceAwareTrait;
     use AgentMobiliteFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
-        $mobilites = $this->getAgentMobiliteService()->getAgentsMobilites();
+        $user = $this->getUserService()->getConnectedUser();
+        $agents = $this->getUtilService()->getAgentsSousReponsabilite($user);
+
+        $mobilites = $this->getAgentMobiliteService()->getAgentsMobilitesWithAgents($agents);
         $types = $this->getMobiliteService()->getMobilites();
 
         $agent = null;

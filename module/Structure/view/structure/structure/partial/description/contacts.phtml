@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @var Structure $structure
+ * @var Contact[] $contacts
+ */
+
+use Structure\Entity\Db\Structure;
+use UnicaenContact\Entity\Db\Contact;
+use UnicaenContact\Entity\Db\Type;
+use UnicaenContact\Provider\Privilege\ContactPrivileges;
+
+$canAjouterContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_AJOUTER));
+$canModifierContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_MODIFIER));
+$canHistoriserContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_HISTORISER));
+$canSupprimerContact = $this->isAllowed(ContactPrivileges::getResourceId(ContactPrivileges::CONTACT_SUPPRIMER));
+
+$sortedContacts = [];
+$sortedTypes = [];
+foreach ($contacts as $contact) {
+    $type = $contact->getType();
+    $sortedTypes[$type->getId()] = $type;
+    $sortedContacts[$type->getId()][] = $contact;
+}
+usort($sortedTypes, function (Type $a, Type $b) {
+    return $a->getLibelle() <=> $b->getLibelle();
+});
+
+
+?>
+
+    <div class="card">
+        <div class="card-header bg-default" style="margin-bottom: 0.5rem;">
+            <div>
+                <h2>Contact·s</h2>
+            </div>
+            <div>
+                <?php if ($canAjouterContact) : ?>
+                    <?php /**  @see \Structure\Controller\ContactController::ajouterAction() * */ ?>
+                    <a href="<?php echo $this->url('structure/contact/ajouter', ['structure' => $structure->getId()], [], true); ?>"
+                       class="ajax-modal action primary" data-event="modification">
+                        <span class="icon icon-ajouter"></span>
+                        Ajouter un nouveau contact
+                    </a>
+                    <?php /**  @see \Structure\Controller\ContactController::associerAction() * */ ?>
+                    <a href="<?php echo $this->url('structure/contact/associer', ['structure' => $structure->getId()], [], true); ?>"
+                       class="action primary ajax-modal" data-event="modification">
+                        <span class="icon icon-link"></span>
+                        Associer un contact existant
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="card-body">
+            <?php if (empty($contacts)) : ?>
+                Aucun contact de désigné pour cette structure.
+            <?php else : ?>
+                <?php foreach ($sortedTypes as $type) : ?>
+                    <h3> <?php echo $type->getLibelle(); ?> </h3>
+                    <?php
+                        $contacts_ = $sortedContacts[$type->getId()];
+                        $res = usort($contacts_, function ($a, $b) {
+                            return Contact::sort($a, $b);
+                        });
+                    ?>
+                    <?php /** @var Contact $contact */ ?>
+                    <?php foreach ($contacts_ as $contact) : ?>
+                        <?php if ($contact->estNonHistorise() or $canModifierContact) : ?>
+                            <?php
+                                $infos = [];
+                                if ($contact->getService()) $infos[] = $contact->getService();
+                                if ($contact->getDenomination()) $infos[] = $contact->getDenomination();
+                                echo implode(" - ", $infos);
+                            ?>
+                            <span>&nbsp;&nbsp;</span>
+                            <?php if ($canModifierContact) : ?>
+                                <?php /** @see \UnicaenContact\Controller\ContactController::modifierAction() */ ?>
+                                <a href="<?php echo $this->url("unicaen-contact/contact/modifier", ['contact' => $contact->getId()], [], true); ?>"
+                                   class="text-primary ajax-modal" data-event="modification" title="Modifier"
+                                >
+                                    <span class="icon icon-editer"></span></a>
+                                <?php /** @see \Structure\Controller\ContactController::desassocierAction() */ ?>
+                                <a href="<?php echo $this->url("structure/contact/desassocier", ['structure' => $structure->getId(), 'contact' => $contact->getId()], [], true); ?>"
+                                   class="text-warning" title="Dissocier"
+                                >
+                                    <span class="icon icon-unlink"></span></a>
+                            <?php endif; ?>
+                            <br>
+                            <?php
+                                $infos = [];
+                                if ($contact->getEmail()) $infos[] = "<span class='icon icon-mail'></span>&nbsp;"."<a href='mailto:".$contact->getEmail()."'>".$contact->getEmail()."</a>";
+                                if ($contact->getTelephone()) $infos[] = "<span class='icon icon-telephone'></span>&nbsp;".$contact->getTelephone();
+                                if ($contact->getUrl()) $infos[] = "<span class='icon icon-lien-externe'></span>&nbsp;"."<a href='".$contact->getUrl()."' target='_blank'>".$contact->getUrl()."</a>";
+                                echo implode(" - ", $infos);
+                            ?>
+
+                            <br>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <div style="padding-bottom: 0.5rem;"></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>

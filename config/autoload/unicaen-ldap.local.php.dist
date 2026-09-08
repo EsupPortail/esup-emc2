@@ -29,7 +29,9 @@ return [
                         'password' => "XXXX",
                         'baseDn' => "ou=people,dc=XXX,dc=fr",
                         'bindRequiresDn' => true,
-                        'accountFilterFormat' => "(&(objectClass=posixAccount)(supannAliasLogin=%s))",
+                        //dé-commenter la ligne correspondant à votre situation
+//        'accountFilterFormat' => "(&(objectClass=posixAccount)(supannAliasLogin=%s))",
+//        'accountFilterFormat' => "(&(objectClass=posixAccount)(uid=%s))",
                         'useStartTls'         => false,
                     ]
                 ]

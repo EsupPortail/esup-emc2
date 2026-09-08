@@ -33,11 +33,11 @@ $this->headTitle("Référentiels");
 
 <table class="table table-condensed" id="referentiels">
     <thead>
-        <tr>
-            <th class="col-md-2"> Libellé court </th>
-            <th class="col-md-8"> Libellé long et description </th>
-            <th class="col-md-2 action"> Action</th>
-        </tr>
+    <tr>
+        <th class="col-md-2"> Libellé court</th>
+        <th class="col-md-8"> Libellé long et description</th>
+        <th class="col-md-2 action"> Action</th>
+    </tr>
     </thead>
     <tbody>
     <?php foreach ($referentiels as $referentiel): ?>
@@ -58,40 +58,41 @@ $this->headTitle("Référentiels");
 
                 <?php $nbActivites = count($referentiel->getActivites()); ?>
                 <?php if ($nbActivites > 0) : ?>
-                    <?php /** @see \FicheMetier\Controller\ActiviteController::indexAction()  */ ?>
+                    <?php /** @see \FicheMetier\Controller\ActiviteController::indexAction() */ ?>
                     <a href="<?php echo $this->url('activite', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
                         <span class="badge activite"> <?php echo $nbActivites; ?> activité·s </span></a>
                 <?php endif; ?>
                 <?php $nbMissions = count($referentiel->getMissions()); ?>
                 <?php if ($nbMissions > 0) : ?>
-                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction()  */ ?>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::indexAction() */ ?>
                     <a href="<?php echo $this->url('mission-principale', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
                         <span class="badge mission"> <?php echo $nbMissions; ?> mission·s </span></a>
                 <?php endif; ?>
                 <?php $nbCompetences = count($referentiel->getCompetences()); ?>
                 <?php if ($nbCompetences > 0) : ?>
-                    <?php /** @see \Element\Controller\CompetenceController::listingAction()  */ ?>
+                    <?php /** @see \Element\Controller\CompetenceController::listingAction() */ ?>
                     <a href="<?php echo $this->url('element/competence/listing', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
                         <span class="badge competence"> <?php echo $nbCompetences; ?> compétence·s </span></a>
                 <?php endif; ?>
                 <?php $nbFichesMetiers = count($referentiel->getFichesMetiers()); ?>
                 <?php if ($nbFichesMetiers > 0) : ?>
-                    <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction()  */ ?>
+                    <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier', [], ['query' => ['referentiel' => $referentiel->getId()]], true); ?>">
                         <span class="badge fichemetier"> <?php echo $nbFichesMetiers; ?> fiche·s métier·s</span></a>
                 <?php endif; ?>
             </td>
             <td class="action">
-<!--                --><?php //if ($canAfficher): ?>
-<!--                    --><?php ///** @see \Referentiel\Controller\ReferentielController::afficherAction() */ ?>
-<!--                    <a href="--><?php //echo $this->url('referentiel/afficher', ['referentiel' => $referentiel->getId()], [], true); ?><!--"-->
-<!--                       class="action secondary ajax-modal" >-->
-<!--                        <span class="icon icon-voir"></span>-->
-<!--                        Afficher-->
-<!--                    </a>-->
-<!--                --><?php //endif; ?>
+                <!--                --><?php //if ($canAfficher): ?>
+                <!--                    --><?php ///** @see \Referentiel\Controller\ReferentielController::afficherAction() */ ?>
+                <!--                    <a href="-->
+                <?php //echo $this->url('referentiel/afficher', ['referentiel' => $referentiel->getId()], [], true); ?><!--"-->
+                <!--                       class="action secondary ajax-modal" >-->
+                <!--                        <span class="icon icon-voir"></span>-->
+                <!--                        Afficher-->
+                <!--                    </a>-->
+                <!--                --><?php //endif; ?>
                 <?php if ($canModifier): ?>
-<!--                    <br/>-->
+                    <!--                    <br/>-->
                     <?php /** @see \Referentiel\Controller\ReferentielController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('referentiel/modifier', ['referentiel' => $referentiel->getId()], [], true); ?>"
                        class="action primary ajax-modal" data-event="modification">
@@ -117,6 +118,15 @@ $this->headTitle("Référentiels");
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
+                <?php if ($canModifier): ?>
+                    <br>
+                    <?php /** @see \Referentiel\Controller\ReferentielController::purgerAction() */ ?>
+                    <a href="<?php echo $this->url('referentiel/purger', ['referentiel' => $referentiel->getId()], [], true); ?>"
+                       class="action warning ajax-modal" data-event="modification">
+                        <span class="icon icon-nettoyer"></span>
+                        Purger
+                    </a>
+                <?php endif; ?>
                 <?php if ($canSupprimer): ?>
                     <br/>
                     <?php /** @see \Referentiel\Controller\ReferentielController::supprimerAction() */ ?>
@@ -133,12 +143,22 @@ $this->headTitle("Référentiels");
 </table>
 
 
-
 <script>
     $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+
+        $('table#referentiels').dataTable({
+            stateSave: true,
+            autoWidth: false,
+            language: {
+                "url": "/js/datatables_fr.json",
+            },
+            columnDefs: [
+                { targets: [2], orderable: false }
+            ]
         });
     });
 </script>

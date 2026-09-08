@@ -5,12 +5,14 @@ namespace Agent\Controller;
 use Agent\Form\AgentMobilite\AgentMobiliteForm;
 use Agent\Service\Agent\AgentService;
 use Agent\Service\AgentMobilite\AgentMobiliteService;
+use Application\Service\Util\UtilService;
 use Carriere\Service\Mobilite\MobiliteService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class AgentMobiliteControllerFactory
 {
@@ -27,6 +29,8 @@ class AgentMobiliteControllerFactory
          * @var MobiliteService $mobiliteService
          * @var ParametreService $parametreService
          * @var StructureService $structureService
+         * @var UserService $userService
+         * @var UtilService $utilService
          * @var AgentMobiliteForm $agentMobiliteForm
          */
         $agentService = $container->get(AgentService::class);
@@ -34,6 +38,8 @@ class AgentMobiliteControllerFactory
         $mobiliteService = $container->get(MobiliteService::class);
         $parametresService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
+        $userService = $container->get(UserService::class);
+        $utilService = $container->get(UtilService::class);
         $agentMobiliteForm = $container->get('FormElementManager')->get(AgentMobiliteForm::class);
 
         $controller = new AgentMobiliteController();
@@ -42,6 +48,8 @@ class AgentMobiliteControllerFactory
         $controller->setMobiliteService($mobiliteService);
         $controller->setParametreService($parametresService);
         $controller->setStructureService($structureService);
+        $controller->setUserService($userService);
+        $controller->setUtilService($utilService);
         $controller->setAgentMobiliteForm($agentMobiliteForm);
         return $controller;
     }

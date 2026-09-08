@@ -9,22 +9,48 @@ use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
  * @var string $mode
  */
 
-$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+$canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+
 ?>
 
-
-<?php if ($fichemetier->getRaison() !== null) : ?>
-    <?php echo $fichemetier->getRaison(); ?>
-<?php else :?>
-    Aucune raison de fournie
-<?php endif; ?>
-
+<div id="raison_view">
+    <div class="card">
+        <div class="card-header bg-default">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>Raison d'être du métier dans l'établissement</h3>
+                </div>
+                <div class="col-md-4">
+                    <?php if ($canModifier and $mode === 'edition-fiche-metier') : ?>
+                        <div class="float-end">
+                            <?php /** @see FicheMetierController::modifierRaisonAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/modifier-raison', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                               class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-raison"
+                            >
+                                <span class="icon icon-editer"></span>
+                                Modifier
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" style="color:rgb(80,80,80);">
+            <?php if ($fichemetier->getRaison() !== null) : ?>
+                <?php echo $fichemetier->getRaison(); ?>
+            <?php else : ?>
+                Aucune raison de fournie
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
 
 
 <script>
     function refreshRaison() {
         <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshRaisonAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-raison", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode],['force_canonical' => true]); ?>";
+        let url = "<?php echo $this->url("fiche-metier/refresh-raison", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode], ['force_canonical' => true]); ?>";
         console.log("refreshing raison");
         $.ajax({
             type: "POST",
@@ -40,7 +66,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
         });
     }
 
-    $(".raison-ajax").on("click", function (event) {
+    $(".raison-ajax").on("click", function () {
         let url = $(this).data("url");
         $("#raison_view").addClass('refreshing');
         $.ajax({

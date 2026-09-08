@@ -43,6 +43,7 @@ $this->headTitle($titre);
 $canExporterFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+$canIndex = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX));
 
 $actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
 if ($mode === 'edition-fiche-metier') {
@@ -57,6 +58,17 @@ foreach ($types as $type) {
     }
 }
 ?>
+
+<?php if ($canIndex) : ?>
+    <?php /** @see \FicheMetier\Controller\FicheMetierController::indexAction() */ ?>
+    <div style="margin-bottom: 1.25rem;">
+        <a href="<?php echo $this->url('fiche-metier', [], [], true); ?>"
+           class="btn btn-secondary">
+            <span class="icon icon-listing"></span>
+            Retour à l'index des fiches métiers
+        </a>
+    </div>
+<?php endif; ?>
 
 <div class="row">
     <div class="col-md-8">
@@ -117,98 +129,26 @@ foreach ($types as $type) {
 </div>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]) || $parametres[FicheMetierParametres::DISPLAY_EMPLOIREPERE]->getValeur() !== "false") : ?>
-        <?php echo $this->partial('partial/emploi-repere',   ['emplois' => $emplois, 'mode' => $mode ],  [], true); ?>
+    <?php echo $this->partial('partial/emploi-repere',   ['emplois' => $emplois, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_INTITULE]) || $parametres[FicheMetierParametres::DISPLAY_INTITULE]->getValeur() !== "false") : ?>
-        <?php echo $this->partial('partial/intitule-poste',   ['postes' => $postes, 'mode' => $mode ],  [], true); ?>
+    <?php echo $this->partial('partial/intitule-poste',   ['postes' => $postes, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_FICHEPOSTE]) || $parametres[FicheMetierParametres::DISPLAY_FICHEPOSTE]->getValeur() !== "false") : ?>
-        <?php echo $this->partial('partial/fiche-poste',   ['fichemetier' => $fiche, 'fichespostes' => $fichespostes, 'mode' => $mode ],  [], true); ?>
+    <?php echo $this->partial('partial/fiche-poste',   ['fichemetier' => $fiche, 'fichespostes' => $fichespostes, 'mode' => $mode ],  [], true); ?>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_RAISON]) || $parametres[FicheMetierParametres::DISPLAY_RAISON]->getValeur() !== "false") : ?>
-    <div class="card">
-        <div class="card-header bg-default">
-            <div class="row">
-                <div class="col-md-8">
-                    <h3>Raison d'être du métier dans l'établissement</h3>
-                </div>
-                <div class="col-md-4">
-                    <?php if ($canModifier AND $mode === 'edition-fiche-metier' ) : ?>
-                        <div class="float-end">
-                            <?php /** @see FicheMetierController::modifierRaisonAction() */ ?>
-                            <a href="<?php echo $this->url('fiche-metier/modifier-raison', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                               class="btn btn-primary ajax-modal"  style="margin: 0 0.5rem;"
-                               data-event="refresh-raison"
-                            >
-                                <span class="icon icon-editer"></span>
-                                Modifier la raison
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-        <div class="card-body" style="color:rgb(80,80,80);" id="raison_view">
-            <?php echo $this->partial('partial/bloc-raison', ['fichemetier' => $fiche, 'mode' => $mode ]); ?>
-        </div>
-    </div>
-
+    <?php echo $this->partial('partial/bloc-raison', ['fichemetier' => $fiche, 'canModifier' => $canModifier, 'mode' => $mode ]); ?>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_MISSION]) || $parametres[FicheMetierParametres::DISPLAY_MISSION]->getValeur() !== "false") : ?>
-   <?php echo $this->partial('partial/missions-principales',   ['fichemetier' => $fiche, 'missionsprincipales' => $missions, 'mode' => $mode ],  [], true); ?>
-
-    <div class="card info">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-md-6"><h2> Missions principales </h2></div>
-                <div class="col-md-6">
-                    <div class="float-end">
-                        <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
-                            <?php /** @see FicheMetierController::gererMissionsPrincipalesAction() */ ?>
-                            <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                               data-event="refresh-missions"
-                               href="<?php echo $this->url('fiche-metier/gerer-missions-principales', ['fiche-metier' => $fiche->getId()], [], true); ?>">
-                                <span class="icon icon-listing"></span>
-                                Gérer les missions
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body" style="color:rgb(80,80,80);" id="missions_view">
             <?php echo $this->partial('partial/bloc-mission', ['fichemetier' => $fiche, 'missions' => $missions, 'mode' => $mode ]); ?>
-        </div>
-    </div>
 <?php endif; ?>
 
 <?php if (!isset($parametres[FicheMetierParametres::DISPLAY_ACTIVITE]) || $parametres[FicheMetierParametres::DISPLAY_ACTIVITE]->getValeur() !== "false") : ?>
-<div class="card info">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-md-6"><h2> Activités </h2></div>
-            <div class="col-md-6">
-                <div class="float-end">
-                    <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
-                        <?php /** @see FicheMetierController::gererActivitesAction() */ ?>
-                        <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
-                           data-event="refresh-activites"
-                           href="<?php echo $this->url('fiche-metier/gerer-activites', ['fiche-metier' => $fiche->getId()], [], true); ?>">
-                            <span class="icon icon-listing"></span>
-                            Gérer les activités
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card-body" style="color:rgb(80,80,80);" id="activites_view">
         <?php echo $this->partial('partial/bloc-activite', ['fichemetier' => $fiche, 'activites' => $activites, 'mode' => $mode ]); ?>
-    </div>
-</div>
 <?php endif; ?>
 
 <!-- COMPETENCES STANDARDS -------------------------------------------------------------------------------------------->
@@ -221,20 +161,26 @@ foreach ($types as $type) {
                 </div>
                 <div class="col-md-7">
                     <div class="float-end">
-                        <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
-                        <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
-                        >
-                            <span class="icon icon-diagramme"></span>
-                            Afficher les compétences
-                        </a>
-
+<!--                        --><?php ///** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
+<!--                        <a href="--><?php //echo $this->url('graphique/competences', ['fiche-metier' => $fiche->getId()], [], true); ?><!--"-->
+<!--                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"-->
+<!--                        >-->
+<!--                            <span class="icon icon-diagramme"></span>-->
+<!--                            Afficher les compétences-->
+<!--                        </a>-->
                         <?php if ($mode === 'edition-fiche-metier'): ?>
                             <?php /** @see \FicheMetier\Controller\FicheMetierController::gererCompetencesAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/gerer-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                class="btn btn-primary ajax-modal" data-event="refresh-competences">
                                 <span class="icon icon-lister"></span>
-                                Gérer les compétences
+                                Gérer
+                            </a>
+                            <?php /** @see FicheMetierController::purgerCompetencesAction() */ ?>
+                            <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-competences"
+                               href="<?php echo $this->url('fiche-metier/purger-competences', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-nettoyer"></span>
+                                Purger
                             </a>
                         <?php endif; ?>
                     </div>
@@ -277,7 +223,14 @@ foreach ($types as $type) {
                                data-competence-type="<?php echo CompetenceType::CODE_SPECIFIQUE; ?>"
                             >
                                 <span class="icon icon-lister"></span>
-                                Gérer les compétences
+                                Gérer
+                            </a>
+                            <?php /** @see FicheMetierController::purgerCompetencesSpecifiquesAction() */ ?>
+                            <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-competences-specifiques"
+                               href="<?php echo $this->url('fiche-metier/purger-competences-specifiques', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-nettoyer"></span>
+                                Purger
                             </a>
                         <?php endif; ?>
                     </div>
@@ -294,28 +247,34 @@ foreach ($types as $type) {
     <div class="card info">
         <div class="card-header">
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <h2>
                         <span class="icon application"></span>
                         Applications
                     </h2>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="float-end">
-                        <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueApplicationsAction() */ ?>
-                        <a href="<?php echo $this->url('graphique/applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"
-                        >
-                            <span class="icon icon-diagramme"></span>
-                            Afficher les applications
-                        </a>
-
+<!--                        --><?php ///** @see \FicheMetier\Controller\GraphiqueController::graphiqueApplicationsAction() */ ?>
+<!--                        <a href="--><?php //echo $this->url('graphique/applications', ['fiche-metier' => $fiche->getId()], [], true); ?><!--"-->
+<!--                           class="btn btn-secondary ajax-modal" style="margin: 0 0.5rem;"-->
+<!--                        >-->
+<!--                            <span class="icon icon-diagramme"></span>-->
+<!--                            Afficher les applications-->
+<!--                        </a>-->
                         <?php if ($mode === 'edition-fiche-metier' AND $canModifier) : ?>
                             <?php /** @see \FicheMetier\Controller\FicheMetierController::gererApplicationsAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/gerer-applications', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                class="btn btn-primary ajax-modal" data-event="refresh-applications">
                                 <span class="icon icon-lister"></span>
-                                Gérer les applications
+                                Gérer
+                            </a>
+                            <?php /** @see \FicheMetier\Controller\FicheMetierController::purgerApplicationsAction() */ ?>
+                            <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                               data-event="refresh-applications"
+                               href="<?php echo $this->url('fiche-metier/purger-applications', ['fiche-metier' => $fiche->getId()], [], true); ?>">
+                                <span class="icon icon-nettoyer"></span>
+                                Purger
                             </a>
                         <?php endif; ?>
                     </div>

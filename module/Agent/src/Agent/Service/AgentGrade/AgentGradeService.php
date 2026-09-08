@@ -4,24 +4,27 @@ namespace Agent\Service\AgentGrade;
 
 use Agent\Entity\Db\Agent;
 use Agent\Entity\Db\AgentGrade;
+use Application\Service\SqlHelper\SqlHelperServiceAwareTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
-use Carriere\Entity\Db\EmploiType;
 use Carriere\Entity\Db\Grade;
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Structure\Entity\Db\Structure;
 
-class AgentGradeService {
+class AgentGradeService
+{
     use ProvidesObjectManager;
+    use SqlHelperServiceAwareTrait;
 
     /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
             ->join('agentgrade.agent', 'agent')->addSelect('agent')
@@ -29,8 +32,7 @@ class AgentGradeService {
             ->leftjoin('agentgrade.grade', 'grade')->addSelect('grade')
             ->leftjoin('agentgrade.corps', 'corps')->addSelect('corps')
             ->leftjoin('agentgrade.correspondance', 'correspondance')->addSelect('correspondance')
-            ->andWhere('agentgrade.deletedOn IS NULL')
-        ;
+            ->andWhere('agentgrade.deletedOn IS NULL');
         return $qb;
     }
 
@@ -39,13 +41,12 @@ class AgentGradeService {
      * @param bool $actif
      * @return array
      */
-    public function getAgentGradesByAgent(Agent $agent, bool $actif = true) : array
+    public function getAgentGradesByAgent(Agent $agent, bool $actif = true): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.agent = :agent')
             ->setParameter('agent', $agent)
-            ->orderBy('agentgrade.dateDebut', 'DESC')
-        ;
+            ->orderBy('agentgrade.dateDebut', 'DESC');
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
 
@@ -53,18 +54,16 @@ class AgentGradeService {
         return $result;
     }
 
-    public function getAgentGradesByAgents(array $agents, ?DateTime $date = null) : array
+    public function getAgentGradesByAgents(array $agents, ?DateTime $date = null): array
     {
         if ($date === null) $date = new DateTime();
 
         $qb = $this->createQueryBuilder();
-        $qb = $qb   ->andWhere('agentgrade.deletedOn IS NULL')
-        ;
+        $qb = $qb->andWhere('agentgrade.deletedOn IS NULL');
         $qb = $qb
             ->andWhere('agentgrade.dateDebut IS NULL OR agentgrade.dateDebut <= :date')
             ->andWhere('agentgrade.dateFin IS NULL OR agentgrade.dateFin >= :date')
-            ->setParameter('date', $date)
-        ;
+            ->setParameter('date', $date);
         $qb = $qb->andWhere('agentgrade.agent in (:agents)')->setParameter('agents', $agents);
         $qb = $qb->orderBy('grade.libelleLong', 'ASC');
 
@@ -84,12 +83,11 @@ class AgentGradeService {
      * @param bool $actif
      * @return array
      */
-    public function getAgentGradesByStructure(Structure $structure, bool $actif = true) : array
+    public function getAgentGradesByStructure(Structure $structure, bool $actif = true): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.structure = :structure')
-            ->setParameter('structure', $structure)
-        ;
+            ->setParameter('structure', $structure);
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
 
@@ -102,13 +100,12 @@ class AgentGradeService {
      * @param bool $actif
      * @return array
      */
-    public function getAgentGradesByGrade(Grade $grade, bool $actif = true) : array
+    public function getAgentGradesByGrade(Grade $grade, bool $actif = true): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.grade = :grade')
             ->setParameter('grade', $grade)
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-        ;
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
 
@@ -121,13 +118,12 @@ class AgentGradeService {
      * @param bool $actif
      * @return array
      */
-    public function getAgentGradesByCorps(Corps $corps, bool $actif = true) : array
+    public function getAgentGradesByCorps(Corps $corps, bool $actif = true): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.corps = :corps')
             ->setParameter('corps', $corps)
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-        ;
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
 
@@ -140,17 +136,144 @@ class AgentGradeService {
      * @param bool $actif
      * @return array
      */
-    public function getAgentGradesByCorrespondance(Correspondance $correspondance, bool $actif = true) : array
+    public function getAgentGradesByCorrespondance(Correspondance $correspondance, bool $actif = true): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.correspondance = :correspondance')
             ->setParameter('correspondance', $correspondance)
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-        ;
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
+
+    /**
+     * @param Agent[] $agents
+     * @return array
+     */
+    public function generateRecensementByCorps(array $agents): array
+    {
+        $agent_ids = array_map(function (Agent $agent) { return $agent->getId(); }, $agents);
+        $params = ['agent_ids' => $agent_ids];
+
+        $sql = <<<EOS
+select corps_id, count(DISTINCT acg.agent_id) as count from agent_carriere_grade acg
+where true
+  and coalesce(acg.d_debut, now()) <= now()
+  and coalesce(acg.d_fin, now()) >= now()
+  and acg.deleted_on IS NULL
+  and acg.agent_id in (:agent_ids)
+group by acg.corps_id
+EOS;
+
+        $tmp = $this->getSqlHelperService()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_STR_ARRAY]);
+        $dictionnaire = [];
+        foreach ($tmp as $row) {
+            $dictionnaire[$row['corps_id']] = $row['count'];
+        }
+        return $dictionnaire;
+    }
+
+    /**
+     * @param Corps $corps
+     * @param Agent[] $agents
+     * @return AgentGrade[]
+     */
+    public function generateDictionnaireWithCorps(Corps $corps, array $agents): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentgrade.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('agentgrade.corps = :corps')->setParameter('corps', $corps);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @return array
+     */
+    public function generateRecensementByGrade(array $agents): array
+    {
+        $agent_ids = array_map(function (Agent $agent) { return $agent->getId(); }, $agents);
+        $params = ['agent_ids' => $agent_ids];
+
+        $sql = <<<EOS
+select grade_id, count(DISTINCT acg.agent_id) as count from agent_carriere_grade acg
+where true
+  and coalesce(acg.d_debut, now()) <= now()
+  and coalesce(acg.d_fin, now()) >= now()
+  and acg.deleted_on IS NULL
+  and acg.agent_id in (:agent_ids)
+group by acg.grade_id
+EOS;
+
+        $tmp = $this->getSqlHelperService()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_STR_ARRAY]);
+        $dictionnaire = [];
+        foreach ($tmp as $row) {
+            $dictionnaire[$row['grade_id']] = $row['count'];
+        }
+        return $dictionnaire;
+    }
+
+    /**
+     * @param Grade $grade
+     * @param Agent[] $agents
+     * @return AgentGrade[]
+     */
+    public function generateDictionnaireWithGrade(Grade $grade, array $agents): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentgrade.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('agentgrade.grade = :grade')->setParameter('grade', $grade);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @return array
+     */
+    public function generateRecensementBySpecialite(array $agents): array
+    {
+        $agent_ids = array_map(function (Agent $agent) { return $agent->getId(); }, $agents);
+        $params = ['agent_ids' => $agent_ids];
+
+        $sql = <<<EOS
+select correspondance_id, count(DISTINCT acg.agent_id) as count from agent_carriere_grade acg
+where true
+  and coalesce(acg.d_debut, now()) <= now()
+  and coalesce(acg.d_fin, now()) >= now()
+  and acg.deleted_on IS NULL
+  and acg.agent_id in (:agent_ids)
+group by acg.correspondance_id
+EOS;
+
+        $tmp = $this->getSqlHelperService()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_STR_ARRAY]);
+        $dictionnaire = [];
+        foreach ($tmp as $row) {
+            $dictionnaire[$row['correspondance_id']] = $row['count'];
+        }
+        return $dictionnaire;
+    }
+
+    /**
+     * @param Correspondance $specialite
+     * @param Agent[] $agents
+     * @return AgentGrade[]
+     */
+    public function generateDictionnaireWithSpecialite(Correspondance $specialite, array $agents): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentgrade.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('agentgrade.correspondance = :specialite')->setParameter('specialite', $specialite);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
     }
 }

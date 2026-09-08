@@ -12,6 +12,10 @@ use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieForm;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieFormFactory;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieHydrator;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieHydratorFactory;
+use Carriere\Form\SelectionnerCategories\SelectionnerCategoriesForm;
+use Carriere\Form\SelectionnerCategories\SelectionnerCategoriesFormFactory;
+use Carriere\Form\SelectionnerCategories\SelectionnerCategoriesHydrator;
+use Carriere\Form\SelectionnerCategories\SelectionnerCategoriesHydratorFactory;
 use Carriere\Provider\Privilege\CategoriePrivileges;
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Categorie\CategorieServiceFactory;
@@ -179,12 +183,14 @@ return [
         'factories' => [
             CategorieForm::class => CategorieFormFactory::class,
             SelectionnerCategorieForm::class => SelectionnerCategorieFormFactory::class,
+            SelectionnerCategoriesForm::class => SelectionnerCategoriesFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             CategorieHydrator::class => CategorieHydratorFactory::class,
             SelectionnerCategorieHydrator::class => SelectionnerCategorieHydratorFactory::class,
+            SelectionnerCategoriesHydrator::class => SelectionnerCategoriesHydratorFactory::class,
         ],
     ]
 

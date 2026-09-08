@@ -85,7 +85,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $error = null;
         $entretiens = [];
         if ($params !== null and !empty($params)) {
-            if ($params['campagne'] !== "" or $params['etat'] !== "" or $params['structure-filtre']['id'] !== "" or $params['agent-filtre']['id'] !== "" or $params['responsable-filtre']['id'] !== "") {
+            if ($params['campagne'] !== "" or $params['etat'] !== "" or $params['structure-select']??"" !== "" or $params['agent-filtre']['id'] !== "" or $params['responsable-filtre']['id'] !== "") {
                 $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsWithFiltre($params);
             } else {
                 $entretiens = [];
@@ -97,6 +97,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'entretiens' => $entretiens,
             'params' => $params,
             'campagnes' => $this->getCampagneService()->getCampagnes(),
+            'structuresGroups' => $this->getStructureService()->getStructuresAsOptionGroup(),
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode('ENTRETIEN_PROFESSIONNEL'),
             'error' => $error,
         ]);
@@ -271,7 +272,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
                 $this->flashMessenger()->addSuccessMessage("Entretien professionnel de <strong>" . $entretien->getAgent()->getDenomination() . "</strong> est bien re-planifié.");
-                $this->getNotificationService()->triggerConvocationDemande($entretien);
+                $this->getNotificationService()->triggerModificationConvocationDemande($entretien);
             }
         }
 
@@ -569,6 +570,21 @@ class EntretienProfessionnelController extends AbstractActionController
         return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'validation'], true);
     }
 
+    public function revoquerValidationFinaleAction(): Response
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
+        $this->getValidationInstanceService()->historise($validation);
+
+        if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_AGENT) {
+            $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
+        }
+        $this->getEntretienProfessionnelService()->update($entretien);
+
+        /** @see EntretienProfessionnelController::accederAction */
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'validation'], true);
+    }
+
     public function exporterCrepAction(): string
     {
         $assistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
@@ -642,6 +658,8 @@ class EntretienProfessionnelController extends AbstractActionController
         try {
             $dateButoir = (DateTime::createFromFormat('d/m/Y', $entretien->getHistoModification()->format('d/m/Y')))->add(new DateInterval('P' . $delai . 'D'));
         } catch (Exception $e) {
+            $message = "Un problème est survenu lors du calcul de la date butoir.";
+            if ($delai === null) $message .= " Aucune valeur pour le paramètre [".EntretienProfessionnelParametres::TYPE.",".EntretienProfessionnelParametres::DELAI_ACCEPTATION_AGENT."], veuillez contacter l'assistance.";
             throw new RuntimeException("Un problème est survenu lors du calcul de la date butoir", null, $e);
         }
         $depassee = $dateButoir < (new DateTime());

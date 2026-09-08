@@ -52,7 +52,7 @@ class NotificationService
 
     /** Notifications liées aux validations de la fiche de poste ******************************************************/
 
-    public function triggerValidationResponsableFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): Mail
+    public function triggerValidationResponsableFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): ?Mail
     {
         $vars = ['ficheposte' => $ficheposte, 'agent' => $ficheposte->getAgent(), 'validation' => $validation];
         $UrlService = $this->getUrlService()->setVariables($vars);
@@ -67,7 +67,7 @@ class NotificationService
         return $mail;
     }
 
-    public function triggerValidationAgentFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): Mail
+    public function triggerValidationAgentFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): ?Mail
     {
 
         $vars = ['ficheposte' => $ficheposte, 'agent' => $ficheposte->getAgent(), 'validation' => $validation];

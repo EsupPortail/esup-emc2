@@ -21,6 +21,8 @@ use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceFactory;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieService;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -103,8 +105,8 @@ return [
 
                         'modifier-famille-professionnelle',
                         'supprimer-famille-professionnelle',
-                        'modifier-categorie',
-                        'supprimer-categorie',
+                        'modifier-categories',
+                        'vider-categories',
                         'modifier-niveau-carriere',
                         'supprimer-niveau-carriere',
                         'modifier-code-fonction',
@@ -120,16 +122,22 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'gerer-missions-principales',
+                        'purger-missions-principales',
                         'retirer-mission',
                         'bouger-mission',
 
+
                         'gerer-activites',
+                        'purger-activites',
                         'retirer-activite',
                         'bouger-activite',
 
                         'gerer-competences',
+                        'purger-competences',
                         'gerer-applications',
+                        'purger-applications',
                         'gerer-competences-specifiques',
+                        'purger-competences-specifiques',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -303,23 +311,23 @@ return [
                             ],
                         ],
                     ],
-                    'modifier-categorie' => [
+                    'modifier-categories' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-categorie/:fiche-metier',
+                            'route'    => '/modifier-categories/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::modifierCategorieAction() */
-                                'action'     => 'modifier-categorie',
+                                /** @see FicheMetierController::modifierCategoriesAction() */
+                                'action'     => 'modifier-categories',
                             ],
                         ],
                     ],
-                    'supprimer-categorie' => [
+                    'vider-categories' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-categorie/:fiche-metier',
+                            'route'    => '/vider-categories/:fiche-metier',
                             'defaults' => [
-                                /** @see FicheMetierController::supprimerCategorieAction() */
-                                'action'     => 'supprimer-categorie',
+                                /** @see FicheMetierController::viderCategoriesAction() */
+                                'action'     => 'vider-categories',
                             ],
                         ],
                     ],
@@ -413,6 +421,16 @@ return [
                             ],
                         ],
                     ],
+                    'purger-activites' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/purger-activites/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::purgerActivitesAction() */
+                                'action' => 'purger-activites',
+                            ],
+                        ],
+                    ],
                     'bouger-activite' => [
                         'type' => Segment::class,
                         'options' => [
@@ -443,6 +461,16 @@ return [
                             ],
                         ],
                     ],
+                    'purger-applications' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/purger-applications/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::purgerApplicationsAction() */
+                                'action' => 'purger-applications',
+                            ],
+                        ],
+                    ],
                     'gerer-competences' => [
                         'type' => Segment::class,
                         'options' => [
@@ -450,6 +478,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::gererCompetencesAction() */
                                 'action' => 'gerer-competences',
+                            ],
+                        ],
+                    ],
+                    'purger-competences' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/purger-competences/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::purgerCompetencesAction() */
+                                'action' => 'purger-competences',
                             ],
                         ],
                     ],
@@ -463,6 +501,16 @@ return [
                             ],
                         ],
                     ],
+                    'purger-competences-specifiques' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/purger-competences-specifiques/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::purgerCompetencesSpecifiquesAction() */
+                                'action' => 'purger-competences-specifiques',
+                            ],
+                        ],
+                    ],
                     'gerer-missions-principales' => [
                         'type' => Segment::class,
                         'options' => [
@@ -470,6 +518,16 @@ return [
                             'defaults' => [
                                 /** @see FicheMetierController::gererMissionsPrincipalesAction() */
                                 'action' => 'gerer-missions-principales',
+                            ],
+                        ],
+                    ],
+                    'purger-missions-principales' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/purger-missions-principales/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::purgerMissionsPrincipalesAction() */
+                                'action' => 'purger-missions-principales',
                             ],
                         ],
                     ],
@@ -561,6 +619,7 @@ return [
     'service_manager' => [
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
+            FicheMetierCategorieService::class => FicheMetierCategorieServiceFactory::class,
         ],
     ],
     'controllers' => [

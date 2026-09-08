@@ -3,6 +3,7 @@
 namespace Agent\Assertion;
 
 use Agent\Provider\Privilege\AgentPrivileges;
+use Agent\Provider\Privilege\PortfolioPrivileges;
 use Agent\Provider\Role\RoleProvider as AgentRoleProvider;
 use Agent\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Agent\Entity\Db\Agent;
@@ -126,8 +127,6 @@ class AgentAssertion extends AbstractAssertion
             'informations', 'portfolio',
             'afficher-statuts-grades'
             => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
-            'upload-fichier'
-            => $this->computeAssertion($entity, AgentPrivileges::AGENT_ELEMENT_AJOUTER),
             default => true,
         };
     }

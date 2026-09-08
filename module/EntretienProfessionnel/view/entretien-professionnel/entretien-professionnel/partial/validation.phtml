@@ -27,6 +27,7 @@ $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::E
 $canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderAutorite     = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+$canRevoquerValidationFinale     = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_REVOQUER_VALIDATION_FINALE);
 
 // TODO serait plus sûr d'ajouter une assertion (mais surement de l'overkill car la page check ce qu'il faut en amont)
 $canVoirObservationsAgent = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_VOIR_OBSERVATION_AGENT));
@@ -421,10 +422,10 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <strong>Visa effectué par l'agent</strong><br>
             Visé le <?php echo $validationAgent->getHistoModification()->format('d/m/y à H:i:s'); ?> par <?php echo $validationAgent->getHistoModificateur()->getDisplayName(); ?>.
         </div>
-        <?php if ($canValiderAgent) : ?>
+        <?php if ($canRevoquerValidationFinale) : ?>
             <a
-                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationFinaleAction() */ ?>
+                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation-finale', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
                     class="btn btn-danger"
             >
                 <span class="icon icon-unchecked"></span>

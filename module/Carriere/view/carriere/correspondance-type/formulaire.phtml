@@ -1,0 +1,60 @@
+<?php
+
+use Carriere\Form\SpecialiteType\SpecialiteTypeForm;
+
+/**
+ * @see \Carriere\Controller\CorrespondanceTypeController::ajouterAction()
+ * @see \Carriere\Controller\CorrespondanceTypeController::modifierAction()
+ * @var SpecialiteTypeForm $form
+ */
+
+?>
+
+<?php
+
+echo $this->form()->openTag($form);
+echo $this->formControlGroup($form->get('code'));
+echo $this->formControlGroup($form->get('libelle_court'));
+echo $this->formControlGroup($form->get('libelle_long'));
+echo $this->formControlGroup($form->get('description'));
+?>
+<div class="row">
+    <div class="col-md-6">
+        <?php echo $this->formControlGroup($form->get('date_ouverture')); ?>
+    </div>
+    <div class="col-md-6">
+        <?php echo $this->formControlGroup($form->get('date_fermeture')); ?>
+    </div>
+</div>
+<?php
+echo $this->formControlGroup($form->get('bouton'));
+echo $this->form()->closeTag();
+?>
+
+
+<script>
+    $(function () {
+        $('select').selectpicker();
+        tinymce.remove();
+        tinymce.init({
+            selector: '.tinymce',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist numlist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            menubar: false,
+            height: 200,
+            // body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    // console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+    });
+</script>

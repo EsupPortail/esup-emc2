@@ -371,6 +371,14 @@
     content:"\f04b";
 }
 
+
+.icon.icon-telephone:before {
+    content: "\f879";
+}
+.icon.icon-locked:before {
+    content: "\f023";
+}
+
 .icon.icon-down::before
 {
     content:"\f078";
@@ -382,7 +390,13 @@
 }
 
 .icon.icon-rechercher::before,
-.icon.search::before
+.icon.icon-search::before
 {
     content:"\f002";
+}
+
+.icon.icon-lien-externe::before,
+.icon.icon-external-link::before
+{
+    content:"\f35d";
 }

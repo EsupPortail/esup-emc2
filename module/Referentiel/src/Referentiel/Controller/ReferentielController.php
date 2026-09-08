@@ -49,8 +49,8 @@ class ReferentielController extends AbstractActionController
         $referentiel = $this->getReferentielService()->getRequestedReferentiel($this);
 
         return new ViewModel([
-           'title' => "Affichage du referentiel [".$referentiel?->getLibelleCourt()."]",
-           'referentiel' => $referentiel
+            'title' => "Affichage du referentiel [" . $referentiel?->getLibelleCourt() . "]",
+            'referentiel' => $referentiel
         ]);
     }
 
@@ -98,7 +98,7 @@ class ReferentielController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Modification du référentiel [".$referentiel?->getLibelleCourt()."]",
+            'title' => "Modification du référentiel [" . $referentiel?->getLibelleCourt() . "]",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -147,68 +147,117 @@ class ReferentielController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($referentiel !== null) {
-            $role = $this->getUserService()->getConnectedRole();
-            $warnings = "";
+            $warnings = $this->generateWarning($referentiel);
+            $texteWarning = '';
 
-            $nbActivite = count($referentiel->getActivites());
-            if ($nbActivite > 0) {
-                $warnings .= "<li>".$nbActivite . " activités ";
-                if ($this->getPrivilegeService()->checkPrivilege(ActivitePrivileges::ACTIVITE_INDEX, $role)) {
-                    /** @see ActiviteController::indexAction() **/
-                    $urlActivite = $this->url()->fromRoute('activite', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
-                    $warnings .= "<a href='".$urlActivite."' class='action secondary' target='_blank'> <span class='icon icon-voir'  style='color: gray;'></span> Accéder aux activités </a>";
-                }
-                $warnings .= "</li>";
-            }
-            $nbMission = count($referentiel->getMissions());
-            if ($nbMission > 0) {
-                $warnings .= "<li>".$nbMission . " missions ";
-                if ($this->getPrivilegeService()->checkPrivilege(MissionPrincipalePrivileges::MISSIONPRINCIPALE_INDEX, $role)) {
-                    /** @see MissionPrincipaleController::indexAction() */
-                    $urlMission = $this->url()->fromRoute('mission-principale', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
-                    $warnings .= "<a href='".$urlMission."' class='action secondary' target='_blank'> <span class='icon icon-voir'  style='color: gray;'></span> Accéder aux missions </a>";
-                }
-                $warnings .= "</li>";
-            }
-
-            $nbCompetence = count($referentiel->getCompetences());
-            if ($nbCompetence > 0) {
-                $warnings .= "<li>".$nbCompetence . " compétences ";
-                if ($this->getPrivilegeService()->checkPrivilege(CompetencePrivileges::COMPETENCE_INDEX, $role)) {
-                    /** @see CompetenceController::indexAction() */
-                    $urlCompetence = $this->url()->fromRoute('element/competence/listing', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
-                    $warnings .= "<a href='".$urlCompetence."' class='action secondary' target='_blank'> <span class='icon icon-voir'  style='color: gray;'></span> Accéder aux compétences </a>";
-                }
-                $warnings .= "</li>";
-            }
-
-            $nbFiche = count($referentiel->getFichesMetiers());
-            if ($nbFiche > 0) {
-                $warnings .= "<li>".$nbFiche . " fiches métiers ";
-                if ($this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_INDEX, $role)) {
-                    /** @see FicheMetierController::indexAction() */
-                    $urlCompetence = $this->url()->fromRoute('fiche-metier', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
-                    $warnings .= "<a href='".$urlCompetence."' class='action secondary' target='_blank'> <span class='icon icon-voir' style='color: gray;'></span> Accéder aux fiches métiers </a>";
-                }
-                $warnings .= "</li>";
-            }
             if ($warnings !== '') {
-                $texteWarning  = "<strong class='text-danger'>ATTENTION :</strong> la suppression du référentiel entraîne la suppression des ressources attachées.<br>";
-                $texteWarning .= "Ressources attachées au référentiel :<ul>".$warnings."</ul>";
+                $texteWarning .= "<strong class='text-danger'>ATTENTION :</strong> la suppression du référentiel entraîne la suppression des ressources attachées.<br>";
+                $texteWarning .= "Ressources attachées au référentiel :<ul>" . $warnings . "</ul>";
                 $texteWarning .= "Nous vous conseillons de rattacher les ressources à un autre référentiel avant de le supprimer.";
             }
 
-
-            else $texteWarning = null;
-
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du référentiel [".$referentiel->getLibelleCourt()."]",
-                'warning' => $texteWarning,
+                'title' => "Suppression du référentiel [" . $referentiel->getLibelleCourt() . "]",
+                'warning' => $texteWarning !== ''?$texteWarning:null,
                 'text' => "La suppression est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('referentiel/supprimer', ["referentiel" => $referentiel->getId()], [], true),
             ]);
         }
         return $vm;
+    }
+
+    public function purgerAction(): ViewModel
+    {
+        $referentiel = $this->getReferentielService()->getRequestedReferentiel($this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data['purge_activite']??"off" === "on") {
+                foreach ($referentiel->getActivites() as $activite) $this->getActiviteService()->delete($activite);
+            }
+            if ($data['purge_mission']??"off" === "on") {
+                foreach ($referentiel->getMissions() as $mission) $this->getMissionPrincipaleService()->delete($mission);
+            }
+            if ($data['purge_competence']??"off" === "on") {
+                foreach ($referentiel->getCompetences() as $competence) $this->getCompetenceService()->delete($competence);
+            }
+            if ($data['purge_fichemetier']??"off" === "on") {
+                foreach ($referentiel->getFichesMetiers() as $fichemetier) $this->getFicheMetierService()->delete($fichemetier);
+            }
+        }
+
+        if ($referentiel !== null) {
+            $warnings = $this->generateWarning($referentiel);
+            $texteWarning = '';
+
+            if ($warnings !== '') {
+                $texteWarning .= "<strong class='text-danger'>ATTENTION :</strong> la purge du référentiel entraîne la suppression des ressources attachées.<br>";
+                $texteWarning .= "Ressources attachées au référentiel :<ul>" . $warnings . "</ul>";
+            }
+
+        }
+        return new ViewModel([
+            'title' => "Purge du référentiel [".$referentiel->getLibelleCourt()."]",
+            'referentiel' => $referentiel,
+            'warning' => $texteWarning??'',
+        ]);
+    }
+
+    /**  */
+
+    public function generateWarning(?Referentiel $referentiel): ?string
+    {
+        if ($referentiel === null) return '';
+
+        $role = $this->getUserService()->getConnectedRole();
+        $warnings = "";
+
+        $nbActivite = count($referentiel->getActivites());
+        if ($nbActivite > 0) {
+            $warnings .= "<li>" . $nbActivite . " activités ";
+            if ($this->getPrivilegeService()->checkPrivilege(ActivitePrivileges::ACTIVITE_INDEX, $role)) {
+                /** @see ActiviteController::indexAction() * */
+                $urlActivite = $this->url()->fromRoute('activite', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
+                $warnings .= "<a href='" . $urlActivite . "' class='action secondary' target='_blank'> <span class='icon icon-voir'  style='color: gray;'></span> Accéder aux activités </a>";
+            }
+
+            $warnings .= "</li>";
+        }
+        $nbMission = count($referentiel->getMissions());
+        if ($nbMission > 0) {
+            $warnings .= "<li>" . $nbMission . " missions ";
+            if ($this->getPrivilegeService()->checkPrivilege(MissionPrincipalePrivileges::MISSIONPRINCIPALE_INDEX, $role)) {
+                /** @see MissionPrincipaleController::indexAction() */
+                $urlMission = $this->url()->fromRoute('mission-principale', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
+                $warnings .= "<a href='" . $urlMission . "' class='action secondary' target='_blank'> <span class='icon icon-voir'  style='color: gray;'></span> Accéder aux missions </a>";
+            }
+            $warnings .= "</li>";
+        }
+
+        $nbCompetence = count($referentiel->getCompetences());
+        if ($nbCompetence > 0) {
+            $warnings .= "<li>" . $nbCompetence . " compétences ";
+            if ($this->getPrivilegeService()->checkPrivilege(CompetencePrivileges::COMPETENCE_INDEX, $role)) {
+                /** @see CompetenceController::indexAction() */
+                $urlCompetence = $this->url()->fromRoute('element/competence/listing', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
+                $warnings .= "<a href='" . $urlCompetence . "' class='action secondary' target='_blank'> <span class='icon icon-voir'  style='color: gray;'></span> Accéder aux compétences </a>";
+            }
+            $warnings .= "</li>";
+        }
+
+        $nbFiche = count($referentiel->getFichesMetiers());
+        if ($nbFiche > 0) {
+            $warnings .= "<li>" . $nbFiche . " fiches métiers ";
+            if ($this->getPrivilegeService()->checkPrivilege(FicheMetierPrivileges::FICHEMETIER_INDEX, $role)) {
+                /** @see FicheMetierController::indexAction() */
+                $urlCompetence = $this->url()->fromRoute('fiche-metier', [], ['query' => ['referentiel' => $referentiel->getId()]], true);
+                $warnings .= "<a href='" . $urlCompetence . "' class='action secondary' target='_blank'> <span class='icon icon-voir' style='color: gray;'></span> Accéder aux fiches métiers </a>";
+            }
+            $warnings .= "</li>";
+        }
+
+        return $warnings;
     }
 }

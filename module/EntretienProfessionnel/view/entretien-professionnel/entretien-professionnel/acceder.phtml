@@ -276,7 +276,6 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
     <?php if ($canEvenement) : ?>
         <div id="evenements" class="tab-pane">
-
             <br/>
             <div>
                 <?php echo $this->evenements($entretien->getEvenements()->toArray()); ?>
@@ -340,10 +339,64 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         }
     });
 
+
+
     $('form').on("submit", function () {
         // Sauvegarder la position de défilement actuelle
+        formulaireModifie = false;
         localStorage.setItem('scrollPosition', window.scrollY);
     });
+
+    // TEST
+    let formulaireModifie = false;
+    // changement associé au formulaire
+    $(function(){
+        $('body').on('change', function(){
+            formulaireModifie = true;
+            // console.log("Changement formulaire");
+            // alert('changes !');
+        })
+        $('button[type="submit"]').click(function(event){
+            event.preventDefault();
+            console.log("submitting");
+            formulaireModifie = false;
+        });
+    });
+    // le comportement de tinymce est différent et il faut alors attrapper un event envoyé en interne
+    // todo necessite la dernière version de autoform
+    document.addEventListener("change-via-tinmce", function(e) {
+        console.log("Changement formulaire via tinymce"); // Prints "Example of an event"
+        formulaireModifie = true;
+    });
+
+    // rechargement
+    window.addEventListener('beforeunload', function(e) {
+        if (formulaireModifie) {
+            const message = 'Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?';
+            e.preventDefault();
+            e.returnValue = message;
+            return message;
+        }
+    });
+
+    // changement d'historique
+    window.addEventListener('popstate', function(e) {
+        if (formulaireModifie) {
+            const confirmer = confirm('Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?');
+            if (!confirmer) {
+                // Annuler la navigation
+                history.pushState(null, null, window.location.href);
+            } else {
+                // Réinitialiser le flag si on confirme
+                formulaireModifie = false;
+            }
+        }
+    });
+
+    // Pour que le popstate fonctionne, il faut ajouter un état initial
+    history.pushState(null, null, window.location.href);
+    // TEST
+
 </script>
 
 

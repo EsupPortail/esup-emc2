@@ -38,7 +38,7 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
      * @param EntretienProfessionnel $object
      * @return EntretienProfessionnel
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
 //        $responsable = $this->getAgentService()->getAgent($data['responsable']['id']);
         $responsable = $this->getAgentService()->getAgent($data['responsable']);

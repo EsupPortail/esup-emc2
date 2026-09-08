@@ -42,8 +42,8 @@ $this->headTitle('Index des fiches métiers');
     <div class="col-md-4">
         <?php if ($canConfigurer) : ?>
             <br>
-            <?php /** @see \FicheMetier\Controller\ConfigurationController::competenceAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/configuration/competence', [], [], true); ?>"
+            <?php /** @see \FicheMetier\Controller\FicheMetierConfigurationCompetenceParDefautController::indexAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/configuration/competences-par-defaut', [], [], true); ?>"
                class="btn btn-secondary"
             >
                 <span class="icon icon-gerer"></span>

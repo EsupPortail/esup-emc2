@@ -25,6 +25,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
@@ -476,7 +477,23 @@ class EntretienProfessionnelService
         }
 
         $result = $qb->getQuery()->getResult();
-
+        if (isset($params['structure-select']) and $params['structure-select'] !== "") {
+            $structure = $this->getStructureService()->getStructure($params['structure-select']);
+            $entretiens = [];
+            /** @var EntretienProfessionnel $item */
+            foreach ($result as $item) {
+                $agent = $item->getAgent();
+                $affectations = $agent->getAffectations($item->getDateEntretien());
+                //todo filtrer les affectations ?
+                foreach ($affectations as $affectation) {
+                    if ($affectation->getStructure()->isCompatible($structure)) {
+                        $entretiens[] = $item;
+                        break;
+                    }
+                }
+            }
+            $result = $entretiens;
+        }
         if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "") {
             $structure = $this->getStructureService()->getStructure($params['structure-filtre']['id']);
             // NOTE Changement provoqué par la gestion des structures "mères"
@@ -542,6 +559,19 @@ class EntretienProfessionnelService
         $entretiens = $qb->getQuery()->getResult();
         if (!$sortByEtat) return $entretiens;
         return $this->sortByEtat($entretiens);
+    }
+
+    /** @return EntretienProfessionnel[] */
+    public function getEntretiensProfessionnelsByObservateur(UserInterface $user): array
+    {
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->addSelect('agent')->join('entretien.agent', 'agent')
+            ->addSelect('observateur')->join('entretien.observateurs', 'observateur')
+            ->andWhere('entretien.histoDestruction IS NULL')
+            ->andWhere('observateur.histoDestruction IS NULL')
+            ->andWhere('observateur.user = :user')->setParameter('user', $user);
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /**

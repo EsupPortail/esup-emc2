@@ -20,77 +20,100 @@ if ($mode === 'edition-fiche-metier') {
 $canModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER))
 
 ?>
-
-<?php if (empty($activites)): ?>
-    <span class="missing-data"> Aucune activité </span>
-<?php else : ?>
-    <ul>
-        <?php foreach ($activites as $activite): ?>
-            <li>
-                <?php echo $activite->getActivite()->getLibelle() ?>
-                <?php echo $activite->getActivite()->printReference() ?>
-                <?php if ($mode === "edition-fiche-metier" AND $canModifier) : ?>
-                    <small>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
-                        <span class="activite-ajax action primary "
-                              data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '-1'], [], true); ?>"
-                        >
-                        <span class="icon icon-monter"></span>
-                        Monter
+<div id="activites_view">
+<div class="card info">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6"><h2> Activités </h2></div>
+            <div class="col-md-6">
+                <div class="float-end">
+                    <?php if ($mode === 'edition-fiche-metier' and $canModifier) : ?>
+                        <?php /** @see FicheMetierController::gererActivitesAction() */ ?>
+                        <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                           data-event="refresh-activites"
+                           href="<?php echo $this->url('fiche-metier/gerer-activites', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
+                            <span class="icon icon-listing"></span>
+                            Gérer
+                        </a>
+                        <?php /** @see FicheMetierController::purgerActivitesAction() */ ?>
+                        <a class="btn btn-warning ajax-modal" style="margin: 0 0.5rem;"
+                           data-event="refresh-activites"
+                           href="<?php echo $this->url('fiche-metier/purger-activites', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
+                            <span class="icon icon-nettoyer"></span>
+                            Purger
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:rgb(80,80,80);" >
+        <?php if (empty($activites)): ?>
+            <span class="missing-data"> Aucune activité </span>
+        <?php else : ?>
+            <ul>
+                <?php foreach ($activites as $activite): ?>
+                    <li>
+                        <?php echo $activite->getActivite()->printReference() ?>
+                        <?php echo $activite->getActivite()->getLibelle() ?>
+                        <?php if ($mode === "edition-fiche-metier" and $canModifier) : ?>
+                            <div style="display: inline-block;">
+                                <small>
+                                    <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
+                                    <span class="activite-ajax action primary icon icon-monter"
+                                          data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '-1'], [], true); ?>"
+                                    >
                     </span>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
-                        <span class="activite-ajax action primary "
-                              data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '1'], [], true); ?>"
-                        >
-                        <span class="icon icon-descendre"></span>
-                        Descendre
+                                    <?php /** @see \FicheMetier\Controller\FicheMetierController::bougerActiviteAction() */ ?>
+                                    <span class="activite-ajax action primary icon icon-descendre"
+                                          data-url="<?php echo $this->url('fiche-metier/bouger-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId(), 'direction' => '1'], [], true); ?>"
+                                    >
                     </span>
-                        <?php /** @see \FicheMetier\Controller\FicheMetierController::retirerActiviteAction() */ ?>
-                        <span class="activite-ajax action danger "
-                              data-url="<?php echo $this->url('fiche-metier/retirer-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId()], [], true); ?>"
-                        >
-                        <span class="icon icon-unchecked" ></span>
-                        Retirer
+                                    <?php /** @see \FicheMetier\Controller\FicheMetierController::retirerActiviteAction() */ ?>
+                                    <span class="activite-ajax action danger icon icon-unchecked"
+                                          data-url="<?php echo $this->url('fiche-metier/retirer-activite', ['fiche-metier' => $fichemetier->getId(), 'activite-element' => $activite->getId()], [], true); ?>"
+                                    >
                     </span>
-                    </small>
-                <?php endif; ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+                                </small>
+                            </div>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+</div>
+</div>
 
+        <script>
+            function refreshActivites() {
+                <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshActivitesAction() */ ?>
+                let url = "<?php echo $this->url("fiche-metier/refresh-activites", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode]); ?>";
+                console.log("refreshing activites");
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    beforeSend:
+                        function () {
+                            $("#activites_view").addClass('refreshing');
+                        },
+                    success:
+                        function (retour) {
+                            $("#activites_view").html(retour).removeClass('refreshing');
+                        }
+                });
+            }
 
-
-
-<script>
-    function refreshActivites() {
-        <?php /** @see \FicheMetier\Controller\FicheMetierController::refreshActivitesAction() */ ?>
-        let url = "<?php echo $this->url("fiche-metier/refresh-activites", ['fiche-metier' => $fichemetier->getId(), 'mode' => $mode ]); ?>";
-        console.log("refreshing activites");
-        $.ajax({
-            type: "POST",
-            url: url,
-            beforeSend:
-                function () {
-                    $("#activites_view").addClass('refreshing');
-                },
-            success:
-                function (retour) {
-                    $("#activites_view").html(retour).removeClass('refreshing');
-                }
-        });
-    }
-
-    $(".activite-ajax").on("click", function (event) {
-        let url = $(this).data("url");
-        $("#activites_view").addClass('refreshing');
-        $.ajax({
-            type: "POST",
-            url: url,
-            success:
-                function () {
-                    refreshActivites();
-                }
-        });
-    });
-</script>
+            $(".activite-ajax").on("click", function (event) {
+                let url = $(this).data("url");
+                $("#activites_view").addClass('refreshing');
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success:
+                        function () {
+                            refreshActivites();
+                        }
+                });
+            });
+        </script>

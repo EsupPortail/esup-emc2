@@ -141,6 +141,7 @@ $this->headTitle("Familles professionnelles");
 
         $('#familles').DataTable({
             autoWidth: false,
+            stateSave: true,
             order: [[0, 'asc'], [1, 'asc']],
             columnDefs: [{
                 "targets": 3,

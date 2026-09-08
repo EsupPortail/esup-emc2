@@ -50,6 +50,7 @@ return [
                     'controller' => ReferentielController::class,
                     'action' => [
                         'modifier',
+                        'purger',
                     ],
                     'privileges' => [
                         ReferentielPrivileges::REFERENTIEL_MODIFIER,
@@ -169,6 +170,16 @@ return [
                             'defaults' => [
                                 /** @see ReferentielController::detruireAction() */
                                 'action'     => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'purger' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/purger/:referentiel',
+                            'defaults' => [
+                                /** @see ReferentielController::purgerAction() */
+                                'action'     => 'purger',
                             ],
                         ],
                     ],

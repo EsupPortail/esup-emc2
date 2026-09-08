@@ -94,18 +94,6 @@ return [
             'position'    => 13,
             'commentaire' => NULL,
         ],
-        'emploitype_id'         => [
-            'name'        => 'emploitype_id',
-            'type'        => 'int',
-            'bdd-type'    => 'integer',
-            'length'      => 0,
-            'scale'       => NULL,
-            'precision'   => 4,
-            'nullable'    => TRUE,
-            'default'     => NULL,
-            'position'    => 17,
-            'commentaire' => NULL,
-        ],
         'grade_id'              => [
             'name'        => 'grade_id',
             'type'        => 'int',

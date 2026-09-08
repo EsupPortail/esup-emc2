@@ -228,7 +228,8 @@ div.multicheckbox label {
     margin-right: 1rem;
 }
 
-h1.page-header {
+
+.page-header {
     border-left: 2rem solid  var(--unistrap-color-main);
     padding-left: 1rem;
 }
@@ -256,6 +257,13 @@ small a {
     text-decoration: none;
 }
 
+h1 { font-size: 2rem; }
+h2 {
+    font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.1rem; }
+h5 { font-size: 1rem; }
+
 @media only screen and (min-width: 1600px) {
     div#contenu-principal{
         min-width:1450px;
@@ -264,11 +272,7 @@ small a {
         min-width: 1450px;
     }
 
-    h1 { font-size: 32px; }
-    h2 { font-size: 28px; }
-    h3 { font-size: 24px; }
-    h4 { font-size: 22px; }
-    h5 { font-size: 20px; }
+
 }
 
 @media only screen and (min-width: 1700px) {

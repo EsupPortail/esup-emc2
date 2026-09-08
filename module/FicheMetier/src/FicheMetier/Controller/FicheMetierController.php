@@ -8,11 +8,15 @@ use Application\Provider\Etat\FicheMetierEtats;
 use Agent\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Carriere\Form\SelectionnerCategorie\SelectionnerCategorieFormAwareTrait;
+use Carriere\Form\SelectionnerCategories\SelectionnerCategoriesFormAwareTrait;
 use Carriere\Form\SelectionnerFamilleProfessionnelle\SelectionnerFamilleProfessionnelleFormAwareTrait;
 use Carriere\Form\SelectionnerNiveauCarriere\SelectionnerNiveauCarriereFormAwareTrait;
+use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use EmploiRepere\Service\EmploiRepere\EmploiRepereServiceAwareTrait;
 use FicheMetier\Entity\Db\CodeFonction;
@@ -27,6 +31,9 @@ use FicheMetier\Provider\Parametre\FicheMetierParametres;
 use FicheMetier\Service\ActiviteElement\ActiviteElementServiceAwareTrait;
 use FicheMetier\Service\CodeFonction\CodeFonctionServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieServiceAwareTrait;
+use FicheMetier\Service\FicheMetierConfigurationApplicationParDefaut\FicheMetierConfigurationApplicationParDefautServiceAwareTrait;
+use FicheMetier\Service\FicheMetierConfigurationCompetenceParDefaut\FicheMetierConfigurationCompetenceParDefautServiceAwareTrait;
 use FicheMetier\Service\MissionElement\MissionElementServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use FicheMetier\Service\TendanceElement\TendanceElementServiceAwareTrait;
@@ -49,11 +56,16 @@ class FicheMetierController extends AbstractActionController
     use ActiviteElementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use AgentPosteServiceAwareTrait;
+    use ApplicationElementServiceAwareTrait;
     use CodeFonctionServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
     use EmploiRepereServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FicheMetierCategorieServiceAwareTrait;
+    use FicheMetierConfigurationApplicationParDefautServiceAwareTrait;
+    use FicheMetierConfigurationCompetenceParDefautServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use MissionElementServiceAwareTrait;
@@ -74,6 +86,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionEtatFormAwareTrait;
     use SelectionnerActivitesFormAwareTrait;
     use SelectionnerCategorieFormAwareTrait;
+    use SelectionnerCategoriesFormAwareTrait;
     use SelectionnerFamilleProfessionnelleFormAwareTrait;
     use SelectionnerNiveauCarriereFormAwareTrait;
     use SelectionnerMissionPrincipaleFormAwareTrait;
@@ -171,8 +184,8 @@ class FicheMetierController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->create($fiche);
-                $this->getFicheMetierService()->setDefaultValues($fiche);
-                $this->getFicheMetierService()->update($fiche);
+                $this->getFicheMetierConfigurationApplicationParDefautService()->applyDefault($fiche);
+                $this->getFicheMetierConfigurationCompetenceParDefautService()->applyDefault($fiche);
 
                 $this->flashMessenger()->addSuccessMessage(
                     "Une nouvelle fiche métier vient d'être ajoutée pour le métier <strong>" . $fiche->getLibelle() . "</strong>.<br/> " .
@@ -526,6 +539,59 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
+    public function modifierCategoriesAction(): ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionnerCategoriesForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-categories', ['fiche-metier' => $fichemetier->getId()], [], true));
+        $form->bind($fichemetier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $fmCategories = $fichemetier->getCategories();
+                foreach ($fmCategories as $category) {
+                    if ($category->getId() === null) {
+                        $this->getFicheMetierCategorieService()->create($category);
+                    }
+                    if ($category->getHistoDestruction() !== null AND $category->getHistoDestructeur() === null) {
+                        $this->getFicheMetierCategorieService()->historise($category);
+                    }
+                }
+                $this->getFicheMetierService()->update($fichemetier);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner les catégories statutaires",
+            'fichemetier' => $fichemetier,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function viderCategoriesAction(): Response
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+
+        $fmCategories = $fichemetier->getCategories(false);
+        foreach ($fmCategories as $category) {
+            $this->getFicheMetierCategorieService()->historise($category);
+        }
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
+    }
+
+
+
     public function modifierCategorieAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -552,18 +618,6 @@ class FicheMetierController extends AbstractActionController
         $vm->setTemplate('default/default-form');
         return $vm;
     }
-
-    public function supprimerCategorieAction(): Response
-    {
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $fichemetier->setCategorie(null);
-        $this->getFicheMetierService()->update($fichemetier);
-
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $fichemetier->getId()], [], true);
-    }
-
 
     public function modifierNiveauCarriereAction(): ViewModel
     {
@@ -658,6 +712,34 @@ EOS;
         return $vm;
     }
 
+    public function purgerActivitesAction(): ViewModel
+    {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $activites = $ficheMetier->getActivites();
+                foreach ($activites as $activite) {
+                    $this->getActiviteElementService()->delete($activite);
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($ficheMetier !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Purge des activités associées à la fiche métier",
+                'text' => "La purge est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier/purger-activites', ['fiche-metier' => $ficheMetier->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     public function bougerActiviteAction(): JsonModel
     {
         $activiteElement = $this->getActiviteElementService()->getResquestedActiviteElement($this);
@@ -737,6 +819,34 @@ EOS;
         return $vm;
     }
 
+    public function purgerMissionsPrincipalesAction(): ViewModel
+    {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $missions = $ficheMetier->getMissions();
+                foreach ($missions as $mission) {
+                    $this->getMissionElementService()->delete($mission);
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($ficheMetier !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Purge des missions principales associées à la fiche métier",
+                'text' => "La purge est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier/purger-missions-principales', ['fiche-metier' => $ficheMetier->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     public function bougerMissionAction(): JsonModel
     {
         $missionElement = $this->getMissionElementService()->getResquestedMissionElement($this);
@@ -804,6 +914,34 @@ EOS;
         return $vm;
     }
 
+    public function purgerApplicationsAction(): ViewModel
+    {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $applications = $ficheMetier->getApplicationListe(true);
+                foreach ($applications as $application) {
+                    $this->getApplicationElementService()->delete($application);
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($ficheMetier !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Purge des applications associées à la fiche métier",
+                'text' => "La purge est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier/purger-applications', ['fiche-metier' => $ficheMetier->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     public function gererCompetencesAction(): ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -838,6 +976,36 @@ EOS;
         return $vm;
     }
 
+    public function purgerCompetencesAction(): ViewModel
+    {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $competences = $ficheMetier->getCompetenceListe(true);
+                $competences = array_filter($competences, function (CompetenceElement $competence) {
+                    return in_array($competence->getCompetence()->getType()->getCode(), CompetenceType::CODE_TYPES_STANDARDS);
+                });
+                foreach ($competences as $competence) {
+                    $this->getCompetenceElementService()->delete($competence);
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($ficheMetier !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Purge des compétences associées à la fiche métier",
+                'text' => "La purge est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier/purger-competences', ['fiche-metier' => $ficheMetier->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
 
     public function gererCompetencesSpecifiquesAction(): ViewModel
     {
@@ -872,6 +1040,37 @@ EOS;
             'css' => $css,
         ]);
         $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function purgerCompetencesSpecifiquesAction(): ViewModel
+    {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $competences = $ficheMetier->getCompetenceListe(true);
+                $competences = array_filter($competences, function (CompetenceElement $competence) {
+                    return in_array($competence->getCompetence()->getType()->getCode(), CompetenceType::CODE_TYPES_SPECIFIQUES);
+                });
+                foreach ($competences as $competence) {
+                    $this->getCompetenceElementService()->delete($competence);
+                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($ficheMetier !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Purge des compétences spécifiques associées à la fiche métier",
+                'text' => "La purge est définitive, êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier/purger-competences-specifiques', ['fiche-metier' => $ficheMetier->getId()], [], true),
+            ]);
+        }
         return $vm;
     }
 

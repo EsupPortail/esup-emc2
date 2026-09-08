@@ -9,7 +9,7 @@ return [
     'rtable'      => 'unicaen_renderer_macro',
     'update_rule' => 'NO ACTION',
     'delete_rule' => 'CASCADE',
-    'index'       => 'unicaen_document_macro_pk',
+    'index'       => 'unicaen_document_macro_id_uindex',
     'columns'     => [
         'macro_id' => 'id',
     ],

@@ -83,7 +83,6 @@ return [
                         'acquis',
                         'informations',
                         'missions-specifiques',
-                        'portfolio',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
@@ -119,17 +118,6 @@ return [
                         'rechercher-with-structure-mere',
                     ],
                     'roles' => [],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'upload-fichier',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_EDITER,
-                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
-                        AgentPrivileges::AGENT_ELEMENT_AJOUTER,
-                    ],
                 ],
                 [
                     'controller' => AgentController::class,
@@ -202,29 +190,9 @@ return [
                             ],
                         ],
                     ],
-                    'portfolio' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/portfolio/:agent',
-                            'defaults' => [
-                                /** @see AgentController::portfolioAction() */
-                                'controller' => AgentController::class,
-                                'action' => 'portfolio'
-                            ],
-                        ],
-                    ],
+
                     /** AUTRE  ****************************************************************************************/
 
-                    'upload-fichier' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/upload-fichier/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action' => 'upload-fichier',
-                            ],
-                        ],
-                    ],
                     'upload-fiche-poste-pdf' => [
                         'type' => Segment::class,
                         'options' => [

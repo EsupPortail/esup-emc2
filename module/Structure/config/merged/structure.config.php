@@ -32,7 +32,6 @@ return [
                         'privileges' => [
                             StructurePrivileges::STRUCTURE_AFFICHER,
                             StructurePrivileges::STRUCTURE_DESCRIPTION,
-                            StructurePrivileges::STRUCTURE_GESTIONNAIRE,
                             StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT,
                             StructurePrivileges::STRUCTURE_AGENT_FORCE,
                             StructurePrivileges::STRUCTURE_AGENT_MASQUE,

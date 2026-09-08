@@ -18,6 +18,7 @@ use FicheMetier\Service\Activite\ActiviteService;
 use FicheMetier\Service\ActiviteElement\ActiviteElementService;
 use FicheMetier\Service\CodeFonction\CodeFonctionService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\FicheMetierCategorie\FicheMetierCategorieService;
 use FicheMetier\Service\Import\ImportService;
 use FicheMetier\Service\MissionElement\MissionElementService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
@@ -55,6 +56,7 @@ class ImportControllerFactory
          * @var EtatInstanceService $etatInstanceService
          * @var FamilleProfessionnelleService $familleProfessionnelService
          * @var FicheMetierService $ficheMetierService
+         * @var FicheMetierCategorieService $ficheMetierCategorieService
          * @var ImportService $importService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var MissionElementService $missionElementService
@@ -82,6 +84,7 @@ class ImportControllerFactory
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $familleProfessionnelService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $ficheMetierCategorieService = $container->get(FicheMetierCategorieService::class);
         $importService = $container->get(ImportService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $missionElementService = $container->get(MissionElementService::class);
@@ -111,6 +114,7 @@ class ImportControllerFactory
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setFamilleProfessionnelleService($familleProfessionnelService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setFicheMetierCategorieService($ficheMetierCategorieService);
         $controller->setImportService($importService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setMissionElementService($missionElementService);

@@ -4,12 +4,18 @@ namespace Agent\Entity\Db;
 
 use Agent\Entity\Db\Agent;
 use Carriere\Entity\Db\Mobilite;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 
-class AgentMobilite implements HistoriqueAwareInterface
+class AgentMobilite implements HistoriqueAwareInterface, ResourceInterface
 {
     use HistoriqueAwareTrait;
+
+    public function getResourceId(): string
+    {
+        return 'AgentMobilite';
+    }
 
     private ?int $id = null;
     private ?Agent $agent = null;

@@ -9,6 +9,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureAssertionFactory
@@ -24,17 +25,20 @@ class StructureAssertionFactory
         /**
          * @var AgentService $agentService
          * @var ObservateurService $observateurService
+         * @var PrivilegeService $privilegeService
          * @var StructureService $structureService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
         $observateurService = $container->get(ObservateurService::class);
+        $privilegeService = $container->get(PrivilegeService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
         $assertion = new StructureAssertion();
         $assertion->setAgentService($agentService);
         $assertion->setObservateurService($observateurService);
+        $assertion->setPrivilegeService($privilegeService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 
