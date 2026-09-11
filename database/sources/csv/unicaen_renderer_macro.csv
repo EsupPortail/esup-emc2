@@ -1,4 +1,4 @@
-'code';'description';'variable_name';'methode_name'
+"code","description","variable_name","methode_name"
 "EMC2#date","Affiche la date du jour d/m/Y","MacroService","getDate"
 "EMC2#datetime","Affiche la date et l heure d/m/Y à H:i","MacroService","getDateTime"
 "Macro#Parametre","<p>Retourne la valeur d'un paramètre (Attention il faut préciser la catégorie et le paramètre de la façon suivante :  VAR[Macro#Parametre|CATEGORIE;PARAMETRE])</p>","MacroService","getValeurParametre"
@@ -75,6 +75,7 @@
 "ENTRETIEN#Agent","<p>Affiche la d&eacute;nomination de l'agent passant son entretien professionnel</p>","entretien","toStringAgent"
 "ENTRETIEN#CompetencesPersonnelles",null,"entretien","toStringCompetencesPersonnelles"
 "ENTRETIEN#CompetencesTechniques",null,"entretien","toStringCompetencesTechniques"
+"FICHE_POSTE#Contraintes","<p>Retourne la liste des contraintes associées à la fiche de poste sous la forme d'une liste à puce.</p>","ficheposte","toStringContraintes"
 "ENTRETIEN#CREF_Champs","Retourne le contenu des champs (AutoForm) dans l'identification passe par les mots clefs passés en paramètre","entretien","toStringCREF_Champs"
 "ENTRETIEN#CREP_encadrement",null,"entretien","toString_CREP_encadrement"
 "ENTRETIEN#CREP_experiencepro",null,"entretien","toString_CREP_experiencepro"
