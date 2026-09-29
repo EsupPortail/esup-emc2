@@ -427,8 +427,8 @@ class ImportController extends AbstractActionController
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_REFERENS3, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_REFERENS3_CORRESPONDANCE_STATUTAIRE_NIVEAU] ?? "", $dictionnaireNiveauCarriere, $warning);
                         $this->readCategorie($fiche, $raw[self::HEADER_REFERENS3_CATEGORIE] ?? "", $dictionnaireCategorie, "|", $warning);
-                        $this->readMissions($fiche, $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "", "|", $referentiel);
-                        $this->readActivites($fiche, $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "", "|", $referentiel);
+                        $this->readMissions($fiche, $raw[self::HEADER_REFERENS3_MISSION_LIBELLE] ?? "", "|", $referentiel, $data['mode'] === 'import');
+                        $this->readActivites($fiche, $raw[self::HEADER_REFERENS3_MISSION_ACTIVITE] ?? "", "|", $referentiel, $data['mode'] === 'import');
                         $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
                         $this->readLinks($fiche, $raw[self::HEADER_REFERENS3_URL] ?? "", $raw[self::HEADER_REFERENS3_PDF] ?? "", $warning);
                         $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
@@ -574,8 +574,8 @@ class ImportController extends AbstractActionController
                         $fiche->setLibelle($intitule);
                         $fiche->setReference($code);
                         $fiche->setReferentiel($referentiel);
-                        $this->readMissions($fiche, $raw[self::HEADER_RMFP_MISSION_LIBELLE] ?? "", "\n", $referentiel);
-                        $this->readActivites($fiche, $raw[self::HEADER_RMFP_MISSION_ACTIVITE] ?? "", "\n", $referentiel);
+                        $this->readMissions($fiche, $raw[self::HEADER_RMFP_MISSION_LIBELLE] ?? "", "\n", $referentiel, $data['mode'] === 'import');
+                        $this->readActivites($fiche, $raw[self::HEADER_RMFP_MISSION_ACTIVITE] ?? "", "\n", $referentiel, $data['mode'] === 'import');
                         $this->readFamilleProfessionnelle($fiche, $raw, self::FORMAT_RMFP, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
                         $this->readTendancesFromListing($fiche, $raw, $tendancesListing, $warning);
                         $this->readCodeFonction($fiche, $raw[self::HEADER_CODE_FONCTION] ?? "", $dictionnaireCodeFonction, $dictionnaireFamilleProfessionnelle, $warning);
@@ -596,7 +596,7 @@ class ImportController extends AbstractActionController
                                 $element->setCompetence($connaissance);
                                 $fiche->addCompetenceElement($element);
                             } else {
-                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tConnaissance->getLibelle() . "] non trouvée.";
+                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tConnaissance?->getLibelle() . "] non trouvée.";
                             }
                         }
                         $savoiretres = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_COMPORTEMENTALE] ?? "", "\n");
@@ -609,7 +609,7 @@ class ImportController extends AbstractActionController
                                 //                        $this->getCompetenceElementService()->create($element);
                                 $fiche->addCompetenceElement($element);
                             } else {
-                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tsavoiretre->getLibelle() . "] non trouvée.";
+                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tsavoiretre?->getLibelle() . "] non trouvée.";
                             }
                         }
                         $savoirfaires = self::explodeAndTrim($raw[self::HEADER_RMFP_COMPETENCE_OPERATIONNELLE] ?? "", "\n");
@@ -622,7 +622,7 @@ class ImportController extends AbstractActionController
                                 //                        $this->getCompetenceElementService()->create($element);
                                 $fiche->addCompetenceElement($element);
                             } else {
-                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tsavoirfaire->getLibelle() . "] non trouvée.";
+                                if ($item !== "") $warning[] = "[" . $item . "] compétence de type [" . $tsavoirfaire?->getLibelle() . "] non trouvée.";
                             }
                         }
                         //                $this->getFicheMetierService()->update($fiche);
@@ -730,8 +730,8 @@ class ImportController extends AbstractActionController
                         $this->readNiveauCarriere($fiche, $raw[self::HEADER_EMC2_NIVEAU_CARRIERE] ?? "", $dictionnaireNiveauCarriere, $warning);
                         $this->readCategorie($fiche, $raw[ImportController::HEADER_EMC2_CATEGORIE] ?? "", $dictionnaireCategorie, "|", $warning);
                         $this->readFamilleProfessionnelle($fiche, $raw, ImportController::FORMAT_EMC2, $dictionnaireFamille, $dictionnaireSpecialite, $dictionnaireSpecialiteType, $warning);
-                        $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION] ?? "", "|", $referentiel);
-                        $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE] ?? "", "|", $referentiel);
+                        $this->readMissions($fiche, $raw[self::HEADER_EMC2_MISSION] ?? "", "|", $referentiel, $data['mode'] === 'import');
+                        $this->readActivites($fiche, $raw[self::HEADER_EMC2_ACTIVITE] ?? "", "|", $referentiel, $data['mode'] === 'import');
                         $this->readApplications($fiche, $raw[self::HEADER_EMC2_APPLICATION] ?? "", "|", $dictionnaireApplication, $warning);
                         $this->readCompetences($fiche, $raw[self::HEADER_EMC2_COMPETENCE] ?? "", "|", $dictionnaireCompetence, $warning);
                         $this->readTendances($fiche, $raw, $dictionnaireTendance, $warning);
@@ -823,12 +823,16 @@ class ImportController extends AbstractActionController
                     $specialite->setType($dictionnaireSpecialiteType[$specialiteType] ?? null);
                 }
                 $famille->setCorrespondance($specialite);
+                $dictionnaireFamille[trim($raw[$HEADER_FAMILLE_LIBELLE])] = $famille;
             } else {
                 if ($famille->getLibelle() !== $raw[$HEADER_FAMILLE_LIBELLE]) $warning[] = "Le libellé de la famille est différent [FamilleProfessionnelle:" . $famille->getLibelle() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_LIBELLE] . " ]";
                 if ($HEADER_FAMILLE_POSITION !== null AND $famille->getPosition() != $raw[$HEADER_FAMILLE_POSITION]) $warning[] = "La position de la famille " . $famille->getLibelle() . " est différente [FamilleProfessionnelle:" . $famille->getPosition() . " &ne; Fichier:" . $raw[$HEADER_FAMILLE_POSITION] . " ]";
 
-                if ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] !== null AND $famille->getCorrespondance() !== ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] ?? null))
-                    $warning[] = "La spécialité de la famille " . $famille->getLibelle() . " est différente [Spécialité:" . $famille->getCorrespondance()?->getId() . " &ne; Fichier:" . ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_LIBELLE]] ?? null)?->getId() . " ]";
+                if(
+                    ($raw[$HEADER_SPECIALITE_CODE]??null) !== null
+                    AND ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]]??null) !== null
+                    AND $famille->getCorrespondance() !== ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_CODE]] ?? null)
+                ) $warning[] = "La spécialité de la famille " . $famille->getLibelle() . " est différente [Spécialité:" . $famille->getCorrespondance()?->getId() . " &ne; Fichier:" . ($dictionnaireSpecialite[$raw[$HEADER_SPECIALITE_LIBELLE]] ?? null)?->getId() . " ]";
             }
             $fiche->setFamilleProfessionnelle($famille);
         }
@@ -858,7 +862,7 @@ class ImportController extends AbstractActionController
         }
     }
 
-    public function readMissions(FicheMetier &$fiche, ?string $data, string $separator, Referentiel $referentiel): void
+    public function readMissions(FicheMetier &$fiche, ?string $data, string $separator, Referentiel $referentiel, bool $persist = false): void
     {
         $missions = $fiche->getMissions();
         $fiche->clearMissions();
@@ -871,7 +875,7 @@ class ImportController extends AbstractActionController
             $mission = $this->getMissionPrincipaleService()->getMissionPrincipaleByLibelle($readMission, $referentiel);
             if ($mission === null) {
                 $reference = $fiche->getReference() . "_" . $readMissionPosition;
-                $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, false);
+                $mission = $this->getMissionPrincipaleService()->createWith($readMission, $referentiel, $reference, $persist);
             }
             $missionElement = $this->getMissionElementService()->getMissionElementFromArray($missions, $mission);
             if ($missionElement === null) {
@@ -884,7 +888,7 @@ class ImportController extends AbstractActionController
         }
     }
 
-    public function readActivites(FicheMetier &$fiche, string $data, string $separator, Referentiel $referentiel): void
+    public function readActivites(FicheMetier &$fiche, string $data, string $separator, Referentiel $referentiel, bool $persist = false): void
     {
         $activites = $fiche->getActivites();
         $fiche->clearActivites();
@@ -897,7 +901,7 @@ class ImportController extends AbstractActionController
             $activite = $this->getActiviteService()->getActiviteByLibelle($readActivite, $referentiel);
             if ($activite === null) {
                 $reference = $fiche->getReference() . "_" . $readActivitePosition;
-                $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, false);
+                $activite = $this->getActiviteService()->createWith($readActivite, $referentiel, $reference, $persist);
             }
             $activiteElement = $this->getActiviteElementService()->getActiviteElementFromArray($activites, $activite);
             if ($activiteElement === null) {

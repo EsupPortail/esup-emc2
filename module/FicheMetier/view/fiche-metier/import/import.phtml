@@ -255,7 +255,7 @@ $this->headTitle("Importation des fiches métiers");
                 <?php if ($fiche->getFamilleProfessionnelle()): ?>
                     <strong>Famille professionnelle</strong>
                     <?php echo $fiche->getFamilleProfessionnelle()->getLibelle(); ?>
-                    <?php echo $fiche->getFamilleProfessionnelle()->computeCode(); ?>
+                    &nbsp;<code><?php echo $fiche->getFamilleProfessionnelle()->computeCode(); ?></code>
                     <br>
                 <?php endif; ?>
 
