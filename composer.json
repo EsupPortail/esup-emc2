@@ -33,7 +33,7 @@
     "unicaen/privilege": "6.2.1",
     "unicaen/renderer": "7.2.6",
     "unicaen/synchro": "7.0.0",
-    "unicaen/utilisateur": "7.1.2",
+    "unicaen/utilisateur": "7.1.3",
     "unicaen/utilisateur-ldap-adapter" : "2.0.7",
     "unicaen/validation": "6.1.7"
   },
