@@ -441,18 +441,20 @@ class ImportController extends AbstractActionController
                         $stringCompetenceIds = $raw[self::HEADER_REFERENS3_COMPETENCE] ?? "";
                         $stringCompetenceIds = str_replace(',', '|', $stringCompetenceIds);
 
+                        // NB : Il y a eu une évolution du référentiel des compétences les id on été trim des 0 initiaux 0067 => 67
+                        // par conséquent on passe ici tous les id dans intval (les ids attendus sont numériques)
                         $comptenceIds = explode("|", $stringCompetenceIds);
                         $dictionnaireFicheMetierCompetence = [];
                         $competences = $fiche->getCompetenceListe();
                         foreach ($competences as $competence) {
-                            $dictionnaireFicheMetierCompetence[$competence->getCompetence()->getId()] = $competence;
+                            $dictionnaireFicheMetierCompetence[intval($competence->getCompetence()->getId())] = $competence;
                         }
                         $fiche->clearCompetences();
                         foreach ($comptenceIds as $comptenceId) {
-                            if (isset($dictionnaireFicheMetierCompetence[$comptenceId])) {
-                                $fiche->addCompetenceElement($dictionnaireFicheMetierCompetence[$comptenceId]);
+                            if (isset($dictionnaireFicheMetierCompetence[intval($comptenceId)])) {
+                                $fiche->addCompetenceElement($dictionnaireFicheMetierCompetence[intval($comptenceId)]);
                             } else {
-                                $competence = $dictionnaireCompetence[$comptenceId] ?? null;
+                                $competence = $dictionnaireCompetence[intval($comptenceId)] ?? null;
                                 if ($competence !== null) {
                                     $element = new CompetenceElement();
                                     $element->setCompetence($competence);
