@@ -30,7 +30,7 @@ trait HasReferenceTrait
     }
 
     /** Les modes sont : modal, lien **/
-    public function printReference(?string $mode = null, ?string $url = null, bool $isAllowed = true): string
+    public function printReference(?string $mode = null, ?string $url = null, ?bool $isAllowed = true): string
     {
         $referentiel = $this->getReferentiel();
         $label  = ($referentiel?$referentiel->getLibelleCourt():"Aucun référentiel");
