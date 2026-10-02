@@ -25,9 +25,12 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Referentiel\Provider\Privilege\ReferentielPrivileges;
 use Referentiel\Service\Referentiel\ReferentielServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class CompetenceController extends AbstractActionController
 {
@@ -42,8 +45,10 @@ class CompetenceController extends AbstractActionController
     use GradeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -362,6 +367,7 @@ class CompetenceController extends AbstractActionController
             }
 
             if ($mode === 'import') {
+                $allowedReferentiel = $this->getPrivilegeService()->checkPrivilege(ReferentielPrivileges::REFERENTIEL_AFFICHER, $this->getUserService()->getConnectedRole());
                 foreach ($result['competences']??[] as $competence) {
                 // Bricolage pour satisfaire Marseille
                     $codesFicheMetier = explode('|', $competence->getCodesEmploiType() ?? "");

@@ -20,6 +20,8 @@ use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Referentiel\ReferentielService;
 use Structure\Service\Structure\StructureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class CompetenceControllerFactory
 {
@@ -43,8 +45,10 @@ class CompetenceControllerFactory
          * @var GradeService $gradeService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var ParametreService $parametreService
+         * @var PrivilegeService $privilegeService
          * @var ReferentielService $referentielService
          * @var StructureService $structureService
+         * @var UserService $userService
          */
         $codeFonctionService = $container->get(CodeFonctionService::class);
         $competenceService = $container->get(CompetenceService::class);
@@ -57,8 +61,10 @@ class CompetenceControllerFactory
         $gradeService = $container->get(GradeService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $parametreService = $container->get(ParametreService::class);
+        $privilegeService = $container->get(PrivilegeService::class);
         $referentielService = $container->get(ReferentielService::class);
         $structureService = $container->get(StructureService::class);
+        $userService = $container->get(UserService::class);
 
         /**
          * @var CompetenceForm $competenceForm
@@ -79,10 +85,12 @@ class CompetenceControllerFactory
         $controller->setGradeService($gradeService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setParametreService($parametreService);
+        $controller->setPrivilegeService($privilegeService);
         $controller->setStructureService($structureService);
         $controller->setCompetenceForm($competenceForm);
         $controller->setReferentielService($referentielService);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
+        $controller->setUserService($userService);
         return $controller;
     }
 }
